@@ -1,0 +1,138 @@
+@charset "utf-8"; 
+* { box-sizing: content-box;}
+body { background: #ffffff; color: #666; margin: 0 auto;}
+html, body { margin: 0; padding: 0;}
+body, td, input, textarea, select, button { color: #666; font-size: 12px; font-family: "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif; }
+label{ font-weight: normal; }
+body, ul, ol, li, dl, dt, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset { margin: 0; padding: 0;}
+ul, ol, li { list-style-image: none; list-style-type: none; }
+a { color: #666; text-decoration: none;  blr: expression(this.onFocus=this.blur()); outline: none;}
+a:active { star: expression_r(this.onFocus=this.blur());} 
+a:hover { color: #FA4862; text-decoration: none; cursor: pointer}
+a:focus, input[type=button] ,input[type=submit] { outline: none; } 
+input, button, select, textarea { outline: none}
+a img { border: none; }
+i,em{ font-style: normal; }
+i.fa { font-size: 14px; vertical-align: middle; margin: 0px 5px;}
+.w1210{ width: 1210px; margin: 0px auto}
+.w990 { width: 990px; margin: 0px auto}
+.left{ float: left;}
+.right{ float: right;}
+.relative { position: relative!important;}
+.color{ color: #FA4862;}
+.clear { clear: both; height: 0; overflow: hidden;}
+.hide{ display: none;}
+
+/*底部*/
+.footer-info{ width: 100%; height: auto; padding: 25px 0 15px; font-size: 12px; background: #3A3A3A; color: #cccccc; display: inline-block; }
+.footer-info .info-text { width: 1210px; margin: 0 auto; text-align: center; margin-bottom: 10px; }
+.footer-info .info-text .nav-bottom a { padding: 0px 8px; color: #ccc; }
+.footer-info .info-text .nav-bottom a:hover { color: #FA4862; }
+.footer-info .info-text .sep { margin: 0 10px; }
+.footer-info .info-text p { margin: 0; line-height: 25px; }
+.footer-info .info-text p a { color: #ccc; }
+.footer-info .info-text p a:hover { color: #FA4862;} 
+.footer-info .info-text p.company-info a{ margin: 0px 5px}
+.footer-info .info-links { clear: both;}
+.footer-info .info-links img { width: auto; height: 20px;}
+
+
+.form-group .icon, .login-wrap .form-group .form-control-error i, .logo-info a.sina, .logo-info a.qq, .logo-info .weixin span, .login-wrap .item-coagent a i, .login-wrap .item-coagent a:hover i, .login-con .login-switch a, .login-mobile .default-state .qrcode-desc i { background: url(../images/user-icon.png) no-repeat;}
+/*头部*/
+.header { height: 95px; }
+.logo-info { width: 920px; margin: 0 auto; position: relative; z-index: 5; }
+.logo-info a.logo { display: block; width: 250px; height: 70px; background: url(../images/logo.jpg) no-repeat; margin: 10px 0 0 0px; float: left; }
+.logo-info span.findpw { border-left: 1px #eee solid; width: 290px; height: 44px; line-height: 44px; font-size: 28px; margin: 26px 0px 0px 15px; float: left; padding: 0px 15px;}
+.logo-info .weixin{ width: 24px; height: 24px; float: right; margin:	45px 0 0 20px; position: relative; z-index: 2; cursor: pointer;}
+.logo-info a.sina, .logo-info a.qq{ width: 24px; height: 24px; float: right; cursor: pointer; margin: 45px 0 0 20px; }
+.logo-info .weixin span{ width: 24px; height: 24px; display: block; background-position: -53px -60px; }
+.logo-info a.sina{ background-position: -53px -27px; }
+.logo-info a.qq{ background-position: -53px 0px; }
+.logo-info .erweima{ display: none; position: absolute; left: -60px; top: 30px; }
+.logo-info .erweima .erweima-inner{ position: relative; border: 1px solid #eee; padding: 10px; background: #fff; }
+.logo-info .erweima .erweima-inner i{ top: -7px; right: 70px; height: 7px; overflow: hidden; font: 400 20px/14px simsun; color: #fff; display: block; position: absolute; background: #fff; width: 13px; text-indent: -4px; }
+.logo-info .erweima .erweima-inner i s{ position: relative; top: 1px; text-decoration: none; color: #eee; }
+
+/*****登录页面*****/
+/*登录表单*/
+.login-content{ position: relative; height: 535px; z-index: 1;	}
+.login-content .login-form{ position: absolute; z-index: 1; width: 346px; background: #fff; overflow: visible; top:30px; right: 0; }
+.login-content .login-form .login-con{ width: 286px; padding: 20px 30px; }
+
+/*二维码、PC端登录切换*/
+.login-switch { width: 52px; height: 52px; position: absolute; right: 10px; top: 10px; }
+.login-switch a { width: 52px; height: 52px; display: inline-block; cursor: pointer; }
+.login-switch a.btn-qrcode{ background-position: -308px 0px; }
+.login-switch a.btn-login{ background-position: -308px -60px; }
+
+/*PC端登录*/
+.login-wrap .login-tit{ height: 25px; line-height: 25px; color: #999; }
+.login-wrap .login-tit .regist-link{ font-size: 12px; }
+.login-wrap .login-tit .regist-link i{ font-family: sinum; font-weight: bold; }
+.login-wrap .login-radio{ height: 35px; line-height: 35px; padding: 5px 0px 0px; margin: 15px 0px 30px; }
+.login-wrap .login-radio ul{ width: 100%; height: 36px; line-height: 35px; display: inline-block; border-bottom: 1px #FA4862 solid}
+.login-wrap .login-radio ul li{ float: left; height: 36px; line-height: 36px; margin-right: 15px; padding: 0px 15px; background: #fff; font-size: 13px; cursor: pointer;}
+.login-wrap .login-radio ul li.active{ border-width: 2px 1px 0px; border-style: solid; border-color: #FA4862; color: #FA4862}
+
+.login-wrap .form-group{ overflow: hidden; height: 65px; position: relative; }
+.login-wrap .form-group .form-control-box{ height: 38px; border: 1px solid #ddd; position: relative;}
+.login-wrap .form-group .form-control-box.error{ border: 1px solid #FA4862; }
+.login-wrap .form-group .icon{ display: block; width: 20px; height: 20px; position: absolute; left: 10px; top: 9px; }
+.login-wrap .form-group.item-name .icon{ background-position:0 -15px; }
+.login-wrap .form-group.item-password .icon{ background-position: 0 -36px; }
+.login-wrap .form-group .text{ line-height: 18px; height: 18px; border: 0; padding: 10px 0 10px 40px; width: 224px; float: none; font-size: 14px; overflow: hidden; }
+.login-wrap .form-group-spe .form-control-box{ height: 40px; border: none;}
+.login-wrap .form-group-spe .form-control-box.error{ border: none; }
+.login-wrap .form-group-spe .form-control-box .text{ width: 80px; line-height: 38px; height: 38px; padding: 0px 0 0px 40px; border: 1px solid #ddd; }
+.login-wrap .form-group-spe .form-control-box.error .text{ border: 1px solid #FA4862;}
+.login-wrap .form-group.captcha .icon{ background-position: 0 -57px; }
+.login-wrap .form-group .form-control-error{ height: 25px; line-height: 25px; color: #999; overflow: hidden; }
+.login-wrap .form-group .form-control-error i{ width: 14px; height: 14px; background-position: 0 0; margin-right: 5px; margin-top: -2px; display: inline-block;}
+
+.login-wrap .form-group.phonecode .icon{ background-position: 0 -57px; }
+.login-wrap .form-group-spe .phonecode{ background: #F6F6F6; border: 1px solid #d9d9d9; cursor: pointer; padding: 0 8px; display: inline-block; line-height: 38px; height: 38px; color: #666; margin-left: 10px; text-align: center; width: 120px; }
+
+.login-wrap .safety{ margin-bottom: 15px; overflow: hidden; height: 18px; line-height: 18px; }
+.login-wrap .safety label{ cursor: pointer; }
+.login-wrap .safety label .checkbox{ margin: 0px 3px 0 0; vertical-align: middle; cursor: pointer; }
+.login-wrap .safety label span{ vertical-align: middle; cursor: pointer; }
+.login-wrap .safety .forget-password{ margin-top: 3px; }
+
+.login-wrap .login-btn{ margin-bottom: 20px; overflow: hidden; }
+.login-wrap .login-btn .btn-img{ width: 286px; height: 35px; font-size: 14px; color: #FFF; background: #FA4862; text-align: center; line-height: 35px; text-decoration: none; cursor: pointer; letter-spacing: 2px; border: none; }
+
+.login-wrap .item-coagent{ height: 43px; line-height: 43px; overflow: hidden; }
+.login-wrap .item-coagent a{ float: left; width: 43px; height: 43px; position: relative; margin-right: 20px; margin-left: 10px; }
+.login-wrap .item-coagent a i{ display: block; width: 43px; height: 43px; position: absolute; left: 0; top: 0; }
+.login-wrap .item-coagent a i.qq{ background-position: -85px 0px; }
+.login-wrap .item-coagent a i.alipay{ background-position: -142px 0px; }
+.login-wrap .item-coagent a i.sina{ background-position: -199px 0px; }
+.login-wrap .item-coagent a i.weixin{ background-position: -254px 0px; }
+.login-wrap .item-coagent a:hover i.qq{ background-position: -85px -45px; }
+.login-wrap .item-coagent a:hover i.alipay{ background-position: -142px -45px; }
+.login-wrap .item-coagent a:hover i.sina{ background-position: -199px -45px; }
+.login-wrap .item-coagent a:hover i.weixin{ background-position: -254px -45px; }
+.login-wrap .item-coagent a.last{ margin-right: 0; }
+
+/*扫描登录*/
+.login-mobile .default-state { width: 290px; padding-bottom: 27px; text-align: center; }
+.login-mobile .default-state .qrcode-tit { padding: 44px 0 25px; color: #888; font-size: 16px; }
+.login-mobile .default-state .ma { width: 165px; height: 165px; margin: 0 auto; border: #f3f3f3; }
+.login-mobile .default-state .ma img{ width: 165px; height: 165px; display: inline; }
+.login-mobile .default-state .ma-help { padding-top: 20px; }
+.login-mobile .default-state .ma-help a{ color: #999; }
+.login-mobile .default-state .ma-help span { color: #ccc; padding: 0px 13px; }
+.login-mobile .default-state .qrcode-desc { overflow: hidden; width: 150px; margin: 30px auto 0; text-align: left; }
+.login-mobile .default-state .qrcode-desc i { width: 30px; height: 30px; background-position: -50px -90px; float: left; margin-right: 10px; margin-top: 3px; display: inline-block; }
+.login-mobile .default-state .qrcode-desc p { width: 110px; line-height: 18px; color: #999;  font-size: 12px; float: left; }
+.login-mobile .default-state .qrcode-desc p a{ margin: 0px 3px; }
+
+/*登录广告图*/
+.login-banner{ height: 535px; background: #FA4862; }
+.login-banner .banner-bg{ display: block; width: 100%; height: 535px; background: url(../images/login-banner.jpg) no-repeat 0 0; }
+
+/*底部*/
+.footer-info{ background: #fff; color: #666; }
+.footer-info .info-text { width: 990px; }
+.footer-info .info-text .nav-bottom a { color: #666; }
+.footer-info .info-text p a { color: #666; }

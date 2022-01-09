@@ -1,0 +1,45 @@
+@charset "utf-8"; 
+/*区别于其他页面头部、底部的展示*/
+body{ background-color: #f9f9f9;}
+.header{ width: 100%;}
+.header-box{ width: 990px; margin: 0 auto;}
+.header .search{ float: right;}
+.footer-related{ padding: 0px;}
+.footer-info{ margin-top: 0px;}
+.footer-info .info-text{ width: 990px;}
+.bg { background-color: #000; opacity: 0.15; filter: alpha(opacity=15); width: 100%; height: 100%; left: 0; top: 0;/*FF IE7*/ z-index: 99999; position: fixed!important;/*FF IE7*/ position: absolute;/*IE6*/ _top:       expression(eval(document.compatMode && document.compatMode=='CSS1Compat') ? documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/
+ document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/*IE5 IE5.5*/}
+.content{ padding: 15px 0px; min-height:400px;}
+
+/*分类树*/
+h3.left-title{ font-size: 16px; text-indent: 15px; height: 40px; line-height: 40px; font-weight: normal; color: #fff;}
+.left-content{ margin-bottom: 10px; border-top: none;}
+.store-category{ width: 210px; height: auto; margin-bottom: 10px;}
+.tree { min-height: 20px; }
+.tree li { list-style-type: none; heigth: 30px; line-height: 30px; margin: 0; position: relative;}
+.tree li h4{ font-weight: normal; padding: 5px 15px; background-color: #eaeaea; border-bottom: 1px #fff solid; cursor: pointer;}
+.tree li h4 span { width: 15px; height: 30px; line-height: 30px; float: right; position: relative; display: inline-block;}
+.tree li h4 span i{ border-style: solid dashed solid dashed; border-color: #999 transparent #999 transparent; font-size: 0; line-height: 0; height: 0; overflow: hidden; position: absolute; top: 12px; right: 0px; }
+.tree li h4 span i.icon-plus-sign{ border-width: 5px 5px 0;}
+.tree li h4 span i.icon-minus-sign{ border-width: 0 5px 5px;}
+.tree li h4 span i.arrow{ width: 8px; background-position: 0px -60px;}
+.tree li a{ color: #666;}
+.tree li a.tree-first{ margin-left: 5px; color: #333;}
+.tree li:last-child::before { height: 30px;}
+.tree li ul { background-color: #fff; display: none;} 
+.tree li ul li{ padding: 0px 40px; border-bottom: 1px solid #faf8f9;}
+.tree li ul li.border-none{ border: none;}
+.tree li ul li:hover{ background-color: #F5F5F5; cursor: pointer;}
+
+/*文章内容*/
+.fr{ width: 725px; background-color: #fff; padding: 15px 20px;}
+.help-tit { text-align: center;  padding: 10px 0; font-size: 18px; line-height: 150%; font-weight: normal; color: #666; border-bottom: 1px dashed #ddd;}
+.help-detail { padding: 15px 20px; line-height: 2em;}
+.help-detail img{ max-width: 100%; height: auto;}
+.help-detail .help-search-name a{ font-size: 14px;}
+.help-detail .help-search-content{ color: #999;}
+
+/*没有信息内容时显示*/
+.tip-box { width: 725px; margin: 80px auto; text-align: center;}
+.tip-box .tip-icon { display: block; max-width: 100%; max-height: 100%; margin: 0 auto;}
+.tip-box .tip-text { line-height: 20px; padding: 10px; font-size: 14px;}

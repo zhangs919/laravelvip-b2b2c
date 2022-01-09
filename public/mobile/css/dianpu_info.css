@@ -1,0 +1,67 @@
+/*头部*/
+
+body{ background:#f3f5f7;}
+.header { position:relative;width: 100%; height:50px; background:#F6F6F9 ; zoom: 1 ; border-bottom:1px solid #eee;}
+.header:after{ clear: both; content: " "; display: block; font-size: 0; height: 0; visibility: hidden }
+.header-left { float: left; width:15%; height:50px; }
+.header-left a { display: block; width: 30px; height:50px; vertical-align: middle; background: url(../images/top.png) no-repeat; background-size: auto 230px; background-position: 5px 12px; }
+.header-middle {width:70%; text-align:center; color:#222; height:50px; float: left;color: #222; font-size: 0.8rem; line-height:50px; position: relative; padding:0;}
+.header-right { float: right; width:15%;height:50px; line-height:50px; }
+.header-right a.text {display: inline-block; float:right;white-space: nowrap;line-height: 50px;font-size: 0.65rem;color: #fff;padding-right: 13px;}
+.top_bar { float: right; display: block; width:40px; height:50px; }
+#show_more {background: url(../images/top.png) no-repeat;background-size: auto 230px;width: 30px; height:50px;background-position:0px -25px; }
+
+.ui-flex {display: -webkit-box !important;display: -webkit-flex !important;display: -ms-flexbox !important;display: flex !important;-webkit-flex-wrap: wrap;  -ms-flex-wrap: wrap;flex-wrap: wrap;}
+.cell {-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;width: 0;-webkit-flex-basis: 0;-ms-flex-preferred-size: 0;flex-basis: 0;max-width: 100%;    display: block;padding: 0 !important;position: relative;}
+
+/*内容*/
+.shop-introduction-box{ width:100%; position:relative;}
+.shop-introduction-top{ background:#fff;position: relative;height: 52px;padding: 10px;}
+.shop-introduction-top .shop-desc{position: relative;display: -webkit-box !important;display: -webkit-flex !important;display: -ms-flexbox !important;
+display: flex !important;-webkit-flex-wrap: wrap;-ms-flex-wrap: wrap;flex-wrap: wrap;}
+.shop-introduction-top .shop-logo {display: block;width:100px; height:50px;border: 1px solid #f8f8f8;text-align: center;overflow: hidden;}
+.shop-introduction-top .shop-logo img{ width:100px; height:50px;}
+.shop-introduction-top .shop-info{display: block;position: relative;margin-left:10px; overflow:hidden;}
+.shop-introduction-top .shop-info .shop-name{ display:block;height:30px; line-height:30px; font-size:16px; color:#222;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
+.shop-introduction-top .shop-info .collect-num{ display:block;height:20px; line-height:20px; font-size:12px; color:#999;}
+.shop-introduction-top .collect-btn{position: relative;display: block; margin-top:13px; padding:0 8px;height:26px;line-height:26px; border-radius:3px;color: #fff;cursor: pointer;text-align: center;border: 1px solid transparent; background: rgba(242,48,48,1);}
+.shop-introduction-top .collect-btn i{display: inline-block;line-height: 26px;font-size: 0.75rem;color: #fff; margin-right:3px; position:relative; vertical-align:top; bottom:-2px;}
+.shop-top-box .shop-info .shop-collect-btn span{ display:inline-block;line-height: 26px; vertical-align:top;}
+
+
+/*描述，服务，物流*/
+.store-detail-score{position: relative;background-color: #fff;padding:0.5rem 2.5%;margin-bottom:0.5rem; border-bottom:1px solid #eee;}
+.detail-score-centent {position: relative;height: 1.4rem;}
+.detail-score-centent a {position: relative;color: #666;text-align: center;}
+.detail-score-centent a:after {content: " ";border-left: 1px solid #eee;height:1rem;width: 0;font-size: 0;position: absolute;right: 0; top: 50%;   margin-top:-0.5rem;}
+.detail-score-centent a:last-child:after{ content:none;}
+.detail-score-centent a span {display: block;line-height:0.7rem;}
+.detail-score-centent a .score-num {font-size:0.8rem;}
+.detail-score-centent a .score-text{font-size:0.6rem;margin-top:0.25rem;}
+
+
+.shop-detail-item{margin-bottom:0.5rem; border-top:1px solid #eee; border-bottom:1px solid #eee; background:#fff;}
+.shop-detail-item .shop-item-list{ height:2rem; line-height:2rem;position: relative;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;
+display: flex;-webkit-box-align: center;-webkit-align-items: center;-ms-flex-align: center;align-items: center; padding:0 2.5%;}
+.shop-detail-item .shop-item-list .item-list-left{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;display: block;color: #232323;font-size:0.65rem; padding-right:0.5rem;}
+.shop-detail-item .shop-item-list .item-list-left .list-title,.shop-detail-item .shop-item-list .item-list-left .list-desc {display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; color:#222;}
+.shop-detail-item .shop-item-list .item-list-left .list-title{ width:70px;}
+.shop-detail-item .shop-item-list .item-list-left .list-desc{ margin-left:10px;color:#999;}
+.shop-detail-item .shop-item-list .item-list-right {text-align: right;color: #232323;display: block;font-size: .52rem;position: relative;}
+.shop-detail-item .shop-item-list .item-list-right:after {content: " ";display: inline-block;position: relative;top:0.5rem;margin-left:0.5rem; background-repeat: no-repeat;background-size: contain;}
+.customer-service:after{ width:1rem; height:1rem; background:url(../images/dianpu/customer_service_bg.png);}
+.phone-number:after{ width:1rem; height:1rem; background:url(../images/dianpu/phone_number_bg.png);}
+.shop-qrcode:after{width:0.8rem; height:0.8rem; background:url(../images/dianpu/shop_qrcode_bg.png); vertical-align:top;}
+
+
+/*二维码弹出层*/
+.shop-qrcode-section .qrcode-mask {position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: 999;background: rgba(0,0,0,.75);overflow: hidden;}
+.qrcode-box {position: fixed;left: 50%;top: 50%;background: #F8F8F8;z-index: 10000;-webkit-transform: translate3d(-50%,-50%,0);-moz-transform: translate3d(-50%,-50%,0);transform: translate3d(-50%,-50%,0);border-radius:0.15rem;overflow: hidden; max-width:300px;}
+.qrcode-content {position: relative;}
+.qrcode-content-hd {color: #222;font-size:18px;line-height:1.2rem;display: block;border-bottom: 1px solid #eee;padding:0.5rem; white-space: nowrap;overflow: hidden;text-align: center;text-overflow: ellipsis;}
+.qrcode-content-bd {position: relative;padding:0.5rem 0;text-align: center;display: block;}
+.qrcode-content-bd img {display: block;width:11rem;height:11rem; margin:0 auto;}
+.qrcode-tips {display: block;color: #686868;font-size:0.65rem;padding-top:0.5rem;}
+.common-field {padding: 0 2.5%}
+.common-field .name{ width:70px;}
+.common-field .name,.common-field .content .info{ font-size:0.65rem;}

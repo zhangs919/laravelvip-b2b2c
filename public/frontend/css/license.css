@@ -1,0 +1,35 @@
+@charset "utf-8"; 
+/*公共样式*/
+body, td, input, textarea, select, button { color: #666; font-size: 12px; font-family: "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif; }
+html, body, ul, ol, li, dl, dt, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset { margin: 0; padding: 0;}
+img { border: none; }
+.w990 { width: 990px; margin: 0px auto}
+
+.box-mod { margin: 50px auto;}
+.box-mod .box-hd h2 { font-family: 'MicroSoft YaHei'; font-size: 20px; color: #424242;}
+.box-mod .box-hd p { margin-top: 5px; color: #A9A9A9;}
+.box-mod .box-hd p a { text-decoration: none; color: #439BC5;}
+.box-mod .box-item { border: 1px solid #EAEAEA; padding: 10px 15px; margin-top: 20px; color: #424242; text-align: center; overflow: hidden;}
+.box-mod .box-item img { max-width: 100%; max-height: 100%;}
+
+.bomb-box-mod { width: 470px; background-color: #E2EEFF; border: 1px solid #A9CCFF; padding: 3px;}
+.bomb-box { width: 450px; font-size: 12px; padding: 5px 10px; background-color: #fff;}
+.bomb-box h5 { color: #999; margin: 3px 0; font-size: 14px;  border-bottom: 1px dotted #C3C3C2; padding-bottom: 5px; font-weight: normal;}
+.bomb-box .content{ text-align: center;}
+.bomb-box .content h3 { font-size: 16px; color: #333; margin: 10px 0; font-weight: normal;}
+.bomb-box .content p { text-align: left; color: #666;}
+.bomb-box .content .check { border: 1px solid #d7d7d7; padding: 10px; font-size: 14px; line-height: 30px; margin: 15px 0;}
+.form-horizontal .form-group { clear: both }
+.form-horizontal .form-group-spe{ margin: 10px 0px 20px}
+.form-horizontal .form-group .form-control-box{ position: relative; display: inline-block;line-height: 30px;}
+
+.form-horizontal .form-group input[type="text"]:focus,.form-horizontal .form-group input[type="text"]:hover,.form-horizontal .form-group input[type="text"]:active{ background-color: #fff;/* border: 1px solid;  border-color: #1B9AF7; -moz-box-shadow: 0 0 0 2px rgba(82, 168, 236, 0.15); -webkit-box-shadow: 0 0 0 0 2px rgba(82, 168, 236, 0.15); box-shadow: 0 0 0 2px rgba(82, 168, 236, 0.15);*/ outline: 0 none; border:1px solid #aaa}
+.form-horizontal .form-group input[type="text"]{ line-height: 20px; height: 20px; padding: 5px; border-radius: 2px; border: 1px solid #ccc; box-shadow: 0 1px 2px 0 #f0f0f0 inset; background: #fff; vertical-align: middle;}
+.form-horizontal .form-group input.error,.form-horizontal .form-group input.error:hover,.form-horizontal .form-group input.error:active,.form-horizontal .form-group input.error:focus{/*border: 1px dashed rgb(237, 85, 100);background-color: #FFBFBF;color: #333;box-shadow: 0px 0px 0px 2px rgba(232, 71, 35, 0.15);*/ border:1px solid rgb(237, 85, 100)}
+.form-horizontal .form-group input[type="text"].input-small{ width: 60px;}
+
+.form-horizontal .form-group .form-control-error{ color: #E31939; vertical-align: middle; margin-top: 5px; display: block;}
+.form-horizontal .form-group .form-control-error i{ width: 16px; height: 16px; background: url(../images/user-icon.png) no-repeat; background-position: -30px -134px; margin-right: 5px; vertical-align: middle; display: inline-block;}
+
+.btn{font-family: "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif; display: inline-block; padding: 0 10px; height: 32px; line-height: 30px; color: #666; min-width: 80px; cursor: pointer; text-align: center; font-size: 12px; font-weight: 400; box-sizing: border-box; vertical-align: middle; -webkit-appearance: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; outline:0; text-decoration: none; background-image: none; background-color: #f6f6f6; border: 1px solid #ccc; border-radius:2px;}
+.btn:hover{ color:#333}

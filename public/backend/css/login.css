@@ -1,0 +1,82 @@
+@charset "utf-8";
+img,button,input{ border:0px;}
+body { background: #f8f8f8; /*font-family: 'PT Sans', Helvetica, Arial, sans-serif;*/font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei",华文细黑,STHeiti,MingLiu; text-align: center; color: #fff;}
+h1 { font-size: 48px; font-weight: 200; text-shadow: 0 1px 4px rgba(0,0,0,.2); margin-bottom:5px; }
+form { position: relative; width: 305px; margin: 15px auto 0 auto; text-align: center;}
+input:-webkit-autofill { -webkit-animation-name: autofill; -webkit-animation-fill-mode: both;}
+@-webkit-keyframes autofill { to { color: #fff; background: transparent; } }
+
+/*登录样式*/
+.input-text-box input.input-text{ font-size: 14px; font-family: "Microsoft YaHei", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Helvetica, Arial, sans-serif; color: #fff; height: 28px; padding: 5px 6px; position: relative; z-index: 1; background: #2d2d2d; background: rgba(45,45,45,.15); border: 1px solid #3d3d3d; border: 1px solid rgba(255,255,255,.15); -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; text-shadow: 0 1px 2px rgba(0,0,0,.1); -moz-box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset; -webkit-box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset; box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset; -o-transition: all .2s; -moz-transition: all .2s; -webkit-transition: all .2s; -ms-transition: all .2s; }
+.input-text-box input.input-text:-moz-placeholder {color: #fff;}
+.input-text-box input.input-text:-ms-input-placeholder {color: #fff;}
+.input-text-box input.input-text::-webkit-input-placeholder {color: #fff;}
+.input-text-box input.input-text:focus {
+filter:progid:DXImageTransform.Microsoft.gradient(enabled='true', startColorstr='#3F000000', endColorstr='#3F000000'); background: rgba(0,0,0,0.25); outline: none; border-color: rgba(255,255,255,0.5); -moz-box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset, 0 0 0 2px rgba(255,255,255,0.15); -webkit-box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset, 0 0 0 2px rgba(255,255,255,0.15); box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset, 0 0 0 2px rgba(255,255,255,0.15); }
+.submit { cursor: pointer;  width: 300px; height: 36px; margin-top: 15px; padding: 0; background:#F47A4D;border-radius: 6px; border: 0px;font-family: 'PT Sans', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700;  color: #fff; }
+.submit:hover { background:#F3713F}
+.submit:active { border: 0px solid #ef4300;}
+.input-code { width: 88px; float:left; }
+.page-container {min-width:700px; min-height:100%; }
+.center{position:fixed;left: 50%;margin-left: -350px;top: 50%;margin-top: -140px; width:700px}
+.logo-info{float:left; margin-top:30px;width: 280px;}
+.logo-info p{ font-size:14px;text-shadow: 2px 2px 2px rgba(0,0,0,0.25);}
+.logo-info img{ max-width:270px; max-height:70px;}
+.line{width:1px; margin:0px 40px; float:left;opacity: 0.5;}
+.form-info{float:left;}
+.captchaImg{ float:left;margin-top: 3px;margin-left: 20px; background: #fff;width: 100px;height: 34px;}
+.captchaImg img{margin: 4px auto; cursor:pointer;}
+.bottom { font-family: Verdana, Tahoma; line-height: 16px; color: #FFF;  text-shadow: 1px 1px 0 rgba(0,0,0,0.25); text-align: center; width: 100%;position:fixed; bottom:20px;}
+.bottom h5 { font-size: 12px; margin:0;}
+.bottom h6 { font-size: 10px;margin:0;font-weight: 200;}
+.bottom a {color: #FFFFFF; text-decoration: none;}
+.form-group { width: 300px; position: relative;  margin-bottom: 7px;}
+.form-group label.tit { font-size: 14px;  font-weight: 600; line-height: 20px;color: #FFF; display: block;  height: 20px;  padding-right: 10px; border-right: dotted 1px #FFF; position: absolute;  z-index: 9; top: 10px;left: 10px;}
+.username, .password { width: 234px;padding-left: 56px !important;}
+/*记住密码*/
+.checkbox-signup{ overflow:hidden; text-align:left;padding-top: 7px; margin-bottom:0;}
+.checkbox-signup input[type="checkbox"],.checkbox-signup label{ cursor:pointer;}
+.checkbox-signup label{ font-size:12px !important; font-weight:300 !important;}
+.checkbox-signup input[type="checkbox"]{ margin-right:7px; vertical-align:middle;}
+/*忘记密码*/
+.forget-password{ float:right; color:#fff !important; cursor:pointer;}
+/*报错样式*/
+.form-group{ position:relative; max-height:40px;}
+.tip-error{color: #000;background-color: #fff9c9;text-align: left;min-width: 50px;max-width: 300px;border: 1px solid #c7bf93;border-radius: 4px;-moz-border-radius: 4px;-webkit-border-radius: 4px;z-index: 1000;padding: 6px 8px;box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);transition: all 0.2s ease 0s;}
+.tip-arrow{background:url(../images/login/tip_arrows.gif) no-repeat -27px 0;width: 6px;height: 9px;margin-top: -4px;margin-left: -6px;top: 50%;left: 0;position: absolute;overflow: hidden;font: 1px/1px sans-serif;}
+.tip-arrow.tip-arrow-top{ background-position: 0 0; height: 6px; left: 50%; margin-left: -30px; margin-top: -6px; top: 0; width: 9px;}
+.tip-error .tip-inner { background-position: -10px -10px;}
+.tip-error .tip-inner {font: 12px/16px arial,helvetica,sans-serif;  white-space:nowrap}
+.tip-error{visibility: visible;position: absolute;top: 5px;left: 310px;}
+.captcha .tip-error{ left:235px;}
+
+/*登录背景切换*/
+#supersized-loader { position: absolute; top: 50%; left: 50%; z-index: 0; width: 60px; height: 60px; margin: -30px 0 0 -30px; text-indent: -999em; }
+#supersized { display: block; position: fixed; left: 0; top: 0; overflow: hidden; z-index: -999; height: 100%; width: 100%; }
+#supersized img { width: auto; height: auto; position: relative; display: none; outline: none; border: none; }
+#supersized.speed img { -ms-interpolation-mode: nearest-neighbor; image-rendering: -moz-crisp-edges; }	/*Speed*/
+#supersized.quality img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality; }			/*Quality*/
+#supersized li { display: block; list-style: none; z-index: -30; position: fixed; overflow: hidden; top: 0; left: 0; width: 100%; height: 100%; background: #111; }
+#supersized a { width: 100%; height: 100%; display: block; overflow: hidden}
+#supersized li.prevslide { z-index: -20; }
+#supersized li.activeslide { z-index: -10; }
+#supersized li.prevslide img,
+#supersized li.activeslide img { display: inline; }
+#supersized img { max-width: none !important }
+#supersized i { _zoom: 67;}
+
+/*找回密码页面*/
+.psd-head{text-align: center; font-size:26px; color:#fff; font-weight:normal;}
+
+/*登录页面左侧导航样式*/
+.login-menu{ position:fixed; top:50%; right:0%; margin-top:-140px; width:100px  }
+.login-menu ul li{ display:block; margin:10px 0px;}
+.login-menu ul li a{ display:block; width:100px; height:42px; text-align:center; transition: all 0.1s; color:#fff; line-height:42px; font-size:16px; background:#80B0FA;}
+.login-menu ul li a i{ margin-right:5px; font-size:30px; vertical-align: middle; margin-top:-3px; display:none}
+.login-menu ul li.current a{ }
+.login-menu ul li.current a i{ display:inline-block}
+.login-menu ul li a.blue-bg{ background:#80B0FA}
+.login-menu ul li a.red-bg{ background:#F04B4B}
+.login-menu ul li a.green-bg{ background:#71CB45}
+.login-menu ul li a.yellow-bg{ background:#FFC80B}
+.login-menu ul li:hover a{ transition: all 0.1s; font-size:17px; }

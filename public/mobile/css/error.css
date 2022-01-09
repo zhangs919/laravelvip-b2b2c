@@ -1,0 +1,5 @@
+@charset "utf-8";
+body{ background:#f3f5f7;}
+.font12{ font-size:18px; line-height:50px; text-align:center; color:#333}
+ /* 页面头部  */
+.error-tip-img{height: 5rem;width: 5rem;text-align: center;display: block;margin: 0 auto; background:url(../images/error-tip-img.png); background-size:contain;}

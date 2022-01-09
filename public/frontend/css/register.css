@@ -1,0 +1,110 @@
+@charset "utf-8"; 
+.item .icon, .reg-content .reg-form .msg-wrap .msg-icon, .item-coagent a i, .item-coagent a:hover i, .reg-con .reg-switch a, .reg-mobile .default-state .qrcode-desc i { background: url(../images/login-regiser-icon.png) no-repeat;}
+/*头部*/
+.header { width: 990px; min-width: 990px; height: 90px; padding: 0px;}
+.logo-info { width: 920px; margin: 0 auto; position: relative; z-index: 5; }
+.logo-info a.logo { float: left;}
+.logo-info span.findpw { border-left: 1px #eee solid; width: auto; height: 44px; line-height: 44px; font-size: 28px; margin: 18px 0px 0px 15px; float: left; padding: 0px 15px; color: #333;}
+
+/*注册切换*/
+.reg-type{ height: 40px; line-height: 40px; padding: 5px 0px 0px; margin: 15px 0px 0px; position: relative; z-index: 2;}
+.reg-type .login-info { position: absolute; top: 5px; right: 15px;}
+.reg-type ul{ height: 41px; line-height: 40px; display: inline-block; border-bottom: 1px #ddd solid; position: absolute; top: 2px; left: 160px;}
+.reg-type ul li{ float: left; height: 40px; line-height: 40px; margin-right: 10px; border: 1px #ddd solid; background: #f8f8f8; font-size: 14px; cursor: pointer;}
+.reg-type ul li.active{ border-width: 2px 1px 0px; border-style: solid; border-color-left: #ddd; border-color-right: #ddd; border-color-bottom:#fff; background: #fff;}
+.reg-type ul li a{ display: inline-block; width: 100%; height: 100%; padding: 0px 35px;}
+
+.reg-wrap{ padding: 40px; border: 1px #ddd solid; margin-top: -2px; z-index: 1;}
+.reg-wrap .reg-wrap-con{ background-size: 420px 220px;}
+.reg-wrap .login-radio{ margin-left: 120px;}
+.reg-wrap .login-radio label{ height: 30px; line-height: 30px; margin-right: 15px; font-size: 14px; cursor: pointer; display: inline-block;}
+.reg-wrap .login-radio label input{ vertical-align: middle; margin-top: -1px; cursor: pointer;}
+.reg-wrap .login-radio label span{ vertical-align: middle; cursor: pointer;}
+
+.form-horizontal .form-group-spe{ margin: 0px 0px 30px; position: relative;}
+.form-horizontal .form-group .form-control-error{ display: block; position: absolute; left: 116px; top: 47px;}
+
+.form-horizontal{ margin-top: 20px; margin-left: 0px; padding-top: 0px;}
+.form-horizontal .form-group label.input-left{ width: 100px; line-height: 38px; }
+.form-horizontal .form-group .form-control-box{ line-height: 38px;}
+.form-horizontal .form-group input[type="text"], .form-horizontal .form-group input[type="password"]{ line-height: 28px; height: 28px;}
+.form-horizontal .form-group input[type="text"].input-small{ width: 100px; }
+.form-group .form-control-box .pwd-toggle{ background: url(../images/user-icon.png) no-repeat; width: 15px; height: 15px; vertical-align: middle; margin-right: 4px; display: inline-block; position: absolute; top: 16px; right: 10px; cursor: pointer;}
+.form-group .form-control-box .pwd-toggle.fa-eye-slash { background-position: -24px -30px;}
+.form-group .form-control-box .pwd-toggle.fa-eye { background-position: -24px -50px;}
+
+.phonecode{ background: #F6F6F6; border: 1px solid #d9d9d9; cursor: pointer; padding: 0 8px; display: inline-block; line-height: 38px; height: 38px; color: #666; margin-left: 10px; text-align: center; width: 120px; vertical-align: middle;}
+
+.agreement{ margin-bottom: 15px; overflow: hidden; width: 334px; height: 18px; line-height: 18px; }
+.agreement label{ cursor: pointer; }
+.agreement label .checkbox{ margin: 0px 3px 0 0; vertical-align: middle; cursor: pointer; }
+.agreement label span{ vertical-align: middle; cursor: pointer; }
+
+.reg-btn{ width: 262px; margin-bottom: 20px; margin-left: 120px; overflow: hidden; }
+.reg-btn .btn-img{ width: 262px; height: 35px; font-size: 14px; color: #FFF; text-align: center; line-height: 35px; text-decoration: none; cursor: pointer; letter-spacing: 2px; border: none; }
+
+.modal-dialog { width: 60%; margin: 30px auto;}
+.protocol{ height: 310px; padding: 10px; line-height: 20px; overflow-x: hidden; overflow-y: auto; margin-bottom: 25px;}
+.protocol-con { padding: 15px 20px; line-height: 2em;}
+
+.reg-wrap .form-horizontal .form-group .form-control-box label, .reg-wrap .form-horizontal .form-group .form-control-box label input{ cursor: pointer;}
+
+/*企业注册*/
+.reg-enterprise{ padding: 40px; border: 1px #ddd solid; margin-top: -2px; z-index: 1;}
+.service-notes{ padding: 15px; background: rgba(93,178,255,.1);}
+.service-notes h2{ font-size: 16px; font-weight: 400;}
+.service-notes ul{ padding: 10px 15px 0px;}
+.service-notes ul li{ height: 25px; line-height: 25px;}
+.reg-enterprise .form-horizontal{ width: 100%; margin-top: 0px;}
+.reg-enterprise .form-horizontal h2{ font-size: 14px; font-weight: normal; background: #fafafa; height: 40px; line-height: 40px; text-indent: 15px; margin: 20px 0px;}
+.reg-enterprise .form-horizontal .form-group label.input-left{ width: 300px;}
+.reg-enterprise .form-horizontal .form-group label.input-left{ font-size: 12px;}
+.reg-enterprise .form-horizontal .form-group .form-control-box{ max-width: 570px;}
+.reg-enterprise .form-horizontal .form-group .select{ vertical-align: baseline;}
+.reg-enterprise .form-horizontal .form-group .radio-spe{ line-height: 30px; vertical-align: middle; display: inline-block;}
+.reg-enterprise .form-horizontal .form-group .radio-spe label{ margin-right: 10px; cursor: pointer; white-space: nowrap;}
+.reg-enterprise .form-horizontal .form-group .radio-spe label input{ margin-left: 3px;cursor:pointer;vertical-align: sub;}
+.reg-enterprise .form-horizontal .form-group .radio-spe label span{ margin-left: 3px; cursor: pointer;}
+.reg-enterprise .form-horizontal .form-group span.hint{ margin-left: 320px;}
+.reg-enterprise-btn{ width: 262px; margin-bottom: 20px; margin-left: 320px; overflow: hidden; }
+.reg-enterprise-btn .btn-img{ width: 262px; height: 35px; font-size: 14px; color: #FFF; background: #E31939; text-align: center; line-height: 35px; text-decoration: none; cursor: pointer; letter-spacing: 2px; border: none; }
+
+/*注册成功*/
+.reg-succeed{ width: 100%; min-height: 400px; margin: 0px auto; text-align: center; background: #F3FDF6}
+.reg-succeed .message{ width: 600px; padding: 140px; height: 80px; margin: 0px auto;}
+.reg-succeed .message i{ width: 80px; height: 80px; background: url(../images/alipay_bank/success.png) no-repeat; display: inline-block; vertical-align: middle; margin-right: 10px; float:left;}
+.reg-succeed .message .message-info{ float: left;text-align: left;}
+.reg-succeed .message .message-info span{ font-size: 24px; padding-top: 5px; display: inline-block;}
+.reg-succeed .message .message-info span span{ margin: 0px 5px;}
+.reg-succeed .go-to-btn{ text-align: left;}
+.reg-succeed .go-to-btn a{ padding: 8px 0px; margin: 0px 5px; font-size: 12px; display: inline-block;}
+.reg-succeed .go-to-btn em{ color: #999;}
+.reg-succeed .validate{ width: 470px; padding: 20px 15px; margin: 15px auto; border: 1px #f4d3d3 solid; background: #fcdede;}
+.reg-succeed .validate p{ color: #666; font-size: 14px; text-align: left;}
+.reg-succeed .validate .form-horizontal{ width: 470px; margin-top: 0px;}
+.reg-succeed .validate .form-horizontal .form-group label.input-left{ width: 80px; margin-right: 5px; color: #666;}
+.reg-succeed .validate .form-horizontal .form-group input[type="text"]{ width: 200px; height: 20px; line-height: 20px;}
+.reg-succeed .validate .form-horizontal .validate-btn{display: inline-block; padding: 0 10px; height: 30px; line-height: 30px; color: #fff; min-width: 80px; cursor: pointer; text-align: center; font-size: 12px; font-weight: 400; margin-left: 5px; vertical-align: middle;}
+
+/*注册关闭*/
+.reg-close{ margin: 70px auto 30px; width: 990px; min-height: 250px; overflow: hidden;}
+.reg-close-l{ float: left; width: 350px; height: 370px; margin-left: 40px; background: url(../images/reg-close.png) no-repeat;}
+.reg-close-r{ float: right; width: 500px; font-size: 14px; line-height: 1.5;}
+.reg-close-r .reg-close-title{ width: 500px; height: 80px; text-align: center;}
+.reg-close-r .reg-close-title p{ font-size: 30px; height: 70px; line-height: 70px; font-family: Tahoma, Geneva, sans-serif;}
+.reg-close-r .reg-close-line{ width: 500px; height: 2px; background: url(../images/error-line.png) no-repeat;}
+.reg-close-r .reg-close-info{ margin-left: 100px; padding: 30px 0px; list-style: none; overflow: hidden;}
+.reg-close-r .reg-close-info .title{ line-height: 40px; font-size: 16px; color: #333;}
+.reg-close-r .reg-close-info .reg-close-con{ width: 350px; height: auto; max-height: 120px;line-height: 28px; text-indent: 24px; font-size: 12px; overflow: hidden;}
+.reg-close-r .reg-close-info .reg-close-btn{ margin-top: 15px; color: #333;}
+.reg-close-r .reg-close-info .reg-close-btn a{ margin: 0px 5px;}
+
+/*账号绑定*/
+.wellcome-tip { height: 28px; line-height: 28px; margin-bottom: 30px; margin-left: 120px; font-size: 14px;}
+.wellcome-tip img { margin-right: 10px; border-radius: 30px; vertical-align: middle;}
+/*底部*/
+.footer-info{ background: #fff; color: #666; padding: 0px;}
+.footer-info .info-text { width: 990px; }
+.footer-info .info-text .nav-bottom a { color: #666; }
+.footer-info .info-text p a { color: #666; }
+.footer-related { background: #fff none repeat scroll 0 0; padding: 0 0 0; }

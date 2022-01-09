@@ -1,18 +1,19 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
-
-# Other files and folders
-.settings/
-
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
-
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+/node_modules
+/public/hot
+/public/upload
+/public/demo
+/public/storage
+/public/frontend/css/custom/site-color-style-0.css
+/storage/*.key
+/vendor
+/.idea
+/.vscode
+/.vagrant
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.env
+composer.lock
+/backup/*.zip
+/database/migrations

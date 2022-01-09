@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+.content{ min-height: 350px;}
+.content .content-left{ width: 210px; float: left; overflow: hidden;}
+.menu-list h4 b{ background: url(../images/common-icon.png) no-repeat;}
+.title{ height: 40px; line-height: 40px; color: #fff; font-size: 16px; padding-left:25px;}
+.article-menu{ border: 1px solid #eee; background-color: #f9f9f9;}
+.article-menu .menu-list{ }
+.article-menu .menu-list.last{ border-bottom:0;}
+.article-menu .menu-list h4{ height: 40px; line-height: 40px; padding-left: 25px; color: #4a4a4a; font-size: 14px; font-weight: normal;}
+.article-menu .menu-list h4 b{ float: right; width: 11px; height: 11px; margin-top: 1px; background-position: -26px -59px; overflow: hidden; cursor: pointer; margin: 14px 20px 0 0;}
+.article-menu .menu-list.current{ background-color: #fff;}
+.article-menu .menu-list.current h4 { background: #f9f9f9;}
+.article-menu .menu-list.current h4.last{ border:none;}
+.article-menu .menu-list.current h4 b{ background-position: -40px -59px;}
+.article-menu .menu-list ul{ display: none; padding: 0 10px;}
+.article-menu .menu-list ul li { padding-left: 32px; height: 36px; line-height: 36px; overflow: hidden; border-top: 1px dashed #eee;}
+.article-menu .menu-list ul li.first { border-top: none;}
+.article-menu .menu-list ul li.curr a{ color: #E31939;}
+
+.content .content-right{ width: 990px; float: right; overflow: hidden;}
+.content .content-right .mod-tit{ height: 40px; line-height: 40px; background: #f9f9f9; padding: 0 10px; font-size: 14px; position: relative; border: 1px solid #eee;}
+.content .content-right .mod-tit h4{ font-weight: normal;}
+.content .content-right .mod-tit .article-search{ position: absolute; right: 10px; top: 5px; overflow: hidden;}
+.content .content-right .mod-tit .article-search .article-input{ border: 0; height: 28px; border: 1px solid #eee; border-right: 0; background: #fff; width: 200px; float: left; font-size: 12px; padding: 0 10px;}
+.content .content-right .mod-tit .article-search .article-search-btn{ float: left; height: 29px; border: 0; padding: 0 10px; text-align: center; color: #fff; font-size: 12px; cursor: pointer;}
+.content .content-right .right-inner { border: 1px solid #eee; border-top: none;}
+.content .content-right .right-inner .article-list th{ font-weight: normal; padding: 10px; font-size: 14px;}
+.content .content-right .right-inner .article-list td{ border-top: 1px solid #eee; padding: 10px;}
+.content .content-right .right-inner .article-list td a{ text-decoration: none;}
+
+/*文章内容*/
+.content .content-right .article-right{ width: 948px; padding: 15px 20px; border: 1px solid #eee;}
+.content .content-right .article-right .article-tit { text-align: center;  padding-bottom: 10px; line-height: 150%; border-bottom: 1px dashed #ddd;}
+.content .content-right .article-right .article-tit h3{ font-size: 18px; font-weight: normal; color: #666;}
+.content .content-right .article-right .article-tit p{ padding-top: 10px; color: #999;}
+.content .content-right .article-right .article-detail { width: 948px; padding: 15px 0px; line-height: 2em;}
+.content .content-right .article-right .article-detail img{ max-width: 100%; height: auto;}
+.content .content-right .article-right .source{ padding: 10px 0px; text-align: right;}
+.content .content-right .article-right .article-bottom { border-top: 1px solid #eee; padding: 10px 0; line-height: 20px; color: #999;}
+.content .content-right .article-right .article-bottom .article-bottom-left{ float: left;}
+.content .content-right .article-right .article-bottom .article-bottom-right{ float: right;}
+.content .content-right .article-right .article-bottom a{ margin: 0px 5px;}
+/*没有文章内容*/
+.tip-box{ width: 300px; height: 300px; margin: 0px auto; text-align: center; padding-top: 80px;}
+.tip-box .tip-icon{ display: block; max-width: 100%; max-height: 100%; margin: 0 auto;}
+.tip-box .tip-text{ line-height: 20px; padding: 10px; font-size: 14px;}
+.tip-box .tip-text p{ height: 40px; line-height: 40px;}
+
+.site-footer{ z-index: 1;}

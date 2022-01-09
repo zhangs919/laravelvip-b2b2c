@@ -1,0 +1,99 @@
+@charset "utf-8";
+/* CSS Document */
+.footer-info{ margin-top: 0px; padding-top: 15px;}
+
+/*筛选*/
+.classify-screen{ border: 1px solid #ececec; font-size: 12px; padding: 5px 20px 0px; margin: 15px auto;}
+.classify-box { padding: 10px 0px;}
+.classify-box-reg{ border: none;}
+.classify-box .classify-name{ width: 100px; float: left; font-size: 14px; font-weight: 400; text-indent: 15px;}
+.classify-box .classify-screen-con{ float: left; width: 1060px;}
+.classify-box .classify-screen-con .classify-choose{ width: 1060px; float: left;}
+.classify-box .classify-screen-con a { display: inline-block; color: #666; font-size: 12px; width: 100px; height: 20px; line-height: 20px; margin-bottom: 5px; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+.classify-box .classify-screen-con a:hover { text-decoration: none;}
+.classify-box .classify-screen-con a span { padding: 3px 10px;}
+.classify-box .classify-screen-con a:hover span { color: #ffffff;}
+.classify-box .classify-screen-con a.selected span { color: #ffffff;}
+.classify-screen-con1{ float: left; width: 1040px; margin: 8px 10px 10px 0px; background: #FBFBFB; padding: 10px 10px 5px; border: 1px solid #f0f0f0;}
+
+/*排序*/
+#filter { border: 1px solid #EEE; background: #FFF; margin: 10px auto 15px;}
+#filter .order b{ background: url(../images/common-icon.png) no-repeat;}
+#filter.filter-fixed { position: fixed;top: 0; z-index: 999999; width: 1208px;}
+#filter.filter-fixed .fore2 { display: none;}
+#filter .fore1 { background: #F9F9F9; height: 38px; line-height: 38px; overflow: hidden;}
+#filter dl{ float: left; height: 38px; margin-right: 20px;}
+#filter dt, #filter dd{ float: left; height: 38px; line-height: 38px;}
+#filter .order a { display: block; height: 38px; padding: 0 18px; border-left: solid 1px #F9F9F9; border-right: solid 1px #F9F9F9; margin-left: -1px;}
+#filter .order .first a, #filter .order .curr.first a { margin-left: 0; border-left: 0;}
+#filter .order .curr a, #filter .order a:hover { position: relative; z-index: 1; background: #FFF; border-color: #eee;}
+#filter .order i{vertical-align: middle; color: #DDDDDD;}
+#filter .shop-name input{ width: 150px; line-height: 25px; height: 25px; padding: 0px 5px; border-radius: 2px; border: 1px solid #ddd; background: #fff;  vertical-align: middle; margin-top: -2px;}
+#filter .shop-name input.btn{ width: 60px; min-width: 60px; color: #fff; vertical-align: middle;  border: none; margin-top: -2px; margin-left: 5px;}
+.filter-tag, .filter-tag-radio { float: left; height: 38px; line-height: 38px; margin-left: 17px; cursor: pointer; color: #666; white-space: nowrap;}
+.filter-tag .icon, .filter-tag-radio .icon { background: url(../images/common-icon.png) no-repeat; float: left; margin-top: 13px; width: 13px; height: 13px;}
+.filter-tag .icon { background-position: -26px -12px;}
+.filter-tag:hover .icon, .filter-tag.curr .icon { background-position: -40px -12px;}
+.filter-tag .text, .filter-tag-radio .text { float: left; margin-left: 4px;}
+.filter-tag-radio .icon { background-position: -56px -12px;}
+.filter-tag-radio.curr .icon, .filter-tag-radio:hover .icon { background-position: -71px -12px;}
+
+/*列表形式*/
+.main { width: 1210px; margin: 0px auto;}
+.shop-list{ width: 1227px; display: inline-block;}
+.shop-list li { float: left; width: 390px; height: 295px; border: 1px solid #ececec; position: relative; cursor: pointer; margin-right: 17px; margin-bottom: 15px; overflow: hidden;}
+.shop-list li:hover { border-width: 1px; border-style: solid;}
+.shop-list li .brand-logo { position: absolute; width: 80px; height: 30px; background: #fff; top: 5px; left: 5px; z-index: 2;}
+.shop-list li a { height: 100%; width: 100%; display: block; text-decoration: none; position: absolute; top: 0; left: 0; z-index: 8; cursor: pointer;}
+.shop-list li a:hover { text-decoration: none;}
+.shop-list li .p-img { position: relative; width: 390px; height: 200px; overflow: hidden; margin: 0 auto; text-align: center; cursor: pointer;}
+.shop-list li .p-img img { vertical-align: top; width: 390px; height: 200px;}
+.shop-list .shop-info { width: 350px; height: 90px; padding: 0 20px;}
+.shop-list .shop-info .shop-name-wrap { height: 45px; padding: 5px 0px; overflow: hidden;}
+.shop-list .shop-info .shop-name-wrap .shop-logo{ width: 90px; height: 45px; margin-right: 20px;}
+.shop-list .shop-info .shop-name-wrap .shop-logo img{ width: 90px; height: 45px;}
+.shop-list .shop-info .shop-name-wrap .shop-name { width: 240px; font-size: 16px; height: 45px; line-height: 45px; color: #666; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+
+.shop-list .shop-info .line { width: 100%; height: 1px; border-bottom: 1px #ddd dashed; display: block; overflow: hidden;}
+.shop-list .shop-info .shop-desc{ height: 20px; padding: 10px 0px; overflow: hidden;}
+.shop-list .shop-info .shop-desc p{ height: 20px; color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+.shop-list-wall .shop { margin: 30px auto; height: 220px; overflow: hidden;}
+.shop-list-wall .shop .shop-info { float: left; background-color: #F9F9F9; margin-right: 10px; width:322px; height: 220px; overflow: hidden;}
+.shop-list-wall .shop .shop-info .shop-tit { width: 282px; height: 120px; overflow: hidden; float: left; background-color: #ebebeb; position: relative; padding: 20px;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-logo { width: 68px; height: 68px; overflow: hidden; border-radius: 50%; float: left;}
+.shop-list-wall .shop .shop-info .shop-tit .detail { float: left; margin-left: 12px;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-name { font-size: 14px; font-weight: bold; color: #333; max-width: 172px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-rank { margin-top: 5px; height: 24px;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-rank img{ max-height: 100%; max-width: 100%}
+.shop-list-wall .shop .shop-info .shop-tit .like { margin-top: 5px; color: #999; width: 200px; overflow: hidden;}
+.shop-list-wall .shop .shop-info .shop-tit .like span:first-child { margin-right: 6px;}
+.shop-list-wall .shop .shop-info .shop-tit .like .num { color: #666; margin-left: 4px;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-extend{ margin-top: 5px;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-extend .extend-right { margin-left: 59px; color: #999; position: relative; _top: -1px;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-extend .extend-right span { line-height: 20px; color: #666;}
+.shop-list-wall .shop .shop-info .shop-tit .shop-extend label { float: left;}
+.ww-light { width: 20px; height: 20px; vertical-align: middle; margin: 0px 0px 0 5px; display: inline-block;}
+.ww-light a{ width: 20px; height: 20px; line-height: 220px5px; display: inline-block; overflow: hidden;}
+.shop-list-wall .shop .shop-info .shop-tit .evaluate{ margin-top: 5px;}
+.shop-list-wall .shop .shop-info .shop-tit .evaluate label{ float: left; color:#999;}
+.shop-list-wall .shop .shop-info .shop-tit .evaluate span{ float: left;}
+.shop-list-wall .shop .shop-info .shop-tit .evaluate .item-icons{ float: left; margin-left: 10px;}
+.shop-list-wall .shop .shop-info .shop-tit .evaluate .item-icons img{ width: 16px; height: 16px; margin-right: 3px; display: inline-block; vertical-align: middle; overflow: hidden;}
+
+.shop-list-wall .shop .shop-info .assess { float: left; overflow: hidden; margin: 13px 10px 0px; display: inline-block;}
+.shop-list-wall .shop .shop-info .assess li { float: left; width: 100px; text-align: center; border-right: 1px #ccc dotted;}
+.shop-list-wall .shop .shop-info .assess li .assess-score { margin-top: 4px; color: #94a603;}
+.shop-list-wall .shop .shop-info .assess li .assess-score span { margin-right: 5px;}
+.shop-list-wall .shop .shop-info .assess li:last-child { border-right: 0;}
+.shop-list-wall .shop .goods-wall li { width: 210px; height: 218px; overflow: hidden; float: left; margin-left: 10px; position: relative; border: 1px #eee solid;}
+.shop-list-wall .shop .goods-wall li .goods-pic { height: 210px; width: 210px;}
+.shop-list-wall .shop .goods-wall li .mask { width: 100%; height: 30px; line-height: 30px; position: absolute; bottom: 0; background: rgba(255,255,255,0.8);}
+.shop-list-wall .shop .goods-wall li .mask .price { font-size: 14px; margin-left: 12px;}
+.shop-list-wall .shop .goods-wall li .mask .sell { color: #999; font-size: 12px; float: right; margin-right: 12px;}
+.shop-list-wall .shop .goods-wall li:first-child { margin-left: 0;}
+
+/*没有信息内容时显示*/
+.tip-box { width: 300px; height: 300px; text-align: center; margin: 80px auto 0px;}
+.tip-box .tip-icon { display: block; max-width: 100%; max-height: 100%; margin: 0 auto;}
+.tip-box .tip-text { line-height: 20px; padding: 10px; font-size: 14px;}

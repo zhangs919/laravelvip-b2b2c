@@ -1,0 +1,207 @@
+﻿#modules { z-index: 1; }
+.dropzone { padding: 20px; /* background: #eee;*/min-height: 400px; z-index: 0; border-radius: 10px; }
+.dragactive { outline: 1px solid red;  }
+.banner #nav-dropzone.nav-dragactive { outline: 1px solid red; background-color: #CBE3FB;}
+.draghover { outline: 1px solid blue; }
+.drop-item { cursor: pointer; margin-bottom: 10px; /*background-color: rgb(255, 255, 255);*/ 
+padding: 5px 10px; border-radisu: 3px; /* border: 1px solid rgb(204, 204, 204);*/ 
+position: relative; }
+.drop-item .remove { position: absolute; top: 5px; right: 5px; z-index:9999}
+
+
+/*新加修改样式*/
+.drop-item { border: 1px solid transparent; width: 1212px; margin: 0px auto;  padding: 0px; }
+.drop-item:hover { border: 1px dashed #5874d8}
+.drop-item.ui-sortable-helper { background: #fff; border: 3px solid #27a9e3; box-shadow: 0 0 10px rgba(0,0,0,0.25); cursor: move; opacity: 1; }
+.decor-btn { color: #fff;  background: #4DA2FD; padding: 2px 6px; font-size: 12px; border: 1px solid transparent; margin-left: 5px; visibility: hidden; margin-bottom: 5px; }
+.decor-btn i.fa{ margin-top:-2px;}
+.drop-item:hover .decor-btn { visibility: visible; }
+.drop-item.invalid{background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0%;border: 1px solid rgba(0, 0, 0,0.1);opacity: 0.4;}
+
+.store-wall-ad{position: relative;}
+.floor-layout .floor-content5{ width: 1210px !important;} 
+
+/*banner右侧内容特殊样式*/
+.banner #nav-dropzone{ width: 222px; margin-left: 383px;}
+.right-sidebar .drop-item { width: 220px; height: 220px; position: relative;}
+.right-sidebar .drop-item .proclamation1, .right-sidebar .drop-item .proclamation2, .right-sidebar .drop-item .sale-discount, .shortcut-menu, .nav-custom,.right-sidebar .drop-item .nav-login,.right-sidebar .drop-item .nav-shop-apply{ position: absolute;}
+.right-sidebar .operateEdit {top: 185px; right:0px; }
+
+/*楼层编辑按钮公共*/
+.selector,.title-selector{ position: absolute; top: 0px; left: 0px; font-size:0px; display: block; width: 34px !important; height: 34px !important; visibility: hidden; z-index: 33; background:url(../../images/design/edit_operate_bg.png) no-repeat 0 0;}
+.selector:hover,.title-selector:hover{background-position: 0px -34px;}
+.selector.setting-btn,.title-selector.setting-btn{background-position: -374px 0}
+.selector.setting-btn:hover,.title-selector.setting-btn:hover{background-position: -374px -34px;}
+.selector.style-btn,.title-selector.style-btn{background-position: -68px 0}
+.selector.style-btn:hover,.title-selector.style-btn:hover{background-position: -68px -34px;}
+.selector i.fa,.title-selector i.fa{ margin-right: 3px; display: none;}
+.set-style{ position: absolute; top: 0px; left: 0px; font-size: 12px; color: #fff; background: #4DA2FD; padding: 2px 5px 2px 1px; line-height: 20px; margin :0; z-index: 33;}
+.floor-layout .floor-con .floor-title h2 a.selector, .selector:hover, .set-style:hover{ color: #fff;}
+.floor .floor-con3 .floor-ad3 .up-three-ad .selector2, .floor .floor-con3 .floor-goods3 .down-three-ad .selector{ left: 10px;}
+.floor .floor-con2 .line-body .hot-word-con .selector, .floor .floor-con4 .hot-word-con .selector{ left: auto; right: 0px; top: -5px;}
+.shop3-title .selector{ top: 30px;}
+.shop-ad-group3 .shop-ad-group3-con .shop-ad-group-middle .selector, .shop-ad-group3 .shop-ad-group3-con .shop-ad-group-down .selector{ top: 20px;}
+.floor-title h3 .selector{ top: -10px; left: -25px}
+.floor-title .title-tags .selector{ left: auto; right: -15px; top: -10px;}
+.quality-info .title-selector{margin-top: 18px; right: 0px; left: auto;}
+/*.shop-floor1 .selector{ left: 110px}*/
+.right-sidebar .drop-item .proclamation1 .selector, .right-sidebar .drop-item .proclamation2 .selector, .right-sidebar .drop-item .sale-discount .selector,.right-sidebar .drop-item .shortcut-menu .selector,.right-sidebar .drop-item .nav-custom .selector,.right-sidebar .drop-item .nav-shop-apply .selector{visibility: hidden;}
+.floor-con9 .floor-layout ul li a .example-text{ display: inline-block; width: 220px; height: 220px;}
+/*装修示例文字*/
+.example-text { color: #777; text-align: center; position: relative; background: #eee!important; font-weight: 300;}
+.example-text.dark { background: #dedede!important;}
+.example-text.white { background: #fff!important;}
+.example-text:hover,.example-text:focus,.example-text:hover span,.example-text span { color: #777;}
+.example-text span { display:block; width: 100%; line-height: 24px; position: absolute; top: 50%; margin-top: -12px; font-size: 15px!important;}
+.example-text.special span { margin-top: -24px;}
+.example-text.floor-special span { top: 140px;}
+.example-custom { width: 1210px; min-height: 200px; height: auto;}
+.custom-box, .custom-box .custom { width: 1210px; min-height: 100px; height: auto;}
+.example-text.full-size { display: block; width: 100%; height: 100%;}
+.quality-item .example-text span{ padding-left: 140px;}
+/*示例文字特殊处理*/
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .example-text { display: block; width: 140px; height: 140px; position: absolute; top: -150px; left: 27px; -moz-transition: all .3s; -ms-transition: all .3s; -o-transition: all .3s; -webkit-transition: all .3s; transition: all .3s; }
+.floor-layout .floor-content4 .floor-right .floor-tabs-panel .item .example-text { left: 5px;}
+.floor-layout .floor-brand .tabs-brand ul li .example-text { display: inline-block; width: 100px; height: 40px;}
+.floor-layout .floor-content5 .floor-ad-img{ width: 210px; height: 485px; display: block;}
+
+
+/*前台样式处理*/
+.banner>.selector{width:34px;height:34px;margin-left:-395px;left: 50%;top: 0;}
+.w1210,.store-wall2 h2,.index-sale2 .index-sale-title,.article-nav{ position:relative;}
+#nav,.category-layer,.banner,.article-nav{ border: 1px solid transparent;}
+#nav:hover,.category-layer:hover,.banner:hover,.article-nav:hover{ border:1px dashed #5874d8;}
+.drop-item .banner,.drop-item .banner:hover{border:0}
+#nav:hover .selector,.category-layer:hover .selector,.banner:hover .selector,.article-nav:hover .selector{visibility: visible;}
+.layout .shop-menu ul.shop-menu-right:hover{ width: 1018px; height: 35px; border:1px dashed #5874d8; margin-top: -1px; margin-left: -1px;}
+
+
+.index-sale .tabs-nav li:hover .selector,
+.index-sale2 .tabs-nav li:hover .selector,
+.index-sale2 .index-sale-title:hover .selector,
+.floor-banner:hover .selector,
+.floor-words:hover .selector,
+.floor-title h2:hover .selector,
+.floor-brand:hover .selector,
+.store-wall1 h2:hover .selector,
+.store-wall-ad:hover .selector,
+.img-groups1:hover .selector,
+.img-groups2:hover .selector,
+.img-groups4:hover .selector,
+.img-groups:hover .selector,
+.img-groups-more-left:hover .selector,
+.img-groups-more-right:hover .selector,
+.store-rec-content:hover .selector,
+.fixed-suspend-layer-uid:hover .selector,
+.floor-con1 .floor-right:hover .selector,
+.floor-tabs-nav li.floor-tabs-selected:hover .selector,
+.floor-con2 h2:hover a.title-selector,
+.hot-word-con:hover .selector,
+.big-banner-con:hover a.selector,
+.middle-column-con:hover a.selector,
+.right-column-con:hover a.selector,
+.floor .floor-title3:hover .selector,
+.floor .floor-con3 .floor-ad3 .first:hover .selector1,
+.floor .floor-con3 .floor-ad3 .up-three-ad:hover .selector2,
+.floor .floor-con3 .floor-goods3 .floor-category3:hover .selector,
+.floor .floor-con3 .floor-goods3 .down-three-ad:hover .selector,
+.floor-layout .floor-content4 .floor-left .floor-left-con .floor-left-up:hover .selector,
+.floor-layout .floor-content4 .floor-left .floor-left-con .floor-left-down:hover .selector,
+.floor-layout .floor-content4 .floor-left .floor-banner:hover .selector,
+.floor-layout .floor-content4 .floor-right:hover .selector,
+.banner:hover .selector,
+.shop-floor h2:hover .selector,
+.shop-ad-group2 .shop-ad1:hover .selector,
+.shop-ad-group2 .shop-ad2:hover .selector,
+.shop-ad-group2 .shop-ad3:hover .selector,
+.shop-ad-group2 .shop-ad4:hover .selector,
+.shop-category-ad2:hover .selector,
+.shop-floor-ad:hover .selector,
+.shop-floor-goods:hover .selector,
+.shop3-title:hover .selector,
+.shop-ad-group-up:hover .selector,
+.shop-ad-group-middle:hover .selector,
+.shop-ad-group-down:hover .selector,
+.shop-category-con:hover .selector,
+.store-wall2 h2:hover .selector,
+.store-wall2-ad:hover .selector,
+.store-wall2-list:hover .selector,
+.floor-content5 .floor-suspend:hover .selector,
+.floor-tabs-suspend-up:hover .selector,
+.floor-tabs-suspend-down:hover .selector,
+.floor-right:hover .selector,
+.custom:hover .selector,
+.industry-floor-img:hover .selector,
+.floor-content .floor-head:hover .selector,
+.floor-body-right.logo:hover .selector,
+.floor-body-left:hover .selector,
+.scroll-box:hover .selector,
+.pic-group:hover .selector,
+.article-title:hover .selector,
+.article-list:hover .selector,
+.story-list:hover .selector,
+.right-pic:hover .selector,
+.industry-text h3:hover .selector,
+.industry-text ul:hover .selector,
+.industry-hot:hover .selector,
+.industry-story:hover .selector,
+.topic-tab:hover .selector,
+.topic-goods:hover .selector,
+.topic-goods-border:hover .selector,
+.shop-floor .shop-goods-list:hover .selector,
+.right-sidebar .drop-item .proclamation1:hover .selector,
+.right-sidebar .drop-item .proclamation2:hover .selector,
+.right-sidebar .drop-item .sale-discount:hover .selector,
+.right-sidebar .drop-item .shortcut-menu:hover .selector,
+.right-sidebar .drop-item .nav-custom:hover .selector,
+.right-sidebar .drop-item .nav-shop-apply:hover .selector,
+.shop-menu-right:hover .selector,
+.floor-title h3:hover .selector,
+.floor-title .title-tags:hover .selector,
+.floor-img-left:hover .selector,
+.floor-img-right:hover .selector,
+.floor-con6 .floor-img-down:hover .selector,
+.floor-con6-brand:hover .selector,
+.img-down-left:hover .selector,
+.img-down-right:hover .selector,
+.floor-con8 .floor-img-down:hover .selector,
+.floor-con9 .floor-layout:hover .selector,
+.quality-box .quality-item:hover .selector,
+.grid-ftit:hover .selector,
+.quality-item:hover .title-selector,
+.feed-index h5:hover .title-selector,
+.article-img-box:hover .selector,
+.feed-index .notice .article-list:hover .select
+/*.floor:hover .selector*/{ visibility: visible; }
+
+/*编辑按钮整合——编辑主导航、编辑分类导航、编辑焦点图*/
+.nav-edit button{ font-size: 12px; color: #fff; background: #4DA2FD; padding: 3px 6px 3px 2px; line-height: 20px; border: none;}
+
+
+
+/*装修内部样式*/
+.operateEdit{ position: absolute; right: 0px; top: -38px; z-index: 100; animation: bounceScale .1s;}
+.operateEdit a{display: inline-block; position: relative; padding: 0px; background:url(../../images/design/edit_operate_bg.png) no-repeat; height: 32px; width: 32px; margin: 0 5px 0 0; cursor: pointer;}
+.operateEdit a i{ display: none;}
+.drop-item .operateEdit a.decor-btn:hover{background:url(../../images/design/edit_operate_bg.png) no-repeat; }
+.operateEdit a.upMove-btn{background-position: -272px 0;}
+.operateEdit a.downMove-btn{background-position: -305px 0;}
+.operateEdit a.hide-btn{background-position: -442px 0;}
+.operateEdit a.show-btn{background-position: -408px 0;}
+.operateEdit a.deletes-btn{background-position: -238px 0;}
+.operateEdit a.style-btn{background-position: -68px 0}
+.operateEdit a.setting-btn{background-position: -374px 0}
+.drop-item .operateEdit a.upMove-btn:hover{background-position: -272px -34px;}
+.drop-item .operateEdit a.downMove-btn:hover{background-position: -305px -34px;}
+.drop-item .operateEdit a.hide-btn:hover{background-position: -442px -34px;}
+.drop-item .operateEdit a.show-btn:hover{background-position: -408px -34px;}
+.drop-item .operateEdit a.deletes-btn:hover{background-position: -238px -34px;}
+.drop-item .operateEdit a.setting-btn:hover{background-position: -374px -34px;}
+.drop-item .operateEdit a.style-btn:hover{background-position: -68px -34px;}
+
+.selector-box{ display: none;height: 40px; top: -49px; left:-20px; background: #fff; z-index: 9; position: absolute; color: #333; text-align: center; line-height: 38px; font-size: 14px;}
+.selector-box > .arrow{display: inline-block;border-width: 7px; border-color: #FFF transparent transparent transparent; border-style: solid dashed dashed dashed;position: absolute; left: 50%; margin-left: -6px; bottom: -13px;}
+.selector:hover .selector-box,.operateEdit .decor-btn:hover .selector-box{ display: block;}
+.popover,.selector-box{ border-radius: 12px !important; min-width: 70px; border: none; box-shadow: 0px 3px 9px rgba(0,0,0,.3) !important; text-align: center;}
+.popover.top > .arrow{  bottom: -7px; border-top-color:#fff; border-top-color: rgba(0,0,0,.0);}
+.popover.fade .popover-content{ font-size: 14px; color: #333;}

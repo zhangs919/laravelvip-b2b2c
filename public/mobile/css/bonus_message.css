@@ -1,0 +1,15 @@
+@charset "utf-8";
+/*注册送红包提示*/
+.layer-mask-box { width:270px; height:376px; margin:auto; position:fixed; z-index: 10000;top: 50%; left: 50%; margin-top: -188px; margin-left:-135px;display: none;}
+.layer-mask-box .layer-mask-content { display:block;width:270px; height:376px; width:100%; overflow: hidden; background-color: transparent;}
+.layer-mask-box .layer-mask-close {background: url(../images/message_close.png) no-repeat center center;width: 30px;height: 30px;
+display:block;position:relative;margin: 10px auto;cursor: pointer;border-radius: 100%;background-size: 15px;border: 1px solid #fff;}
+.layer-mask-wrap { text-align: center; color: #FFF; font-size: 14px; background-image: url(../images/bg_bonus.png); width:270px;height:376px; background-size:contain;}
+.layer-mask-wrap .register-bonus-con{ position:absolute; left:30px; top:60px; width:210px;font-size: 16px; color:#D38005;}
+.layer-mask-wrap .register-bonus-money{ height:50px; line-height:50px; font-size:0.9rem;color:#f23030;}
+.layer-mask-wrap .register-bonus-money em{font-size:1.4rem;display: inline-block;margin-right: 3px; font-weight:700;}
+.layer-mask-wrap .register-bonus-name {font-size:0.7rem; color:#D38005;}
+.layer-mask-wrap .command { margin-top: 15px;}
+.layer-mask-wrap .command .command-btn { font-size: 18px; background-color: #E03135; border: 1px solid #E03135; display: inline-block; height: 54px; line-height: 54px; width: 200px; color: #FFF;}
+.layer-mask-wrap .command .command-btn:hover { opacity: .8;}
+.layer-mask { position: absolute; left: 0px; top: 0px; opacity: 0.15; z-index: 9998; width: 100%; height: 100%; background-color: rgb(0, 0, 0); filter: alpha(opacity=60) !important; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)" !important; -webkit-opacity: 0.6 !important; -khtml-opacity: 0.6 !important; -moz-opacity: 0.6 !important; -ms-opacity: 0.6 !important; -o-opacity: 0.6 !important; opacity: 0.6 !important; display: none;}

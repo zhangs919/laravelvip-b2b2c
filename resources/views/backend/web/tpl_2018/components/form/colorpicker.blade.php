@@ -1,0 +1,1 @@
+<input type="text" class="form-control colorpicker ipt w250" name="bgcolor" value="">

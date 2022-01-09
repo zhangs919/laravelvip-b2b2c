@@ -1,0 +1,57 @@
+/*=======首页头部========*/
+.header{ background:#fff; z-index:100; left:0px;}
+.header-l{width: 13%;height: 50px;float: left;}
+.header-l a {display: block; width: 30px; height: 50px;background: url(../images/top.png) no-repeat;background-size: auto 230px;
+ background-position: 5px 14px; margin-left: 5px;}
+.header-middle {width:70%; height:50px; margin: auto;padding-top:8px;}
+.search-box{ width:92%; margin:auto; height:34px; background:#F0F2F5;border-radius:7px; position:relative}
+.search-box .text{ display:block; width:100%;-webkit-appearance: none; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; border-radius: 0; -webkit-rtl-ordering: logical; -webkit-user-select: text; height:34px; background:none; border:0; font-size:14px; line-height:36px; color:#666; text-indent:10px; padding-left:28px;}
+.search-box i{ display:block; width:35px; height:35px; position:absolute; left:0px; top:0px; background:url(../images/category_search.png) no-repeat center center;background-size: auto 18px; border:0}
+
+
+/*分类页面css*/
+.container{ width:100%;padding:0; overflow:hidden; margin:auto;position: relative;top: 51px;bottom: 48px;}
+.category-box{ height:100%; width:100%; overflow:hidden; background:#f3f5f7;}
+
+
+/*分类页面左侧*/
+.category-left{ height:100%; float:left; width:25%; background:#fff;}
+.category-left ul{width:100%; overflow:hidden;}
+.category-left li{ width:100%;height:46px;line-height:46px;background-color:#fff;font-size:13px; text-align:center; color:#232326;position:relative;}
+.category-left li:before { content: '';height: 92px;width: 1px;position: absolute;left: auto;top: 0px;right: 0px;bottom: auto;
+    background-color: #e5e5e5;border: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px;transform: scale(0.5); -webkit-transform: scale(0.5);-moz-transform: scale(0.5);-ms-transform: scale(0.5);-o-transform: scale(0.5);
+    transform-origin: top left;-webkit-transform-origin: top left;-moz-transform-origin: top left;-ms-transform-origin: top left;-o-transform-origin: top left;}
+.category-left li:after {content: '';height: 1px;width: 200%;position: absolute;left: 0px;top: auto;right: auto;bottom: 0px;
+ background-color: #e5e5e5;border: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px;transform: scale(0.5);
+    -webkit-transform: scale(0.5);-moz-transform: scale(0.5);-ms-transform: scale(0.5);-o-transform: scale(0.5);    transform-origin: top left; -webkit-transform-origin: top left;-moz-transform-origin: top left;-ms-transform-origin: top left; -o-transform-origin: top left;}
+.category-left li.cur{background:#f3f5f7;}
+.category-left li.cur:before{ background-color:#f3f5f7;}
+.category-left li span{display: block;width: 100%;height: 46px;line-height: 46px;text-decoration: none;font-size: 13px;color: #232326;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+
+
+/*分类页面右侧*/
+.category-right{ float:left; width:75%; height:100%; background-color:#f3f5f7; }
+.category-right dl{ width:94%; margin:auto;overflow:hidden;} 
+.category-right dl span{ display:block; width:100%; height:auto; overflow:hidden; position:relative; margin-top:10px;}
+.category-right dl span img{ display:block; width:100%; height:auto}
+.category-right dl span em{  width:10px; height:100%;   display:block;font-size:12px; position:absolute; right:0px; bottom:0px;
+ padding:0px 10px 0px 10px;background-color:rgba(27,27,27,0.5); color:#FFF; vertical-align:center; font-style:normal; line-height:150%; font-family:'宋体';-webkit-box-align:center;display:-webkit-box;} 
+.category-right dt{ width:100%; height:20px;margin-top:19px; margin-bottom:9px;}
+.category-right dt a{ display:block; height:20px;font-size:13px; line-height:20px;color:#232326; padding-left:5px; font-weight:600;}
+.category-right dt a.brand{ background:none;}
+.category-right dd{ display:block;overflow:hidden; background:#fff;padding: 7px 10px 5px 10px;}
+.catalog-box{ width:100%; overflow:hidden;}
+.catalog-info{width: 32.8%;float: left;text-align: center; margin:0; padding:0;}
+.catalog-info a span{ display:block; width:100%; height:80px; overflow:hidden;}
+.catalog-info a img{width:55px;height:55px;border: 0;}
+.catalog-info a.catalog-info-link{ width: 55px; height: 55px; border:0; text-align: center; display: block; margin: 0 auto;}
+.catalog-info a.catalog-info-link img{ display: block; width: auto; height: auto; max-width: 55px;max-height: 55px; margin:auto;}
+.catalog-info a em{ display: block;height: 31px;color: #686868;width: 100%;overflow: hidden;text-overflow: ellipsis;display: box;display: -webkit-box;display: -moz-box;display: -ms-box;display: -o-box;line-clamp: 2;-webkit-line-clamp: 2;-moz-line-clamp: 2;-ms-line-clamp: 2;-o-line-clamp: 2;box-orient: vertical;-webkit-box-orient: vertical;-moz-box-orient: vertical;-ms-box-orient: vertical;-o-box-orient: vertical;word-break: break-all;box-align: center;-webkit-box-align: center;-moz-box-align: center;-ms-box-align: center;-o-box-align: center;box-pack: center;-webkit-box-pack: center;-moz-box-pack: center;-ms-box-pack: center;-o-box-pack: center;z-index: 2;position: relative;line-height: 15px; margin-top:5px; font-size:12px;}
+
+
+/*分类页面右侧-品牌*/
+.catalog-brand-logo{width:33.3%;float:left; overflow:hidden;text-align:left;margin-bottom:5px; }
+.catalog-brand-logo a{display:block; width:90%; height:50px; background:#FFF; margin:auto}
+.catalog-brand-logo a img {display: block;width:65px;height:26px;margin: auto; margin-top:11px;}
+a.all{ display:block;font-size: 12px;line-height: 20px;text-align: center;margin: auto;margin-bottom: 10px;
+border-radius: 3px;margin-top: 10px;padding: 8px 5px; color:#fff;}

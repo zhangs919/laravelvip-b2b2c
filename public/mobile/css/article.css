@@ -1,0 +1,31 @@
+@charset "utf-8"; 
+/*区别于其他页面头部、底部的展示*/
+body{ background-color: #f3f5f7;}
+.more_loader_spinner{ background:none;}
+.header-middle{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-wrap: normal;word-wrap: break-word;word-break: break-all;}
+h1, h2, h3, h4, h5, h6{ font-weight:normal;}
+
+/*公告文章列表*/
+#article-content{background: #fff;padding:0 10px;margin:0.5rem auto 0;overflow: hidden;}
+#article-content .article-list{ width:100%; background:#fff;}
+#article-content .article-list li{ height:40px;border-bottom: 1px dotted #eee;}
+#article-content .article-list li>a{display: -webkit-box !important;display: box !important;position: relative; height:40px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+#article-content .article-list li>a>span{position: relative;display:block;}
+#article-content .article-list li .article-name{-webkit-box-flex: 1;box-flex: 1; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;line-height:40px; color:#666; font-size:14px;}
+#article-content .article-list li .article-time{ float:right; line-height:40px; color:#666; font-size:14px;text-align: right; width:80px;}
+
+
+/*文章详情*/
+.breadcrumb{background: #F3F5F7;padding: .5rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-size: .7rem;color: #888;}
+.breadcrumb> a {color: #888;font-size: .7rem;}
+.article-info{background: #fff;padding: 10px;margin:0 auto;overflow: hidden;}
+.article-info .article-title{text-align: center;font-size:0.8rem;line-height:40px;font-weight: normal;color: #666;border-bottom: 1px dashed #eee;}
+.article-info .article-detail { margin-top:5px;line-height:25px; word-wrap: break-word;
+    word-break: normal;}
+.article-info .article-detail img{ width:100%; height:auto !important; max-width:100%;}
+table{ width:100% !important;}
+/*翻页*/
+.info-page { width: 100%; height: 1.5rem; margin: .8rem 0 1rem; text-align: center;}
+.info-page a { display: inline-block; width: 3.5rem; line-height: 1.5rem; color: #fff; font-size: .7rem; border-radius: .3rem; text-align: center;}
+.info-page a.pre { background: #61b8fc; margin-right: 1rem;}
+.info-page a.next { background: #fc8080;}

@@ -1,0 +1,150 @@
+@charset "utf-8";
+/* CSS Document */
+.footer-info{ margin-top: 0px; padding-top: 15px;}
+.banner-left-info i,.hot-bonus .title h3 i,.banner-left .user-info-down .user-info-data i{ background-image: url(../images/exchange.png); background-repeat: no-repeat;}
+
+/*************** 首页焦点区域 **********/
+.banner{ width: 1210px; height: 350px; position: relative; margin-bottom: 15px; border: solid 1px #FED4AE; overflow: hidden;}
+
+/*焦点图左侧信息*/
+.banner-left { background-color: #FFF; width: 299px; height: 350px; float: left; border-right: solid 1px #EEE; background-color: #FFFBF3;}
+.banner-left .member { text-align: center; padding: 40px 0 20px 0;}
+.banner-left .member a{ height: 42px; line-height: 42px; padding: 0px 25px; font-size: 16px; color: #fff; background-color: #FFB577;  border-radius: 5px; display: inline-block;}
+.banner-left .member p{ font-size: 14px; height: 30px; line-height: 30px; color: #999;}
+.banner-left-info { font-size: 0; width: 260px; margin: 0 auto; padding: 22px 0; border-top: dotted 1px #FFB577;}
+.banner-left-info.first{ border: none;}
+.banner-left-info i { vertical-align: top; letter-spacing: normal; display: inline-block; width: 48px; height: 48px; margin: 0 20px 0 10px;}
+.banner-left-info i.bonus { background-position: 0px 0px;}
+.banner-left-info i.exchange { background-position: -49px 0px;}
+.banner-left-info dl { vertical-align: top; letter-spacing: normal; display: inline-block;}
+.banner-left-info dl dt { font: 14px/28px "microsoft yahei"; color: #666;}
+.banner-left-info dl dd { font-size: 12px; color: #999;}
+
+.banner-left .user-info-box{ width: 264px; padding: 50px 0 30px 35px; border-bottom: solid 1px #FED4AE; display: inline-block; overflow: hidden;}
+.banner-left .user-header{ width: 76px; height: 76px; margin: 0 auto; position: relative; border-radius: 50%;}
+.banner-left .user-header .header-img{ padding-top: 2px; border-radius: 50%; width: 76px; height: 74px; display: block; background-color: #fff; box-shadow: 0 0 5px #fff;}
+.banner-left .user-header .header-img img { border-radius: 50%; width: 72px; height: 72px; display: block; margin: 0 auto;}
+.banner-left .user-info{ margin-left: 15px; width:170px;}
+.banner-left .user-info p{ line-height: 25px;}
+.banner-left .user-info p span.type{ color: #999;}
+.banner-left .user-info p img{ vertical-align: middle; margin-top: -3px; margin-right: 3px; max-width: 100px; max-height: 20px;}
+.banner-left .user-info-down{ padding: 40px 10px; display: inline-block;}
+.banner-left .user-info-down .user-info-data{ width: 139px; height: auto; float: left; text-align: center; display: inline-block;}
+.banner-left .user-info-down .user-info-data.first{ border-right: solid 1px #FED4AE;}
+.banner-left .user-info-down .user-info-data i{ width: 48px; height: 50px; display: inline-block;}
+.banner-left .user-info-down .user-info-data i.my-exchange{ background-position: -48px -60px;}
+.banner-left .user-info-down .user-info-data i.my-change{ background-position: 0px -60px;}
+.banner-left .user-info-down .user-info-data span{ width: 100%; height: 30px; line-height: 30px; font-size: 14px; display: inline-block;}
+.banner-left .user-info-down .user-info-data strong{ width: 100%; color: #999; font-weight: normal; display: inline-block;}
+.banner-left .user-info-down .user-info-data strong em{ color: #E31939; font-size: 18px; margin-right: 5px; font-weight: 600;}
+
+/* 切换焦点图 */
+.banner-img{ width: 910px; height: 350px; float: right; position: relative;}
+.banner-img ul.full-screen-slides { width: 910px; height: 350px; position: relative; z-index: 1;}
+.banner-img ul.full-screen-slides li { width: 100%; height: 100%; position: absolute; z-index: 1; top: 0; left: 0;}
+.banner-img ul.full-screen-slides li a { display: block; width: 910px; height: 350px; position: absolute; z-index: 2;}
+.banner-img ul.full-screen-slides li a img{ max-width: 100%; max-height: 100%;}
+.banner-img ul.full-screen-slides-pagination { font-size: 0; *word-spacing:-1px/*IE6、7*/; text-align: right; display: block; list-style: none; width: 910px; height: 16px; padding: 7px 0px; margin-left: -455px; position: absolute; left: 50%; bottom: 10px; z-index: 3; text-align: center;}
+.banner-img ul.full-screen-slides-pagination li { vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display:inline/*IE6、7*/; list-style: none; width: 16px; height: 16px; border-radius: 50%; margin-left: 4px; filter:progid:DXImageTransform.Microsoft.gradient(enabled='true', startColorstr='#3F000000', endColorstr='#3F000000'); background: rgba(0,0,0,0.25); overflow: hidden; cursor: pointer; *zoom:1;}
+.banner-img ul.full-screen-slides-pagination a { display: block; width: 100%; height: 100%; padding: 0; margin: 0; text-indent: -9999px;}
+.banner-img ul.full-screen-slides-pagination .current { background: #F30;}
+
+/*热门红包*/
+.hot-bonus{ width: 1210px; height: 280px; margin-bottom: 15px;}
+.hot-bonus-box{ height: auto;}
+.hot-bonus .title { height: 38px; margin-bottom: 25px; position: relative;}
+.hot-bonus .title h3 { position: relative; z-index: 2; float: left; height: 38px; line-height: 38px; font-size: 24px; color: #E31939; font-weight: 400; background: #fff;}
+.hot-bonus .title h3 i { background-position: -100px 3px; width: 30px; height: 35px; margin-right: 10px; display:inline-block; vertical-align: middle; overflow: hidden;}
+.hot-bonus .title .slogan { float: left; position: relative; top: 13px; width: 145px; height: 20px; line-height: 99em; z-index: 2; font-size: 18px; color: #e4393c; background: url(../images/exchange.png) #fff no-repeat; overflow: hidden;}
+.hot-bonus .title .slogan.s2 { background-position: -135px -30px;}
+.hot-bonus .title .more { position: relative; z-index: 2; float: right; background: #fff;}
+.hot-bonus .title .more a { display: inline-block; *display: inline; *zoom: 1; height: 32px; line-height: 32px; padding: 0 20px; margin: 3px 0 0 10px; border: 1px solid #ccc; color: #666; -webkit-border-radius: 18px; -moz-border-radius: 18px; border-radius: 18px;}
+.hot-bonus .title .more a:hover{ color: #E31939; border-color: #E31939;}
+.hot-bonus .title .line { position: absolute; top: 20px; left: 0; width: 100%; height: 1px; background: #ffd3d4; overflow: hidden;}
+
+.hot-bonus-list{ width: 1210px; display: inline-block;}
+.hot-bonus-con{ width: 1240px; display: block;}
+.hot-bonus-con .item{ display: block; position: relative; width: 593px; height: 215px; background: #fff; font-family: "Microsoft YaHei"; border: 1px solid #f1f1f1; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; float: left; margin-right: 20px}
+.hot-bonus-box .hot-bonus-con .item{ margin-top: 25px;}
+.hot-bonus-con .item:hover{-webkit-box-shadow:0 0 5px rgba(0,0,0,.1);-moz-box-shadow:0 0 5px rgba(0,0,0,.1);box-shadow:0 0 5px rgba(0,0,0,.1)}
+
+.item .item-left{ float: left; width: 260px; padding: 15px 35px 15px 45px;}
+.item .item-left p{ width: 260px; overflow: hidden;}
+.item .item-left .price{ height: 50px; margin-bottom: 10px; color: #74d2d4;}
+.item .item-left .price em { float: left; margin: 5px 0 0; font-family: verdana; font-size: 24px;}
+.item .item-left .price strong { float: left; line-height: 50px; margin: 0 10px 0 5px; font-size: 60px; font-family: arial; _display: inline;}
+.item .item-left .price .txt { float: left; line-height: 22px; margin-top: 25px; color: #666;}
+.item .item-left .issuer{ margin-right: 10px; color: #666;}
+.item .item-left p.row{ height: 25px; line-height: 25px; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+
+.item .item-right{ position: absolute; bottom: 0; right: 0; width: 250px; background: #74d2d4; font-size: 14px; color: #fff; text-align: center; -webkit-border-radius: 0 5px 5px 0; -moz-border-radius: 0 5px 5px 0; border-radius: 0 5px 5px 0;}
+.semi-circle { display: block; position: absolute; z-index: 4; left: 0; top: 0; width: 3px; height: 215px; background: url(../images/semi-circle.png) top center repeat-y;}
+.item .item-right .item-right-con{ height: 160px; padding: 35px 0 20px; }
+.item .item-right p{ line-height: 1.5em;}
+.item .item-right p.exchange, .item .item-right p.time{ margin-bottom: 10px;}
+.item .item-right p.exchange strong{ color: #fff; font-size: 36px;}
+.item .item-right p.exchange em{ font-size: 12px; margin-left: 5px;}
+.item .item-right .receive{ position: relative; display: inline-block; width: 96px; height: 30px; line-height: 30px; border: 1px solid #fff; margin-bottom: 10px; color: #fff; -webkit-border-radius: 16px; -moz-border-radius: 16px; border-radius: 16px; vertical-align: middle; font-size: 14px; font-family: "Microsoft YaHei"; overflow: hidden;}
+.item .item-right .receive span.txt { position: relative; z-index: 2; color: #fff;}
+.item .item-right .receive:hover{ background-color: #fff;}
+.item .item-right .receive:hover span.txt{ color: #197f81}
+
+#filter .order b, #filter .pagin .icon, .filter-tag .icon{
+	background: url(../images/common-icon.png) no-repeat;
+}
+.main{ position: relative; min-height: 250px;}
+
+/*排序*/
+#filter { border: 1px solid #EEE; background: #FFF;}
+#filter.filter-fixed { position: fixed;top: 0; z-index: 999999; width: 1208px;}
+#filter .fore1 { background: #F9F9F9; height: 38px; line-height: 38px; overflow: hidden;}
+#filter .order { float: left; height: 38px;}
+#filter .order dd { float: left;}
+#filter .order a { display: block; height: 38px; padding: 0 18px; border-left: solid 1px #F9F9F9; border-right: solid 1px #F9F9F9; margin-left: -1px;}
+#filter .order .first a, #filter .order .curr.first a { margin-left: 0; border-left: 0;}
+#filter .order .curr a, #filter .order a:hover { position: relative; z-index: 1; background: #FFF; border-color: #eee;}
+#filter .order a i{vertical-align: middle; color: #DDDDDD; margin-top: 2px; display: inline-block;}
+#filter .pagin { float: right; line-height: 38px; overflow: hidden;}
+#filter .pagin .prev, #filter .pagin .next, #filter .pagin .text { float: left; line-height: 37px;}
+#filter .pagin .prev, #filter .pagin .next { padding: 0 15px; height: 38px;}
+#filter .pagin .icon { display: inline-block; width: 6px; height: 9px; margin-top: 14px;}
+#filter .pagin .prev .prev-btn { background-position: -26px 0;}
+#filter .pagin .prev-btn:hover { background-position: -42px 0;}
+#filter .pagin .prev-disabled { background-position: -58px 0;}
+#filter .pagin .next .next-btn { background-position: -74px 0;}
+#filter .pagin .next-btn:hover { background-position: -90px 0;}
+#filter .pagin .next-disabled { background-position: -106px 0;}
+#filter .total { float: right;}
+#filter .total span { padding: 0 3px;}
+#filter .filter-btn { float: left; height: 38px;}
+.filter-tag { float: left; height: 38px; line-height: 38px; margin-left: 17px; cursor: pointer; color: #666; white-space: nowrap;}
+.filter-tag i.iconfont{ float: left; vertical-align: middle; margin-top:2px; color: #ccc;}
+.filter-tag .text { float: left; margin-left: 4px;}
+
+/*列表 表格形式*/
+.list-grid { overflow: hidden;}
+.list-grid .item { float: left; font-size: 12px; width: 228px; margin: 15px 15px 0 0; padding: 1px;}
+.list-grid .item.last { margin-right: 0;}
+.list-grid .item-con { background: #FFF; line-height: 18px; padding: 5px 4px; border: solid 1px #eee; position: relative; overflow: hidden;}
+.list-grid .item-pic{ width: 220px; height: 220px; text-align: center;}
+.list-grid .item-pic a{ width: 220px; height: 220px; overflow: hidden; text-align: center; vertical-align: middle; display: inline-block;}
+.list-grid .item-pic img { width: 220px; height: 220px;}
+.list-grid .item-info { padding: 0 6px;}
+.list-grid .item-exchange { display: block; height: 20px; line-height: 20px; padding: 10px 0 0; overflow: hidden;}
+.list-grid .sale-exchange { font-size: 20px; color: #E31939; font-weight: 400; font-family: Arial, Helvetica, sans-serif; text-overflow: ellipsis; white-space: nowrap; min-width: 70px; float: left; overflow: hidden;}
+.list-grid .sale-exchange em{ font-size: 12px; color: #666; margin-left: 5px;}
+.list-grid .item-name { height: 40px; line-height: 20px; overflow: hidden; margin: 5px 0;}
+.list-grid .item-time { height: 20px; line-height: 20px; color: #999; overflow: hidden; margin: 5px 0;}
+.list-grid .item-con-info{ height: 30px; overflow: hidden;}
+.list-grid .item-con-info .item-shop{ height: 22px; line-height: 22px;}
+.list-grid .item-con-info .item-shop a{ width: 120px; height: 22px; line-height: 22px; display: inline-block; overflow: hidden; white-space: nowrap;text-overflow: ellipsis;}
+.list-grid .item-con-info .on-exchange{ padding: 3px 8px; background-color: #E31939; border-radius: 3px; color: #fff; display: inline-block; overflow: hidden;}
+.list-grid .item-con-info .on-exchange.disabled{ background-color: #c7c7c9;}
+
+/*没有积分兑换商品*/
+.tip-box { width: 300px; height: 300px; text-align: center; margin: 80px auto 0px;}
+.tip-box .tip-icon { display: block; max-width: 100%; max-height: 100%; margin: 0 auto;}
+.tip-box .tip-text { line-height: 20px; padding: 10px; font-size: 14px;}
+
+/*新增售罄样式*/
+.sell-out{ position: absolute; width: 95px; height: 95px; top: 60px; left: 50%; margin-left: -47px; background: url(../images/shouqing.png) no-repeat;}

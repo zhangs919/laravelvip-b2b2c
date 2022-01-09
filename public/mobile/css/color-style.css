@@ -1,0 +1,50 @@
+@charset "utf-8";
+/*主题颜色*/
+.color{ color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.bg-color{ background:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.border-color{ border-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+
+/*特殊处理*/
+#second-category .item.active{color:/*m_main_color_start*/#f23030/*m_main_color_end*/;border-left-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.login-radio ul li.active,.region-tabs .selected,.shop-nav ul li.current{ color:/*m_main_color_start*/#f23030/*m_main_color_end*/; border-bottom-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.goods-footer-nav dl dd,.fixed-bottom .check-btn,.goods-footer-nav dl dd{ background:/*m_main_color_start*/#f23030/*m_main_color_end*/; border-top-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+
+/*背景色和字体颜色*/
+.swiper-pagination-bullet-active,.sale-goods-list .hd .swiper-pagination-bullet-active{ background:/*m_main_color_start*/#f23030/*m_main_color_end*/ !important;color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+
+/*边框和字体颜色*/
+.goods-evaluate .comment-type ul li a,.filter-tag-box .filter-tag-list a.current,.invoice-coupon .tab-nav .tab-item-selected:before,.invoice-tit-list .invoice-item.invoice-item-selected:before,.invoice-list .invoice-item.invoice-item-selected:before,.order-list-top li a.on,.good-logistics-ul li.cur,.select-layer .select-layer-title,.prompt-choose-title.capital-detail-nav li.selected,.capital-detail-nav li.selected a,.address-list li .address-info-select,.navContent li .item a.hover,.choose dl.attr dd li.selected,.order-bottom-btn a.look-order-info,.detail-dowm>.operate  a.cur,.base-filter li.cur,.attr-info-ul li.cur,.detail-dowm>.operate  a.cur:after,.attr-info-ul li.cur,.exchange-list-top li a.active,.base-filter li.cur, .attr-info-ul li.cur,.category-layer ul li.category-active a,.shop-favorable-info li.active,.tabmenu ul li.cur a,.shop-prom .shop-prom-title .coupons span{ color:/*m_main_color_start*/#f23030/*m_main_color_end*/; border-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.choose dl.attr dd li.selected a,.order-bottom-btn a.cur,.tab-nav-fold li.current a.menu-item,.tab-container .tab-menu li.active .menu-item{color:/*m_main_color_start*/ #f23030/*m_main_color_end*/;}
+.order-bottom-btn a.cur:before,.tab-nav-fold li.current a.menu-item:after{ border-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+
+/*边框和背景颜色*/
+.swiper-pagination .swiper-pagination-bullet-active,.platform-list li label.current,.filter-tag-box .filter-tag-footer .confirm-btn,.pay-again-bottom .pay-again-btn{border-color: /*m_main_color_start*/#f23030/*m_main_color_end*/;background-color: /*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.order-bottom-btn a.cur:before,.order-bottom-btn a.look-order-info:before,.item-list li.item-package .cart-promos .promos-tag:before,span.icon-condition span:before{border-color: /*m_main_color_start*/#f23030/*m_main_color_end*/;}
+
+
+/*字体颜色*/
+.filtrate-term  li.cur a,.filtrate-term  li.cur a i,.shop-submenu-right li.current .submenu-name,.shop-nav a.current,.sort-box span a.current,.footer-nav ul li.current span,.filtrate-more span a.current,.good-logistics-ul li.cur a,.user-order-comment .comment-goods-list .comment-goods-btn,.user-order-comment .comment-goods-list .comment-goods-btn i,.comment-shop .comment-shop-btn .comment-btn,.colect-goods-footer .goods-seleted em,.colect-shop-footer .shop-seleted em,.comment-shop .comment-shop-btn .comment-btn i,.header-right .comment-submit,.user-comment-box .comment-pic-btn .comment-btn i,.user-comment-type ul li.selected em,.user-comment-type ul li.selected a,.recharge-nav li.selected a,.order-bottom-btn .status,.bonus-nav li.selected a,.shop-nav ul li.current i, .shop-nav ul li.current i.iconfont, .shop-nav ul li.current span,.shop-nav a.current,.invoice-info .invoice-name label,.seltimebox .seltimebox-right li.current,.prompt-choose-title,.message-num,.cl-c-letter,.shop-nav ul li.current i, .shop-nav ul li.current i.iconfont, .shop-nav ul li.current span,.goods-evaluate .comment-type ul li em,#second-category .item.active a,.goods-list-grid .decrease,.navContent li .item1 .cart-box .decrease,.navContent li .item1 .cart-box .increase,.goods-list-grid .increase,.shop-nav .nav-item.current,.distance-box span a.current,.sort-box span a.current,.shop-submenu-right li.current .submenu-name,.filtrate-more span a.current,.goods-num i.cartbox-decrease,.goods-num i.cartbox-increase,.item-list li.item-package .inner-bottom .goods-num .decrease,.scroll-y-menu li.active a,.filtrate-term li.active span,.filter-nav a.current,#goods-category ul li.category-active a,.shop-favorable-info li.active span,.tab-container .tab-menu li.active .menu-item,.catalog-info a.current em,.address-list li.current .address-info p,.address-list li.current .addr-icon,.goods-details-nav li.current,.goods-header .goods-header-nav li.cur,.self-employed-label,.group-top-nav .group-nav-title.current,.prompt-choose-reason li.seleted,.list .goods-list-box li.item .item-info .item-con-info .cart-box .increase,.list .goods-list-box li.item .item-info .item-con-info .cart-box .decrease,.list .goods-list-box li.item .item-info .item-con-info .cart-box .decrease,.collect-goods-list .cart-box .increase,.collect-goods-list .cart-box .decrease,#list-wrap .goods-list-box li.item .item-info .cart-box .increase,#list-wrap .goods-list-box li.item .item-info .cart-box .decrease,#list-wrap .goods-item .info-bottom .cart-box .increase,#list-wrap .goods-item .info-bottom .cart-box .decrease,.category-left li.cur span{ color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.coupon-action,.tab-container .tab-menu li.active:after,.tab-container .tab-menu li.active:after,.goods-header .goods-header-nav li.cur:before{background-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.goods-floor-title a .iconfont,.footer-nav ul li.cur { color:/*m_main_color_start*/#f23030/*m_main_color_end*/ !important; }
+
+/*背景颜色*/
+.integralmall-title:before,.hot ul li .hot-message a:before,.swiper-pagination .swiper-pagination-bullet-active,.goods-evaluate .comment-type ul li.cur a,.user-comment-footer .comment-submit,.user-comment-footer .again-comment-submit,.list-footer a.return-apply,.list-footer a.btn-link,.invoice-footer input[type="button"].save,.capital-top,.invoice-footer input[type="button"].save,.capital-top,.no-data-div .no-data-btn,.prompt-choose-bottom button:last-child,.btn-submit, a.btn-submit,.form-group dl dd a.phonecode,.forget-content .submit-btn a.btn-submit,#second-category .item span,.choose-foot .btn,.search-right a.submit,dl dd a.phonecode,.addressmone .save_btn.ok .btn, .addressmone1 .save_btn.ok .btn,.pop-up-content .pop-up-content-footer button:last-child,.middle-content .submit-btn a.btn-submit,.filter-footer .btn-submit,.edit-quantity-ft button:last-child,.header-con1 .header,.box-oprate a,.rank-price-btn a,.pickup-bomb-btn a,.f-foot a.button-attr.buy-goods,.choose-foot a.button-attr.buy-goods,.scroll-y-menu li.active:after,.ui-slider-range,a.on-exchange,.layer-mask-foot .btn.confirm,.goods-details-nav li.current:before,.group-top-nav .group-nav-title.current:before,.submenu:before,.category-left li.cur:after{background-color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.layui-layer-btn .layui-layer-btn0,.list-footer a,.premise-footer a.btn,.apply-success .apply-success-btn a.btn,.cart-num,.header-con2 .header.current,.goods-buy-number .item1 .cart-box .increase, .buyout-footer-nav a.bg-color.disabled{background-color:/*m_main_color_start*/#f23030/*m_main_color_end*/ !important; border-color:/*m_main_color_start*/#f23030/*m_main_color_end*/ !important;}
+
+/*边框颜色*/
+.user-comment-type ul li.selected,.recharge-nav li.selected,.bonus-nav li.selected,.shop-nav ul li.current,.tabmenu ul li.cur,#goods-category span.category-active,#goods-category ul li.category-active,.self-employed-label:before,.goods-buy-number .item1 .cart-box .increase:before,.goods-buy-number .item1 .cart-box .decrease:before,.comment-shop .comment-shop-btn .comment-btn:before,.user-order-comment .comment-goods-list .comment-goods-btn:before,.prompt-choose-reason li.seleted:after,.item-content-activity .right-text:after,.package-item .package-title .price-save i:before,.package-footer .total .price-save i{border-color: /*m_main_color_start*/#f23030/*m_main_color_end*/ !important;}
+a.color{color:/*m_main_color_start*/#f23030/*m_main_color_end*/}
+/*选中之后样式*/
+.cart-checkbox.select>label,.payment-tab>li .pay-way-checkbox:checked+.check-div>label{left:-20px;border-right:20px solid transparent;-webkit-filter:drop-shadow(20px 0 0px /*m_main_color_start*/#f23030/*m_main_color_end*/);filter:drop-shadow(20px 0 0px /*m_main_color_start*/#f23030/*m_main_color_end*/);}
+
+/*商品价格颜色--辅助颜色*/
+.price-color{ color:/*m_second_color_start*/#f23030/*m_second_color_end*/!important;;}
+.f-title-arr-right span.price-color{color:/*m_second_color_start*/#f23030/*m_second_color_end*/ !important;}
+.attribute-header-right span.price-color{color:/*m_second_color_start*/#f23030/*m_second_color_end*/ !important;}
+
+/*自由购弹窗*/
+.goods-buy-number .item1 .cart-box:before, .item-list .goods-num .decrease:after, .item-list .goods-num .increase:before, .item-list .goods-num:before,.goods-buy-number .item1 .cart-box .decrease:after { border-color:/*m_main_color_start*/#f23030/*m_main_color_end*/; }
+
+.new-goods-con-left li.current:before{ background:/*m_main_color_start*/#f23030/*m_main_color_end*/ }
+.new-goods-con-right .second-goods-classify li.current{color:/*m_main_color_start*/#f23030/*m_main_color_end*/;}
+.new-goods-con-right .right-con .right-con-top .filter-term li.current span{ color:/*m_main_color_start*/#f23030/*m_main_color_end*/ !important; }

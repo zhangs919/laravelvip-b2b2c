@@ -1,0 +1,1 @@
+<input type="text" id="systemconfigmodel-captcha_noise" class="form-control ipt" name="SystemConfigModel[captcha_noise]" value="0">

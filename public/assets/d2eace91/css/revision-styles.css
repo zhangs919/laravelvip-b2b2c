@@ -1,0 +1,249 @@
+@charset "utf-8";
+/* CSS Document */
+/******新加改版*******/
+.table .ng-binding span{ display: block; text-align: left; margin-bottom:2px; line-height:18px;}
+.table .ng-binding span:nth-last-child(1){ margin-bottom:0;}
+h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margin: 10px auto; border: solid 1px #E6E6E6;}
+.tabmenu {display: block; width: 100%; height: 38px; margin-bottom: 10px; position: relative;}
+.tabmenu .tab { font-size: 0px; height: 36px;border-bottom: 1px solid #E7E7E7;}
+.tabmenu .tab li { vertical-align: top;letter-spacing: normal; word-spacing: normal;display: inline-block; margin-right: -1px;}
+.tabmenu .tab a { font-family: "microsoft yahei";font-size: 14px; line-height: 20px; color: #333;  display: block;  padding:7px 25px 8px; text-align: center;}
+.tabmenu .tab .active a, .tabmenu .tab .active a:hover {font-weight: 600;text-decoration: none; color:#58B4FF; border-bottom: 2px solid #4FC0E8; cursor: default;}
+
+
+/**********************营销中心模块***************************/
+.application-list { margin-bottom: 20px; overflow: hidden }
+.application-list h3 { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; }
+.application-list ul { margin-left: -8px; margin-right: -8px; }
+.application-item { float: left; margin-bottom: 20px; text-align: left; }
+.application-item.col-md-3.col-sm-4 { padding-left: 8px; padding-right: 8px; }
+.application-item a { display: block; padding: 10px; position: relative; background: #f8f8f8; }
+.application-item a:hover { background: #f2f2f2; cursor: pointer; }
+.application-logo { float: left; width: 40px; height: 40px; border-radius: 4px; }
+.application-logo i { width: 40px; height: 40px; display: block; background: url(../images/common/marketing_img.png) no-repeat 0 0; vertical-align: bottom; }
+.application-name { font-size: 14px; height: 24px; line-height: 24px; vertical-align: bottom; color: #333; font-weight: bold; margin-left: 50px; }
+.application-desc { font-size: 12px; height: 16px; line-height: 16px; vertical-align: top; color: #999; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; margin-left: 50px; }
+.application-item .application-label { position: absolute; top: 0px; right: 0px; display: none; color: #fff; background: #FF4343; background-image: linear-gradient(270deg, #FF7700 0%, #FCB22A 100%); padding: 2px 7px 2px 12px; font-size: 12px; text-align: center; line-height: 17px; }
+.application-item a span::before{position: absolute; top: 50%; left:0px; right: auto; display: inline-block !important; border-top: 10px solid transparent; border-left: 6px solid #f8f8f8; border-bottom: 10px solid transparent; content: ''; margin-top: -10px;}
+.application-item a:hover span::before{border-left:6px solid #f2f2f2;}
+.application-label.grey {background: #bbb; display:block;}
+.application-logo i.hb { background-position: 0px 0px; }
+.application-logo i.tg { background-position: -41px 0px; }
+.application-logo i.cx { background-position: -287px -82px }
+.application-logo i.zp { background-position: -123px 0px; }
+.application-logo i.mj { background-position: -164px 0px; }
+.application-logo i.mz { background-position: -205px 0px; }
+.application-logo i.dp { background-position: -246px 0px; }
+.application-logo i.yh { background-position: -287px 0px; }
+.application-logo i.jf { background-position: -328px 0px; }
+.application-logo i.pt { background-position: 0px -41px; }
+.application-logo i.kj { background-position: -41px -41px; }
+.application-logo i.dx { background-position: -82px -41px; }
+.application-logo i.yj { background-position: -123px -41px; }
+.application-logo i.wx { background-position: -164px -41px; }
+.application-logo i.fx { background-position: -205px -41px; }
+.application-logo i.ms { background-position: -410px 0px; }
+.application-logo i.qd { background-position: -451px 0px; }
+.application-logo i.zszk { background-position:-492px 0px}
+.application-logo i.qhb { background-position: -533px -41px }
+.application-logo i.czk { background-position: -369px -0px; }
+.application-logo i.ddf { background-position: -492px -41px }
+.application-logo i.gwfx { background-position: -451px -41px }
+.application-logo i.jjg { background-position: -410px -41px }
+.application-logo i.zc { background-position: -246px -41px; }
+.application-logo i.ysx { background-position: -41px -287px; }
+.application-logo i.ksgx { background-position: -41px -82px }
+.application-logo i.sjdc { background-position: -82px -246px; }
+.application-logo i.mssy{ background-position: -82px -287px }
+.application-logo i.wsc { background-position: 0px -123px }
+.application-logo i.wap { background-position: -41px -123px }
+.application-logo i.zd { background-position:-82px -123px}
+.application-logo i.pfsc { background-position: -123px -123px}
+.application-logo i.xfz-app { background-position:-164px -123px}
+.application-logo i.sjb-app { background-position:-205px -123px }
+.application-logo i.syt { background-position:-246px -123px }
+.application-logo i.zyg{ background-position: -164px -82px;}
+.application-logo i.khfx{ background-position:-41px -246px}
+.application-logo i.ggk{ background-position:0px -164px}
+.application-logo i.dcj{ background-position: -41px -164px}
+.application-logo i.xyzd{ background-position: -123px -164px}
+.application-logo i.yyy{ background-position:-205px -164px}
+.application-logo i.sgj{ background-position: -82px -164px}
+.application-logo i.ddg{ background-position: -451px -82px;}
+.application-logo i.czyl{background-position: -533px -164px;}
+.application-logo i.lpk{background-position: -492px -164px;}
+.application-logo i.zrdf{background-position: 0px -205px;}
+.application-logo i.smf{background-position: -369px -82px;}
+.application-logo i.ydd{background-position: -410px -123px;} 
+.application-logo i.live{background-position: -41px -205px;}
+.application-logo i.xg{background-position: -328px -82px} 
+.application-logo i.wd{background-position: -451px -123px}
+.application-logo i.qyhhw{background-position: -287px -123px} 
+.application-logo i.dls{background-position: -328px -123px} 
+.application-logo i.ys{background-position: -82px -205px} 
+/*应用版*/
+.app-board { padding: 25px; margin-bottom: 15px; border: 1px solid #e5e5e5; overflow: hidden }
+.app-board-img { float: left; width: 200px; height: 200px; overflow: hidden; }
+.app-board-img img { max-width: 100%; }
+.app-board-intro { overflow: hidden; padding-left: 30px; }
+.app-board-intro h3 { margin-bottom: 10px; font-size: 18px; color: #333; font-weight: bold; }
+.app-board-intro .intro { color: #666; font-size: 13px; margin-bottom: 15px; line-height: 20px; }
+.app-info-content { margin-top: 20px; }
+.app-info-content h2.title { font-size: 16px; margin-bottom: 5px; color: #333; height: 24px; line-height: 24px; }
+.app-info-content .app-info { border: 1px solid #e5e5e5; padding: 25px; }
+.app-info-content .tutorial-image { margin-bottom: 15px; }
+.app-info-content .app-desc { margin-bottom: 30px; }
+.app-info-content .app-desc h2, .app-info-content .app-image h2 { font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #333; }
+.app-info-content .app-desc .desc-content { color: #666; font-size: 12px; margin-bottom: 15px; line-height: 20px; }
+
+/*短信设置*/
+.app-inner-wrap h2.title { font-size: 16px; margin-bottom: 5px; color: #333; height: 24px; line-height: 24px; }
+.app-init { background-color: #f8f8f8; padding: 12px; margin-bottom: 15px; }
+.app-init ul li { display: inline-block; width: 210px; text-align: center; border-right: 1px dotted #ccc; }
+.app-init ul li:last-child { border-right: 0px; }
+.app-init ul li h5 { margin: 11px 0 0 0; margin-top: 11px; font-size: 22px; font-weight: 400; line-height: 18px; }
+.app-init ul li h6 { margin: 10px 0 0 0; font-size: 12px; font-weight: 400; line-height: 18px; }
+.app-init ul li a.btn { margin-top: -40px; }
+.app-autograph { font-size: 14px; color: #333; margin-bottom: 10px; line-height: 32px; }
+
+/*短信套餐*/
+.sms-box { padding: 0 10px; }
+.sms-box li { border: 1px solid #eee; width: 170px; height:80px; float: left; display: inline-block; margin-right: 10px; margin-bottom: 12px; display: inline-block; padding: 10px 15px; background: #F8F8F8; border-radius: 3px; cursor:pointer; text-align: center; font-size: 12px; color: #999; }
+.sms-box li.selected { border-color: #FF7700; border-width: 2px; padding: 9px 14px; }
+.sms-box li span { display: block; line-height: 22px;}
+.sms-box li span.dt { border-bottom: 1px dashed #ddd; margin-bottom: 5px; padding-bottom: 3px; }
+.sms-box li span em { font-size: 18px; font-weight: 600; margin-right: 5px; color: #FF7700; vertical-align: middle; margin-top: -5px; display: inline-block; font-family: Arial;}
+.sms-box li span.dd strong { font-size: 12px; color: #555; }
+
+/*支付方式*/
+.payment-tab { width: 100%; border-top: 1px solid #eee; }
+.payment-tab li { border: 1px solid #eee; border-top: none; padding: 10px 15px; font-size: 14px; font-weight: bold; }
+.payment-tab li label { height: 40px; line-height: 40px; display: inline-block; cursor: pointer; }
+.payment-tab li label input { vertical-align: middle; margin-top: -1px; cursor: pointer; }
+.payment-tab li label img{ border: 1px solid #eee; border-radius: 3px; width: 120px; height: 40px;}
+.payment-tab li .payment-name { font-size: 14px; color: #666; font-weight: 600; }
+.payment-tab li .pay-tips { margin-left: 10px; font-size: 12px; font-weight: normal; color: #666; display: inline-block; }
+.mail-image { max-width: 200px; max-height: 150px; padding: 5px; }
+
+/*付款弹框样式*/
+.pay-sms p.warning { width: 100%; height: 124px; text-align: center; padding: 40px 0px 20px; overflow: hidden; }
+.pay-sms p.warning i.fa{font-size: 68px; color: #F2E81C;}
+.pay-sms p.warning span { width: auto; height: 64px; line-height: 64px; margin-left: 10px; font-size: 14px; color: #333; display: inline-block; vertical-align: middle; }
+.pay-sms p.prompt { height: 30px; line-height: 30px; text-indent: 60px; }
+.pay-sms p.btns { padding: 30px 0px 20px 60px; }
+
+/*应用场景*/
+.detail-model{ margin-bottom:10px; padding:10px 25px;}
+.detail-model h2.title{ font-size:15px; margin-bottom:10px; font-weight:bold; color:#333;}
+.detail-model p{ line-height:24px; font-size:12px; color: #666;}
+.message-warning{color: #333; background: #ffc; border: 1px solid #fc6;  padding: 7px 15px; margin-bottom: 15px; line-height: 24px;}
+.message-warning p{line-height: 24px; font-size:12px; color:#333;}
+
+/*客户分群*/
+.group{ margin-bottom:10px; overflow:hidden;}
+.group.row{ margin-left: -8px; margin-right: -8px;}
+.group.row .col-sm-4{ padding-left: 8px; padding-right: 8px;}
+.group-region{ width: 100%; float: left; display:inline-block; border:1px solid #e9e9e9; font-size:12px;}
+.group-region:hover,.group-region-small:hover{ border-color:#58B4FF}
+.group-region .group-region-brief{padding: 15px 10px 10px; position:relative }
+.group-region .group-region-brief .icon{ width:60px; height:60px; background:url(../images/common/icon_small.png) no-repeat -347px -290px; position:absolute; top:15px; left:20px; display:block;}
+.group-region .group-region-brief .icon.icon-taste{ background-position:-347px -222px}
+.group-region .group-region-brief .icon.icon-new{ background-position:-347px -290px}
+.group-region .group-region-brief .icon.icon-old{ background-position:-347px -357px}
+.group-region .group-region-brief .icon.icon-bonus{ background-position:-273px -446px}
+.group-region .group-region-brief .icon.icon-index{ background-position:-217px -446px}
+.group-region .group-region-brief .icon.icon-weixin{ background-position:5px -446px}
+.group-region .group-region-brief .icon.icon-mail{ background-position:-105px -446px}
+.group-region .group-region-brief .icon.icon-app{ background-position:-160px -446px}
+.group-region .group-region-brief .icon.icon-sms{ background-position:-50px -446px}
+.group-region .group-region-brief p{ padding-left:85px; font-size:12px; color:#999;}
+.group-region .group-region-brief p.name{ font-size:14px; color:#333; margin-bottom:5px;}
+.group-region .group-region-brief p.desc{ height:34px;}
+.group-region .group-region-subtotal{ overflow:hidden; padding: 20px 0;}
+.group-region .group-region-subtotal dl{ width:33%; float:left; display:inline-block; text-align:center; border-right:1px dashed #ddd;}
+.group-region .group-region-subtotal dl dt.group-label{ margin-bottom:5px; font-weight: 200}
+.group-region .group-region-subtotal dl dd.num{color: #333; font-size:14px;}
+.group-region .group-region-subtotal dl:last-child{ border-right:none;}
+.group-region .group-region-btn{ color:#fff; display:block; text-align:center; font-size:14px; cursor:pointer; background:#58B4FF; line-height:34px;  width:100%;}
+.group-region .group-region-btn.disabled{background: #eee; cursor: not-allowed; color: #bbb;}
+.group.row .percent-20{ width:20%; padding-left: 8px; padding-right: 8px; float: left;}
+.group-region-small{ width: 100%; padding:20px; text-align:center;}
+.group-region-small .group-region-brief{height: 165px; padding-top: 75px;}
+.group-region-small .group-region-brief .icon{left: 50%; top:5px; margin-left: -30px;}
+.group-region-small .group-region-brief p{ padding-left:0px;}
+
+/*自由购核销*/
+.content-panel{ }
+.scan-box{ border:1px solid #eee; padding:5px; width:90%; margin:0px auto 20px; overflow:hidden; position:relative}
+.scan-box .scan-icon{ position:absolute; top:5px; left:5px; padding-right:6px; height:60px; display:inline-block; float:left; border-right:1px solid #eee;}
+.scan-box .scan-icon i{ width:60px; height:60px; display:block; background:url(../images/common/combine_img.png) no-repeat -120px -26px; }
+.scan-box .scan-input-box{ float:left; display:inline-block; width: 100%;}
+.scan-box .scan-input-box input{ text-align:left; font-size:24px; border:none; box-shadow:none !important; padding:5px 65px 5px 90px; height:60px; width: 100%;}
+.scan-box .scan-input-box input:hover{ border:none; }
+.scan-box .scan-delete{ width:30px; height:30px; font-size:24px;line-height: 26px; text-align: center; display:block; background:#eee; color:#fff; border-radius:99%; position:absolute; top:20px; right:80px; cursor:pointer;}
+.scan-box .scan-delete:hover{ background:#d9d9d9;}
+.scan-box a.scan-search-btn{width: 60px;height: 60px;background: #22BAA0;font-size: 18px;display: block;text-align: center;line-height: 60px;color: #fff;border-radius: 4px;position: absolute;right: 5px;top: 5px; cursor:pointer}
+.bill-panel{ border:1px solid #ddd; padding-bottom:50px; position:relative}
+.bill-panel .table{ border-width:0 0 1px 0;}
+.bill-panel .bottom-btn{ text-align:center; margin-top:90px; }
+.bill-panel i.state,.bill-panel i.state.unable{ width:160px; height:120px; display:block; position:absolute; top:-120px; right:160px;  background:url(../images/common/state.png) no-repeat -495px -30px;}
+.bill-panel i.state.not{ background-position:-495px -180px}
+.bill-panel i.state.finish{ background-position:-495px -330px}
+a.screen-btn{  position: absolute; top: 11px; right: 20px; z-index: 999;}
+.scan-box.backend .scan-icon i{ background-position:-183px -26px}
+.scan-box.backend a.scan-search-btn{ background:#58B4FF}
+
+/*自由购轮播图*/
+.banner-panel { max-width: 1000px; height: 400px; margin:25px auto; position: relative; overflow:hidden; margin-bottom: 15px; }
+.banner-panel .num { overflow:hidden; height: 25px; position: absolute; bottom:12px; right: 15px; zoom:1; z-index:3 }
+.banner-panel .num ul{overflow: hidden;margin: 0;}
+.banner-panel .num li { width: 18px; height: 18px; text-indent: -9999px;list-style:none;text-align: center; font-weight: 400; font-family: "微软雅黑", Arial; color: #FFFFFF; background:#999; background: rgba(0,0,0,0.5); margin-right: 6px; border-radius:50%; cursor:pointer; float: left; }
+.banner-panel .num li.selected{ background: #F30 }
+
+/*辅助高度滑块*/
+.slider{display:inline-block;vertical-align:middle;position:relative}
+.slider.slider-horizontal{width:210px;height:20px}
+.slider-horizontal+.slider-horizontal{ display:none}
+.slider.slider-horizontal .slider-track{height:10px;width:100%;margin-top:-5px;top:50%;left:0}
+.slider.slider-horizontal .slider-selection{height:100%;top:0;bottom:0}
+.slider.slider-horizontal .slider-handle{margin-left:-10px;margin-top:-5px}
+.slider.slider-horizontal .slider-handle.triangle{border-width:0 10px 10px 10px;width:0;height:0;border-bottom-color:#0480be;margin-top:0}
+.slider.slider-vertical{height:210px;width:20px}
+.slider.slider-vertical .slider-track{width:10px;height:100%;margin-left:-5px;left:50%;top:0}
+.slider.slider-vertical .slider-selection{width:100%;left:0;top:0;bottom:0}
+.slider.slider-vertical .slider-handle{margin-left:-5px;margin-top:-10px}
+.slider.slider-vertical .slider-handle.triangle{border-width:10px 0 10px 10px;width:1px;height:1px;border-left-color:#0480be;margin-left:0}
+.slider.slider-disabled .slider-handle{background-image:-webkit-linear-gradient(top,#dfdfdf 0,#bebebe 100%);background-image:-o-linear-gradient(top,#dfdfdf 0,#bebebe 100%);background-image:linear-gradient(to bottom,#dfdfdf 0,#bebebe 100%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdfdfdf',endColorstr='#ffbebebe',GradientType=0)}
+.slider.slider-disabled .slider-track{background-image:-webkit-linear-gradient(top,#e5e5e5 0,#e9e9e9 100%);background-image:-o-linear-gradient(top,#e5e5e5 0,#e9e9e9 100%);background-image:linear-gradient(to bottom,#e5e5e5 0,#e9e9e9 100%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe5e5e5',endColorstr='#ffe9e9e9',GradientType=0);cursor:not-allowed}
+.slider input{display:none}
+.slider .tooltip.top{margin-top:-36px}
+.slider .tooltip-inner{white-space:nowrap}
+.slider .hide{display:none}
+.slider-track{position:absolute;cursor:pointer; background: #ddd; -webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);border-radius:4px}
+.slider-selection{position:absolute; background:#ededed; -webkit-box-shadow:inset 0 -1px 0 rgba(0,0,0,0.15);box-shadow:inset 0 -1px 0 rgba(0,0,0,0.15);-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-radius:4px}
+.slider-handle{position:absolute;width:20px;height:20px;background-color:#42AAFF;-webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(0,0,0,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(0,0,0,.05);border:1px solid #3CA7FF}
+.slider-handle.round{border-radius:50%}
+.slider-handle.triangle{background:transparent none}
+.slider-handle.custom{background:transparent none}
+.slider-handle.custom::before{line-height:20px;font-size:20px;content:'\2605';color:#726204}
+
+.amount-widget{ position:relative; display:inline-block; width:80px;}
+.amount-widget input.slider-input{ width:50px !important;}
+.amount-btn{display: inline-block;vertical-align: middle;}
+.amount-btn a{width: 20px;height: 15px;color: #666overflow: hidden;cursor: pointer;border: 1px solid #ddd;display: block;line-height: 12px;text-align: center;font-size: 13px;background: #FAFAFA;}
+.amount-btn a.amount-plus{ margin-bottom:2px;} 
+
+
+/*手机短信推送模板*/
+.design-preview { position: absolute; top:-10px; right: 20px;  background:#ffffff url(../images/design/sms-bg.png) no-repeat top center; background-size: 100%;  width: 320px; height: 568px; border: 1px solid #ccc; }
+.design-entry {margin: 0 auto; overflow: hidden;}
+.design-config-region{position: relative;}
+.design-config-region h1{padding: 18px 78px 0 65px; height: 64px; line-height: 46px; font-size: 16px; color: #000; font-weight: bold; font-family: Arial; text-align: center; }
+.design-config-region h1 span { display: inline-block; height: 46px; width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+.design-fields-region{ position:relative;height: 435px; padding: 48px 15px;}
+.design-fields-region .sms-item{ position: relative; background: #E5E5EA; color: #010101; width: 240px; margin-bottom: 15px; display: block; text-align:left; padding: 7px 12px; border-radius: 16px; height: auto; font-size: 16px;}
+.design-fields-region .sms-item::after{  display: block; position: absolute; bottom: 8px; left: -8px; content: ''; width: 0; height: 0; border-style: solid; border-width: 8px 11px 8px 0; border-color: transparent #E5E5EA transparent transparent;}
+.design-preview.small{ width:280px;height: 496px;}
+.design-preview.small .design-config-region h1{ font-size: 14px; height: 55px; line-height: 36px; padding: 18px 65px 0 60px;}
+.design-preview.small .design-fields-region .sms-item { width: 210px; font-size: 14px;}
+

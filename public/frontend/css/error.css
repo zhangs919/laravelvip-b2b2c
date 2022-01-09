@@ -1,0 +1,23 @@
+@charset "utf-8"; 
+.header-top{ min-width: 990px;}
+.w1210{ width: 990px;}
+.header-box, .header-con, .header, .footer-info .info-text{ width: 990px;}
+.site-footer{ margin-top: 0px;}
+.footer-related{ padding: 0px;}
+
+.error{ margin: 70px auto 30px; width: 990px; min-height: 250px; overflow: hidden;}
+.error-l{ float: left; width: 350px; height: 370px; margin-left: 40px; background: url(../images/error.png) no-repeat;}
+.error-r{ float: right; width: 500px; font-size: 14px; line-height: 1.5;}
+.error-r .error-title{ width: 500px; height: auto; text-align: center;}
+.error-r .error-title p{ font-size: 30px; height: 70px; line-height: 70px; font-family: Tahoma, Geneva, sans-serif; overflow:hidden; width: 100%; text-overflow: ellipsis; white-space: nowrap; display: inline-block;}
+.error-r .error-line{ width: 500px; height: 2px; background: url(../images/error-line.png) no-repeat;}
+/*.error-r .error-info{ margin-left: 100px; padding: 30px 0px; list-style: none; overflow: hidden;}
+.error-r .error-info .title{ line-height: 40px; font-size: 16px; color: #333;}
+.error-r .error-info .error-con{ width: 350px; height: auto; max-height: 120px;line-height: 28px; text-indent: 24px; font-size: 12px; overflow: hidden;}
+.error-r .error-info .error-btn{ margin-top: 15px; color: #333;}
+.error-r .error-info .error-btn a{ margin: 0px 5px;}*/
+.error-r .error-box{ margin-left: 100px; padding: 30px 0px; list-style: none; overflow: hidden;}
+.error-r .error-box .error-title{ width: 400px; height: auto; line-height: 40px; font-size: 20px; text-align: left;}
+.error-r .error-box .error-info{ width: 400px; height: auto; max-height: 120px; line-height: 28px; text-indent: 24px; font-size: 12px; overflow: hidden;}
+.error-r .error-box .error-btn{ margin-top: 15px; color: #333;}
+.error-r .error-box .error-btn a{ margin: 0px 5px; }

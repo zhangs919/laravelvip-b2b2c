@@ -1,0 +1,53 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*edit.css*/
+.floatLeftTop { position: fixed; _position: absolute; top: 0; left: 0; width: 0; height: 0; font-size: 0;z-index: 29; margin: 0; padding: 0;}
+.floatLeftBottom { position: fixed; _position: absolute; bottom: 0; left: 0; width: 0; height: 0; font-size: 0; z-index: 29; margin: 0; padding: 0;}
+.floatRightBottom { position: fixed; _position: absolute;  bottom: 0; right: 0;width: 0; height: 0; font-size: 0; z-index: 29; margin: 0; padding: 0;}
+.moveFrame {position: fixed;border: #2b73ba 0 dashed;font-size: 0;overflow: hidden;zoom: 1;z-index: 9028;}
+
+/*moduleEditToll.css*/
+.edit-moduleToolbar {font-size: 12px;font-family: "Microsoft YaHei";overflow: hidden;position: absolute;z-index: 9099;background: #56a1e3}
+.edit-moduleToolbar-right {border-radius: 0 4px 4px 0}
+.edit-moduleToolbar-left {border-radius: 4px 0 0 4px}
+.edit-moduleToolbar .f-toolItem {position: relative;border-bottom: 1px solid #6cade7}
+.edit-moduleToolbar .f-toolItem:last-child {border-bottom: 0}
+.edit-moduleToolbar .f-icon {display: block;width: 20px;height: 20px;position: absolute;top: 50%;left: 3px;margin-top: -10px;background-image:url(../../images/design/moduleToolbar.png);background-repeat: no-repeat}
+.edit-moduleToolbar .f-title {display: block;position: relative;font-size: 12px;font-family: "Microsoft YaHei";color: #fff;padding: 11px 10px 11px 26px}
+.edit-moduleToolbar .f-title:hover {cursor: pointer;background: #4295de}
+.edit-moduleToolbar .f-icon {background-position: 3px 3px}
+.edit-moduleToolbar .f-onlyIcon {display: none}
+.edit-moduleToolbar .f-toolItembannerAndBorder .f-icon {background-position: 2px -227px}
+.edit-moduleToolbar .f-toolItemMoveUp .f-icon {background-position: 2px -336px}
+.edit-moduleToolbar .f-toolItemMoveDown .f-icon {background-position: 2px -314px}
+.edit-moduleToolbar .f-toolItemclose .f-icon {background-position: 5px -57px}
+.edit-moduleToolbar .f-toolItemclearTB .f-icon {background-position: 2px -91px}
+.edit-moduleToolbar .f-toolItemresetTB .f-icon {background-position: 2px -117px}
+.edit-moduleToolbar .f-toolItemadd .f-icon {background-position: 3px -286px}
+.edit-moduleToolbar .f-toolItemedit .f-icon {background-position: 3px -254px}
+.edit-moduleToolbar-multiModule {background: #7e807f}
+.edit-moduleToolbar-multiModule .f-toolItem {border-bottom: 1px solid #8f9090}
+.edit-moduleToolbar-multiModule .f-title:hover {background: #737373}
+.edit-moduleToolbar-multiModule .f-toolItemtabStyle .f-icon {background-position: 2px -27px}
+.edit-moduleToolbar-multiModule .f-toolItemmulColStyle .f-icon {background-position: 2px -27px}
+.edit-moduleToolbar-multiModule .f-toolItembannerAndBorder .f-icon {background-position: 3px -143px}
+.edit-moduleToolbar-fullmeasure {background: #7e807f;overflow: hidden}
+.edit-moduleToolbar-fullmeasure .f-toolItem {height: 31px;line-height: 31px;float: left;border: 0;border-right: 1px solid #8f9090}
+.edit-moduleToolbar-fullmeasure .f-toolItem:last-child {border-right: 0}
+.edit-moduleToolbar-fullmeasure .f-title {display: block;height: 100%;padding: 0 6px 0 6px}
+.edit-moduleToolbar-fullmeasure .f-title:hover {background: 0}
+.edit-moduleToolbar-multiModule.edit-moduleToolbar-top .f-toolItem, .edit-moduleToolbar-multiModule.edit-moduleToolbar-bottom .f-toolItem {border-color: #8f9090}
+.edit-moduleToolbar-top .f-toolItem:last-child, .edit-moduleToolbar-bottom .f-toolItem:last-child {border-right: 0}
+.edit-moduleToolbar-top .f-title, .edit-moduleToolbar-bottom .f-title {padding: 11px 11px 12px 15px}
+.edit-moduleToolbar-top .f-title .f-text, .edit-moduleToolbar-bottom .f-title .f-text {display: none}
+.edit-moduleToolbar-top .f-onlyIcon, .edit-moduleToolbar-bottom .f-onlyIcon {display: block}
+#context-menu-layer {z-index: 9030!important}
+.edit-moduleContextMenu {min-width: 120px;position: absolute;z-index: 9031!important;font-family: "Microsoft YaHei";font-size: 12px;list-style-type: none;border: 1px solid #f1f1f1;border-radius: 3px;background: #fff;padding: 4px 0;margin: 0;opacity: .95;filter: alpha(opacity=95);-webkit-box-shadow: 1px 1px 6px rgba(0,0,0,0.27);-moz-box-shadow: 1px 1px 6px rgba(0,0,0,0.27);-o-box-shadow: 1px 1px 6px rgba(0,0,0,0.27);box-shadow: 1px 1px 6px rgba(0,0,0,0.27)}
+.edit-moduleContextMenu .context-menu-item {position: relative;padding: 3px 20px;color: #000;text-align: center;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none}
+.edit-moduleContextMenu .f-tip {width: 12px;height: 12px;position: absolute;top: 50%;left: 10px;margin-top: -5px;background: 0}
+.edit-moduleContextMenu .context-menu-separator {padding: 0;margin: 4px 0;border-bottom: 1px solid #f1f1f1}
+.edit-moduleContextMenu .context-menu-hover {color: #fff;cursor: pointer;background-color: #2980b9}
+.edit-moduleContextMenu .f-icon-tickGlobal .f-tip, .edit-moduleContextMenu .f-icon-tickIndependent .f-tip {background: url(../../images/design/moduleToolbar.png) no-repeat 0 -234px}
+
+

@@ -1,0 +1,216 @@
+@charset "utf-8";
+/* CSS Document */
+.footer-info{ margin-top: 0px; padding-top: 15px;}
+
+/*************** 首页焦点区域 **********/
+.brand-banner{ width: 100%; height: 190px; position: relative; margin-bottom: 15px; background: #fbe8ed;}
+.brand-banner .brand-scroll{ width: 1210px; margin: 0px auto;}
+.brand-banner a.scrleft, .brand-banner a.scrright{ background: url(../images/goods-icon.png) no-repeat;}
+.brand-banner a.scrleft { width: 13px; height: 64px; background-position: -356px 0px; float: left; margin-left: 5px; margin-top: 65px; cursor: pointer;}
+.brand-banner a.scrright { width: 13px; height: 64px; background-position: -370px 0px; float: right; margin-right: 5px; margin-top: 65px; cursor: pointer;}
+.brand-banner .banner { width: 1150px; position: relative; height: 140px; margin-top: 25px; margin-left: 24px; overflow: hidden; float: left;}
+.brand-banner .banner ul { width: auto; position: absolute; left: 0; top: 0;}
+.brand-banner .banner li { float: left; width: 230px;}
+.brand-banner .banner li img { width: 210px; height: 140px; display: block;}
+
+
+.main{ width: 100%; height: auto; height: 100%; position: relative; overflow: hidden;}
+.main .brand-left{ width: 120px; min-height: 600px; position: relative; z-index: 102; float: left;} 
+.sort-menu { width: 120px; height: 600px; z-index: 4; overflow: hidden;}
+.sort-menu dd { float: left; width: 120px; height: 100%; overflow: hidden;}
+.sort-menu dd ul { position: absolute; top: 0px;}
+.sort-menu dd ul li { right: 0; width: 100px;}
+.sort-menu dd ul li a { display: block; width: 110px; padding: 9px 5px; border-bottom: 1px solid #857866; border-left: 1px solid #7B6E5D; background: #5B503C; text-align: center; text-decoration: none; color: #FFFEFD;}
+.sort-menu dd ul li:hover a, .sort-menu dd ul li.on a { background: #F60; text-decoration: none; color: #FFF;}
+.sort-menu dd ul li a img { display: block; display: none; margin: 0 auto;}
+
+.main .brand-right{ width: 1060px; height: 100%; float: right;}
+.brand-list{ width: 1060px;}
+.brand-list h2{ width: 1060px; height: 20px; line-height: 20px; padding: 10px 0px; font-weight: normal; border-bottom: 2px solid #eee; margin: 0 auto; margin-bottom: 20px;}
+.brand-list h2 i{ height: 20px; width: 3px; display: inline-block; vertical-align: middle; margin-top: -3px; margin-right: 5px;}
+.brand-list ul{ width: 1080px; display: inline-block;}
+.brand-list li { width: 326px; height: 272px; overflow: hidden; margin: 0 20px 20px 20px; float: left;}
+.brand-list li.li-spe{ margin-left: 0px;}
+.brand-list li .listbox{ border: 1px solid #eee; width: 324px; height: 270px; overflow: hidden; display: inline-block;}
+.brand-list li .listbox .brand-suspend-img { position: relative; display: block; width: 300px; height: 200px; margin: 11px; text-align: center;}
+.brand-list li .listbox .brand-suspend-img img{ max-width: 100%; max-height: 100%;}
+.brand-list li .listbox .brand-con{ height: 40px; margin-top: 10px;}
+.brand-list li .listbox .brand-img { float: left; margin-left: 8px; padding: 0 15px; width: 120px; height: 40px; border-right: 1px dashed #e5e5e5;}
+.brand-list li .listbox .brand-img img { width: 100px; height: 40px;}
+.brand-list li .listbox .brand-name{ float: right; margin-right: 10px; width: 146px; height: 40px; line-height: 40px; text-align: center;}
+.brand-list li .listbox .brand-name span{ font-size: 16px; font-family: "microsoft yahei"; text-decoration: none;}
+
+.brand-content{ width: 100%; height: 240px; background: #fff url(../images/banner-bg.jpg) no-repeat scroll 0 center;}
+.brand-info{ width: 1210px; position: relative; padding-top: 24px; margin: 0px auto;}
+.brand-info .brand-logo{ position: relative; width: 110px; height: 110px; border-radius: 55px; background: #fff; margin: 0 auto;}
+.brand-info .brand-logo img{ width: 100px; height: 40px; position: absolute; top: 50%; left: 50%; margin: -20px -50px;}
+.brand-info .brand-desc{ width: 900px; height: 57px; color: #fff; padding-top: 20px; margin: 0 auto; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px; text-indent: 24px;}
+
+/*条件筛选*/
+.search-wrap .selected-attr li i, .search-wrap .brand-abox-imgul .brand-seled i, .sanjiao-red, #filter .order b, #filter .pagin .icon, .filter-tag .icon, .filter-tag-radio .icon, .filter-type .filter-type-icon, .list-grid .operate-btn i, .list-grid .add-cart, .category .item h3 i{ background: url(../images/common-icon.png) no-repeat;}
+.search-wrap { width: 1210px; text-align: left; border-top: 1px solid #eee; border-bottom: 1px solid #eee; position: relative; z-index: 1;}
+.search-wrap dl { width: 1188px; border-top: 1px dotted #ddd; padding: 10px 10px 5px 10px; margin: 0; overflow: hidden; border-left: 1px solid #eee; border-right: 1px solid #eee;}
+.search-wrap dl dt { float: left; width: 70px; height: 24px; line-height: 24px; text-align: right; padding: 0px 5px 5px 0; color: #999; overflow: hidden;}
+.search-wrap dl dd { float: none; padding: 0px 10px 0 0; margin: 0; overflow: hidden;}
+.search-wrap dl dd.moredd { float: right; text-align: left; text-indent: 10px; width: 110px; padding: 0;}
+.search-wrap dl dd i { float: left; overflow: hidden; width: 4px; height: 1px; margin: 12px 4px 0 0; background: #ccc;}
+.search-wrap dl dd ul { float: left; padding: 0; margin: 0;}
+.search-wrap dl dd .attr-abox-1 { padding-top: 3px;}
+.search-wrap dl dd ul li { float: left; padding: 0 10px 5px 0; line-height: 24px; white-space: nowrap;}
+.search-wrap dl dd ul li a { color: #666;}
+.more, .more.opened { float: left; display: block; color: #666; padding: 0; margin: 0; width: 45px; height: 20px; line-height: 21px; background-position: 27px -54px; text-indent: 0;}
+.more.opened { background-position: 27px -12px;}
+.more:hover { background-position: 27px -34px;}
+.more.opened:hover { background-position: 27px 8px;}
+.multiple { float: right; padding: 0; margin: 0; text-align: center; text-indent: 0; background: #fff; width: 50px; height: 20px; line-height: 20px; border: 1px solid #eee;}
+.multiple:hover { border-width: 1px; border-style:solid;}
+.duo-b { font-size: 13px; font-weight: bold; padding-right: 3px;}
+.input-txt { float: left; width: 50px; height: 23px; line-height: 23px; border: 1px solid #ddd; margin-right: 5px; color: #999999; padding: 0px 5px;}
+.select-button { display: inline-block; height: 23px; padding: 0 12px; margin-top: 2px; line-height: 23px; border-radius: 2px; margin-top: 0; text-align: center; cursor: pointer; color: #999; background: #fff; border: 1px solid #ddd;}
+.select-button:hover { border-width: 1px; border-style:solid;}
+.select-button.disabled, .select-button.disabled:hover { border: 1px solid #eee; color: #ddd; cursor: default;}
+.select-button-sumbit { border-width: 1px; border-style: solid; color: #fff; cursor: pointer;}
+.select-button-sumbit:hover { color: #fff;}
+.attr-group-more { display: inline-block; text-align: center; position: relative; border: 1px solid #eee; border-top: 1px solid #fff; margin-top: -1px; background: #fff; z-index: 2;}
+.attr-group-more a { color: #666; height: 28px; line-height: 28px; padding: 5px 10px;}
+.search-wrap dl dd ul.brand-abox-ul { float: left; margin: 0; width: 100%;}
+.search-wrap dl dd ul.brand-abox-ul li { float: left; padding: 0 15px 5px 0; width: 75px; overflow: hidden;}
+#brand-sobox { overflow: hidden; margin-bottom: 10px;}
+#brand-sobox input { border: 1px solid #ddd; height: 22px; line-height: 22px; width: 160px; color: #999; padding: 0px 5px;}
+#brand-zimu { margin-bottom: 10px; width: 100%;}
+#brand-zimu span { float: left; height: 20px; margin-right: 3px;}
+#brand-zimu span a { display: block; height: 20px; line-height: 20px; min-width: 15px; padding: 0 5px; color: #666; text-align: center;}
+#brand-zimu span.span {  position: relative;}
+#brand-zimu span.span b { display: block; border-style: solid dashed dashed; border-width: 4px; font-size: 0; overflow: hidden; width: 0; height: 0; _zoom: 1; position: absolute; bottom: -8px; left: 50%; margin-left: -4px;}
+#brand-zimu span.span a { display: block; height: 20px; line-height: 20px; min-width: 15px; padding: 0 5px; color: #fff; text-align: center;}
+.brand-more { border: 1px solid #ddd; overflow: hidden; padding: 10px; margin: 0; margin-bottom: 10px; height: 100px; overflow-y: scroll; position: relative;}
+.brand-more-ecshop68-2 { overflow: hidden; padding: 10px; margin: 0;}
+.search-wrap .selected-attr-dl { border-bottom: 1px dotted #ccc; border-top: none;}
+.search-wrap .selected-attr-dl .moredd { text-align: right;}
+.search-wrap .selected-attr { float: left; overflow: hidden;}
+.search-wrap .selected-attr li { float: left; height: 24px; margin: 0 5px 5px 0; padding: 0;}
+.search-wrap .selected-attr li a { display: block; height: 22px; line-height: 22px; border: 1px solid #eee; padding: 0 26px 0 4px; position: relative; z-index: 1;}
+.search-wrap .selected-attr li b { font-weight: normal;}
+.search-wrap .selected-attr li i { margin: 0; text-decoration: none; display: block; position: absolute; right: 0; top: 0; width: 22px; height: 22px; background-position: -424px 6px;}
+.search-wrap .selected-attr li a:hover { border-width: 1px; border-style: solid;}
+.search-wrap .selected-attr li a:hover i { background: url(../images/common-icon.png) no-repeat -424px -12px #FA4862;}
+.search-wrap .brand-abox-imgul { float: left; margin: 0; padding: 0; list-style: none; margin-bottom: 5px; padding-left:1px; padding-bottom: 1px; *padding-bottom:1px; display: block; position: relative; overflow: hidden;}
+.search-wrap .brand-abox-imgul li { float: left; text-align: center; width: 100px; height: 40px; line-height: 40px; padding: 0; margin: 0 0 -1px -1px; border: 1px solid #ddd;}
+.search-wrap .brand-abox-imgul li.bottom { float: left; text-align: center; width: 100px; height: 40px; line-height: 40px; padding: 0; margin: 0 0 -1px -1px; border: 1px solid #ddd;}
+.brand-abox-imgul li:last-child{ margin-right:0px !important;}
+.search-wrap .brand-abox-imgul li:hover { border-width: 1px; border-style: solid; position: relative; z-index: 1;}
+.search-wrap .brand-abox-imgul li img { float: left; width: 100px; height: 40px;}
+.search-wrap .brand-abox-imgul li a { display: block; width: 100px; height: 40px; position: relative; background: #fff; cursor: pointer;}
+.search-wrap .brand-abox-imgul li a span { display: none; width: 100px; height: 40px; line-height: 40px; text-align: center; background: #fff;}
+.search-wrap .brand-abox-imgul li a i { display: none;}
+.search-wrap .brand-abox-imgul li a:hover span { position: absolute; left: 0; top: 0; display: block;}
+.search-wrap .brand-abox-imgul .brand-seled { border: 1px solid #FA4682; background-position: 80px; position: relative; z-index: 1;}
+.search-wrap .brand-abox-imgul .brand-seled i { display: block; width: 10px; height: 10px; margin: 0; background-position: 0 -122px; position: absolute; right: 0; bottom: 0;}
+.search-wrap dl .duoxuan-btnbox { float: left; width: 100%; margin: 15px auto 7px auto; display: none;}
+.search-wrap dl.duoxuan .duoxuan-btnbox { display: block; text-align: center;}
+.search-wrap dl.duoxuan .duoxuan-btnbox .select-button:last-child { margin-left: 10px; white-space: nowrap;}
+.search-wrap dl .checkBox { vertical-align: middle; display: none;}
+.search-wrap dl.duoxuan .checkBox { display: inline; cursor: pointer;}
+.color-value li span { width: 17px; height: 17px; margin-top: 5px; display: block; position: relative; border: 1px solid #f5f5f5;}
+.color-value li span a { display: block; cursor: pointer; width: 17px; height: 17px;}
+.bg-000000 { background: #000}
+.bg-EDEDED { background: #EDEDED}
+.bg-FFA012 { background: #FFA012}
+.bg-DDDDDD { background: #DDDDDD}
+.bg-FFFFFF { background: #FFFFFF}
+.bg-FFA1DC { background: #FFA1DC}
+.bg-C403FF { background: #C403FF}
+.bg-00FF00 { background: #00FF00}
+.bg-D5C47E { background: #D5C47E}
+.color-value li span.selected { display: block; border-width: 1px; border-style: solid; width: 17px; height: 17px;}
+.color-value li span .sanjiao-red { width: 10px; height: 10px; position: absolute; right: 0; bottom: 0; background-position: 0 -122px; display: none;}
+.color-value li span.selected .sanjiao-red { display: block;}
+
+#filter { border: 1px solid #EEE; background: #FFF;}
+#filter.filter-fixed { position: fixed;top: 0; z-index: 999999; width: 1208px;}
+#filter.filter-fixed .fore2 { display: none;}
+#filter .fore1 { background: #F9F9F9; height: 38px; line-height: 38px; overflow: hidden;}
+#filter .fore2 { border-top: 1px solid #EEE; background: #fff; height: 38px;}
+#filter .order { float: left; height: 38px;}
+#filter .order dd { float: left;}
+#filter .order a { display: block; height: 38px; padding: 0 18px; border-left: solid 1px #F9F9F9; border-right: solid 1px #F9F9F9; margin-left: -1px;}
+#filter .order .first a, #filter .order .curr.first a { margin-left: 0; border-left: 0;}
+#filter .order .curr a, #filter .order a:hover { position: relative; z-index: 1; background: #FFF; border-color: #eee;}
+#filter .order b { position: relative; top: 3px; right: -1px; width: 14px; height: 14px; overflow: hidden; display: inline-block; z-index: 2;}
+#filter .order b.icon-order-DESCending { background-position: 2px -147px;}
+#filter .order .curr b.icon-order-ASCending { background-position: -23px -169px;}
+#filter .order .curr b.icon-order-DESCending, #filter .order a:hover b.icon-order-DESCending { background-position: -23px -147px;}
+#filter .pagin { float: right; line-height: 38px; overflow: hidden;}
+#filter .pagin .prev, #filter .pagin .next, #filter .pagin .text { float: left; line-height: 37px;}
+#filter .pagin .prev, #filter .pagin .next { padding: 0 15px; height: 38px;}
+#filter .pagin .icon { display: inline-block; width: 6px; height: 9px; margin-top: 14px;}
+#filter .pagin .prev .prev-btn { background-position: -26px 0;}
+#filter .pagin .prev-btn:hover { background-position: -42px 0;}
+#filter .pagin .prev-disabled { background-position: -58px 0;}
+#filter .pagin .next .next-btn { background-position: -74px 0;}
+#filter .pagin .next-btn:hover { background-position: -90px 0;}
+#filter .pagin .next-disabled { background-position: -106px 0;}
+#filter .total { float: right;}
+#filter .total span { padding: 0 3px;}
+#filter .filter-btn { float: left; height: 38px;}
+.filter-tag, .filter-tag-radio { float: left; height: 38px; line-height: 38px; margin-left: 17px; cursor: pointer; color: #666; white-space: nowrap;}
+.filter-tag .icon, .filter-tag-radio .icon { float: left; margin-top: 13px; width: 13px; height: 13px;}
+.filter-tag .icon { background-position: -26px -12px;}
+.filter-tag:hover .icon, .filter-tag.curr .icon { background-position: -40px -12px;}
+.filter-tag .text, .filter-tag-radio .text { float: left; margin-left: 4px;}
+.filter-tag-radio .icon { background-position: -56px -12px;}
+.filter-tag-radio.curr .icon, .filter-tag-radio:hover .icon { background-position: -71px -12px;}
+.filter-mod { float: right; height: 38px; overflow: hidden; background: #FCFCFC;}
+.filter-mod .filter-type { width: 38px; height: 38px; float: left; overflow: hidden; border-left: 1px solid #eee; border-right: 1px solid #eee; margin-right: -1px;}
+.filter-mod .filter-type-icon { display: block; margin-top: 14px; margin-left: 14px; width: 12px; height: 12px;}
+.filter-type-list .filter-type-icon { background-position: -70px -30px;}
+.filter-type-grid .filter-type-icon { background-position: -26px -30px;}
+.filter-type-text .filter-type-icon { background-position: -114px -30px;}
+.filter-type-list:hover .filter-type-icon, .filter-type-list.curr .filter-type-icon { background-position: -92px -30px;}
+.filter-type-grid:hover .filter-type-icon, .filter-type-grid.curr .filter-type-icon { background-position: -48px -30px;}
+.filter-type-text:hover .filter-type-icon, .filter-type-text.curr .filter-type-icon { background-position: -136px -30px;}
+.filter-type.curr { background-color: #fff;}
+.filter-type:hover { background-color: #fff;}
+
+/*列表 表格形式*/
+.list-grid { overflow: hidden;}
+.list-grid .item { float: left; font-size: 12px; width: 228px; margin: 15px 15px 0 0; padding: 1px;}
+.list-grid .item.last { margin-right: 0;}
+.list-grid .item-con { background: #FFF; line-height: 18px; padding: 4px; border: solid 1px #eee; position: relative; z-index: 11; overflow: hidden;}
+.list-grid .item-tag-box { position: absolute; left: 4px; top: 4px;}
+.list-grid .item-tag { width: 40px; height: 22px; text-align: center; position: relative; color: #fff; z-index: 2;}
+.list-grid .item-tag span { display: block; width: 40px; height: 22px; line-height: 22px; text-align: center; font-size: 12px;}
+.list-grid .item-tag i { position: absolute; display: block; border-style: solid; border-width: 9px 20px; left: 0; top: 22px;}
+.list-grid .item-pic, .list-grid .item-pic img { width: 220px; height: 220px;}
+.list-grid .shop-over { width: 220px; height: 220px; position: absolute; left: 4px; top: 4px; background: url(../images/soldout.png) no-repeat center center;}
+.list-grid .item-info { padding: 0 6px;}
+.list-grid .item-price { display: block; height: 20px; line-height: 20px; padding: 15px 0 0; overflow: hidden;}
+.list-grid .sale-price { font-size: 20px; font-weight: 400; font-family: Arial, Helvetica, sans-serif; text-overflow: ellipsis; white-space: nowrap; width: auto; float: left; margin-right: 5px; overflow: hidden;}
+.list-grid del{ color: #b9b9b9;}
+.list-grid .sale-count { float: right; font-family: "Microsoft YaHei", Arial; color: #b9b9b9;}
+.list-grid .item-name { line-height: 20px; color: #999; height: 40px; display: block; overflow: hidden; margin: 5px 0;}
+.list-grid .item-name i{ margin-left: 5px;}
+.list-grid .item-name i.free-shipping{ border: 1px solid #ffe1d3; background: #fff0e7; padding: 0px 5px;}
+.list-grid .item-name i.gift{ color: #fff; background: #0ABEDE; padding: 0px 3px;}
+.list-grid .item-con-info{ height: 50px; overflow: hidden;}
+.list-grid .item-con-info .item-operate { overflow: hidden; position: relative; height: 22px; padding: 3px 0;}
+.list-grid .item-con-info .operate-btn { float: left; width: auto; height: 18px; overflow: hidden; margin-right: 10px; padding-left: 18px; color: #b9b9b9; position: relative;}
+.list-grid .item-con-info .operate-btn i {	position: absolute; display: block; width: 14px; height: 14px; left: 0; top: 2px;}
+.list-grid .item-con-info .compare-btn i { background-position: -26px -11px;}
+.list-grid .item-con-info .compare-btn.curr i, .list-grid .compare-btn:hover i { background-position: -40px -11px;}
+.list-grid .item-con-info .collet-btn i { background-position: -91px -11px;}
+.list-grid .item-con-info .operate-btn.curr, .list-grid .operate-btn:hover { cursor: pointer;}
+.list-grid .item-con-info .collet-btn.curr i, .list-grid .collet-btn:hover i { background-position: -107px -11px;}
+.list-grid .item-con-info .comment-btn i { background-position: -124px -11px;}
+.list-grid .item-con-info .comment-btn:hover i { background-position: -141px -11px;}
+.list-grid .item-con-info .item-shop{ height: 22px; line-height: 22px;}
+.list-grid .item-con-info .item-shop .dsrs { margin-top: 4px; width: 15px; float: left;}
+.list-grid .item-con-info .item-shop .dsrs .dsr { float: left; margin-top: 2px; height: 2px; width: 10px; overflow: hidden; background: #f40;}
+.list-grid .item-con-info .item-add-cart{ width: 30px; height: 50px; overflow: hidden;}
+.list-grid .item-con-info .item-add-cart .add-cart { display: block; width: 30px; height: 30px; background-position: -165px 0; margin-top: 10px;}
+.list-grid .item-con-info .item-add-cart .add-cart.tell-me { background-position: -64px -94px;}
+
+/*没有信息内容时显示*/
+.tip-box { width: 300px; height: 300px; text-align: center; margin: 80px auto 0px;}
+.tip-box .tip-icon { display: block; max-width: 100%; max-height: 100%; margin: 0 auto;}
+.tip-box .tip-text { line-height: 20px; padding: 10px; font-size: 14px;}
