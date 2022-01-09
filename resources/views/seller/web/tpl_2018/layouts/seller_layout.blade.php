@@ -55,7 +55,7 @@
     <!-- 加载Chosen插件 END-->
     <script src="/seller/js/common.js?v=1.2"></script>
     {{--todo 暂时注释--}}
-    {{--<script src="/assets/d2eace91/js/lodop/LodopFuncs.js?v=1.2"></script> --}}
+    <script src="/assets/d2eace91/js/lodop/LodopFuncs.js?v=1.2"></script>
     <script type="text/javascript">
         // 返回顶部js
         $(window).scroll(function() {
@@ -160,13 +160,12 @@
 <!--顶部导航-->
 <div class="seller-head">
     <!--导航-->
-    <div class="seller-nav">
-        <div class="site-nav-content wrapper">
+    <div class="seller-nav first-sidebar">
+        <div class="site-nav-content">
             <div class="seller-logo">
-                <a href="/index" target="_blank">
-                    <img src="{{ get_image_url(sysconf('seller_center_logo')) }}">
+                <a href="/shop/shop-set/edit"  title="[&nbsp;店铺&nbsp;]&nbsp;{{ $shop_info->shop_name ?? '' }}">
+                    <img src="{{ get_image_url($shop_info->shop_image) ?? '' }}" />
                 </a>
-                <h1 class="hide">卖家中心</h1>
             </div>
             <div class="seller-nav-list">
                 <ul>
@@ -174,20 +173,22 @@
                 @foreach(seller_top_menus() as $menu)
                     <!--   -->
 
-                        <li data-param="{{ $menu['menus'] }}" class="@if(@$menu_select['action'] == explode('|',$menu['menus'])[0]) active @endif">
+                        <li data-param="{{ $menu['menus'] }}" class="@if(@$menu_select['action'] == explode('|',$menu['menus'])[0]) active @endif @if($menu['menus'] == 'dashboard'){{ 'activity' }}@elseif($menu['menus'] == 'account'){{ 'setting' }}@endif">
                             <a href="javascript:void(0);" target="_top" data-menus="{{ $menu['menus'] }}" onClick="toFirst(this)">
+                                <i class="sidebar-icon  sidebar-icon-{{ $menu['menus'] }}"></i>
                                 <em>{{ $menu['title'] }}</em>
                             </a>
                             @if(@$menu_select['action'] == explode('|',$menu['menus'])[0])
                                 <b class="arrow"></b>
                             @endif
                             @if(!empty($menu['child']))
-                                <div class="sub-list">
-                                    <ul>
+                                <div class="second-sidebar" @if($menu['menus'] == 'index')style="display: none;"@endif>
+                                    <div class="second-sidebar-title">{{ $menu['title'] }}管理</div>
+                                    <ul class="left-menu">
 
                                         @foreach($menu['child'] as $child)
-                                            <li>
-                                                <a href="{{ $child['url'] }}" data-menus="{{ $child['menus'] }}" onClick="to('{{ $child['url'] }}', this)" target="{{ @$child['target'] }}">{{ $child['title'] }}</a>
+                                            <li class="@if($menu_select['current'] == explode('|',$child['menus'])[1] || @$menu_select['current'] == get_seller_mac_by_url($child['url'])[1]){{ 'selected' }}@endif">
+                                                <a href="{{ $child['url'] }}" data-menus="{{ $child['menus'] }}" onClick="to('{{ $child['url'] }}', this)" target="{{ @$child['target'] }}">{{ $child['title'] }}<i class="fa fa-caret-right icon pull-right"></i></a>
                                             </li>
                                         @endforeach
 
@@ -201,234 +202,93 @@
             </div>
 
             <!--个人信息-->
-            <div class="admin">
-                <a class="dropdown-toggle">
-                    <div class="pic" title="[&nbsp;店铺&nbsp;]&nbsp;{{ $seller->nickname ?? '' }}">
-                        <img src="{{ get_image_url(sysconf('default_user_portrait')) }}">
+            <div class="user-info">
+					<span class="user-name">
+
+									{{ $seller->nickname ?? '' }}
+
+					</span>
+                <div class="user-dropdown">
+                    <div class="user-dropdown-meta">
+                        <div class="name">[&nbsp;店铺&nbsp;]
+
+                            {{ $seller->nickname ?? '' }}
+
+                        </div>
+                        <div class="">{{ $seller->mobile ?? '' }}</div>
                     </div>
-                </a>
-                <ul id="admin-panel" class="dropdown-menu dropdown-list right animated fadeInUp">
-                    <li class="top-dropdown-bg"></li>
-                    <li class="user-title">
-                        <h5>
-                            <span class="user-role m-r-2">[&nbsp;店铺&nbsp;]</span>
-                            <span class="user-name" title="{{ $seller->nickname ?? '' }}">
+                    <div class="user-dropdown-select">
 
-                                {{ $seller->nickname ?? '' }}
-
-                            </span>
-                        </h5>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="{{ route('pc_home') }}" target="_blank">
-                            <i class="fa fa-home"></i>
-                            商城首页
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ route('user_center') }}" target="_blank">
-                            <i class="fa fa-user"></i>
-                            用户中心
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://{{ env('FRONTEND_DOMAIN') }}/user/security/edit-password" target="_blank">
-                            <i class="fa fa-lock"></i>
-                            修改密码
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/site/logout" data-method="post" data-confirm="您确定要退出卖家中心吗？">
-                            <i class="fa fa-sign-out"></i>
-                            退出
-                        </a>
-                    </li>
-                </ul>
+                        <a  href='{{ route('pc_home') }}' target="_blank">前往店铺</a> <a href="http://{{ env('FRONTEND_DOMAIN') }}/user/security/edit-password.html" >修改密码</a> <a  onClick="clearCache()">清除缓存</a> <a href="/site/logout.html" data-method="post" data-confirm="您确定要退出卖家中心吗？">安全退出</a> </div>
+                </div>
             </div>
-            <!--右侧菜单-->
-            <div class="right-menu">
-                <ul>
-                    <li class="we-chat">
-                        <a class="go-store dropdown-toggle" href="{{ route('pc_shop_home', ['shop_id'=>session('seller')['shop_id']]) }}" title="前往店铺" target="_blank">
-                            <i></i>
-                            <span>店铺</span>
-                        </a>
-                        <div class="we-chat-box dropdown-menu dropdown-list animated fadeInUp">
-                            <div class="top-dropdown-bg"></div>
-                            <h5>微信扫码访问</h5>
-                            <img class="we-chat-img" src="http://images.68mall.com/15164/gqrcode/shop/C4/qrcode_1.png">
-                            <div class="we-chat-btn" style="position: relative;">
-                                <a class="m-r-10 btn-copy" href="#" data-clipboard-text="{{ route('mobile_shop_home', ['shop_id'=>session('seller')['shop_id']]) }}">复制页面链接</a>
-                                <a class="" href="{{ route('pc_shop_home', ['shop_id'=>session('seller')['shop_id']]) }}" target="_blank">电脑上查看</a>
-                            </div>
-                        </div>
-                    </li>
 
-                    <li id="message-box" class="top-menu">
-                        <a class="message-alert" data-toggle="dropdown" title="查看待处理事项">
-                            <i></i>
-                            <span>提醒</span>
-                            <em id="message_logo" style="display: none">0</em>
-                        </a>
-                        <!-- 消息提醒 -->
-                        <div id="message-panel" class="manager-menu right dropdown-menu animated fadeInDown" style="display: none;"><span class="top-dropdown-bg"></span>
-                            <div class="message-title">
-                                <h5>
-                                    <i class="news-icon"></i>
-                                    消息通知（0）
-                                    <input id="counts_time" type="hidden" value="1532252602">
-                                </h5>
-                                <!--<a class="close" href="javascript:;"></a>-->
-                            </div>
-                            <div class="message-info">
-
-
-                                <div class="no-data-page">
-                                    <div class="icon">
-                                        <i class="fa fa-bell-o"></i>
-                                    </div>
-                                    <h5>暂无消息内容</h5>
-                                    <p>暂时没有消息提醒，稍后再来看看吧！</p>
-                                </div>
-
-
-                            </div>
-                            <script>
-                                function message_click(object_type) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/site/message-update',
-                                        data: {
-                                            'object_type': object_type
-                                        },
-                                        dataType: 'json',
-                                        success: function(result) {
-                                            if (result.code == 0) {
-                                                if (result.data.message_logo_counts <= 0) {
-                                                    $("#message_logo").hide();
-                                                }
-                                                $("#message_logo").html(result.data.message_logo_counts);
-                                                window.location.href = result.data.url;
-                                            } else {
-                                                $.msg(result.message);
-                                            }
-                                        }
-                                    });
-                                }
-                            </script>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="wipe-cache" onclick="clearCache()" title="清除缓存">
-                            <i></i>
-                            <span>清缓存</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
+
 </div>
+
 <!--中间内容-->
 <div class="seller-center">
-    <div class="wrapper">
 
-        <!--左侧部分-->
-        <div class="seller-left">
-            <!--搜索-->
-            <div class="search">
-                <div class="search-bar">
-                    <!--这里搜索-->
-                    <form action="/goods/list/index" method="GET" target="_blank">
-                        <input class="search-input-text" placeholder="商城商品搜索" type="text" name="keyword" />
-                        <a class="search-input-btn" href="javascript:void(0);" title="点击进行搜索" onClick="$(this).parents('form').submit();")">
-                        <i class="fa fa-search"></i>
-                        </a>
-                    </form>
-                </div>
+    <!--右侧内容-->
+    <div class="seller-rihgt">
+        <div class="seller-page">
+
+            <!--在这里调用内容-->
+
+            {{--css style--}}
+            @section('style')@show
+
+            <div class="page">
+
+                {{--fixed_bar--}}
+                @include('layouts.partials.fixed_bar')
+
+                {{--title_bar--}}
+                @include('layouts.partials.title_bar')
+
+                {{--explain_panel--}}
+                @include('layouts.partials.explain_panel')
+
+                {{--content--}}
+                @yield('content')
+
+                {{--script--}}
+                @section('script')@show
+
+
             </div>
 
-            <!--左侧导航-->
-            <ul class="left-menu">
-                <!--当首页选中的时候，这块显示添加常用功能菜单按钮，点击弹出选择常用功能菜单,最多可选择10个；选择完毕后，以下面的li标签内容显示，添加按钮则隐藏-->
-                <div class="add-quickmenu" style="display: none">
-                    <a href="javascript:;" title="添加常用功能菜单" data-toggle="modal" data-target="#allModal">
-                        <i class="fa fa-plus"></i>
-                        添加常用功能菜单
-                    </a>
-                </div>
+            {{--extra html block--}}
+            @section('extra_html')@show
+
+            {{--helper_tool--}}
+            @section('helper_tool')@show
+
+            {{--footer script--}}
+            @section('footer_script')@show
 
 
-                @if(!empty(seller_top_menus()[@$menu_select['action']]['child']))
-                @foreach(seller_top_menus()[@$menu_select['action']]['child'] as $menu)
 
-                <li class="@if(@$menu_select['current'] == explode('|',$menu['menus'])[1] || @$menu_select['current'] == get_seller_mac_by_url($menu['url'])[1]) selected @endif">
-
-                    <a href="{{ $menu['url'] }}" data-menus="{{ $menu['menus'] }}" onClick="to('{{ $menu['url'] }}', this)">{{ $menu['title'] }}</a>
-
-                </li>
-
-                @endforeach
-                @endif
-
-
-                <!--分割线-->
-                <!--      <li class="line"></li> -->
-            </ul>
         </div>
 
-        <!--右侧内容-->
-        <div class="seller-rihgt">
-            <div class="seller-page">
-                <div class="seller-page-bg"></div>
-                <!--在这里调用内容-->
-
-                {{--css style--}}
-                @section('style')@show
-
-                <div class="page">
-
-                    {{--fixed_bar--}}
-                    @include('layouts.partials.fixed_bar')
-
-                    {{--title_bar--}}
-                    @include('layouts.partials.title_bar')
-
-                    {{--explain_panel--}}
-                    @include('layouts.partials.explain_panel')
-
-                    {{--content--}}
-                    @yield('content')
-
-                    {{--script--}}
-                    @section('script')@show
-
-
-                </div>
-
-                {{--extra html block--}}
-                @section('extra_html')@show
-
-                {{--helper_tool--}}
-                @section('helper_tool')@show
-
-                {{--footer script--}}
-                @section('footer_script')@show
-
-                <a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
 
 
 
+    </div>
+    <!--消息提醒-->
+    <!-- 获取翼客服一键登录地址 -->
 
-
+    <div id="message-box" class="notice-center">
+        <div class="notice-nav">
+            <a class="notice-nav-service" href="https://kf.yunmall.68mall.com/admin/login/witchAccount.html?url=UmIEawE2AjRQOFUfCGpQN1MRBGwDUFEtBC9SJFF6BHBcTVQVUG4HJ1tsAXFcJwZLBzdTKQFVUDsBNQZMBTVSB1JGBH0BKwI%2FUHdVdAhxUChTIgRiAz1RZQR%2BUiJRcwRmXH1UC1BqBzBbMwE0" target='_blank'><span class="icon customer-service"></span>客服消息</a><a class="notice-nav-message"><span class="icon message-reminder"></span>消息<em id="message_logo" class="m-l-5" >1</em></a>
+        </div>
+        <div class="noticePanel" style="display: none;">
+            <div class="noticePanel-title">消息通知<span id="notice-close" class="icon-close">×</span></div>
+            <div id="message-panel" class="noticePanel-body">
 
             </div>
-
-
-
-
         </div>
     </div>
 
@@ -436,78 +296,76 @@
     {{--footer--}}
     @include('layouts.partials.footer')
 
-
     <!--返回顶部-->
     <a class="totop animation" href="javascript:;">
         <i class="fa fa-angle-up"></i>
     </a>
-</div>
 
+    <form id="__SZY_TO_URL_FORM__" method="GET"></form>
 
-
-<form id="__SZY_TO_URL_FORM__" method="GET"></form>
-
-<!--右下角消息提醒弹窗-->
-<div class="message-pop-box down">
-    <div class="message-title">
-        <h5>
-            <i class="news-icon"></i>
-            消息提醒
-        </h5>
-        <a class="close" href="javascript:;">×</a>
+    <!--右下角消息提醒弹窗-->
+    <div class="message-pop-box down">
+        <div class="message-title">
+            <h5>
+                <i class="news-icon"></i>
+                消息提醒
+            </h5>
+            <a class="close" href="javascript:void(0);">×</a>
+        </div>
+        <div class="message-info">
+            <div class="message-icon"></div>
+            <h5>
+                <span id="message-pop-text"></span>
+            </h5>
+            <a class="btn btn-primary btn-sm message-btn" href="javascript:void(0);" target="_blank">立即处理</a>
+        </div>
     </div>
-    <div class="message-info">
-        <div class="message-icon"></div>
-        <h5>
-            <span id="message-pop-text"></span>
-        </h5>
-        <a class="btn btn-primary btn-sm message-btn" href="/trade/order/list" target="_blank">立即处理</a>
-    </div>
-</div>
-<!-- 店铺即将到期提醒弹框，宽度给600即可-->
-<div class="modal-body" style="display: none">
-    <div class="f14 p-10">
-        <p class="m-b-5">
-            欢迎是用xxx商城系统，您的店铺服务将于
-            <span class="c-red">2017-02-30</span>
-            日到期/已过期，将影响您店铺的正常运营，建议尽快进行续费！
+    <!-- 店铺即将到期提醒弹框，宽度给600即可-->
+    <div class="modal-body" style="display: none">
+        <div class="f14 p-10">
+            <p class="m-b-5">
+                欢迎是用xxx商城系统，您的店铺服务将于
+                <span class="c-red">2017-02-30</span>
+                日到期/已过期，将影响您店铺的正常运营，建议尽快进行续费！
 
-        </p>
-        <p class="m-b-5">
-            续费流程：前往
-            <span class="c-red">
+            </p>
+            <p class="m-b-5">
+                续费流程：前往
+                <span class="c-red">
 					“店铺 -> 店铺信息 ->
 					<a href="../shop/shop-info/renew-list">续签列表</a>
 					”
 				</span>
-            进行线上提交续签申请，线下联系平台方管理员进行缴纳费用！
-        </p>
+                进行线上提交续签申请，线下联系平台方管理员进行缴纳费用！
+            </p>
 
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+
+    <!--店铺关闭提示-->
+    <div class="store-close-box hide">
+        <a class="store-close">×</a>
+        <span class="store-mark">店铺已关闭，请联系平台管理员</span>
     </div>
 </div>
-
-<!--店铺关闭提示-->
-<div class="store-close-box hide">
-    <a class="store-close">×</a>
-    <span class="store-mark">店铺已关闭，请联系平台管理员</span>
-</div>
-
-
-
-
+<!--
+<script src="/assets/d2eace91/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>InstantClick.init('mousedown');</script>
+ -->
 </body>
 
 <script type="text/javascript">
     function toFirst(target){
-        var url = $(target).parents("li").find(".sub-list").find("li:first").find("a").attr("href");
+        var url = $(target).parents("li").find(".left-menu").find("li:first").find("a").attr("href");
         $.go(url);
     }
     function to(url, target){
 
     }
+
 
     function clearCache(){
         // 缓载
@@ -564,34 +422,53 @@
         {{--'type': "add_user"--}}
     {{--});--}}
     //右下角消息提醒弹窗js
-    function open_message_box(message, url) {
-        if (typeof message == "undefined") {
-            message = "";
+    function open_message_box(data) {
+        if (!data) {
+            data = {};
         }
-        $('#message-pop-text').html(message.content);
-        // 判断订单类型
-        var go_url = '/trade/order/list.html';
-        if(message.buy_type == 4){
-            go_url = '/dashboard/free-buy/list.html';
-        }else if(message.buy_type == 5){
-            go_url = '/dashboard/reachbuy/list.html';
-        }else if(message.buy_type == 6){
-            go_url = '/dashboard/gift-card/order-list.html';
-        }else if(message.type == 'new_take_order'){
-            go_url = '/trade/order/take-list.html';
-        }else {
-            go_url = '/trade/order/list.html';
+
+        var src = window.location.href;
+
+        // 如果当前框架中的链接地址和弹框的链接地址一致则不弹框
+        if(data.auto_refresh == 1 && data.link && src.indexOf(data.link) != -1){
+
+            var contentWindow = window;
+
+            if(contentWindow.tablelist){
+                contentWindow.tablelist.load({
+                    page: {
+                        cur_page: 1
+                    }
+                });
+            }else{
+                contentWindow.location.reload();
+            }
+
+            return;
         }
-        $('.message-pop-box').find('.message-btn').attr('href',go_url);
-        $('.message-pop-box').removeClass('down').addClass('up');
+
+        $('.message-pop-box').find('#message-pop-text').html(data.content);
+
+        if(data.link){
+            $('.message-pop-box').find('.message-btn').attr('href', data.link).show();
+        }else{
+            $('.message-pop-box').find('.message-btn').hide();
+        }
+
+        if(data.content || data.link){
+            $('.message-pop-box').removeClass('down').addClass('up');
+        }
+
         try {
-            if(refresh_order&&typeof(refresh_order)=="function") {
+            if(refresh_order && typeof(refresh_order) == "function") {
                 refresh_order();
             }
         } catch(e) {}
-
     }
     $('.message-pop-box .close').click(function() {
+        $('.message-pop-box').removeClass('up').addClass('down');
+    });
+    $('.message-btn').click(function() {
         $('.message-pop-box').removeClass('up').addClass('down');
     });
     //用户信息
@@ -624,7 +501,7 @@
         }
         $.ajax({
             type: 'GET',
-            url: '/site/update-message',
+            url: '/site/update-message.html',
             data: {},
             dataType: 'json',
             success: function(result) {
@@ -638,15 +515,15 @@
         });
     }
     // 消息通知
-    $("#message-box").mouseenter(function() {
+    $("#message-box .notice-nav-message").click(function() {
         update_message();
         window.focus();
-        $("#message-panel").show();
-    }).mouseleave(function() {
-        $("#message-panel").hide();
-    }).find(".close").click(function() {
-        $("#message-panel").hide();
+        $(".noticePanel").show();
+    });
+    $("#notice-close").click(function() {
+        $(".noticePanel").hide();
     });
 </script>
+
 </html>
 

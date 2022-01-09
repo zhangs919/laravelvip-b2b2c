@@ -16,3 +16,8 @@ yarn-error.log
 .env
 composer.lock
 /backup/*.zip
+/database/unready
+/captures
+/html
+/app_api
+/docs

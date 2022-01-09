@@ -125,6 +125,7 @@ class Seller extends Foundation
     protected final function set_menu_select($active_module = '', $active_action = '')
     {
         $menu_select = ['action'=>$active_module, 'current'=>$active_action];
+//        dd($menu_select);
         view()->share('menu_select', $menu_select);
     }
 

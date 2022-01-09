@@ -62,4 +62,13 @@ $().ready(function() {
 			$(".afpc").addClass("show");
 		}
 	}
+	
+	// 右侧帮助
+	$('.help-icon-handle').click(function() {
+		if ($('.help-container').hasClass('unfold')) {
+			$('.help-container').addClass('fold').removeClass('unfold');
+		} else {
+			$('.help-container').addClass('unfold').removeClass('fold');
+		}
+	});
 });

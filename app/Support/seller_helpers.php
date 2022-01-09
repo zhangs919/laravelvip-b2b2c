@@ -437,6 +437,52 @@ function seller_top_menus($module = '')
             ]
         ],
 
+        // 财务报表 statistics
+        'statistics' => [
+            'title' => '统计',
+            'parent_menu' => 'root',
+            'menus' => 'statistics',
+            'url' => '',
+            'child' => [
+                [
+                    'title' => '数据概况',
+                    'parent_menu' => 'statistics',
+                    'menus' =>'statistics|data-profiling',
+                    'url' => '/statistics/data-profiling/index'
+                ],
+                [
+                    'title' => '营业统计',
+                    'parent_menu' => 'statistics',
+                    'menus' =>'statistics|sales-statistics',
+                    'url' => '/statistics/sales-statistics/index'
+                ],
+                [
+                    'title' => '商品分析',
+                    'parent_menu' => 'statistics',
+                    'menus' =>'statistics|goods-analyse',
+                    'url' => '/statistics/goods-analyse/index'
+                ],
+                [
+                    'title' => '单品分析',
+                    'parent_menu' => 'statistics',
+                    'menus' =>'statistics|goods-statistics',
+                    'url' => '/statistics/goods-statistics/sales'
+                ],
+                [
+                    'title' => '交易分析',
+                    'parent_menu' => 'statistics',
+                    'menus' =>'statistics|trade-analyse',
+                    'url' => '/statistics/trade-analyse/index'
+                ],
+                [
+                    'title' => '会员统计',
+                    'parent_menu' => 'statistics',
+                    'menus' =>'statistics|users-statistics',
+                    'url' => '/statistics/users-statistics/list'
+                ],
+            ]
+        ],
+
         // 移动端
         'weixin' => [
             'title' => '移动端',
@@ -535,51 +581,7 @@ function seller_top_menus($module = '')
             ]
         ],*/
 
-        // 财务报表 statistics
-        'statistics' => [
-            'title' => '财务报表',
-            'parent_menu' => 'root',
-            'menus' => 'statistics',
-            'url' => '',
-            'child' => [
-                [
-                    'title' => '数据概况',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|data-profiling',
-                    'url' => '/statistics/data-profiling/index'
-                ],
-                [
-                    'title' => '营业统计',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|sales-statistics',
-                    'url' => '/statistics/sales-statistics/index'
-                ],
-                [
-                    'title' => '商品分析',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|goods-analyse',
-                    'url' => '/statistics/goods-analyse/index'
-                ],
-                [
-                    'title' => '单品分析',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|goods-statistics',
-                    'url' => '/statistics/goods-statistics/sales'
-                ],
-                [
-                    'title' => '交易分析',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|trade-analyse',
-                    'url' => '/statistics/trade-analyse/index'
-                ],
-                [
-                    'title' => '会员统计',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|users-statistics',
-                    'url' => '/statistics/users-statistics/list'
-                ],
-            ]
-        ],
+
     ];
 
     if ($module != '') {
