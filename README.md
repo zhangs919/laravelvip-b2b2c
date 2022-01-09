@@ -15,9 +15,12 @@
 - 商城后台演示：http://backend.mall.laravelvip.com/
 - 用户名和密码：test 123456
 
+- 商城后台演示：http://seller.mall.laravelvip.com/
+- 用户名和密码：18669035369 111111
+
 #### 源码下载
 
-下载地址：https://gitee.com/laravelmall/laravelvip-b2c
+下载地址：https://gitee.com/laravelmall/laravelvip-b2b2c
 
 #### 环境要求
 - CentOS 7.0+
