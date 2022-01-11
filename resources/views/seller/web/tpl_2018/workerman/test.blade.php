@@ -591,7 +591,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/site/logout.html" data-method="post" data-confirm="您确定要退出卖家中心吗？">
+                        <a href="/site/logout" data-method="post" data-confirm="您确定要退出卖家中心吗？">
                             <i class="fa fa-sign-out"></i>
                             退出
                         </a>

@@ -176,16 +176,22 @@ function seller_top_menus($module = '')
             'url' => '',
             'child' => [
                 [
-                    'title' => '交易设置',
+                    'title' => '接单列表',
                     'parent_menu' => 'trade',
-                    'menus' =>'trade|trade-set',
-                    'url' => '/shop/config/index?group=trade'
+                    'menus' =>'trade|trade-order-take',
+                    'url' => '/trade/order/take-list'
                 ],
                 [
                     'title' => '订单管理',
                     'parent_menu' => 'trade',
                     'menus' =>'trade|trade-order-list',
                     'url' => '/trade/order/list'
+                ],
+                [
+                    'title' => '虚拟兑换订单',
+                    'parent_menu' => 'trade',
+                    'menus' =>'trade|virtual-order-list',
+                    'url' => '/trade/order/take-list'
                 ],
                 [
                     'title' => '发货单管理',
@@ -216,6 +222,12 @@ function seller_top_menus($module = '')
                     'parent_menu' => 'trade',
                     'menus' =>'trade|trade-evaluate-buyer-list',
                     'url' => '/trade/service/evaluate-buyer-list'
+                ],
+                [
+                    'title' => '交易设置',
+                    'parent_menu' => 'trade',
+                    'menus' =>'trade|trade-set',
+                    'url' => '/shop/config/index?group=trade'
                 ],
             ]
         ],
@@ -692,8 +704,7 @@ if (! function_exists('get_shop_config_group'))
                 'title' => '交易设置',
                 'explain' => [
                     '接单模式：不影响自由购订单、堂内点餐订单、积分兑换订单、提货券订单、预售订单、拼团订单、砍价订单，接单模式只对普通订单起作用',
-                    '只要卖家设置了在哪种订单状态下自动打印订单的话，那么只要有客户下单了之后，打印机即可自动打印订单，不需要你手动操作。例如：我设置了订单在已付款的状态下自动打印，那么只要付了款的订单都不需要你手动去点击打印，机子会自动出单。当然，如果你不需要自动打印则不设置自动打印即可',
-                    '买家付款后自动打印订单规则：<p class="m-t-2">1.下单并支付成功<b>&gt;</b>声音提醒、自动打印订单；</p><p class="m-t-2">2.下单未支付<b>&gt;</b>无声音提醒、不自动打印订单<b>&gt;</b>买家二次支付成功<b>&gt;</b>声音提醒、自动打印订单；</p>'
+                    '买家付款后自动打印订单规则：<p class="m-t-2">1.下单并支付成功<b>&gt;</b>声音提醒、自动打印订单；</p><p class="m-t-2">2.下单未支付<b>&gt;</b>无声音提醒、不自动打印订单<b>&gt;</b>买家二次支付成功<b>&gt;</b>声音提醒、自动打印订单；</p>',
                 ],
                 'anchor' => [
                     '接单设置',

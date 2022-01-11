@@ -123,7 +123,7 @@
         </td>
         <td>
             {{ $v->created_at->format('Y-m-d') }}
-            </br>
+            <br />
             {{ $v->created_at->format('H:i:s') }}
         </td>
         <td class="handle">
@@ -220,6 +220,9 @@
                         </li>
                         <li class="divider"></li>
                         <li>
+                            <a class="goods-tag">打标签</a>
+                        </li>
+                        <li>
                             <a class="goods-unit">商品单位</a>
                         </li>
                         <li>
@@ -243,6 +246,9 @@
                         <li>
                             <a class="goods-freight">运费设置</a>
                         </li>
+                        <li>
+                            <a class="set-price">调整价格</a>
+                        </li>
                     </ul>
                 </div>
                 <input type="button" class="btn btn-danger m-r-2 delete-goods" value="批量删除" />
@@ -258,132 +264,5 @@
     </tfoot>
 </table>
 
-<script type='text/javascript'>
-    $(document).ready(function() {
-        // toggle `popup` / `inline` mode
-        // $.fn.editable.defaults.mode = "inline";
 
-        // 商品价格
-        $(".goods_price").editable({
-            type: "text",
-            url: "/goods/list/edit-goods-info",
-            pk: 1,
-            // title: "本店价（元）",
-            ajaxOptions: {
-                type: "post"
-            },
-            params: function(params) {
-                params.goods_id = $(this).data("goods_id");
-                params.title = 'goods_price';
-                return params;
-            },
-            /* validate: function(value) {
-                value = $.trim(value);
-                if (!value) {
-                    return '商品价格不能为空。';
-                } else if (isNaN(value)) {
-                    return '商品价格必须是一个数字。';
-                } else if (value < 0.01) {
-                    return '价格必须是0.01~9999999之间的数字。';
-                } else if (value > 9999999) {
-                    return '价格必须是0.01~9999999之间的数字。';
-                }
-            }, */
-            success: function(response, newValue) {
-                var response = eval('(' + response + ')');
-                // 错误处理
-                if (response.code == -1) {
-                    return response.message;
-                }
-            },
-            display: function(value, sourceData) {
-                // 保留两位小数
-                $(this).html((Number(value)).toFixed(2));
-            }
-        });
-
-        // 商品库存
-        $(".goods_number").editable({
-            type: "text",
-            url: "/goods/list/edit-goods-info",
-            pk: 1,
-            // title: "商品库存",
-            ajaxOptions: {
-                type: "post"
-            },
-            params: function(params) {
-                params.goods_id = $(this).data("goods_id");
-                params.title = 'goods_number';
-                return params;
-            },
-            /* validate: function(value) {
-                value = $.trim(value);
-                var ex = /^\d+$/;
-                if (!value) {
-                    return '商品库存不能为空。';
-                } else if (!ex.test(value)) {
-                    return '商品库存必须是正整数。';
-                } else if (value > 999999999) {
-                    return '商品库存不能大于999999999';
-                }
-            }, */
-            success: function(response, newValue) {
-                var response = eval('(' + response + ')');
-                // 错误处理
-                if (response.code == -1) {
-                    return response.message;
-                }
-            },
-            display: function(value, sourceData) {
-                // 显示整数
-                $(this).html((Number(value)).toFixed(0));
-            }
-        });
-
-        $('.goods_name_controller').click(function(e) {
-            e.stopPropagation();
-            $(this).parent().children(":first").editable('toggle');
-        });
-
-        // 商品名称
-        $(".goods_name").editable({
-            type: "text",
-            url: "/goods/list/edit-goods-info",
-            pk: 1,
-            // title: "商品名称",
-            ajaxOptions: {
-                type: "post"
-            },
-            params: function(params) {
-                params.goods_id = $(this).data("goods_id");
-                params.title = 'goods_name';
-                return params;
-            },
-            /* validate: function(value) {
-                value = $.trim(value);
-                if (!value) {
-                    return '商品名称不能为空。';
-                } else if (value.length < 3) {
-                    return '商品名称应该包含至少3个字。';
-                } else if (value.length > 60) {
-                    return '商品名称只能包含至多60个字。';
-                }
-            }, */
-            success: function(response, newValue) {
-                var response = eval('(' + response + ')');
-                // 错误处理
-                if (response.code == -1) {
-                    return response.message;
-                }
-            },
-            display: function(value, sourceData) {
-                if (value.length > 28) {
-                    $(this).html(value.substring(0, 28) + '...');
-                } else {
-                    $(this).html(value);
-                }
-            }
-        });
-    });
-</script>
 

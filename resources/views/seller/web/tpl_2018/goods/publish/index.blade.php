@@ -82,7 +82,7 @@
                                 <span class="ng-binding">商品分类：</span>
                             </label>
                             <div class="col-sm-9">
-                                <label class="control-label" data-anchor="商品分类">{{ $cat_names }}</label>
+                                <label class="control-label" data-anchor="商品分类">{!! $cat_names !!}</label>
                                 <input type="hidden" id="goodsmodel-cat_id" class="form-control" name="GoodsModel[cat_id]" value="{{ $cat_id }}">
 
                                 <a id="change_category" href="javascript:void(0);" class="btn btn-warning btn-sm m-l-5">编辑商品分类</a>
@@ -90,6 +90,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 商品类别 -->
+
+                    <div class="simple-form-field" >
+                        <div class="form-group">
+                            <label for="goodsmodel-goods_mode" class="col-sm-3 control-label">
+
+                                <span class="ng-binding">商品类别：</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="form-control-box">
+
+
+                                    <input type="hidden" name="GoodsModel[goods_mode]" value="0">
+                                    <div id="goodsmodel-goods_mode" class="" name="GoodsModel[goods_mode]" selection="0">
+                                        <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[goods_mode]" value="0" @if($goods_mode == 0){{ 'checked' }}@endif> 实物商品（物流发货）</label>
+                                        <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[goods_mode]" value="1" @if($goods_mode == 1){{ 'checked' }}@endif> 电子卡券（无需物流）</label>
+                                        <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[goods_mode]" value="2" @if($goods_mode == 2){{ 'checked' }}@endif> 服务商品（无需物流）</label></div>
+
+
+
+                                </div>
+
+                                <div class="help-block help-block-t"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!---扩展分类-->
                     <div class="simple-form-field" >
                         <div class="form-group">
@@ -1114,138 +1142,757 @@
                             </div>
                         </div>
                     </div>
-                    <h5 class="m-b-30" data-anchor="物流信息">商品物流信息</h5>
-                    <!-- 商品重量 -->
-                    <div class="simple-form-field" >
-                        <div class="form-group">
-                            <label for="goodsmodel-goods_weight" class="col-sm-3 control-label">
-
-                                <span class="ng-binding">物流重量(Kg)：</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <div class="form-control-box">
 
 
-                                    <input type="text" id="goodsmodel-goods_weight" class="form-control ipt pull-none m-r-10" name="GoodsModel[goods_weight]">Kg
+                    @if($goods_mode == 0)
+                        <h5 class="m-b-30" data-anchor="物流信息">商品物流信息</h5>
+                        <!-- 商品重量 -->
+                        <div class="simple-form-field" >
+                            <div class="form-group">
+                                <label for="goodsmodel-goods_weight" class="col-sm-3 control-label">
+
+                                    <span class="ng-binding">物流重量(Kg)：</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-box">
 
 
-                                </div>
-
-                                <div class="help-block help-block-t"><div class="help-block help-block-t">商品的重量单位为千克，如果商品的运费模板按照重量计算请填写此项，为空则默认商品重量为0Kg；</br>如果SKU的重量未设置，则以此重量作为默认值；</div></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 商品体积 -->
-                    <div class="simple-form-field" >
-                        <div class="form-group">
-                            <label for="goodsmodel-goods_volume" class="col-sm-3 control-label">
-
-<span class="ng-binding">物流体积(m
-				<sup>3</sup>
-				)：</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <div class="form-control-box">
+                                        <input type="text" id="goodsmodel-goods_weight" class="form-control ipt pull-none m-r-10" name="GoodsModel[goods_weight]">Kg
 
 
-                                    <input type="text" id="goodsmodel-goods_volume" class="form-control ipt pull-none m-r-10" name="GoodsModel[goods_volume]">m
-                                    <sup>3</sup>
-
-
-                                </div>
-
-                                <div class="help-block help-block-t"><div class="help-block help-block-t">商品的体积单位为立方米，如果商品的运费模板按照体积计算请填写此项，为空则默认商品体积为0立方米；</br>如果SKU的体积未设置，则以此体积作为默认值；</div></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 运费设置 -->
-                    <div class="simple-form-field" >
-                        <div class="form-group">
-                            <label for="goodsmodel-goods_freight_type" class="col-sm-3 control-label">
-                                <span class="text-danger ng-binding">*</span>
-                                <span class="ng-binding">运费设置：</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <div class="form-control-box">
-
-                                    <label class="control-label cur-p">
-                                        <input type="radio" id="goodsmodel-goods_freight_type_0" name="GoodsModel[goods_freight_type]" class="goods-freight-type" value="0"  checked="checked"  />
-                                        店铺统一运费
-                                        <span>（￥{{ $shop_freight_fee }}）</span>
-                                    </label>
-                                    <br />
-                                    <!--
-<label class="control-label cur-p">
-    <input type="radio" id="goodsmodel-goods_freight_type_1" name="GoodsModel[goods_freight_type]" class="goods-freight-type" value="1"  />
-    固定运费 <input type="text" id="goodsmodel-goods_freight_fee" class="form-control ipt m-l-5" name="GoodsModel[goods_freight_fee]">
-</label>
- -->
-                                    <br />
-                                    <label class="control-label cur-p">
-                                        <input type="radio" id="goodsmodel-goods_freight_type_2" name="GoodsModel[goods_freight_type]" class="goods-freight-type" value="2"  />
-                                        运费模板
-
-                                        <select id="goodsmodel-freight_id" class="form-control m-l-5 m-r-5 freight-list" name="GoodsModel[freight_id]">
-                                            @foreach($freight_list as $v)
-                                                <option value="{{ $v['freight_id'] }}">{{ $v['title'] }}</option>
-                                            @endforeach
-                                        </select>
-                                        <div class="btn-group m-r-2">
-                                            <button type="button" data-toggle="dropdown" aria-expanded="true" class="btn btn-warning btn-sm dropdown-toggle">
-                                                新建运费模板
-                                                <span class="caret m-l-5"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li>
-                                                    <a href="/shop/freight/add" target="_blank">新建全国模板</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/shop/freight/map-add" target="_blank">新建同城模板</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <a href="javascript:void(0);" class="btn btn-primary btn-sm refresh-freight-list">重新加载</a>
-                                    </label>
-
-
-
-                                    <div id="goods_freight_info" class="goods-freight col-sm-10 m-t-10"style='display: none;'>
-                                        <div class="freight-pop">
-                                            <div class="freight-box">
-                                                <div class="logis-switch m-b-5">
-                                                    <div class="switch-bar">
-                                                        <!--
-                                <span class="tpl-name active">
-                                    平邮
-                                    <b></b>
-                                </span>
-                                 -->
-                                                    </div>
-                                                    <a href="javascript:void(0);" class="help-link freight-info">查看详情</a>
-                                                </div>
-                                                <div class="logis-content">
-                                                    <div class="col-split p-5 default-desc"></div>
-                                                    <div class="col-title p-5 other-desc-title">指定区域运费</div>
-                                                    <div class="p-l-5 other-desc"></div>
-                                                </div>
-                                            </div>
-                                            <div class="deliver-warn p-5">
-                                                <strong class="warn-type limit-sale">区域限售</strong>
-                                                <strong class="warn-type is-free">包邮</strong>
-                                                <strong class="warn-type free-set">已指定条件包邮</strong>
-                                                发货地：
-                                                <span class="goods-from"></span>
-                                            </div>
-                                        </div>
                                     </div>
 
+                                    <div class="help-block help-block-t"><div class="help-block help-block-t">商品的重量单位为千克，如果商品的运费模板按照重量计算请填写此项，为空则默认商品重量为0Kg；</br>如果SKU的重量未设置，则以此重量作为默认值；</div></div>
                                 </div>
-
-                                <div class="help-block help-block-t"></div>
                             </div>
                         </div>
-                    </div>
+                        <!-- 商品体积 -->
+                        <div class="simple-form-field" >
+                            <div class="form-group">
+                                <label for="goodsmodel-goods_volume" class="col-sm-3 control-label">
+
+<span class="ng-binding">物流体积(m
+            <sup>3</sup>
+            )：</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-box">
+
+
+                                        <input type="text" id="goodsmodel-goods_volume" class="form-control ipt pull-none m-r-10" name="GoodsModel[goods_volume]">m
+                                        <sup>3</sup>
+
+
+                                    </div>
+
+                                    <div class="help-block help-block-t"><div class="help-block help-block-t">商品的体积单位为立方米，如果商品的运费模板按照体积计算请填写此项，为空则默认商品体积为0立方米；</br>如果SKU的体积未设置，则以此体积作为默认值；</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 运费设置 -->
+                        <div class="simple-form-field" >
+                            <div class="form-group">
+                                <label for="goodsmodel-goods_freight_type" class="col-sm-3 control-label">
+                                    <span class="text-danger ng-binding">*</span>
+                                    <span class="ng-binding">运费设置：</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-box">
+
+                                        <label class="control-label cur-p">
+                                            <input type="radio" id="goodsmodel-goods_freight_type_0" name="GoodsModel[goods_freight_type]" class="goods-freight-type" value="0"  checked="checked"  />
+                                            店铺统一运费
+                                            <span>（￥{{ $shop_freight_fee }}）</span>
+                                        </label>
+                                        <br />
+                                        <!--
+    <label class="control-label cur-p">
+        <input type="radio" id="goodsmodel-goods_freight_type_1" name="GoodsModel[goods_freight_type]" class="goods-freight-type" value="1"  />
+        固定运费 <input type="text" id="goodsmodel-goods_freight_fee" class="form-control ipt m-l-5" name="GoodsModel[goods_freight_fee]">
+    </label>
+     -->
+                                        <br />
+                                        <label class="control-label cur-p">
+                                            <input type="radio" id="goodsmodel-goods_freight_type_2" name="GoodsModel[goods_freight_type]" class="goods-freight-type" value="2"  />
+                                            运费模板
+
+                                            <select id="goodsmodel-freight_id" class="form-control m-l-5 m-r-5 freight-list" name="GoodsModel[freight_id]">
+                                                @foreach($freight_list as $v)
+                                                    <option value="{{ $v['freight_id'] }}">{{ $v['title'] }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="btn-group m-r-2">
+                                                <button type="button" data-toggle="dropdown" aria-expanded="true" class="btn btn-warning btn-sm dropdown-toggle">
+                                                    新建运费模板
+                                                    <span class="caret m-l-5"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="/shop/freight/add" target="_blank">新建全国模板</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/shop/freight/map-add" target="_blank">新建同城模板</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <a href="javascript:void(0);" class="btn btn-primary btn-sm refresh-freight-list">重新加载</a>
+                                        </label>
+
+
+
+                                        <div id="goods_freight_info" class="goods-freight col-sm-10 m-t-10"style='display: none;'>
+                                            <div class="freight-pop">
+                                                <div class="freight-box">
+                                                    <div class="logis-switch m-b-5">
+                                                        <div class="switch-bar">
+                                                            <!--
+                                    <span class="tpl-name active">
+                                        平邮
+                                        <b></b>
+                                    </span>
+                                     -->
+                                                        </div>
+                                                        <a href="javascript:void(0);" class="help-link freight-info">查看详情</a>
+                                                    </div>
+                                                    <div class="logis-content">
+                                                        <div class="col-split p-5 default-desc"></div>
+                                                        <div class="col-title p-5 other-desc-title">指定区域运费</div>
+                                                        <div class="p-l-5 other-desc"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="deliver-warn p-5">
+                                                    <strong class="warn-type limit-sale">区域限售</strong>
+                                                    <strong class="warn-type is-free">包邮</strong>
+                                                    <strong class="warn-type free-set">已指定条件包邮</strong>
+                                                    发货地：
+                                                    <span class="goods-from"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="help-block help-block-t"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif($goods_mode == 1)
+                        <!-- 虚拟商品-电子卡券 -->
+
+                        <div id="virtual_goods_container" class="m-t-30">
+                            <h5 class="m-b-30" data-anchor="特殊商品">特殊商品</h5>
+
+                            <!-- 生效类型 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-effective_type" class="col-sm-3 control-label">
+                                        <span class="text-danger ng-binding">*</span>
+                                        <span class="ng-binding">兑换生效期：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="hidden" name="GoodsModel[effective_type]" value="0"><div id="goodsmodel-effective_type" class="" name="GoodsModel[effective_type]"><label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[effective_type]" value="0" checked> 付款完成立即生效</label>
+                                                <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[effective_type]" value="1"> 付款完成<input type="text" class="form-control small m-l-5 m-r-5" name="effective_hour" disabled="disabled">小时后生效</label>
+                                                <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[effective_type]" value="2"> 付款完成次日生效</label></div>
+
+                                            <input type="hidden" id="goodsmodel-effective_hour" class="form-control" name="GoodsModel[effective_hour]" value="0">
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 有效期限类型 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-valid_period_type" class="col-sm-3 control-label">
+                                        <span class="text-danger ng-binding">*</span>
+                                        <span class="ng-binding">使用有效期：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="hidden" name="GoodsModel[valid_period_type]" value="0"><div id="goodsmodel-valid_period_type" class="" name="GoodsModel[valid_period_type]"><label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[valid_period_type]" value="0" checked> 长期有效</label>
+                                                <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[valid_period_type]" value="1"> <input class="form-control form_datetime ipt" name="add_time_begin" disabled="disabled" placeholder="开始时间" type="text"><span class="ctime">至</span><input class="form-control form_datetime ipt" name="add_time_end" disabled="disabled" placeholder="结束时间" type="text"></label>
+                                                <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[valid_period_type]" value="2"> 自购买之日起，<input type="text" class="form-control small m-r-5" name="valid_period_hour" disabled="disabled">小时内有效</label></div>
+                                            <!-- 隐藏域 -->
+                                            <input type="hidden" id="goodsmodel-valid_period_hour" class="form-control" name="GoodsModel[valid_period_hour]" value="0">
+
+                                            <input type="hidden" id="goodsmodel-valid_period_start_time" class="form-control" name="GoodsModel[valid_period_start_time]" value="0">
+
+                                            <input type="hidden" id="goodsmodel-valid_period_end_time" class="form-control" name="GoodsModel[valid_period_end_time]" value="0">
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 使用限制 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-use_limit" class="col-sm-3 control-label">
+
+                                        <span class="ng-binding">使用限制：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="hidden" name="GoodsModel[use_limit]" value=""><div id="goodsmodel-use_limit" class="" name="GoodsModel[use_limit]" selection='[0,1]'><label class="control-label cur-p m-r-10"><input type="checkbox" name="GoodsModel[use_limit][]" value="0" checked> 免预约</label>
+                                                <label class="control-label cur-p m-r-10"><input type="checkbox" name="GoodsModel[use_limit][]" value="1" checked> 节假日有效</label></div>
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">仅在前台会有文字提示，实际使用时不会校验</div></div>
+                                    </div>
+                                </div>
+                            </div>					<!-- 电子卡券购买上限 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-buy_limit" class="col-sm-3 control-label">
+                                        <span class="text-danger ng-binding">*</span>
+                                        <span class="ng-binding">电子卡券购买上限：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="text" id="goodsmodel-buy_limit" class="form-control ipt m-r-10" name="GoodsModel[buy_limit]" value="1">
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">请填写1~10之间的数字，电子卡券最高购买数量不能超过10个。</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 支持过期退款 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-is_expired_refund" class="col-sm-3 control-label">
+                                        <span class="text-danger ng-binding">*</span>
+                                        <span class="ng-binding">支持过期退款：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="hidden" name="GoodsModel[is_expired_refund]" value="1"><div id="goodsmodel-is_expired_refund" class="" name="GoodsModel[is_expired_refund]"><label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[is_expired_refund]" value="1" checked> 是</label>
+                                                <label class="control-label cur-p m-r-10"><input type="radio" name="GoodsModel[is_expired_refund]" value="0"> 否</label></div>
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">兑换码过期后是否可以申请退款。</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 自定义用户预留信息 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-user_information" class="col-sm-3 control-label">
+
+                                        <span class="ng-binding">自定义用户预留信息 ：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <div class="user-information-container">
+                                            <span class="user-information-item m-b-10 m-r-20 disp-inlblock">
+                        <input type="text" class="form-control w150" placeholder="请输入预留信息名称">
+                        <select class="form-control m-l-5 m-r-5">
+                                                            <option value="number">数字格式</option>
+                                                            <option value="string">文本格式</option>
+                                                            <option value="cardno">身份证号</option>
+                                                            <option value="email">邮件格式</option>
+                                                            <option value="date">日期格式</option>
+                                                            <option value="image">图片格式</option>
+                                                        </select>
+                        <label class="cur-p">
+                            <input type="checkbox">
+                            必填
+                        </label>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-sm m-l-5 del-information">移除</a>
+                    </span>
+                                            </div>
+                                            <a href="javascript:void(0)" class="add-information btn btn-warning btn-sm ">添加预留信息</a>
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">设置用户购买该商品时，需要预留的用户信息，商家可以在订单详情中查看该信息，最多可设置10条。</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script id="user_information" type='text'>
+                <span class="user-information-item m-b-10 m-r-20 disp-inlblock">
+                    <input type="text" class="form-control w150" placeholder="请输入预留信息名称">
+                    <select class="form-control m-l-5 m-r-5">
+                                                    <option value="number">数字格式</option>
+                                                    <option value="string">文本格式</option>
+                                                    <option value="cardno">身份证号</option>
+                                                    <option value="email">邮件格式</option>
+                                                    <option value="date">日期格式</option>
+                                                    <option value="image">图片格式</option>
+                                                </select>
+                    <label class="cur-p"><input type="checkbox">必填</label>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-sm m-l-5 del-information">移除</a>
+                </span>
+                </script>
+                            <!-- 时间插件引入 start -->
+                            <link rel="stylesheet" href="/assets/d667b223/bootstrap/datetimepicker/css/bootstrap-datetimepicker.css?v=4.0"/> <script src="/assets/d667b223/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190110"></script>
+                            <script src="/assets/d667b223/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190110"></script>
+                            <!-- 时间插件引入 end -->
+                            <script type="text/javascript">
+                                $('#virtual_goods_container').find('.add-information').click(function(){
+                                    if($(this).hasClass('disabled')){
+                                        return ;
+                                    }
+                                    var user_information_html = $('#virtual_goods_container').find('#user_information').html();
+                                    $('#virtual_goods_container').find('.user-information-container').append(user_information_html);
+                                    if($('#virtual_goods_container').find('.user-information-container .user-information-item').length >= 10){
+                                        $(this).addClass('disabled');
+                                    }
+
+                                });
+                                $('#virtual_goods_container').on('click','.del-information',function(){
+                                    if($(this).parent().index() == 0){
+                                        $(this).parent().find('input[type="text"]').val('');
+                                        $(this).parent().find('select').val('integer');
+                                        $(this).parent().find('input[type="checkbox"]').removeAttr("checked")
+                                    }else{
+                                        $(this).parent().remove();
+                                        $('#virtual_goods_container').find('.add-information').removeClass('disabled');
+                                    }
+                                });
+
+
+
+                                $('#virtual_goods_container #goodsmodel-effective_type').find('[name="GoodsModel[effective_type]"]').change(function(){
+                                    $('#virtual_goods_container').find('input[name="effective_hour"]').val('');
+                                    $('#virtual_goods_container').find('#goodsmodel-effective_hour').val(0);
+                                    $('#virtual_goods_container').find('input[name="effective_hour"]').removeClass('error');
+                                    $.validator.clearError($("#goodsmodel-effective_type"));
+                                    if($(this).val() == 1){
+                                        $('#virtual_goods_container').find('input[name="effective_hour"]').removeAttr('disabled');
+                                    }else{
+                                        $('#virtual_goods_container').find('input[name="effective_hour"]').attr('disabled','disabled');
+                                    }
+                                });
+
+                                // 验证时间
+                                $('#virtual_goods_container').find('input[name="effective_hour"]').on('input',function(){
+                                    validateEffectiveHour($(this));
+                                });
+                                $('#virtual_goods_container').find('input[name="effective_hour"]').blur(function(){
+                                    validateEffectiveHour($(this));
+                                });
+
+                                // 验证方法
+                                function validateEffectiveHour (obj){
+                                    if($('#virtual_goods_container').find('[name="GoodsModel[effective_type]"]:checked').val() == 1){
+                                        if($.trim(obj.val()) == ''){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-effective_type"), '时间不能为空');
+                                        }
+                                        else if(! (/^(\+|-)?\d+$/.test(obj.val()))){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-effective_type"), '时间必须为数字');
+                                        }else{
+                                            $.validator.clearError($("#goodsmodel-effective_type"));
+                                            $('#virtual_goods_container').find('#goodsmodel-effective_hour').val(obj.val());
+                                        }
+
+                                    }
+                                }
+
+
+
+
+
+
+                                $('#virtual_goods_container #goodsmodel-valid_period_type').find('[name="GoodsModel[valid_period_type]"]').change(function(){
+                                    $('#virtual_goods_container').find('input[name="valid_period_hour"]').val('');
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_hour').val(0);
+                                    $('#virtual_goods_container').find('input[name="valid_period_hour"]').removeClass('error');
+                                    $('#virtual_goods_container').find('input[name="add_time_begin"]').removeClass('error');
+                                    $('#virtual_goods_container').find('input[name="add_time_end"]').removeClass('error');
+                                    $.validator.clearError($("#goodsmodel-valid_period_type"));
+                                    if($(this).val() == 2){
+                                        $('#virtual_goods_container').find('input[name="valid_period_hour"]').removeAttr('disabled');
+                                    }else{
+                                        $('#virtual_goods_container').find('input[name="valid_period_hour"]').attr('disabled','disabled');
+                                    }
+                                    $('#virtual_goods_container').find('input[name="add_time_begin"]').val('');
+                                    $('#virtual_goods_container').find('input[name="add_time_end"]').val('');
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_start_time').val(0);
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_end_time').val(0);
+                                    if($(this).val() == 1){
+                                        $('#virtual_goods_container').find('input[name="add_time_begin"]').removeAttr('disabled');
+                                        $('#virtual_goods_container').find('input[name="add_time_end"]').removeAttr('disabled');
+                                    }else{
+                                        $('#virtual_goods_container').find('input[name="add_time_begin"]').attr('disabled','disabled');
+                                        $('#virtual_goods_container').find('input[name="add_time_end"]').attr('disabled','disabled');
+                                    }
+                                });
+
+                                // 验证时间
+                                $('#virtual_goods_container').find('input[name="valid_period_hour"]').on('input',function(){
+                                    validateValidPeriodHour($(this));
+                                });
+                                $('#virtual_goods_container').find('input[name="valid_period_hour"]').blur(function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_begin"]').on('input',function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_begin"]').blur(function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_end"]').on('input',function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_end"]').blur(function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                function validateValidPeriodHour (obj){
+                                    var error_message = '';
+                                    if($('#virtual_goods_container').find('[name="GoodsModel[valid_period_type]"]:checked').val() == 1){
+                                        if($.trim(obj.val()) == ''){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-valid_period_type"), '时间不能为空');
+                                            error_message = '时间不能为空';
+                                        }else{
+                                            obj.removeClass('error');
+                                            $.validator.clearError($("#goodsmodel-valid_period_type"));
+                                        }
+                                    }
+                                    else if($('#virtual_goods_container').find('[name="GoodsModel[valid_period_type]"]:checked').val() == 2){
+                                        if($.trim(obj.val()) == '' || $.trim(obj.val()) == 0){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-valid_period_type"), '时间不能为空');
+                                            error_message = '时间不能为空';
+                                        }
+                                        else if(! (/^(\+|-)?\d+$/.test(obj.val()))){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-valid_period_type"), '时间必须为整数');
+                                            error_message = '时间必须为整数';
+                                        }else{
+                                            $.validator.clearError($("#goodsmodel-valid_period_type"));
+                                            $('#virtual_goods_container').find('#goodsmodel-valid_period_hour').val(obj.val());
+                                        }
+
+                                    }
+                                    return error_message;
+                                }
+
+                                $('.form_datetime').datetimepicker({
+                                    language: 'zh-CN',
+                                    weekStart: 1,
+                                    todayBtn: 1,
+                                    autoclose: 1,
+                                    todayHighlight: 1,
+                                    startView: 2,
+                                    forceParse: 0,
+                                    showMeridian: 1,
+                                    format: 'yyyy-mm-dd hh:ii:ss',
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_begin"]').datetimepicker().on('changeDate', function(ev) {
+                                    $('#virtual_goods_container').find('input[name="add_time_end"]').datetimepicker('setStartDate', ev.date);
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_start_time').val($(this).val());
+                                    validateValidPeriodHour($(this));
+                                });
+                                $('#virtual_goods_container').find('input[name="add_time_end"]').datetimepicker().on('changeDate', function(ev) {
+                                    $('#virtual_goods_container').find('input[name="add_time_begin"]').datetimepicker('setEndDate', ev.date);
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_end_time').val($(this).val());
+                                    validateValidPeriodHour($(this));
+                                });
+                            </script>
+                        </div>
+
+                    @elseif($goods_mode == 2)
+                        <!-- 虚拟商品-电子卡券 -->
+
+                        <div id="virtual_goods_container" class="m-t-30">
+                            <h5 class="m-b-30" data-anchor="特殊商品">特殊商品</h5>
+
+                            <!-- 使用限制 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-use_limit" class="col-sm-3 control-label">
+
+                                        <span class="ng-binding">使用限制：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="hidden" name="GoodsModel[use_limit]" value=""><div id="goodsmodel-use_limit" class="" name="GoodsModel[use_limit]" selection='[0,1]'><label class="control-label cur-p m-r-10"><input type="checkbox" name="GoodsModel[use_limit][]" value="0" checked> 免预约</label>
+                                                <label class="control-label cur-p m-r-10"><input type="checkbox" name="GoodsModel[use_limit][]" value="1" checked> 节假日有效</label></div>
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">仅在前台会有文字提示，实际使用时不会校验</div></div>
+                                    </div>
+                                </div>
+                            </div>					<!-- 电子卡券购买上限 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-buy_limit" class="col-sm-3 control-label">
+                                        <span class="text-danger ng-binding">*</span>
+                                        <span class="ng-binding">电子卡券购买上限：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <input type="text" id="goodsmodel-buy_limit" class="form-control ipt m-r-10" name="GoodsModel[buy_limit]" value="1">
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">请填写1~10之间的数字，电子卡券最高购买数量不能超过10个。</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 自定义用户预留信息 -->
+                            <div class="simple-form-field" >
+                                <div class="form-group">
+                                    <label for="goodsmodel-user_information" class="col-sm-3 control-label">
+
+                                        <span class="ng-binding">自定义用户预留信息 ：</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-control-box">
+
+                                            <div class="user-information-container">
+                                            <span class="user-information-item m-b-10 m-r-20 disp-inlblock">
+                        <input type="text" class="form-control w150" placeholder="请输入预留信息名称">
+                        <select class="form-control m-l-5 m-r-5">
+                                                            <option value="number">数字格式</option>
+                                                            <option value="string">文本格式</option>
+                                                            <option value="cardno">身份证号</option>
+                                                            <option value="email">邮件格式</option>
+                                                            <option value="date">日期格式</option>
+                                                            <option value="image">图片格式</option>
+                                                        </select>
+                        <label class="cur-p">
+                            <input type="checkbox">
+                            必填
+                        </label>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-sm m-l-5 del-information">移除</a>
+                    </span>
+                                            </div>
+                                            <a href="javascript:void(0)" class="add-information btn btn-warning btn-sm ">添加预留信息</a>
+
+
+                                        </div>
+
+                                        <div class="help-block help-block-t"><div class="help-block help-block-t">设置用户购买该商品时，需要预留的用户信息，商家可以在订单详情中查看该信息，最多可设置10条。</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script id="user_information" type='text'>
+                <span class="user-information-item m-b-10 m-r-20 disp-inlblock">
+                    <input type="text" class="form-control w150" placeholder="请输入预留信息名称">
+                    <select class="form-control m-l-5 m-r-5">
+                                                    <option value="number">数字格式</option>
+                                                    <option value="string">文本格式</option>
+                                                    <option value="cardno">身份证号</option>
+                                                    <option value="email">邮件格式</option>
+                                                    <option value="date">日期格式</option>
+                                                    <option value="image">图片格式</option>
+                                                </select>
+                    <label class="cur-p"><input type="checkbox">必填</label>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-sm m-l-5 del-information">移除</a>
+                </span>
+                </script>
+                            <!-- 时间插件引入 start -->
+                            <link rel="stylesheet" href="/assets/d667b223/bootstrap/datetimepicker/css/bootstrap-datetimepicker.css?v=4.0"/> <script src="/assets/d667b223/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190110"></script>
+                            <script src="/assets/d667b223/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190110"></script>
+                            <!-- 时间插件引入 end -->
+                            <script type="text/javascript">
+                                $('#virtual_goods_container').find('.add-information').click(function(){
+                                    if($(this).hasClass('disabled')){
+                                        return ;
+                                    }
+                                    var user_information_html = $('#virtual_goods_container').find('#user_information').html();
+                                    $('#virtual_goods_container').find('.user-information-container').append(user_information_html);
+                                    if($('#virtual_goods_container').find('.user-information-container .user-information-item').length >= 10){
+                                        $(this).addClass('disabled');
+                                    }
+
+                                });
+                                $('#virtual_goods_container').on('click','.del-information',function(){
+                                    if($(this).parent().index() == 0){
+                                        $(this).parent().find('input[type="text"]').val('');
+                                        $(this).parent().find('select').val('integer');
+                                        $(this).parent().find('input[type="checkbox"]').removeAttr("checked")
+                                    }else{
+                                        $(this).parent().remove();
+                                        $('#virtual_goods_container').find('.add-information').removeClass('disabled');
+                                    }
+                                });
+
+
+
+                                $('#virtual_goods_container #goodsmodel-effective_type').find('[name="GoodsModel[effective_type]"]').change(function(){
+                                    $('#virtual_goods_container').find('input[name="effective_hour"]').val('');
+                                    $('#virtual_goods_container').find('#goodsmodel-effective_hour').val(0);
+                                    $('#virtual_goods_container').find('input[name="effective_hour"]').removeClass('error');
+                                    $.validator.clearError($("#goodsmodel-effective_type"));
+                                    if($(this).val() == 1){
+                                        $('#virtual_goods_container').find('input[name="effective_hour"]').removeAttr('disabled');
+                                    }else{
+                                        $('#virtual_goods_container').find('input[name="effective_hour"]').attr('disabled','disabled');
+                                    }
+                                });
+
+                                // 验证时间
+                                $('#virtual_goods_container').find('input[name="effective_hour"]').on('input',function(){
+                                    validateEffectiveHour($(this));
+                                });
+                                $('#virtual_goods_container').find('input[name="effective_hour"]').blur(function(){
+                                    validateEffectiveHour($(this));
+                                });
+
+                                // 验证方法
+                                function validateEffectiveHour (obj){
+                                    if($('#virtual_goods_container').find('[name="GoodsModel[effective_type]"]:checked').val() == 1){
+                                        if($.trim(obj.val()) == ''){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-effective_type"), '时间不能为空');
+                                        }
+                                        else if(! (/^(\+|-)?\d+$/.test(obj.val()))){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-effective_type"), '时间必须为数字');
+                                        }else{
+                                            $.validator.clearError($("#goodsmodel-effective_type"));
+                                            $('#virtual_goods_container').find('#goodsmodel-effective_hour').val(obj.val());
+                                        }
+
+                                    }
+                                }
+
+
+
+
+
+
+                                $('#virtual_goods_container #goodsmodel-valid_period_type').find('[name="GoodsModel[valid_period_type]"]').change(function(){
+                                    $('#virtual_goods_container').find('input[name="valid_period_hour"]').val('');
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_hour').val(0);
+                                    $('#virtual_goods_container').find('input[name="valid_period_hour"]').removeClass('error');
+                                    $('#virtual_goods_container').find('input[name="add_time_begin"]').removeClass('error');
+                                    $('#virtual_goods_container').find('input[name="add_time_end"]').removeClass('error');
+                                    $.validator.clearError($("#goodsmodel-valid_period_type"));
+                                    if($(this).val() == 2){
+                                        $('#virtual_goods_container').find('input[name="valid_period_hour"]').removeAttr('disabled');
+                                    }else{
+                                        $('#virtual_goods_container').find('input[name="valid_period_hour"]').attr('disabled','disabled');
+                                    }
+                                    $('#virtual_goods_container').find('input[name="add_time_begin"]').val('');
+                                    $('#virtual_goods_container').find('input[name="add_time_end"]').val('');
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_start_time').val(0);
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_end_time').val(0);
+                                    if($(this).val() == 1){
+                                        $('#virtual_goods_container').find('input[name="add_time_begin"]').removeAttr('disabled');
+                                        $('#virtual_goods_container').find('input[name="add_time_end"]').removeAttr('disabled');
+                                    }else{
+                                        $('#virtual_goods_container').find('input[name="add_time_begin"]').attr('disabled','disabled');
+                                        $('#virtual_goods_container').find('input[name="add_time_end"]').attr('disabled','disabled');
+                                    }
+                                });
+
+                                // 验证时间
+                                $('#virtual_goods_container').find('input[name="valid_period_hour"]').on('input',function(){
+                                    validateValidPeriodHour($(this));
+                                });
+                                $('#virtual_goods_container').find('input[name="valid_period_hour"]').blur(function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_begin"]').on('input',function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_begin"]').blur(function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_end"]').on('input',function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_end"]').blur(function(){
+                                    validateValidPeriodHour($(this));
+                                });
+
+                                function validateValidPeriodHour (obj){
+                                    var error_message = '';
+                                    if($('#virtual_goods_container').find('[name="GoodsModel[valid_period_type]"]:checked').val() == 1){
+                                        if($.trim(obj.val()) == ''){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-valid_period_type"), '时间不能为空');
+                                            error_message = '时间不能为空';
+                                        }else{
+                                            obj.removeClass('error');
+                                            $.validator.clearError($("#goodsmodel-valid_period_type"));
+                                        }
+                                    }
+                                    else if($('#virtual_goods_container').find('[name="GoodsModel[valid_period_type]"]:checked').val() == 2){
+                                        if($.trim(obj.val()) == '' || $.trim(obj.val()) == 0){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-valid_period_type"), '时间不能为空');
+                                            error_message = '时间不能为空';
+                                        }
+                                        else if(! (/^(\+|-)?\d+$/.test(obj.val()))){
+                                            obj.addClass('error');
+                                            $.validator.showError($("#goodsmodel-valid_period_type"), '时间必须为整数');
+                                            error_message = '时间必须为整数';
+                                        }else{
+                                            $.validator.clearError($("#goodsmodel-valid_period_type"));
+                                            $('#virtual_goods_container').find('#goodsmodel-valid_period_hour').val(obj.val());
+                                        }
+
+                                    }
+                                    return error_message;
+                                }
+
+                                $('.form_datetime').datetimepicker({
+                                    language: 'zh-CN',
+                                    weekStart: 1,
+                                    todayBtn: 1,
+                                    autoclose: 1,
+                                    todayHighlight: 1,
+                                    startView: 2,
+                                    forceParse: 0,
+                                    showMeridian: 1,
+                                    format: 'yyyy-mm-dd hh:ii:ss',
+                                });
+
+                                $('#virtual_goods_container').find('input[name="add_time_begin"]').datetimepicker().on('changeDate', function(ev) {
+                                    $('#virtual_goods_container').find('input[name="add_time_end"]').datetimepicker('setStartDate', ev.date);
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_start_time').val($(this).val());
+                                    validateValidPeriodHour($(this));
+                                });
+                                $('#virtual_goods_container').find('input[name="add_time_end"]').datetimepicker().on('changeDate', function(ev) {
+                                    $('#virtual_goods_container').find('input[name="add_time_begin"]').datetimepicker('setEndDate', ev.date);
+                                    $('#virtual_goods_container').find('#goodsmodel-valid_period_end_time').val($(this).val());
+                                    validateValidPeriodHour($(this));
+                                });
+                            </script>
+                        </div>
+                    @endif
 
                     <h5 class="m-b-30" data-anchor="售后保障">售后服务保障</h5>
                     <!-- 发票 -->
@@ -1620,7 +2267,7 @@
 
     <!-- 验证规则 -->
     <script id="client_rules" type="text">
-[{"id": "goodsmodel-cat_id1", "name": "GoodsModel[cat_id1]", "attribute": "cat_id1", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Cat Id1必须是整数。"}}},{"id": "goodsmodel-cat_id2", "name": "GoodsModel[cat_id2]", "attribute": "cat_id2", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Cat Id2必须是整数。"}}},{"id": "goodsmodel-cat_id3", "name": "GoodsModel[cat_id3]", "attribute": "cat_id3", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Cat Id3必须是整数。"}}},{"id": "goodsmodel-pricing_mode", "name": "GoodsModel[pricing_mode]", "attribute": "pricing_mode", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"计价方式必须是整数。"}}},{"id": "goodsmodel-goods_unit", "name": "GoodsModel[goods_unit]", "attribute": "goods_unit", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品单位必须是整数。"}}},{"id": "goodsmodel-filter_attr_ids", "name": "GoodsModel[filter_attr_ids]", "attribute": "filter_attr_ids", "rules": {"string":true,"messages":{"string":"Filter Attr Ids必须是一条字符串。"}}},{"id": "goodsmodel-filter_attr_vids", "name": "GoodsModel[filter_attr_vids]", "attribute": "filter_attr_vids", "rules": {"string":true,"messages":{"string":"Filter Attr Vids必须是一条字符串。"}}},{"id": "goodsmodel-goods_stockcode", "name": "GoodsModel[goods_stockcode]", "attribute": "goods_stockcode", "rules": {"string":true,"messages":{"string":"商品库位码必须是一条字符串。"}}},{"id": "goodsmodel-goods_name", "name": "GoodsModel[goods_name]", "attribute": "goods_name", "rules": {"required":true,"messages":{"required":"商品名称不能为空。"}}},{"id": "goodsmodel-cat_id", "name": "GoodsModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"商品分类不能为空。"}}},{"id": "goodsmodel-shop_id", "name": "GoodsModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "goodsmodel-goods_price", "name": "GoodsModel[goods_price]", "attribute": "goods_price", "rules": {"required":true,"messages":{"required":"店铺价不能为空。"}}},{"id": "goodsmodel-goods_number", "name": "GoodsModel[goods_number]", "attribute": "goods_number", "rules": {"required":true,"messages":{"required":"商品库存不能为空。"}}},{"id": "goodsmodel-add_time", "name": "GoodsModel[add_time]", "attribute": "add_time", "rules": {"required":true,"messages":{"required":"商品发布时间不能为空。"}}},{"id": "goodsmodel-last_time", "name": "GoodsModel[last_time]", "attribute": "last_time", "rules": {"required":true,"messages":{"required":"最后一次更新时间不能为空。"}}},{"id": "goodsmodel-freight_id", "name": "GoodsModel[freight_id]", "attribute": "freight_id", "rules": {"required":true,"messages":{"required":"运费模板不能为空。"}}},{"id": "goodsmodel-sku_open", "name": "GoodsModel[sku_open]", "attribute": "sku_open", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Sku Open必须是整数。"}}},{"id": "goodsmodel-sku_id", "name": "GoodsModel[sku_id]", "attribute": "sku_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Sku Id必须是整数。"}}},{"id": "goodsmodel-cat_id", "name": "GoodsModel[cat_id]", "attribute": "cat_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品分类必须是整数。"}}},{"id": "goodsmodel-shop_id", "name": "GoodsModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "goodsmodel-invoice_type", "name": "GoodsModel[invoice_type]", "attribute": "invoice_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"发票必须是整数。"}}},{"id": "goodsmodel-is_repair", "name": "GoodsModel[is_repair]", "attribute": "is_repair", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"保修必须是整数。"}}},{"id": "goodsmodel-user_discount", "name": "GoodsModel[user_discount]", "attribute": "user_discount", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"会员打折必须是整数。"}}},{"id": "goodsmodel-stock_mode", "name": "GoodsModel[stock_mode]", "attribute": "stock_mode", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"库存计数必须是整数。"}}},{"id": "goodsmodel-goods_number", "name": "GoodsModel[goods_number]", "attribute": "goods_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品库存必须是整数。"}}},{"id": "goodsmodel-warn_number", "name": "GoodsModel[warn_number]", "attribute": "warn_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"库存警告数量必须是整数。"}}},{"id": "goodsmodel-brand_id", "name": "GoodsModel[brand_id]", "attribute": "brand_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"品牌必须是整数。"}}},{"id": "goodsmodel-top_layout_id", "name": "GoodsModel[top_layout_id]", "attribute": "top_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品顶部模板编号必须是整数。"}}},{"id": "goodsmodel-bottom_layout_id", "name": "GoodsModel[bottom_layout_id]", "attribute": "bottom_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品底部模板编号必须是整数。"}}},{"id": "goodsmodel-packing_layout_id", "name": "GoodsModel[packing_layout_id]", "attribute": "packing_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Packing Layout Id必须是整数。"}}},{"id": "goodsmodel-service_layout_id", "name": "GoodsModel[service_layout_id]", "attribute": "service_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Service Layout Id必须是整数。"}}},{"id": "goodsmodel-click_count", "name": "GoodsModel[click_count]", "attribute": "click_count", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品浏览次数必须是整数。"}}},{"id": "goodsmodel-goods_audit", "name": "GoodsModel[goods_audit]", "attribute": "goods_audit", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"审核是否通过必须是整数。"}}},{"id": "goodsmodel-goods_status", "name": "GoodsModel[goods_status]", "attribute": "goods_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品状态必须是整数。"}}},{"id": "goodsmodel-is_delete", "name": "GoodsModel[is_delete]", "attribute": "is_delete", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否已删除必须是整数。"}}},{"id": "goodsmodel-is_virtual", "name": "GoodsModel[is_virtual]", "attribute": "is_virtual", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Is Virtual必须是整数。"}}},{"id": "goodsmodel-is_best", "name": "GoodsModel[is_best]", "attribute": "is_best", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否精品必须是整数。"}}},{"id": "goodsmodel-is_new", "name": "GoodsModel[is_new]", "attribute": "is_new", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否新品必须是整数。"}}},{"id": "goodsmodel-is_hot", "name": "GoodsModel[is_hot]", "attribute": "is_hot", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否热卖必须是整数。"}}},{"id": "goodsmodel-is_promote", "name": "GoodsModel[is_promote]", "attribute": "is_promote", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否促销必须是整数。"}}},{"id": "goodsmodel-supplier_id", "name": "GoodsModel[supplier_id]", "attribute": "supplier_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"供货商ID必须是整数。"}}},{"id": "goodsmodel-freight_id", "name": "GoodsModel[freight_id]", "attribute": "freight_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"运费模板必须是整数。"}}},{"id": "goodsmodel-goods_sort", "name": "GoodsModel[goods_sort]", "attribute": "goods_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Goods Sort必须是整数。"}}},{"id": "goodsmodel-audit_time", "name": "GoodsModel[audit_time]", "attribute": "audit_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Audit Time必须是整数。"}}},{"id": "goodsmodel-add_time", "name": "GoodsModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品发布时间必须是整数。"}}},{"id": "goodsmodel-last_time", "name": "GoodsModel[last_time]", "attribute": "last_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"最后一次更新时间必须是整数。"}}},{"id": "goodsmodel-comment_num", "name": "GoodsModel[comment_num]", "attribute": "comment_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品评论次数必须是整数。"}}},{"id": "goodsmodel-sale_num", "name": "GoodsModel[sale_num]", "attribute": "sale_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品销售数量必须是整数。"}}},{"id": "goodsmodel-collect_num", "name": "GoodsModel[collect_num]", "attribute": "collect_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品收藏数量必须是整数。"}}},{"id": "goodsmodel-sales_model", "name": "GoodsModel[sales_model]", "attribute": "sales_model", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"销售模式必须是整数。"}}},{"id": "goodsmodel-goods_images", "name": "GoodsModel[goods_images]", "attribute": "goods_images", "rules": {"string":true,"messages":{"string":"Goods Images必须是一条字符串。"}}},{"id": "goodsmodel-button_name", "name": "GoodsModel[button_name]", "attribute": "button_name", "rules": {"string":true,"messages":{"string":"按钮名称必须是一条字符串。"}}},{"id": "goodsmodel-button_url", "name": "GoodsModel[button_url]", "attribute": "button_url", "rules": {"string":true,"messages":{"string":"按钮链接必须是一条字符串。"}}},{"id": "goodsmodel-goods_price", "name": "GoodsModel[goods_price]", "attribute": "goods_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"店铺价必须是一个数字。","decimal":"店铺价必须是一个不大于2位小数的数字。","min":"店铺价必须不小于0。","max":"店铺价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-market_price", "name": "GoodsModel[market_price]", "attribute": "market_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"市场价必须是一个数字。","decimal":"市场价必须是一个不大于2位小数的数字。","min":"市场价必须不小于0。","max":"市场价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-warn_number", "name": "GoodsModel[warn_number]", "attribute": "warn_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"库存警告数量必须是整数。","min":"库存警告数量必须不小于0。","max":"库存警告数量必须不大于255。"},"min":0,"max":255}},{"id": "goodsmodel-goods_number", "name": "GoodsModel[goods_number]", "attribute": "goods_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品库存必须是整数。","min":"商品库存必须不小于0。","max":"商品库存必须不大于999999999。"},"min":0,"max":999999999}},{"id": "goodsmodel-cost_price", "name": "GoodsModel[cost_price]", "attribute": "cost_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"成本价必须是一个数字。","decimal":"成本价必须是一个不大于2位小数的数字。","min":"成本价必须不小于0。","max":"成本价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-mobile_price", "name": "GoodsModel[mobile_price]", "attribute": "mobile_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"移动端专项价必须是一个数字。","decimal":"移动端专项价必须是一个不大于2位小数的数字。","min":"移动端专项价必须不小于0。","max":"移动端专项价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-pc_desc", "name": "GoodsModel[pc_desc]", "attribute": "pc_desc", "rules": {"string":true,"messages":{"string":"商品电脑端描述必须是一条字符串。"}}},{"id": "goodsmodel-mobile_desc", "name": "GoodsModel[mobile_desc]", "attribute": "mobile_desc", "rules": {"string":true,"messages":{"string":"商品手机端描述必须是一条字符串。"}}},{"id": "goodsmodel-contract_ids", "name": "GoodsModel[contract_ids]", "attribute": "contract_ids", "rules": {"string":true,"messages":{"string":"保障服务必须是一条字符串。"}}},{"id": "goodsmodel-goods_name", "name": "GoodsModel[goods_name]", "attribute": "goods_name", "rules": {"string":true,"messages":{"string":"商品名称必须是一条字符串。","minlength":"商品名称应该包含至少3个字符。","maxlength":"商品名称只能包含至多60个字符。"},"minlength":3,"maxlength":60}},{"id": "goodsmodel-goods_subname", "name": "GoodsModel[goods_subname]", "attribute": "goods_subname", "rules": {"string":true,"messages":{"string":"商品卖点必须是一条字符串。","maxlength":"商品卖点只能包含至多140个字符。"},"maxlength":140}},{"id": "goodsmodel-goods_image", "name": "GoodsModel[goods_image]", "attribute": "goods_image", "rules": {"string":true,"messages":{"string":"商品主图必须是一条字符串。","maxlength":"商品主图只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_video", "name": "GoodsModel[goods_video]", "attribute": "goods_video", "rules": {"string":true,"messages":{"string":"主图视频必须是一条字符串。","maxlength":"主图视频只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-keywords", "name": "GoodsModel[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"关键词必须是一条字符串。","maxlength":"关键词只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_info", "name": "GoodsModel[goods_info]", "attribute": "goods_info", "rules": {"string":true,"messages":{"string":"商品简介必须是一条字符串。","maxlength":"商品简介只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_reason", "name": "GoodsModel[goods_reason]", "attribute": "goods_reason", "rules": {"string":true,"messages":{"string":"Goods Reason必须是一条字符串。","maxlength":"Goods Reason只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_volume", "name": "GoodsModel[goods_volume]", "attribute": "goods_volume", "rules": {"string":true,"messages":{"string":"物流体积(m3)必须是一条字符串。","maxlength":"物流体积(m3)只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_weight", "name": "GoodsModel[goods_weight]", "attribute": "goods_weight", "rules": {"string":true,"messages":{"string":"物流重量(Kg)必须是一条字符串。","maxlength":"物流重量(Kg)只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_remark", "name": "GoodsModel[goods_remark]", "attribute": "goods_remark", "rules": {"string":true,"messages":{"string":"商品备注必须是一条字符串。","maxlength":"商品备注只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_sn", "name": "GoodsModel[goods_sn]", "attribute": "goods_sn", "rules": {"string":true,"messages":{"string":"商品货号必须是一条字符串。","maxlength":"商品货号只能包含至多60个字符。"},"maxlength":60}},{"id": "goodsmodel-goods_barcode", "name": "GoodsModel[goods_barcode]", "attribute": "goods_barcode", "rules": {"string":true,"messages":{"string":"商品条形码必须是一条字符串。","maxlength":"商品条形码只能包含至多1,500个字符。"},"maxlength":1500}},{"id": "goodsmodel-invoice_type", "name": "GoodsModel[invoice_type]", "attribute": "invoice_type", "rules": {"in":{"range":["0","1","2","3"]},"messages":{"in":"发票是无效的。"}}},{"id": "goodsmodel-is_repair", "name": "GoodsModel[is_repair]", "attribute": "is_repair", "rules": {"in":{"range":["0","1"]},"messages":{"in":"保修是无效的。"}}},{"id": "goodsmodel-user_discount", "name": "GoodsModel[user_discount]", "attribute": "user_discount", "rules": {"in":{"range":["0","1"]},"messages":{"in":"会员打折是无效的。"}}},{"id": "goodsmodel-stock_mode", "name": "GoodsModel[stock_mode]", "attribute": "stock_mode", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"库存计数是无效的。"}}},{"id": "goodsmodel-goods_status", "name": "GoodsModel[goods_status]", "attribute": "goods_status", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"商品状态是无效的。"}}},{"id": "goodsmodel-goods_freight_type", "name": "GoodsModel[goods_freight_type]", "attribute": "goods_freight_type", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"运费设置是无效的。"}}},{"id": "goodsmodel-goods_freight_fee", "name": "GoodsModel[goods_freight_fee]", "attribute": "goods_freight_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"商品固定运费必须是一个数字。","decimal":"商品固定运费必须是一个不大于2位小数的数字。","min":"商品固定运费必须不小于0。","max":"商品固定运费必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-goods_sn", "name": "GoodsModel[goods_sn]", "attribute": "goods_sn", "rules": {"string":true,"messages":{"string":"商品货号必须是一条字符串。","maxlength":"商品货号只能包含至多20个字符。"},"maxlength":20}},{"id": "goodsmodel-goods_barcode", "name": "GoodsModel[goods_barcode]", "attribute": "goods_barcode", "rules": {"string":true,"messages":{"string":"商品条形码必须是一条字符串。","maxlength":"商品条形码只能包含至多1,500个字符。"},"maxlength":1500}},{"id": "goodsmodel-goods_moq", "name": "GoodsModel[goods_moq]", "attribute": "goods_moq", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"最小起订量必须是整数。","min":"最小起订量必须不小于1。"},"min":1}},{"id": "goodsmodel-button_name", "name": "GoodsModel[button_name]", "attribute": "button_name", "rules": {"string":true,"messages":{"string":"按钮名称必须是一条字符串。"}}},{"id": "goodsmodel-button_url", "name": "GoodsModel[button_url]", "attribute": "button_url", "rules": {"string":true,"messages":{"string":"按钮链接必须是一条字符串。"}}},{"id": "goodsmodel-goods_freight_fee", "name": "GoodsModel[goods_freight_fee]", "attribute": "goods_freight_fee", "rules": {"required":true,"messages":{"required":"商品固定运费不能为空。"}}},{"id": "goodsmodel-freight_id", "name": "GoodsModel[freight_id]", "attribute": "freight_id", "rules": {"compare":{"operator":">","type":"number","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"运费模板不能为空"},"when":"function(){console.info($('.goods-freight-type:checked').val());return $('.goods-freight-type:checked').val() == 2;}"}},]
+    [{"id": "goodsmodel-cat_id1", "name": "GoodsModel[cat_id1]", "attribute": "cat_id1", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Cat Id1必须是整数。"}}},{"id": "goodsmodel-cat_id2", "name": "GoodsModel[cat_id2]", "attribute": "cat_id2", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Cat Id2必须是整数。"}}},{"id": "goodsmodel-cat_id3", "name": "GoodsModel[cat_id3]", "attribute": "cat_id3", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Cat Id3必须是整数。"}}},{"id": "goodsmodel-pricing_mode", "name": "GoodsModel[pricing_mode]", "attribute": "pricing_mode", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"计价方式必须是整数。"}}},{"id": "goodsmodel-goods_unit", "name": "GoodsModel[goods_unit]", "attribute": "goods_unit", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品单位必须是整数。"}}},{"id": "goodsmodel-filter_attr_ids", "name": "GoodsModel[filter_attr_ids]", "attribute": "filter_attr_ids", "rules": {"string":true,"messages":{"string":"Filter Attr Ids必须是一条字符串。"}}},{"id": "goodsmodel-filter_attr_vids", "name": "GoodsModel[filter_attr_vids]", "attribute": "filter_attr_vids", "rules": {"string":true,"messages":{"string":"Filter Attr Vids必须是一条字符串。"}}},{"id": "goodsmodel-goods_stockcode", "name": "GoodsModel[goods_stockcode]", "attribute": "goods_stockcode", "rules": {"string":true,"messages":{"string":"商品库位码必须是一条字符串。"}}},{"id": "goodsmodel-goods_name", "name": "GoodsModel[goods_name]", "attribute": "goods_name", "rules": {"required":true,"messages":{"required":"商品名称不能为空。"}}},{"id": "goodsmodel-cat_id", "name": "GoodsModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"商品分类不能为空。"}}},{"id": "goodsmodel-shop_id", "name": "GoodsModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "goodsmodel-goods_price", "name": "GoodsModel[goods_price]", "attribute": "goods_price", "rules": {"required":true,"messages":{"required":"店铺价不能为空。"}}},{"id": "goodsmodel-goods_number", "name": "GoodsModel[goods_number]", "attribute": "goods_number", "rules": {"required":true,"messages":{"required":"商品库存不能为空。"}}},{"id": "goodsmodel-add_time", "name": "GoodsModel[add_time]", "attribute": "add_time", "rules": {"required":true,"messages":{"required":"商品发布时间不能为空。"}}},{"id": "goodsmodel-last_time", "name": "GoodsModel[last_time]", "attribute": "last_time", "rules": {"required":true,"messages":{"required":"最后一次更新时间不能为空。"}}},{"id": "goodsmodel-freight_id", "name": "GoodsModel[freight_id]", "attribute": "freight_id", "rules": {"required":true,"messages":{"required":"运费模板不能为空。"}}},{"id": "goodsmodel-sku_open", "name": "GoodsModel[sku_open]", "attribute": "sku_open", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Sku Open必须是整数。"}}},{"id": "goodsmodel-sku_id", "name": "GoodsModel[sku_id]", "attribute": "sku_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Sku Id必须是整数。"}}},{"id": "goodsmodel-cat_id", "name": "GoodsModel[cat_id]", "attribute": "cat_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品分类必须是整数。"}}},{"id": "goodsmodel-shop_id", "name": "GoodsModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "goodsmodel-invoice_type", "name": "GoodsModel[invoice_type]", "attribute": "invoice_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"发票必须是整数。"}}},{"id": "goodsmodel-is_repair", "name": "GoodsModel[is_repair]", "attribute": "is_repair", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"保修必须是整数。"}}},{"id": "goodsmodel-user_discount", "name": "GoodsModel[user_discount]", "attribute": "user_discount", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"会员打折必须是整数。"}}},{"id": "goodsmodel-stock_mode", "name": "GoodsModel[stock_mode]", "attribute": "stock_mode", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"库存计数必须是整数。"}}},{"id": "goodsmodel-goods_number", "name": "GoodsModel[goods_number]", "attribute": "goods_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品库存必须是整数。"}}},{"id": "goodsmodel-warn_number", "name": "GoodsModel[warn_number]", "attribute": "warn_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"库存警告数量必须是整数。"}}},{"id": "goodsmodel-brand_id", "name": "GoodsModel[brand_id]", "attribute": "brand_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"品牌必须是整数。"}}},{"id": "goodsmodel-top_layout_id", "name": "GoodsModel[top_layout_id]", "attribute": "top_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品顶部模板编号必须是整数。"}}},{"id": "goodsmodel-bottom_layout_id", "name": "GoodsModel[bottom_layout_id]", "attribute": "bottom_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品底部模板编号必须是整数。"}}},{"id": "goodsmodel-packing_layout_id", "name": "GoodsModel[packing_layout_id]", "attribute": "packing_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Packing Layout Id必须是整数。"}}},{"id": "goodsmodel-service_layout_id", "name": "GoodsModel[service_layout_id]", "attribute": "service_layout_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Service Layout Id必须是整数。"}}},{"id": "goodsmodel-click_count", "name": "GoodsModel[click_count]", "attribute": "click_count", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品浏览次数必须是整数。"}}},{"id": "goodsmodel-goods_audit", "name": "GoodsModel[goods_audit]", "attribute": "goods_audit", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"审核是否通过必须是整数。"}}},{"id": "goodsmodel-goods_status", "name": "GoodsModel[goods_status]", "attribute": "goods_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品状态必须是整数。"}}},{"id": "goodsmodel-is_delete", "name": "GoodsModel[is_delete]", "attribute": "is_delete", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否已删除必须是整数。"}}},{"id": "goodsmodel-is_virtual", "name": "GoodsModel[is_virtual]", "attribute": "is_virtual", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Is Virtual必须是整数。"}}},{"id": "goodsmodel-is_best", "name": "GoodsModel[is_best]", "attribute": "is_best", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否精品必须是整数。"}}},{"id": "goodsmodel-is_new", "name": "GoodsModel[is_new]", "attribute": "is_new", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否新品必须是整数。"}}},{"id": "goodsmodel-is_hot", "name": "GoodsModel[is_hot]", "attribute": "is_hot", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否热卖必须是整数。"}}},{"id": "goodsmodel-is_promote", "name": "GoodsModel[is_promote]", "attribute": "is_promote", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否促销必须是整数。"}}},{"id": "goodsmodel-supplier_id", "name": "GoodsModel[supplier_id]", "attribute": "supplier_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"供货商ID必须是整数。"}}},{"id": "goodsmodel-freight_id", "name": "GoodsModel[freight_id]", "attribute": "freight_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"运费模板必须是整数。"}}},{"id": "goodsmodel-goods_sort", "name": "GoodsModel[goods_sort]", "attribute": "goods_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Goods Sort必须是整数。"}}},{"id": "goodsmodel-audit_time", "name": "GoodsModel[audit_time]", "attribute": "audit_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Audit Time必须是整数。"}}},{"id": "goodsmodel-add_time", "name": "GoodsModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品发布时间必须是整数。"}}},{"id": "goodsmodel-last_time", "name": "GoodsModel[last_time]", "attribute": "last_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"最后一次更新时间必须是整数。"}}},{"id": "goodsmodel-comment_num", "name": "GoodsModel[comment_num]", "attribute": "comment_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品评论次数必须是整数。"}}},{"id": "goodsmodel-sale_num", "name": "GoodsModel[sale_num]", "attribute": "sale_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品销售数量必须是整数。"}}},{"id": "goodsmodel-collect_num", "name": "GoodsModel[collect_num]", "attribute": "collect_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品收藏数量必须是整数。"}}},{"id": "goodsmodel-sales_model", "name": "GoodsModel[sales_model]", "attribute": "sales_model", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"销售模式必须是整数。"}}},{"id": "goodsmodel-goods_images", "name": "GoodsModel[goods_images]", "attribute": "goods_images", "rules": {"string":true,"messages":{"string":"Goods Images必须是一条字符串。"}}},{"id": "goodsmodel-button_name", "name": "GoodsModel[button_name]", "attribute": "button_name", "rules": {"string":true,"messages":{"string":"按钮名称必须是一条字符串。"}}},{"id": "goodsmodel-button_url", "name": "GoodsModel[button_url]", "attribute": "button_url", "rules": {"string":true,"messages":{"string":"按钮链接必须是一条字符串。"}}},{"id": "goodsmodel-goods_price", "name": "GoodsModel[goods_price]", "attribute": "goods_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"店铺价必须是一个数字。","decimal":"店铺价必须是一个不大于2位小数的数字。","min":"店铺价必须不小于0。","max":"店铺价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-market_price", "name": "GoodsModel[market_price]", "attribute": "market_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"市场价必须是一个数字。","decimal":"市场价必须是一个不大于2位小数的数字。","min":"市场价必须不小于0。","max":"市场价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-goods_sort", "name": "GoodsModel[goods_sort]", "attribute": "goods_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Goods Sort必须是整数。","min":"Goods Sort必须不小于0。","max":"Goods Sort必须不大于9999。"},"min":0,"max":9999}},{"id": "goodsmodel-warn_number", "name": "GoodsModel[warn_number]", "attribute": "warn_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"库存警告数量必须是整数。","min":"库存警告数量必须不小于0。","max":"库存警告数量必须不大于255。"},"min":0,"max":255}},{"id": "goodsmodel-goods_number", "name": "GoodsModel[goods_number]", "attribute": "goods_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品库存必须是整数。","min":"商品库存必须不小于0。","max":"商品库存必须不大于999999999。"},"min":0,"max":999999999}},{"id": "goodsmodel-cost_price", "name": "GoodsModel[cost_price]", "attribute": "cost_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"成本价必须是一个数字。","decimal":"成本价必须是一个不大于2位小数的数字。","min":"成本价必须不小于0。","max":"成本价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-mobile_price", "name": "GoodsModel[mobile_price]", "attribute": "mobile_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"移动端专项价必须是一个数字。","decimal":"移动端专项价必须是一个不大于2位小数的数字。","min":"移动端专项价必须不小于0。","max":"移动端专项价必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-pc_desc", "name": "GoodsModel[pc_desc]", "attribute": "pc_desc", "rules": {"string":true,"messages":{"string":"商品电脑端描述必须是一条字符串。"}}},{"id": "goodsmodel-mobile_desc", "name": "GoodsModel[mobile_desc]", "attribute": "mobile_desc", "rules": {"string":true,"messages":{"string":"商品手机端描述必须是一条字符串。"}}},{"id": "goodsmodel-contract_ids", "name": "GoodsModel[contract_ids]", "attribute": "contract_ids", "rules": {"string":true,"messages":{"string":"保障服务必须是一条字符串。"}}},{"id": "goodsmodel-goods_name", "name": "GoodsModel[goods_name]", "attribute": "goods_name", "rules": {"string":true,"messages":{"string":"商品名称必须是一条字符串。","minlength":"商品名称应该包含至少1个字符。","maxlength":"商品名称只能包含至多60个字符。"},"minlength":1,"maxlength":60}},{"id": "goodsmodel-goods_subname", "name": "GoodsModel[goods_subname]", "attribute": "goods_subname", "rules": {"string":true,"messages":{"string":"商品卖点必须是一条字符串。","maxlength":"商品卖点只能包含至多140个字符。"},"maxlength":140}},{"id": "goodsmodel-goods_image", "name": "GoodsModel[goods_image]", "attribute": "goods_image", "rules": {"string":true,"messages":{"string":"商品主图必须是一条字符串。","maxlength":"商品主图只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_video", "name": "GoodsModel[goods_video]", "attribute": "goods_video", "rules": {"string":true,"messages":{"string":"主图视频必须是一条字符串。","maxlength":"主图视频只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-keywords", "name": "GoodsModel[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"关键词必须是一条字符串。","maxlength":"关键词只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_info", "name": "GoodsModel[goods_info]", "attribute": "goods_info", "rules": {"string":true,"messages":{"string":"商品简介必须是一条字符串。","maxlength":"商品简介只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_reason", "name": "GoodsModel[goods_reason]", "attribute": "goods_reason", "rules": {"string":true,"messages":{"string":"Goods Reason必须是一条字符串。","maxlength":"Goods Reason只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_volume", "name": "GoodsModel[goods_volume]", "attribute": "goods_volume", "rules": {"string":true,"messages":{"string":"物流体积(m3)必须是一条字符串。","maxlength":"物流体积(m3)只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_weight", "name": "GoodsModel[goods_weight]", "attribute": "goods_weight", "rules": {"string":true,"messages":{"string":"物流重量(Kg)必须是一条字符串。","maxlength":"物流重量(Kg)只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_remark", "name": "GoodsModel[goods_remark]", "attribute": "goods_remark", "rules": {"string":true,"messages":{"string":"商品备注必须是一条字符串。","maxlength":"商品备注只能包含至多255个字符。"},"maxlength":255}},{"id": "goodsmodel-goods_sn", "name": "GoodsModel[goods_sn]", "attribute": "goods_sn", "rules": {"string":true,"messages":{"string":"商品货号必须是一条字符串。","maxlength":"商品货号只能包含至多60个字符。"},"maxlength":60}},{"id": "goodsmodel-goods_barcode", "name": "GoodsModel[goods_barcode]", "attribute": "goods_barcode", "rules": {"string":true,"messages":{"string":"商品条形码必须是一条字符串。","maxlength":"商品条形码只能包含至多1,500个字符。"},"maxlength":1500}},{"id": "goodsmodel-invoice_type", "name": "GoodsModel[invoice_type]", "attribute": "invoice_type", "rules": {"in":{"range":["0","1","2","3"]},"messages":{"in":"发票是无效的。"}}},{"id": "goodsmodel-is_repair", "name": "GoodsModel[is_repair]", "attribute": "is_repair", "rules": {"in":{"range":["0","1"]},"messages":{"in":"保修是无效的。"}}},{"id": "goodsmodel-user_discount", "name": "GoodsModel[user_discount]", "attribute": "user_discount", "rules": {"in":{"range":["0","1"]},"messages":{"in":"会员打折是无效的。"}}},{"id": "goodsmodel-stock_mode", "name": "GoodsModel[stock_mode]", "attribute": "stock_mode", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"库存计数是无效的。"}}},{"id": "goodsmodel-goods_status", "name": "GoodsModel[goods_status]", "attribute": "goods_status", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"商品状态是无效的。"}}},{"id": "goodsmodel-goods_freight_type", "name": "GoodsModel[goods_freight_type]", "attribute": "goods_freight_type", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"运费设置是无效的。"}}},{"id": "goodsmodel-goods_freight_fee", "name": "GoodsModel[goods_freight_fee]", "attribute": "goods_freight_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"商品固定运费必须是一个数字。","decimal":"商品固定运费必须是一个不大于2位小数的数字。","min":"商品固定运费必须不小于0。","max":"商品固定运费必须不大于9999999。"},"decimal":2,"min":0,"max":9999999}},{"id": "goodsmodel-goods_sn", "name": "GoodsModel[goods_sn]", "attribute": "goods_sn", "rules": {"string":true,"messages":{"string":"商品货号必须是一条字符串。","maxlength":"商品货号只能包含至多20个字符。"},"maxlength":20}},{"id": "goodsmodel-goods_barcode", "name": "GoodsModel[goods_barcode]", "attribute": "goods_barcode", "rules": {"string":true,"messages":{"string":"商品条形码必须是一条字符串。","maxlength":"商品条形码只能包含至多1,500个字符。"},"maxlength":1500}},{"id": "goodsmodel-goods_moq", "name": "GoodsModel[goods_moq]", "attribute": "goods_moq", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"最小起订量必须是整数。","min":"最小起订量必须不小于1。"},"min":1}},{"id": "goodsmodel-button_name", "name": "GoodsModel[button_name]", "attribute": "button_name", "rules": {"string":true,"messages":{"string":"按钮名称必须是一条字符串。"}}},{"id": "goodsmodel-button_url", "name": "GoodsModel[button_url]", "attribute": "button_url", "rules": {"string":true,"messages":{"string":"按钮链接必须是一条字符串。"}}},{"id": "goodsmodel-goods_freight_fee", "name": "GoodsModel[goods_freight_fee]", "attribute": "goods_freight_fee", "rules": {"required":true,"messages":{"required":"商品固定运费不能为空。"}}},{"id": "goodsmodel-freight_id", "name": "GoodsModel[freight_id]", "attribute": "freight_id", "rules": {"compare":{"operator":">","type":"number","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"运费模板不能为空"},"when":"function(){console.info($('.goods-freight-type:checked').val());return $('.goods-freight-type:checked').val() == 2;}"}},{"id": "goodsmodel-effective_type", "name": "GoodsModel[effective_type]", "attribute": "effective_type", "rules": {"required":true,"messages":{"required":"兑换生效期不能为空。"}}},{"id": "goodsmodel-valid_period_type", "name": "GoodsModel[valid_period_type]", "attribute": "valid_period_type", "rules": {"required":true,"messages":{"required":"使用有效期不能为空。"}}},{"id": "goodsmodel-is_expired_refund", "name": "GoodsModel[is_expired_refund]", "attribute": "is_expired_refund", "rules": {"required":true,"messages":{"required":"支持过期退款不能为空。"}}},{"id": "goodsmodel-buy_limit", "name": "GoodsModel[buy_limit]", "attribute": "buy_limit", "rules": {"required":true,"messages":{"required":"电子卡券购买上限不能为空。"}}},{"id": "goodsmodel-effective_hour", "name": "GoodsModel[effective_hour]", "attribute": "effective_hour", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Effective Hour必须是整数。"}}},{"id": "goodsmodel-valid_period_hour", "name": "GoodsModel[valid_period_hour]", "attribute": "valid_period_hour", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Valid Period Hour必须是整数。"}}},{"id": "goodsmodel-buy_limit", "name": "GoodsModel[buy_limit]", "attribute": "buy_limit", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"电子卡券购买上限必须是整数。","min":"电子卡券购买上限必须不小于1。","max":"电子卡券购买上限必须不大于10。"},"min":1,"max":10}},]
 </script>
     <script type='text/javascript'>
         //初始化规格排序

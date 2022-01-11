@@ -105,7 +105,7 @@ class Goods extends BaseModel
         'bottom_layout_id','packing_layout_id','service_layout_id','click_count','keywords','goods_info','invoice_type','is_repair','user_discount','stock_mode','comment_num',
         'sale_num','collect_num','goods_audit','goods_status','goods_reason','is_delete','is_virtual','is_best','is_new','is_hot','is_promote','contract_ids','supplier_id',
         'freight_id','goods_freight_type','goods_freight_fee','goods_stockcode','goods_volume','goods_weight','goods_remark','goods_sort','add_time','last_time','audit_time',
-        'edit_items','act_id','goods_moq','lib_goods_id','other_attrs','filter_attr_ids','filter_attr_vids','button_name','button_url','pricing_mode','goods_unit','sales_model',
+        'edit_items','act_id','goods_moq','lib_goods_id','other_attrs','filter_attr_ids','filter_attr_vids','button_name','button_url','pricing_mode','goods_unit','goods_tag', 'sales_model',
         'order_act_id','goods_mode',
         'ext_info','remark',
         'shop_cat_ids',

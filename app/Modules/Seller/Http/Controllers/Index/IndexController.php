@@ -29,21 +29,22 @@ class IndexController extends Seller
     {
 
         $data = [
-            'after_sale_order_count'=> 0,
-            'backing_order_count' => 0,
-            'exchange_order_count'=> 0,
-            'illegal_goods_count' => 1,
-            'involve_complaint_count' => 0,
-            'offsale_goods_count' => 0,
-            'onsale_goods_count' => 12,
-            'today_gains' => "0.00",
-            'today_order_count' => 0,
-            'today_users_count' => 0,
-            'unevaluate_order_count' => 0,
-            'unpayed_order_count' => 0,
-            'unshipping_order_count' => 0,
-            'wait_audit_goods_count' => 0,
-            'wait_complaint_count' => 0,
+            'after_sale_order_count'=> '6',
+            'backing_order_count' => '2',
+            'exchange_order_count'=> '0',
+            'illegal_goods_count' => '10',
+            'involve_complaint_count' => '0',
+            'live_enable' => false,
+            'offsale_goods_count' => '221',
+            'onsale_goods_count' => '5',
+            'today_gains' => 0,
+            'today_order_count' => '0',
+            'today_users_count' => '0',
+            'unevaluate_order_count' => '43',
+            'unpayed_order_count' => '0',
+            'unshipping_order_count' => '11',
+            'wait_audit_goods_count' => '0',
+            'wait_complaint_count' => '0',
         ];
         return $data;
     }
@@ -51,7 +52,7 @@ class IndexController extends Seller
     public function showMessage()
     {
 
-        return result(1);
+        return result(0, 1);
     }
 
     public function expirationReminding()

@@ -3,10 +3,10 @@
 namespace App\Modules\Seller\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Seller;
-use App\Repositories\GoodsLayoutRepository;
+use App\Repositories\GoodsTagRepository;
 use Illuminate\Http\Request;
 
-class LayoutController extends Seller
+class GoodsTagController extends Seller
 {
 
     private $links = [
@@ -17,45 +17,35 @@ class LayoutController extends Seller
         ['url' => 'goods/questions/list', 'text' => '常见问题'],
     ];
 
-    private $manage_links = [
-        ['url' => 'goods/layout/list', 'text' => '详情版式列表'],
-        ['url' => 'goods/layout/add', 'text' => '添加'],
-        ['url' => 'goods/layout/edit', 'text' => '编辑'],
-    ];
 
-    protected $goodsLayout;
-
+    protected $goodsTag;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->goodsLayout = new GoodsLayoutRepository();
+        $this->goodsTag = new GoodsTagRepository();
 
-        $this->set_menu_select('goods', 'goods-set');
+        $this->set_menu_select('goods', 'goods-tag');
 
     }
 
     public function lists(Request $request)
     {
-        $title = '详情版式';
+        $title = '商品标签';
         $fixed_title = '商品设置 - '.$title;
 
-        $this->sublink($this->links, 'goods/layout/list');
+        $this->sublink($this->links, 'goods/goods-tag/list');
 
         $action_span = [
             [
                 'url' => 'add',
                 'icon' => 'fa-plus',
-                'text' => '添加详情版式'
+                'text' => '添加商品标签'
             ],
         ];
 
-        $explain_panel = [
-            '可设置前台商品详情页的头部和底部公用模板，以及前台商品详情页的包装清单和售后保障',
-            '设置详情版式后，需在发布商品时管理设置的详情版式，这样前台商品详情页才展示',
-            '店铺设置自己店铺的详情版式，仅供自己店铺商品使用',
-        ];
+        $explain_panel = [];
         $blocks = [
             'explain_panel' => $explain_panel,
             'fixed_title' => $fixed_title,
@@ -69,12 +59,12 @@ class LayoutController extends Seller
         $where = [];
         $where[] = ['shop_id', seller_shop_info()->shop_id];
         // 搜索条件
-        $search_arr = ['layout_name','position'];
+        $search_arr = ['keyword','tag_position'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
 
-                if ($v == 'layout_name') {
-                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                if ($v == 'keyword') {
+                    $where[] = ['tag_name', 'like', "%{$params[$v]}%"];
                 } else {
                     $where[] = [$v, $params[$v]];
                 }
@@ -83,35 +73,41 @@ class LayoutController extends Seller
         // 列表
         $condition = [
             'where' => $where,
-            'sortname' => 'layout_id',
+            'sortname' => 'tag_id',
             'sortorder' => 'desc',
         ];
-        list($list, $total) = $this->goodsLayout->getList($condition);
+        list($list, $total) = $this->goodsTag->getList($condition);
 
         $pageHtml = pagination($total);
-//        dd($list);
+
         if ($request->ajax()) {
-            $render = view('goods.layout.partials._list', compact('list', 'total', 'pageHtml'))->render();
+            $render = view('goods.goods-tag.partials._list', compact('list', 'total', 'pageHtml'))->render();
             return result(0, $render);
         }
-        return view('goods.layout.list', compact('title', 'list', 'pageHtml'));
+
+        $tagPosition = $this->tagPosition();
+
+        return view('goods.goods-tag.list', compact('title', 'list', 'pageHtml', 'tagPosition'));
     }
 
     public function add(Request $request)
     {
-        $title = '添加详情版式';
-        $this->sublink($this->manage_links, 'add', '', '', 'edit');
+        $title = '添加商品标签';
 
         $id = $request->get('id', 0);
 
         if ($id) {
             // 更新操作
-            $info = $this->goodsLayout->getById($id);
+            $info = $this->goodsTag->getById($id);
+            if (str_contains($info->tag_image, 'superscript')) {
+//                $info->tag_image = '/assets/d2eace91'.$info->tag_image;
+                $info->self_img = false;
+            } else {
+//                $info->tag_image = get_image_url($info->tag_image);
+                $info->self_img = true;
+            }
             view()->share('info', $info);
-            $title = '编辑详情版式';
-//            dd($info);
-            $this->sublink($this->manage_links, 'edit', '', '', 'add');
-
+            $title = '编辑商品标签';
         }
 
         $fixed_title = '商品设置 - '.$title;
@@ -120,15 +116,11 @@ class LayoutController extends Seller
             [
                 'url' => 'list',
                 'icon' => 'fa-reply',
-                'text' => '返回详情版式列表'
+                'text' => '返回商品标签列表'
             ],
         ];
 
-        $explain_panel = [
-            '详情顶部、详情底部展示在商品详情的头部和底部',
-            '包装清单、售后保障在商品详情下方展示',
-            '模板内容上传图片，建议上传宽度为800像素的图片',
-        ];
+        $explain_panel = [];
         $blocks = [
             'explain_panel' => $explain_panel,
             'fixed_title' => $fixed_title,
@@ -137,7 +129,9 @@ class LayoutController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('goods.layout.add', compact('title', 'info'));
+        $tagPosition = $this->tagPosition();
+
+        return view('goods.goods-tag.add', compact('title', 'tagPosition'));
     }
 
     public function edit(Request $request)
@@ -153,17 +147,17 @@ class LayoutController extends Seller
      */
     public function saveData(Request $request)
     {
-        $post = $request->post('GoodsLayoutModel');
+        $post = $request->post('GoodsTag');
 
-        if (!empty($post['layout_id'])) {
+        if (!empty($post['tag_id'])) {
             // 编辑
-            $ret = $this->goodsLayout->update($post['layout_id'], $post);
-            $msg = '详情版式编辑';
+            $ret = $this->goodsTag->update($post['tag_id'], $post);
+            $msg = '商品标签编辑';
         }else {
             // 添加
             $post['shop_id'] = seller_shop_info()->shop_id;
-            $ret = $this->goodsLayout->store($post);
-            $msg = '详情版式添加';
+            $ret = $this->goodsTag->store($post);
+            $msg = '商品标签添加';
         }
 
         if ($ret === false) {
@@ -174,20 +168,7 @@ class LayoutController extends Seller
         return result(0, null, $msg.'成功');
     }
 
-    /**
-     * 名称验证是否重复
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function clientValidate(Request $request)
-    {
-        $result = $this->goodsLayout->clientValidate($request, 'GoodsLayoutModel');
-        if (!$result['code']) {
-            return result(-1, '', $result['message']);
-        }
-        return result(0);
-    }
+
 
     /**
      * 删除
@@ -199,9 +180,9 @@ class LayoutController extends Seller
         $id = $request->post('id');
         if (count(explode(',', $id)) > 1) {
             // 批量删除
-            $ret = $this->goodsLayout->batchDel(explode(',', $id));
+            $ret = $this->goodsTag->batchDel(explode(',', $id));
         } else {
-            $ret = $this->goodsLayout->del($id);
+            $ret = $this->goodsTag->del($id);
         }
         if ($ret === false) {
             // Log
@@ -210,6 +191,25 @@ class LayoutController extends Seller
 
         // Log
         return result(0, null, '删除成功');
+    }
+
+    /**
+     * 标签位置列表
+     *
+     * @param $key
+     * @return array|mixed
+     */
+    private function tagPosition($key = '')
+    {
+        $data = [
+            '左上角',
+            '右上角',
+            '左下角',
+            '右下角',
+            '中间'
+        ];
+
+        return !empty($id) ? $data[$key] : $data;
     }
 
 }

@@ -164,7 +164,7 @@
         <div class="site-nav-content">
             <div class="seller-logo">
                 <a href="/shop/shop-set/edit"  title="[&nbsp;店铺&nbsp;]&nbsp;{{ $shop_info->shop_name ?? '' }}">
-                    <img src="{{ get_image_url($shop_info->shop_image) ?? '' }}" />
+                    <img src="@if(!empty($shop_info->shop_image)){{ get_image_url($shop_info->shop_image) }}@endif" />
                 </a>
             </div>
             <div class="seller-nav-list">
@@ -187,7 +187,7 @@
                                     <ul class="left-menu">
 
                                         @foreach($menu['child'] as $child)
-                                            <li class="@if($menu_select['current'] == explode('|',$child['menus'])[1] || @$menu_select['current'] == get_seller_mac_by_url($child['url'])[1]){{ 'selected' }}@endif">
+                                            <li class="@if(@$menu_select['current'] == explode('|',$child['menus'])[1] || @$menu_select['current'] == get_seller_mac_by_url($child['url'])[1]){{ 'selected' }}@endif">
                                                 <a href="{{ $child['url'] }}" data-menus="{{ $child['menus'] }}" onClick="to('{{ $child['url'] }}', this)" target="{{ @$child['target'] }}">{{ $child['title'] }}<i class="fa fa-caret-right icon pull-right"></i></a>
                                             </li>
                                         @endforeach
@@ -219,7 +219,7 @@
                     </div>
                     <div class="user-dropdown-select">
 
-                        <a  href='{{ route('pc_home') }}' target="_blank">前往店铺</a> <a href="http://{{ env('FRONTEND_DOMAIN') }}/user/security/edit-password.html" >修改密码</a> <a  onClick="clearCache()">清除缓存</a> <a href="/site/logout.html" data-method="post" data-confirm="您确定要退出卖家中心吗？">安全退出</a> </div>
+                        <a  href='{{ route('pc_home') }}' target="_blank">前往店铺</a> <a href="http://{{ env('FRONTEND_DOMAIN') }}/user/security/edit-password.html" >修改密码</a> <a  onClick="clearCache()">清除缓存</a> <a href="/site/logout" data-method="post" data-confirm="您确定要退出卖家中心吗？">安全退出</a> </div>
                 </div>
             </div>
 

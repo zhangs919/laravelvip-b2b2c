@@ -39,7 +39,7 @@
         <div class="col-sm-9">
             <div class="shop-panel panel-region">
                 <div class="shop-basic-logo">
-                    <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2018/11/24/15430357753119.png" />
+                    <img src="{{ get_image_url($shop_info->shop_logo, 'shop_logo') }}" />
                     <div class="edit-mask">
                         <a href="/shop/shop-set/edit">
                             <i class="fa fa-edit"></i>
@@ -48,9 +48,9 @@
                     </div>
                 </div>
                 <div class="shop-basic-info">
-                    <span class="name">哆啦A梦</span>
+                    <span class="name">{{ $shop_info->shop_name ?? '' }}</span>
 
-                    <img class="m-r-20" src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/backend/859/images/2018/11/24/15430532353112.png" height="16" />
+                    <img class="m-r-20" src="http://image.laravelvip.com/images/shop/shop-credit/2018/06/30/15303660397766.gif" height="16" />
 
 
                     <span class="code-box popover-por">
@@ -335,22 +335,22 @@
                 <div class="module-body shop-body hide">
                     <p>
                         <span>用户名：</span>
-                        <font>测试店铺</font>
+                        <font>{{ $seller->user_name }}</font>
                     </p>
 
                     <p>
                         <span>店铺有效期：</span>
-                        <font>截止至 2020-08-22</font>
+                        <font>截止至 {{ $shop_info->end_time }}</font>
                     </p>
 
 
                     <p>
                         <span>上次登录IP：</span>
-                        <font title="112.117.8.43（云南省昆明市）">112.117.8.43（云南省昆明市）</font>
+                        <font title="{{ $seller->last_ip }}（云南省昆明市）">{{ $seller->last_ip }}（云南省昆明市）</font>
                     </p>
                     <p>
                         <span>上次登录时间：</span>
-                        <font>2019-01-12 11:22:57</font>
+                        <font>{{ $seller->last_login }}</font>
                     </p>
 
                 </div>
@@ -360,10 +360,10 @@
                     <div>平台信息</div>
                 </div>
                 <div class="module-body">
-                    <p>电话：400-078-5268</p>
-                    <p>邮件：kefu@bhmg.com</p>
-                    <p>QQ：800007396</p>
-                    <p>旺旺：szy800007396</p>
+                    <p>电话：{{ sysconf('mall_phone') }}</p>
+                    <p>邮件：{{ sysconf('mall_email') }}</p>
+                    <p>QQ：{{ sysconf('mall_qq') }}</p>
+                    <p>旺旺：{{ sysconf('mall_wangwang') }}</p>
                 </div>
             </div>
 
@@ -760,7 +760,7 @@
                         $.open({
                             title: "店铺指引",
                             ajax: {
-                                url: '/index/index/seller-guide.html',
+                                url: '/index/index/seller-guide',
                             },
                             width: "1080px",
                             height: "540px",

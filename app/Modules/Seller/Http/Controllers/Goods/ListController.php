@@ -47,14 +47,19 @@ class ListController extends Seller
 
         $action_span = [
             [
+                'url' => '/goods/list/batch-edit',
+                'icon' => 'fa-cloud-upload',
+                'text' => '批量更新商品价格、库存'
+            ],
+            [
                 'url' => '/goods/list/batch-add',
                 'icon' => 'fa-cloud-upload',
                 'text' => '批量上传商品'
             ],
             [
-                'url' => '/goods/list/batch-edit',
+                'url' => 'goods/list/upload-set-sku-member',
                 'icon' => 'fa-cloud-upload',
-                'text' => '批量更新商品价格、库存'
+                'text' => '批量自定义会员价'
             ],
         ];
 

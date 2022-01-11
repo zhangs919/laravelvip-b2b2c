@@ -172,6 +172,7 @@ class PublishController extends Seller
         $title = '填写商品详情';
         $fixed_title = '发布商品 - '.$title;
         $cat_id = $request->get('cat_id');
+        $goods_mode = $request->get('goods_mode',0); // 商品类别 0实物商品（物流发货） 1电子卡券（无需物流） 2服务商品（无需物流）
 
         $shop_id = seller_shop_info()->shop_id;
         $action_span = [];
@@ -315,7 +316,7 @@ class PublishController extends Seller
 
         $edit_enable = 1;
 
-        $compact = compact('cat_names', 'attr_list', 'spec_list', 'cat_list', 'other_cat_ids','attr_values','spec_values',
+        $compact = compact('goods_mode', 'cat_names', 'attr_list', 'spec_list', 'cat_list', 'other_cat_ids','attr_values','spec_values',
             'goods_image','date_list','hour_list','minute_list','cat_id','top_layouts','bottom_layouts','packing_layouts','service_layouts',
             'freight_list','shop_cat_list','contract_list','brand_list','goods_unit_list','edit_items','shop_freight_fee','is_supply',
             'wholesale_enable','edit_enable');

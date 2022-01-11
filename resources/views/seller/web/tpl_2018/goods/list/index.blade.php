@@ -716,10 +716,11 @@
             tablelist = $("#table_list").tablelist();
 
             $("#btn_export").click(function() {
-                var url = "/goods/list/export";
+                var url = "/goods/list/export.html";
                 url += "?goods_barcode=" + $("#searchmodel-goods_barcode").val();
                 url += "&keyword=" + $("#searchmodel-keyword").val();
                 url += "&cat_id=" + $("#searchmodel-cat_id").val();
+                url += "&tag_id=" + $("#searchmodel-tag_id").val();
                 url += "&status=" + $("#searchmodel-status").val();
                 url += "&brand_id=" + $("#searchmodel-brand_id").val();
                 url += "&store_id=" + $("#searchmodel-store_id").val();
@@ -729,13 +730,19 @@
                 url += "&sales_model=" + $("#searchmodel-sales_model").val();
                 url += "&start_stock=" + $("#searchmodel-start_stock").val();
                 url += "&end_stock=" + $("#searchmodel-end_stock").val();
+                url += "&erp_goods_id=" + $("#searchmodel-erp_goods_id").val();
+                url += "&shop_goods_cat_id=" + $("#searchmodel-shop_goods_cat_id").val();
 
                 if (tablelist.sortname != null && tablelist.sortorder != null) {
                     url += "&sortname=" + tablelist.sortname;
                     url += "&sortorder=" + tablelist.sortorder;
                 }
 
-                $.go(url, "_blank", false);
+                if($("#freight_id").size() > 0){
+                    url += "&freight_id=" + $("#freight_id").val();
+                }
+
+                $.go('/site/export?url=' + encodeURIComponent($.base64.encode(url)) + '&title=导出商品列表', '_blank', false);
             });
 
             // 查看SKU信息
@@ -747,7 +754,7 @@
                 $.open({
                     title: "商品 #" + goods_id + " 的SKU列表",
                     ajax: {
-                        url: '/goods/list/sku-list',
+                        url: '/goods/list/sku-list.html',
                         data: {
                             goods_id: goods_id
                         }
@@ -771,7 +778,7 @@
                 $.open({
                     title: "自定义会员价",
                     ajax: {
-                        url: '/goods/list/sku-member',
+                        url: '/goods/list/sku-member.html',
                         data: {
                             goods_id: goods_id
                         }
@@ -826,18 +833,24 @@
                 }
 
                 $.confirm("您确定要下架此商品吗？", {}, function() {
+
+                    $.loading.start();
+
                     $.post("/goods/publish/offsale", {
                         ids: ids
                     }, function(result) {
                         if (result.code == 0) {
-                            $.msg(result.message);
-                            tablelist.load();
+                            $.msg(result.message, function(){
+                                tablelist.load();
+                            });
                         } else {
                             $.msg(result.message, {
                                 time: 5000
                             });
                         }
-                    }, "json");
+                    }, "json").always(function(){
+                        $.loading.stop();
+                    });
                 });
             });
 
@@ -854,18 +867,23 @@
                     return;
                 }
 
+                $.loading.start();
+
                 $.post("/goods/publish/onsale", {
                     ids: ids
                 }, function(result) {
                     if (result.code == 0) {
-                        tablelist.load();
-                        $.msg(result.message);
+                        $.msg(result.message, function(){
+                            tablelist.load();
+                        });
                     } else {
                         $.msg(result.message, {
                             time: 5000
                         });
                     }
-                }, "json");
+                }, "json").always(function(){
+                    $.loading.stop();
+                });
             });
 
             $("body").on("click", ".delete-goods", function() {
@@ -883,18 +901,24 @@
                 }
 
                 $.confirm("您确定要删除此商品吗？", function() {
+
+                    $.loading.start();
+
                     $.post('/goods/publish/delete', {
                         ids: ids
                     }, function(result) {
                         if (result.code == 0) {
-                            $.msg(result.message);
-                            tablelist.load();
+                            $.msg(result.message, function(){
+                                tablelist.load();
+                            });
                         } else {
                             $.msg(result.message, {
                                 time: 5000
                             });
                         }
-                    }, "json");
+                    }, "json").always(function(){
+                        $.loading.stop();
+                    });
                 });
             })
 
@@ -950,6 +974,31 @@
                 });
             });
 
+            //商品标签
+            $("body").on("click", ".goods-tag", function() {
+                var ids = $(this).data("id");
+                if (!ids) {
+                    ids = tablelist.checkedValues();
+                    ids = ids.join(",");
+                }
+                if (!ids || ids.length == 0) {
+                    $.msg("请选择要设置标签的商品");
+                    return;
+                }
+                $.open({
+                    // 标题
+                    title: '商品标签设置',
+                    height:'200px',
+                    width: '500px',
+                    // ajax加载的设置
+                    ajax: {
+                        url: '/goods/list/set-goods-tag',
+                        data: {
+                            ids: ids
+                        }
+                    },
+                });
+            });
             //商品单位
             $("body").on("click", ".goods-unit", function() {
                 var ids = $(this).data("id");
@@ -961,10 +1010,12 @@
                     $.msg("请选择要设置单位的商品");
                     return;
                 }
-                $.modal({
+
+                $.open({
                     // 标题
                     title: '商品单位设置',
                     width: 500,
+                    height: 150,
                     trigger: $(this),
                     // ajax加载的设置
                     ajax: {
@@ -972,7 +1023,7 @@
                         data: {
                             ids: ids
                         }
-                    },
+                    }
                 });
             });
             //计价方式
@@ -986,10 +1037,11 @@
                     $.msg("请选择要设置计价方式的商品");
                     return;
                 }
-                $.modal({
+                $.open({
                     // 标题
                     title: '计价方式设置',
                     width: 500,
+                    height: 150,
                     trigger: $(this),
                     // ajax加载的设置
                     ajax: {
@@ -1156,6 +1208,29 @@
                     },
                 });
             });
+            // 设置价格
+            $("body").on("click", ".set-price", function() {
+                var ids = $(this).data("id");
+                if (!ids) {
+                    ids = tablelist.checkedValues();
+                    ids = ids.join(",");
+                }
+                if (!ids || ids.length == 0) {
+                    $.msg("请选择要调整价格的商品");
+                    return;
+                }
+                $.open({
+                    title: "调整价格",
+                    ajax: {
+                        url: '/goods/list/set-price.html',
+                        data: {
+                            ids: ids
+                        }
+                    },
+                    hight: "300px",
+                    width: "500px",
+                });
+            });
             $("#btn_search").click(function() {
                 var data = $("#SearchModel").serializeJson();
                 tablelist.load(data);
@@ -1207,17 +1282,19 @@
                         }
                         $.loading.start();
                         $.post('/goods/list/remark', data, function(result) {
-                            $.loading.stop();
                             if (result.code == 0) {
-                                tablelist.load();
                                 layer.close(index);
-                                $.msg(result.message);
+                                $.msg(result.message, function(){
+                                    tablelist.load();
+                                });
                             } else {
                                 $.msg(result.message, {
                                     time: 5000
                                 })
                             }
-                        }, "json");
+                        }, "json").always(function(){
+                            $.loading.stop();
+                        });
                     }
                 });
             });
@@ -1265,17 +1342,17 @@
                     return params;
                 },
                 /* validate: function(value) {
-    value = $.trim(value);
-    if (!value) {
-        return '商品价格不能为空。';
-    } else if (isNaN(value)) {
-        return '商品价格必须是一个数字。';
-    } else if (value < 0.01) {
-        return '价格必须是0.01~9999999之间的数字。';
-    } else if (value > 9999999) {
-        return '价格必须是0.01~9999999之间的数字。';
-    }
-}, */
+                    value = $.trim(value);
+                    if (!value) {
+                        return '商品价格不能为空。';
+                    } else if (isNaN(value)) {
+                        return '商品价格必须是一个数字。';
+                    } else if (value < 0.01) {
+                        return '价格必须是0.01~9999999之间的数字。';
+                    } else if (value > 9999999) {
+                        return '价格必须是0.01~9999999之间的数字。';
+                    }
+                }, */
                 success: function(response, newValue) {
                     var response = eval('(' + response + ')');
                     // 错误处理
@@ -1304,16 +1381,16 @@
                     return params;
                 },
                 /* validate: function(value) {
-    value = $.trim(value);
-    var ex = /^\d+$/;
-    if (!value) {
-        return '商品库存不能为空。';
-    } else if (!ex.test(value)) {
-        return '商品库存必须是正整数。';
-    } else if (value > 999999999) {
-        return '商品库存不能大于999999999';
-    }
-}, */
+                    value = $.trim(value);
+                    var ex = /^\d+$/;
+                    if (!value) {
+                        return '商品库存不能为空。';
+                    } else if (!ex.test(value)) {
+                        return '商品库存必须是正整数。';
+                    } else if (value > 999999999) {
+                        return '商品库存不能大于999999999';
+                    }
+                }, */
                 success: function(response, newValue) {
                     var response = eval('(' + response + ')');
                     // 错误处理
@@ -1347,15 +1424,15 @@
                     return params;
                 },
                 /* validate: function(value) {
-    value = $.trim(value);
-    if (!value) {
-        return '商品名称不能为空。';
-    } else if (value.length < 3) {
-        return '商品名称应该包含至少3个字。';
-    } else if (value.length > 60) {
-        return '商品名称只能包含至多60个字。';
-    }
-}, */
+                    value = $.trim(value);
+                    if (!value) {
+                        return '商品名称不能为空。';
+                    } else if (value.length < 3) {
+                        return '商品名称应该包含至少3个字。';
+                    } else if (value.length > 60) {
+                        return '商品名称只能包含至多60个字。';
+                    }
+                }, */
                 success: function(response, newValue) {
                     var response = eval('(' + response + ')');
                     // 错误处理
@@ -1364,8 +1441,8 @@
                     }
                 },
                 display: function(value, sourceData) {
-                    if (value.length > 28) {
-                        $(this).html(value.substring(0, 28) + '...');
+                    if (value.length > 25) {
+                        $(this).html(value.substring(0, 25) + '...');
                     } else {
                         $(this).html(value);
                     }

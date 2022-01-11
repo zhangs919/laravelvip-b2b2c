@@ -383,6 +383,25 @@
                     </div>
                 </div>
             </div>
+            <!-- 非营业时间下单提示 -->
+            <div class="simple-form-field">
+                <div class="form-group">
+                    <label for="shopmodel-close_tips" class="col-sm-4 control-label">
+
+                        <span class="ng-binding">非营业时间下单提示：</span>
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="form-control-box">
+
+                            <textarea id="shopmodel-close_tips" class="form-control valid" name="ShopModel[close_tips]" rows="5">{!! $info->close_tips ?? '' !!}</textarea>
+
+
+                        </div>
+
+                        <div class="help-block help-block-t"><div class="help-block help-block-t">消费者在店铺非营业时间下单，提交订单时，展示的提示信息</div></div>
+                    </div>
+                </div>
+            </div>
             <div class="simple-form-field" >
                 <div class="form-group">
                     <label for="shopmodel-opening_hour" class="col-sm-4 control-label">

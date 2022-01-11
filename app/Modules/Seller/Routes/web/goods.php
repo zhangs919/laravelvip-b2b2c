@@ -137,6 +137,16 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
         // 商品设置
         Route::get('goods-set/index', 'Goods\GoodsSetController@index'); // index
 
+        // 商品标签
+        Route::group(['prefix' => 'goods-tag'], function () {
+            Route::get('list', 'Goods\GoodsTagController@lists'); // lists
+            Route::get('add', 'Goods\GoodsTagController@add'); // add
+            Route::get('edit', 'Goods\GoodsTagController@edit'); // edit
+            Route::post('add', 'Goods\GoodsTagController@saveData'); // saveData
+            Route::post('edit', 'Goods\GoodsTagController@saveData'); // saveData
+            Route::post('delete', 'Goods\GoodsTagController@delete'); // delete
+        });
+
         // 商品单位
         Route::group(['prefix' => 'goods-unit'], function () {
             Route::get('list', 'Goods\GoodsUnitController@lists'); // lists

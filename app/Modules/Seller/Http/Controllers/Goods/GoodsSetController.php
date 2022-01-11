@@ -13,6 +13,7 @@ class GoodsSetController extends Seller
 
     private $links = [
         ['url' => 'goods/goods-set/index', 'text' => '基本设置'],
+        ['url' => 'goods/goods-tag/list', 'text' => '商品标签'],
         ['url' => 'goods/goods-unit/list', 'text' => '商品单位'],
         ['url' => 'goods/layout/list', 'text' => '详情版式'],
         ['url' => 'goods/questions/list', 'text' => '常见问题'],
