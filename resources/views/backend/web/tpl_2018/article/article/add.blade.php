@@ -53,7 +53,7 @@
 
                                 @if(!empty($cat_list))
                                 @foreach($cat_list as $v)
-                                    <option value="{{ $v['cat_id'] }}" @if(!$v['active']) disabled="true" @endif>{{ $v['title_show'] }}</option>
+                                    <option value="{{ $v['cat_id'] }}" @if(!$v['active']) disabled="true" @endif>{!! $v['title_show'] !!}</option>
                                 @endforeach
                                 @endif
 

@@ -33,7 +33,8 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .application-logo i.zp { background-position: -123px 0px; }
 .application-logo i.mj { background-position: -164px 0px; }
 .application-logo i.mz { background-position: -205px 0px; }
-.application-logo i.dp { background-position: -246px 0px; }
+.application-logo i.dp { background-position: -533px -205px; }
+.application-logo i.db { background-position: -246px 0px; }
 .application-logo i.yh { background-position: -287px 0px; }
 .application-logo i.jf { background-position: -328px 0px; }
 .application-logo i.pt { background-position: 0px -41px; }
@@ -81,6 +82,22 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .application-logo i.qyhhw{background-position: -287px -123px} 
 .application-logo i.dls{background-position: -328px -123px} 
 .application-logo i.ys{background-position: -82px -205px} 
+.application-logo i.wnbd{background-position: -123px -82px} 
+.application-logo i.xnsp{background-position:-205px -82px}
+.application-logo i.qydls{background-position: -82px -205px}  
+.application-logo i.rlsb{background-position: -82px -205px}
+.application-logo i.dbykj{background-position: -492px -205px}
+.application-logo i.mppd{background-position: -0px -328px}
+.application-logo i.djbjpd{background-position: -41px -328px}
+.application-logo i.sjspd{background-position: -82px -328px}
+.application-logo i.dsfpd{background-position: -123px -328px}
+.application-logo i.zazzwx{background-position: -164px -328px}
+.application-logo i.sqyx{background-position: -123px -246px} 
+.application-logo i.esc{background-position: 0px -369px} 
+.application-logo i.eswp{background-position: -82px -369px}  
+.application-logo i.fwzs{background-position: -41px -369px} 
+
+
 /*应用版*/
 .app-board { padding: 25px; margin-bottom: 15px; border: 1px solid #e5e5e5; overflow: hidden }
 .app-board-img { float: left; width: 200px; height: 200px; overflow: hidden; }
@@ -146,16 +163,16 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .group-region{ width: 100%; float: left; display:inline-block; border:1px solid #e9e9e9; font-size:12px;}
 .group-region:hover,.group-region-small:hover{ border-color:#58B4FF}
 .group-region .group-region-brief{padding: 15px 10px 10px; position:relative }
-.group-region .group-region-brief .icon{ width:60px; height:60px; background:url(../images/common/icon_small.png) no-repeat -347px -290px; position:absolute; top:15px; left:20px; display:block;}
-.group-region .group-region-brief .icon.icon-taste{ background-position:-347px -222px}
-.group-region .group-region-brief .icon.icon-new{ background-position:-347px -290px}
-.group-region .group-region-brief .icon.icon-old{ background-position:-347px -357px}
-.group-region .group-region-brief .icon.icon-bonus{ background-position:-273px -446px}
-.group-region .group-region-brief .icon.icon-index{ background-position:-217px -446px}
-.group-region .group-region-brief .icon.icon-weixin{ background-position:5px -446px}
-.group-region .group-region-brief .icon.icon-mail{ background-position:-105px -446px}
-.group-region .group-region-brief .icon.icon-app{ background-position:-160px -446px}
-.group-region .group-region-brief .icon.icon-sms{ background-position:-50px -446px}
+.group-region .group-region-brief .icon,.group-region-fl .group-region-brief .icon,.widget-app-board-icon .icon{ width:60px; height:60px; background:url(../images/common/icon_small.png) no-repeat -347px -290px; position:absolute; top:15px; left:20px; display:block;}
+.group-region .group-region-brief .icon.icon-taste,.widget-app-board-icon .icon.icon-taste{ background-position:-347px -222px}
+.group-region .group-region-brief .icon.icon-new,.widget-app-board-icon .icon.icon-new{ background-position:-347px -290px}
+.group-region .group-region-brief .icon.icon-old,.widget-app-board-icon .icon.icon-old{ background-position:-347px -357px}
+.group-region .group-region-brief .icon.icon-bonus,.widget-app-board-icon .icon.icon-bonus{ background-position:-273px -446px}
+.group-region .group-region-brief .icon.icon-index,.widget-app-board-icon .icon.icon-index{ background-position:-217px -446px}
+.group-region .group-region-brief .icon.icon-weixin,.widget-app-board-icon .icon.icon-weixin{ background-position:5px -446px}
+.group-region .group-region-brief .icon.icon-mail,.widget-app-board-icon .icon.icon-mail{ background-position:-105px -446px}
+.group-region .group-region-brief .icon.icon-app,.widget-app-board-icon .icon.icon-app{ background-position:-160px -446px}
+.group-region .group-region-brief .icon.icon-sms,.widget-app-board-icon .icon.icon-sms{ background-position:-50px -446px}
 .group-region .group-region-brief p{ padding-left:85px; font-size:12px; color:#999;}
 .group-region .group-region-brief p.name{ font-size:14px; color:#333; margin-bottom:5px;}
 .group-region .group-region-brief p.desc{ height:34px;}
@@ -165,12 +182,24 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .group-region .group-region-subtotal dl dd.num{color: #333; font-size:14px;}
 .group-region .group-region-subtotal dl:last-child{ border-right:none;}
 .group-region .group-region-btn{ color:#fff; display:block; text-align:center; font-size:14px; cursor:pointer; background:#58B4FF; line-height:34px;  width:100%;}
+.group-region .group-region-ft{ position: relative; }
+.group-region-ft .group-region-btn{ color:#fff; display:block; text-align:center; font-size:14px; cursor:pointer; background:#58B4FF; line-height:34px;  width:50%; float: left;}
+.group-region-ft .group-region-btn:last-child{ background:#FF6D57; }
 .group-region .group-region-btn.disabled{background: #eee; cursor: not-allowed; color: #bbb;}
 .group.row .percent-20{ width:20%; padding-left: 8px; padding-right: 8px; float: left;}
 .group-region-small{ width: 100%; padding:20px; text-align:center;}
 .group-region-small .group-region-brief{height: 165px; padding-top: 75px;}
 .group-region-small .group-region-brief .icon{left: 50%; top:5px; margin-left: -30px;}
 .group-region-small .group-region-brief p{ padding-left:0px;}
+
+/*展示介绍内容样式*/
+.widget-app-board{margin-bottom: 15px; padding: 25px 30px; overflow: inherit; max-height: none; background: #f8f8f8; position: relative; transition: margin-bottom .1s ease-out; }
+.widget-app-board .widget-app-board-info{float: left; width:65%;}
+.widget-app-board-icon{float: left; margin-right: 10px;}
+.widget-app-board-icon .icon{ position: relative; top: 0px; left: 0;}
+.widget-app-board-info h3{font-size: 16px;color: #333; font-weight: bold; line-height: 30px;}
+.widget-app-board-info p{ line-height: 20px; color: #333; font-size: 12px;}
+.widget-app-board-control{ float: left; width: 20%;}
 
 /*自由购核销*/
 .content-panel{ }
@@ -247,3 +276,55 @@ a.screen-btn{  position: absolute; top: 11px; right: 20px; z-index: 999;}
 .design-preview.small .design-config-region h1{ font-size: 14px; height: 55px; line-height: 36px; padding: 18px 65px 0 60px;}
 .design-preview.small .design-fields-region .sms-item { width: 210px; font-size: 14px;}
 
+/*会员统计分析*/
+.user-statistics-con{ position:relative;}
+.user-statistics-con .funnel-block{border-top: 1px solid #e4e4e4;border-bottom: 1px solid #e4e4e4;padding-top: 4px;height:88px;width: auto; padding:15px 0;}
+.user-statistics-con .funnel-block .cell{ float: left;min-width: 80px;font-size: 12px; color: #666; text-align: center; border-right: 1px dotted #e4e4e4}
+.user-statistics-con .funnel-block .cell:last-child{ border-right: 0px; }
+.user-statistics-con .funnel-block .cell .cell-hd span{font-size: 14px; color: #666; text-align: center;line-height: 20px;}
+.user-statistics-con .funnel-block .cell .cell-ft span.number{color: #000;font-size:22px; line-height:40px; font-family: Helvetica,STHeiti,"Microsoft YaHei",Verdana,Arial,Tahoma,sans-serif;}
+.user-statistics-con .funnel-block .cell .cell-ft .ratio{position: relative; padding-left: 14px; color: #999;}
+.user-statistics-con .funnel-block .cell .cell-ft .desc{color: #518502;}
+.user-statistics-con .funnel-block .cell .cell-ft .desc::after { position: absolute; left: 0; content: '\2193';}
+.user-statistics-con .funnel-block .cell .cell-ft .asc{color: #EE3935;}
+.user-statistics-con .funnel-block .cell .cell-ft .asc::after { position: absolute; left: 0; content: '\2191';}
+.group-region-con { width: 100%;border:1px solid #e9e9e9; font-size:12px;}
+.group-region-con:hover.group-region-small:hover{ border-color:#58B4FF}
+.group-region-fl,.group-region-fr{ width: 50%; float: left; }
+.group-region-fl{border-right: 1px dotted #e9e9e9;}
+.group-region-fl .group-region-brief{padding: 15px 10px 10px; position:relative }
+.group-region-fl .group-region-brief .icon.icon-taste{ background-position:-347px -222px}
+.group-region-fl .group-region-brief .icon.icon-new{ background-position:-347px -290px}
+.group-region-fl .group-region-brief .icon.icon-old{ background-position:-347px -357px}
+.group-region-fl .group-region-brief .icon.icon-bonus{ background-position:-273px -446px}
+.group-region-fl .group-region-brief .icon.icon-index{ background-position:-217px -446px}
+.group-region-fl .group-region-brief .icon.icon-weixin{ background-position:5px -446px}
+.group-region-fl .group-region-brief .icon.icon-mail{ background-position:-105px -446px}
+.group-region-fl .group-region-brief .icon.icon-app{ background-position:-160px -446px}
+.group-region-fl .group-region-brief .icon.icon-sms{ background-position:-50px -446px}
+.group-region-fl .group-region-brief p{ padding-left:85px; font-size:12px; color:#999;}
+.group-region-fl .group-region-brief p.name{ font-size:14px; color:#333; margin-bottom:5px;}
+.group-region-fl .group-region-brief p.desc{ height:34px;}
+.group-region-fr{ position: relative;padding: 35px 40px 10px;}
+.group-region-fr .group-region-info em{ font-size: 18px; color: #000;}
+.widget-app-board-control .group-region-info{font-size: 14px; border-left: 1px solid #e9e9e9; height: 100%; display: block; width: 100%; padding-left: 20px; line-height: 50px; color:#9b9b9b;}
+.widget-app-board-control .group-region-info em{font-size: 20px; color: #333;}
+.widget-app-board-control .group-region-info i{ font-size: 16px; cursor: pointer; color: #ddd; margin: -2px 0 0 5px;}
+h5.model-title span{ float: right; font-size: 12px; color: #999; }
+.user-behavior-groups.row{margin-right: -8px; margin-left: -8px;}
+.user-behavior-groups a{ text-decoration: none; color: #9b9b9b;}
+.user-behavior-groups .behavior-groups{border:1px solid #e9e9e9;  font-size:12px;padding: 18px 0 18px 35px; border-radius: 2px;overflow: hidden; }
+.user-behavior-groups .behavior-groups:hover,.user-behavior-groups .behavior-groups.current{ border-color:#58B4FF;}
+.user-behavior-groups .behavior-groups.current{background: url(../images/default/user-behavior-select.png) right bottom no-repeat;}
+.user-behavior-groups .behavior-groups dt,.user-behavior-groups .behavior-groups dd span{color: #9b9b9b; font-size: 12px; line-height: 28px; margin:0;}
+.user-behavior-groups .behavior-groups dt{font-size: 13px; font-weight: 400; color: #333;}
+.user-behavior-groups .behavior-groups dt i{ color: #ddd; font-size: 16px; margin-left: 5px; margin-top: -2px;}
+.user-behavior-groups .behavior-groups dd span.number{line-height: 28px;  margin-right: 5px; font-size: 18px; color: #000;}
+.user-behavior-groups .col-lg-3{padding-right: 8px !important;padding-left: 8px !important; text-align:left;}
+
+/*统计数据*/
+.data-text-box { overflow: hidden; background: #F8F8F8; }
+.data-text-box .data-text{ width: 50%; overflow: hidden; display: inline-block; float: left; padding: 40px 0 0 30px; margin-bottom: 20px;}
+.data-text-box .data-text h6{color: #333; margin-bottom: 10px;}
+.data-text-box .data-text h6 i{ color: #ddd; font-size: 16px; margin-left: 5px;}
+.data-text-box .data-text p{color: #333; font-size: 26px; margin-bottom: 10px;}

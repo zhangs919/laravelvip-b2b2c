@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Collect;
 use App\Models\Goods;
 use App\Models\Shop;
 use App\Models\ShopBindClass;
@@ -17,10 +18,22 @@ class ShopRepository
 
     protected $model;
 
+    protected $goodsRep;
+
+    protected $userRep;
+
+    protected $activityRep;
+
+    protected $freightRep;
 
     public function __construct()
     {
         $this->model = new Shop();
+        $this->goodsRep = new GoodsRepository();
+        $this->userRep = new UserRepository();
+        $this->activityRep = new ActivityRepository();
+        $this->freightRep = new FreightRepository();
+
 
     }
 
@@ -194,6 +207,90 @@ class ShopRepository
             echo $e->getMessage();
             echo $e->getCode();
             return false;
+        }
+    }
+
+    /**
+     * 平台方 彻底删除店铺
+     *
+     * @param int $shop_id 店铺id
+     * @return bool
+     */
+    public function shopDelete($shop_id)
+    {
+        DB::beginTransaction();
+        try {
+
+            // todo 检查是否存在未完成订单 如果存在 则不允许删除
+            $hasUnfinishedOrder = false;
+            if ($hasUnfinishedOrder) {
+                return arr_result(1, '', '此店铺存在未完成订单，不能删除');
+            }
+            // 检查是否存在在售商品 如果存在 则不允许删除
+            $hasOnSaleGoods = $this->getShopGoodsCount($shop_id);
+            if ($hasOnSaleGoods) {
+                return arr_result(1, '', '此店铺存在在售商品，不能删除');
+            }
+
+            // 删除店铺关联信息
+            $query = Shop::find($shop_id);
+            $query->delete(); // 删除店铺表 shop
+            $query->integralGoods()->delete();// 店铺关联积分商品 integral_goods
+            $query->shopBindClass()->delete();// 店铺绑定分类 shop_bind_class
+            $query->shopCategory()->delete(); // 店铺内分类 shop_category
+            $query->member()->delete();// 店铺会员 member
+            $query->printSpec()->delete();// 打印规格 print_spec
+            $query->selfPickup()->delete();// 店铺自提点 self_pickup
+            $query->customer()->delete(); // 店铺客服 customer
+            $query->customerType()->delete(); // 店铺客服类型 customer_type
+            $query->shopAddress()->delete(); // 店铺发货地址 shop_address
+            $query->shopApply()->delete();// 店铺入驻申请 shop_apply
+//            $query ->shopAuth()->delete();// 店铺权限 shop_auth todo 暂时未完成 先不执行删除
+            $query->shopComment()->delete();// 店铺动态评价 shop_comment
+            $query->shopConfig()->delete();// 店铺系统配置 shop_config
+            $query->shopContract()->delete();// 店铺消费保障 shop_contract
+            $query->shopFieldValue()->delete();// 店铺认证信息 shop_field_value
+            $query->shopLog()->delete(); // 店铺操作日志 shop_log
+            $query->shopMessageTpl()->delete();// 店铺消息模板 shop_message_tpl
+            $query->shopNavigation()->delete();// 店铺导航 shop_navigation
+            $query->shopPayment()->delete();// 店铺付款信息 shop_payment
+            $query->shopQuestions()->delete();// 店铺问答 shop_questions
+            $query->shopRank()->delete();// 店铺会员等级 shop_rank
+            $query->shopRole()->delete();// 店铺账号角色 shop_role
+            $query->shopShipping()->delete();// 店铺物流运单 shop_shipping
+            $query->stores()->delete();// 店铺关联网点 stores
+            $query->storeGroup()->delete();// 店铺网点分组 store_group
+            $query->templateItem()->delete();// 店铺装修信息 template_item
+            $query->topic()->delete();// 店铺专题 topic
+            $query->ylyPrinter()->delete();// 易联云打印机配置 yly_printer
+            $query->goodsUnit()->delete(); // 店铺商品单位 goods_unit
+            $query->goodsLayout()->delete(); // 店铺商品详情版式 goods_layout
+            $query->goodsTag()->delete(); // 店铺商品标签 goods_tag
+
+            // 特殊表删除
+            // 店铺关联商品信息彻底删除
+            $this->goodsRep->foreverDeleteGoods($shop_id);
+
+            // 店铺活动
+            $this->activityRep->deleteActivity($shop_id);
+
+            // 运费模板
+            $this->freightRep->deleteFreight($shop_id);
+
+            // 店铺收藏
+            Collect::where([['shop_id', $shop_id], ['collect_type', 1]])->delete();
+
+            // 店主管理员账号和网点管理员账号(包括会员认证信息)
+            $user_ids = User::where('shop_id', $shop_id)->select(['user_id'])->pluck('user_id')->toArray();
+            $this->userRep->deleteUser($user_ids);
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack(); // 事务回滚
+            echo $e->getMessage();
+            echo $e->getCode();
+            return arr_result(-1, '', '删除失败');
         }
     }
 

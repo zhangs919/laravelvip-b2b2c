@@ -11,8 +11,10 @@
 
     @foreach($list as $v)
         <tr>
-            <td class="text-l">{{ $v->title }}</td>
-            <td>{{ $v->send_time }}</td>
+            <td class="text-l">
+                <a href="@if(!empty($v->link)){{ $v->link }}@else{{ route('pc_show_article', ['article_id'=>$v->article_id]) }}@endif" target="_blank" title="{{ $v->title }}">{{ $v->title }}</a>
+            </td>
+            <td>{{ $v->add_time }}</td>
         </tr>
     @endforeach
 

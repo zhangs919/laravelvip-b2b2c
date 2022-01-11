@@ -25,7 +25,7 @@
             <td class="text-c">{{ $v->id }}</td>
             <td>美酒</td>
             <td class="text-c">
-                <a href="javascript:void(0);" ref="{{ $v->ad_image }}" class="preview m-l-5" data-toggle="tooltip" data-placement="auto bottom"><i class="fa fa-picture-o"></i></a>
+                <a href="javascript:void(0);" ref="{{ get_image_url($v->ad_image) }}" class="preview m-l-5" data-toggle="tooltip" data-placement="auto bottom"><i class="fa fa-picture-o"></i></a>
             </td>
             <td>{{ $v->ad_link }}</td>
             <td class="text-c">

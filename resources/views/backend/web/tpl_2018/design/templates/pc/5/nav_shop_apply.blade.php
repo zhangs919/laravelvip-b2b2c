@@ -17,10 +17,10 @@
 
             @if(!empty($data['3-1']))
                 @foreach($data['3-1'] as $v)
-                    <a href="javascript:void(0)" title="申请商家入驻；已提交申请，可查看当前审核状态。" class="store-join-btn">
+                    <a href="{{ $v['link'] ?? 'javascript:void(0)' }}" title="申请商家入驻；已提交申请，可查看当前审核状态。" class="store-join-btn">
                         <img src="{{ get_image_url($v['path']) }}">
                     </a>
-                    <a href="javascript:void(0)" class="store-join-help">
+                    <a href="{{ $v['link'] ?? 'javascript:void(0)' }}" class="store-join-help">
                         <i class="icon-cog"></i>
                         登录商家管理中心
                     </a>

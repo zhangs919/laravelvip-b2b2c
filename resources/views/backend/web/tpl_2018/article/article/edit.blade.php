@@ -55,7 +55,7 @@
 
                                 @if(!empty($cat_list))
                                 @foreach($cat_list as $v)
-                                    <option value="{{ $v['cat_id'] }}" @if($info->cat_id == $v['cat_id']) selected="true" @else @if(!$v['active']) disabled="true" @endif @endif>{{ $v['title_show'] }}</option>
+                                    <option value="{{ $v['cat_id'] }}" @if($info->cat_id == $v['cat_id']) selected="true" @else @if(!$v['active']) disabled="true" @endif @endif>{!! $v['title_show'] !!}</option>
                                 @endforeach
                                 @endif
 

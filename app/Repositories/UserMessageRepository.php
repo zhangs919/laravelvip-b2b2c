@@ -23,7 +23,7 @@
 namespace App\Repositories;
 
 
-use App\Models\Message;
+use App\Models\UserMessage;
 
 /**
  * 会员消息/店铺消息模型
@@ -31,7 +31,7 @@ use App\Models\Message;
  * Class MessageRepository
  * @package App\Repositories
  */
-class MessageRepository
+class UserMessageRepository
 {
     use BaseRepository;
 
@@ -39,7 +39,8 @@ class MessageRepository
 
     public function __construct()
     {
-        $this->model = new Message();
+        $this->model = new UserMessage();
     }
+
 
 }

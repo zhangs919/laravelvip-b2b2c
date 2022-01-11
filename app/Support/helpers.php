@@ -3097,17 +3097,17 @@ function get_application_list()
                     'is_disp_block' => true,
                     'logo' => 'live',
                     'url' => '/dashboard/live/index',
-                    'field' => '',
+                    'field' => 'live',
                     'type' => 1,
                 ],
                 [
                     'name' => '预售',
                     'desc' => '预定形式销售',
-                    'label' => '敬请期待',
-                    'is_disp_block' => false,
+                    'label' => '',
+                    'is_disp_block' => true,
                     'logo' => 'ys',
                     'url' => '/dashboard/pre-sale/index',
-                    'field' => '',
+                    'field' => 'pre_sale',
                     'type' => 1,
                 ],
             ]
@@ -3168,7 +3168,27 @@ function get_application_list()
                     'is_disp_block' => false,
                     'logo' => 'xg',
                     'url' => '/dashboard/purchase/list',
-                    'field' => '',
+                    'field' => 'purchase',
+                    'type' => 1,
+                ],
+                [
+                    'name' => '万能表单',
+                    'desc' => '自定义表单文件',
+                    'label' => '',
+                    'is_disp_block' => false,
+                    'logo' => 'wnbd',
+                    'url' => '/dashboard/custom-form/list',
+                    'field' => 'custom_form',
+                    'type' => 1,
+                ],
+                [
+                    'name' => '虚拟商品',
+                    'desc' => '服务商品、电子卡券',
+                    'label' => '已购',
+                    'is_disp_block' => false,
+                    'logo' => 'xnsp',
+                    'url' => '/trade/virtual-order/list',
+                    'field' => 'virtual',
                     'type' => 1,
                 ],
             ]
@@ -3189,7 +3209,7 @@ function get_application_list()
                     'is_disp_block' => false,
                     'logo' => 'jf',
                     'url' => '/dashboard/integral-mall/revision',
-                    'field' => 'exchange',
+                    'field' => 'integralmall',
                     'type' => 2,
                 ],
                 [
@@ -3288,6 +3308,16 @@ function get_application_list()
                     'logo' => 'khfx',
                     'url' => '/dashboard/customer-analysis/index',
                     'field' => 'customer_analysis',
+                    'type' => 2,
+                ],
+                [
+                    'name' => '商圈营销',
+                    'desc' => '同城电商区域分析',
+                    'label' => '已购',
+                    'is_disp_block' => false,
+                    'logo' => 'sqyx',
+                    'url' => '/dashboard/trade-area/list',
+                    'field' => 'trade_area',
                     'type' => 2,
                 ],
                 [
@@ -3419,7 +3449,7 @@ function get_application_list()
                     'is_disp_block' => false,
                     'logo' => 'wd',
                     'url' => 'javascript:;',
-                    'field' => '',
+                    'field' => 'wd',
                     'type' => 1,
                 ],
                 [
@@ -3434,7 +3464,8 @@ function get_application_list()
                 ],
             ]
         ],
-        [
+
+        /*[
             'name' => '互动活动',
             'desc' => '',
             'label' => '',
@@ -3494,7 +3525,7 @@ function get_application_list()
                     'type' => 2,
                 ],
             ]
-        ]
+        ]*/
     ];
 
     return $data;
@@ -3519,7 +3550,7 @@ function get_shop_application_list()
             'child' => [
                 [
                     'name' => '红包',
-                    'desc' => '向消费者发放平台红包',
+                    'desc' => '向消费者发放红包',
                     'label' => '',
                     'is_disp_block' => false,
                     'logo' => 'hb',
@@ -3528,7 +3559,7 @@ function get_shop_application_list()
                 ],
                 [
                     'name' => '团购',
-                    'desc' => '监管店铺限时促销活动',
+                    'desc' => '创建限时促销活动',
                     'label' => '',
                     'is_disp_block' => false,
                     'logo' => 'tg',
@@ -3574,8 +3605,8 @@ function get_shop_application_list()
                 [
                     'name' => '满件优惠',
                     'desc' => '设置购买指定件享受优惠',
-                    'label' => '',
-                    'is_disp_block' => false,
+                    'label' => '敬请期待',
+                    'is_disp_block' => true,
                     'logo' => 'yh',
                     'url' => 'javascript:;',
                     'field' => 'full_discount',
@@ -3589,15 +3620,15 @@ function get_shop_application_list()
                     'url' => '/dashboard/cash-back/list',
                     'field' => 'cash_back',
                 ],
-                [
-                    'name' => '签到',
-                    'desc' => '每日签到领取积分或奖励',
-                    'label' => '敬请期待',
-                    'is_disp_block' => true,
-                    'logo' => 'qd',
-                    'url' => 'javascript:;',
-                    'field' => 'sign_in',
-                ],
+//                [
+//                    'name' => '签到',
+//                    'desc' => '每日签到领取积分或奖励',
+//                    'label' => '敬请期待',
+//                    'is_disp_block' => true,
+//                    'logo' => 'qd',
+//                    'url' => 'javascript:;',
+//                    'field' => 'sign_in',
+//                ],
             ]
         ],
         [
@@ -3620,7 +3651,7 @@ function get_shop_application_list()
                 ],
                 [
                     'name' => '砍价',
-                    'desc' => '，拉动粉丝',
+                    'desc' => '互动帮砍，拉动粉丝',
                     'label' => '已购',
                     'is_disp_block' => false,
                     'logo' => 'kj',
@@ -3653,6 +3684,15 @@ function get_shop_application_list()
                     'logo' => 'fx',
                     'url' => '/dashboard/distrib-goods/list',
                     'field' => 'distrib',
+                ],
+                [
+                    'name' => '直播',
+                    'desc' => '直播引流，效果直观',
+                    'label' => '',
+                    'is_disp_block' => true,
+                    'logo' => 'live',
+                    'url' => '/dashboard/live/index',
+                    'field' => 'live',
                 ],
                 [
                     'name' => '预售',
@@ -3701,6 +3741,33 @@ function get_shop_application_list()
                     'url' => '/dashboard/reachbuy/index',
                     'field' => 'reach_buy',
                 ],
+                [
+                    'name' => '限购',
+                    'desc' => '不同等级消费者限制购买',
+                    'label' => '',
+                    'is_disp_block' => false,
+                    'logo' => 'xg',
+                    'url' => '/dashboard/purchase/list',
+                    'field' => 'purchase',
+                ],
+                [
+                    'name' => '万能表单',
+                    'desc' => '自定义表单文件',
+                    'label' => '',
+                    'is_disp_block' => false,
+                    'logo' => 'wnbd',
+                    'url' => '/dashboard/custom-form/list',
+                    'field' => 'custom_form',
+                ],
+                [
+                    'name' => '虚拟商品',
+                    'desc' => '服务商品、电子卡券',
+                    'label' => '已购',
+                    'is_disp_block' => false,
+                    'logo' => 'xnsp',
+                    'url' => '/trade/virtual-order/list',
+                    'field' => 'virtual',
+                ],
             ]
         ],
         [
@@ -3719,7 +3786,7 @@ function get_shop_application_list()
                     'is_disp_block' => false,
                     'logo' => 'jf',
                     'url' => '/dashboard/integral-mall/revision',
-                    'field' => 'exchange',
+                    'field' => 'integralmall',
                 ],
                 [
                     'name' => '店铺购物卡',
@@ -3757,7 +3824,16 @@ function get_shop_application_list()
                     'is_disp_block' => false,
                     'logo' => 'khfx',
                     'url' => '/dashboard/customer-analysis/index',
-                    'field' => 'analysis',
+                    'field' => 'customer-analysis',
+                ],
+                [
+                    'name' => '商圈营销',
+                    'desc' => '同城电商区域分析',
+                    'label' => '已购',
+                    'is_disp_block' => false,
+                    'logo' => 'sqyx',
+                    'url' => '/dashboard/trade-area/list',
+                    'field' => 'trade_area',
                 ],
                 [
                     'name' => '数据导出',
@@ -3819,7 +3895,8 @@ function get_shop_application_list()
                 ],
             ]
         ],
-        [
+
+        /*[
             'name' => '互动活动',
             'desc' => '',
             'label' => '',
@@ -3875,7 +3952,7 @@ function get_shop_application_list()
                     'field' => '',
                 ],
             ]
-        ]
+        ]*/
     ];
 
     return $data;

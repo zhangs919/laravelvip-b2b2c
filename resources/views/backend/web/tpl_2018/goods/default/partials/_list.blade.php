@@ -104,13 +104,15 @@
                 <font class="c-green">出售中</font>
                 <br>
             @elseif($v->goods_audit == 2)
-                <font class="c-red">审核未通过</font>
-                <i class="c-yellow m-l-5 fa fa-exclamation-circle goods-reason" data-goods-reason="{{ $v->goods_reason }}" style="cursor: pointer;"></i>
+                @if($v->goods_status == 0)
+                    <font class="c-red" data-goods-reason="{{ $v->goods_reason }}">已下架</font>
+                @elseif($v->goods_status == 2)
+                    <font class="c-red" data-goods-reason="{{ $v->goods_reason }}">违规下架</font>
+                @else
+                    <font class="c-red">审核未通过</font>
+                    <i class="c-yellow m-l-5 fa fa-exclamation-circle goods-reason" data-goods-reason="{{ $v->goods_reason }}" style="cursor: pointer;"></i>
+                @endif
             @endif
-
-
-
-
 
 
         </td>

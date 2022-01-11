@@ -91,9 +91,13 @@ class Seller extends Foundation
                     $auth_codes = [];
                 }
 
-                if (/*$this->seller_id != 1 && */!empty($request_route) && !in_array($request_route, $auth_codes) && $request_route != 'seller_home') {
-                    // 超级管理员不验证权限
-                    // 无访问权限 通过路由来判断是否有权限 admin_node表中routes字段存储该权限节点路由地址即可
+                if (/*$this->seller_id != 1 && */
+                    !empty($request_route)
+                    && !in_array($request_route, $auth_codes)
+                    && $request_route != 'seller_home'
+                ) {
+                    // 店主管理员不验证权限
+                    // 无访问权限 通过路由来判断是否有权限 shop_node表中routes字段存储该权限节点路由地址即可
                     if ($request->ajax()) {
                         // ajax 请求 返回json
                         return result(-1, '', '对不起，您现在还没有获得此操作的权限');

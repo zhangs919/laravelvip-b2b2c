@@ -153,8 +153,8 @@
 
 
 
-                                            @if(count($info->freight_record) > 1)
-                                                @foreach($info->freight_record as $fr)
+                                            @if(count($info->freightRecord) > 1)
+                                                @foreach($info->freightRecord as $fr)
                                                     @if($fr->is_default != 1)
                                                         <div class="freight-set m-t-10">
                                                             <div class="table-responsive">
@@ -243,7 +243,7 @@
                                                     @endif
                                                 @endforeach
                                             @else
-                                                @foreach($info->freight_record as $fr)
+                                                @foreach($info->freightRecord as $fr)
                                                     @if($fr->is_default == 1)
                                                         <div id="default_record" style="width: 100%; display: block;">
                                                             <div class="simple-form-field" >
@@ -358,7 +358,7 @@
                                                     </thead>
                                                     <tbody>
 
-                                                    @foreach($info->freight_free_record as $ffr)
+                                                    @foreach($info->freightFreeRecord as $ffr)
                                                         <tr>
                                                             <td>
 

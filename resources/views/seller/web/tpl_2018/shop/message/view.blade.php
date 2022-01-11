@@ -6,7 +6,7 @@
                     <span class="ng-binding">发送时间：</span>
                 </label>
                 <div class="col-sm-8">
-                    <label class="control-label">2018-04-20 16:54:21</label>
+                    <label class="control-label">{{ $msg_info->send_time }}</label>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
                     <span class="ng-binding">消息内容：</span>
                 </label>
                 <div class="col-sm-8">
-                    <label class="control-label text-l">亲爱的店主，您店铺商品ID为27商品由于违规，已被平台方强制下架，请尽快修改。</label>
+                    <label class="control-label text-l">{!! $msg_info->content !!}</label>
                 </div>
             </div>
         </div>

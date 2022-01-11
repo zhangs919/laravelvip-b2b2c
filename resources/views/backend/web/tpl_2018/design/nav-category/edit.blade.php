@@ -29,7 +29,7 @@
 							<input type="hidden" id="navcategorymodel-nav_icon" class="form-control w200 m-r-10" name="NavCategoryModel[nav_icon]" value="{{ $info->nav_icon }}">
 							<i class="iconfont iconfont-box @if($info->nav_icon == '')iconfont-bg @endif" id="show_icon">
 
-								{{ $info->nav_icon }}
+								{!! $info->nav_icon !!}
 
 							</i>
 							<span class="btn btn-warning btn-sm m-l-10" id="select_icon">选择图标</span>
@@ -81,7 +81,7 @@
                                 <select name="link" class="form-control chosen-select">
                                     @foreach($cat_list as $cat)
 
-                                        <option value="{{ $cat['cat_id'] }}" @if($v->link == $cat['cat_id'])selected="true"@endif>@if($cat['_child'])<span>◢</span>@endif {{ $cat['title_show'] }}</option>
+                                        <option value="{{ $cat['cat_id'] }}" @if($v->link == $cat['cat_id'])selected="true"@endif>@if($cat['_child'])<span>◢</span>@endif {!! $cat['title_show'] !!}</option>
 
                                     @endforeach
                                 </select>

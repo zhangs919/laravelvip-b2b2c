@@ -115,10 +115,17 @@
         <td class="text-c">
             <!-- 审核未通过的商品不显示商品状态 -->
 
-
-            <font class="c-green">出售中</font>
-
-
+            @if($v->goods_status == 0)
+                @if(!empty($v->goods_reason))
+                    <font class="c-red" data-goods-reason="{{ $v->goods_reason }}">已下架</font>
+                @else
+                    已下架
+                @endif
+            @elseif($v->goods_status == 1)
+                <font class="c-green">出售中</font>
+            @elseif($v->goods_status == 2)
+                <font class="c-red" data-goods-reason="">违规下架</font>
+            @endif
 
         </td>
         <td>

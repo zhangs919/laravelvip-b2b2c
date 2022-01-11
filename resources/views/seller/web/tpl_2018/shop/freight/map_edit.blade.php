@@ -152,7 +152,7 @@
                                     <div class="postage-detail freight-container m-t-0 m-b-3" style="width: 780px;">
                                         <div class="entity">
 
-                                            @foreach($info->freight_record as $fr)
+                                            @foreach($info->freightRecord as $fr)
                                                 @if($fr->is_default == 1 && $info->limit_sale == 0) {{--不支持区域限售并且是默认运费模板 才显示--}}
                                                 <div class="default">
                                                     <input type="hidden" id="freightrecord-record_id" class="form-control" name="FreightRecord[record_id]" value="{{ $fr->record_id }}">{{--新加 用于编辑标识--}}
@@ -323,7 +323,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    @foreach($info->freight_free_record as $ffr)
+                                                    @foreach($info->freightFreeRecord as $ffr)
                                                         <tr>
                                                             <td>
 
@@ -1669,7 +1669,7 @@
             });
 
 
-            @foreach($info->freight_record as $fr)
+            @foreach($info->freightRecord as $fr)
             @if($fr->is_default != 1)
             // 		//
             addArea(map, "{{ $fr->region_path }}", "{{ $fr->region_color }}", {

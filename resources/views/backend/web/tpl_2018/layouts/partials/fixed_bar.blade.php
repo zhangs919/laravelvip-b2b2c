@@ -10,16 +10,17 @@
             </h3>
 
             @if(!empty($action_span))
-                @foreach($action_span as $vo)
                 <h5>
+                @foreach($action_span as $vo)
+
                     <span class="action-span">
                         <a @if(!empty($vo['id']))id="{{ $vo['id'] }}" href="javascript:void(0);" @else href="{{ $vo['url'] }}" @endif class="btn btn-warning">
                             <i class="fa {{ $vo['icon'] }}"></i>
                             {{ $vo['text'] }}
                         </a>
                     </span>
-                </h5>
                 @endforeach
+                </h5>
             @endif
 
 

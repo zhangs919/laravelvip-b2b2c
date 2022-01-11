@@ -128,8 +128,8 @@ class CategoryController extends Backend
         $condition = [
             'where' => $where,
             'limit' => 0, // 不分页
-            'sortname' => 'created_at',
-            'sortorder' => 'desc'
+            'sortname' => 'cat_sort',
+            'sortorder' => 'asc'
         ];
         list($list, $total) = $this->category->getList($condition, '', true);
 
@@ -250,6 +250,7 @@ class CategoryController extends Backend
 
             $ret = $this->category->store($post);
             $data['cat_id'] = $ret->cat_id;
+            $data['parent_id'] = $post['parent_id'];
         }
 
         if ($ret === false) {

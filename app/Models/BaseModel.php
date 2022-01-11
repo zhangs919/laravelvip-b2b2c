@@ -83,7 +83,7 @@ class BaseModel extends Model
 //        $sortorder = isset($condition['sortorder']) ? $condition['sortorder'] : request('sortorder', 'asc');
 
         $sortname = request('sortname', $this->primaryKey);
-        $sortorder = request('sortorder', 'asc');
+        $sortorder = request('sortorder', 'desc');
 
         // 排序规则
         $sortname = !empty($condition['sortname']) ? $condition['sortname'] : $sortname;
@@ -101,6 +101,12 @@ class BaseModel extends Model
 
         if (!empty($condition['between'])) {
             $query = $query->whereBetween($condition['between']['field'], $condition['between']['condition']);
+        }
+
+        // 链接查询
+        if (!empty($condition['join'])) {
+            extract($condition['join']);
+            $query = $query->join($join_table, $join_first, $join_operator, $join_second, $join_type, $join_where);
         }
 
         // 关联查询数量

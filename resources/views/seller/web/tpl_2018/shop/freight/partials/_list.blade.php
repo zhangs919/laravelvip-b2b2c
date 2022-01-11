@@ -49,7 +49,7 @@
                 </tr>
                 <!--运费模板内容-->
 
-                @foreach($v->freight_record as $fr)
+                @foreach($v->freightRecord as $fr)
                     @if($fr->is_default == 1)
                         <tr>
                             <td title="">

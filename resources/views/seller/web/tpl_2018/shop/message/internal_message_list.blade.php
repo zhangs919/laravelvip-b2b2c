@@ -122,6 +122,22 @@
                     }
                 });
             });
+
+            //批量删除
+            $("body").on('click', '#btn_delete', function() {
+                var data = tablelist.checkedValues();
+                if (data.length == 0) {
+                    $.msg("您没有选择任何待处理的数据！");
+                    return;
+                }
+                tablelist.remove({
+                    confirm: '您确定删除这些记录吗？',
+                    url: 'batch-delete',
+                    data: {
+                        data: data
+                    }
+                });
+            });
         });
     </script>
 @stop

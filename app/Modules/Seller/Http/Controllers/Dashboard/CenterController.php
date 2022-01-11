@@ -31,7 +31,10 @@ class CenterController extends Seller
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('dashboard.center.index', compact('title'));
+        $shop_id = seller_shop_info()->shop_id;
+        $shop_auth = !empty(shopconf('shop_auth', false, $shop_id)) ? unserialize(shopconf('shop_auth', false, $shop_id)) : []; // 店铺营销权限
+
+        return view('dashboard.center.index', compact('title', 'shop_auth'));
     }
 
 }

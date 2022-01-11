@@ -137,10 +137,20 @@ class UserRepository
     {
         DB::beginTransaction();
         try{
-            // 删除会员表
-            User::where(['user_id' => $user_id])->delete();
-            // 删除会员认证表
-            UserReal::where(['user_id' => $user_id])->delete();
+            if (is_array($user_id)) {
+                // 批量删除
+                // 删除会员表
+                User::whereIn('user_id', $user_id)->delete();
+                // 删除会员认证表
+                UserReal::whereIn('user_id', $user_id)->delete();
+            } else {
+                // 删除单个
+                // 删除会员表
+                User::where(['user_id' => $user_id])->delete();
+                // 删除会员认证表
+                UserReal::where(['user_id' => $user_id])->delete();
+            }
+
 
             DB::commit();
             return true;

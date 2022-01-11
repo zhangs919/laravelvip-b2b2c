@@ -17,7 +17,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
         Route::group(['prefix' => 'shop-auth'], function () {
             Route::get('index', 'Dashboard\ShopAuthController@index')->name('shop-auth'); // index
             Route::get('view', 'Dashboard\ShopAuthController@view')->name('shop-auth'); // view
-            Route::get('set-auth', 'Dashboard\ShopAuthController@setAuth')->name('shop-auth'); // setAuth
+            Route::any('set-auth', 'Dashboard\ShopAuthController@setAuth')->name('shop-auth'); // setAuth
+            Route::get('all-auth', 'Dashboard\ShopAuthController@allAuth')->name('shop-auth'); // allAuth
 
         });
 

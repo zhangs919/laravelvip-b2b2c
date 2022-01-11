@@ -1055,7 +1055,7 @@ class PublishController extends Seller
     }
 
     /**
-     * 将商品移入回收站
+     * 将商品(批量)移入回收站
      *
      * @param Request $request
      * @return mixed
@@ -1064,35 +1064,49 @@ class PublishController extends Seller
     {
         $ids = $request->post('ids');
         $ret = $this->goods->softDeleteGoods(explode(',', $ids));
-
+        if (is_int($ids)) {
+            $msg = '商品删除';
+        } else {
+            $msg = '商品批量删除';
+        }
         if ($ret === false) {
             // Log
-//            shop_log('商品批量删除失败。ID：'.$ids);
+//            shop_log($msg.'失败。ID：'.$ids);
             return result(-1, null, '删除失败');
         }
+
         // Log
-        shop_log('商品批量删除成功。ID：'.$ids);
+        shop_log($msg.'成功。ID：'.$ids);
         return result(0, null, '删除成功');
     }
 
+    /**
+     * 商品(批量)还原
+     *
+     * @param Request $request
+     * @return array
+     */
     public function recover(Request $request)
     {
         $ids = $request->post('ids');
         $ret = $this->goods->recoverGoods(explode(',', $ids));
-
+        if (is_int($ids)) {
+            $msg = '商品还原';
+        } else {
+            $msg = '商品批量还原';
+        }
         if ($ret === false) {
             // Log
-//            shop_log('商品批量还原失败。ID：'.$ids);
-            return result(-1, null, '删除失败');
+//            shop_log($msg.'失败。ID：'.$ids);
+            return result(-1, null, '商品还原失败');
         }
         // Log
-        shop_log('商品批量还原成功。ID：'.$ids);
+        shop_log($msg.'成功。ID：'.$ids);
         return result(0, null, '商品已还原！');
     }
 
     /**
-     * 彻底删除商品
-     * todo 删除商品关联信息
+     * 商品(批量)彻底删除
      *
      * @param Request $request
      * @return mixed
@@ -1100,20 +1114,23 @@ class PublishController extends Seller
     public function foreverDelete(Request $request)
     {
         $ids = $request->post('ids');
-        if (count(explode(',', $ids)) > 1) {
-            // 批量删除
-            $ret = $this->goods->batchDel(explode(',', $ids));
+        if (is_int($ids)) {
+            $msg = '商品彻底删除';
         } else {
-            $ret = $this->goods->del($ids);
+            // 批量删除
+            $msg = '商品批量彻底删除';
         }
+
+        $ret = $this->goods->foreverDeleteGoods(0, explode(',', $ids));
 
         if ($ret === false) {
             // Log
-//            shop_log('商品批量彻底删除。ID：'.$ids);
-            return result(-1, null, '商品彻底删除失败');
+//            shop_log($msg.'失败。ID：'.$ids);
+            return result(-1, null, $msg.'失败');
         }
+
         // Log
-        shop_log('商品批量彻底删除成功。ID：'.$ids);
+        shop_log($msg.'成功。ID：'.$ids);
         return result(0, null, '商品已彻底删除！');
     }
 

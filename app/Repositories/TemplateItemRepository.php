@@ -139,8 +139,8 @@ class TemplateItemRepository
 
             // 商品分类 分类名称
             if (!empty($itemData['6-'.$i])) {
-                foreach ($itemData['6-'.$i] as &$item) {
-                    $item['cat_name'] = Category::where('cat_id', $item['cat_id'])->value('cat_name');
+                foreach ($itemData['6-'.$i] as $k6=>$item) {
+                    $itemData['6-'.$i][$k6]['cat_name'] = Category::where('cat_id', $item['cat_id'])->value('cat_name');
                 }
             }
 

@@ -9,10 +9,12 @@ use App\Models\Brand;
 use App\Models\BrandCategory;
 use App\Models\CatAttribute;
 use App\Models\Category;
+use App\Models\Collect;
 use App\Models\Contract;
 use App\Models\Goods;
 use App\Models\GoodsAttr;
 use App\Models\GoodsCat;
+use App\Models\GoodsHistory;
 use App\Models\GoodsImage;
 use App\Models\GoodsSku;
 use App\Models\GoodsSpec;
@@ -70,7 +72,7 @@ class GoodsRepository
     {
         $data = $this->model->getList($condition, $column);
 
-        if (!$data[0]->isEmpty()) {
+//        if (!$data[0]->isEmpty()) {
 
 //            foreach ($data[0] as $key=>$value) {
 //                $value->shop_name = Shop::where('shop_id', $value->shop_id)->value('shop_name');
@@ -81,7 +83,7 @@ class GoodsRepository
 //                    $value->is_collect = true;
 //                }
 //            }
-        }
+//        }
         return $data;
     }
 
@@ -585,6 +587,48 @@ class GoodsRepository
     }
 
     /**
+     * 商品(批量)彻底删除
+     *
+     * @param int $shop_id 店铺id
+     * @param array $goods_ids 商品id
+     * @return array|bool
+     */
+    public function foreverDeleteGoods($shop_id = 0, $goods_ids = [])
+    {
+        if (empty($shop_id) && empty($goods_ids)) {
+            return false;
+        }
+
+        DB::beginTransaction();
+        try {
+
+            // 商品关联数据
+            if (!empty($shop_id)) {
+                // 删除店铺所有商品
+                $goods_ids = Goods::where('shop_id', $shop_id)->select(['goods_id'])->pluck('goods_id')->toArray();
+            }
+
+            Goods::whereIn('goods_id', $goods_ids)->delete(); // 商品表 goods
+            GoodsAttr::whereIn('goods_id', $goods_ids)->delete(); // 商品属性 goods_attr
+            GoodsCat::whereIn('goods_id', $goods_ids)->delete(); // 商品扩展分类 goods_cat
+            GoodsHistory::whereIn('goods_id', $goods_ids)->delete(); // 商品历史记录 goods_history
+            GoodsImage::whereIn('goods_id', $goods_ids)->delete(); // 商品相册 goods_image
+            GoodsSku::whereIn('goods_id', $goods_ids)->delete(); // 商品SKU goods_sku
+            GoodsSpec::whereIn('goods_id', $goods_ids)->delete(); // 商品规格 goods_sku
+            Collect::whereIn('goods_id', $goods_ids)->delete(); // 商品收藏 collect
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack(); // 事务回滚
+            echo $e->getMessage();
+            echo $e->getCode();
+            return false;
+        }
+
+    }
+
+    /**
      * 还原商品
      *
      * @param $ids
@@ -666,7 +710,7 @@ class GoodsRepository
     public function getHotSaleGoods($cat_id_arr = [], $num = 4)
     {
         $where = [];
-        $where[] = ['goods_status',1]; // 商品状态 已发布
+        $where[] = ['goods_status',1]; // 商品状态 已上架
         $where[] = ['goods_audit',1]; // 审核通过
         $where[] = ['is_hot',1]; // 是否热卖
         $condition = [

@@ -1,6 +1,9 @@
 <table id="table_list" class="table table-hover">
     <thead>
     <tr>
+        <th class="tcheck">
+            <input type="checkbox" class="checkBox allCheckBox" />
+        </th>
         <!-- 编号 -->
         <th class="text-c w100" data-sortname="rec_id">编号</th>
         <!-- 消息内容 -->
@@ -15,6 +18,9 @@
 
     @foreach($list as $v)
     <tr>
+        <td class="tcheck">
+            <input type="checkbox" class="checkBox" value="{{ $v->rec_id }}" />
+        </td>
         <td class="text-c">{{ $v->rec_id }}</td>
         <td class="text-l">{{ $v->content }}</td>
         <td>{{ $v->send_time }}</td>
@@ -31,7 +37,13 @@
     </tbody>
     <tfoot>
     <tr>
+        <td class="text-c w10">
+            <input type="checkbox" class="allCheckBox checkBox" />
+        </td>
         <td colspan="4">
+            <div class="pull-left">
+                <input type="button" id="btn_delete" class="btn btn-danger m-r-2" value="批量删除" />
+            </div>
             <div class="pull-right page-box">
 
 

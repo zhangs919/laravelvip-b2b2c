@@ -33,6 +33,167 @@ class Shop extends BaseModel
 
     protected $primaryKey = 'shop_id';
 
+
+    /**
+     * 一对多关联 积分商品表
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function integralGoods()
+    {
+        return $this->hasMany(IntegralGoods::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺绑定分类表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopBindClass()
+    {
+        return $this->hasMany(ShopBindClass::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺内分类表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopCategory()
+    {
+        return $this->hasMany(ShopCategory::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺会员表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function member()
+    {
+        return $this->hasMany(Member::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺打印规格表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function printSpec()
+    {
+        return $this->hasMany(PrintSpec::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺自提点表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function selfPickup()
+    {
+        return $this->hasMany(SelfPickup::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺活动表 需要关联活动商品表-goods_activity
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activity()
+    {
+        return $this->hasMany(Activity::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺客服表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customer()
+    {
+        return $this->hasMany(Customer::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺客服类型表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function customerType()
+    {
+        return $this->hasMany(CustomerType::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 运费模板表 需要关联表-freight_free_record freight_record
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function freight()
+    {
+        return $this->hasMany(Freight::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺发货地址表
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopAddress()
+    {
+        return $this->hasMany(ShopAddress::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对一关联 店铺入驻申请表
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function shopApply()
+    {
+        return $this->hasOne(ShopApply::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺权限表 todo 该功能未完成
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopAuth()
+    {
+        return $this->hasMany(ShopAuth::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺动态评价表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopComment()
+    {
+        return $this->hasMany(ShopComment::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺系统配置表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopConfig()
+    {
+        return $this->hasMany(ShopConfig::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺消费保障表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopContract()
+    {
+        return $this->hasMany(ShopContract::class, 'shop_id', 'shop_id');
+    }
+
     /**
      * 一对一关联 店铺认证信息表
      *
@@ -44,12 +205,172 @@ class Shop extends BaseModel
     }
 
     /**
-     * 一对多关联 店铺所属分类表
+     * 一对多关联 店铺操作日志表
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopBindClass()
+    public function shopLog()
     {
-        return $this->hasMany(ShopBindClass::class, 'shop_id', 'shop_id');
+        return $this->hasMany(ShopLog::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺消息模板表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopMessageTpl()
+    {
+        return $this->hasMany(ShopMessageTpl::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺导航表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopNavigation()
+    {
+        return $this->hasMany(ShopNavigation::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺付款信息表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopPayment()
+    {
+        return $this->hasMany(ShopPayment::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺问答表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopQuestions()
+    {
+        return $this->hasMany(ShopQuestions::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺会员等级表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopRank()
+    {
+        return $this->hasMany(ShopRank::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺账号角色表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopRole()
+    {
+        return $this->hasMany(ShopRole::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺物流运单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopShipping()
+    {
+        return $this->hasMany(ShopShipping::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺网点表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stores()
+    {
+        return $this->hasMany(Store::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺网点分组表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function storeGroup()
+    {
+        return $this->hasMany(StoreGroup::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺装修表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function templateItem()
+    {
+        return $this->hasMany(TemplateItem::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺专题表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function topic()
+    {
+        return $this->hasMany(Topic::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺装修备份表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tplBackup()
+    {
+        return $this->hasMany(TplBackup::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 易联云打印机配置表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ylyPrinter()
+    {
+        return $this->hasMany(YlyPrinter::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺商品单位表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsUnit()
+    {
+        return $this->hasMany(GoodsUnit::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺商品详情版式表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsLayout()
+    {
+        return $this->hasMany(GoodsLayout::class, 'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 店铺商品标签表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsTag()
+    {
+        return $this->hasMany(GoodsTag::class, 'shop_id', 'shop_id');
     }
 }

@@ -5,7 +5,7 @@
 
     @foreach($cat_list as $v)
 
-        <option value="{{ $v['cat_id'] }}">@if($v['_child'])<span>◢</span>@endif {{ $v['title_show'] }}</option>
+        <option value="{{ $v['cat_id'] }}">@if($v['_child'])<span>◢</span>@endif {!! $v['title_show'] !!}</option>
 
     @endforeach
 

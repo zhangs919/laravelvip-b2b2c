@@ -15,13 +15,13 @@
 {{--content--}}
 @section('content')
 
-    <form id="ShopConfig" class="form-horizontal" name="ShopConfig" action="/dashboard/shop-auth/set-auth?shop_id=1"
+    <form id="ShopConfig" class="form-horizontal" name="ShopConfig" action="/dashboard/shop-auth/set-auth?shop_id={{ $shop_info->shop_id }}"
           method="post" enctype="multipart/form-data" novalidate="novalidate">
         {{ csrf_field() }}
 
-        <input type="hidden" id="shopconfig-id" class="form-control" name="ShopConfig[id]" value="4">
+        {{--<input type="hidden" id="shopconfig-id" class="form-control" name="ShopConfig[id]" value="4">--}}
 
-        <input type="hidden" id="shopconfig-shop_id" class="form-control" name="ShopConfig[shop_id]" value="1">
+        <input type="hidden" id="shopconfig-shop_id" class="form-control" name="ShopConfig[shop_id]" value="{{ $shop_info->shop_id }}">
         <div class="table-content m-t-30 clearfix">
             <div class="simple-form-field">
                 <div class="form-group">
@@ -29,7 +29,7 @@
                         <span class="ng-binding">店铺ID：</span>
                     </label>
                     <div class="col-sm-4">
-                        <label class="control-label text-l">1</label>
+                        <label class="control-label text-l">{{ $shop_info->shop_id }}</label>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                         <span class="ng-binding">店铺名称：</span>
                     </label>
                     <div class="col-sm-4">
-                        <label class="control-label text-l">鲜农乐食品专营店</label>
+                        <label class="control-label text-l">{{ $shop_info->shop_name }}</label>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     <div class="col-sm-9">
                         <div class="form-control-box">
                             <label class="control-label cur-p">
-                                <input type="checkbox" id="all_auth" data-id="1" checked="checked">
+                                <input type="checkbox" id="all_auth" data-id="{{ $shop_info->shop_id }}" @if($shop_auth == 'all_auth')checked="checked"@endif>
                                 全部权限
                             </label>
                         </div>
@@ -67,475 +67,45 @@
                         <div class="col-sm-9">
                             <div class="authset-all" style="width: 780px;">
                                 <!--一级循环-->
-                                <dl class="simple-form-field">
-                                    <dt class="tit">
-                                        <span>
-                                            <label> 促销工具 </label>
-                                        </span>
-                                    </dt>
-                                    <dd class="form-group-t">
-                                        <div class="authset-list">
-                                            <div class="col-sm-12 control-label control-label-t">
-                                                <ul class="authset-section b-n">
+                                @foreach($shop_application_list as $shop_app)
+                                    <dl class="simple-form-field">
+                                        <dt class="tit">
+                <span>
+                    <label> {{ $shop_app['name'] }} </label>
+                </span>
+                                        </dt>
+                                        <dd class="form-group-t">
+                                            <div class="authset-list">
+                                                <div class="col-sm-12 control-label control-label-t">
+                                                    <ul class="authset-section b-n">
 
+                                                        @if(!empty($shop_app['child']))
+                                                            @foreach($shop_app['child'] as $child)
+                                                                <li class="w180 p-l-0 m-b-20">
+                                                                    <label class="control-label w80 text-r pull-left m-r-5"
+                                                                           style="margin-top: -2px;">{{ $child['name'] }}：</label>
+                                                                    <label class="control-label control-label-switch">
+                                                                        <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
+                                                                            <label>
+                                                                                <input name="{{ $child['field'] }}"
+                                                                                       class="onoffswitch-checkbox"
+                                                                                       type="checkbox"
+                                                                                       data-on-text="启用" data-off-text="禁用" @if($shop_auth == 'all_auth' || in_array($child['field'], $shop_auth))checked="checked" @endif>
+                                                                            </label>
+                                                                        </div>
+                                                                    </label>
+                                                                </li>
+                                                            @endforeach
+                                                        @endif
 
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">红包：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="bonus"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->bonus == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">团购：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="group_buy"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->group_buy == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">促销专场：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="topic"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->topic == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">积分商城：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="exchange"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->exchange == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">提货券：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="gift_card"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->gift_card == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">店铺购物卡：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="shop_store_card"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->shop_store_card == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">搭配套餐：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="goods_mix"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->goods_mix == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">限时折扣：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="limit_discount"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->limit_discount == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">赠品：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="gift"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->gift == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">满减/送：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="full_cut"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->full_cut == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">满件优惠：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="full_discount"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->full_discount == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">购物返现：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="buy_back"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->buy_back == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">签到：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="sign_in"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->sign_in == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                </ul>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <!--一级循环 end-->
-                                <dl class="simple-form-field">
-                                    <dt class="tit">
-                                        <span>
-                                            <label> 营销工具 </label>
-                                        </span>
-                                    </dt>
-                                    <dd class="form-group-t">
-                                        <div class="authset-list">
-                                            <div class="col-sm-12 control-label control-label-t">
-                                                <ul class="authset-section b-n">
+                                        </dd>
+                                    </dl>
+                            @endforeach
 
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">拼团：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="groupon"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->groupon == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">砍价：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="bargain"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->bargain == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">短信推送：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="sms_send"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->sms_send == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">邮件推送：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="email_send"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->email_send == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">分销：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="distrib"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->distrib == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl class="simple-form-field">
-                                    <dt class="tit">
-                                        <span>
-                                            <label> 应用插件 </label>
-                                        </span>
-                                    </dt>
-                                    <dd class="form-group-t">
-                                        <div class="authset-list">
-                                            <div class="col-sm-12 control-label control-label-t">
-                                                <ul class="authset-section b-n">
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">批量更新：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="quick_update"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->quick_update == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">数据导出：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="data_import"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->data_import == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">神码收银：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="god_qrcode"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->god_qrcode == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">自由购：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="free_buy"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->free_buy == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">堂内点餐：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="reach_buy"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->reach_buy == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">客户分析：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="customer_analysis"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->customer_analysis == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl class="simple-form-field">
-                                    <dt class="tit">
-                                        <span>
-                                            <label> 经营插件 </label>
-                                        </span>
-                                    </dt>
-                                    <dd class="form-group-t">
-                                        <div class="authset-list">
-                                            <div class="col-sm-12 control-label control-label-t">
-                                                <ul class="authset-section b-n">
-
-
-                                                    <li class="w180 p-l-0 m-b-20">
-                                                        <label class="control-label w80 text-r pull-left m-r-5"
-                                                               style="margin-top: -2px;">收银台：</label>
-                                                        <label class="control-label control-label-switch">
-                                                            <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                                                <label>
-                                                                    <input name="cashier"
-                                                                           class="onoffswitch-checkbox"
-                                                                           type="checkbox"
-                                                                           data-on-text="启用" data-off-text="禁用" @if($shop_auth_info->cashier == 1)checked="checked" @endif>
-                                                                </label>
-                                                            </div>
-                                                        </label>
-                                                    </li>
-
-
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                </dl>
+                            <!--一级循环 end-->
                             </div>
                         </div>
                     </div>
@@ -626,7 +196,8 @@
                     },
                     dataType: 'json',
                     success: function (result) {
-                        $("#content").html(result.data);
+                        location.reload();
+                        // $("#content").html(result.data);
                     }
                 }).always(function () {
                     $.loading.stop();

@@ -83,4 +83,14 @@ class Activity extends BaseModel
     ];
 
     protected $primaryKey = 'act_id';
+
+    /**
+     * 一对多关联 活动商品表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsActivity()
+    {
+        return $this->hasMany(GoodsActivity::class, 'act_id', 'act_id');
+    }
 }

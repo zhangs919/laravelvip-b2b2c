@@ -159,4 +159,38 @@ class FreightRepository
         }
     }
 
+    /**
+     * 店铺运费模板(批量)删除
+     *
+     * @param int $shop_id 店铺id
+     * @param array $freight_ids 运费模板id
+     * @return bool
+     */
+    public function deleteFreight($shop_id = 0, $freight_ids = [])
+    {
+        if (empty($shop_id) && empty($freight_ids)) {
+            return false;
+        }
+
+        DB::beginTransaction();
+        try {
+
+            // 运费模板关联数据
+            if (!empty($shop_id)) {
+                // 删除店铺所有运费模板
+                $freight_ids = Freight::where('shop_id', $shop_id)->select(['freight_id'])->pluck('freight_id')->toArray();
+            }
+            Freight::whereIn('freight_id', $freight_ids)->delete(); // 运费模板表 freight
+            FreightFreeRecord::whereIn('freight_id', $freight_ids)->delete(); // 免运费模板记录表 freight_free_record
+            FreightRecord::whereIn('freight_id', $freight_ids)->delete(); // 运费模板记录表 freight_record
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack(); // 事务回滚
+            echo $e->getMessage();
+            echo $e->getCode();
+            return false;
+        }
+    }
 }

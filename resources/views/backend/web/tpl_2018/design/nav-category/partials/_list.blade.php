@@ -29,7 +29,7 @@
             <td class="text-c">{{ $v->id }}</td>
             <td>{{ $v->name }}</td>
             <td class="text-c">
-                <i class="iconfont">{{ $v->nav_icon }}</i>
+                <i class="iconfont">{!! $v->nav_icon !!}</i>
             </td>
             <td class="text-c">
                 @if($v->is_show == 1)

@@ -872,4 +872,33 @@ class ShopController extends Backend
         $shop_id = $request->get('shop_id',0);
         return $this->shop->generateShopQrCode($shop_id);
     }
+
+    /**
+     * 店铺删除
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function delete(Request $request)
+    {
+        $shop_id = $request->post('id');
+        $ret = $this->shop->shopDelete($shop_id);
+
+        // 判断是否删除出错
+        if (isset($ret['code'])) {
+            // Log
+            admin_log('店铺删除失败。ID：'.$shop_id);
+            return result($ret['code'], $ret['data'], $ret['message']);
+        }
+
+//        if ($ret === false) {
+//            // Log
+//            admin_log('店铺删除失败。ID：'.$shop_id);
+//            return result(-1, '', '删除失败');
+//        }
+
+        // Log
+        admin_log('店铺删除成功。ID：'.$shop_id);
+        return result(0, null, '删除成功');
+    }
 }

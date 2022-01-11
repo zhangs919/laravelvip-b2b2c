@@ -68,10 +68,17 @@ class ShopAuthController extends Backend
         return view('dashboard.shop-auth.index', compact('title', 'list', 'pageHtml'));
     }
 
+    /**
+     * 查看营销权限
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function view(Request $request)
     {
         $title = '查看营销权限';
         $fixed_title = '店铺营销权限 - '.$title;
+        $shop_id = $request->get('shop_id');
 
         $action_span = [
             [
@@ -88,19 +95,26 @@ class ShopAuthController extends Backend
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('dashboard.shop-auth.view', compact('title'));
+        $shop_info = $this->shop->getById($shop_id);
+
+        $shop_auth = !empty(shopconf('shop_auth', false, $shop_id)) ? unserialize(shopconf('shop_auth', false, $shop_id)) : []; // 店铺营销权限
+
+        $shop_application_list = get_shop_application_list(); // 店铺所有营销权限
+
+        return view('dashboard.shop-auth.view', compact('title', 'shop_info', 'shop_auth', 'shop_application_list'));
     }
 
+    /**
+     * 营销权限设置
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setAuth(Request $request)
     {
         $title = '营销权限设置';
         $fixed_title = '店铺营销权限 - '.$title;
         $shop_id = $request->get('shop_id');
-        $shop_auth_info = [
-            'bonus' => 1
-        ];
-
-        $shop_info = $this->shop->getById($shop_id);
 
         $action_span = [
             [
@@ -117,6 +131,56 @@ class ShopAuthController extends Backend
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('dashboard.shop-auth.set_auth', compact('title', 'shop_auth_info', 'shop_info'));
+        $shop_info = $this->shop->getById($shop_id);
+
+        $shop_auth = !empty(shopconf('shop_auth', false, $shop_id)) ? unserialize(shopconf('shop_auth', false, $shop_id)) : []; // 店铺营销权限
+
+        $shop_application_list = get_shop_application_list(); // 店铺所有营销权限
+
+        if ($request->method() == 'POST') {
+            // 保存设置
+            $postData = $request->post();
+            unset($postData['_token'], $postData['ShopConfig']);
+            $postData = serialize(array_keys($postData));
+            $ret = shopconf('shop_auth', $postData, $shop_id);
+            if ($ret === false) {
+                // Log
+                admin_log('店铺营销权限设置。ID：'.$shop_id);
+                flash('error', '店铺营销权限设置失败');
+                return redirect('/dashboard/shop-auth/index');
+            }
+
+            // Log
+            admin_log('店铺营销权限设置。ID：'.$shop_id);
+            flash('success', '店铺营销权限设置成功');
+            return redirect('/dashboard/shop-auth/index');
+        }
+
+        return view('dashboard.shop-auth.set_auth', compact('title', 'shop_info', 'shop_auth', 'shop_application_list'));
+    }
+
+    /**
+     * 设置/取消全部权限
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
+    public function allAuth(Request $request)
+    {
+        $is_all = $request->get('is_all', 0); // 是否设置全部权限
+        $shop_id = $request->get('shop_id'); // 店铺id
+
+        $shop_auth = serialize($is_all == 1 ? 'all_auth' : []);
+        $ret = shopconf('shop_auth', $shop_auth, $shop_id);
+
+        if ($ret === false) {
+            admin_log('店铺营销权限设置。ID：'.$shop_id);
+            return result(-1, null, '设置失败');
+        }
+
+        admin_log('店铺营销权限设置。ID：'.$shop_id);
+        return result(0);
+
     }
 }

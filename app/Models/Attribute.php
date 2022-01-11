@@ -19,7 +19,12 @@ class Attribute extends BaseModel
 
     protected $primaryKey = 'attr_id';
 
-    public function attr_value()
+    /**
+     * 一对多关联 属性值表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attrValue()
     {
         return $this->hasMany(AttrValue::class, 'attr_id');
     }

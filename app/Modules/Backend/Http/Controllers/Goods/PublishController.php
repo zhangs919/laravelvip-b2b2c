@@ -53,6 +53,14 @@ class PublishController extends Backend
         return result(0, $ret, '设置成功');
     }
 
+    /**
+     * 商品违规下架
+     * goods_status -> 2 违规下架
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
     public function illegal(Request $request)
     {
         $id = $request->get('id',0);
@@ -63,7 +71,8 @@ class PublishController extends Backend
         if ($request->method() == 'POST') {
             $update = [
                 'goods_reason' => $request->post('reason'),
-                'goods_audit' => 2 // 审核不通过
+                'goods_audit' => 2, // 审核不通过
+                'goods_status' => 2 // 违规下架
             ];
             $ret = $this->goods->update($id, $update);
             if ($ret === false) {
@@ -79,11 +88,19 @@ class PublishController extends Backend
         return result(0, $render);
     }
 
+    /**
+     * 批量设置商品违规下架
+     * goods_status -> 2 违规下架
+     *
+     * @param Request $request
+     * @return array
+     */
     public function batchIllegal(Request $request)
     {
         $ids = $request->get('ids');
         $update = [
-            'goods_audit' => 2 // 审核不通过
+            'goods_audit' => 2, // 审核不通过
+            'goods_status' => 2 // 违规下架
         ];
         $ret = $this->goods->batchUpdate('goods_id', $ids, $update);
         if ($ret === false) {
@@ -98,11 +115,18 @@ class PublishController extends Backend
         return result(0, null, '商品批量下架成功！');
     }
 
+    /**
+     * 上架商品
+     *
+     * @param Request $request
+     * @return array
+     */
     public function onsale(Request $request)
     {
         $id = $request->get('id',0);
         $update = [
-            'goods_audit' => 1 // 审核通过
+            'goods_audit' => 1, // 审核通过
+            'goods_status' => 1 // 商品状态 已上架
         ];
         $ret = $this->goods->update($id, $update);
         if ($ret === false) {
@@ -114,11 +138,18 @@ class PublishController extends Backend
         return result(0, null, '商品上架成功！');
     }
 
+    /**
+     * 批量上架商品
+     *
+     * @param Request $request
+     * @return array
+     */
     public function batchOnsale(Request $request)
     {
         $ids = $request->get('ids');
         $update = [
-            'goods_audit' => 1 // 审核通过
+            'goods_audit' => 1, // 审核通过
+            'goods_status' => 1 // 商品状态 已上架
         ];
         $ret = $this->goods->batchUpdate('goods_id', $ids, $update);
         if ($ret === false) {
@@ -133,6 +164,13 @@ class PublishController extends Backend
         return result(0, null, '商品批量上架成功！');
     }
 
+    /**
+     * 审核商品
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
     public function audit(Request $request)
     {
         $ids = $request->get('ids', '');

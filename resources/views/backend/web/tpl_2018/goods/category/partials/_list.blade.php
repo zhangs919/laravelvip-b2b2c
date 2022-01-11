@@ -45,7 +45,7 @@
 
             </td>
             <td class="text-c">
-                <a href="javascript:void(0);" ref="@if(!empty($v['cat_image'])) {{ get_image_url($v['cat_image']) }} @else /images/default/goods.gif @endif" class="preview">
+                <a href="javascript:void(0);" ref="@if(!empty($v['cat_image'])) {{ get_image_url($v['cat_image']) }} @else /backend/images/default/goods.gif @endif" class="preview">
                     <i class="fa fa-picture-o"></i>
                 </a>
 
@@ -105,7 +105,7 @@
 
                     </td>
                     <td class="text-c">
-                        <a href="javascript:void(0);" ref="@if(!empty($child['cat_image'])) {{ get_image_url($child['cat_image']) }} @else /images/default/goods.gif @endif" class="preview">
+                        <a href="javascript:void(0);" ref="@if(!empty($child['cat_image'])) {{ get_image_url($child['cat_image']) }} @else /backend/images/default/goods.gif @endif" class="preview">
                             <i class="fa fa-picture-o"></i>
                         </a>
 
@@ -156,7 +156,7 @@
                                         <a href="#" title="展开">&nbsp;</a>
                                     @endif
                                 </span>--}}
-                                <a href="http://www.laravelvip.com/list-{{ $child2['cat_id'] }}.html" target="_blank" title="点击进入商城前台查看分类【{{ $child2['cat_name'] }}】"> {{ $child2['cat_name'] }} </a>
+                                <a href="{{ route('pc_goods_list', ['cat_id' => $child2['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $child2['cat_name'] }}】"> {{ $child2['cat_name'] }} </a>
                             </td>
                             <td class="handle text-l">
                                 <font class="f14">

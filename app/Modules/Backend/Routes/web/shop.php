@@ -63,6 +63,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::post('pay-edit', 'Shop\ShopController@savePayData'); // paySaveData
 
             Route::get('qrcode', 'Shop\ShopController@qrcode'); // qrcode
+            Route::post('delete', 'Shop\ShopController@delete'); // 删除店铺
+
 
         });
 

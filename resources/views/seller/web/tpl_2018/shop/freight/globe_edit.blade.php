@@ -149,7 +149,7 @@
                                         <div class="entity">
 
 
-                                            @foreach($info->freight_record as $fr)
+                                            @foreach($info->freightRecord as $fr)
                                                 @if($fr->is_default == 1 && $info->limit_sale == 0) {{--不支持区域限售并且是默认运费模板 才显示--}}
                                                     <div id="default_record" class="default" style="width: 100%; height: 30px; display: ;">
                                                         <input type="hidden" id="freightrecord-record_id" class="form-control" name="FreightRecord[record_id]" value="{{ $fr->record_id }}">{{--新加 用于编辑标识--}}
@@ -191,7 +191,7 @@
                                                 @endif
                                             @endforeach
 
-                                            @if(count($info->freight_record) > 1)
+                                            @if(count($info->freightRecord) > 1)
                                                 <div class="freight-set m-t-10">
                                                     <div class="table-responsive">
                                                         <table id="freight_table" class="table table-hover">
@@ -218,7 +218,7 @@
                                                             </thead>
                                                             <tbody id="tbl">
 
-                                                            @foreach($info->freight_record as $fr)
+                                                            @foreach($info->freightRecord as $fr)
                                                                 @if($fr->is_default != 1)
                                                                     <tr>
                                                                         <td>
@@ -329,7 +329,7 @@
                                                     </thead>
                                                     <tbody>
 
-                                                    @foreach($info->freight_free_record as $ffr)
+                                                    @foreach($info->freightFreeRecord as $ffr)
                                                         <tr>
                                                             <td>
 

@@ -21,7 +21,7 @@
 
                     @foreach($cat_list as $v)
 
-                        <option value="{{ $v['cat_id'] }}" @if($link == $v['cat_id']){{ 'selected="true"' }}@endif>@if($v['_child'])<span>◢</span>@endif {{ $v['title_show'] }}</option>
+                        <option value="{{ $v['cat_id'] }}" @if($link == $v['cat_id']){{ 'selected="true"' }}@endif>@if($v['_child'])<span>◢</span>@endif {!! $v['title_show'] !!}</option>
 
                     @endforeach
 

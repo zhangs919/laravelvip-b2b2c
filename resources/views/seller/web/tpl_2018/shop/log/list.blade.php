@@ -3,7 +3,12 @@
 
 {{--css style page元素同级上面--}}
 @section('style')
-
+    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20190116"/>
+    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=20190116"/>
+    <!-- 日历控件-->
+    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=20190116"/>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=20190117"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190117"></script>
 @stop
 
 {{--content--}}

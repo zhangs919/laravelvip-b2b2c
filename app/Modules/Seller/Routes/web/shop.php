@@ -7,12 +7,14 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
 
         // 系统消息
         Route::group(['prefix' => 'message'], function () {
+            Route::get('index', 'Shop\MessageController@internalMessageList'); // 站内信
             Route::get('internal-message-list', 'Shop\MessageController@internalMessageList'); // 站内信
             Route::post('delete', 'Shop\MessageController@internalMessageDelete'); // 站内信删除
-            Route::post('delete', 'Shop\MessageController@internalMessageBatchDelete'); // 站内信批量删除
+            Route::post('batch-delete', 'Shop\MessageController@internalMessageBatchDelete'); // 站内信批量删除
             Route::get('system-message-list', 'Shop\MessageController@systemMessageList'); // 系统公告
             Route::any('message-set', 'Shop\MessageController@messageSet'); // 消息接收设置
             Route::get('view', 'Shop\MessageController@view'); // 查看消息
+            Route::get('set-is-open', 'Shop\MessageController@setIsOpen'); // 设置开启状态
         });
 
         // 运费设置

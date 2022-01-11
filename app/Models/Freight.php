@@ -17,7 +17,7 @@ class Freight extends BaseModel
      * 一对多关联
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function freight_record()
+    public function freightRecord()
     {
         return $this->hasMany(FreightRecord::class, 'freight_id', 'freight_id');
     }
@@ -26,7 +26,7 @@ class Freight extends BaseModel
      * 一对多关联
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function freight_free_record()
+    public function freightFreeRecord()
     {
         return $this->hasMany(FreightFreeRecord::class, 'freight_id', 'freight_id');
     }

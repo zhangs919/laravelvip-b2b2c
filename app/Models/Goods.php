@@ -7,8 +7,6 @@ class Goods extends BaseModel
 {
     protected $table = 'goods';
 
-    protected $primaryKey = 'goods_id';
-
 //    protected $fillable = [
 //        'cat_id','goods_sn','bar_code','goods_barcode','goods_name','click_count','brand_id','goods_number',
 //        'goods_weight','default_shipping','market_price','cost_price','shop_price','promote_price',
@@ -113,5 +111,77 @@ class Goods extends BaseModel
 //        'other_cat_ids' // 考虑另建表存储
 //        'goods_price_format',
     ];
+
+    protected $primaryKey = 'goods_id';
+
+    /**
+     * 一对多关联 商品属性表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsAttr()
+    {
+        return $this->hasMany(GoodsAttr::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 一对多关联 商品扩展分类表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsCat()
+    {
+        return $this->hasMany(GoodsCat::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 一对多关联 商品历史记录表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsHistory()
+    {
+        return $this->hasMany(GoodsHistory::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 一对多关联 商品相册表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsImage()
+    {
+        return $this->hasMany(GoodsImage::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 一对多关联 商品SKU表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsSku()
+    {
+        return $this->hasMany(GoodsSku::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 一对多关联 商品规格表
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsSpec()
+    {
+        return $this->hasMany(GoodsSpec::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 一对多关联 收藏表(商品收藏)
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goodsCollect()
+    {
+        return $this->hasMany(Collect::class, 'goods_id', 'goods_id');
+    }
+
 
 }

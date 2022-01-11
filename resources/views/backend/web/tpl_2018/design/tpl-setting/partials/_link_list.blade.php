@@ -6,7 +6,7 @@
         @if(!empty($link_data))
             <option value="" >-- 请选择 --</option>
             @foreach($link_data as $v)
-                <option value="{{ $v['link'] }}" @if($link == $v['link']) selected="selected" @endif>{{ $v['title'] }}</option>
+                <option value="{{ $v['link'] }}" @if($link == $v['link']) selected="selected" @endif>{!! $v['title'] !!}</option>
             @endforeach
         @endif
 
