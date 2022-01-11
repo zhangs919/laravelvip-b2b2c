@@ -35,15 +35,15 @@
 - cp .env.example .env
 - 修改 .env配置文件中的数据库连接信息和域名配置
     - 配置二级域名\
-      BACKEND_DOMAIN=backend.b2c.com
-      FRONTEND_DOMAIN=www.b2c.com
-      MOBILE_DOMAIN=m.b2c.com
-      PUSH_DOMAIN=push.b2c.com #配置 Websocket 域名
+      BACKEND_DOMAIN=backend.lrw.com
+      FRONTEND_DOMAIN=www.lrw.com
+      MOBILE_DOMAIN=m.lrw.com
+      PUSH_DOMAIN=push.lrw.com #配置 Websocket 域名
     - 数据库配置\
       DB_CONNECTION=mysql
       DB_HOST=127.0.0.1
       DB_PORT=3306
-      DB_DATABASE=laravelvip_b2b2c
+      DB_DATABASE=lrw
       DB_USERNAME=homestead
       DB_PASSWORD=secret
 - 导入mysql文件
