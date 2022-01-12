@@ -1,6 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 /*************************************头部模板 start****************************************/
+.floor-loading{width:1210px;background-repeat: no-repeat; background-size: 90px; margin: 0 auto; background-position: 50% 50%;}
 /*首页头部广告 */
 .top-active { position: relative; z-index: 9999; clear: both; width: 100%; min-width: 1210px; font-size: 0;}
 .top-active .top-active-wrap {  position: relative; width: 1210px; overflow: hidden; margin: 0 auto;}
@@ -10,17 +11,18 @@
 
 /*************************************轮播焦点图模板 start****************************************/
 /* 满屏背静切换焦点图 */
-.banner{ width: 100%; height: 443px; position: relative; margin-bottom: 15px;}
+.banner{ width: 100%; height: 443px; background: #fff; position: relative; margin-bottom: 15px;}
 .banner>.selector {margin-left:0 !important;left:0 !important;top: 0;}
-.banner ul.full-screen-slides { width: 100%; height: 443px; position: relative; z-index: 1;}
+.banner ul.full-screen-slides { width: 100%; height: 400px; position: relative; z-index: 1;}
 .banner ul.full-screen-slides li { width: 100%; height: 100%; position: absolute; z-index: 1; top: 0; left: 0;}
-.banner ul.full-screen-slides li a{ width: 100%; height: 443px; display:inline-block; text-align: center; overflow: hidden;}
+.banner ul.full-screen-slides li a{ width: 100%; height: 400px; display:inline-block; text-align: center; overflow: hidden; background-position: top center !important;}
 .banner ul.full-screen-slides li img{ max-height: 443px;}
 .banner ul.full-screen-slides-pagination { font-size: 0; text-align: center; display: block; list-style: none; width: 766px; height: 16px; padding: 7px 8px; position: absolute; left: 50%; margin-left: -396px; bottom: 10px; z-index: 3;}
 .banner ul.full-screen-slides-pagination li { width: 10px; height: 10px; border: 2px solid #fff; opacity: .7; line-height: 15px; text-align: center; border-radius: 50%; margin: 0 5px; display: inline-block; overflow: hidden; cursor: pointer;}
 .banner ul.full-screen-slides-pagination a { display: block; width: 100%; height: 100%; padding: 0; margin: 0; text-indent: -9999px;}
 .banner ul.full-screen-slides-pagination .current { background: #FFFFFF; opacity: .9;}
-
+.pace-done .banner ul.full-screen-slides { height: 443px;}
+.pace-done .banner ul.full-screen-slides li a{ height: 443px;}
 /*焦点区域右侧*/
 .banner .right-sidebar { width: 220px; height: 442px; margin-left: 385px; position: absolute; z-index: 1; top: 0; left: 50%; float: right; overflow: hidden;}
 .banner .right-sidebar.no-nav-data{ background:url(../images/no-nav-data.png) no-repeat;}
@@ -140,7 +142,7 @@
 .close-fixed-suspend{ position: absolute; width: 36px; height: 36px; top: -40px; z-index: 2; background: url(../images/close_layer_icon.png); background-size: cover; right: -40px; cursor: pointer;}
 
 /*************************************2-2栏广告*************************************/
-.shop-ad-group2{ width: 1210px; height: 980px; position: relative; margin: 80px auto 20px;}
+.shop-ad-group2{ width: 1210px; height: 980px; position: relative; margin:15px auto;}
 .shop-ad-group2 .shop-ad{ position: absolute;}
 .shop-ad-group2 .shop-ad1{ width: 650px; height: 580px; left: 0; top: 0;}
 .shop-ad-group2 .shop-ad2{ width: 540px; height: 580px; right: 0; top: 0;}
@@ -218,7 +220,7 @@
 .index-sale2 .tabs-nav { width: auto; height: 40px; position: relative; float: right; z-index: 1;}
 .index-sale2 .tabs-nav li { background-color: #f2f2f2; width: auto; height: 40px; float: left; position: relative; z-index: 1; cursor: pointer;margin-left: 10px; padding: 0 30px;}
 .index-sale2 .tabs-nav li h3 { font-size: 14px; font-weight: 400; line-height: 38px; text-align: center;}
-.index-sale2 .tabs-nav li i.arrow { font-size: 0; line-height: 0; display: none; width: 0; height: 0; float: right; margin-left: -4px; border-width: 5px; border-style: solid dashed dashed dashed; position: absolute; z-index: 1; bottom: -12px; left: 50%;}
+.index-sale2 .tabs-nav li i.arrow { font-size: 0; line-height: 0; display: none; width: 0; height: 0; float: right; margin-left: -4px; border-width: 5px; border-style: solid dashed dashed dashed;border-color: #f2f2f2 transparent transparent; position: absolute; z-index: 1; bottom: -12px; left: 50%;}
 .index-sale2 .tabs-nav .tabs-selected { border-style: solid; border-width: 0 0 2px 0;}
 .index-sale2 .tabs-nav .tabs-selected i.arrow { display: block;}
 .index-sale2 .tabs-nav .tabs-selected h3 { color: #fff;}
@@ -271,7 +273,14 @@
 .floor-layout .floor-content .floor-right .floor-tabs-panel .item { float: left; width: 235px; color: #2f2f2f; height: 236px; overflow: hidden; border-right: 1px solid #eee; border-bottom: 1px solid #eee; margin-right: -1px; box-sizing: content-box;}
 .floor-layout .floor-content .floor-right .floor-tabs-panel .item .wrap { height: 67px; margin: 165px 20px 0; position: relative; _zoom: 1;}
 .floor-layout .floor-content .floor-right .floor-tabs-panel .item .wrap .image-lazyload{ text-align: center; width: 195px; height: 150px; display: block;}
-.floor-layout .floor-content .floor-right .floor-tabs-panel .item img { display: block; width: 140px; height: 140px; position: absolute; top: -150px; left: 27px; -moz-transition: all .3s; -ms-transition: all .3s; -o-transition: all .3s; -webkit-transition: all .3s; transition: all .3s; }
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .wrap .goods-links{ display: block; position: relative; }
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .wrap a > img { display: block; width: 140px; height: 140px; position: absolute; top: -150px; left:0px; -moz-transition: all .3s; -ms-transition: all .3s; -o-transition: all .3s; -webkit-transition: all .3s; transition: all .3s; }
+.floor-con1 .floor-content .floor-right .floor-tabs-panel .item .wrap a > img,.market-goods-floor1 .floor-content .floor-right .floor-tabs-panel .item .wrap a > img{ left: 27px; }
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .goodstag-seat.location0{top: -160px; left: -10px;}
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .goodstag-seat.location1{top: -160px; right: -10px;}
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .goodstag-seat.location2{bottom: 70px;right: -10px;}
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .goodstag-seat.location3{ bottom: 70px; right: -10px;}
+.floor-layout .floor-content .floor-right .floor-tabs-panel .item .goodstag-seat.location4{top: -70px;}
 /*.floor-layout .floor-content .floor-right .floor-tabs-panel .item:hover img { width: 150px!important; height: 150px!important; left: 22px; top: -155px;}*/
 .floor-layout .floor-content .floor-right .floor-tabs-panel .item h3 { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; _width: 100%; height: 20px; line-height: 20px;}
 .floor-layout .floor-content .floor-right .floor-tabs-panel .item .title { margin-bottom: 5px; height: 32px; overflow: hidden;}
@@ -359,6 +368,7 @@
 .floor-layout .floor-content4 .floor-right .floor-tabs-panel{ border-top: 1px #eee solid;}
 .floor-layout .floor-content4 .floor-right .floor-tabs-panel .item{ width: 190px; height: 219px;}
 .floor-layout .floor-content4 .floor-right .floor-tabs-panel .item .wrap{ height: 53px;}
+.floor-layout .floor-content4 .floor-right .floor-tabs-panel .item .wrap .goods-links{ display: block; position: relative; }
 .floor-layout .floor-content4 .floor-right .floor-tabs-panel .item .title{ height: 20px; line-height: 20px;}
 .floor-layout .floor-content4 .floor-right .floor-tabs-panel .item a.add-cart{ width: 23px; height: 23px; -moz-background-size: 23px 23px; background-size: 23px 23px; bottom: 5px;}
 .floor-layout .floor-content4 .floor-right .floor-tabs-panel .item img { left: 5px;}
@@ -382,6 +392,9 @@
 .floor-layout .floor-content5 .floor-middle .floor-banner ul li a:hover::before { -webkit-transition: left 0.5s; -moz-transition: left 0.5s; transition: left 0.5s; left: 260px;}
 .floor-layout .floor-content5 .floor-middle .floor-banner .focus-btn{ position: absolute; width: 390px; height: 14px; bottom: 15px; text-align: center;}
 .floor-layout .floor-content5 .floor-middle .floor-banner .focus-btn span{ display: inline-block; width: 14px; height: 14px; cursor: pointer; background: #000; margin-right: 5px; border-radius: 14px;}
+.floor-layout .floor-content5 .floor-middle .floor-banner .hiSlider-btn-prev,.floor-layout .floor-content5 .floor-middle .floor-banner .hiSlider-btn-next{ position: absolute; top: 50%; width: 29px; cursor: pointer; display: block; height: 50px; margin-top: -25px; left: 0; text-indent: -9999px; background: #000; background: url(../images/hislider-arrow.png) no-repeat 0 0; opacity: 0;}
+.floor-layout .floor-content5 .floor-middle .floor-banner .hiSlider-btn-next{ left: auto; right: 0px; background-position: -31px 0px;}
+.floor-layout .floor-content5 .floor-middle .floor-banner:hover .hiSlider-btn-prev,.floor-layout .floor-content5 .floor-middle .floor-banner:hover .hiSlider-btn-next{ opacity: 1;}
 .floor-layout .floor-content5 .floor-right{ width: 606px; height: 485px; overflow: hidden;}
 .floor-layout .floor-content5 .floor-right .floor-tabs-panel{ width: 608px; height: 485px;}
 .floor-layout .floor-content5 .floor-right .floor-tabs-panel .floor-tabs-suspend-up{ width: 608px; height: 300px; border-bottom: 1px #eee solid; overflow: hidden; position: relative;}
@@ -413,7 +426,7 @@
 .floor-con6 .floor-title h3{ max-width: 110px; }
 .floor-con6 .floor-title h3 .floor-name,.floor-con7 .floor-title h3 .floor-name,.floor-con8 .floor-title h3 .floor-name{ font-size: 22px; color: #fff; height: 28px; line-height: 28px; font-weight: 400; text-decoration: none; width: 100%; display: inline-block;overflow: hidden;}
 .floor-title .title-tags { float: right; max-width: 440px; height: 28px; text-align: right; position: relative;}
-.floor-title .title-tags .tags-item { display: inline-block; height: 24px; line-height: 24px; padding: 0 10px; border-width: 1px; border-style: solid; color: #fff; margin-left: 10px; margin-bottom: 10px; max-width: 100px; background-color: hsla(0,0%,100%,.2); overflow: hidden;}
+.floor-title .title-tags .tags-item { display: inline-block; height: 24px; line-height: 24px; padding: 0 10px; border-width: 1px; border-style: solid; color: #fff; margin-left: 10px; margin-bottom: 10px; max-width: 55px; text-align: center; background-color: hsla(0,0%,100%,.2); overflow: hidden;}
 .floor-title .title-tags .tags-item:hover { border-color: #fff!important}
 .floor-con6 .floor-layout { padding: 10px; background-color: #fff; overflow: hidden;}
 .floor-layout .floor-content6 { position: relative; overflow: hidden;}
@@ -498,6 +511,7 @@
 .floor-con9 .floor-layout ul{ margin-left: -10px; display: inline-block;}
 .floor-con9 .floor-layout ul li{ float: left; margin: 0 0 10px 10px; display: inline-block;}
 .floor-con9 .floor-layout ul li a{ position: relative; display: block; padding: 6px 4px; width: 224px; height: 297px; border: 1px solid #F6F6F6; background-color: #fff; text-align: center; overflow: hidden;}
+.floor-con9 .floor-layout ul li a .goods-link{ position: relative; }
 .floor-con9 .floor-layout ul li a img{ display: inline-block; width: auto; height: 220px;}
 .floor-con9 .floor-layout ul li a .goods-info{ padding: 10px; text-align: left; border: none;}
 .floor-con9 .floor-layout ul li a .goods-info .goods-name{ overflow: hidden; margin-bottom: 5px; height: 36px;}
@@ -532,7 +546,7 @@
 .shop-floor .shop-goods-list ul li { width: 230px; height: 305px; background-color: #fff; float: left; overflow: hidden; margin: 0 0 12px 12px; border: 1px #eee solid; }
 .shop-floor .shop-goods-list ul li.first{ margin-left: 1px;}
 .shop-floor .shop-goods-list ul li dl { width: 230px; margin: 0 auto auto;}
-.shop-floor .shop-goods-list ul li dl dt.goods-thumb { width: 230px; height: 230px;}
+.shop-floor .shop-goods-list ul li dl dt.goods-thumb { width: 230px; height: 230px; position: relative;}
 .shop-floor .shop-goods-list ul li dl dt.goods-thumb a { text-align: center; vertical-align: middle; display: block; width: 230px; height: 230px; overflow: hidden;}
 .shop-floor .shop-goods-list ul li dl dt.goods-thumb img { max-width: 230px; max-height: 230px; }
 .shop-floor .shop-goods-list ul li dl dd.goods-info { width: 230px; height: 75px; border: none; overflow: hidden; text-align: center;}
@@ -568,6 +582,22 @@
 .floor-layout .floor-item .industry-floor-item-static .floor-content .floor-body .floor-body-right.logo a.brand-logo { display: block; width: 100px; height: 40px; overflow: hidden; margin-bottom: 16px; text-align: center;}
 .floor-layout .floor-item .industry-floor-item-static .floor-content .floor-body .floor-body-right.logo a.brand-logo img { display: inline-block; max-width: 100%; max-height: 100%;}
 
+.act-type{height: 18px; line-height: 17px; padding: 0 5px; background-color: #F23030; color: #fff; border-radius: 2px; font-size: 11px; display: inline-block;}
+.act-type.pre-sale{background-color: #FE6A6A;}
+.act-type.group-buy{background-color: #FEAC24;}
+.act-type.bargain{background-color: #0BB760;}
+.act-type.live{background-color: #7D89B9;}
+.act-type.limited-discount{background-color:#58B4FF;}
+.act-type.fight-group{background-color: #48CEAD;}
+.act-type.pre-sale{background-color: #FE6A6A;}
+.act-type.gift{background-color: #EF2F2F;}
+.act-type.set-meal{background-color: #FF8635;}
+.act-type.crowdfund{background-color: #48CEAD;}
+.act-type.full-gift,.act-type.fullsubtraction{background-color: #C282E3;}
+.act-type.exchange{background-color: #F0AA4A;}
+.act-type.purchase{background-color: #7675F2; }
+.act-type.fictitious{background-color: #FF4791;}
+.act-type.service{background-color: #9900FF; }
 /*************************************定位模板 start****************************************/
 /*左侧楼层定位*/
 .elevator { overflow: visible; width: 40px; height: 400px; position: fixed; left: 50%; top: 50%; margin: -150px 0 0 -650px; z-index: 3333; display: block;}

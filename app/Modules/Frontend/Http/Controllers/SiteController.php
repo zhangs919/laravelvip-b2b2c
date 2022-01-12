@@ -6,8 +6,10 @@ use App\Models\Collect;
 use App\Models\Compare;
 use App\Models\DefaultSearch;
 use App\Models\HotSearch;
+use App\Models\TemplateItem;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\RegionRepository;
+use App\Repositories\TemplateItemRepository;
 use App\Repositories\ToolsRepository;
 use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Http\Request;
@@ -18,6 +20,7 @@ class SiteController extends Frontend
 
     protected $regions;
     protected $tools;
+    protected $templateItem;
 
     public function __construct()
     {
@@ -25,6 +28,8 @@ class SiteController extends Frontend
 
         $this->regions = new RegionRepository();
         $this->tools = new ToolsRepository();
+        $this->templateItem = new TemplateItemRepository();
+
     }
 
     public function user(Request $request)
@@ -352,13 +357,15 @@ class SiteController extends Frontend
      */
     public function ajaxRender(Request $request)
     {
+        // /site/ajax-render.html?uid=154797592964HJCM&tpl_file=%2F0%2Fgoods%2Fgoods_floor.tpl&is_last=0
         $uid = $request->get('uid');
-        $tpl_file = $request->get('tpl_file');
+        $tpl_file = $request->get('tpl_file'); // /0/goods/goods_floor.tpl
         $is_last = $request->get('is_last');
+        $page = TemplateItem::where('uid', $uid)->select(['page'])->value('page');
 
-        $tplHtml = view($tpl_file)->render();
+        $render = $this->templateItem->getTemplateItemHtml($uid, $page);
 
-        return result(0, $tplHtml);
+        return result(0, $render);
     }
 
     /**

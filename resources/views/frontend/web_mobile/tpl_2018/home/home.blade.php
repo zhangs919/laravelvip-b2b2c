@@ -320,7 +320,11 @@
             <!-- #tpl_region_end -->
         </div>
 
-
+        @if(!$webStatic)
+            <script type="text/javascript">
+                $.templateloading();
+            </script>
+        @endif
 
     </div>
 

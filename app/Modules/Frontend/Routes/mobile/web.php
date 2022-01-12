@@ -52,6 +52,8 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
         Route::post('upload-image', 'SiteController@uploadImage'); // 用户上传图片
         Route::get('tpl-data', 'SiteController@tplData'); // 异步加载模板数据
 
+        Route::get('ajax-render.html', 'SiteController@ajaxRender'); // 异步加载模板内容
+
     });
 
 

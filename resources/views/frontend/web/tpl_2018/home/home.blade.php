@@ -1,5 +1,9 @@
 @extends('layouts.base')
 
+@section('header_js')
+    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190121"></script>
+@stop
+
 {{--follow_box 注意此效果只在首页面展示--}}
 @section('follow_box')
     @include('layouts.partials.follow_box')
@@ -131,6 +135,8 @@
 
         <!--模块内容-->
         <!-- #tpl_region_start -->
+        {{--商城悬浮广告模板 特殊处理 无论静态页面开启与否 都加载出来--}}
+
         {!! $tplHtml !!}
 
 
@@ -150,4 +156,9 @@
         }
     </style>
 
+    @if(!$webStatic)
+    <script type="text/javascript">
+        $.templateloading();
+    </script>
+    @endif
 @stop

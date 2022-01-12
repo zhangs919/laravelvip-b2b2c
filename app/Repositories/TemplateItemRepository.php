@@ -218,14 +218,32 @@ class TemplateItemRepository
         $tplHtml = $navContainerHtml = "";
         foreach ($templateItems as $item)
         {
-            // todo PC首页导航 后期再判断其他端
-            $navTpl = $this->template->getTplList(1, 5, 'code');
-            if (in_array($item['code'], $navTpl)) {
-                // 如果是导航模板
-                $navContainerHtml .= $item->file;
-            }else {
-                $tplHtml .= $item->file;
+            // 判断首页静态页面开启状态
+            $webStatic = false;
+            if ($webStatic) {
+                // 开启-同步请求
+                // todo PC首页导航 后期再判断其他端
+                $navTpl = $this->template->getTplList(1, 5, 'code');
+                if (in_array($item['code'], $navTpl)) {
+                    // 如果是导航模板
+                    $navContainerHtml .= $item->file;
+                }else {
+                    $tplHtml .= $item->file;
+                }
+            } else {
+                // 关闭-异步加载模板Html数据 ajax加载
+                // todo PC首页导航 后期再判断其他端
+                $navTpl = $this->template->getTplList(1, 5, 'code');
+                if (in_array($item['code'], $navTpl)) {
+                    // 如果是导航模板
+                    $navContainerHtml .= $item->file;
+                }else {
+                    $is_last = 0; // 是否是最后一个
+                    $tplHtml .= "<div class='floor-template floor-loading' tpl_file='/0/goods/goods_floor.tpl' id='".$item->uid."' style='height:200px;background-image: url(".get_image_url(sysconf('default_floor_loading')).")' is_last='".$is_last."'></div>\n";
+                }
             }
+
+
         }
 
         return [$tplHtml, $navContainerHtml];

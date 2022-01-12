@@ -51,6 +51,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
         Route::get('region-list.html', 'SiteController@regionList'); // 异步加载地区
         Route::post('upload-image', 'SiteController@uploadImage'); // 用户上传图片
 
+        Route::get('ajax-render.html', 'SiteController@ajaxRender'); // 异步加载模板内容
+
+
     });
 
 
