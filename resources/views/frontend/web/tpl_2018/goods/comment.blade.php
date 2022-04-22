@@ -4,19 +4,19 @@
         <div class="comment-grade">
             <div class="rate-score">
                 <h4>宝贝与描述相符</h4>
-                <strong>5.00</strong>
+                <strong>{{ $desc_mark_avg }}</strong>
                 <p>
 <span class="score-value-no">
 
-<em style='width: 100%;'></em>
+<em style='width: {{ $desc_mark_avg*20 }}%;'></em>
 </span>
                 </p>
             </div>
             <div class="rate-graph">
                 <div class="graph-scroller">
-<span style='width: 100%;'>
+<span style='width: {{ $desc_mark_avg*20 }}%;'>
 <em>
-5.00
+{{ $desc_mark_avg }}
 <i>▼</i>
 </em>
 </span>
@@ -40,22 +40,22 @@
                 <li data-type="1">
                     <i class="icon"></i>
                     图片
-                    <em>（0）</em>
+                    <em>（{{ $comment_counts[1] }}）</em>
                 </li>
                 <li data-type="2">
                     <i class="icon"></i>
                     好评
-                    <em>（0）</em>
+                    <em>（{{ $comment_counts[2] }}）</em>
                 </li>
                 <li data-type="3">
                     <i class="icon"></i>
                     中评
-                    <em>（0）</em>
+                    <em>（{{ $comment_counts[3] }}）</em>
                 </li>
                 <li data-type="4">
                     <i class="icon"></i>
                     差评
-                    <em>（0）</em>
+                    <em>（{{ $comment_counts[4] }}）</em>
                 </li>
             </ul>
         </div>
@@ -63,11 +63,8 @@
 
         <div id="comment_content">
 
-            <div class="tip-box">
-                <img src="/frontend/images/noresult.png" class="tip-icon" />
-                <div class="tip-text">还没有任何评价哦</div>
-            </div>
-            <!-- -->
+            {{--引入商品评价列表--}}
+            @include('goods.partials._comment_list')
 
         </div>
 
@@ -79,14 +76,14 @@
 <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
 <script type="text/javascript">
     $().ready(function() {
-        $("#evaluate_count").html("累计评价(0)");
-        $("#evaluate_num").html("0人评价");
+        $("#evaluate_count").html("累计评价({{ $comment_counts[0] }})");
+        $("#evaluate_num").html("{{ $comment_counts[0] }}人评价");
 
     });
 </script>
 <script type="text/javascript">
     var tablelist = $(".tablelist").tablelist({
-        url: '/goods/comment?sku_id=712'
+        url: '/goods/comment?sku_id={{ $sku_id }}'
     });
 
     $(".comment-type li").click(function() {
@@ -105,7 +102,7 @@
                 $("#comment_content").html(result.data);
 // 重新初始化
                 tablelist = $(".tablelist").tablelist({
-                    url: '/goods/comment?sku_id=712'
+                    url: '/goods/comment?sku_id={{ $sku_id }}'
                 });
             }
         });

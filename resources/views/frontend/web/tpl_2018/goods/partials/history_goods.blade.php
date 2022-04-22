@@ -2,7 +2,7 @@
 
     @if(empty($goods_history))
         <div class="tip-box">
-            <img src="/frontend/images/noresult.png" class="tip-icon">
+            <img src="/images/noresult.png" class="tip-icon">
             <div class="tip-text">暂无历史足迹</div>
         </div>
     @else

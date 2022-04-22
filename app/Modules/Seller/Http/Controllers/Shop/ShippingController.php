@@ -40,7 +40,7 @@ class ShippingController extends Seller
 
     private $links = [
         ['url' => 'shop/shipping/self', 'text' => '自行配送'],
-        ['url' => 'shop/shipping/list', 'text' => '第三方配送'],
+        ['url' => 'shop/shipping/list', 'text' => '第三方快递'],
     ];
 
     private $edit_links = [

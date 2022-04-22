@@ -72,7 +72,7 @@ class Mobile extends Foundation
 
                 // 会员等级信息
                 $userRep = new UserRepository();
-                $userRankInfo = $userRep->getUserRank($this->user->rank_points);
+                $userRankInfo = $userRep->getUserRank($this->user->rank_point);
                 view()->share('user_rank_info', $userRankInfo);
 
                 // 会员安全级别

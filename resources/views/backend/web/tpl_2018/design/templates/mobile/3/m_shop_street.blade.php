@@ -1,7 +1,5 @@
 <!-- 手机端首页店铺模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!--店铺推荐 start-->
     <section class="store-wall">
@@ -56,9 +54,7 @@
     </section>
     <!--店铺推荐 end-->
 
-@if($is_design)
 </div>
-@endif
 
 <script type="text/javascript">
     var mySwiper = new Swiper('.shop-container', {

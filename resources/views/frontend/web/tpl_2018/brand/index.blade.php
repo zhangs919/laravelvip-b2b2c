@@ -11,13 +11,13 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180813"></script>
-    <script src="/frontend/js/tabs.js?v=20180813"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180813"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180813"></script>
-    <script src="/frontend/js/index_tab.js?v=20180813"></script>
-    <script src="/frontend/js/jump.js?v=20180813"></script>
-    <script src="/frontend/js/nav.js?v=20180813"></script>
+    <script src="/js/index.js?v=20180813"></script>
+    <script src="/js/tabs.js?v=20180813"></script>
+    <script src="/js/bubbleup.js?v=20180813"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180813"></script>
+    <script src="/js/index_tab.js?v=20180813"></script>
+    <script src="/js/jump.js?v=20180813"></script>
+    <script src="/js/nav.js?v=20180813"></script>
 @stop
 
 
@@ -25,7 +25,7 @@
 @section('content')
 
     <!-- 内容 -->
-    <link rel="stylesheet" href="/frontend/css/brand.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/brand.css?v=20180702"/>
     <div class="brand-banner">
         <div class="brand-scroll">
 
@@ -113,6 +113,6 @@
             </div>
         </div>
     </div>
-    <script src="/frontend/js/brand.js?v=20180813"></script>
+    <script src="/js/brand.js?v=20180813"></script>
 
 @stop

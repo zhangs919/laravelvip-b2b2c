@@ -37,8 +37,11 @@ class GoodsComment extends BaseModel
         'desc_mark','comment_desc','comment_img1','comment_img2','comment_img3','comment_img4','comment_img5','is_anonymous',
         'comment_time','comment_status','is_show','add_comment_desc','add_img1','add_img2','add_img3','add_img4','add_img5',
         'add_is_anonymous','add_time','add_status','add_is_show','seller_reply_desc','seller_reply_time','user_reply_desc',
-        'user_reply_time','is_delete','evaluate_status','back_id','back_number','goods_number','goods_name','goods_image',
-        'spec_info','order_add_time','confirm_time','order_status','user_comment_status',
+        'user_reply_time','is_delete','evaluate_status',
+
+        /*以下字段可不用存储*/
+//        'back_id','back_number','goods_number','goods_name','goods_image',
+//        'spec_info','order_add_time','confirm_time','order_status','user_comment_status',
 //        'comment_images' 包括初次评价和追加评价的图片 不用存储
     ];
 

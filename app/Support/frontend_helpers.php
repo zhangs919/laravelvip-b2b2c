@@ -182,28 +182,51 @@ function is_mobile()
 /**
  * 检测是否使用app访问
  *
- * @param string $clientType
+ * @param string $clientType android-Android客户端、ios-iOS客户端、weapp-微信小程序端
  * @return bool
  */
 function is_app($clientType = '')
 {
     if ($clientType == 'android') {
         // Android
-        if (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/android')) {
+        if (
+            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/android'))
+            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/android'))
+        ) {
             return true;
         } else {
             return false;
         }
     } elseif ($clientType == 'ios') {
         // Ios
-        if (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/ios')) {
+        if (
+            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/ios'))
+            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/ios'))
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    } elseif ($clientType == 'weapp') {
+        // weapp 微信小程序
+        if (
+            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/weapp'))
+            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/weapp'))
+        ) {
             return true;
         } else {
             return false;
         }
     } else {
-        // Android、Ios
-        if (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/android' || $_SERVER['HTTP_USER_AGENT'] == 'lrwapp/ios')) {
+        // Android、Ios、weapp
+        if (
+            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/android'))
+            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/android'))
+            || (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/ios'))
+            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/ios'))
+            || (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/weapp'))
+            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/weapp'))
+        ) {
             return true;
         } else {
             return false;

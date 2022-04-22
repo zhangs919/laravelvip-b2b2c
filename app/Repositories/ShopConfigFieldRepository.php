@@ -49,7 +49,7 @@ class ShopConfigFieldRepository
      * @param string $column
      * @return mixed
      */
-    public function getSpecialConfigsByGroup($group, $column = '')
+    public function getSpecialConfigsByGroup($group, $column = '', $returnValue = false)
     {
         $condition[] = ['group', $group];
         $condition[] = ['status', 1];
@@ -66,10 +66,16 @@ class ShopConfigFieldRepository
         if ($column != '') {//dd(DB::table($this->table));
             // 以某个字段名为键名返回列表
             $newList = [];
+            $valueList = [];
             foreach ($list as &$value) {
                 $newList[$value->$column] = $value;
+                $valueList[$value->$column] = $value->value;
             }
             $list = $newList;
+
+            if ($returnValue) { // 只返回配置键和值
+                return $valueList;
+            }
 //            dd($list);
         }
 

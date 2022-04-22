@@ -1,7 +1,8 @@
 <?php
 
 Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
-    // Design-
+
+    // Design route
     Route::group(['prefix' => 'design'], function () {
         // TplSetting 装修页面
         Route::group(['prefix' => 'tpl-setting'], function () {
@@ -21,14 +22,16 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::get('select-template/{id?}/{code?}/{sort?}/{page?}/{topic_id?}', 'Design\TplSettingController@selectTemplate'); // selectTemplate
             Route::get('tpl-ref/{page?}/{uid?}', 'Design\TplSettingController@templateRefresh'); // templateRefresh
             Route::get('valid-tpls', 'Design\TplSettingController@validTpls'); // validTpls
+            Route::post('batch-valid-tpls', 'Design\TplSettingController@batchValidTpls'); // 批量设置模板模块显示/隐藏
             Route::get('add-data', 'Design\TplSettingController@addData'); // addData
             Route::get('change-link-type', 'Design\TplSettingController@changeLinkType'); // changeLinkType
             Route::get('setting', 'Design\TplSettingController@setting'); // setting 发布
             Route::get('color-style-url', 'Design\TplSettingController@colorStyleUrl'); // colorStyleUrl
-            Route::get('delete-tpls', 'Design\TplSettingController@deleteTpls'); // deleteTpls
+            Route::get('delete-tpls', 'Design\TplSettingController@deleteTpls'); // 删除模板模块
+            Route::post('batch-delete', 'Design\TplSettingController@batchDelete'); // 批量删除模板模块
             Route::get('ajax-render', 'Design\TplSettingController@ajaxRender'); // ajaxRender ajax渲染模板
             Route::get('design-setting', 'Design\TplSettingController@designSetting'); // designSetting
-
+            Route::get('qrcode.html', 'Design\TplSettingController@qrCode'); // 生成网站首页二维码
 
             Route::any('sort', 'Design\TplSettingController@templateSort'); // templateSort
             Route::post('save-tpls', 'Design\TplSettingController@saveTpls'); // saveTpls
@@ -36,11 +39,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::post('set-static', 'Design\TplSettingController@setStatic'); // 开启/关闭静态页面
 
         });
-    });
 
-
-    // Design route
-    Route::group(['prefix' => 'design'], function () {
         // NavCategory 分类导航
         Route::group(['prefix' => 'nav-category'], function () {
             Route::get('list', 'Design\NavCategoryController@lists'); // lists

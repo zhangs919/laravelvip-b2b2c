@@ -20,6 +20,8 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
             Route::get('is-follow.html', 'Index\InformationController@isFollow'); // isFollow
             Route::get('search-record', 'Index\InformationController@searchRecord'); // searchRecord
             Route::get('get-weixinconfig.html', 'Index\InformationController@getWeiXinConfig'); // getWeiXinConfig
+            Route::get('amap', 'Index\InformationController@amap'); // 高德地图
+
         });
     });
 

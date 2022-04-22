@@ -1,8 +1,6 @@
 <!-- 默认缓载图片 -->
 <!-- 手机端导航模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
 
     <!--内容区域 start-->
@@ -27,7 +25,8 @@
                         <li>
                             <a href="{{ $v['link'] }}">
 
-                                <img src="/assets/d2eace91/images/common/blank.png" data-src="{{ get_image_url($v['path'], 'mobile_nav') }}" class="swiper-lazy">
+{{--                                <img src="{{ get_image_url($v['path'], 'mobile_nav') }}" data-src="{{ get_image_url($v['path'], 'mobile_nav') }}" class="swiper-lazy">--}}
+                                <img src="{{ $v['path'] }}" data-src="{{ $v['path'] }}" class="swiper-lazy">
 
 
                                 <span style="color:{{ $v['color'] }}">{{ $v['name'] }}</span>
@@ -54,23 +53,24 @@
 
 
 
-@if($is_design)
 </div>
 
 <script type="text/javascript">
-    $('#{{ $uid }}').find('.operateEdit').prepend('<a href="javascript:void(0);" class="decor-btn style-btn SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-type="99" data-style_colorpicker="1" data-style_image="1"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>设置样式</div></a>')
-</script>
-@endif
-
-<script type="text/javascript">
     var swiper = $('#{{ $uid }} .nav-list-container').swiper({
-        pagination: '#{{ $uid }} .swiper-pagination',
+        pagination: '.swiper-pagination',
         paginationClickable: true,
-        autoplay:false,
-        autoplayDisableOnInteraction: false
+        autoplay: false,
+        autoplayDisableOnInteraction: false,
+        lazyLoading: true,
     });
-    if($('#{{ $uid }} ul').length <= 1){
+    if ($('#{{ $uid }} ul').length <= 1) {
         $('#{{ $uid }}').find('.swiper-pagination').addClass('hide');
     }
 </script>
+@if($is_design)
+<script type="text/javascript">
+    $('#{{ $uid }}').find('.operateEdit').prepend('<a href="javascript:void(0);" class="decor-btn style-btn SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-type="99" data-style_colorpicker="1" data-style_image="1" data-width="650"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>设置样式</div></a>')
+</script>
+@endif
+
 

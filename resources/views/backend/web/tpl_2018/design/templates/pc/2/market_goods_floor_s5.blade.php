@@ -1,9 +1,7 @@
 <!-- 默认缓载图片 -->
 <!-- 前台首页楼层模板 -->
-@if($is_design)
 <!-- 判断url链接 -->
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
@@ -15,7 +13,7 @@
 
 
     <div class="w1210 floor-list">
-        <div class="floor" floor="5" color="#8ed515">
+        <div class="floor" floor="5" color="{{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '#8ed515' }}">
             <div class="floor-layout">
                 <div class="floor-con floor-con4">
                     <div class="floor-title">
@@ -212,7 +210,6 @@
     </div>
     <!-- 楼层 _end -->
 
-@if($is_design)
 </div>
 
 <script type="text/javascript">
@@ -267,6 +264,5 @@
         }
     });
 </script>
-@endif
 
 

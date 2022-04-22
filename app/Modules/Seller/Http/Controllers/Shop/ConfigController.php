@@ -47,14 +47,25 @@ class ConfigController extends Seller
 
     public function index(Request $request)
     {
+        $is_layer = $request->get('is_layer', 0); // 是否弹出层
         $group = $request->get('group', ''); // 当前配置分组
         $group_info = $this->shopConfigField->getConfigList($group);
         $title = $fixed_title = $group_info['title'];
         $uuid = make_uuid();
         $script_render = view('shop.config.partials.'.$group, compact('uuid'))->render();
 
-        if ($request->ajax()) {
-            $render = view('shop.config.ajax_config', compact('uuid', 'group', 'group_info', 'script_render'))->render();
+        if ($request->ajax() || $is_layer) {
+            $ajax_tpl = 'ajax_config'; // 默认使用公共模板
+            // 特殊处理
+            $ajax_special_groups = [
+                'm_shop_header', // 店铺头部设置
+            ];
+            if (in_array($group, $ajax_special_groups)) {
+                $ajax_tpl = $group;
+                $group_info = $this->shopConfigField->getSpecialConfigsByGroup($group, 'code');
+            }
+
+            $render = view('shop.config.'.$ajax_tpl, compact('uuid', 'group', 'group_info', 'script_render'))->render();
             return result(0, $render);
         }
 
@@ -156,7 +167,7 @@ class ConfigController extends Seller
 
             // 记录成功日志
             shop_log('配置设置成功，配置分组：'.$group);
-            return result(0, '', '设置成功');
+            return result(0, '', '设置成功！');
         }
 
         if ($result === false) {
@@ -170,7 +181,7 @@ class ConfigController extends Seller
 
         // success
         shop_log('配置设置成功，配置分组：'.$group);
-        flash('success', '设置成功');
+        flash('success', '设置成功！');
         return redirect($backUrl);
     }
 

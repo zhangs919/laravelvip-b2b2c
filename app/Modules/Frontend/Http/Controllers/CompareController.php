@@ -81,7 +81,7 @@ class CompareController extends UserCenter
         })->select(['compare.goods_id','goods_name','goods_image'])
             ->get()->toArray();
 
-        $compact = compact('seo_title', 'compare_goods');
+        $compact = compact('compare_goods');
 
         if ($request->ajax()) {
             $render = view('compare.box_goods_list', $compact)->render();
@@ -145,10 +145,11 @@ class CompareController extends UserCenter
                 ];
             }
         }
-//        dd($list);
+
+        $footer_type = 1; // 底部类型 short_footer
 
 
-        $compact = compact('seo_title','ids','list');
+        $compact = compact('ids','list','footer_type');
 
         if ($request->ajax()) {
             $type = $request->get('type');

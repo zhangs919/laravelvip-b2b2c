@@ -15,13 +15,13 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180528"></script>
-    <script src="/frontend/js/tabs.js?v=20180528"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180528"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/frontend/js/index_tab.js?v=20180528"></script>
-    <script src="/frontend/js/jump.js?v=20180528"></script>
-    <script src="/frontend/js/nav.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180528"></script>
+    <script src="/js/tabs.js?v=20180528"></script>
+    <script src="/js/bubbleup.js?v=20180528"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
+    <script src="/js/index_tab.js?v=20180528"></script>
+    <script src="/js/jump.js?v=20180528"></script>
+    <script src="/js/nav.js?v=20180528"></script>
 @stop
 
 
@@ -30,13 +30,13 @@
 
     <!-- 内容 -->
     <!-- css -->
-    <link rel="stylesheet" href="/frontend/css/goods.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/goods.css?v=20180428"/>
     <!-- 地区选择器 -->
     <script src="/assets/d2eace91/js/jquery.region.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/jquery.history.js?v=20180528"></script>
     <!-- 放大镜 _start -->
-    <script type="text/javascript" src="/frontend/js/magiczoom.js"></script>
+    <script type="text/javascript" src="/js/magiczoom.js"></script>
     <!-- 放大镜 _end -->
     <div class="w1210">
 
@@ -58,7 +58,7 @@
                     // 图片相册
                     $(".goodsgallery").goodsgallery({
                         images: $.parseJSON($("#SZY_SKU_IMAGES").html()),
-                        video: ""
+                        video: "{{ get_video_url($goods['goods_video']) }}"
                     });
                 </script>
                 <!--相册 END-->
@@ -94,11 +94,10 @@
                 </div>
 
                 <script type="text/javascript">
-                    var site_name = "{{ sysconf('site_name') }}";
                     window._bd_share_config = {
                         "common": {
                             "bdSnsKey": {},
-                            "bdText": "我在@" + site_name + " 发现了一个非常不错的商品：" + $(".SZY-GOODS-NAME-BASE").text() + "。感觉不错，分享一下~",
+                            "bdText": "我在@" + "{{ sysconf('site_name') }}" + " 发现了一个非常不错的商品：" + $(".SZY-GOODS-NAME-BASE").text() + "。感觉不错，分享一下~",
                             "bdMini": "2",
                             "bdMiniList": false,
                             "bdPic": "{{ get_image_url($goods['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320",
@@ -121,11 +120,45 @@
                     <!-- 商品名称 -->
                     <h1 class="goods-name SZY-GOODS-NAME">{{ $sku['sku_name'] }}</h1>
                     <!-- 限时折扣 -->
+                    {{--todo 判断 限时折扣显示 后期再做促销功能--}}
+                    {{--<p class="end-time bg-color">
+                        <font id="limit_discount_label">
+                            <span class="activity-label">标签</span>
+                            <em class="discount"> 减5元 </em>
+                            <span class="fr small-text">
+                                <strong id="limit_discount_countdown">00 天 00 小时 00 分 00 秒</strong>
+                                后结束，请尽快购买！
+                            </span>
+                        </font>
+                    </p>--}}
+
+
+
+                    <!-- 预售 -->
+
 
                     <!-- 商品简单描述 -->
-                    <p class="goods-brief second-color"></p>
+                    <p class="goods-brief second-color">{{ $goods['goods_subname'] }}</p>
                     <!-- 商品团购倒计时 -->
                     <!--当团购商品未开始时-->
+
+                    {{--todo 判断 限时团购显示 后期再做促销功能--}}
+                    {{--<div class="activity-banner bg-color">
+                        <div class="activity-type">
+                            <i class="icon iconfont">&#xe6aa;</i>
+                            <strong>限时团购</strong>
+                        </div>
+                        <div class="activity-message">
+                            距离结束
+                            <div id="groupbuy_countdown" class="fr">
+                                <span>00</span>
+                                :
+                                <span>00</span>
+                                :
+                                <span>00</span>
+                            </div>
+                        </div>
+                    </div>--}}
 
 
                     <div class="goods-price">
@@ -170,7 +203,7 @@
                         </div>
 
                         <!-- 促销 -->
-                        <div class="shop-prom SZY-ACTIVITY" style="display: none;">
+                        <div class="shop-prom SZY-ACTIVITY" >
                             <div class="shop-prom-title">
                                 <dl>
                                     <dt class="dt">促&nbsp;&nbsp;&nbsp;销</dt>
@@ -180,29 +213,147 @@
                                         <!-- 会员价 _end -->
                                         <!-- 领红包 _start -->
 
+                                        {{--todo 判断 有红包时显示--}}
+                                        @if(!empty($bonus_list))
+                                            <dd>
+                                                <div>
+                                                    <span class="pro-type">红包</span>
+                                                    <div class="pro-info">
+                                            <span class="shop-coupon">
+                                                <span class="bonus">点击此处领取并查看红包详情</span>
+                                                <!-- 优惠券弹框 -->
+                                                <div class="coupon-popup">
+                                                    <i class="close"></i>
+                                                    <div class="popup-content">
+                                                        <div class="coupon-list">
+                                                            <ul>
+                                                                @foreach($bonus_list as $bonus)
+                                                                    <li class="coupon">
+                                                                        <div class="coupon-amount">
+                                                                            <div class="coupon-price">
+                                                                                {{ $bonus['bonus_amount_format'] }}
+                                                                                <i></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="coupon-detail">
+                                                                            <div class="coupon-info">
+                                                                                <p class="coupon-title" title="">{{ $bonus['bonus_name'] }}</p>
+                                                                                <p class="coupon-time">{{ $bonus['start_time_format'] }}&nbsp;-&nbsp;{{ $bonus['end_time_format'] }}</p>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        @if($bonus['is_receive'])
+                                                                            <!-- 已领取的红包 _start -->
+                                                                            <span class="bonus-received">已领取</span>
+                                                                            <!-- 已领取的红包 _end -->
+                                                                        @else
+                                                                            <!-- 未领取的红包 _start -->
+                                                                            <a href="javascript:void(0);" title="点击领取红包" data-bonus-id="{{ $bonus['bonus_id'] }}" class="bonus-receive color">领取</a>
+                                                                            <!-- 未领取的红包 _end -->
+                                                                        @endif
+
+
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                        <span class="popup-arrow"></span>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                        @endif
                                         <!-- 领红包 _end -->
                                         <!-- 赠品 _start -->
 
+                                        {{--todo 判断 有赠品时显示 后期再做促销功能--}}
+                                        {{--<dd>
+                                            <div class="prom-gift SZY-GIFT-LIST">
+                                                <span class="pro-type SZY-GIFT-LABEL">赠品</span>
+                                                <span class="pro-info">
+                                                    <div class="prom-gift">
+
+                                                        <div class="prom-gift-list SZY-GIFT m-l-5">
+                                                            <a href="/1112.html" title="彩椒  C之王" target="_blank">
+                                                                <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2019/01/15/15475140324781.png?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" width="25" height="25" class="gift-img" />
+                                                            </a>
+                                                            <em class="gift-number color">× 1</em>
+                                                        </div>
+
+                                                        <div class="prom-gift-list SZY-GIFT m-l-5">
+                                                            <a href="/1127.html" title="彩椒 123 1" target="_blank">
+                                                                <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2019/01/11/15472021222241.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" width="25" height="25" class="gift-img" />
+                                                            </a>
+                                                            <em class="gift-number color">× 1</em>
+                                                        </div>
+
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </dd>--}}
                                         <!--赠品 _end-->
                                         <!-- 满减、满折 _start -->
 
+                                        {{--todo 判断 有满减、满折时显示 后期再做促销功能--}}
+                                        {{--<dd class="discount">
+                                            <div class="pro-item">
+
+                                                <span class="pro-type">满减</span>
+
+
+                                                <span class="pro-type">包邮</span>
+
+
+                                                <div class="pro-info">
+                                                    <div class="pro-info-list">
+                                                        <p title="满5元，减3元、包邮；">满5元，减3元、包邮；</p>
+                                                    </div>
+
+                                                    <div class="list-bomb-box">
+                                                        <i></i>
+                                                        <ul>
+
+                                                            <li>满5元，减3元、包邮；</li>
+
+                                                            <li>满10元，减5元；</li>
+
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+                                                <!-- 当条件大于1个时，此标签显示 _start -->
+
+                                                <i class="more"></i>
+
+                                                <!-- 当条件大于1个时，此标签显示 _end -->
+                                            </div>
+                                        </dd>--}}
+
                                         <!-- 满减送_end -->
                                         <!-- 当促销方式多于2个时，此模块显示----显示的是所有活动前面的标签 _start -->
+                                        <div class="pro-type-group">
+                                            <span class="pro-info-down">
+                                                展开促销
+                                                <i class="more"></i>
+                                            </span>
+                                        </div>
                                         <!-- <dd class="pro-type-group">
-                                            <div class="pro-item">
-                                                <span class="pro-type">红包</span>
-                                                <span class="pro-type">赠品</span>
-                                                <span class="pro-type">限购</span>
-                                                <span class="pro-type">满减</span>
-                                                <span class="pro-type">包邮</span>
-                                                <span class="pro-type">赠</span>
-                                                <span class="pro-type">加价购</span>
-                                                <span class="pro-info-down">
-                                                    展开促销
-                                                    <i class="more"></i>
-                                                </span>
-                                            </div>
-                                        </dd> -->
+                                        <div class="pro-item">
+                                            <span class="pro-type">红包</span>
+                                            <span class="pro-type">赠品</span>
+                                            <span class="pro-type">限购</span>
+                                            <span class="pro-type">满减</span>
+                                            <span class="pro-type">包邮</span>
+                                            <span class="pro-type">赠</span>
+                                            <span class="pro-type">加价购</span>
+                                            <span class="pro-info-down">
+                                                展开促销
+                                                <i class="more"></i>
+                                            </span>
+                                        </div>
+                                    </dd> -->
                                         <!-- 当促销方式多于2个时，此模块显示 _end -->
                                     </div>
                                 </dl>
@@ -210,11 +361,44 @@
                         </div>
 
 
+                        @if($goods['goods_moq'] > 0)
+                            <div class="start-batch">
+                                <span>起订量</span>
+                                <font class="start-batch-num">≥&nbsp;{{ $goods['goods_moq'] }}&nbsp;件</font>
+                            </div>
+                        @endif
+
 
                     </div>
                     <!-- 在售的商品 _start -->
+                    <!-- 虚拟商品判断 -->
 
-
+                    {{--todo 判断 是否显示--}}
+                    @if(sysconf('goods_info_freight') == 0)
+                    {{--goods_info_freight=0 显示具体运费--}}
+                    <!-- 运费 -->
+                    <div class="freight">
+                        <div class="dt">配送至</div>
+                        <div class="dd">
+                            <div class="post-age">
+                                <div class="region-chooser-container" style="z-index: 3"></div>
+                                <div class="post-age-info">
+                                    <span class="freight-info"></span>
+                                    <div class="service-tips freight-free-info" style="display: none;">
+                                        <i class="sprite-question"></i>
+                                        <div class="tips">
+                                            <div class="sprite-arrow"></div>
+                                            <div class="tips-bg"></div>
+                                            <div class="content">
+                                                <p></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
 
                     <!-- 服务 -->
@@ -229,33 +413,8 @@
                         </div>
                     </div>
 
-                    <!-- 评价、销量、积分 准备删除的模块 _start -->
-                    <!-- <div class="info-other" style="display: none;">
-                                <ul class="other">
-                                    <li>
-                                        <p>
-                                            累积评价
-                                            <span>
-                                                <a id="evaluate_num" href="#goods_evaluate" class="second-color">0人评价</a>
-                                            </span>
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            累计销量
-                                            <span class="second-color">0</span>
-                                        </p>
-                                    </li>
-                                    <li class="last">
-                                        <p>
-                                            赠送积分
-                                            <span class="second-color">0</span>
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>-->
-                    <!-- 评价、销量、积分 准备删除的模块 _end -->
 
+                    @if(sysconf('goods_info_pickup'))
                     <!-- 自提点 -->
                     <div class="pickup">
                         <div class="dt">自提点</div>
@@ -268,6 +427,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
 
 
                     <div class="choose SZY-GOODS-SPEC-ITEMS">
@@ -283,7 +443,7 @@
 
                                     @foreach($v['attr_values'] as $kk=>$vv)
                                     <!-- 属性值被选中的状态 -
-                                    <!-- 梁：如果规格下没有库存，虚线格式给li标签追加class值“no-stock” -->
+                                    <!-- 如果规格下没有库存，虚线格式给li标签追加class值“no-stock” -->
                                     <li class="goods-spec-item @if(in_array($vv['spec_id'], $sku['spec_ids'])) selected @endif"
                                         data-spec-id="{{ $vv['spec_id'] }}" data-attr-id="{{ $v['attr_id'] }}" data-is-default="{{ $v['is_default'] }}" data-points-goods="0">
                                         <a href="javascript:void(0);" title="{{ $vv['attr_value'] }}">
@@ -304,7 +464,7 @@
 
                         <!-- 购买数量 -->
                         <dl class="amount">
-                            <dt class="dt">数&nbsp;&nbsp;&nbsp;量</dt>
+                            <dt class="dt">数量</dt>
                             <dd class="dd">
                                 <span class="amount-widget">
                                     <input type="text" class="amount-input" value="1"
@@ -336,7 +496,15 @@
                         </dl>
 
                         <!-- 限购提示语 -->
-
+                        {{--todo 判断 有限购数量时显示--}}
+                        @if($sku['purchase_num'] > 0)
+                        <div class="purchase-msg">
+                            <div class="msg-con">
+                                每人限购{{ $sku['purchase_num'] }}件
+                                <i class="msg-icon"></i>
+                            </div>
+                        </div>
+                        @endif
 
 
                         <!-- 加入购物车按钮、手机购买 -->
@@ -346,9 +514,9 @@
                                 <a href="javascript:void(0);" class="buy-goods color ">
                                     <span class="buy-goods-bg bg-color"></span>
                                     <span class="buy-goods-border"></span>
-                                    立即购买
-                                </a>
+                                    立即购买					</a>
                             </div>
+                            <!-- 判断不能加入购物车的商品 -->
 
                             <div class="btn-buy">
                                 <a href="javascript:void(0);" class="add-cart bg-color ">
@@ -374,6 +542,26 @@
                         </div>
 
                         <!-- 服务承诺 -->
+                        {{--保障服务 如果无保障服务 不显示--}}
+                        @if(!empty($goods['contract_list']))
+                            <dl class="service">
+                                <dt class="dt">服务承诺</dt>
+                                <dd class="dd">
+                                    <ul class="contract-list">
+
+                                        @foreach($goods['contract_list'] as $v)
+                                            <li>
+                                                <a href="javascript:void(0);" title="{{ $v['contract_desc'] }}">
+                                                    <img src="{{ get_image_url($v['contract_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_16,w_16" />
+                                                    <span>{{ $v['contract_name'] }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+
+                                    </ul>
+                                </dd>
+                            </dl>
+                        @endif
 
                     </div>
 
@@ -387,7 +575,7 @@
             </script>
             <script type="text/javascript">
                 var sku_ids = [];
-                var local_region_code = "13,03,02";
+                var local_region_code = "{{ $region_code }}";
                 var sku_freights = [];
                 var change_sku_images = false;
 
@@ -424,10 +612,24 @@
                             sku_freights[region_code] = result.data;
 
                             if (result.data.is_last == 0) {
-                                return;
+                                // return;
                             }
 
                             $(".freight-info").html(result.data.freight_info);
+                            $(".freight-free-info").find(".content").html("");
+
+                            if ($.isArray(result.data.free_list) && result.data.free_list.length > 0) {
+
+                                for (var i = 0; i < result.data.free_list.length; i++) {
+                                    $(".freight-free-info").find(".content").append("<p>" + result.data.free_list[i] + "</p>");
+                                }
+
+                                // 显示包邮条件
+                                $(".freight-free-info").show();
+                            } else {
+                                // 隐藏包邮条件
+                                $(".freight-free-info").hide();
+                            }
 
                             if ($(document).data("SZY-SKU-" + sku_id)) {
                                 var sku = $(document).data("SZY-SKU-" + sku_id);
@@ -487,6 +689,10 @@
 
                 // 设置SKU信息
                 function setSkuInfo(sku) {
+                    var is_lib_goods = "";
+                    if (is_lib_goods == true) {
+                        return false;
+                    }
 
                     if (sku == undefined || sku == null || sku == false) {
                         $(".add-cart").addClass("disabled");
@@ -527,12 +733,22 @@
                     // 售价
                     $(".SZY-GOODS-PRICE").html(sku.goods_price_format);
                     // 市场价
-                    $(".SZY-MARKET-PRICE").html(sku.market_price_format);
+                    //搭配套餐 显示原价
+                    if (sku.activity && sku.activity.act_type == '11' && sku.activity.act_status == 1) {
+                        $(".SZY-MARKET-PRICE").html(sku.original_price_format);
+                    } else {
+                        $(".SZY-MARKET-PRICE").html(sku.market_price_format);
+                    }
 
                     if (parseFloat(sku.market_price) == 0) {
                         $(".SZY-MARKET-PRICE").parents(".show-price").hide();
                     } else {
                         $(".SZY-MARKET-PRICE").parents(".show-price").show();
+                    }
+                    // 预售定金显示
+                    if (parseFloat(sku.earnest_money) > 0 && $('.SZY-EARNST-MONEY').length > 0) {
+                        $('.SZY-EARNST-MONEY').html(sku.earnest_money_format);
+                        $('.SZY-TAIL-MONEY').html(sku.tail_money_format);
                     }
 
                     // 库存
@@ -573,6 +789,8 @@
                     var show_activity = false;
 
                     //
+                    show_activity = true;
+                    //
 
                     // 会员价格
                     if (sku.rank_prices != undefined && sku.rank_prices != null) {
@@ -603,7 +821,7 @@
                     if (sku.gift_list && sku.gift_list.length > 0) {
 
                         $(".SZY-GIFT-LIST").show();
-                        $(".SZY-GIFT-LABEL").nextAll().remove();
+                        $(".SZY-GIFT-LIST").find(".prom-gift").children().remove();
 
                         for (var i = 0; i < sku.gift_list.length; i++) {
                             var gift = sku.gift_list[i];
@@ -612,8 +830,8 @@
                             $(element).find("img").attr("src", gift.goods_image_thumb);
                             $(element).find("a").attr("href", "/" + gift.gift_sku_id + ".html");
                             $(element).find("a").attr("title", "/" + gift.sku_name);
-                            $(element).find(".gift-number").html("×" + gift.gift_number);
-                            $(".SZY-GIFT-LABEL").after(element);
+                            $(element).find(".gift-number").html("× " + gift.gift_number);
+                            $(".SZY-GIFT-LIST").find(".prom-gift").append(element);
                         }
 
                         // 展示促销
@@ -622,8 +840,19 @@
                         $(".SZY-GIFT-LIST").hide();
                         $(".SZY-GIFT-LABEL").nextAll().remove();
                     }
+                    //订单返现
+                    if (sku.cash_back.message) {
+                        show_activity = true;
+                    }
+
+                    if ($(".SZY-ACTIVITY").find(".discount").size() > 0) {
+                        // 展示促销
+                        show_activity = true;
+                        $(".SZY-MARKET-PRICE").html(sku.original_price_format);
+                    }
 
                     if (show_activity) {
+
                         $(".SZY-ACTIVITY").show();
                     } else {
                         $(".SZY-ACTIVITY").hide();
@@ -674,12 +903,18 @@
                     var goods_number_amount = $(".amount-input").amount({
                         value: 1,
                         min: 1,
-                        max: "12",
+                        max: "97",
                         change: function(element, value) {
                             var sku_id = element.data('sku_id');
                             if (value == this.max) {
 
                             }
+                        },
+                        max_callback: function() {
+                            $.msg("最多只能购买" + this.max + "件");
+                        },
+                        min_callback: function() {
+                            $.msg("商品数量必须大于" + (this.min - 1));
                         }
                     });
 
@@ -700,16 +935,20 @@
                         $.cart.add(sku_id, $(".amount-input").val(), {
                             is_sku: true,
                             image_url: image_url,
-                            event: event
+                            event: event,
+                            info_callback: function() {
+
+                            }
                         });
                         return false;
                     });
 
                     // 立即购买
                     $(".buy-goods").click(function() {
-                        var act_type = "";
+                        var act_type = "11";
                         var purchase = "15";
-
+                        var pre_sale = "2";
+                        var virtual = "0";
                         var is_lib_goods = "";
                         if (is_lib_goods == true) {
                             return;
@@ -720,14 +959,14 @@
                         }
                         var sku_id = getSkuId();
                         var number = $(".amount-input").val();
-
-                        if (act_type == purchase) {
-                            $.cart.quickBuy(sku_id, number, {
-                                act_type: act_type
-                            });
-                        } else {
-                            $.cart.quickBuy(sku_id, number);
+                        var data = {};
+                        if (act_type == purchase || act_type == pre_sale) {
+                            data.act_type = act_type;
                         }
+                        if (virtual > 0) {
+                            data.virtual = virtual;
+                        }
+                        $.cart.quickBuy(sku_id, number, data);
 
                     });
 
@@ -751,17 +990,16 @@
                     });
 
                     //身份验证弹框
-//        $(".buy-goods").click(function() {
-//			layer.open({
-//				type: 1,
-//                title: '身份验证',
-//                area: ['700px', '330px'],
-//				content: $('#status-verify').html()
-//			});
-//        });
+                    //        $(".buy-goods").click(function() {
+                    //			layer.open({
+                    //				type: 1,
+                    //                title: '身份验证',
+                    //                area: ['700px', '330px'],
+                    //				content: $('#status-verify').html()
+                    //			});
+                    //        });
                 });
             </script>
-
             <!-- 商品详细信息 _end-->
             <!-- 店铺信息 _star-->
 
@@ -865,13 +1103,13 @@
                         <a class="bg-color shop-add collect-shop" href="javascript:void(0);">
 
                             @if($goods['shop_collect'])
-                                {{--已收藏--}}
+                                {{--已关注--}}
                                 <i class="iconfont collect">&#xe6b1;</i>
-                                <span>取消收藏</span>
+                                <span>取消关注</span>
                             @else
-                                {{--未收藏--}}
+                                {{--未关注--}}
                                 <i class="iconfont collect">&#xe6b3;</i>
-                                <span>收藏本店</span>
+                                <span>关注本店</span>
                             @endif
 
 
@@ -892,37 +1130,37 @@
                     <ul>
                         <li>
                             <a class="" href="javascript:;" title="" target="_blank">
-                                <img src="/frontend/images/user_headimg.gif" alt="" width="150" height="150">
+                                <img src="/images/user_headimg.gif" alt="" width="150" height="150">
                                 <p class="price">￥18.00</p>
                             </a>
                         </li>
                         <li>
                             <a class="" href="javascript:;" title="" target="_blank">
-                                <img src="/frontend/images/user_headimg.gif" alt="" width="150" height="150">
+                                <img src="/images/user_headimg.gif" alt="" width="150" height="150">
                                 <p class="price">￥38.00</p>
                             </a>
                         </li>
                         <li>
                             <a class="" href="javascript:;" title="" target="_blank">
-                                <img src="/frontend/images/user_headimg.gif" alt="" width="150" height="150">
+                                <img src="/images/user_headimg.gif" alt="" width="150" height="150">
                                 <p class="price">￥38.00</p>
                             </a>
                         </li>
                         <li>
                             <a class="" href="javascript:;" title="" target="_blank">
-                                <img src="/frontend/images/user_headimg.gif" alt="" width="150" height="150">
+                                <img src="/images/user_headimg.gif" alt="" width="150" height="150">
                                 <p class="price">￥18.00</p>
                             </a>
                         </li>
                         <li>
                             <a class="" href="javascript:;" title="" target="_blank">
-                                <img src="/frontend/images/user_headimg.gif" alt="" width="150" height="150">
+                                <img src="/images/user_headimg.gif" alt="" width="150" height="150">
                                 <p class="price">￥58.00</p>
                             </a>
                         </li>
                         <li>
                             <a class="" href="javascript:;" title="" target="_blank">
-                                <img src="/frontend/images/user_headimg.gif" alt="" width="150" height="150">
+                                <img src="/images/user_headimg.gif" alt="" width="150" height="150">
                                 <p class="price">￥58.00</p>
                             </a>
                         </li>
@@ -947,7 +1185,7 @@
 
                 <div class="store-service">
                     <div class="store-logo">
-                        <img src="/frontend/images/service.png" width="" height="" />
+                        <img src="/images/service.png" width="" height="" />
                     </div>
                     <div class="store-service-group left-content">
 
@@ -1019,8 +1257,8 @@
                                         <span>
                                             <i class="arrow"></i>
                                         </span>
-                                            <a href="/shop/{{ $shop_info['shop']['shop_id'] }}/list.html?cat_id={{ $v['cat_id'] }}"
-                                               target="_self" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                            <a href="/shop/{{ $shop_info['shop']['shop_id'] }}/list.html?cat_id={{ $child['cat_id'] }}"
+                                               target="_self" title="{{ $child['cat_name'] }}">{{ $child['cat_name'] }}</a>
                                         </li>
                                         @endforeach
                                     @endif
@@ -1189,6 +1427,14 @@
                                 @endif
 
                                 {{--属性列表--}}
+                                @if(!empty($goods['other_attrs']))
+                                    @foreach($goods['other_attrs'] as $v)
+                                        <li>
+                                            {{ $v['attr_name'] }}：
+                                            <span id="goods_attr_" title="{{ $v['attr_value'] }}" class="goods-attr-value">{{ $v['attr_value'] }}</span>
+                                        </li>
+                                    @endforeach
+                                @endif
                                 @if(!empty($goods['attr_list']))
                                    @foreach($goods['attr_list'] as $v)
                                         <li>
@@ -1211,7 +1457,7 @@
                             <!-- 商品后台上传的商品描述 -->
                             <div class="detail-content goods-detail-content">
                                 <div class="ajax-loading">
-                                    <img src="/frontend/images/loading.gif" />
+                                    <img src="/images/loading.gif" />
                                 </div>
 
 
@@ -1267,6 +1513,8 @@
             正常维修处理周期：自接收到问题商品之日起 30 日内为您处理完成。
         </p>
     </div>
+
+    @if(sysconf('goods_info_pickup'))
     <!-- 自提点弹框 _start-->
     <!-- 自提点 _start -->
     <div id="goods_pickup" class="goods-pickup">
@@ -1323,19 +1571,21 @@
     </script>
     <!-- 自提点 _end -->
     <!-- 自提点弹框 _end-->
+    @endif
+
     <!-- 头部右侧鼠标经过图片放大效果 _start -->
-    <script type="text/javascript" src="/frontend/js/bubbleup.js"></script>
+    <script type="text/javascript" src="/js/bubbleup.js"></script>
     <!-- 头部右侧鼠标经过图片放大效果 _end -->
     <!-- 套餐、店内排行等左右切换效果 _start-->
-    <script type="text/javascript" src="/frontend/js/tabs.js"></script>
+    <script type="text/javascript" src="/js/tabs.js"></script>
     <!-- 套餐、店内排行等左右切换效果 _end -->
     <!-- 右侧商品信息等定位切换效果 _start -->
-    <script type="text/javascript" src="/frontend/js/tabs_totop.js"></script>
+    <script type="text/javascript" src="/js/tabs_totop.js"></script>
     <!-- 右侧商品信息等定位切换效果 _end -->
     <!-- 控制图片经过放大 -->
-    <script type="text/javascript" src="/frontend/js/goods.js"></script>
+    <script type="text/javascript" src="/js/goods.js"></script>
     <!-- 地址选择 _start -->
-    <script type="text/javascript" src="/frontend/js/select_region.js"></script>
+    <script type="text/javascript" src="/js/select_region.js"></script>
     <!-- 地址选择 _end -->
     <script id="SZY_GIFT_TEMPLATE" type="text">
 <div class="prom-gift-list">
@@ -1345,16 +1595,33 @@
 	<em class="gift-number color">×</em>
 </div>
 </script>
-
+    @if(!empty($user_info))
+        <!-- 分享 -->
+        <script type="text/javascript">
+            var url =  location.href;
+            if (url.indexOf("user_id=") == -1 && window.history && history.pushState){
+                if(url.indexOf("?") == -1){
+                    url += "?user_id=" + "{{ $user_info['user_id'] }}";
+                }else{
+                    url += "&user_id=" + "{{ $user_info['user_id'] }}";
+                }
+                history.replaceState(null, document.title, url);
+            }
+        </script>
+    @endif
     <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Geocoder,AMap.Geolocation,AMap.Autocomplete"></script>
     <!-- 获取当前地址 -->
     <script type="text/javascript">
         var deferred = $.Deferred();
 
-        var local_region_code = "13,03,02";
+        var local_region_code = "{{ $region_code }}";
 
         $().ready(function() {
 
+            //
+            if (local_region_code && local_region_code.length > 0) {
+                changeLocation(local_region_code);
+            }
             //
 
             //变更配送地址
@@ -1372,7 +1639,7 @@
 
             //在线客服
             /* 	$(".service-online").click(function() {
-                    var goods_id = 128;
+                    var goods_id = 249;
                     $.openim({
                         goods_id:goods_id
                     });
@@ -1429,13 +1696,13 @@
             // 添加收藏
             $(".collect-shop").click(function(event) {
                 var target = $(this);
-                var shop_id = "{{ $shop_info['shop']['shop_id'] }}";
+                var shop_id = "1";
                 $.collect.toggleShop(shop_id, function(result) {
                     if (result.data == 1) {
-                        $(target).find("span").html("取消收藏");
+                        $(target).find("span").html("取消关注");
                         $(target).find('i').html('&#xe6b1;');
                     } else {
-                        $(target).find("span").html("收藏本店");
+                        $(target).find("span").html("关注本店");
                         $(target).find('i').html('&#xe6b3;');
                     }
                 });
@@ -1473,41 +1740,54 @@
 
         $().ready(function() {
 
-            // 导入
+            // 申请代理
             $("body").on("click", ".no-auth", function() {
                 // 商品ID
                 var id = $(this).data("goods_id");
-                $.open({
-                    title: "申请代理	",
-                    //type:2,
-                    ajax: {
-                        url: '/compare/agent',
-                        data: {
-                            goods_id: id
-                            //	single: single
-                        }
-                    },
-                    width: "900px",
-                    btn: ['确定', '取消'],
-                    yes: function(index, container) {
-                        if (!validator.form()) {
-                            return;
-                        }
 
-                        var data = $(container).serializeJson();
-                        $.loading.start();
-                        $.post('/compare/agent', data, function(result) {
-                            $.loading.stop();
-                            if (result.code == 0) {
-                                //tablelist.load();
-                                $.msg(result.message);
-                                $.closeDialog(index);
-                            } else {
-                                $.msg(result.message, {
-                                    time: 5000
-                                })
-                            }
-                        }, "json");
+                $.ajax({
+                    type:"POST",
+                    url:'/goods/shop-type-by-goods',
+                    data: {
+                        goods_id: id
+                    },
+                    dataType: "json",
+                    success:function(result){
+                        if(result.code==0){
+                            $.open({
+                                title: "申请代理	",
+                                //type:2,
+                                ajax: {
+                                    url: '/compare/agent',
+                                    data: {
+                                        goods_id: id
+                                        //	single: single
+                                    }
+                                },
+                                width: "900px",
+                                btn: ['确定', '取消'],
+                                yes: function(index, container) {
+                                    if (!validator.form()) {
+                                        return;
+                                    }
+
+                                    var data = $(container).serializeJson();
+                                    $.loading.start();
+                                    $.post('/compare/agent', data, function(result) {
+                                        $.loading.stop();
+                                        if (result.code == 0) {
+                                            //tablelist.load();
+                                            $.msg(result.message);
+                                            $.closeDialog(index);
+                                        } else {
+                                            $.msg(result.message, {
+                                                time: 5000
+                                            })
+                                        }
+                                    }, "json");
+                                }
+                            });
+                        }
                     }
                 });
             });
@@ -1523,7 +1803,7 @@
                     if ($(document).scrollTop() >= $(desc_container).offset().top - $(window).height()) {
                         $("body").data("loading-goods-desc", true);
                         $.get("/goods/desc.html", {
-                            sku_id: "{{ $sku['sku_id'] }}",
+                            sku_id: "{{ $goods['sku_id'] }}",
                             is_lib_goods: ""
                         }, function(result) {
                             $(desc_container).html(result.pc_desc);
@@ -1531,12 +1811,12 @@
                     }
                 }
                 // 评论
-                if (!$("body").data("loading-goods-comment")) {
+                if (!$("body").data("loading-goods-comment") && $(evaluate_container).size() > 0) {
                     // 计算高度
                     if ($(document).scrollTop() >= $(evaluate_container).offset().top - $(window).height()) {
                         $("body").data("loading-goods-comment", true);
                         $.get('/goods/comment.html', {
-                            sku_id: "{{ $sku['sku_id'] }}",
+                            sku_id: "{{ $goods['goods_id'] }}",
                             output: 1
                         }, function(result) {
                             if (result.code == 0) {
@@ -1568,4 +1848,71 @@
         }
     </script>
 
+    {{--todo 判断 限时团购倒计时显示--}}
+    <!-- 倒计时 -->
+    <script type="text/javascript">
+        $().ready(function() {
+            // <font id="groupbuy_countdown">此商品正在参加团购活动 3天19时28秒后结束</font>
+            $("#groupbuy_countdown").countdown({
+                time: "596522000",
+
+                htmlTemplate: '<span>%{d}</span>:<span>%{h}</span>:<span>%{m}</span>:<span>%{s}</span>',
+
+                leadingZero: true,
+                onComplete: function(event) {
+                    $(this).parent().html("团购活动已结束！");
+                    $.go("{{ route('pc_show_goods',['goods_id'=>$goods['goods_id']]) }}");
+                }
+            });
+        });
+    </script>
+
+    {{--todo 判断 限时折扣倒计时显示--}}
+    <!-- 倒计时 -->
+    <script type="text/javascript">
+        $().ready(function() {
+            // <font id="groupbuy_countdown">此商品正在参加团购活动 3天19时28秒后结束</font>
+            $("#limit_discount_countdown").countdown({
+                time: "594235000",
+                leadingZero: true,
+                onComplete: function(event) {
+                    //$(this).parent().html("活动已结束！");
+                    $.go("{{ route('pc_show_goods',['goods_id'=>$goods['goods_id']]) }}");
+                }
+            });
+        });
+    </script>
+
+
+    <!-- 预售倒计时 -->
+    <link rel="stylesheet" href="/css/online.css?v=20190130"/>
+    <div class="yikf-form site_yikf_form" id="yikf-kefu" style='display:none;'>
+        <i class="yikf-icon"></i>
+
+        <form class="yikf-item " action="https://kf.mall.laravelvip.com/index/index/home?business_id=eb5bf6642a5a445221241a51842b901c&groupid=0&shop_id=1&goods_id=249" method="post" target="_blank">
+            <input type="hidden" name="visiter_id" value=''>
+            <input type="hidden" name="visiter_name" value=''>
+            <input type="hidden" name="avatar" value=''>
+            <input type="hidden" name="domain" value=''>
+
+            <input type="hidden" name="product" value='{"pid":249,"title":"\u6c5f\u534e-\u6d4b\u8bd5H1","img":"http:\/\/68yun.oss-cn-beijing.aliyuncs.com\/images\/15164\/shop\/1\/gallery\/2018\/05\/17\/15265253513800.jpg","info":"\u6d4b\u8bd5H1","price":"95.00","goods_type":null,"url":"http:\/\/www.b2b2c.yunmall.68mall.com\/goods-249.html"}'>
+
+            <input type="submit" value='在线咨询'>
+        </form>
+
+        <form class="yikf-item " action="https://kf.yunmall.68mall.com/index/index/home?business_id=eb5bf6642a5afe7621241a51842b901c&groupid=151&shop_id=1&goods_id=249" method="post" target="_blank">
+            <input type="hidden" name="visiter_id" value=''>
+            <input type="hidden" name="visiter_name" value=''>
+            <input type="hidden" name="avatar" value=''>
+            <input type="hidden" name="domain" value=''>
+
+            <input type="hidden" name="product" value='{"pid":249,"title":"\u6c5f\u534e-\u6d4b\u8bd5H1","img":"http:\/\/68yun.oss-cn-beijing.aliyuncs.com\/images\/15164\/shop\/1\/gallery\/2018\/05\/17\/15265253513800.jpg","info":"\u6d4b\u8bd5H1","price":"95.00","goods_type":null,"url":"http:\/\/www.b2b2c.yunmall.68mall.com\/goods-249.html"}'>
+
+            <input type="submit" value='售前客服'>
+        </form>
+
+    </div>
+    <script type="text/javascript">
+
+    </script>
 @stop

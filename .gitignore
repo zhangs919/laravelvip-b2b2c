@@ -21,3 +21,5 @@ composer.lock
 /html
 /app_api
 /docs
+/note.md
+yarn.lock

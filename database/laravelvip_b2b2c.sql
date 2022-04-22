@@ -3,15 +3,15 @@
 
  Source Server         : dev-homestead
  Source Server Type    : MySQL
- Source Server Version : 80023
- Source Host           : 192.168.10.10:3306
- Source Schema         : laravelvip_b2c
+ Source Server Version : 80026
+ Source Host           : 192.168.1.206:3306
+ Source Schema         : laravelvip_b2b2c
 
  Target Server Type    : MySQL
- Target Server Version : 80023
+ Target Server Version : 80026
  File Encoding         : 65001
 
- Date: 19/09/2021 18:39:33
+ Date: 21/04/2022 18:06:45
 */
 
 SET NAMES utf8mb4;
@@ -46,13 +46,13 @@ CREATE TABLE `admin` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `admins_user_name_unique` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
 BEGIN;
-INSERT INTO `admin` VALUES (1, 1, 0, 'admin', '$2y$10$8Nr2rB2x0OVAJFt2tJ6UGegBiaQOEOiqrL10B.Xdwgr4xSUQ4/.Py', '小乐', '13333333333', '290648237@qq.com', '0755-22222222', 1, 33, 155555555, '2021-09-19 10:01:06', '2021-09-19 18:01:06', '192.168.10.1', '1231', '53423', '1231', '1513123', 'Tq9JpacJKNxMu3HZKCOWs4qHz5pHqgwfPhCWulpVsQYJ2Qrttr9TYgLMwYiZ', '2018-02-27 05:01:56', '2021-09-19 18:01:06');
+INSERT INTO `admin` VALUES (1, 1, 0, 'admin', '$2y$10$8Nr2rB2x0OVAJFt2tJ6UGegBiaQOEOiqrL10B.Xdwgr4xSUQ4/.Py', '小乐', '13333333333', '290648237@qq.com', '0755-22222222', 1, 36, 155555555, '2022-03-11 14:44:04', '2022-03-11 22:44:04', '192.168.56.1', '1231', '53423', '1231', '1513123', 'Tq9JpacJKNxMu3HZKCOWs4qHz5pHqgwfPhCWulpVsQYJ2Qrttr9TYgLMwYiZ', '2018-02-27 05:01:56', '2022-03-11 22:44:04');
 COMMIT;
 
 -- ----------------------------
@@ -67,7 +67,7 @@ CREATE TABLE `admin_auth_node` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Table structure for admin_log
@@ -83,7 +83,7 @@ CREATE TABLE `admin_log` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1536 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1541 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of admin_log
@@ -92,6 +92,11 @@ BEGIN;
 INSERT INTO `admin_log` VALUES (1533, '管理员登录后台，用户ID：1', 'admin', 1, '192.168.10.1', 'login', '2021-09-19 17:51:25', '2021-09-19 17:51:25');
 INSERT INTO `admin_log` VALUES (1534, '管理员登录后台，用户ID：1', 'admin', 1, '192.168.10.1', 'login', '2021-09-19 17:57:25', '2021-09-19 17:57:25');
 INSERT INTO `admin_log` VALUES (1535, '管理员登录后台，用户ID：1', 'admin', 1, '192.168.10.1', 'login', '2021-09-19 18:01:06', '2021-09-19 18:01:06');
+INSERT INTO `admin_log` VALUES (1536, '管理员登录后台，用户ID：1', 'admin', 1, '192.168.56.1', 'login', '2022-03-04 18:01:45', '2022-03-04 18:01:45');
+INSERT INTO `admin_log` VALUES (1537, '管理员登录后台，用户ID：1', 'admin', 1, '192.168.56.1', 'login', '2022-03-09 23:12:37', '2022-03-09 23:12:37');
+INSERT INTO `admin_log` VALUES (1538, '管理员登录后台，用户ID：1', 'admin', 1, '192.168.56.1', 'login', '2022-03-11 22:44:04', '2022-03-11 22:44:04');
+INSERT INTO `admin_log` VALUES (1539, '装修模块删除成功。UID：1647009866SOKBMR', 'admin', 1, '192.168.56.1', 'design/tpl-setting/delete-tpls', '2022-03-11 22:44:33', '2022-03-11 22:44:33');
+INSERT INTO `admin_log` VALUES (1540, '配置设置成功，配置分组：site_style', 'admin', 1, '192.168.56.1', 'system/config/index', '2022-03-14 22:37:48', '2022-03-14 22:37:48');
 COMMIT;
 
 -- ----------------------------
@@ -110,7 +115,7 @@ CREATE TABLE `admin_menu` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Table structure for admin_node
@@ -130,7 +135,7 @@ CREATE TABLE `admin_node` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=342 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=342 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of admin_node
@@ -494,7 +499,7 @@ CREATE TABLE `admin_role` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of admin_role
@@ -698,7 +703,7 @@ CREATE TABLE `attribute` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`attr_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of attribute
@@ -767,6 +772,39 @@ CREATE TABLE `back_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
+-- Table structure for bonus
+-- ----------------------------
+DROP TABLE IF EXISTS `bonus`;
+CREATE TABLE `bonus` (
+  `bonus_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `bonus_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '红包类型 默认0 1-主动领红包/到店送红包 2-收藏送红包 4-会员送红包 6-注册送红包 9-推荐送红包 10-积分兑换红包',
+  `bonus_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '红包名称',
+  `bonus_desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '红包描述',
+  `bonus_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '红包图片',
+  `send_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT 'send type',
+  `bonus_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '红包面值',
+  `receive_count` int unsigned NOT NULL DEFAULT '0' COMMENT '每人限领数量',
+  `bonus_number` int unsigned NOT NULL DEFAULT '0' COMMENT '红包发放数量',
+  `use_range` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '使用范围 默认0 0-全部商品 1-指定商品',
+  `bonus_data` text COLLATE utf8mb4_unicode_ci COMMENT '红包扩展数据 序列化存储',
+  `min_goods_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '最小订单金额限制',
+  `is_original_price` tinyint(1) NOT NULL DEFAULT '1' COMMENT '仅限原价购买时使用 0-可与其他优惠、活动一起使用 1-仅限原价购买时使用',
+  `start_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包发放起始时间',
+  `end_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包发放截至时间',
+  `is_enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 0-无效 1-有效',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0-未删除 1-已删除',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包添加时间',
+  `sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `receive_number` int unsigned NOT NULL DEFAULT '0' COMMENT '已领取数量',
+  `used_number` int unsigned NOT NULL DEFAULT '0' COMMENT '已使用数量',
+  `goods_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '红包商品ids 多个以逗号分隔',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`bonus_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='红包表';
+
+-- ----------------------------
 -- Table structure for brand
 -- ----------------------------
 DROP TABLE IF EXISTS `brand`;
@@ -786,7 +824,7 @@ CREATE TABLE `brand` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`brand_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of brand
@@ -904,6 +942,7 @@ CREATE TABLE `cart` (
   `sku` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'sku',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `goods_number` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`cart_id`),
   KEY `session_id` (`session_id`),
   KEY `user_id` (`user_id`),
@@ -915,14 +954,14 @@ CREATE TABLE `cart` (
 -- Records of cart
 -- ----------------------------
 BEGIN;
-INSERT INTO `cart` VALUES (1, 1, 0, 'dvGglmjBQJNK9BSgl4hpcwbN2Li70eUWXpXllgNS', 1, '', '蒙顿茶膏 尚品茶石茶膏 普洱茶膏礼盒 普洱茶 熟茶云南普洱茶礼茶', 100.00, 45.00, 45.00, 2, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-08-09 16:59:58', '2018-08-09 17:00:02');
-INSERT INTO `cart` VALUES (2, 1, 0, 'mSdvHuT8DS8QT47RnB9bxYwvY60rc7gjwO83QV8A', 2, '', '冰岛山茶糯伍2018年春季普洱茶生茶200g/饼棉纸包装饼茶', 865.00, 865.00, 865.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-08-20 14:06:06', '2018-08-20 14:06:06');
-INSERT INTO `cart` VALUES (3, 1, 0, 'bxd2r7Qt6vWB2vSl4XWZfR40oyDm13GlaLducyr9', 6, '', '云芽碧螺春勐海茶区2017年春茶一级绿茶散茶1000克', 100.00, 100.00, 100.00, 17, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-08-20 14:46:10', '2018-08-20 14:46:10');
-INSERT INTO `cart` VALUES (4, 1, 0, 'INYtlACtDoJZqGBoPQGdMa6gYYZcJAEYVq8szSPg', 4, '', '【极边】火山灰土质原始森林茶园新品风雪红韵2200米高山有机红茶', 35.00, 35.00, 35.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-09-15 13:44:25', '2018-09-15 13:44:25');
-INSERT INTO `cart` VALUES (5, 1, 0, 'INYtlACtDoJZqGBoPQGdMa6gYYZcJAEYVq8szSPg', 3, '', '古藏黑美人古树红茶2018年春季红茶滇红功夫茶200g/盒盒装散茶礼盒装', 398.00, 398.00, 398.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-09-15 13:45:14', '2018-09-15 13:45:14');
-INSERT INTO `cart` VALUES (6, 1, 0, 'E5lzJuqdYekg5Wy2Z5iZvuma3xuH9I2HKB6dgKKb', 2, '', '冰岛山茶糯伍2018年春季普洱茶生茶200g/饼棉纸包装饼茶', 865.00, 865.00, 865.00, 25, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-09-22 08:20:09', '2018-09-22 09:19:35');
-INSERT INTO `cart` VALUES (10, 1, 0, 'nskja5QWNsoHBRXfPavhseafnWNYZ8W3krdnwGjy', 9, '', '测试商品3', 90.00, 123.00, 123.00, 3, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-11-15 17:22:30', '2018-11-15 17:22:50');
-INSERT INTO `cart` VALUES (11, 1, 0, 'aByJCvdl31ve1vCWTiekl5sgyK6oCyXodtApyWs7', 9, '', '测试商品3', 90.00, 100.00, 100.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-11-16 04:24:34', '2018-11-16 04:24:34');
+INSERT INTO `cart` VALUES (1, 1, 0, 'dvGglmjBQJNK9BSgl4hpcwbN2Li70eUWXpXllgNS', 1, '', '蒙顿茶膏 尚品茶石茶膏 普洱茶膏礼盒 普洱茶 熟茶云南普洱茶礼茶', 100.00, 45.00, 45.00, 2, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-08-09 16:59:58', '2018-08-09 17:00:02', 0);
+INSERT INTO `cart` VALUES (2, 1, 0, 'mSdvHuT8DS8QT47RnB9bxYwvY60rc7gjwO83QV8A', 2, '', '冰岛山茶糯伍2018年春季普洱茶生茶200g/饼棉纸包装饼茶', 865.00, 865.00, 865.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-08-20 14:06:06', '2018-08-20 14:06:06', 0);
+INSERT INTO `cart` VALUES (3, 1, 0, 'bxd2r7Qt6vWB2vSl4XWZfR40oyDm13GlaLducyr9', 6, '', '云芽碧螺春勐海茶区2017年春茶一级绿茶散茶1000克', 100.00, 100.00, 100.00, 17, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-08-20 14:46:10', '2018-08-20 14:46:10', 0);
+INSERT INTO `cart` VALUES (4, 1, 0, 'INYtlACtDoJZqGBoPQGdMa6gYYZcJAEYVq8szSPg', 4, '', '【极边】火山灰土质原始森林茶园新品风雪红韵2200米高山有机红茶', 35.00, 35.00, 35.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-09-15 13:44:25', '2018-09-15 13:44:25', 0);
+INSERT INTO `cart` VALUES (5, 1, 0, 'INYtlACtDoJZqGBoPQGdMa6gYYZcJAEYVq8szSPg', 3, '', '古藏黑美人古树红茶2018年春季红茶滇红功夫茶200g/盒盒装散茶礼盒装', 398.00, 398.00, 398.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-09-15 13:45:14', '2018-09-15 13:45:14', 0);
+INSERT INTO `cart` VALUES (6, 1, 0, 'E5lzJuqdYekg5Wy2Z5iZvuma3xuH9I2HKB6dgKKb', 2, '', '冰岛山茶糯伍2018年春季普洱茶生茶200g/饼棉纸包装饼茶', 865.00, 865.00, 865.00, 25, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-09-22 08:20:09', '2018-09-22 09:19:35', 0);
+INSERT INTO `cart` VALUES (10, 1, 0, 'nskja5QWNsoHBRXfPavhseafnWNYZ8W3krdnwGjy', 9, '', '测试商品3', 90.00, 123.00, 123.00, 3, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-11-15 17:22:30', '2018-11-15 17:22:50', 0);
+INSERT INTO `cart` VALUES (11, 1, 0, 'aByJCvdl31ve1vCWTiekl5sgyK6oCyXodtApyWs7', 9, '', '测试商品3', 90.00, 100.00, 100.00, 1, NULL, NULL, NULL, 1, 0, 0, NULL, '2018-11-16 04:24:34', '2018-11-16 04:24:34', 0);
 COMMIT;
 
 -- ----------------------------
@@ -993,7 +1032,7 @@ CREATE TABLE `category` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of category
@@ -1068,6 +1107,34 @@ INSERT INTO `compare` VALUES (4, 1, 1, '2018-12-30 11:25:44', '2018-12-30 11:25:
 COMMIT;
 
 -- ----------------------------
+-- Table structure for complaint
+-- ----------------------------
+DROP TABLE IF EXISTS `complaint`;
+CREATE TABLE `complaint` (
+  `complaint_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `complaint_sn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '投诉编号',
+  `order_id` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉的订单ID',
+  `goods_id` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉的商品ID',
+  `sku_id` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉的商品Sku ID',
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉的店铺ID',
+  `user_id` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉的用户ID',
+  `parent_id` int unsigned NOT NULL DEFAULT '0' COMMENT '上级投诉ID',
+  `role_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '角色类型 0-买家 1-卖家 2-平台',
+  `complaint_type` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉原因',
+  `complaint_mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系电话',
+  `complaint_images` text COLLATE utf8mb4_unicode_ci COMMENT '上传投诉凭证图片',
+  `complaint_desc` text COLLATE utf8mb4_unicode_ci COMMENT '投诉说明',
+  `complaint_status` int unsigned NOT NULL DEFAULT '0' COMMENT '投诉处理状态 0- 等待卖家处理  1 - 卖家已回复  2-买家撤销投诉 3 - 平台方介入 4-平台方仲裁中  5- 仲裁成功  6-仲裁失败',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `close_time` int unsigned NOT NULL DEFAULT '0' COMMENT '关闭时间',
+  `deduct_credit` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺扣分',
+  `deduct_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '店铺罚款',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`complaint_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
 -- Table structure for contract
 -- ----------------------------
 DROP TABLE IF EXISTS `contract`;
@@ -1119,6 +1186,45 @@ BEGIN;
 INSERT INTO `copyright_auth` VALUES (1, '经营性网址备案信息', '/goods/brand/2018/06/09/15285349165783.png', 'http://www.apprh.com', 1, 255, '2018-06-09 09:02:32', '2018-06-09 09:02:32');
 INSERT INTO `copyright_auth` VALUES (2, '诚信网站', '/goods/brand/2018/06/09/15285349782992.png', 'http://www.apprh.com', 1, 255, '2018-06-09 09:03:10', '2018-07-24 12:34:02');
 COMMIT;
+
+-- ----------------------------
+-- Table structure for custom_form_data
+-- ----------------------------
+DROP TABLE IF EXISTS `custom_form_data`;
+CREATE TABLE `custom_form_data` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `form_id` int unsigned NOT NULL DEFAULT '0' COMMENT '表单id',
+  `user_id` int unsigned NOT NULL DEFAULT '0' COMMENT '会员id',
+  `user_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '会员名',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '提交时间',
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '提交地点',
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '电话',
+  `form_data` longtext COLLATE utf8mb4_unicode_ci COMMENT '表单数据',
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '所在地区 如：云南省昆明市',
+  `ip` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip地址',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for custom_form_template
+-- ----------------------------
+DROP TABLE IF EXISTS `custom_form_template`;
+CREATE TABLE `custom_form_template` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `group` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板类型',
+  `code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板code',
+  `preview_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '预览大图',
+  `thumb_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '缩略图',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板标题',
+  `form_datas` longtext COLLATE utf8mb4_unicode_ci COMMENT '表单数据',
+  `global_form_datas` longtext COLLATE utf8mb4_unicode_ci COMMENT '表单全局数据',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for customer
@@ -1235,6 +1341,36 @@ CREATE TABLE `delivery_order` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`delivery_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='发货单订单表';
+
+-- ----------------------------
+-- Table structure for form
+-- ----------------------------
+DROP TABLE IF EXISTS `form`;
+CREATE TABLE `form` (
+  `form_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `site_id` int unsigned NOT NULL DEFAULT '0' COMMENT '网点id',
+  `user_id` int unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `fb_num` int unsigned NOT NULL DEFAULT '0' COMMENT '反馈数',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `is_publish` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否发布 0-否 1-是',
+  `need_login` int unsigned NOT NULL DEFAULT '0' COMMENT '是否需要登录 0-否 1-是',
+  `form_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '表单标题',
+  `form_data` longtext COLLATE utf8mb4_unicode_ci COMMENT '表单设计数据',
+  `global_data` longtext COLLATE utf8mb4_unicode_ci COMMENT '表单设计全局数据',
+  `header_style` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '去除头部（PC端）',
+  `bottom_style` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '去除底部（PC端）',
+  `form_keyword` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '关键词',
+  `form_desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
+  `share_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分享推广图',
+  `commit_mode` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '允许用户提交次数 默认0 0-只允许提交一次 1-可参与多次（取最后一次为结果） 2-可参与多次（每天最多可以投10次，投票结果可以累加）',
+  `start_time` int unsigned NOT NULL DEFAULT '0' COMMENT '有效期开始时间',
+  `end_time` int unsigned NOT NULL DEFAULT '0' COMMENT '有效期结束时间',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`form_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for freight
@@ -1425,7 +1561,7 @@ CREATE TABLE `goods` (
 -- Records of goods
 -- ----------------------------
 BEGIN;
-INSERT INTO `goods` VALUES (1, '冰岛山茶糯伍2018年春季普洱茶生茶', 16, 1, 3, 16, 1, 0, 1, '冰岛山茶糯伍2018年春季普洱茶生茶', 120.00, 120.00, 120.00, 0.00, 0, 122, 5, '', '', '/shop/1/gallery/2018/08/17/15345218539234.jpg', NULL, '', 0, '<img src=\"http://image.laravelvip.com/images/shop/1/gallery/2018/08/17/15345216868854.jpg\" />', 'a:0:{}', 0, 0, 0, 0, 42, '', NULL, 0, 0, 1, 0, 0, 0, 1, 1, 1, NULL, 0, 0, 0, 0, 0, 0, 'a:2:{i:1;s:1:\"0\";i:2;s:1:\"0\";}', 0, 0, 0, 0.00, '', '', '', NULL, 255, 1545113130, 1545879419, 0, NULL, 0, 1, 0, 'a:0:{}', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '', '2018-12-18 06:05:30', '2018-12-27 08:30:54');
+INSERT INTO `goods` VALUES (1, '冰岛山茶糯伍2018年春季普洱茶生茶', 16, 1, 3, 16, 1, 0, 1, '冰岛山茶糯伍2018年春季普洱茶生茶', 120.00, 120.00, 120.00, 0.00, 0, 122, 5, '', '', '/shop/1/gallery/2018/08/17/15345218539234.jpg', NULL, '', 0, '<img src=\"http://image.laravelvip.com/images/shop/1/gallery/2018/08/17/15345216868854.jpg\" />', 'a:0:{}', 0, 0, 0, 0, 45, '', NULL, 0, 0, 1, 0, 0, 0, 1, 1, 1, NULL, 0, 0, 0, 0, 0, 0, 'a:2:{i:1;s:1:\"0\";i:2;s:1:\"0\";}', 0, 0, 0, 0.00, '', '', '', NULL, 255, 1545113130, 1545879419, 0, NULL, 0, 1, 0, 'a:0:{}', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '', '2018-12-18 06:05:30', '2022-04-10 17:46:11');
 COMMIT;
 
 -- ----------------------------
@@ -1580,7 +1716,7 @@ CREATE TABLE `goods_history` (
 -- Records of goods_history
 -- ----------------------------
 BEGIN;
-INSERT INTO `goods_history` VALUES (1, 1, 1, 16, 1, 3, 16, 120.00, 1545878020, 18, '2018-12-27 02:33:40', '2018-12-27 02:33:40');
+INSERT INTO `goods_history` VALUES (1, 1, 1, 16, 1, 3, 16, 120.00, 1649583971, 20, '2022-04-10 17:46:11', '2022-04-10 17:46:11');
 COMMIT;
 
 -- ----------------------------
@@ -1652,6 +1788,7 @@ CREATE TABLE `goods_sku` (
   `pc_desc` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '商品电脑端描述',
   `mobile_desc` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '商品手机端描述',
   `is_spu` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否SPU 默认1',
+  `checked` tinyint(1) NOT NULL DEFAULT '1',
   `is_enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否可用 默认1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1662,7 +1799,7 @@ CREATE TABLE `goods_sku` (
 -- Records of goods_sku
 -- ----------------------------
 BEGIN;
-INSERT INTO `goods_sku` VALUES (1, 1, NULL, NULL, NULL, NULL, NULL, NULL, 120.00, 0.00, 120.00, 122, 0, '', '', 5, '', NULL, NULL, NULL, NULL, 1, 1, '2018-12-18 06:05:30', '2018-12-18 06:05:30');
+INSERT INTO `goods_sku` VALUES (1, 1, NULL, NULL, NULL, NULL, NULL, NULL, 120.00, 0.00, 120.00, 122, 0, '', '', 5, '', NULL, NULL, NULL, NULL, 1, 1, 1, '2018-12-18 06:05:30', '2018-12-18 06:05:30');
 COMMIT;
 
 -- ----------------------------
@@ -1685,6 +1822,24 @@ CREATE TABLE `goods_spec` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商品规格表';
 
 -- ----------------------------
+-- Table structure for goods_tag
+-- ----------------------------
+DROP TABLE IF EXISTS `goods_tag`;
+CREATE TABLE `goods_tag` (
+  `tag_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `tag_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标签名称',
+  `tag_image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标签图片',
+  `tag_shape` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标签形状',
+  `tag_position` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '标签位置 默认0 0-左上角 1-右上角 2-左下角 3-右下角 4-中间',
+  `sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商品标签';
+
+-- ----------------------------
 -- Table structure for goods_type
 -- ----------------------------
 DROP TABLE IF EXISTS `goods_type`;
@@ -1696,7 +1851,7 @@ CREATE TABLE `goods_type` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of goods_type
@@ -2541,7 +2696,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of migrations
@@ -2659,6 +2814,17 @@ INSERT INTO `migrations` VALUES (189, '2018_11_17_153254_create_delivery_orders_
 INSERT INTO `migrations` VALUES (190, '2018_11_17_153307_create_delivery_goods_table', 114);
 INSERT INTO `migrations` VALUES (191, '2018_12_22_133346_create_brand_libraries_table', 114);
 INSERT INTO `migrations` VALUES (192, '2018_12_26_135036_create_goods_activities_table', 115);
+INSERT INTO `migrations` VALUES (193, '2019_01_12_183530_create_goods_tags_table', 116);
+INSERT INTO `migrations` VALUES (194, '2019_01_19_130610_create_user_messages_table', 116);
+INSERT INTO `migrations` VALUES (195, '2019_01_19_160030_create_shop_message_tpls_table', 117);
+INSERT INTO `migrations` VALUES (196, '2019_02_18_164340_create_bonuses_table', 118);
+INSERT INTO `migrations` VALUES (197, '2019_02_18_192204_create_user_bonuses_table', 118);
+INSERT INTO `migrations` VALUES (198, '2019_03_14_142734_create_forms_table', 118);
+INSERT INTO `migrations` VALUES (199, '2019_03_14_220236_create_custom_form_templates_table', 118);
+INSERT INTO `migrations` VALUES (200, '2019_03_16_161529_create_custom_form_datas_table', 118);
+INSERT INTO `migrations` VALUES (201, '2019_03_17_105736_create_video_dirs_table', 118);
+INSERT INTO `migrations` VALUES (202, '2019_03_17_105802_create_videos_table', 118);
+INSERT INTO `migrations` VALUES (203, '2019_04_15_214707_create_complaints_table', 118);
 COMMIT;
 
 -- ----------------------------
@@ -3017,7 +3183,7 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   KEY `password_resets_email_index` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Table structure for payment
@@ -3088,7 +3254,7 @@ CREATE TABLE `region` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`region_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3226 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3226 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of region
@@ -6406,6 +6572,1329 @@ INSERT INTO `shipping` VALUES (3, '中铁快运', 'ZTKY', 0, 0, 0, 0, NULL, 1, 0
 COMMIT;
 
 -- ----------------------------
+-- Table structure for shop
+-- ----------------------------
+DROP TABLE IF EXISTS `shop`;
+CREATE TABLE `shop` (
+  `shop_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL COMMENT '绑定店主帐号',
+  `site_id` int unsigned NOT NULL DEFAULT '0' COMMENT '站点id',
+  `shop_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺名称',
+  `shop_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺头像',
+  `shop_logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺LOGO',
+  `shop_poster` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺海报',
+  `shop_sign` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺招牌',
+  `shop_type` tinyint unsigned NOT NULL DEFAULT '2' COMMENT '店铺类型 1个人店铺 2企业店铺 默认2',
+  `is_supply` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否供货商 0-否 1-是',
+  `cat_id` int unsigned NOT NULL COMMENT '店铺分类',
+  `credit` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺信誉 默认0',
+  `desc_score` decimal(10,2) NOT NULL DEFAULT '5.00' COMMENT '店铺评分（描述）',
+  `service_score` decimal(10,2) NOT NULL DEFAULT '5.00' COMMENT '店铺评分（服务）',
+  `send_score` decimal(10,2) NOT NULL DEFAULT '5.00' COMMENT '店铺评分（发货）',
+  `logistics_score` decimal(10,2) NOT NULL DEFAULT '5.00' COMMENT '店铺评分（物流）',
+  `region_code` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '地区代码',
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '详细地址',
+  `shop_lng` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '经度',
+  `shop_lat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '纬度',
+  `opening_hour` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '营业时间',
+  `close_tips` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺关闭备注',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `pass_time` int unsigned NOT NULL DEFAULT '0' COMMENT '审核通过时间',
+  `duration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '开店时长',
+  `unit` int unsigned NOT NULL DEFAULT '0' COMMENT 'unit',
+  `clearing_cycle` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '结算周期',
+  `open_time` int NOT NULL DEFAULT '0' COMMENT '店铺开始时间',
+  `end_time` int NOT NULL DEFAULT '0' COMMENT '店铺到期时间',
+  `system_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台使用费',
+  `insure_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台保证金',
+  `goods_status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '商品是否需要审核 0-默认 1-必须审核 2-无需审核 3-仅第一次上架需要审核',
+  `shop_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '店铺状态 默认0 0关闭 1开启',
+  `close_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺关闭备注',
+  `shop_sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `shop_audit` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺审核状态 默认0 0待审核 1审核通过 2审核不通过',
+  `fail_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺审核不通过备注',
+  `simply_introduce` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺简要介绍',
+  `shop_keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺关键词',
+  `shop_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺简介',
+  `detail_introduce` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺公告',
+  `service_tel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺服务电话',
+  `service_hours` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺服务时间 如：AM 08:30 - PM 17:30',
+  `shop_sign_m` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺招牌(微)',
+  `take_rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '佣金比例',
+  `qrcode_take_rate` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '神码佣金比例',
+  `collect_allow_number` int unsigned NOT NULL DEFAULT '0' COMMENT '允许采集商品数量',
+  `collected_number` int unsigned NOT NULL DEFAULT '0' COMMENT '已采集商品数量',
+  `comment_allow_number` int unsigned NOT NULL DEFAULT '0' COMMENT '允许采集评论次数',
+  `comment_number` int unsigned NOT NULL DEFAULT '0' COMMENT '已采集评论次数',
+  `store_allow_number` int unsigned NOT NULL DEFAULT '0' COMMENT '每个店铺可添加网点数量',
+  `store_number` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺已添加网点数量',
+  `login_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否允许登录卖家中心',
+  `show_credit` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否显示店铺信誉',
+  `show_in_street` tinyint(1) NOT NULL DEFAULT '1' COMMENT '店铺能否在商城展示',
+  `goods_is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '店铺商品能否在商城展示',
+  `control_price` tinyint(1) NOT NULL DEFAULT '1' COMMENT '店铺商品能否control_price',
+  `show_price` tinyint(1) NOT NULL DEFAULT '1' COMMENT '店铺价格是否显示',
+  `show_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺价格显示内容',
+  `button_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '购买按钮显示内容',
+  `button_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '购买按钮链接',
+  `start_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '起送金额',
+  `shop_sn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '第三方组织编号',
+  `rebate_enable` tinyint(1) NOT NULL DEFAULT '0' COMMENT '店铺是否开启折扣 默认0 0否 1是',
+  `rebate_days` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺折扣天数',
+  `rebate_setting` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺折扣设置',
+  `rebate_begin_time` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺折扣开始时间 默认0',
+  `is_other_shpping_fee` tinyint(1) NOT NULL DEFAULT '0' COMMENT '店铺是否统一额外配送费 默认0 0-否 1-是',
+  `other_shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '额外增加配送费',
+  `is_packing_fee` tinyint(1) NOT NULL DEFAULT '0' COMMENT '店铺是否统一包装费 默认0 0-否 1-是',
+  `packing_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '店铺统一包装费',
+  `shipping_time` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '下单时间不在某个范围内额外增加运费',
+  `multi_store_number` int NOT NULL DEFAULT '0' COMMENT '多网点数量',
+  `multi_store_allow_number` int NOT NULL DEFAULT '0' COMMENT '允许添加的多网点数量',
+  `is_cross_border` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'is_cross_border',
+  `wx_barcode` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '微信二维码 如：https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQ',
+  `collect_num` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺关注量',
+  `is_own_shop` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否自营店铺 0非自营 1自营 默认0',
+  `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '会员名',
+  `back_id` int unsigned NOT NULL DEFAULT '0' COMMENT '模板备份id',
+  `m_back_id` int NOT NULL DEFAULT '0' COMMENT '微信端店铺首页模板备份id',
+  `app_back_id` int NOT NULL DEFAULT '0' COMMENT 'APP端店铺首页模板备份id',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`shop_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop` VALUES (1, 1, 0, '蒙顿茶膏旗舰店', '/shop/1/image/2018/11/03/15412139613117.png', '/shop/1/image/2018/08/09/15337894002695.png', '/shop/1/image/2018/08/09/15337894822407.png', '/shop/1/image/2018/08/30/15356421756868.jpg', 2, 0, 1, 0, 5.00, 5.00, 5.00, 5.00, '43,01,03', '长沙市天心区人民法院', '102.672369', '25.052983', 'a:5:{s:4:\"week\";a:4:{i:0;s:1:\"0\";i:1;s:1:\"2\";i:2;s:1:\"3\";i:3;s:1:\"4\";}s:10:\"begin_hour\";a:1:{i:0;s:2:\"09\";}s:12:\"begin_minute\";a:1:{i:0;s:2:\"30\";}s:8:\"end_hour\";a:1:{i:0;s:2:\"17\";}s:10:\"end_minute\";a:1:{i:0;s:2:\"30\";}}', '现在不在营业时间，不送货的哟！!', 0, 0, '1', 0, 0, 1598112000, 1629647999, 1000.00, 1000.00, 1, 1, NULL, 255, 1, NULL, NULL, NULL, '乐融沃第一家旗舰店于2018年1月20日在云南正式开业，欢迎广大顾问朋友线上线下体验', '店铺公告', '13333333333', 'AM 10:00 - PM 18:00', '/shop/1/image/2019/10/18/15714061924796.png', 0.00, 0.00, 0, 0, 0, 0, 10, 0, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL, 1.00, NULL, 0, 0, NULL, 0, 1, 10.00, 1, 20.00, 'a:4:{s:10:\"begin_hour\";s:2:\"12\";s:12:\"begin_minute\";s:2:\"30\";s:8:\"end_hour\";s:2:\"16\";s:10:\"end_minute\";s:2:\"30\";}', 0, 0, 0, NULL, 1, 0, NULL, 3, 0, 0, '2018-08-08 22:41:47', '2021-12-28 22:32:05');
+INSERT INTO `shop` VALUES (30, 3, 0, '乐融沃旗舰店', NULL, NULL, NULL, NULL, 2, 0, 0, 0, 5.00, 5.00, 5.00, 5.00, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '6', 0, 0, 1581136494, 1596815999, 500.00, 1000.00, 0, 1, NULL, 25, 1, '拒绝通过', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0, 0, 0, 0, 5, 0, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL, 0.00, NULL, 0, 0, NULL, 0, 0, 0.00, 0, 0.00, NULL, 0, 0, 0, NULL, 0, 0, NULL, 0, 0, 0, '2020-02-07 22:38:21', '2020-02-09 20:35:19');
+INSERT INTO `shop` VALUES (31, 4, 0, '乐融沃自营店铺', NULL, NULL, NULL, NULL, 0, 0, 1, 0, 5.00, 5.00, 5.00, 5.00, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, 2, 1581136494, 0, 0.00, 0.00, 0, 1, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 5, 0, 3, 0, 5, 0, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL, 0.00, NULL, 0, 0, NULL, 0, 0, 0.00, 0, 0.00, NULL, 0, 0, 0, NULL, 0, 0, NULL, 0, 0, 0, '2020-02-09 19:57:48', '2020-04-01 07:31:26');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_address
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_address`;
+CREATE TABLE `shop_address` (
+  `address_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `consignee` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '收货人',
+  `region_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '收货地址',
+  `address_detail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '详细地址',
+  `mobile` char(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号码',
+  `tel` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '固定电话',
+  `email` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮件地址',
+  `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否默认地址',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`address_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='发/退货地址库表';
+
+-- ----------------------------
+-- Records of shop_address
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_address` VALUES (2, 1, '小乐', '11,01,01', '东城大院120号', '18333336666', '023-88888888', '2954@qq.com', 1, '2020-01-10 22:13:16', '2020-01-10 22:55:39');
+INSERT INTO `shop_address` VALUES (3, 1, '小莉', '12,01,01', '和平小区', '13211112222', '023-88888888', NULL, 0, '2020-01-11 05:29:43', '2020-01-11 05:29:43');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_apply`;
+CREATE TABLE `shop_apply` (
+  `apply_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL DEFAULT '0' COMMENT '会员id',
+  `shop_id` int NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `site_id` int NOT NULL DEFAULT '0' COMMENT '站点id',
+  `shop_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺名称',
+  `cat_id` int unsigned NOT NULL COMMENT '店铺分类',
+  `duration` int NOT NULL DEFAULT '0' COMMENT '开店时长',
+  `unit` int NOT NULL DEFAULT '0' COMMENT '开店时长单位 默认0 0-年 1-月 2-天',
+  `system_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台使用费',
+  `insure_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台保证金',
+  `cat_ids` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺经营类目',
+  `audit_status` tinyint NOT NULL DEFAULT '0' COMMENT '审核状态 默认0 0-待审核 1-审核通过 2-审核拒绝',
+  `fail_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '审核失败原因',
+  `pay_status` tinyint NOT NULL DEFAULT '0' COMMENT '开店款项付款状态 默认0 0-待付款 1-已付款',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`apply_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_apply
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_apply` VALUES (1, 1, 1, 0, '开州茶庄', 1, 1, 0, 1000.00, 1000.00, NULL, 1, NULL, 0, '2019-01-03 22:41:17', '2019-01-03 22:41:17');
+INSERT INTO `shop_apply` VALUES (4, 3, 30, 0, '乐融沃旗舰店', 1, 6, 1, 500.00, 1000.00, '1', 1, '拒绝通过', 0, '2020-02-07 22:45:49', '2020-02-07 22:45:49');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_auth
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_auth`;
+CREATE TABLE `shop_auth` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for shop_bill
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_bill`;
+CREATE TABLE `shop_bill` (
+  `bill_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `shop_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '店铺名称',
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `site_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '站点名称',
+  `site_id` int unsigned NOT NULL DEFAULT '0' COMMENT '站点id',
+  `order_ids` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '订单ids',
+  `shop_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '结算状态 0-未出账 2-已出账，待结算 3-已出账，已结算 4-部分账单已出账，已结算',
+  `order_count` int unsigned NOT NULL DEFAULT '0' COMMENT '订单总数量',
+  `order_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '本期应结',
+  `system_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台佣金',
+  `site_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '站点佣金',
+  `shop_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '店铺付款金额',
+  `shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费',
+  `other_shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '额外配送费',
+  `packing_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '包装费',
+  `alipay` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '支付宝支付',
+  `weixin` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '微信支付',
+  `union` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '银联支付',
+  `is_cod` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '货到付款',
+  `store_card` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '店铺购物卡支付',
+  `integral_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '积分抵扣',
+  `surplus` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '余额支付',
+  `activity_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台承担活动款',
+  `year` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '年份',
+  `group_time` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '年月',
+  `start_date` int unsigned NOT NULL DEFAULT '0' COMMENT '账单开始时间',
+  `end_date` int unsigned NOT NULL DEFAULT '0' COMMENT '账单结束时间',
+  `finish_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '已结金额',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`bill_id`),
+  KEY `shop_bill_shop_id_index` (`shop_id`),
+  KEY `shop_bill_site_id_index` (`site_id`),
+  KEY `shop_bill_shop_status_index` (`shop_status`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺结算表';
+
+-- ----------------------------
+-- Records of shop_bill
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_bill` VALUES (1, '乐融沃', 1, NULL, 0, '1', 3, 2, 31.00, 0.00, 0.00, 31.00, 0.00, 0.00, 0.00, 31.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '2020', '2020-01', 1577808000, 1580400000, 31.00, '2020-08-16 20:13:47', '2020-08-16 20:13:53');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_bind_class
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_bind_class`;
+CREATE TABLE `shop_bind_class` (
+  `bind_cls_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `cls_id` int unsigned NOT NULL DEFAULT '0' COMMENT '平台店铺分类id',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`bind_cls_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_bind_class
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_bind_class` VALUES (3, 1, 1, '2018-11-16 14:54:22', '2018-11-16 14:54:22');
+INSERT INTO `shop_bind_class` VALUES (8, 30, 1, '2020-02-07 22:40:03', '2020-02-07 22:40:03');
+INSERT INTO `shop_bind_class` VALUES (9, 30, 1, '2020-02-07 22:45:49', '2020-02-07 22:45:49');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_category
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_category`;
+CREATE TABLE `shop_category` (
+  `cat_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `cat_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分类名称',
+  `parent_id` smallint unsigned NOT NULL DEFAULT '0' COMMENT '上级分类，店铺商品分类最多支持二级',
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `keywords` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Keywords',
+  `cat_desc` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类描述',
+  `is_show` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否显示',
+  `cat_sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`cat_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_category
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_category` VALUES (1, '茶叶', 0, 1, NULL, NULL, 1, 255, '2018-12-08 18:41:50', '2021-07-09 06:17:24');
+INSERT INTO `shop_category` VALUES (2, '普洱茶', 1, 1, NULL, NULL, 1, 255, '2018-12-08 18:41:56', '2021-07-09 06:17:38');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_class
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_class`;
+CREATE TABLE `shop_class` (
+  `cls_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `cls_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分类名称',
+  `parent_id` smallint unsigned NOT NULL DEFAULT '0' COMMENT '上级分类，店铺分类最多支持三级',
+  `cls_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类图标',
+  `is_hot` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否热门',
+  `is_show` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否显示',
+  `cls_sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `keywords` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Keywords',
+  `cls_desc` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Cls Desc',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`cls_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_class
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_class` VALUES (1, '茶叶', 0, NULL, 1, 1, 255, NULL, NULL, '2018-08-08 22:34:11', '2018-08-08 22:34:11');
+INSERT INTO `shop_class` VALUES (2, '普洱茶', 1, NULL, 1, 1, 255, NULL, NULL, '2018-08-08 22:36:01', '2018-08-08 22:36:01');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_comment`;
+CREATE TABLE `shop_comment` (
+  `shop_comment_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL DEFAULT '0' COMMENT '会员id',
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `order_id` int unsigned NOT NULL DEFAULT '0' COMMENT '订单id',
+  `shop_service` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '卖家服务态度 默认0',
+  `shop_speed` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '卖家发货速度 默认0',
+  `logistics_speed` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '物流公司的服务 默认0',
+  `shop_comment_add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺动态评价时间 默认0',
+  `shop_comment_status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '店铺评价状态 默认0 0待审核 1审核通过 2审核拒绝',
+  `shop_is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 默认0 0正常 1已删除',
+  `shop_is_show` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否显示评价 默认0 0不显示 1显示',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`shop_comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺动态评价表';
+
+-- ----------------------------
+-- Table structure for shop_config
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_config`;
+CREATE TABLE `shop_config` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_config_id` int unsigned NOT NULL COMMENT '店铺配置id',
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `config_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置code',
+  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '配置值',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=695 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_config
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_config` VALUES (446, 53, 1, 'm_bonus_link1', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (447, 63, 1, 'bonus_share_title', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (448, 62, 1, 'bonus_share_name', '111', NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (449, 61, 1, 'm_guide_ad', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (450, 60, 1, 'guide_ad', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (451, 59, 1, 'm_bonus_link4', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (452, 58, 1, 'm_bonus_img4', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (453, 57, 1, 'm_bonus_link3', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (454, 56, 1, 'm_bonus_img3', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (455, 55, 1, 'm_bonus_link2', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (456, 54, 1, 'm_bonus_img2', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (457, 64, 1, 'bonus_share_desc', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (458, 52, 1, 'm_bonus_img1', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (459, 51, 1, 'bonus_link4', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (460, 50, 1, 'bonus_img4', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (461, 49, 1, 'bonus_link3', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (462, 48, 1, 'bonus_img3', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (463, 47, 1, 'bonus_link2', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (464, 46, 1, 'bonus_img2', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (465, 45, 1, 'bonus_link1', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (466, 44, 1, 'bonus_img1', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (467, 74, 1, 'shop_qrcode', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (468, 83, 1, 'shop_place_order_enable', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (469, 82, 1, 'multi_store_check_enable', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (470, 81, 1, 'is_show_guide_recomm', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (471, 80, 1, 'multi_store_select_store', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (472, 79, 1, 'multi_store_sellout_recommend', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (473, 78, 1, 'multi_store_comment_management', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (474, 77, 1, 'multi_store_back_manage', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (475, 76, 1, 'multi_store_stock_price', '1,2', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (476, 75, 1, 'multi_store_open_enable', '0', NULL, '2021-12-14 21:01:37');
+INSERT INTO `shop_config` VALUES (477, 43, 1, 'integral_qrcode', 'http://images.test.com/olpqrcode/olp_1.png', NULL, NULL);
+INSERT INTO `shop_config` VALUES (478, 73, 1, 'left_nav_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (479, 72, 1, 'right_bg_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (480, 71, 1, 'second_bg_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (481, 70, 1, 'second_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (482, 69, 1, 'main_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (483, 68, 1, 'custom_style_enable_shop', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (484, 67, 1, 'm_search_mode', '0', NULL, '2021-12-25 22:07:00');
+INSERT INTO `shop_config` VALUES (485, 66, 1, 'shop_index_show_goods_number', '1', NULL, '2021-12-25 22:07:00');
+INSERT INTO `shop_config` VALUES (486, 65, 1, 'bonus_share_image', NULL, NULL, '2021-12-14 20:49:30');
+INSERT INTO `shop_config` VALUES (487, 12, 1, 'aliim_secret_key', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (488, 22, 1, 'order_refresh', '1', NULL, '2021-12-14 21:14:03');
+INSERT INTO `shop_config` VALUES (489, 21, 1, 'order_notice_enable', '1', NULL, '2021-12-14 21:14:03');
+INSERT INTO `shop_config` VALUES (490, 20, 1, 'wx_config_token', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (491, 19, 1, 'wx_config_url', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (492, 18, 1, 'auth_verify', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (493, 17, 1, 'appsecret', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (494, 16, 1, 'appid', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (495, 15, 1, 'shop_wechat', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (496, 14, 1, 'aliim_customer_logo', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (497, 13, 1, 'aliim_main_customer', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (498, 23, 1, 'notice_count', '1', NULL, '2021-12-14 21:14:03');
+INSERT INTO `shop_config` VALUES (499, 11, 1, 'aliim_app_key', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (500, 10, 1, 'aliim_enable', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (501, 9, 1, 'zxps_open', '0', NULL, '2022-01-23 21:16:19');
+INSERT INTO `shop_config` VALUES (502, 8, 1, 'goods_list_show_mode', '0', NULL, '2021-12-25 22:07:00');
+INSERT INTO `shop_config` VALUES (503, 7, 1, 'shop_index_topic', '0', NULL, '2021-12-25 22:07:00');
+INSERT INTO `shop_config` VALUES (504, 6, 1, 'shop_index', '0', NULL, '2021-12-25 22:07:00');
+INSERT INTO `shop_config` VALUES (505, 5, 1, 'goods_edit_items', 'sku_weight', NULL, '2022-01-23 21:14:12');
+INSERT INTO `shop_config` VALUES (506, 4, 1, 'trade_mode', '0', NULL, '2021-12-14 21:14:03');
+INSERT INTO `shop_config` VALUES (507, 2, 1, 'trade_enable', '1', NULL, '2021-12-14 21:14:03');
+INSERT INTO `shop_config` VALUES (508, 33, 1, 'custom_style_enable_m_shop', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (509, 42, 1, 'integral_shipping', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (510, 41, 1, 'give_integral_out_line_balance', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (511, 40, 1, 'give_integral_consume', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (512, 39, 1, 'give_integral_comment', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (513, 38, 1, 'give_integral_confirm', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (514, 37, 1, 'integral_validity', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (515, 36, 1, 'app_shop_header_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (516, 35, 1, 'm_second_color', '#e36c09', NULL, NULL);
+INSERT INTO `shop_config` VALUES (517, 34, 1, 'm_main_color', '#7030a0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (518, 1, 1, 'take_enable', '0', NULL, '2021-12-14 21:14:03');
+INSERT INTO `shop_config` VALUES (519, 32, 1, 'm_shop_list_style', '0', NULL, '2021-12-25 22:07:00');
+INSERT INTO `shop_config` VALUES (520, 31, 1, 'shop_header_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (521, 30, 1, 'm_shop_web_static', '1', NULL, '2021-12-24 00:13:43');
+INSERT INTO `shop_config` VALUES (522, 29, 1, 'shop_web_static', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (523, 28, 1, 'shop_auth', 's:8:\"all_auth\";', NULL, '2021-12-14 21:20:06');
+INSERT INTO `shop_config` VALUES (524, 27, 1, 'nav_bgcolor', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (525, 26, 1, 'freight_cash_more', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (526, 25, 1, 'freight_cod_enable', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (527, 24, 1, 'freight_fee', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (528, 53, 30, 'm_bonus_link1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (529, 63, 30, 'bonus_share_title', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (530, 62, 30, 'bonus_share_name', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (531, 61, 30, 'm_guide_ad', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (532, 60, 30, 'guide_ad', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (533, 59, 30, 'm_bonus_link4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (534, 58, 30, 'm_bonus_img4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (535, 57, 30, 'm_bonus_link3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (536, 56, 30, 'm_bonus_img3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (537, 55, 30, 'm_bonus_link2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (538, 54, 30, 'm_bonus_img2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (539, 64, 30, 'bonus_share_desc', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (540, 52, 30, 'm_bonus_img1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (541, 51, 30, 'bonus_link4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (542, 50, 30, 'bonus_img4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (543, 49, 30, 'bonus_link3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (544, 48, 30, 'bonus_img3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (545, 47, 30, 'bonus_link2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (546, 46, 30, 'bonus_img2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (547, 45, 30, 'bonus_link1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (548, 44, 30, 'bonus_img1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (549, 74, 30, 'shop_qrcode', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (550, 83, 30, 'shop_place_order_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (551, 82, 30, 'multi_store_check_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (552, 81, 30, 'is_show_guide_recomm', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (553, 80, 30, 'multi_store_select_store', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (554, 79, 30, 'multi_store_sellout_recommend', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (555, 78, 30, 'multi_store_comment_management', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (556, 77, 30, 'multi_store_back_manage', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (557, 76, 30, 'multi_store_stock_price', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (558, 75, 30, 'multi_store_open_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (559, 43, 30, 'integral_qrcode', 'http://images.test.com/olpqrcode/olp_1.png', NULL, NULL);
+INSERT INTO `shop_config` VALUES (560, 73, 30, 'left_nav_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (561, 72, 30, 'right_bg_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (562, 71, 30, 'second_bg_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (563, 70, 30, 'second_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (564, 69, 30, 'main_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (565, 68, 30, 'custom_style_enable_shop', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (566, 67, 30, 'm_search_mode', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (567, 66, 30, 'shop_index_show_goods_number', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (568, 65, 30, 'bonus_share_image', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (569, 12, 30, 'aliim_secret_key', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (570, 22, 30, 'order_refresh', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (571, 21, 30, 'order_notice_enable', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (572, 20, 30, 'wx_config_token', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (573, 19, 30, 'wx_config_url', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (574, 18, 30, 'auth_verify', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (575, 17, 30, 'appsecret', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (576, 16, 30, 'appid', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (577, 15, 30, 'shop_wechat', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (578, 14, 30, 'aliim_customer_logo', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (579, 13, 30, 'aliim_main_customer', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (580, 23, 30, 'notice_count', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (581, 11, 30, 'aliim_app_key', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (582, 10, 30, 'aliim_enable', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (583, 9, 30, 'zxps_open', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (584, 8, 30, 'goods_list_show_mode', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (585, 7, 30, 'shop_index_topic', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (586, 6, 30, 'shop_index', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (587, 5, 30, 'goods_edit_items', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (588, 4, 30, 'trade_mode', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (589, 2, 30, 'trade_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (590, 33, 30, 'custom_style_enable_m_shop', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (591, 42, 30, 'integral_shipping', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (592, 41, 30, 'give_integral_out_line_balance', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (593, 40, 30, 'give_integral_consume', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (594, 39, 30, 'give_integral_comment', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (595, 38, 30, 'give_integral_confirm', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (596, 37, 30, 'integral_validity', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (597, 36, 30, 'app_shop_header_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (598, 35, 30, 'm_second_color', '#e36c09', NULL, NULL);
+INSERT INTO `shop_config` VALUES (599, 34, 30, 'm_main_color', '#7030a0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (600, 1, 30, 'take_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (601, 32, 30, 'm_shop_list_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (602, 31, 30, 'shop_header_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (603, 30, 30, 'm_shop_web_static', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (604, 29, 30, 'shop_web_static', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (605, 28, 30, 'shop_auth', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (606, 27, 30, 'nav_bgcolor', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (607, 26, 30, 'freight_cash_more', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (608, 25, 30, 'freight_cod_enable', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (609, 24, 30, 'freight_fee', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (610, 53, 31, 'm_bonus_link1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (611, 63, 31, 'bonus_share_title', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (612, 62, 31, 'bonus_share_name', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (613, 61, 31, 'm_guide_ad', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (614, 60, 31, 'guide_ad', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (615, 59, 31, 'm_bonus_link4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (616, 58, 31, 'm_bonus_img4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (617, 57, 31, 'm_bonus_link3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (618, 56, 31, 'm_bonus_img3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (619, 55, 31, 'm_bonus_link2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (620, 54, 31, 'm_bonus_img2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (621, 64, 31, 'bonus_share_desc', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (622, 52, 31, 'm_bonus_img1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (623, 51, 31, 'bonus_link4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (624, 50, 31, 'bonus_img4', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (625, 49, 31, 'bonus_link3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (626, 48, 31, 'bonus_img3', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (627, 47, 31, 'bonus_link2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (628, 46, 31, 'bonus_img2', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (629, 45, 31, 'bonus_link1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (630, 44, 31, 'bonus_img1', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (631, 74, 31, 'shop_qrcode', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (632, 83, 31, 'shop_place_order_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (633, 82, 31, 'multi_store_check_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (634, 81, 31, 'is_show_guide_recomm', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (635, 80, 31, 'multi_store_select_store', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (636, 79, 31, 'multi_store_sellout_recommend', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (637, 78, 31, 'multi_store_comment_management', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (638, 77, 31, 'multi_store_back_manage', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (639, 76, 31, 'multi_store_stock_price', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (640, 75, 31, 'multi_store_open_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (641, 43, 31, 'integral_qrcode', 'http://images.test.com/olpqrcode/olp_1.png', NULL, NULL);
+INSERT INTO `shop_config` VALUES (642, 73, 31, 'left_nav_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (643, 72, 31, 'right_bg_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (644, 71, 31, 'second_bg_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (645, 70, 31, 'second_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (646, 69, 31, 'main_color', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (647, 68, 31, 'custom_style_enable_shop', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (648, 67, 31, 'm_search_mode', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (649, 66, 31, 'shop_index_show_goods_number', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (650, 65, 31, 'bonus_share_image', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (651, 12, 31, 'aliim_secret_key', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (652, 22, 31, 'order_refresh', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (653, 21, 31, 'order_notice_enable', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (654, 20, 31, 'wx_config_token', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (655, 19, 31, 'wx_config_url', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (656, 18, 31, 'auth_verify', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (657, 17, 31, 'appsecret', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (658, 16, 31, 'appid', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (659, 15, 31, 'shop_wechat', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (660, 14, 31, 'aliim_customer_logo', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (661, 13, 31, 'aliim_main_customer', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (662, 23, 31, 'notice_count', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (663, 11, 31, 'aliim_app_key', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (664, 10, 31, 'aliim_enable', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (665, 9, 31, 'zxps_open', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (666, 8, 31, 'goods_list_show_mode', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (667, 7, 31, 'shop_index_topic', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (668, 6, 31, 'shop_index', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (669, 5, 31, 'goods_edit_items', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (670, 4, 31, 'trade_mode', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (671, 2, 31, 'trade_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (672, 33, 31, 'custom_style_enable_m_shop', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (673, 42, 31, 'integral_shipping', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (674, 41, 31, 'give_integral_out_line_balance', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (675, 40, 31, 'give_integral_consume', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (676, 39, 31, 'give_integral_comment', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (677, 38, 31, 'give_integral_confirm', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (678, 37, 31, 'integral_validity', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (679, 36, 31, 'app_shop_header_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (680, 35, 31, 'm_second_color', '#e36c09', NULL, NULL);
+INSERT INTO `shop_config` VALUES (681, 34, 31, 'm_main_color', '#7030a0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (682, 1, 31, 'take_enable', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (683, 32, 31, 'm_shop_list_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (684, 31, 31, 'shop_header_style', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (685, 30, 31, 'm_shop_web_static', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (686, 29, 31, 'shop_web_static', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (687, 28, 31, 'shop_auth', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (688, 27, 31, 'nav_bgcolor', NULL, NULL, NULL);
+INSERT INTO `shop_config` VALUES (689, 26, 31, 'freight_cash_more', '0', NULL, NULL);
+INSERT INTO `shop_config` VALUES (690, 25, 31, 'freight_cod_enable', '1', NULL, NULL);
+INSERT INTO `shop_config` VALUES (691, 24, 31, 'freight_fee', '0', NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_config_field
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_config_field`;
+CREATE TABLE `shop_config_field` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置code',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置标题',
+  `group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置分组',
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '表单类型',
+  `required` tinyint NOT NULL DEFAULT '0' COMMENT '字段是否必须 0非必须 1必须',
+  `anchor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '页面导航',
+  `default_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '默认值 默认空',
+  `options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '配置项',
+  `labels` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '配置项的label',
+  `tips` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '配置提示',
+  `sort` int NOT NULL DEFAULT '255' COMMENT '排序',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态',
+  `storage_dir` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '图片存储路径',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_config_field
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_config_field` VALUES (1, 'take_enable', '是否启用接单模式', 'trade', 'radio', 0, '接单设置', '0', '0::禁用接单\r\n1::启用接单', NULL, '开启接单模式后，用户下单付款后将等待卖家接单，超时未接单的订单将会被系统自动取消。', 255, 1, NULL, '2018-07-18 06:56:41', '2018-10-22 05:21:54');
+INSERT INTO `shop_config_field` VALUES (2, 'trade_enable', '是否启用自动打印订单', 'trade', 'switch', 0, '自动打印', '0', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-04-30 08:29:50', '2018-10-22 05:22:21');
+INSERT INTO `shop_config_field` VALUES (4, 'trade_mode', '打印模式', 'trade', 'radio', 0, '自动打印', '0', '0::默认\r\n1::易联云', NULL, NULL, 255, 1, NULL, '2018-04-30 08:32:25', '2018-10-22 05:22:31');
+INSERT INTO `shop_config_field` VALUES (5, 'goods_edit_items', '更多商品编辑项', 'goods', 'checkbox', 0, '商品编辑', NULL, 'goods_stockcode::商品库位码\r\nsku_weight::SKU商品重量\r\nsku_volume::SKU商品体积\r\ngoods_info_button::自定义商品详情按钮\r\ncart_step::加入购物车倍数\r\nwarn_number::预警值', NULL, '用于控制商品编辑页面的编辑项，您未勾选的编辑项将不会出现在商品编辑页面，已经编辑的内容依然生效', 255, 1, NULL, '2018-07-18 07:19:29', '2019-12-28 14:33:33');
+INSERT INTO `shop_config_field` VALUES (6, 'shop_index', '店铺首页', 'shop_other', 'radio', 0, '店铺首页设置', '0', '0::店铺首页\r\n1::商品列表\r\n2::专题页', NULL, '此设置用于定制你的店铺首页显示的内容，暂时支持店铺的装修首页、商品列表页、专题页', 255, 1, NULL, '2018-07-18 07:27:14', '2019-04-21 12:23:07');
+INSERT INTO `shop_config_field` VALUES (7, 'shop_index_topic', '店铺首页专题页id', 'shop_other', 'select', 0, '店铺首页设置', NULL, NULL, NULL, '此设置用于定制你的店铺首页显示的内容，暂时支持店铺的装修首页、商品列表页、专题页', 255, 1, NULL, '2018-07-18 07:29:06', '2018-07-18 07:29:06');
+INSERT INTO `shop_config_field` VALUES (8, 'goods_list_show_mode', 'pc商品列表展示方式', 'shop_other', 'radio', 0, '店铺商品列表设置', '0', '0::默认主图\r\n1::规格相册', NULL, '设置店铺pc商品列表页面商品的展示形式，默认仅展示商品主图，设置为规格相册后，会将每个商品的规格主图以小图展示出来，让用户能在列表页面即切换看到每个商品的规格主图', 255, 1, NULL, '2018-07-18 07:31:13', '2019-04-21 12:19:54');
+INSERT INTO `shop_config_field` VALUES (9, 'zxps_open', '是否开启', 'shipping', 'switch', 0, NULL, NULL, '0::否\r\n1::是', NULL, '店铺开启自行配送后，在发货时即可使用无需物流', 255, 1, NULL, '2018-07-18 07:32:57', '2018-07-18 07:32:57');
+INSERT INTO `shop_config_field` VALUES (10, 'aliim_enable', '是否启用', 'aliim', 'switch', 0, NULL, NULL, '0::否\r\n1::是', NULL, '开启后在线客服将可用', 255, 1, NULL, '2018-07-18 07:34:32', '2018-07-18 07:34:32');
+INSERT INTO `shop_config_field` VALUES (11, 'aliim_app_key', '阿里云旺AppKey', 'aliim', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:35:21', '2018-07-18 07:35:21');
+INSERT INTO `shop_config_field` VALUES (12, 'aliim_secret_key', '阿里云旺AppSecrect', 'aliim', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:35:50', '2018-07-18 07:35:50');
+INSERT INTO `shop_config_field` VALUES (13, 'aliim_main_customer', '在线主客服账户', 'aliim', 'text', 1, NULL, NULL, NULL, NULL, '设置在阿里淘宝开放平台已开通云旺客服的帐号，填写的账号必须与淘宝开放平台中的云旺账号一致，否则无法接收消息', 255, 1, NULL, '2018-07-18 07:36:15', '2018-07-18 07:37:15');
+INSERT INTO `shop_config_field` VALUES (14, 'aliim_customer_logo', '在线客服头像Logo', 'aliim', 'imagegroup', 0, NULL, NULL, NULL, NULL, '头像请上传148px * 135px像素的图片，不上传则使用默认头像', 255, 1, NULL, '2018-07-18 07:37:02', '2018-07-18 07:37:02');
+INSERT INTO `shop_config_field` VALUES (15, 'shop_wechat', '店铺微信公众号', 'weixin', 'imagegroup', 0, '平台方微信公众号二维码', NULL, NULL, NULL, '注：如没有微信公众号，可以使用平台方的微信二维码推广商城', 255, 1, NULL, '2018-07-18 07:51:24', '2018-07-18 07:51:48');
+INSERT INTO `shop_config_field` VALUES (16, 'appid', '应用ID', 'weixin', 'text', 1, '微信对接', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:54:05', '2018-07-18 07:54:05');
+INSERT INTO `shop_config_field` VALUES (17, 'appsecret', '应用密钥', 'weixin', 'text', 1, '微信对接', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:54:46', '2018-07-18 07:54:46');
+INSERT INTO `shop_config_field` VALUES (18, 'auth_verify', '授权验证码', 'weixin', 'text', 1, '微信对接', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:55:18', '2018-07-18 07:55:18');
+INSERT INTO `shop_config_field` VALUES (19, 'wx_config_url', 'URL', 'weixin', 'static', 0, '微信配置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:56:33', '2018-07-18 07:56:33');
+INSERT INTO `shop_config_field` VALUES (20, 'wx_config_token', '令牌', 'weixin', 'static', 0, '微信配置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-07-18 07:57:08', '2018-07-18 07:57:08');
+INSERT INTO `shop_config_field` VALUES (21, 'order_notice_enable', '语音提醒是否开启', 'trade', 'switch', 0, '声音提醒', '1', '1::是\r\n0::否', NULL, '是-会员下单后，卖家收到声音提醒；否-会员下单，卖家无法收到声音提醒', 255, 1, NULL, '2018-10-22 05:34:00', '2018-10-22 05:54:45');
+INSERT INTO `shop_config_field` VALUES (22, 'order_refresh', '订单列表自动刷新', 'trade', 'switch', 0, '声音提醒', '1', '1::是\r\n0::否', NULL, '卖家、网点列表有新订单，订单列表是否自动刷新，仅在当前页面为订单列表时起作用：是-表示自动刷新；否-表示不自动刷新', 255, 1, NULL, '2018-10-22 05:36:02', '2018-10-22 05:54:55');
+INSERT INTO `shop_config_field` VALUES (23, 'notice_count', '声音提醒频率', 'trade', 'radio', 0, '声音提醒', '1', '1::提示一次\r\n3::循环三次\r\n6::循环六次', NULL, '用于控制卖家、网点有订单相关声音提醒时，声音提醒的提示频率', 255, 1, NULL, '2018-10-22 05:37:53', '2018-10-22 06:01:58');
+INSERT INTO `shop_config_field` VALUES (24, 'freight_fee', '店铺统一运费', 'freight', 'short_text', 1, NULL, '0', NULL, NULL, '当发布、编辑商品的运费设置为店铺统一运费时，此商品的运费按照店铺的统一运费进行计算', 255, 1, NULL, '2018-10-23 21:41:43', '2018-10-23 21:41:43');
+INSERT INTO `shop_config_field` VALUES (25, 'freight_cod_enable', '是否支持货到付款', 'freight', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, '仅用于控制店铺统一运费是否支持货到付款，按运费模板计算运费的商品不受此设置影响', 255, 1, NULL, '2018-10-23 21:42:34', '2018-10-23 21:42:34');
+INSERT INTO `shop_config_field` VALUES (26, 'freight_cash_more', '货到付款加价', 'freight', 'short_text', 1, NULL, '0', NULL, NULL, '仅在上一项支持货到付款为“是”时起作用，用于控制店铺统一运费在支持货到付款时加价金额，按运费模板计算运费的商品不受此设置影响', 255, 1, NULL, '2018-10-23 21:43:20', '2018-10-23 21:43:20');
+INSERT INTO `shop_config_field` VALUES (27, 'nav_bgcolor', '导航背景色', 'navigation', 'colorpicker', 0, NULL, NULL, NULL, NULL, '设置导航背影颜色,如果为空则显示默认颜色', 255, 1, NULL, '2018-10-25 06:25:33', '2018-10-25 06:25:33');
+INSERT INTO `shop_config_field` VALUES (28, 'shop_auth', '店铺营销权限', 'system', 'textarea', 1, NULL, NULL, NULL, NULL, '商家后台店铺营销权限设置', 255, 1, NULL, '2019-01-22 06:38:22', '2019-01-22 06:38:22');
+INSERT INTO `shop_config_field` VALUES (29, 'shop_web_static', '是否开启静态页面', 'web_static', 'text', 0, NULL, '1', '0::关闭\r\n1::开启', NULL, '是否开启店铺首页静态页面', 255, 1, NULL, '2019-01-23 02:26:38', '2019-01-23 03:03:44');
+INSERT INTO `shop_config_field` VALUES (30, 'm_shop_web_static', '是否开启静态页面', 'web_mobile_static', 'text', 0, NULL, '1', '0::关闭\r\n1::开启', NULL, '是否开启微商城店铺首页静态页面', 255, 1, NULL, '2019-01-23 02:27:17', '2019-01-23 03:03:30');
+INSERT INTO `shop_config_field` VALUES (31, 'shop_header_style', '头部样式', 'm_shop_header', 'radio', 1, NULL, '0', '0::头部样式一\r\n1::头部样式二', NULL, NULL, 255, 1, NULL, '2019-04-20 08:53:20', '2019-04-20 08:53:20');
+INSERT INTO `shop_config_field` VALUES (32, 'm_shop_list_style', '店铺商品列表页样式', 'shop_other', 'radio', 0, '店铺商品列表设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺全部商品列表页面商品展示的样式<span class=\"m-l-10 c-blue\">默认样式示例：<i data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-html=\"true\" data-content=\"<img width=\'200\' height=\'180\' src=\'/images/shop/shoplist-1.png\'>\" class=\"fa fa-question-circle f16 c-orange cur-p\" data-original-title=\"\" title=\"\"></i>；</span><span class=\"c-blue\">经典样式示例：<i data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-html=\"true\" data-content=\"<img width=\'200\' height=\'180\' src=\'/images/shop/shoplist-2.png\'>\" class=\"fa fa-question-circle f16 c-orange cur-p\" data-original-title=\"\" title=\"\"></i></span>', 255, 1, NULL, '2019-04-21 12:18:44', '2019-10-27 12:46:54');
+INSERT INTO `shop_config_field` VALUES (33, 'custom_style_enable_m_shop', '是否开启自定义改色', 'm_shop_style', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '是否开启自定义改色', 255, 1, NULL, '2019-05-18 04:48:46', '2019-05-18 04:48:46');
+INSERT INTO `shop_config_field` VALUES (34, 'm_main_color', '主体颜色', 'm_shop_style', 'colorpicker', 0, NULL, '#7030a0', NULL, NULL, '商城主体颜色 code:m_main_color', 255, 1, NULL, '2019-05-18 04:49:47', '2019-05-18 04:49:47');
+INSERT INTO `shop_config_field` VALUES (35, 'm_second_color', '主体辅色', 'm_shop_style', 'colorpicker', 0, NULL, '#e36c09', NULL, NULL, '主体辅色 code:m_second_color', 255, 1, NULL, '2019-05-18 04:50:28', '2019-05-18 04:50:28');
+INSERT INTO `shop_config_field` VALUES (36, 'app_shop_header_style', '头部样式', 'app_shop_header', 'radio', 1, NULL, '0', '0::头部样式一\r\n1::头部样式二', NULL, NULL, 255, 1, NULL, '2019-05-18 09:37:37', '2019-05-18 09:37:37');
+INSERT INTO `shop_config_field` VALUES (37, 'integral_validity', '积分有效期', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, '“0”表示无限制，积分获得日期开始计算，到超过积分有效期，会员积分自动清零', 255, 1, NULL, '2019-06-01 08:57:40', '2019-06-01 08:57:40');
+INSERT INTO `shop_config_field` VALUES (38, 'give_integral_confirm', '主动确认收货送积分', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, '消费者主动点击确认收货后赠送积分', 255, 1, NULL, '2019-06-01 08:58:14', '2019-06-01 08:58:14');
+INSERT INTO `shop_config_field` VALUES (39, 'give_integral_comment', '评价好评送积分', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, '消费者对宝贝与描述相设置好评后赠送积分', 255, 1, NULL, '2019-06-01 08:58:38', '2019-06-01 08:58:38');
+INSERT INTO `shop_config_field` VALUES (40, 'give_integral_consume', '消费金额送积分', 'integral_mall_set', 'short_text', 0, NULL, '1', NULL, NULL, '比如：设置1元=1积分，则会员消费101元，确认收货后则赠送101积分，按消费金额中的整数部分进行赠送积分，不考虑四舍五入。', 255, 1, NULL, '2019-06-01 08:59:15', '2019-06-01 08:59:15');
+INSERT INTO `shop_config_field` VALUES (41, 'give_integral_out_line_balance', '线下消费余额是否累计积分', 'integral_mall_set', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '控制会员线下消费使用会员余额支付，是否可获取积分，获取的积分规则与线上一致</br> 线下消费余额：通过商家APP扫描消费者付款码，或消费者扫描商家APP收款码', 255, 1, NULL, '2019-06-01 09:00:11', '2019-06-01 09:00:11');
+INSERT INTO `shop_config_field` VALUES (42, 'integral_shipping', '积分兑换配送方式', 'integral_mall_set', 'checkbox', 1, NULL, '0', '0::物流配送\r\n1::上门自提', NULL, '积分兑换配送方式将影响消费者积分兑换提交页面是否展示物流配送以及上门自提选项。 <a class=\"c-blue\" href=\"/goods/self-pickup/list.html\" target=\"_Blank\">设置自提点</a>', 255, 1, NULL, '2019-06-01 09:01:42', '2019-06-01 09:27:31');
+INSERT INTO `shop_config_field` VALUES (43, 'integral_qrcode', '店铺积分收款码', 'integral_mall_set', 'hidden', 0, NULL, 'http://images.test.68mall.com/olpqrcode/olp_1.png', NULL, NULL, '积分收款码应用于消费者线下扫码进行消费积分和余额，该余额不累计积分', 255, 1, NULL, '2019-06-01 09:02:38', '2019-06-01 09:02:38');
+INSERT INTO `shop_config_field` VALUES (44, 'bonus_img1', '滚动图片1', 'bonus', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2019-10-19 07:15:29', '2019-10-19 07:15:29');
+INSERT INTO `shop_config_field` VALUES (45, 'bonus_link1', '滚动图片1链接', 'bonus', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2019-10-19 07:18:11', '2019-10-19 07:18:11');
+INSERT INTO `shop_config_field` VALUES (46, 'bonus_img2', '滚动图片2', 'bonus', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (47, 'bonus_link2', '滚动图片2链接', 'bonus', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (48, 'bonus_img3', '滚动图片3', 'bonus', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (49, 'bonus_link3', '滚动图片3链接', 'bonus', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (50, 'bonus_img4', '滚动图片4', 'bonus', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (51, 'bonus_link4', '滚动图片4链接', 'bonus', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (52, 'm_bonus_img1', '滚动图片1', 'bonus', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, '2019-10-19 07:23:56', '2019-10-19 07:23:56');
+INSERT INTO `shop_config_field` VALUES (53, 'm_bonus_link1', '滚动图片1链接', 'bonus', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (54, 'm_bonus_img2', '滚动图片2', 'bonus', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (55, 'm_bonus_link2', '滚动图片2链接', 'bonus', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (56, 'm_bonus_img3', '滚动图片3', 'bonus', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (57, 'm_bonus_link3', '滚动图片3链接', 'bonus', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (58, 'm_bonus_img4', '滚动图片4', 'bonus', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (59, 'm_bonus_link4', '滚动图片4链接', 'bonus', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, NULL, NULL);
+INSERT INTO `shop_config_field` VALUES (60, 'guide_ad', 'pc端引导广告图', 'bonus', 'imagegroup', 0, '引导广告图', NULL, NULL, NULL, '请上传1210*70像素的jpg、gif、png格式图片，此图片展示在领红包页面的轮播图下方', 255, 1, NULL, '2019-10-19 07:28:39', '2019-10-19 07:28:39');
+INSERT INTO `shop_config_field` VALUES (61, 'm_guide_ad', '手机端引导广告图', 'bonus', 'imagegroup', 0, '引导广告图', NULL, NULL, NULL, '请上传1000*110像素的jpg、gif、png格式图片，此图片展示在领红包页面的轮播图下方', 255, 1, NULL, '2019-10-19 07:29:19', '2019-10-19 07:29:19');
+INSERT INTO `shop_config_field` VALUES (62, 'bonus_share_name', '红包集市页面名称', 'bonus', 'text', 0, '分享', NULL, NULL, NULL, '红包集市页面名称，最多15个字', 255, 1, NULL, '2019-10-19 07:29:53', '2019-10-19 07:29:53');
+INSERT INTO `shop_config_field` VALUES (63, 'bonus_share_title', '红包集市分享标题', 'bonus', 'text', 0, '分享', NULL, NULL, NULL, '红包集市信息分享给微信朋友后展示的分享标题，最多40个字', 255, 1, NULL, '2019-10-19 07:30:30', '2019-10-19 07:30:30');
+INSERT INTO `shop_config_field` VALUES (64, 'bonus_share_desc', '红包集市分享内容', 'bonus', 'textarea', 0, '分享', NULL, NULL, NULL, '红包集市信息分享给微信朋友后展示的分享内容，最多100个字', 255, 1, NULL, '2019-10-19 07:31:04', '2019-10-19 07:31:04');
+INSERT INTO `shop_config_field` VALUES (65, 'bonus_share_image', '分享推广图', 'bonus', 'imagegroup', 0, '分享', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2019-10-19 07:31:44', '2019-10-19 07:31:44');
+INSERT INTO `shop_config_field` VALUES (66, 'shop_index_show_goods_number', '店铺首页全部商品是否展示数量', 'shop_other', 'radio', 0, '店铺首页设置', '1', '0::不显示\r\n1::显示', NULL, '此设置用于控制手机端店铺首页全部商品处展示的具体数量', 255, 1, NULL, '2019-10-27 12:43:49', '2019-10-27 12:43:49');
+INSERT INTO `shop_config_field` VALUES (67, 'm_search_mode', '经典样式店铺商品分类页搜索机制', 'shop_other', 'radio', 0, '店铺商品列表设置', '0', '0::当前分类下搜索\r\n1::搜索全部', NULL, '控制的是手机端店铺商品分类页面搜索机制<br>当前分类下搜索：查看某个分类下商品时，在搜索框输入关键词，搜索的是选择的分类下与关键字匹配的商品<br>搜索全部：无论当前切换到哪个分类下，在搜索框输入搜索词，搜索的就是全部分类下与关键词匹配的商品', 255, 1, NULL, '2019-10-27 12:46:02', '2019-10-27 12:46:02');
+INSERT INTO `shop_config_field` VALUES (68, 'custom_style_enable_shop', '是否开启自定义改色', 'shop_style', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '是否开启自定义改色', 255, 1, NULL, '2020-11-05 14:31:06', '2020-11-05 14:31:06');
+INSERT INTO `shop_config_field` VALUES (69, 'main_color', '主体颜色', 'shop_style', 'colorpicker', 0, NULL, NULL, NULL, NULL, '商城主体颜色 code:main_color', 255, 1, NULL, '2020-11-05 14:33:04', '2020-11-05 14:33:04');
+INSERT INTO `shop_config_field` VALUES (70, 'second_color', '主体辅色', 'shop_style', 'colorpicker', 0, NULL, NULL, NULL, NULL, '主体辅色 code:second_color', 255, 1, NULL, '2020-11-05 14:34:13', '2020-11-05 14:34:13');
+INSERT INTO `shop_config_field` VALUES (71, 'second_bg_color', '主体背景辅色', 'shop_style', 'colorpicker', 0, NULL, NULL, NULL, NULL, '主体背景辅色 code:second_bg_color', 255, 1, NULL, '2020-11-05 14:35:36', '2020-11-05 14:35:36');
+INSERT INTO `shop_config_field` VALUES (72, 'right_bg_color', '右侧侧边栏背景色', 'shop_style', 'colorpicker', 0, NULL, NULL, NULL, NULL, '商城右侧侧边栏背景色 code:right_bg_color', 255, 1, NULL, '2020-11-05 14:36:27', '2020-11-05 14:36:27');
+INSERT INTO `shop_config_field` VALUES (73, 'left_nav_color', '左侧分类导航背景颜色', 'shop_style', 'colorpicker', 0, NULL, NULL, NULL, NULL, '商城左侧分类导航背景颜色 code:left_nav_color', 255, 1, NULL, '2020-11-05 14:37:12', '2020-11-05 14:37:12');
+INSERT INTO `shop_config_field` VALUES (74, 'shop_qrcode', '店铺二维码', 'weixin', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-21 15:07:00', '2021-06-21 15:07:00');
+INSERT INTO `shop_config_field` VALUES (75, 'multi_store_open_enable', '是否开启连锁门店', 'multi_store', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '开启门店后，门店设置起作用', 255, 1, NULL, '2021-12-14 07:29:45', '2021-12-14 07:29:45');
+INSERT INTO `shop_config_field` VALUES (76, 'multi_store_stock_price', '库存、价格和活动', 'multi_store', 'checkbox', 0, NULL, NULL, '1::开启门店独立库存\r\n2::开启门店独立价格\r\n3::店铺统一控制参与活动', NULL, '如果开启门店独立库存，商品的库存将由每个门店独立设置；如果开启门店独立价格，商品的价格将由每个门店独立设置；<br/>\r\n如果勾选店铺统一控制参与活动，那么门店单独设置是否参与活动将不起作用', 255, 1, NULL, '2021-12-14 07:38:17', '2021-12-14 07:38:17');
+INSERT INTO `shop_config_field` VALUES (77, 'multi_store_back_manage', '审核取消订单/退款退货管理', 'multi_store', 'radio', 0, NULL, '0', '0::店铺统一管理\r\n1::门店独立管理', NULL, '退款退货管理包含消费者确认收货之前申请的退款退货，也包含确认收货之后申请的退款退货、换货维修', 255, 1, NULL, '2021-12-14 07:39:45', '2021-12-14 07:39:45');
+INSERT INTO `shop_config_field` VALUES (78, 'multi_store_comment_management', '评论管理', 'multi_store', 'radio', 0, NULL, '0', '0::店铺统一管理\r\n1::门店独立管理', NULL, '开启门店独立管理评论之后，门店订单的评论全部由门店处理回复，店铺无权回复', 255, 1, NULL, '2021-12-14 07:41:09', '2021-12-14 07:41:09');
+INSERT INTO `shop_config_field` VALUES (79, 'multi_store_sellout_recommend', '商品售罄推荐', 'multi_store', 'radio', 0, NULL, '0', '0::推荐其它有售的门店\r\n1::不推荐', NULL, '<span class=\"c-blue m-l-10\">查看示例<i data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-html=\"true\" data-content=\"<img width=\'200\' height=\'180\' src=\'/images/goods/pattern-store.png\'>\" class=\"fa fa-question-circle f16 c-orange m-l-5 cur-p\" data-original-title=\"\" title=\"\"></i></span>', 255, 1, NULL, '2021-12-14 07:46:43', '2021-12-14 07:46:43');
+INSERT INTO `shop_config_field` VALUES (80, 'multi_store_select_store', '自动进门店', 'multi_store', 'radio', 0, NULL, '0', '0::新老用户均自动定位到最近的门店\r\n1::新用户均自动定位到最近的门店，老用户默认进上次访问的门店\r\n2::新老用户均不自动定位\r\n3::新用户均自动定位到最近的门店，老用户默认进上次下单的门店', NULL, '开启自动进门店，会根据用户位置自动进入距离最近的门店，无需手动选择', 255, 1, NULL, '2021-12-14 07:48:05', '2021-12-14 07:48:05');
+INSERT INTO `shop_config_field` VALUES (81, 'is_show_guide_recomm', '是否展示引导推荐门店', 'multi_store', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '是：消费者访问门店或者是访问店铺商品，如果最近的门店或上次下单的门店不售卖或者门店已关闭，前台将弹窗引导进入推荐的门店<br/>\r\n否：如果访问的商品在最近的门店或上次下单的门店不售卖，则自动打开商品不存在提示页面，无引导推荐门店，如果最近的门店或上次下单的门店已关闭，择自动进入最近的有售卖访问商品的门店', 255, 1, NULL, '2021-12-14 07:49:14', '2021-12-14 07:49:14');
+INSERT INTO `shop_config_field` VALUES (82, 'multi_store_check_enable', '跨门店核销', 'multi_store', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '如果开启“跨门店核销”，则买家可以在非下单的门店提货核销，哪个门店核销的，订单归属哪个门店', 255, 1, NULL, '2021-12-14 07:50:01', '2021-12-14 07:50:01');
+INSERT INTO `shop_config_field` VALUES (83, 'shop_place_order_enable', '是否允许店铺下单', 'multi_store', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '仅控制手机端，pc端不影响；控制开启多门店的店铺是否可以在店铺下下单，提货券、自由购和堂内点餐不受影响。', 255, 1, NULL, '2021-12-14 07:50:45', '2021-12-14 07:50:45');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_contract
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_contract`;
+CREATE TABLE `shop_contract` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `contract_id` int unsigned NOT NULL COMMENT '保障服务id',
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `status` tinyint unsigned NOT NULL DEFAULT '1' COMMENT '审核状态 1等待审核 2审核通过 3审核未通过',
+  `audit_time` int NOT NULL DEFAULT '0' COMMENT '审核时间',
+  `is_enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用 默认启用',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '审核意见',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_contract
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_contract` VALUES (2, 2, 1, 2, 1544266535, 1, '同意了', '2018-11-08 14:47:56', '2018-12-08 18:55:35');
+INSERT INTO `shop_contract` VALUES (3, 3, 1, 2, 1549720835, 1, NULL, '2019-01-17 19:54:00', '2019-02-10 06:00:35');
+INSERT INTO `shop_contract` VALUES (4, 1, 1, 2, 1549720829, 1, NULL, '2019-01-17 19:54:14', '2019-02-10 06:00:29');
+INSERT INTO `shop_contract` VALUES (5, 5, 1, 2, 1549720804, 1, NULL, '2019-01-31 17:38:01', '2019-02-10 06:00:04');
+INSERT INTO `shop_contract` VALUES (6, 4, 1, 1, 0, 1, NULL, '2021-05-01 20:29:20', '2021-05-01 20:29:20');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_credit
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_credit`;
+CREATE TABLE `shop_credit` (
+  `credit_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `credit_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺信誉名称',
+  `credit_img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '店铺信誉图标',
+  `min_point` int unsigned NOT NULL DEFAULT '0' COMMENT '信誉值下限',
+  `max_point` int unsigned NOT NULL DEFAULT '0' COMMENT '信誉值上限',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`credit_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_credit
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_credit` VALUES (3, '一星', '/shop/shop-credit/2018/06/30/15303660397766.gif', 0, 10, NULL, '2018-06-30 21:20:51', '2020-01-10 07:00:14');
+INSERT INTO `shop_credit` VALUES (4, '二星', '/backend/1/2020/01/06/15783131414842.gif', 11, 40, NULL, '2020-01-07 04:19:10', '2020-01-07 04:19:10');
+INSERT INTO `shop_credit` VALUES (5, '三星', '/backend/1/2020/01/06/15783131606878.gif', 41, 90, NULL, '2020-01-07 04:19:31', '2020-01-07 04:19:31');
+INSERT INTO `shop_credit` VALUES (6, '四星', '/backend/1/2020/01/06/15783131945308.gif', 91, 150, NULL, '2020-01-07 04:19:59', '2020-01-07 04:19:59');
+INSERT INTO `shop_credit` VALUES (7, '五星', '/backend/1/2020/01/06/15783132151816.gif', 151, 250, NULL, '2020-01-07 04:20:25', '2020-01-07 04:20:25');
+INSERT INTO `shop_credit` VALUES (8, '一钻', '/backend/1/2020/01/06/15783132627560.gif', 251, 500, NULL, '2020-01-07 04:21:11', '2020-01-07 04:21:11');
+INSERT INTO `shop_credit` VALUES (9, '二钻', '/backend/1/2020/01/06/15783132811918.gif', 501, 1000, NULL, '2020-01-07 04:21:32', '2020-01-07 04:21:32');
+INSERT INTO `shop_credit` VALUES (10, '三钻', '/backend/1/2020/01/06/15783133061678.gif', 1001, 2000, NULL, '2020-01-07 04:21:56', '2020-01-07 04:21:56');
+INSERT INTO `shop_credit` VALUES (11, '四钻', '/backend/1/2020/01/06/15783133297474.gif', 2001, 5000, NULL, '2020-01-07 04:22:20', '2020-01-07 04:22:20');
+INSERT INTO `shop_credit` VALUES (12, '五钻', '/backend/1/2020/01/06/15783133496661.gif', 5001, 10000, NULL, '2020-01-07 04:22:44', '2020-01-07 04:22:44');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_field_value
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_field_value`;
+CREATE TABLE `shop_field_value` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `real_name` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '真实姓名',
+  `card_no` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '身份证号码',
+  `hand_card` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手持身份证照片',
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系地址',
+  `company_name` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公司名称',
+  `unified_social_credi` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '统一社会信用代码',
+  `artificial_person` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '法人代表姓名',
+  `license` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '企业法人营业执照',
+  `special_aptitude` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '特殊行业资质',
+  `card_type` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '身份证类型',
+  `card_side_a` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '身份证正面',
+  `card_side_b` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '身份证背面（国徽页）',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_field_value
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_field_value` VALUES (1, 1, '乐融沃网络公司', '1231231', NULL, NULL, '乐融沃网络公司', '啊啊啊', 'vvv', '/backend/1/2018/10/29/15408216864285.jpg', '/backend/1/2018/10/29/15408216964341.jpg|/backend/1/2018/10/29/15408217307463.jpg', 'formal\r\n临时身份证', '/backend/1/2018/10/29/15408217068637.jpg', '/backend/1/2018/10/29/15408217189838.jpg', '2018-08-08 22:41:47', '2018-10-29 22:02:23');
+INSERT INTO `shop_field_value` VALUES (4, 30, NULL, '503222211112222234', NULL, NULL, '乐融沃科技有限公司', '2392393838939823', '张先生', '/shop/30/field/2020/02/07/15810575011729.png', NULL, 'formal\r\n临时身份证', '/shop/30/field/2020/02/07/15810575055349.png', '/shop/30/field/2020/02/07/15810575676917.png', '2020-02-07 22:39:29', '2020-02-07 22:39:29');
+INSERT INTO `shop_field_value` VALUES (5, 31, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-09 19:57:48', '2020-02-09 19:57:48');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_log
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_log`;
+CREATE TABLE `shop_log` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '日志内容',
+  `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作者用户名',
+  `user_id` int NOT NULL COMMENT '操作者用户id',
+  `shop_id` int NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `ip` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'IP地址',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作url',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_log
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_log` VALUES (1, '卖家管理员【LRW186XUHP5369】登录卖家中心。', 'LRW186XUHP5369', 1, 0, '192.168.1.191', 'login', '2022-03-22 16:52:07', '2022-03-22 16:52:07');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_message_tpl
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_message_tpl`;
+CREATE TABLE `shop_message_tpl` (
+  `shop_tpl_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `is_open` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否开启',
+  `msg_tpl_id` int unsigned NOT NULL DEFAULT '0' COMMENT '消息模板id',
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `mobile` char(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号码',
+  `email` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮件地址',
+  `wx_id` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信号',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`shop_tpl_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺消息模板表';
+
+-- ----------------------------
+-- Table structure for shop_navigation
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_navigation`;
+CREATE TABLE `shop_navigation` (
+  `nav_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nav_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '导航名称',
+  `nav_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '导航类型',
+  `nav_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '导航链接',
+  `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否显示',
+  `new_open` tinyint(1) NOT NULL DEFAULT '1' COMMENT '新窗口打开',
+  `nav_sort` tinyint unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`nav_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺导航表';
+
+-- ----------------------------
+-- Table structure for shop_node
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_node`;
+CREATE TABLE `shop_node` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `parent_node_id` int NOT NULL DEFAULT '0' COMMENT '父节点id',
+  `parent_node` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '父节点',
+  `node_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节点标题',
+  `node_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节点名称',
+  `routes` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '节点绑定路由 支持多个以英文逗号分隔',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '节点描述',
+  `is_menu` tinyint NOT NULL DEFAULT '0' COMMENT '是否可设置为菜单',
+  `is_auth` tinyint NOT NULL DEFAULT '1' COMMENT '是启启动RBAC权限控制',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态 1开启 0关闭',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=275 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_node
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_node` VALUES (1, 0, 'root', '首页', 'seller-index', '', NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (2, 0, 'root', '商品', 'goods', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (3, 0, 'root', '交易', 'trade', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (4, 0, 'root', '店铺', 'shop', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (5, 0, 'root', '网点', 'store', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (6, 0, 'root', '客服', 'customer', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (7, 0, 'root', '账号', 'account', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (8, 0, 'root', '财务', 'finance', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (9, 0, 'root', '移动端', 'weixin', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (10, 0, 'root', '营销', 'dashboard', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (11, 0, 'root', '收银台', 'cash', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (12, 0, 'root', '财务报表', 'statistics', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (13, 1, 'seller-index', '首页', 'index', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (14, 13, 'index', '新手向导', 'guide', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (15, 13, 'index', '欢迎页', 'welcome', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (16, 2, 'goods', '商品管理', 'shop-goods', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (17, 16, 'shop-goods', '商品发布', 'shop-goods-add', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (18, 16, 'shop-goods', '商品列表', 'shop-goods-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (19, 16, 'shop-goods', '商品编辑', 'shop-goods-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (20, 16, 'shop-goods', '商品上架/下架', 'shop-goods-sale', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (21, 16, 'shop-goods', '商品删除', 'shop-goods-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (22, 16, 'shop-goods', '商品批量上传', 'shop-goods-upload', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (23, 16, 'shop-goods', '商品导出', 'shop-goods-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (24, 16, 'shop-goods', '商品库列表', 'lib-goods-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (25, 16, 'shop-goods', '云端产品库', 'goods-cloud-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (26, 16, 'shop-goods', '商品库导入', 'lib-goods-import', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (27, 16, 'shop-goods', '商品设置', 'shop-goods-set', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (28, 16, 'shop-goods', '批量采集', 'shop-goods-collect', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (29, 16, 'shop-goods', '店铺采集', 'shop-store-collect', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (30, 16, 'shop-goods', '分类采集', 'shop-category-collect', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (31, 2, 'goods', '分类管理', 'shop-category', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (32, 31, 'shop-category', '分类列表', 'shop-category-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (33, 31, 'shop-category', '分类添加/编辑', 'shop-category-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (34, 31, 'shop-category', '分类删除', 'shop-category-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (35, 2, 'goods', '规格管理', 'shop-goods-spec', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (36, 35, 'shop-goods-spec', '规格列表', 'shop-goods-spec-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (37, 35, 'shop-goods-spec', '规格添加/编辑', 'shop-goods-spec-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (38, 35, 'shop-goods-spec', '规格删除', 'shop-goods-spec-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (39, 2, 'goods', '商品单位', 'shop-goods-unit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (40, 39, 'shop-goods-unit', '商品单位列表', 'shop-goods-unit-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (41, 39, 'shop-goods-unit', '商品单位添加/编辑', 'shop-goods-unit-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (42, 39, 'shop-goods-unit', '商品单位删除', 'shop-goods-unit-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (43, 2, 'goods', '图片空间', 'shop-gallery', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (44, 43, 'shop-gallery', '相册列表', 'shop-imagedir-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (45, 43, 'shop-gallery', '相册添加/编辑', 'shop-imagedir-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (46, 43, 'shop-gallery', '相册删除', 'shop-imagedir-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (47, 2, 'goods', '详情版式', 'goods-layout', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (48, 47, 'goods-layout', '版式列表', 'goods-layout-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (49, 47, 'goods-layout', '版式添加/编辑', 'goods-layout-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (50, 47, 'goods-layout', '版式删除', 'goods-layout-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (51, 2, 'goods', '商品回收站', 'goods-trash', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (52, 51, 'goods-trash', '回收站列表', 'goods-trash-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (53, 51, 'goods-trash', '还原商品', 'goods-trash-recover', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (54, 2, 'goods', '常见问题', 'shop-questions', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (55, 54, 'shop-questions', '常见问题列表', 'shop-questions-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (56, 54, 'shop-questions', '常见问题添加/编辑', 'shop-questions-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (57, 54, 'shop-questions', '常见问题删除', 'shop-questions-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (58, 2, 'goods', '上门自提', 'self-pickup', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (59, 58, 'self-pickup', '上门自提列表', 'self-pickup-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (60, 58, 'self-pickup', '上门自提添加/编辑', 'self-pickup-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (61, 58, 'self-pickup', '上门自提删除', 'self-pickup-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (62, 3, 'trade', '会员管理', 'user-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (63, 62, 'user-manage', '会员列表', 'user-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (64, 62, 'user-manage', '编辑会员', 'user-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (65, 62, 'user-manage', '会员验证', 'user-validate', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (66, 3, 'trade', '会员等级管理', 'user-rank', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (67, 66, 'user-rank', '会员等级列表', 'user-rank-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (68, 66, 'user-rank', '编辑会员等级', 'user-rank-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (69, 3, 'trade', '订单管理', 'trade-order', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (70, 69, 'trade-order', '订单查看', 'trade-order-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (71, 69, 'trade-order', '订单操作', 'trade-order-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (72, 69, 'trade-order', '导出订单', 'trade-order-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (73, 69, 'trade-order', '接单管理', 'trade-order-take-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (74, 3, 'trade', '发货单管理', 'trade-delivery', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (75, 74, 'trade-delivery', '发货单查看', 'trade-delivery-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (76, 74, 'trade-delivery', '发货单操作', 'trade-delivery-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (77, 74, 'trade-delivery', '导出发货单', 'trade-delivery-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (78, 3, 'trade', '退款管理', 'trade-refund', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (79, 78, 'trade-refund', '退款列表', 'trade-refund-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (80, 78, 'trade-refund', '退款操作', 'trade-refund-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (81, 78, 'trade-refund', '导出退款列表', 'trade-refund-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (82, 3, 'trade', '投诉管理', 'trade-complaint', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (83, 82, 'trade-complaint', '投诉列表', 'trade-complaint-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (84, 82, 'trade-complaint', '投诉操作', 'trade-complaint-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (85, 3, 'trade', '评价管理', 'evaluate', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (86, 85, 'evaluate', '买家评价', 'user-evaluate-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (87, 85, 'evaluate', '店铺评价', 'shop-evaluate-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (88, 85, 'evaluate', '评价回复', 'evaluate-replay', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (89, 3, 'trade', '交易设置', 'trade-set', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (90, 89, 'trade-set', '交易设置', 'shop-config-trade', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (91, 3, 'trade', '自由购订单管理', 'free-buy-order', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (92, 91, 'free-buy-order', '订单查看', 'free-buy-order-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (93, 91, 'free-buy-order', '订单操作', 'free-buy-order-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (94, 91, 'free-buy-order', '导出订单', 'free-buy-order-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (95, 91, 'free-buy-order', '订单核销', 'free-buy-order-veri', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (96, 3, 'trade', '堂内点餐订单管理', 'reach-buy-order', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (97, 96, 'reach-buy-order', '订单查看', 'reach-buy-order-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (98, 96, 'reach-buy-order', '订单操作', 'reach-buy-order-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (99, 96, 'reach-buy-order', '导出订单', 'reach-buy-order-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (100, 96, 'reach-buy-order', '订单核销', 'reach-buy-order-veri', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (101, 4, 'shop', '店铺设置', 'shop-setting', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (102, 101, 'shop-setting', '店铺设置', 'shop-setting-default', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (103, 4, 'shop', '店铺信息', 'shop-info', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (104, 103, 'shop-info', '店铺信息', 'shop-info-default', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (105, 103, 'shop-info', '续签列表', 'shop-info-renew-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (106, 103, 'shop-info', '续签申请', 'shop-info-renew-add', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (107, 103, 'shop-info', '续签删除', 'shop-info-renew-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (108, 4, 'shop', '申请代理', 'shop-agent', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (109, 108, 'shop-agent', '申请代理列表', 'shop-agent-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (110, 108, 'shop-agent', '申请代理编辑', 'shop-agent-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (111, 4, 'shop', '域名设置', 'shop-domain', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (112, 111, 'shop-domain', '二级域名申请/取消', 'shop-domain-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (113, 111, 'shop-domain', '域名申请记录', 'shop-domain-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (114, 4, 'shop', '配送方式', 'shop-shipping', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (115, 114, 'shop-shipping', '配送方式列表', 'shop-shipping-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (116, 114, 'shop-shipping', '设置运单模板', 'shop-shipping-setting', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (117, 114, 'shop-shipping', '测试打印', 'shop-shipping-print', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (118, 114, 'shop-shipping', '自行配送', 'shop-config-shipping', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (119, 4, 'shop', '运费模板', 'shop-freight', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (120, 119, 'shop-freight', '运费模板列表', 'shop-freight-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (121, 119, 'shop-freight', '运费模板添加/编辑/复制', 'shop-freight-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (122, 119, 'shop-freight', '删除运费模板', 'shop-freight-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (123, 4, 'shop', '地址库', 'shop-address', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (124, 123, 'shop-address', '地址库列表', 'shop-address-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (125, 123, 'shop-address', '地址库添加/编辑', 'shop-address-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (126, 123, 'shop-address', '删除地址库', 'shop-address-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (127, 123, 'shop-address', '设置默认地址', 'shop-address-default', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (128, 4, 'shop', '保障服务', 'shop-contract', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (129, 128, 'shop-contract', '保障服务列表', 'shop-contract-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (130, 128, 'shop-contract', '申请加入', 'shop-contract-apply', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (131, 4, 'shop', '店铺导航', 'shop-navigation', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (132, 131, 'shop-navigation', '店铺导航列表', 'shop-navigation-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (133, 131, 'shop-navigation', '店铺导航添加/编辑', 'shop-navigation-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (134, 131, 'shop-navigation', '删除店铺导航', 'shop-navigation-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (135, 4, 'shop', '打印设置', 'shop-print-set', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (136, 135, 'shop-print-set', '打印规格设置', 'shop-print-spec', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (137, 4, 'shop', '授权列表', 'shop-oauth', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (138, 137, 'shop-oauth', '授权周边系统', 'oauth-other-system', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (139, 4, 'shop', '装修管理', 'shop-design', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (140, 139, 'shop-design', '店铺装修', 'shop-design-setup', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (141, 4, 'shop', '文章管理', 'article', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (142, 141, 'article', '文章列表', 'article-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (143, 141, 'article', '文章添加/编辑', 'article-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (144, 141, 'article', '删除文章', 'article-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (145, 5, 'store', '线下网点管理', 'store-man', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (146, 145, 'store-man', '线下网点列表', 'store-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (147, 145, 'store-man', '线下网点添加/编辑', 'store-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (148, 145, 'store-man', '删除线下网点', 'store-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (149, 5, 'store', '网点分组管理', 'store-group', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (150, 149, 'store-group', '网点分组列表', 'store-group-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (151, 149, 'store-group', '网点分组添加/编辑', 'store-group-manag', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (152, 149, 'store-group', '删除网点分组', 'store-group-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (153, 5, 'store', '销售统计', 'store-trade', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (154, 153, 'store-trade', '销售统计列表', 'store-trade-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (155, 153, 'store-trade', '销售统计详情', 'store-trade-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (156, 6, 'customer', '客服', 'shop-customer-type', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (157, 156, 'shop-customer-type', '客服类型列表', 'customer-type-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (158, 156, 'shop-customer-type', '客服类型添加/编辑', 'customer-type-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (159, 156, 'shop-customer-type', '客服类型删除', 'customer-type-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (160, 6, 'customer', '客服管理', 'shop-customer', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (161, 160, 'shop-customer', '客服列表', 'customer-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (162, 160, 'shop-customer', '客服添加/编辑', 'customer-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (163, 160, 'shop-customer', '客服删除', 'customer-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (164, 160, 'shop-customer', '客服设置', 'customer-setting', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (165, 6, 'customer', '系统消息', 'shop-message', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (166, 165, 'shop-message', '站内信', 'internal-message', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (167, 165, 'shop-message', '系统公告', 'system-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (168, 165, 'shop-message', '消息接收设置', 'receive-setting', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (169, 6, 'customer', '阿里云旺', 'shop-customer-aliim', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (170, 169, 'shop-customer-aliim', '阿里云旺设置', 'shop-config-aliim', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (171, 7, 'account', '账号', 'account-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (172, 171, 'account-manage', '管理员列表', 'admin-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (173, 171, 'account-manage', '管理员添加/编辑', 'admin-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (174, 171, 'account-manage', '删除管理员', 'admin-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (175, 171, 'account-manage', '分派权限', 'auth-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (176, 171, 'account-manage', '角色列表', 'role-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (177, 171, 'account-manage', '角色添加/编辑', 'role-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (178, 171, 'account-manage', '删除角色', 'role-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (179, 7, 'account', '操作日志', 'shop-log', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (180, 179, 'shop-log', '操作日志列表', 'shop-log-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (181, 179, 'shop-log', '删除操作日志', 'shop-log-delete', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (182, 8, 'finance', '结算管理', 'finance-bill', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (183, 182, 'finance-bill', '结算管理列表', 'finance-shop-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (184, 182, 'finance-bill', '结算管理详情', 'finance-shop-view', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (185, 182, 'finance-bill', '结算管理操作', 'finance-shop-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (186, 182, 'finance-bill', '导出店铺对账列表', 'finance-shop-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (187, 182, 'finance-bill', '导出网点对账列表', 'finance-store-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (188, 8, 'finance', '网点结算', 'finance-store-bill', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (189, 188, 'finance-store-bill', '网点结算列表', 'finance-store-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (190, 188, 'finance-store-bill', '网点结算详情', 'finance-store-view', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (191, 188, 'finance-store-bill', '网点结算操作', 'finance-store-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (192, 8, 'finance', '店铺账户明细', 'finance-account-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (193, 192, 'finance-account-detail', '店铺账户明细列表', 'finance-account-detail-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (194, 8, 'finance', '帐户管理', 'finance-account', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (195, 194, 'finance-account', '平台对账列表', 'finance-account-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (196, 194, 'finance-account', '帐户管理详情', 'finance-account-view', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (197, 194, 'finance-account', '帐户管理操作', 'finance-account-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (198, 8, 'finance', '结算申请', 'finance-apply', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (199, 198, 'finance-apply', '结算申请列表', 'finance-apply-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (200, 198, 'finance-apply', '结算申请详情', 'finance-apply-view', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (201, 198, 'finance-apply', '结算申请操作', 'finance-apply-edit', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (202, 8, 'finance', '扫码付管理', 'scan-code', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (203, 202, 'scan-code', '收款', 'scan-code-cashier', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (204, 9, 'weixin', '微信', 'wx', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (205, 204, 'wx', '微信设置', 'shop-config-weixin', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (206, 204, 'wx', '自定义菜单', 'shop-weixin-menu', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (207, 204, 'wx', '关键词回复', 'shop-weixin-keyword', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (208, 204, 'wx', '小程序码管理', 'shop-weixin-programs-qrcode', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (209, 10, 'dashboard', '营销中心', 'dashboard-center', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (210, 209, 'dashboard-center', '红包', 'bonus-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (211, 209, 'dashboard-center', '团购', 'groupbuy-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (212, 209, 'dashboard-center', '促销专场', 'topic-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (213, 209, 'dashboard-center', '积分商城', 'exchange-goods-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (214, 209, 'dashboard-center', '提货券', 'gift-card-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (215, 209, 'dashboard-center', '积分设置', 'shop-config-exchange_set', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (216, 209, 'dashboard-center', '拼团', 'fightgroup-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (217, 209, 'dashboard-center', '搭配套餐', 'goods-mix', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (218, 209, 'dashboard-center', '限时折扣', 'limit-discount', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (219, 209, 'dashboard-center', '赠品', 'gift', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (220, 209, 'dashboard-center', '满减送', 'full-cut', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (221, 209, 'dashboard-center', '砍价', 'bargain-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (222, 209, 'dashboard-center', '短信推送', 'sms-group', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (223, 209, 'dashboard-center', '邮件推送', 'email-group', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (224, 209, 'dashboard-center', '分销', 'distrib-goods-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (225, 209, 'dashboard-center', '神码收银', 'cashier', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (226, 209, 'dashboard-center', '店铺购物卡', 'store-card-type', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (227, 209, 'dashboard-center', '提货券', 'gift-card-manag', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (228, 209, 'dashboard-center', '客户分析', 'customer-analysis-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (229, 209, 'dashboard-center', '限购', 'purchase-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (230, 209, 'dashboard-center', '预售', 'pre-sale-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (231, 11, 'cash', '收银台设置', 'cash-set', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (232, 231, 'cash-set', '收银设置', 'shop-config-receipt', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (233, 231, 'cash-set', '支付设置列表', 'shop-config-pay-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (234, 231, 'cash-set', '支付设置-支付宝', 'shop-config-payment_alipay', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (235, 231, 'cash-set', '支付设置-微信支付', 'shop-config-payment_wx', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (236, 231, 'cash-set', '电子秤设置', 'shop-config-weighter', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (237, 231, 'cash-set', '称重商品列表', 'cash-weigher-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (238, 231, 'cash-set', '导出称重商品', 'cash-weigher-export', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (239, 231, 'cash-set', '收银员列表', 'cash-user-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (240, 231, 'cash-set', '添加/编辑收银员', 'cash-user-manage', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (241, 231, 'cash-set', '收银员业绩列表', 'cash-sales-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (242, 231, 'cash-set', '收银员业绩详情', 'cash-sales-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (243, 231, 'cash-set', '线下订单列表', 'cash-order-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (244, 231, 'cash-set', '线下订单商品详情', 'cash-order-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (245, 231, 'cash-set', '打印线下订单', 'cash-order-print', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (246, 231, 'cash-set', '线下退货单列表', 'cash-back-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (247, 231, 'cash-set', '线下退货单商品详情', 'cash-back-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (248, 231, 'cash-set', '打印线下退货单', 'cash-back-print', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (249, 231, 'cash-set', '线下进货列表', 'cash-stock-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (250, 231, 'cash-set', '线下进货商品详情', 'cash-stock-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (251, 231, 'cash-set', '线下销售统计', 'cash-statistic-index', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (252, 231, 'cash-set', '盘点历史', 'cash-check-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (253, 231, 'cash-set', '商品盘点明细', 'cash-check-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (254, 231, 'cash-set', '商品报损', 'cash-loss-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (255, 231, 'cash-set', '报损明细', 'cash-loss-detail', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (256, 12, 'statistics', '数据概况', 'data-profiling', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (257, 256, 'data-profiling', '数据概况', 'data-profiling-default', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (258, 12, 'statistics', '营业统计', 'sales-statistics', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (259, 258, 'sales-statistics', '营业统计', 'sales-statistics-index', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (260, 12, 'statistics', '商品分析', 'goods-analyse', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (261, 260, 'goods-analyse', '商品概况', 'goods-analyse-default', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (262, 260, 'goods-analyse', '商品销量排行', 'goods-analyse-sales-chart', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (263, 260, 'goods-analyse', '行业分析', 'goods-analyse-industry', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (264, 260, 'goods-analyse', '访问购买率', 'goods-analyse-purchase-rate', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (265, 12, 'statistics', '单品统计', 'goods-statistics', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (266, 265, 'goods-statistics', '单品销售明细统计', 'goods-analyse-sales', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (267, 12, 'statistics', '交易分析', 'trade-analyse', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (268, 267, 'trade-analyse', '交易概况', 'trade-analyse-default', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (269, 267, 'trade-analyse', '销售统计', 'trade-analyse-sales', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (270, 267, 'trade-analyse', '地域分布', 'trade-analyse-area', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (271, 12, 'statistics', '会员统计', 'users-statistics', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (272, 271, 'users-statistics', '会员消费排行', 'users-statistics-list', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (273, 271, 'users-statistics', '会员新增统计', 'users-statistics-new', NULL, NULL, 0, 1, 1, NULL, NULL);
+INSERT INTO `shop_node` VALUES (274, 271, 'users-statistics', '会员等级统计', 'users-statistics-rank', NULL, NULL, 0, 1, 1, NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_payment
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_payment`;
+CREATE TABLE `shop_payment` (
+  `pay_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `apply_time` int unsigned NOT NULL DEFAULT '0' COMMENT '申请时间',
+  `pay_time` int unsigned NOT NULL DEFAULT '0' COMMENT '付款时间',
+  `pay_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '付款方式',
+  `pay_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '付款方式',
+  `begin_time` timestamp NULL DEFAULT NULL COMMENT '店铺起始时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '店铺到期时间',
+  `duration` int unsigned NOT NULL DEFAULT '0' COMMENT '开店时长',
+  `unit` int unsigned NOT NULL DEFAULT '0' COMMENT '开店时长单位',
+  `system_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台使用费',
+  `insure_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '平台保证金',
+  `is_frozen` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否冻结费用 默认0',
+  `pay_status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '付款状态 默认0 0未付款 1已付款',
+  `is_renew` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否续费 默认0 0-开店申请付款 1-店铺续费',
+  `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`pay_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺付款信息表';
+
+-- ----------------------------
+-- Records of shop_payment
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_payment` VALUES (1, 30, 1581136494, 0, '支付宝', NULL, '2020-02-08 20:34:54', '2020-08-08 07:59:59', 6, 1, 500.00, 1000.00, 1, 1, 0, '付款成功', '2020-02-08 20:34:54', '2020-02-09 01:03:59');
+INSERT INTO `shop_payment` VALUES (3, 1, 1604157449, 1604157449, 'alipay', '支付宝', '2020-11-01 07:17:29', '2021-11-01 07:17:29', 1, 0, 1000.00, 1000.00, 1, 1, 0, NULL, '2020-11-01 07:17:29', '2021-06-20 05:30:20');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_questions
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_questions`;
+CREATE TABLE `shop_questions` (
+  `questions_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `question` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '问题',
+  `answer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '答案',
+  `sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`questions_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_questions
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_questions` VALUES (1, 1, '小京东+入驻店铺可以个人入驻吗？', '可以个人入驻。', 255, '2018-07-22 17:31:32', '2018-07-22 17:32:23');
+INSERT INTO `shop_questions` VALUES (2, 1, '小京东+中供货商的资金是怎么流转的？', '供货商入驻商城平台，开店，售卖商品 1）.店铺商家在批发市场中购买了某个供货商的商品，在线付款 2）.此款打到了平台方的账户中 3）.平台定期与供货商结算佣金与订单款 佣金计算时系统自动计算好的，但是对供货商的结算需要平台方线下把钱打给供货商。', 255, '2018-07-22 17:32:13', '2018-07-22 17:32:13');
+INSERT INTO `shop_questions` VALUES (3, 1, '供货商有自己的店铺吗？', '是，供货商有自己的店铺后台和前台的店铺展示，店铺后台处理供货店铺内的业务，在批发市场中会展示供货商的信息，供货商也有自己的店铺首页。', 255, '2018-07-22 17:32:59', '2018-07-22 17:32:59');
+INSERT INTO `shop_questions` VALUES (4, 1, '平台方能处理店铺的订单吗？', '不能，平台方只能查看来自店铺的订单，不能处理订单，只有店铺管理员才能处理本店铺的订单。', 255, '2018-07-22 17:33:19', '2018-07-22 17:33:19');
+INSERT INTO `shop_questions` VALUES (5, 1, '平台方能发布商品吗？', '不能，平台方只能管控和审核店铺发布的商品，不能自己发布商品，如果平台方也想售卖商品，可以创建自营店铺进行发布商品与售卖。', 255, '2018-07-22 17:33:40', '2018-07-22 17:33:40');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_rank
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_rank`;
+CREATE TABLE `shop_rank` (
+  `rank_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `rank_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '等级名称',
+  `rank_level` int unsigned NOT NULL COMMENT '等级级别',
+  `is_special` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否特殊会员级别 默认0',
+  `discount` decimal(10,2) NOT NULL COMMENT '折扣率',
+  `min_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '累计消费金额',
+  `min_times` int unsigned NOT NULL DEFAULT '0' COMMENT '累计成功交易笔数',
+  `expired_level` int unsigned NOT NULL COMMENT '过期后调整至会员级别',
+  `use_between` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '会员等级有效期 默认0 0无期限 1时间段内 2成为会员后多少天内有效',
+  `start_time` date DEFAULT NULL COMMENT '会员等级有效期开始时间',
+  `end_time` date DEFAULT NULL COMMENT '会员等级有效期结束时间',
+  `valid_days` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '成为等级会员后多少天内有效',
+  `is_enable` tinyint NOT NULL DEFAULT '1' COMMENT '是否启用 默认是',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`rank_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_rank
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_rank` VALUES (1, 1, '普通会员（VIP1）', 1, 0, 3.00, 12.00, 3, 0, 0, NULL, NULL, 0, 1, '2018-11-08 11:29:24', '2018-11-08 12:53:58');
+INSERT INTO `shop_rank` VALUES (3, 1, '高级会员(VIP2)', 2, 0, 5.00, 23.00, 2, 0, 0, NULL, NULL, 0, 1, '2018-11-08 12:54:18', '2018-11-08 12:54:18');
+INSERT INTO `shop_rank` VALUES (4, 1, 'VIP会员(VIP3)', 3, 0, 6.00, 43.00, 2, 0, 0, NULL, NULL, 0, 1, '2018-11-08 13:00:30', '2018-11-08 13:00:30');
+INSERT INTO `shop_rank` VALUES (5, 1, '至尊VIP会员(VIP4)', 4, 0, 2.00, 32.00, 3, 0, 0, NULL, NULL, 0, 1, '2018-11-08 13:00:46', '2018-11-08 13:00:46');
+INSERT INTO `shop_rank` VALUES (6, 1, '钻石会员(VIP5)', 5, 0, 1.00, 21.00, 2, 0, 0, NULL, NULL, 0, 1, '2018-11-08 13:00:56', '2018-11-08 13:00:56');
+INSERT INTO `shop_rank` VALUES (7, 1, '特殊等级', 0, 1, 5.00, 0.00, 0, 1, 2, NULL, NULL, 5, 1, '2018-11-08 13:01:27', '2018-11-08 13:01:27');
+INSERT INTO `shop_rank` VALUES (8, 1, '特殊等级1', 0, 1, 3.00, 0.00, 0, 0, 0, NULL, NULL, 0, 1, '2018-11-08 13:03:04', '2019-01-17 19:53:34');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_role
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_role`;
+CREATE TABLE `shop_role` (
+  `role_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `role_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名称',
+  `auth_codes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '权限内容',
+  `role_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '角色类型',
+  `role_alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色别名',
+  `role_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '角色说明',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_role` VALUES (1, 1, '老板', '-2NqA3qZzKKpAmhHIKsjCKht9MakCZuhEJaV8Kb7jAqHXFuWdFFhnwFDx-ZQWh_sHW_JJZGoHz-XhVwK7qAV6XAAkU-LUnNZKl_KnGA5-tNEMZIewtBKMsrg_cPZiUQsviKrynCqYoU66eTFcowZzxCFHrsNHP_q1kRogoL7AP79IfP15fANPZBsDy-2Ns8bvKCu2fMnhVTuwgRt9e8L6vO1KdFt-t93C0vLAdSvyQSoxj7pzkP4Id99LMsWigGV_0OncTvafYOpSTC8cLOr0cOVunQ6TR_NGUBnIgIqRmDa8pxb7nOofXCMPiMa3ty6ItT-vVW08v81PwEp_rw5KhsZmgQUYgNqxG-ZsiMK-YudUNBY7oAaFsAH6cvdThOn1ZF9xfQuNWuPjdQZyJFsWt93q1DXbmEbaFU4ZWt4EmRoEkv8fUA5ypV0r0MHcTuKkpAW1Y0cwXN70o95WhPqzVyODXQzshU6MkBqllxc2sCEraR8vj86DpCaEoCO_SU4lZ6Z3ZEoXrw5KiAmdoG1LbOqVR-pspP5uW_McHOrokL5Gm8XPL1a6nBowgGKot9eFa-wyhMYnbQMPiNLKn_awhS-HGW08v81PoDVgkyJ-fyV-qS4gp9KBD_tMdNq6dxQYNPsHaAZdsAH-dDqek_0MIWdFiR5tV7QDZNYfZVIngJ6fbAaHXFuWdFFUv-VPpC1bTAcbWA1qaQJ0eLqxUA5saLJiJDA7GBrby-2dtQnKUz6eUPnFVWpZaQt1W_rnnQo3KCMjcNb2c1aXvDbyeVlcmuFPZSoUgAovO_pybUkYsO6JFt9sXNZ2L_MvfNIfq-2mlCXqU1Z_lN3hWF9BiQtJluQ_kN4uUQ8HfK73fvHgeFb6VHpAuuFnx-ZAZ_d6U9pymR5vmPKtL_psiMK-YudUNBY_rAaFsAXqcveDaOokTTdhiO-EfAPrdRkXUPMrUKa6c1aXvDbCeVlcmuFPZSoUgAovO_pybUkYuNaZWt9IbN5GY_MvfNIfq_2mlCXma1Z_lN3hWF9JgNNVX8_Xm_4TQTtCV_aK0zHLwTraVF1cW-YImS0oa_8_O9JGgUUYmKKtD7dLYApVeydDfPofq-mhUQqDRD5rbOHpNT91cRZtW8PjZRo2JFsWt9HG1DXbmEraFSoxj7pzkR44q_dPbvJmgUpzbAqYcuKbxOmZV0NPGMr0nLqFfP6nbCuLm-HZHVNpaOJAt9ManAlPaFZ2s_GvhCawZTqnPRJZj_53kP4Id99LMsWigGVvqArAcu6Pw6ZOTBw4X-MIqK6Ga_KTLDuGUBnIgGasuRqgjxMaWNYfWQ9-gOrvbDaTiTeHGUpNZ-EvyQFbkwZnayW5wGUssM6xSt-8rLK-YAQkSPnskM6Gm8XPL1aCmBowgGKot9eFa-wyhQ53MTtDcMafty6oWSe3KSE8v81PqDFgkyJCYyV-qS4gp9L5X7-EqMJuSCscIMLodPpNUCqGczqOtPkMXHKMVRtNe8bnkO4vSUNygMqLtEm7wRLaWGlhnwFrvEU8k98rNvK2gQoQuO2pP69wXLpFG0wLe_oXzOWhjC3KEDtLeMTZWU9xeSO4f8_HgN5zM_Zfc_Hyz1b_vFLaFWJBZ-EcjQJAlsJnQyWFnGpvzAHcE_-EbOVmJ_AMY7YkhAGJjCruczKCs7Y5ZT-sgSd9e9PDVRo2JFsWt-nu1DXbmE7aFWJBZ-EcpOIscv8rQAqFZGoHz_3Ad-afn_2ZGDR0JPXsqK5yd_K3GBOGUBnIgHq0uRqgjwcaWRprIQ8GgMbveA77iS-XWW08v81PrDFgkyJ-dyV-rUYodLGpR-NIbOVmJ_AMY7YkhAGJoCruczKWs7Y1YS91YAN1k8_Hm_43fT8vlOmu1B3bpErfWHV8lwEwrSY4V94vWAZGcUUYtKKhHt9ofOqBG0wLeA4XzOWhjCHKEE-_TM34TTt5fPORX_gWhPoHaU46uL3Ou13goFb2cHU9o-IsbPEoV98rQBZKpWEYeL6ZWqKkfAWFU0xze_Y7y6KKkMKzHyNHXO3JcT-tsANNq__vmRkqiRJao93Tt1H3sFa7XVY5Y70cpPIMm_MKU_5aqV0r0MHcXuKkpAW1b0cwYPb8cL1ukNK7XCdGfMH1PXpsuPKgnvsfnCFmgFY7nNKreA2onQOLYUYEh75InRp8lsJnQyWJrGpvz-X0cqOIoKJCJxQ0TOM4kK5egR2XOBODm7URPIK4oDuEsvcyu8JzZPMDY86zpC70hPOXRW0pZ7oMr-VgayJOdyqBxEFDz6bJV7-_jLKKFBB8FQ7LlNpelR2qdBKenAkRZIKorDZBl9_vk_43dPMjoJ73fy6keTvCFHoYuv1HySlbix5iJ9KOYT54aP6IP-NMmN52dudUNBYLxAaFsAH-cveDaOokTSdhhOddZuQDmM4zM_Zfc_H-q1b_vDkLWdBYNm747kOZIqv83Z95KpDIUiOrEEwdbw_W1fCtPVBIfaLKCXNGXEEOafOotKT-sgONJbA76vO1KdDZfm_Hur1G8bTeHIEI9pA0cmSYEWAIvMC62mUZzbAqYcvKDxOmZV0NPGMcAdL1uURLGPCu_WMIsTXN5lPJAt9MaqBlPaFZ6j_GvsA64YR6nFWJYh9ZwbPJ7e_sfaB19ySFLv_HhVwK_mAV6W_QsHN3saP6dfPrrGAO-fMH1PXpsuPKgowcfnCFqZFY7lK6rdBmoXUPWQUp9Y75vkPJUh_dDbsWigGV7wArAcuK3w6a6J-Q0M-LAtQ1uhQazHDZroMItPCKRcDaQqxw-uAFih_d_bMbmnDaIpU-XRSkpY74AYTIklsJnQyWNwGpvz-HQcqOEeNqxRAQgKOnscL5STRKTWvajbBUAWIewtBa4srg_cPZiURMrZMWbsA6saUqnPTJBoqFUgEVPiydGhwGZxAZwhNr0P89wcNlmW_QgJQnsZLpJUCqGc0q-tPkMYGKMVRtZh_7ndPI7WCN7YMK7xy6EaS-HXSE8v81PuClgkyJ-cyV-qS4gp9K5J79wq9JiNCx3GBrby_WJtQnKT0KeUPnFVWpZUOtNgA7nZNoHb_Zfc_HCv1b_vDLSdBZBc9ZnkP4we88fVvJqYTYogLG8d86ft_WeX0draBXArMp2i_KzRCN7bOTZSU-xn9albxcOrCZuhDJSt5LziCbziTuTMV51d9IDkR4YkBoCi-GduG1QsAX8TwJApM5uUxR0MNM4oM5yZ_LvHE-HbOXAIIdItCqct_salC1KJTsTiNmbtBqYlT-XRSkpk-IMlT07s-5ifw2iqGVrpAW9V8t0m9J-TBgANMnsrMpeiQ6HQAp-tNEMeG6RmDa8pxb7nOofXCMLlK6LhBrDiS-XWW08v81PvCVgkyJ-gyV-qS4gp9KNU79cdM6BRBQsSLLUd6GmbCXCV1uCs_EIgCOxbQu4f8g7ZO4_PU4nXK6XfEqHXFuWdH1Ev-VPoDlbTAcbWA1qYR40rLLBVt9ofOqBG0wLeB4LzOWhjCHKEDtXhPzZHTt1lOOFluPnVPInOQI6uL3Oy0HgoFb2cHU9n8oknBI4V9tDMAqBkR44lLLFHqKkfAWRb0xze_Y3y6KGaPriP_NHWPX5ZWZZXONRTAPjo8FPQFZSr_by0z3Tv_f_LUp0h6YklT58S8dKU_5aqV0r0MHcaw6kpAW1d0cwXN70o95GhPbzU_NDm-HpWWtVs9albxcWkCZuhDZyt5LziCbziSe3ZTIRV_oMmRUod-9HbsWigGVHqArAcuK_w6a-MBxnROb8uM5WTR6HRCZrfLHdHTd4VDtcsxM6vQVKZDZaVNaHpDmojPPLMSo5o84klBIEW_sPb9F9ySFLy-nhVwK7rAV6XAAkU-M4qM5ym_LvSANCUBnIgI60uRqgjx8aWPYncU8SgMb3iA77iTvXWW4JhqFUgEVXmydGhwGRxAZwhNr0P7tMpMJOSxR0JQ8Mo6GmbCXGY1uCs_EsgCNplS9dV-_GhPoHaU46uL3Oz0XgoFb2XHU9V-J4gOokWv8vI_Z6eREr0MHcbwqkpAW1Y0cwFPcIhKZqX_KzHC9LmMDshU6MsDKllxc2kCEraU8vlK2bmB7Ap_bfMHV4kulUqEV3jyIDaB5ypREYmKKtD7dLYApVeyNnVBsDy-2Bs8bvWCu_X-H1LVt5nOJAt9MalAlqiTpak-HOcDbEkTeGQSp9j_5nkR4YkBoCi-GdoE1v0OncTvafYOqCTCg7RMsAnP65fPKnQ_NSUBnIgG6knDuEsvMSu8JvbSt7Y86DsCbIlCODIU4Jo70vyQFbiwpOiAmdoFVLbOrFR-NLjP66F_A7RO7crPlBtOHKTz6OtPkMXIqMVRuJh_fGhRprIQ8GgKq7u_6Yh_bfMHV4kvVUqEV3pyIDKBKCrToYeOWpWA-4b9JiNCx3GBrby-25qCrucza2s7XxbWe1iQNNkuQDtQo2USM3hJ6DfvHgeFb2THFhnwFvnEU8UB9Hb_pqcUUYtQL1Ht9IbN5GY_MvfNIfp-25tQnKTzqeULo5ZXthgOOAf-_XnRkqiRJak93q1DXbmELaFRpJn_okkPJ7e_8_V8JScAVQiAX4TuKkpAW1Z0cwHQMEsNZuXQWXGANnXQ34IIdItBK8lxw-uA16h_c_oNb3pC6InCP_IW5Fd9IDZEoXrw5-byqBxEF7z6aZQ_tMoNZ2QxQcJPsEZLZNUCqGczK6nBowgG6wt9eFr_wDZP0XUPMrUKa6c1aXvDL2ZHpAuu17x-Z8W8cPQBZJkUo4tP6ZQ7Z_xMGZVyNDfPofp_WhUQqDRD5rVOndMU9AgNNpb9PmWCYGhDJ2r_by0z3zv_e3HUIZit4YgSpDTycehwG5wGpvz-H8cqN8aNJWSxQcFOb8fL1BtOHKTza2tPkMXGKMVNNJf9PqhNo3TQNDY5HTj1H3nDLfWHV4lwEwYTJEZv8vI_Z6eREr0MHcTuK_xOmZd0cwWOrod95qbQryE1tas_EsZIewtBK8srg7jPo2USM3hJ6DfvHgeFb2VG1hnwFroEU8j_crMvJGcT44tLG8d86fn-WFfCtPV_ofaOZahQ2XOCtSfO3JZXpsuPKgjvcKvQVKYEJaVNaHpDmohSuOQS4Jg754c-VgayJ-ZxmiqGVnwAW9I89wXNZ-JxR0MOs3lNpelR2qdBKej_UEhWaMkCqgU8fXiM4bKQInmLqjqy7MeQPOFHoYuu1vwEp_rw5WhsZOgTYonKqIP-dYlO1mJ_AMY7YkhAG9lA3PV1a6rBTtMU9dUQdFXuQ_cPZiUQNTjMbvuvHgeFb2WFFhnwFvnEU8X-8zI_ZCcDJwtNr9Ht9MuO5uWD8vfNIfp-WBtQnKT16eUMXJUS9dWOJtlA_vmN0XTRN_n5HTj1H3oDrfWHV4swEwdQIsS_MHMvKCrTpse9LNL7-TYApVeyNzYBsDy-2Zs8a7LCd7gLn4TWe1iRdMf8PDdRkqiRJak9X61DXbnEraFSYZi64gaPEoS8cHWBJurDI0eP65L9psiMK-YudUNBY7r_GmlCXqS1Z_YNHdHVNxYAN9V7vvpPJyUS8XmOmu1B3bmDrOeVlcmulPZPYYf88zK9FqYQowoPKtWt-QfLKNG0wLe_IDwAaFsAXicvdPbOXpUSd4gNNFV-wHiRkXMQ8Xn5HTj1H3oFLfWHV4swEwdQIsS_MHMvJ6nU4Uy9KlL-eHYApVeyN3UBsDy-2Zs8a7LCd7gLn4TS-ljQ-cfAfXZRUqiRJak-nq1DXbmF7aFSYZi64gaPEoSAt7TCFqcR4It6XhLwK7q-WeX0drbBXArKZ-g_KvRA9KfLnpZUtJYRZAt9MalBluiTpak_nOcDaUkT6nGUota84DkToIaCsfVsWigGVnt_3hVwK7sAV6XAAkU-MUdM6abPWXPANvn7URPIKonCKllxc2tCEraR8vj87DfB7UeSanOSJZr9Zwb-VgayJ-bxWiqGVrwAW9V8t0m9KOJARINOXsoOJ2ZQanPDprjPXxVTt4VDtcsvMCrCZuhDJyt5KvpCLIoCOjMVpEWwYLxCFDpydGhwGBxAYArNrJS6OMv9JiNCx3GBrby-2JrCruczK-s7Y1VWtJWANtT-f3bN0qiRJak-3m1DXbmFLaFSJVX8oslPoHe9c3W96BkT4IsP28d86fn_G1fCtPVA4faLZeYR2XF_O_W-HVPWe0VDtcsvMGmCZuhDZCt5LziCbziPuvRSYZbt48vOoUS_MXM7qCcV0r0MHcTv6DxOmZVzNPGMbcfMqKZQafXD5reNIxaCKRcDa8nw8fnCFGh_cPiMa3ty6oeV66eTFclv17ySlbixpiJ_5akSJzmL6ZV6d0rNaBG0wLe_ILuAaFsB3KEAtbYQzshU6MkCKUt_sasCErNUMjf86zvEm7wRLaUGFUv-VPoCVbT8M_Z9p6gTUYlMLBWqKkfAW1Z0NUXBYby6KGfQmXJDdznPzshU6MkCa4t_salA1KJQMnUL6WnAb8kUPyFHoYuu1_oEp_rw5ahsZGgUp0rMK8P7d0lL69RBAMXQ3_zM2hjBXqdDqepBTtJS-xbPNNkrcfdCFmdDpfm_Hqv1G8oU-vVSEpX65wbBJEqAsOJypZxEF7tArAcu6Lw6ZON_h3RLr8qLlufMKbDAp-tNEMXHK4uRqgkw8aWMZ3aU8vgK7un_6sWS_XWTJAh94slOIQWsJnQyW5tFVQsAX4XwJAmPK6HAAsXMHslK5yTNq2E1tas_E8dIewtBKMsrgzmN0XaPMjY86bbCK4cQK6eTFclvFHySlbiy5iJApWmU0YcNqtI89TjOZGH_QMUQ3_zM2hjBXGdDqek_0MIWdFiR5tV-vraO4-UT83s86XjDbDXFuWdFFQkwZzxCVLrsNHP_q1kQognLaZJt-4XQJmJBh4DLLohOp-r8XPL1a6p_ERZIKslDZBl9_vk_4vWScLcKWbq_7YiQOrXQpRsqFUgEV3owJnayW9nGUssM6xSt9ElNZKN_scbMLcfMqKXQWqdBKejAkwhWaMkCqgU7v3nOkXeQMXaLq7sy6keTvCFHoYuu1DrEp_rw5ehsZCYUoDmPqJL7dYbOVmJEBoTPcHaAZdsAH-X1uCs_E0gCNxURtYfAQ_ZQEXTRN_n5HTj1H3sEbfWHV4qwEwaOJAZv9Pa9K9kTIonKKRHqKkfAW1bztUXBY7tAFCVMLvKyODTO35ZF9VcRuIUxvWuA1-fFt-t93C0vKAWTuSQVo5g75zkP4Il88fTsWigGVnwAHhVwK7rAV6H-R0M-L0qLpOk_KTLDuGUBnIgG6EjDuEsvMOu8IvITsSgMbveA77iQ-HXRIZgqFUgEV3pw5nayW5tGUscKLBKt90oL5GWxRoWNLws6GmbCXmazajlBUoaIJtWNOFauP7VMYOUS8XmOmu1B3bmF7-eVlclvFPZOo4k-ovJ8JCiDI0eP65L9p_xMGZV093fPofp_2hUMqnVB5rULHxRF-llPNxmrcfdCFmfEJfm_Hqv1G8YPP_LEJBo9Y0iBIkaAdKJypZxEFDvArAcu6Tw6Z-FCwHRPsInKZlfN63W_Nbe7URPIKorCqllxc6kCErKPN_b87zu_7EeTvDMRkpd9I4cU07s-5iYy2VyUlLq_HcE6d8pM1mHAA8HNnskM6Gm8XPL1a6qBERZIKoqDZBV7Q_c_4vPQM_e863fEq4eS66eTFclw1nySlbixpiJ8p6qS0YlNrBVt9ofOqBG0wLe_IbpAaFsAH6cvdDTPnETVthmRptW8QDVO4SJFsWt93Ks1b_vDb6dBYFV_orkS58g9MfT-JueDI0eLa5X9uHYApVeyNLXBsDy-GBs8bvDC9Ll-IxaS-1cRuJb7w-hO4bLQNSV_aK0z3XpFv-dFV4uqIEmRoEkv8_V8JmwUo3mL6JI6-MiP15fANPVBILzOWhkBHKEAtzhM4wTS9dUQ-dl8LnnM4TMTonWLqrsEm7wRLaUHFMv-VPpCVbT9c3W96BkQIcaN7ZV75sfNZCZCx4WRH_zM2hjCH-dDqekAkMITdhiO-Ef7PrVPpHaQInjO7vdBq4oQKnVRJFZqFUgEV3qypnayW5wGUsgNqxG-ZsXNZ2QER0J-MEZNpOl8XPL1a6rBERZIKskDZBm_f3YN0XISc3fP7zfy6EaQe3YU5EWwYLxCVzhydGhwGZxAZ0rKKFHt98kKJidCw7RPr8kL6FUCqGcza2jBowgG6Et9eJk7PDZ_4nVPMjsNa6n_78aPK6eTFcmulvySlbjw5iJBKCcUZvmOrFD_tcpP5WHCscQNMEs6GmbCXqSzqjlBUsWIJtoRtNk_rnnRonbRN_nL6zty6saUq6eTFcmul3ySlbjw5iJBKCcUZvmOrFD_tcpP5WHCscWLLwj6Gmv', 1, NULL, '老板老板', NULL, '2020-01-29 20:19:37');
+INSERT INTO `shop_role` VALUES (2, 1, '员工', 'EMcDDPRyCOfqSTDaawDzjDryFjL4qasPwDtXl7oNcKxVemubq80k-fDXd_ygQ3xhvByDcyK', 0, NULL, '员工员工', '2018-10-22 12:33:35', '2020-01-29 20:20:00');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_shipper
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_shipper`;
+CREATE TABLE `shop_shipper` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int NOT NULL DEFAULT '0' COMMENT '店铺ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '发货方名称',
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发货方图标',
+  `sort` int unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `last_time` int unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商品发货方表';
+
+-- ----------------------------
+-- Records of shop_shipper
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_shipper` VALUES (4, 1, '测试发货方1', '/shop/1/gallery/2018/08/13/15341736963513.png', 255, 0, '2019-10-17 19:13:14', '2021-11-14 21:18:44');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shop_shipping
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_shipping`;
+CREATE TABLE `shop_shipping` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL COMMENT '店铺id',
+  `shipping_id` int unsigned NOT NULL COMMENT '快递公司id',
+  `img_width` int unsigned DEFAULT '0' COMMENT '背景图片宽度',
+  `img_height` int unsigned DEFAULT '0' COMMENT '背景图片高度',
+  `offset_top` int unsigned DEFAULT '0' COMMENT '上偏移量',
+  `offset_left` int unsigned DEFAULT '0' COMMENT '左偏移量',
+  `img_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板图片',
+  `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否默认 默认0',
+  `is_open` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否启用 默认0',
+  `config_lable` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '配置标签',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of shop_shipping
+-- ----------------------------
+BEGIN;
+INSERT INTO `shop_shipping` VALUES (1, 1, 1, 0, 0, 0, 0, NULL, 0, 1, NULL, NULL, '2020-01-11 06:01:59');
+INSERT INTO `shop_shipping` VALUES (2, 1, 2, 0, 0, 0, 0, NULL, 0, 1, NULL, NULL, '2020-01-11 06:01:59');
+INSERT INTO `shop_shipping` VALUES (3, 1, 3, 869, 480, 0, 0, '/shop/1/image/2018/10/22/15402092336895.jpg', 0, 1, 'seller_name,发件人-姓名,120,22,114,280||,||seller_mobile,发件人-联系电话,120,22,292,285||,||seller_postcode,发件人-邮编,120,22,0,0||,||', NULL, '2020-01-11 06:01:59');
+INSERT INTO `shop_shipping` VALUES (4, 1, 4, 0, 0, 0, 0, NULL, 0, 1, NULL, NULL, '2020-01-11 06:01:59');
+INSERT INTO `shop_shipping` VALUES (5, 1, 5, 0, 0, 0, 0, NULL, 1, 1, NULL, NULL, '2020-01-11 06:01:59');
+COMMIT;
+
+-- ----------------------------
 -- Table structure for sku_member
 -- ----------------------------
 DROP TABLE IF EXISTS `sku_member`;
@@ -6489,381 +7978,911 @@ CREATE TABLE `system_config` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=379 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=509 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of system_config
 -- ----------------------------
 BEGIN;
-INSERT INTO `system_config` VALUES (1, 'config_group', '配置分组', NULL, 'system', 'textarea', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, NULL, '2018-07-18 15:48:29');
-INSERT INTO `system_config` VALUES (2, 'form_item_type', '配置表单类型', NULL, 'system', 'textarea', 0, NULL, NULL, NULL, NULL, '配置表单元素类型', 255, 1, NULL, NULL, '2018-04-02 14:42:57');
-INSERT INTO `system_config` VALUES (3, 'custom_style_enable', '是否开启自定义改色', NULL, 'site_style', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (4, 'main_color', '主体颜色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城主体颜色 code:main_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (5, 'second_color', '主体辅色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '主体辅色 code:second_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (6, 'second_bg_color', '主体背景辅色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff0000', NULL, NULL, '主体背景辅色 code:second_bg_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (7, 'right_bg_color', '右侧侧边栏背景色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城右侧侧边栏背景色 code:right_bg_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (8, 'left_nav_color', '左侧分类导航背景颜色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城左侧分类导航背景颜色 code:left_nav_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (9, 'cart_image', '购物车图标', NULL, 'site_style', 'imagegroup', 0, NULL, '/goods/brand/2018/06/16/15291637579191.jpg', NULL, NULL, '最佳显示尺寸为50*50像素，建议上传png格式', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
-INSERT INTO `system_config` VALUES (19, 'site_name', '网站名称', NULL, 'website', 'text', 1, '网站设置', '乐融沃 · 云商城 · 乐融沃B2C商城演示站', NULL, NULL, '网站名称，将显示在商城相关的页面的浏览器标签页上，网站名称不要超过30个字', 255, 1, NULL, '2018-02-22 16:10:48', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (20, 'site_index', '网站首页', NULL, 'website', 'radio', 0, '网站设置', '0', '0::商城首页\r\n1::资讯频道\r\n2::专题页', NULL, '此设置用于定制你的网站首页显示的内容，暂时支持商城首页、资讯频道、专题页', 255, 1, NULL, '2018-02-22 16:15:32', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (21, 'sale_level_names', '经营地区行政级别名称', NULL, 'region', 'text', 0, NULL, '省,市,区/县,镇,街道/村', NULL, NULL, '对应经营地区列表1、2、3、4、5个行政级别的名称，数值越小，行政级别越高。行政级别名称间请用英文半角逗号“,”分割，提交后生效见效果', 255, 1, NULL, '2018-03-18 21:58:52', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (22, 'region_start', '经营地区最高级别', NULL, 'region', 'select', 0, NULL, '1', '1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制系统中经营地区选择的最高行政级别', 255, 1, NULL, '2018-03-18 22:00:56', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (23, 'region_end', '经营地区最低级别', NULL, 'region', 'select', 0, NULL, '3', '1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制系统中经营地区选择的最低行政级别', 255, 1, NULL, '2018-03-18 22:02:09', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (24, 'level_names', '行政地区行政级别名称', NULL, 'region', 'text', 0, NULL, '省,市,区/县,镇,街道/村', NULL, NULL, '对应行政地区列表1、2、3、4、5个行政级别的名称，数值越小，行政级别越高。行政级别名称间请用英文半角逗号“,”分割，提交后生效见效果', 255, 1, NULL, '2018-03-18 22:03:17', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (25, 'region_min_level', '行政地区最低级别', NULL, 'region', 'select', 0, NULL, '5', '1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制系统中非经营地区选择的最低行政级别', 255, 1, NULL, '2018-03-18 22:04:17', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (26, 'user_address_level', '会员收货地址地区选择的最低级别', NULL, 'region', 'select', 0, NULL, '3', '0:最后一级\r\n1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制会员添加/编译收货地址时选择地区的最低级别，此设置请勿小于“行政地区最低级别”', 255, 1, NULL, '2018-03-18 22:05:48', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (27, 'region_short_name', '地区名称是否使用简写', NULL, 'region', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '选择是则地区选择控件将显示地区的简写，例如：内蒙古自治区将显示内蒙古', 255, 1, NULL, '2018-03-18 22:11:56', '2018-05-29 12:56:52');
-INSERT INTO `system_config` VALUES (28, 'default_goods_image', '默认商品图片', NULL, 'default_image', 'imagegroup', 1, NULL, '/site/1/images/2018/07/15/15316375751761.gif', NULL, NULL, '应用于卖家发布商品时，展示的商品图片初始图，最佳显示尺寸为300*300像素', 255, 1, NULL, '2018-04-01 15:13:55', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (29, 'default_shop_logo', '默认店铺Logo', NULL, 'default_image', 'imagegroup', 1, NULL, '/site/1/images/2018/07/15/15316680507825.gif', NULL, NULL, '商家入驻后，默认展示的店铺logo，最佳显示尺寸为120*60像素', 255, 1, NULL, '2018-04-01 15:15:54', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (30, 'default_shop_image', '默认店铺头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295955731722.gif', NULL, NULL, '商家入驻后，默认展示的店铺头像，最佳显示尺寸为120*120像素', 255, 1, NULL, '2018-04-01 15:16:59', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (31, 'default_user_portrait', '默认用户头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/03/15280050844047.png', NULL, NULL, '会员注册后，默认展示的用户头像，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-01 15:17:37', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (32, 'default_micro_shop_image', '默认微店头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295957187340.jpg', NULL, NULL, '会员成为分销商后，微小店展示的默认头像，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-01 15:20:15', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (33, 'default_article_cat_image', '默认文章分类图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/10/15338637696739.png', NULL, NULL, '图片请使用100 * 100像素jpg、gif、png格式的图片，并且图片大小不得超过2M，此图片将在文章咨询频道下的文章列表中展示，展示位置在文章分类名称前', 255, 1, NULL, '2018-04-01 15:20:44', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (34, 'default_lazyload', 'PC端默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/29/15355368456667.png', NULL, NULL, '前台页面访问时，广告或商品图片未展示出来时，默认展示的图片，最佳显示尺寸140*30像素png格式的图片', 255, 1, NULL, '2018-04-01 15:21:21', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (35, 'default_lazyload_mobile', '手机端默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/29/15355370596900.png', NULL, NULL, '最佳显示尺寸70*70像素png格式的图片', 255, 1, NULL, '2018-04-01 15:21:47', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (36, 'default_noresult', '无记录默认图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/15/15343120351536.png', NULL, NULL, '列表页、搜索页等搜索不到任何记录时显示的默认图片', 255, 1, NULL, '2018-04-01 15:22:22', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (37, 'default_video_image', '默认视频封面图', NULL, 'default_image', 'imagegroup', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-01 15:22:50', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (38, 'idcard_demo_image', '实名认证示例图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295957722848.jpg|/site/1/images/2018/06/21/15295958454033.jpg|/site/1/images/2018/06/21/15295958661606.jpg', NULL, '正面照,背面照,手持照', '分别上传身份证正面照、身份证背面照、本人手持身份证正面照，建议上传400*200像素的图片', 255, 1, NULL, '2018-04-01 15:24:50', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (39, 'company_demo_image', '企业认证示例图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295959073083.jpg', NULL, '营业执照', '上传企业法人营业执照示例图，建议上传595*842像素的图片', 255, 1, NULL, '2018-04-01 15:26:16', '2018-08-29 10:04:29');
-INSERT INTO `system_config` VALUES (40, 'image_dir_type', '图片存放方式', NULL, 'image_upload', 'radio', 1, NULL, '3', '3::按照年月日存放（例：/&nbsp;店铺id&nbsp;/&nbsp;年&nbsp;/&nbsp;月&nbsp;/&nbsp;日&nbsp;/&nbsp;图片）', NULL, NULL, 255, 1, NULL, '2018-04-01 17:40:49', '2018-05-30 15:31:54');
-INSERT INTO `system_config` VALUES (41, 'favicon', '网站头像', NULL, 'website', 'imagegroup', 0, '网站设置', '/site/1/images/2018/06/03/15280052637458.png', NULL, NULL, '网站头像将显示在浏览器的选项卡上，请上传“.ico”格式，大小为25*25像素的图片，此图片将被作为部分二维码中心的Logo图片', 255, 1, NULL, '2018-04-02 13:58:42', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (42, 'backend_logo', '后台系统Logo', NULL, 'website', 'imagegroup', 1, '网站设置', '/site/1/2018/06/03/15280049252604.png', NULL, NULL, '用于后台系统登录页面的Logo展示，建议尺寸270*70像素，背景为透明的白色主题图片', 255, 1, NULL, '2018-04-02 14:05:55', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (43, 'site_icp', 'ICP证书号', NULL, 'website', 'text', 0, '网站设置', NULL, NULL, NULL, '用于前台、平台方后台、站点后台、卖家中心页面底部显示ICP备案信息，如果网站已备案，在此输入你的授权码，如果没有请留空', 255, 1, NULL, '2018-04-02 14:09:30', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (44, 'site_copyright', '版权信息', NULL, 'website', 'text', 0, '网站设置', 'Copyright 乐融沃(www.laravelvip.com) 版权所有', NULL, NULL, '用于前台、平台方后台、站点后台、卖家中心页面底部显示版权信息', 255, 1, NULL, '2018-04-02 14:10:29', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (45, 'timezone', '默认时区', NULL, 'website', 'select', 0, '网站设置', '-12', '-12::(GMT -12:00) Eniwetok, Kwajalein\r\n-11::(GMT -11:00) Midway Island, Samoa', NULL, '系统数据库中存储所有时间为格林威治时间，会根据此配置自动转换为本地时间，请根据实际地区选择时区，否则会造成时间错误，请勿随意变更', 255, 1, NULL, '2018-04-02 14:41:20', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (46, 'stats_code', '第三方流量统计代码(PC端)', NULL, 'website', 'textarea', 0, '网站设置', NULL, NULL, NULL, 'PC端前台页面底部可以显示第三方统计', 255, 1, NULL, '2018-04-02 15:07:20', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (47, 'stats_code_wap', '第三方流量统计代码(WAP端)', NULL, 'website', 'textarea', 0, '网站设置', NULL, NULL, NULL, 'WAP端前台页面底部可以显示第三方统计', 255, 1, NULL, '2018-04-02 15:08:01', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (48, 'pc_site_status', 'PC端状态', NULL, 'website', 'radio', 0, 'pc网站状态', '1', '1::开启\r\n0::关闭', NULL, '可以暂时将商城PC端停用，用户无法访问PC端前台页面，不影响管理员后台操作', 255, 1, NULL, '2018-04-02 15:09:59', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (49, 'pc_site_close_image', 'PC端关闭提示图片', NULL, 'website', 'imagegroup', 0, 'pc网站状态', NULL, NULL, NULL, '建议上传白色背景，最佳尺寸为1920*600像素', 255, 1, NULL, '2018-04-02 15:12:29', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (50, 'site_status', '网站状态', NULL, 'website', 'radio', 0, '网站状态', '1', '1::正常\r\n2::升级中\r\n0::暂时关闭', NULL, '可暂时将网站关闭或设为升级中，其他人无法访问，但不影响管理员访问后台', 255, 1, NULL, '2018-04-02 15:14:18', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (51, 'close_comment', '关闭原因', NULL, 'website', 'textarea', 0, '网站状态', '您好，由于网站系统升级，暂时关闭商城，给您带来不便敬请谅解!', NULL, NULL, '当网站处于关闭状态时，关闭原因将显示在前台', 255, 1, NULL, '2018-04-02 15:15:08', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (52, 'upgrade_comment', '升级描述', NULL, 'website', 'textarea', 0, '网站状态', '为了让您更好的使用资源平台，我们正在对平台进行升级。升级期间暂时无法访问。给您带来的不便，敬请谅解。', NULL, NULL, '当网站处于升级状态时，升级提示将显示在前台', 255, 1, NULL, '2018-04-02 15:15:49', '2021-04-07 22:14:39');
-INSERT INTO `system_config` VALUES (53, 'captcha_code', '启用图片验证码', NULL, 'captcha', 'checkbox', 0, '图片验证码', '1,2,3', '1::后台管理员登录\r\n2::前台新用户注册\r\n3::前台用户登录\r\n4::前台动态密码登录', NULL, '商城会员在商城内进行身份验证时，如果验证失败次数超过3次后将强制开启图片验证码，验证成功后将重置验证失败次数', 255, 1, NULL, '2018-04-02 15:36:43', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (54, 'captcha_login_fail', '登录失败时显示图片验证码', NULL, 'captcha', 'switch', 1, '图片验证码', '1', '1::是\r\n0::否', NULL, '选择“是”，将在用户登录失败 3 次后才显示验证码；选择“否”，将始终在登录时显示验证码<br/>\r\n注意：只有在启用了后台管理员登录和前台用户登录时本设置才有效', 255, 1, NULL, '2018-04-02 15:50:02', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (55, 'alioss_enable', '是否开启', NULL, 'alioss', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，用户上传图片时将会自动上传至阿里OSS上进行存储', 255, 1, NULL, '2018-04-02 16:21:53', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (56, 'alioss_bucket_name', 'Bucket名称', NULL, 'alioss', 'text', 0, NULL, 'laravelvip', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:12:59', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (57, 'alioss_access_key_id', 'AccessKeyID', NULL, 'alioss', 'text', 0, NULL, 'xxxxxxxxx', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:13:44', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (58, 'alioss_access_key_secret', 'AccessKeySecret', NULL, 'alioss', 'text', 0, NULL, 'xxxxxxxxxx', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:14:16', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (59, 'alioss_root_path', '图片存储根目录', NULL, 'alioss', 'text', 0, NULL, 'images', NULL, NULL, '系统上传的所有图片均将被存放在此目录下，为空则存放在OSS根目录下，默认为“images”', 255, 1, NULL, '2018-04-05 08:15:06', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (60, 'alioss_domain', '自定义绑定域名', NULL, 'alioss', 'text', 0, NULL, NULL, NULL, NULL, '您可以在阿里OSS控制台对Bucket进行自定义域名绑定，绑定后系统将会根据此域名访问图片，此域名仅用于访问图片，与商城链接无关，如果没有特殊要求请置空', 255, 1, NULL, '2018-04-05 08:16:20', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (61, 'alioss_bucket_region', '所属地区', NULL, 'alioss', 'radio', 0, NULL, '8', '0:: 华东2(上海)\r\n1:: 华北1(青岛)\r\n2:: 华北2(北京)\r\n3:: 华东1(杭州)\r\n4:: 华南1(深圳)\r\n5:: 香港\r\n6:: 亚洲(新加坡)\r\n7:: 美西1(美国硅谷)\r\n8:: 美东1(美国弗吉尼亚)', NULL, '<span class=\"c-red\">建议您开通华北2(北京)地区的bucket，否则使用商城内的采集时您无法将采集的图片存入您的OSS，华北2（北京）的OSS与商城系统相当于内网，内部的图片上传下载不耗费您的流量；</span>&nbsp;OSS所属地区与访问域名对照规则请参考官网“<a class=\"btn-link\" href=\"https://help.aliyun.com/document_detail/31837.html?spm=5176.2020520105.147.4.DnzI5j\" target=\"_blank\" title=\"点击进入官网\">OSS域名访问</a>”', 255, 1, NULL, '2018-04-05 08:22:27', '2018-04-06 17:16:33');
-INSERT INTO `system_config` VALUES (62, 'oss_domain', 'OSS外网域名', NULL, 'alioss', 'static', 0, NULL, 'image.laravelvip.com', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:36:53', '2018-04-05 08:36:53');
-INSERT INTO `system_config` VALUES (63, 'oss_internal_domain', 'OSS内网域名', NULL, 'alioss', 'static', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:43:37', '2018-04-05 08:43:37');
-INSERT INTO `system_config` VALUES (64, 'oss_image_domain', '图片服务域名', NULL, 'alioss', 'static', 0, NULL, NULL, NULL, NULL, '系统会自动根据阿里OSS图片服务规则对部分图片进行缩放裁剪处理', 255, 1, NULL, '2018-04-05 08:44:22', '2018-04-05 08:44:22');
-INSERT INTO `system_config` VALUES (65, 'captcha_noise', '图片验证码干扰点', NULL, 'captcha', 'short_text', 0, '图片验证码', '0', NULL, NULL, '默认无', 255, 1, NULL, '2018-04-07 13:02:46', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (66, 'captcha_curve', '图片验证码干扰线', NULL, 'captcha', 'short_text', 0, '图片验证码', '0', NULL, NULL, '默认无', 255, 1, NULL, '2018-04-07 13:05:30', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (67, 'captcha_sms_max', '短信验证码控制', NULL, 'captcha', 'short_text', 0, '短信验证码', '100', NULL, NULL, '今日已发送短信验证码<span class=\"c-red m-l-5 m-r-5\">0</span>条', 255, 1, NULL, '2018-04-07 13:12:51', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (68, 'captcha_sms_mobile_max', '每个手机号码地址短信验证码控制', NULL, 'captcha', 'html', 0, '短信验证码', '5', NULL, NULL, '两次短信验证码发送的时间间隔为60秒', 255, 1, NULL, '2018-04-07 13:17:57', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (69, 'captcha_sms_ip_max', '每个IP地址短信验证码控制', NULL, 'captcha', 'html', 0, '短信验证码', '5', NULL, NULL, '两次短信验证码发送的时间间隔为60秒', 255, 1, NULL, '2018-04-07 13:20:11', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (70, 'captcha_sms_limit', '短信验证码发送频繁限制方式', NULL, 'captcha', 'radio', 0, '短信验证码', '1', '0:: 禁止发送短信验证码\r\n1:: 强制输入图片验证码', NULL, '短信验证码发送过于频繁后系统采取的策略<br><span style=\"color: red;\">用户在禁止发送短信验证码情况下依然请求发送短信验证码的接口也会被强制要求输入图片验证码的</span>', 255, 1, NULL, '2018-04-07 13:22:30', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (71, 'mall_logo', '商城Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/06/03/15280053454152.png', NULL, NULL, '前台除了用户中心，其它页面展示，最佳显示尺寸为240*80像素，建议上传jpg格式图片，如果上传png格式图片，会导致接收邮件中的logo无法正常展示', 255, 1, NULL, '2018-04-08 15:43:33', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (72, 'user_center_logo', '会员中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/11/17/15424425979257.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 15:44:37', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (73, 'seller_center_logo', '卖家中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/07/15/15316457446277.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 15:45:44', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (74, 'store_center_logo', '网点中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/11/17/15424423965918.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 15:46:35', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (75, 'mall_phone', '平台方客服联系电话', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '卖家中心欢迎页、站点后台欢迎页、商城前台底部显示，方便商家或会员遇到问题及时咨询', 255, 1, NULL, '2018-04-08 15:47:21', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (76, 'mall_email', '平台方客服电子邮件', NULL, 'mall', 'text', 0, '商城信息', '410284576@qq.com', NULL, NULL, '卖家中心欢迎页、站点后台欢迎页、商城前台底部显示，方便商家或会员遇到问题及时咨询', 255, 1, NULL, '2018-04-08 15:48:07', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (77, 'mall_qq', 'QQ客服', NULL, 'mall', 'text', 0, '商城信息', '410284576', NULL, NULL, '商城前台右侧侧边栏处展示', 255, 1, NULL, '2018-04-08 15:48:54', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (78, 'mall_wangwang', '旺旺客服', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '商城前台右侧侧边栏处展示', 255, 1, NULL, '2018-04-08 15:50:09', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (79, 'mall_region_code', '所在地区', NULL, 'mall', 'region', 1, '商城信息', '50,01,01', NULL, NULL, '商城的所在位置，如果商城定位不到用户所在地区，则会使用此位置信息', 255, 1, NULL, '2018-04-08 15:51:09', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (80, 'mall_address', '详细地址', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '用于备注商城所在地的详细地址', 255, 1, NULL, '2018-04-08 15:52:05', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (81, 'mall_wx_qrcode', '商城微信二维码', NULL, 'mall', 'imagegroup', 0, '商城信息', '/site/1/images/2018/06/03/15280054684937.png', NULL, NULL, '商城微信公众号二维码，显示在商城前台右侧侧边栏，最佳尺寸为130*130像素', 255, 1, NULL, '2018-04-08 15:53:07', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (82, 'user_protocol', '会员注册协议', NULL, 'mall', 'kindeditor', 0, '商城协议', '<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">使用本公司服务所须遵守的条款和条件。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">1.用户资格</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本公司的服务仅向适用法律下能够签订具有法律约束力的 合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的 服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">2.您的资料（包括但不限于所添加的任何商品）不得：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*具有欺诈性、虚假、不准确或具误导性；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有侮辱或者诽谤他人，侵害他人合法权益的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">3.违约</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(a)您违反本协议或纳入本协议的文件；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(b)本公司无法核证或验证您向本公司提供的任何资料；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">4.责任限制</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本 公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接 或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关 实体对本公司用户的行为的合法性及产生的任何结果不承担责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">5.无代理关系</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">6.一般规定</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。</span>', NULL, NULL, '会员注册时需要遵守的注册协议', 255, 1, NULL, '2018-04-08 15:55:31', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (83, 'seller_protocol', '商家入驻协议', NULL, 'mall', 'kindeditor', 0, '商城协议', '<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">使用本公司服务所须遵守的条款和条件。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">1.用户资格</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本公司的服务仅向适用法律下能够签订具有法律约束力的 合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的 服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">2.您的资料（包括但不限于所添加的任何商品）不得：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*具有欺诈性、虚假、不准确或具误导性；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有侮辱或者诽谤他人，侵害他人合法权益的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">3.违约</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(a)您违反本协议或纳入本协议的文件；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(b)本公司无法核证或验证您向本公司提供的任何资料；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">4.责任限制</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本 公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接 或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关 实体对本公司用户的行为的合法性及产生的任何结果不承担责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">5.无代理关系</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">6.一般规定</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。</span>', NULL, NULL, '商家入驻时需要遵守的入驻协议', 255, 1, NULL, '2018-04-08 15:56:38', '2018-12-22 13:04:44');
-INSERT INTO `system_config` VALUES (84, 'amap_web_key', 'Web服务的Key', NULL, 'amap', 'text', 0, '高德地图', '02612214132beb857010dfca88857d17', NULL, NULL, '用于系统在服务器端调用高德地图相关服务接口，请登录<a class=\"btn-link\" target=\"_blank\" href=\"http://lbs.amap.com/dev/key\">高德地图开放平台控制台</a>&gt;我的应用创建应用，并添加“Web服务”的key', 255, 1, NULL, '2018-04-13 02:26:00', '2018-04-13 02:27:09');
-INSERT INTO `system_config` VALUES (85, 'amap_js_key', 'Web端的Key', NULL, 'amap', 'text', 0, '高德地图', '895b322343baec17c8289ae02c113e6f', NULL, NULL, '用于系统在客户端浏览器中通过JS调用高德地图相关服务接口，请登录<a class=\"btn-link\" target=\"_blank\" href=\"http://lbs.amap.com/dev/key\">高德地图开放平台控制台</a>&gt;我的应用创建应用，并添加“Web端”的key', 255, 1, NULL, '2018-04-13 02:26:39', '2018-04-13 02:27:10');
-INSERT INTO `system_config` VALUES (86, 'bmap_js_key', '百度地图的ak', NULL, 'amap', 'text', 0, '百度地图', 'ThZPomUj8vmkMa9LAxzGYSa1BlLfWGbU', NULL, NULL, '用于系统在服务器端调用百度地图相关服务接口', 255, 1, NULL, '2018-04-13 02:26:39', '2018-04-13 02:26:39');
-INSERT INTO `system_config` VALUES (87, 'is_show_site_nav_category', '是否显示分类导航', NULL, 'nav_category_site', 'switch', 0, NULL, '1', '1::开\r\n0::关', NULL, '控制显示或隐藏分类导航', 255, 1, NULL, '2018-04-15 06:34:31', '2018-08-08 15:03:49');
-INSERT INTO `system_config` VALUES (88, 'site_nav_category_style', '导航样式', NULL, 'nav_category_site', 'radio', 0, NULL, '0', '0::默认样式\r\n1::经典样式', NULL, '您可以选择分类导航的样式', 255, 1, NULL, '2018-04-15 06:35:51', '2018-08-08 15:03:49');
-INSERT INTO `system_config` VALUES (89, 'login_bg_image', '登录页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '前台登录、注册页面设置', '/site/1/images/2018/08/02/15332182498062.jpg', NULL, NULL, '用于替换登录页面的主题图片，最佳显示尺寸1920*535像素', 255, 1, NULL, '2018-04-16 14:35:57', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (90, 'login_bg_url', '登录页面主题图片链接', NULL, 'login_bg', 'text', 0, '前台登录、注册页面设置', NULL, NULL, NULL, '设置后前台登录页面背景图将可以点击并跳转此链接页面，为空则不能点击；<br>如访问网站内的链接请直接输入商城域名后的链接内容即可，以\"/\"开头<br>例：想跳转至商城首页，无需输入\"http://www.XXX.com/index.html\"，只需输入“/index.html”', 255, 1, NULL, '2018-04-16 14:37:01', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (91, 'register_bg_image', '注册页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '前台登录、注册页面设置', '/site/1/images/2018/08/02/15332179867040.jpg', NULL, NULL, '用于替换注册页面的主题图片，最佳显示尺寸420*220像素', 255, 1, NULL, '2018-04-16 14:37:40', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (92, 'admin_login_bg_mode', '后台登录页面主题图片风格', NULL, 'login_bg', 'radio', 0, '后台登录页面设置', '1', '0::系统默认\r\n1::自定义', NULL, '选择“自定义”后“后台登录页面主题图片”将起作用', 255, 1, NULL, '2018-04-16 14:39:25', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (93, 'admin_login_bg_image', '后台登录页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '后台登录页面设置', '||||', NULL, ',,,,', '用于替换后台登录页面的主题图片，最多支持上传5张图片，建议图片尺寸为1920*1080像素\r\n仅在开启“后台登录页面主题图片风格”为“自定义”模式下起作用', 255, 1, NULL, '2018-04-16 14:42:47', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (94, 'loading_style', '缓载样式', NULL, 'login_bg', 'radio', 0, '系统加载动画效果设置', '0', '0::系统默认\r\n1::极简风格', NULL, '定义系统中的加载动画效果，极简风格中间的图片将会自动调用你设置的网站头像图片', 255, 1, NULL, '2018-04-16 14:44:32', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (95, 'loading_color', '缓载颜色', NULL, 'login_bg', 'colorpicker', 0, '系统加载动画效果设置', '#ffffff', NULL, NULL, '仅当缓载样式为“极简风格”时起作用，设置加载动画的颜色，建议与您的网站头像颜色保持一致', 255, 1, NULL, '2018-04-16 14:47:55', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (96, 'cart_loading_image', '购物车缓载和提交结算缓载图片', NULL, 'login_bg', 'imagegroup', 0, '系统加载动画效果设置', NULL, NULL, NULL, '控制购物清单为空时的默认图片和提交订单结算时的缓载页面中的图片，最佳显示尺寸200*150像素，建议为gif动态图片<br><span class=\"c-red\"><strong>此设置仅在商城开启整站改色后才起作用！</strong><br>变更后请重新生成商城首页并清理公共缓存和浏览器缓存</span>', 255, 1, NULL, '2018-04-16 14:49:30', '2018-08-02 14:04:35');
-INSERT INTO `system_config` VALUES (97, 'mall_top_ad_image', '商城顶部广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, NULL, NULL, NULL, '用于替换商城顶部广告图片，最佳显示尺寸宽度1210像素，高度不限（建议80像素）', 255, 1, NULL, '2018-04-16 15:00:06', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (98, 'mall_top_ad_bg_color', '商城顶部广告图背景色', NULL, 'mall_top_ad', 'colorpicker', 0, NULL, '#e2283d', NULL, NULL, '由于用户的浏览器或者分辨率可能会超出你图片的宽度，所以建议设置背景色为您广告图两边的颜色，以保证您商城的美观性', 255, 1, NULL, '2018-04-16 15:00:50', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (99, 'mall_top_ad_url', '商城顶部广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 15:01:27', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (100, 'mall_logo_right_ad_image', '商城搜索框左侧广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, '/site/1/images/2018/08/15/15343433458679.jpg', NULL, NULL, '用于替换商城搜索框左侧广告图片，最佳显示尺寸170*90像素', 255, 1, NULL, '2018-04-16 15:02:05', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (101, 'mall_logo_right_ad_url', '商城搜索框左侧广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 15:02:36', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (102, 'mall_search_right_ad_image', '商城搜索框右侧广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, '/site/1/images/2018/08/15/15343433625642.png', NULL, NULL, '用于替换商城搜索框右侧广告图片，最佳显示尺寸180*90像素', 255, 1, NULL, '2018-04-16 15:03:10', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (103, 'mall_search_right_ad_url', '商城搜索框右侧广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 15:03:45', '2018-08-15 14:29:33');
-INSERT INTO `system_config` VALUES (104, 'mall_service', '商城底部广告', NULL, 'mall_bottom_ad', 'kindeditor', 0, NULL, NULL, NULL, NULL, '商城首页、商品列表页、商品详情页、团购页、店铺街、店铺搜索结果页、店铺首页、店铺商品列表页底部展示，整行建议尺寸为1210*90像素', 255, 1, NULL, '2018-04-16 15:10:48', '2018-04-16 15:10:48');
-INSERT INTO `system_config` VALUES (105, 'mall_service_right', '商城底部右侧广告', NULL, 'mall_bottom_ad', 'kindeditor', 0, NULL, NULL, NULL, NULL, '商城底部帮助文章右侧广告，整行图片尺寸建议为122*150像素', 255, 1, NULL, '2018-04-16 15:11:26', '2018-04-16 15:11:26');
-INSERT INTO `system_config` VALUES (106, 'shop_apply_ad_image', '入驻广告图', NULL, 'register_bg', 'imagegroup', 0, NULL, NULL, NULL, NULL, '前台店铺入驻成功提交页面显示，最佳显示尺寸790*70像素', 255, 1, NULL, '2018-04-16 15:12:10', '2018-06-03 06:08:59');
-INSERT INTO `system_config` VALUES (107, 'shop_apply_ad_url', '入驻广告图片链接', NULL, 'register_bg', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-16 15:13:03', '2018-06-03 06:08:59');
-INSERT INTO `system_config` VALUES (108, 'seo_index_title', 'title', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 02:18:48', '2018-08-16 06:40:56');
-INSERT INTO `system_config` VALUES (109, 'seo_index_keywords', 'keywords', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 02:19:42', '2018-08-16 06:40:56');
-INSERT INTO `system_config` VALUES (110, 'seo_index_discription', 'description', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 02:20:20', '2018-08-16 06:40:56');
-INSERT INTO `system_config` VALUES (111, 'seo_index_image', '分享推广图', NULL, 'seo_index', 'imagegroup', 0, NULL, '/site/1/images/2018/08/16/15344016464656.jpg', NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-22 02:21:27', '2018-08-16 06:40:56');
-INSERT INTO `system_config` VALUES (112, 'captcha_sms_mobile_time', '短信验证码发送间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:02:13', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (113, 'captcha_sms_mobile_interval', '限制发送短信恢复正常间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:06:04', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (114, 'captcha_sms_ip_time', '每个IP地址短信验证码限制时间', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:07:51', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (115, 'captcha_sms_ip_interval', '限制ip短信发送恢复间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:08:57', '2018-05-29 14:56:53');
-INSERT INTO `system_config` VALUES (116, 'mail_service', '邮件服务', NULL, 'smtp', 'radio', 1, NULL, '1', '1::采用其他的 SMTP 服务', NULL, NULL, 255, 1, NULL, '2018-05-29 13:11:10', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (117, 'smtp_ssl', '邮件服务器是否要求加密连接(SSL)', NULL, 'smtp', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-05-29 13:12:09', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (118, 'smtp_host', '发送邮件服务器地址(SMTP)', NULL, 'smtp', 'text', 1, NULL, 'smtp.qq.com', NULL, NULL, '邮件服务器主机地址', 255, 1, NULL, '2018-05-29 13:13:30', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (119, 'smtp_port', '服务器端口', NULL, 'smtp', 'text', 1, NULL, '587', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 13:14:01', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (120, 'smtp_user', '邮件发送账号', NULL, 'smtp', 'text', 1, NULL, '123@qq.com', NULL, NULL, '发送邮件所需的认证帐号', 255, 1, NULL, '2018-05-29 13:14:53', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (121, 'smtp_pass', '帐号密码', NULL, 'smtp', 'password', 1, NULL, '123456', NULL, NULL, '如果是QQ邮箱，账号密码为邮箱发送账号的授权码', 255, 1, NULL, '2018-05-29 13:15:46', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (122, 'smtp_mail', '邮件回复地址', NULL, 'smtp', 'text', 1, NULL, '123@qq.com', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 13:16:23', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (123, 'mail_charset', '邮件编码', NULL, 'smtp', 'select', 1, NULL, 'utf-8', 'utf-8::国际化编码（utf-8）', NULL, NULL, 255, 1, NULL, '2018-05-29 13:17:27', '2021-04-07 22:16:08');
-INSERT INTO `system_config` VALUES (124, 'sms_sign_name', '短信签名', NULL, 'sms', 'text', 1, NULL, 'lrw', NULL, NULL, '短信签名请勿随意修改，否则会导致短信发送失败<br>建议使用公司或产品名称，不能包含违禁词汇与其他特殊符号<br>单个签名长度介于2到8个字符之间<br>可以包含汉字、数字、英文，不能为纯数字、纯英文、数字英文组合<br>无需添加【】、()、[]符号，短信发送会自带【】、()、[]符号，避免重复', 255, 1, NULL, '2018-05-29 13:44:08', '2021-04-07 22:16:47');
-INSERT INTO `system_config` VALUES (125, 'sms_api', '短信接口服务', NULL, 'sms', 'radio', 1, NULL, 'aliyunsms', 'aliyunsms::阿里云短信\r\naliyusms::阿里大于短信\r\nyunsms::云短信网（不推荐使用）', NULL, '请选择系统短信服务的运营商，选择后请进行相关接口参数的配置', 255, 1, NULL, '2018-05-29 13:46:59', '2021-04-07 22:16:47');
-INSERT INTO `system_config` VALUES (126, 'aliyunsms_app_key', 'Access Key ID', NULL, 'aliyunsms', 'text', 1, NULL, 'aaa', NULL, NULL, 'TOP分配给应用的Access Key ID', 255, 1, NULL, '2018-05-29 13:56:14', '2021-04-07 22:16:23');
-INSERT INTO `system_config` VALUES (127, 'aliyunsms_app_secret', 'Access Key Secret', NULL, 'aliyunsms', 'password', 1, NULL, 'aaaa', NULL, NULL, '短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 13:57:04', '2021-04-07 22:16:23');
-INSERT INTO `system_config` VALUES (128, 'aliyunsms_api_type', '接口版本类型', NULL, 'aliyunsms', 'radio', 1, NULL, '0', '0::老版本\r\n1::新版本', NULL, '老版本消息模板中支持带下划线的变量，新版本消息模板中不支持下划线的变量，请选择您对应的版本<br>\r\n如果您是从2017年11月中旬开始使用阿里云短信，建议选择新版', 255, 1, NULL, '2018-05-29 13:58:14', '2021-04-07 22:16:23');
-INSERT INTO `system_config` VALUES (129, 'aliyusms_app_key', 'App Key', NULL, 'aliyusms', 'text', 1, NULL, NULL, NULL, NULL, 'TOP分配给应用的AppKey', 255, 1, NULL, '2018-05-29 14:02:23', '2018-05-29 14:02:23');
-INSERT INTO `system_config` VALUES (130, 'aliyusms_app_secret', 'App Secret', NULL, 'aliyusms', 'password', 1, NULL, NULL, NULL, NULL, '短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 14:03:02', '2018-05-29 14:03:02');
-INSERT INTO `system_config` VALUES (131, 'yunsms_accounts', '云短信服务帐号', NULL, 'yunsms', 'text', 1, NULL, NULL, NULL, NULL, '云短信服务商提供的供系统发送短信所需要的账号', 255, 1, NULL, '2018-05-29 14:05:12', '2018-05-29 14:05:12');
-INSERT INTO `system_config` VALUES (132, 'yunsms_password', '云短信服务密码', NULL, 'yunsms', 'password', 1, NULL, NULL, NULL, NULL, '云短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 14:05:44', '2018-05-29 14:05:44');
-INSERT INTO `system_config` VALUES (133, 'yunsms_phones', '平台手机号码', NULL, 'yunsms', 'text', 1, NULL, NULL, NULL, NULL, '请先注册手机短信服务再填写手机号码', 255, 1, NULL, '2018-05-29 14:06:25', '2018-05-29 14:06:25');
-INSERT INTO `system_config` VALUES (134, 'aliim_enable', '是否启用', NULL, 'aliim', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '开启后在线客服将可用', 255, 1, NULL, '2018-05-29 14:09:36', '2018-05-29 14:09:36');
-INSERT INTO `system_config` VALUES (135, 'aliim_app_key', '阿里云旺AppKey', NULL, 'aliim', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 14:10:10', '2018-05-29 14:10:10');
-INSERT INTO `system_config` VALUES (136, 'aliim_secret_key', '阿里云旺AppSecrect', NULL, 'aliim', 'password', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 14:10:49', '2018-05-29 14:10:49');
-INSERT INTO `system_config` VALUES (137, 'aliim_main_customer', '在线主客服账户', NULL, 'aliim', 'text', 1, NULL, NULL, NULL, NULL, '设置在阿里淘宝开放平台已开通云旺客服的帐号，填写的账号必须与淘宝开放平台中的云旺账号一致，否则无法接收消息', 255, 1, NULL, '2018-05-29 14:11:26', '2018-05-29 14:11:26');
-INSERT INTO `system_config` VALUES (138, 'aliim_customer_logo', '在线客服头像Logo', NULL, 'aliim', 'imagegroup', 0, NULL, NULL, NULL, NULL, '头像请上传148px * 135px像素的图片，不上传则使用默认头像', 255, 1, NULL, '2018-05-29 14:12:16', '2018-05-29 14:12:16');
-INSERT INTO `system_config` VALUES (139, 'open_qq_login', '是否开启QQ登录', NULL, 'website_login', 'switch', 1, NULL, '0', '1::是\r\n0::否', NULL, '在实际运营当中，QQ第三方登录使用率非常低，不建议开启使用。', 255, 1, NULL, '2018-05-29 14:15:51', '2018-05-29 14:22:53');
-INSERT INTO `system_config` VALUES (140, 'open_weibo_login', '是否开启微博登录', NULL, 'website_login', 'switch', 1, NULL, '0', '1::是\r\n0::否', NULL, '在实际运营当中，微博第三方登录使用率非常低，不建议开启使用。', 255, 1, NULL, '2018-05-29 14:16:46', '2018-05-29 14:22:53');
-INSERT INTO `system_config` VALUES (141, 'open_weixin_login', '是否开启微信登录', NULL, 'website_login', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, '在实际运营当中，微信第三方登录使用率非常高，使用者非常广泛，建议开启使用。', 255, 1, NULL, '2018-05-29 14:17:27', '2018-05-29 14:22:53');
-INSERT INTO `system_config` VALUES (142, 'website_login_code', '第三方登录验证代码', NULL, 'website_login', 'text', 0, NULL, NULL, NULL, NULL, '当您申请第三方登录时，网站会要求您复制一段代码粘贴到您网站首页或一级目录下HTML代码的head标签中，以验证您是本网站的站长或者管理员，请您将其粘帖至此然后清理首页缓存，此代码会自动出现在网站首页中，然后您即可在对应网站上进行验证', 255, 1, NULL, '2018-05-29 14:18:23', '2018-05-29 14:22:53');
-INSERT INTO `system_config` VALUES (143, 'seo_group_buy_index_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购首页-{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:36:55', '2018-08-14 14:52:55');
-INSERT INTO `system_config` VALUES (144, 'seo_group_buy_index_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购,拼团,{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:37:41', '2018-08-14 14:52:55');
-INSERT INTO `system_config` VALUES (145, 'seo_group_buy_index_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购模式,{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:38:01', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (146, 'seo_group_buy_index_image', '团购分享推广图', NULL, 'seo_group_buy', 'imagegroup', 0, '团购首页', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 13:38:53', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (147, 'seo_group_buy_list_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:39:38', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (148, 'seo_group_buy_list_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：【{name}】-{site_name}', 255, 1, NULL, '2018-05-30 13:40:17', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (149, 'seo_group_buy_list_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：【{name}】-{site_name}', 255, 1, NULL, '2018-05-30 13:41:04', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (150, 'seo_group_buy_info_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:41:51', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (151, 'seo_group_buy_info_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:42:30', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (152, 'seo_group_buy_info_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 13:43:06', '2018-08-14 14:52:56');
-INSERT INTO `system_config` VALUES (153, 'seo_groupon_title', 'title', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:44:47', '2018-05-30 13:44:47');
-INSERT INTO `system_config` VALUES (154, 'seo_groupon_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:45:35', '2018-05-30 13:45:35');
-INSERT INTO `system_config` VALUES (155, 'seo_groupon_discription', 'description', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:46:08', '2018-05-30 13:46:08');
-INSERT INTO `system_config` VALUES (156, 'seo_groupon_image', '分享推广图', NULL, 'seo_groupon', 'imagegroup', 0, '拼团列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 13:46:52', '2018-05-30 13:46:52');
-INSERT INTO `system_config` VALUES (157, 'seo_groupon_info_title', 'title', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：{groupon_num},{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:47:31', '2018-05-30 13:47:31');
-INSERT INTO `system_config` VALUES (158, 'seo_groupon_info_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:48:06', '2018-05-30 13:48:06');
-INSERT INTO `system_config` VALUES (159, 'seo_groupon_info_discription', 'description', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：【{name}】{discription}-{site_name}', 255, 1, NULL, '2018-05-30 13:48:46', '2018-05-30 13:48:46');
-INSERT INTO `system_config` VALUES (160, 'seo_groupon_goods_info_title', 'title', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:49:23', '2018-05-30 13:49:23');
-INSERT INTO `system_config` VALUES (161, 'seo_groupon_goods_info_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:50:05', '2018-05-30 13:50:05');
-INSERT INTO `system_config` VALUES (162, 'seo_groupon_goods_info_discription', 'description', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 13:50:41', '2018-05-30 13:50:41');
-INSERT INTO `system_config` VALUES (163, 'seo_bargain_title', 'title', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:51:49', '2018-05-30 13:51:49');
-INSERT INTO `system_config` VALUES (164, 'seo_bargain_keywords', 'keywords', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:52:23', '2018-05-30 13:52:23');
-INSERT INTO `system_config` VALUES (165, 'seo_bargain_discription', 'description', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:52:55', '2018-05-30 13:52:55');
-INSERT INTO `system_config` VALUES (166, 'seo_bargain_image', '分享推广图', NULL, 'seo_bargain', 'imagegroup', 0, '砍价列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 13:53:35', '2018-05-30 13:53:35');
-INSERT INTO `system_config` VALUES (167, 'seo_bargain_info_title', 'title', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:56:38', '2018-05-30 13:56:38');
-INSERT INTO `system_config` VALUES (168, 'seo_bargain_info_keywords', 'keywords', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:57:07', '2018-05-30 13:58:21');
-INSERT INTO `system_config` VALUES (169, 'seo_bargain_info_discription', 'description', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 13:57:49', '2018-05-30 13:57:49');
-INSERT INTO `system_config` VALUES (170, 'seo_brand_list_title', 'title', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:59:14', '2018-05-30 13:59:14');
-INSERT INTO `system_config` VALUES (171, 'seo_brand_list_keywords', 'keywords', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:59:48', '2018-05-30 13:59:48');
-INSERT INTO `system_config` VALUES (172, 'seo_brand_list_discription', 'description', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:00:27', '2018-05-30 14:00:27');
-INSERT INTO `system_config` VALUES (173, 'seo_brand_list_image', '分享推广图', NULL, 'seo_brand', 'imagegroup', 0, '品牌列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 14:01:34', '2018-05-30 14:01:34');
-INSERT INTO `system_config` VALUES (174, 'seo_article_list_title', 'title', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:02:45', '2018-08-14 15:16:20');
-INSERT INTO `system_config` VALUES (175, 'seo_article_list_keywords', 'keywords', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:03:13', '2018-08-14 15:16:20');
-INSERT INTO `system_config` VALUES (176, 'seo_article_list_discription', 'description', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:03:58', '2018-08-14 15:16:20');
-INSERT INTO `system_config` VALUES (177, 'seo_article_info_title', 'title', NULL, 'seo_article', 'text', 0, '文章详情', '{name}-{site_name}', NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 14:04:33', '2018-08-14 15:16:20');
-INSERT INTO `system_config` VALUES (178, 'seo_article_info_keywords', 'keywords', NULL, 'seo_article', 'text', 0, '文章详情', '【{name}】{keywords}-{site_name}', NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 14:05:03', '2018-08-14 15:16:20');
-INSERT INTO `system_config` VALUES (179, 'seo_article_info_discription', 'description', NULL, 'seo_article', 'text', 0, '文章详情', '{name}-{description}-{site_name}', NULL, NULL, '默认：{name}-{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:05:38', '2018-08-14 15:16:20');
-INSERT INTO `system_config` VALUES (180, 'seo_goods_title', 'title', NULL, 'seo_goods', 'text', 1, NULL, '{name}-{site_name}', NULL, NULL, '{name}-{site_name}', 255, 1, NULL, '2018-05-30 14:06:56', '2018-08-14 15:06:34');
-INSERT INTO `system_config` VALUES (181, 'seo_goods_keywords', 'keywords', NULL, 'seo_goods', 'text', 1, NULL, '【{name}】{keywords}-{site_name}', NULL, NULL, '【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 14:07:37', '2018-08-14 15:06:34');
-INSERT INTO `system_config` VALUES (182, 'seo_goods_discription', 'description', NULL, 'seo_goods', 'text', 1, NULL, '【{name}】{description}-{site_name}', NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:08:06', '2018-08-14 15:06:34');
-INSERT INTO `system_config` VALUES (183, 'seo_shop_title', 'title', NULL, 'seo_shop', 'text', 0, '店铺', '{name}-{site_name}', NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 14:09:04', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (184, 'seo_shop_keywords', 'keywords', NULL, 'seo_shop', 'text', 0, '店铺', '【{name}】{keywords}-{site_name}', NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 14:09:36', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (185, 'seo_shop_discription', 'description', NULL, 'seo_shop', 'text', 0, '店铺', '【{name}】{description}-{site_name}', NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:10:11', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (186, 'seo_shop_street_title', 'title', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:10:51', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (187, 'seo_shop_street_keywords', 'keywords', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:11:25', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (188, 'seo_shop_street_discription', 'description', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:11:56', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (189, 'seo_shop_street_image', '店铺街分享推广图', NULL, 'seo_shop', 'imagegroup', 0, '店铺街', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 14:12:43', '2018-08-14 15:15:34');
-INSERT INTO `system_config` VALUES (190, 'seo_news_title', 'title', NULL, 'seo_news', 'text', 0, '资讯频道首页', '资讯首页 - {site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:13:39', '2018-08-14 15:25:21');
-INSERT INTO `system_config` VALUES (191, 'seo_news_keywords', 'keywords', NULL, 'seo_news', 'text', 0, '资讯频道首页', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:14:10', '2018-08-14 15:25:21');
-INSERT INTO `system_config` VALUES (192, 'seo_news_discription', 'description', NULL, 'seo_news', 'text', 0, '资讯频道首页', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:14:46', '2018-08-14 15:25:21');
-INSERT INTO `system_config` VALUES (193, 'seo_news_image', '分享推广图', NULL, 'seo_news', 'imagegroup', 0, '资讯频道首页', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 14:15:30', '2018-08-14 15:25:21');
-INSERT INTO `system_config` VALUES (194, 'image_max_filesize', '图片/附件大小', NULL, 'image_upload', 'short_text', 1, NULL, '2048', NULL, NULL, '当前服务器环境，最大允许上传 4MB的文件，您的设置请勿超过该值，默认最大可上传2MB', 255, 1, NULL, '2018-05-30 15:30:35', '2018-05-30 15:31:54');
-INSERT INTO `system_config` VALUES (195, 'video_max_filesize', '视频大小', NULL, 'image_upload', 'short_text', 1, NULL, '2048', NULL, NULL, '当前服务器环境，最大允许上传4MB的文件，您的设置请勿超过该值，默认最大可上传2MB', 255, 1, NULL, '2018-05-30 15:31:09', '2018-05-30 15:31:54');
-INSERT INTO `system_config` VALUES (196, 'cash_logo', '收银狗Logo', NULL, 'cash', 'imagegroup', 0, NULL, NULL, NULL, NULL, '收银狗Logo，将显示在收银台页面上，建议尺寸为170*46像素、格式为png的图片，大小不超过5.5kb', 255, 1, NULL, '2018-05-30 15:36:23', '2018-05-30 15:36:37');
-INSERT INTO `system_config` VALUES (197, 'custom_style_enable_m_site', '是否开启自定义改色', NULL, 'mobile_site_style', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '是否开启自定义改色', 255, 1, NULL, '2018-06-18 04:14:57', '2018-11-15 14:02:11');
-INSERT INTO `system_config` VALUES (198, 'm_main_color', '主体颜色', NULL, 'mobile_site_style', 'colorpicker', 0, NULL, '#7030a0', NULL, NULL, '商城主体颜色 code:m_main_color', 255, 1, NULL, '2018-06-18 04:16:01', '2018-11-15 14:02:11');
-INSERT INTO `system_config` VALUES (199, 'm_second_color', '主体辅色', NULL, 'mobile_site_style', 'colorpicker', 0, NULL, '#e36c09', NULL, NULL, '主体辅色 code:m_second_color', 255, 1, NULL, '2018-06-18 04:16:40', '2018-11-15 14:02:11');
-INSERT INTO `system_config` VALUES (200, 'base_fee', '平台保证金', NULL, 'open_shop', 'short_text', 1, NULL, '1000', NULL, NULL, '0表示无需支付保证金', 255, 1, NULL, '2018-06-20 14:12:28', '2018-06-24 04:34:17');
-INSERT INTO `system_config` VALUES (201, 'use_fee', '平台使用费', NULL, 'open_shop', 'radio', 0, NULL, '1', '0::免费\r\n1::付费', NULL, NULL, 255, 1, NULL, '2018-06-20 14:20:17', '2018-06-24 04:34:17');
-INSERT INTO `system_config` VALUES (202, 'use_fee_value', '平台使用费值', NULL, 'open_shop', 'textarea', 0, NULL, 'a:3:{s:6:\"number\";a:3:{i:0;s:1:\"1\";i:1;s:1:\"6\";i:2;s:2:\"30\";}s:4:\"unit\";a:3:{i:0;s:4:\"year\";i:1;s:5:\"month\";i:2;s:3:\"day\";}s:3:\"fee\";a:3:{i:0;s:4:\"1000\";i:1;s:3:\"500\";i:2;s:3:\"100\";}}', NULL, NULL, NULL, 255, 1, NULL, '2018-06-20 14:21:54', '2018-06-24 04:34:17');
-INSERT INTO `system_config` VALUES (203, 'first_warn', '首次警告', NULL, 'open_shop', 'short_text', 1, NULL, '30', NULL, NULL, '首次警告：比如：30天，表示店铺还有30天到期时，店铺将自动进入到待续费店铺列表中，且系统会自动向店铺发送到期续费提醒', 255, 1, NULL, '2018-06-20 14:22:35', '2018-06-24 04:34:17');
-INSERT INTO `system_config` VALUES (204, 'second_warn', '再次警告', NULL, 'open_shop', 'short_text', 1, NULL, '10', NULL, NULL, '再次警告：比如：10天，店铺还有10天到期时，会再次向店铺发送到期续费提醒', 255, 1, NULL, '2018-06-20 14:23:08', '2018-06-24 04:34:17');
-INSERT INTO `system_config` VALUES (205, 'third_warn', '三次警告', NULL, 'open_shop', 'short_text', 1, NULL, '3', NULL, NULL, '三次警告：比如：3天，店铺还有3天到期时，会第三次向店铺发送到期续费提醒<br>\r\n如设置为0天，表示不发送续费提醒通知', 255, 1, NULL, '2018-06-20 14:24:04', '2018-06-24 04:34:17');
-INSERT INTO `system_config` VALUES (206, 'shop_apply_banner_img', '入驻轮播图（pc端）', NULL, 'shop_apply_banner', 'imagegroup', 1, NULL, '/site/1/images/2018/06/23/15297626846550.jpg|/site/1/images/2018/06/23/15297624044077.jpg|/site/1/images/2018/06/21/15295831652086.jpg|/site/1/images/2018/06/21/15295831586241.jpg', NULL, ',,,', '最佳显示尺寸为1920*400像素的图片，允许上传的图片格式：png、jpg、jpeg、gif', 255, 1, NULL, '2018-06-20 15:41:24', '2018-06-23 14:06:40');
-INSERT INTO `system_config` VALUES (207, 'm_shop_apply_banner_img', '入驻背景图（wap端）', NULL, 'shop_apply_banner', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295830638156.png', NULL, NULL, '最佳显示尺寸为750*1400像素的图片，允许上传的图片格式：png、jpg、jpeg、gif', 255, 1, NULL, '2018-06-20 15:42:52', '2018-06-23 14:06:40');
-INSERT INTO `system_config` VALUES (208, 'news_header', '去除头部', NULL, 'news_setting', 'checkbox', 0, NULL, '1', '1::商城顶部导航\r\n2::头部信息', NULL, '商城顶部导航指商城最顶部导航栏；头部信息指商城logo、资讯导航、搜索框', 255, 1, NULL, '2018-07-07 13:38:33', '2018-07-07 13:43:25');
-INSERT INTO `system_config` VALUES (209, 'news_footer', '去除底部', NULL, 'news_setting', 'checkbox', 0, NULL, '2', '1::底部广告\r\n2::友情链接\r\n3::帮助中心\r\n4::底部信息', NULL, '底部广告指帮助文章上方的广告图；帮助中心指商城底部的帮助文章；底部信息指帮助文章下方的所有内容', 255, 1, NULL, '2018-07-07 13:40:10', '2018-07-07 13:43:25');
-INSERT INTO `system_config` VALUES (210, 'app_ios_is_open', 'iOS状态', NULL, 'app_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将消费者iOS端应用停用，显示关闭提示页面', 255, 1, NULL, '2018-08-16 13:52:52', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (211, 'app_ios_use_version', 'iOS使用版本', NULL, 'app_setting', 'text', 0, '应用设置', '1.0', NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-16 13:54:04', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (212, 'app_android_is_open', '安卓状态', NULL, 'app_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将消费者安卓端应用停用，显示关闭提示页面', 255, 1, NULL, '2018-08-16 13:55:03', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (213, 'app_android_use_version', '安卓使用版本', NULL, 'app_setting', 'text', 0, '应用设置', '1.0', NULL, NULL, '小于或等于此版本号的安卓应用受“安卓应用状态”开关控制', 255, 1, NULL, '2018-08-16 13:55:50', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (214, 'app_close_reason', 'APP关闭原因', NULL, 'app_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP商城处于关闭状态时，用户访问APP端看到的提示原因', 255, 1, NULL, '2018-08-16 13:56:30', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (215, 'open_download_qrcode', '是否开启下载二维码', NULL, 'app_setting', 'switch', 0, '下载设置', '1', '1::开\r\n0::关', NULL, '此项用于开启在商城首页头部APP二维码下载', 255, 1, NULL, '2018-08-16 13:58:03', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (216, 'mall_android_app', '安卓客户端下载地址', NULL, 'app_setting', 'text', 0, '下载设置', NULL, NULL, NULL, '请填写安卓应用在应用市场的链接', 255, 1, NULL, '2018-08-16 13:58:49', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (217, 'mall_ios_app', 'IOS客户端下载地址', NULL, 'app_setting', 'text', 0, '下载设置', NULL, NULL, NULL, '请填写IOS应用在应用市场的链接', 255, 1, NULL, '2018-08-16 13:59:31', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (218, 'app_ios_version', 'iOS应用版本号', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-16 14:02:01', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (219, 'app_ios_update_url', 'iOS应用下载链接', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, 'http:// 开头', 255, 1, NULL, '2018-08-16 14:02:44', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (220, 'app_ios_update_content', 'iOS更新内容', NULL, 'app_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-16 14:03:27', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (221, 'app_android_version', 'Android应用版本号', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-16 14:04:04', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (222, 'app_android_update_url', 'Android应用下载链接', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, 'http:// 开头', 255, 1, NULL, '2018-08-16 14:04:35', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (223, 'app_android_update_content', 'Android更新内容', NULL, 'app_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-16 14:05:13', '2018-10-03 07:48:05');
-INSERT INTO `system_config` VALUES (224, 'is_guide_open', '是否开启引导图', NULL, 'app_guide', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-16 14:06:31', '2018-08-16 14:06:31');
-INSERT INTO `system_config` VALUES (225, 'app_guide_pic', '引导图片', NULL, 'app_guide', 'imagegroup', 1, NULL, NULL, NULL, ',,,,', '最佳显示尺寸为750*1334像素的图片，允许上传的图片格式：jpg、jpeg、gif，您最多可以上传5张', 255, 1, NULL, '2018-08-16 14:10:10', '2018-08-16 14:10:10');
-INSERT INTO `system_config` VALUES (226, 'app_enter_button', '进入按钮', NULL, 'app_guide', 'imagegroup', 0, NULL, NULL, NULL, NULL, '最佳显示尺寸350*90 像素，允许上传的图片格式：jpg、jpeg、png', 255, 1, NULL, '2018-08-16 14:11:06', '2018-08-16 14:11:06');
-INSERT INTO `system_config` VALUES (227, 'app_user_center_bgimage', '用户中心背景图片', NULL, 'app_setting_basic', 'imagegroup', 0, '用户中心设置', NULL, NULL, NULL, '最佳显示尺寸为750*260像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:12:06', '2018-08-16 14:12:06');
-INSERT INTO `system_config` VALUES (228, 'app_login_bgimg', '登录页面背景图', NULL, 'app_setting_login', 'imagegroup', 0, '登录设置', NULL, NULL, NULL, '最佳显示尺寸为1080*357像素的图片，允许上传的图片格式：jpg、jpeg、gif、png', 255, 1, NULL, '2018-08-16 14:15:01', '2018-08-16 14:15:01');
-INSERT INTO `system_config` VALUES (229, 'app_login_logo', '登录页面LOGO', NULL, 'app_setting_login', 'imagegroup', 0, '登录设置', NULL, NULL, NULL, '最佳显示尺寸为600*115像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:15:34', '2018-08-16 14:15:34');
-INSERT INTO `system_config` VALUES (230, 'app_search_shop_range', '附近店铺搜索范围', NULL, 'app_setting_index', 'text', 0, '首页模板设置', '100', NULL, NULL, '以km为单位，首页加载附近店铺时搜索多少公里范围的店铺', 255, 1, NULL, '2018-08-16 14:16:39', '2018-08-16 14:17:37');
-INSERT INTO `system_config` VALUES (231, 'app_goods_list_page_count', '滚动商品加载页数', NULL, 'app_setting_index', 'text', 0, '首页模板设置', '3', NULL, NULL, '首页滚动商品允许加载的最大页数，默认为3页', 255, 1, NULL, '2018-08-16 14:17:16', '2018-08-16 14:17:16');
-INSERT INTO `system_config` VALUES (232, 'app_aliim_icon_show', '是否显示首页云旺客服', NULL, 'app_setting_index', 'switch', 0, '首页客服设置', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-16 14:18:26', '2018-08-16 14:18:26');
-INSERT INTO `system_config` VALUES (233, 'app_aliim_icon', '首页云旺客服图标', NULL, 'app_setting_index', 'imagegroup', 0, '首页客服设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:19:03', '2018-08-16 14:19:03');
-INSERT INTO `system_config` VALUES (234, 'm_site_status', '微商城状态', NULL, 'mobile_setting_basic', 'switch', 0, '微商城状态', '1', '1::开\r\n0::关', NULL, '可以暂时将商城微商城端、 WAP端停用，用户无法访问微商城、WAP端前台页面，不影响管理员后台操作', 255, 1, NULL, '2018-08-16 14:38:24', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (235, 'm_site_close_image', '微商城关闭提示图片', NULL, 'mobile_setting_basic', 'imagegroup', 0, '微商城状态', NULL, NULL, NULL, '系统默认给予关闭提示页面设计，商城可自行修改设计，上传图片，建议上传宽度为589像素的图片', 255, 1, NULL, '2018-08-16 14:39:34', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (236, 'is_webp', '是否开启webp格式转换', NULL, 'mobile_setting_basic', 'switch', 0, '微商城状态', '1', '1::开\r\n0::关', NULL, '开启webp格式转换，会提高网站的访问速度，但是图片会被压缩', 255, 1, NULL, '2018-08-16 14:40:38', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (237, 'm_user_center_bgimage', '用户中心背景图片', NULL, 'mobile_setting_basic', 'imagegroup', 0, '用户中心设置', NULL, NULL, NULL, '最佳显示尺寸为750*260像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:41:32', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (238, 'shop_open_hint', '是否开启店铺营业时间提示', NULL, 'mobile_setting_basic', 'switch', 0, '店铺设置', '1', '1::是\r\n0::否', NULL, '是：非营业时间的店铺会有“店铺休息”的提示信息', 255, 1, NULL, '2018-08-16 14:42:26', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (239, 'm_shop_list_style', '店铺商品列表页样式', NULL, 'mobile_setting_basic', 'radio', 0, '店铺设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺全部商品列表页面商品展示的样式', 255, 1, NULL, '2018-08-16 14:44:01', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (240, 'm_shop_street_style', '店铺街样式', NULL, 'mobile_setting_basic', 'radio', 0, '店铺设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺街展示的样式', 255, 1, NULL, '2018-08-16 14:44:55', '2018-11-24 06:42:07');
-INSERT INTO `system_config` VALUES (241, 'm_login_bgimg', '登录页面背景图', NULL, 'mobile_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2018/12/01/15436338325773.png', NULL, NULL, '最佳显示尺寸为1080*357像素的图片，允许上传的图片格式：jpg、jpeg、gif、png', 255, 1, NULL, '2018-08-16 14:47:19', '2018-12-04 05:00:35');
-INSERT INTO `system_config` VALUES (242, 'm_login_logo', '登录页面LOGO', NULL, 'mobile_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2018/12/04/15438991675206.png', NULL, NULL, '最佳显示尺寸为600*115像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:47:54', '2018-12-04 05:00:35');
-INSERT INTO `system_config` VALUES (243, 'wx_login_logo', '微信登录页面LOGO', NULL, 'mobile_setting_login', 'imagegroup', 0, '微信登录设置', '/site/1/images/2018/12/04/15438996225886.png', NULL, NULL, '建议上传高度大于80像素的图片，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:48:33', '2018-12-04 05:00:35');
-INSERT INTO `system_config` VALUES (244, 'use_weixin_login', '是否优先使用微信登录', NULL, 'mobile_setting_login', 'switch', 0, '微信登录设置', '1', '1::是\r\n0::否', NULL, '开启后在微信中优先使用微信绑定登录', 255, 1, NULL, '2018-08-16 14:49:13', '2018-12-04 05:00:35');
-INSERT INTO `system_config` VALUES (245, 'm_search_shop_range', '附近店铺搜索范围', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '9999', NULL, NULL, '以km为单位，首页加载附近店铺时搜索多少公里范围的店铺', 255, 1, NULL, '2018-08-21 13:07:40', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (246, 'm_goods_list_page_count', '滚动商品加载页数', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '3', NULL, NULL, '首页滚动商品允许加载的最大页数，默认为3页', 255, 1, NULL, '2018-08-21 13:14:38', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (247, 'm_aliim_icon_show', '是否显示首页云旺客服', NULL, 'mobile_setting_index', 'switch', 0, '首页客服设置', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-21 13:15:34', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (248, 'm_aliim_icon', '首页云旺客服图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页客服设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 13:16:46', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (249, 'm_app_download', '是否显示首页APP下载', NULL, 'mobile_setting_index', 'switch', 0, '首页APP下载设置', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显示下载app，设置为是并且APP-设置-商店设置中，安卓和IOS客户端下载地址必须有地址时，相应的安卓和IOS手机才可展示下载 app提示', 255, 1, NULL, '2018-08-21 13:18:01', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (250, 'm_app_icon', '首页APP下载图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页APP下载设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 13:18:45', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (251, 'm_follow_wechat', '是否显示引导关注微信公众号', NULL, 'mobile_setting_index', 'switch', 0, '首页引导关注微信公众号设置', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显示引导关注微信公众号，设置为是并且没有关注该公众号才显示', 255, 1, NULL, '2018-08-21 13:19:44', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (252, 'm_follow_wechat_icon', '首页引导关注微信公众号图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页引导关注微信公众号设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 13:20:40', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (253, 'm_wechat_name', '微信公众号名称', NULL, 'mobile_setting_index', 'text', 0, '首页引导关注微信公众号设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:21:23', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (254, 'm_follow_wechat_hint', '首页引导关注微信公众号提示语', NULL, 'mobile_setting_index', 'text', 0, '首页引导关注微信公众号设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:21:56', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (255, 'new_order_remind_open', '是否显示新订单提醒', NULL, 'mobile_setting_index', 'switch', 0, '首页新订单提醒', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显新订单提醒', 255, 1, NULL, '2018-08-21 13:22:43', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (256, 'new_order_remind_num', '模拟新订单提醒数量', NULL, 'mobile_setting_index', 'text', 0, '首页新订单提醒', '20', NULL, NULL, '调取订单中的数据模拟新订单提醒,如果想使用真实数据可以设置为0', 255, 1, NULL, '2018-08-21 13:23:32', '2018-10-03 07:47:59');
-INSERT INTO `system_config` VALUES (257, 'weixin_name', '名称', NULL, 'weixin', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:25:57', '2018-08-21 13:25:57');
-INSERT INTO `system_config` VALUES (258, 'token', 'Token(令牌)', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, 'Token对应的是微信公众平台的token，要保持一致', 255, 1, NULL, '2018-08-21 13:26:41', '2018-08-21 13:26:41');
-INSERT INTO `system_config` VALUES (259, 'appid', '应用ID', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:27:09', '2018-08-21 13:27:09');
-INSERT INTO `system_config` VALUES (260, 'appsecret', '应用密钥', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:27:32', '2018-08-21 13:27:32');
-INSERT INTO `system_config` VALUES (261, 'auth_verify', '授权验证码', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:28:00', '2018-08-21 13:28:00');
-INSERT INTO `system_config` VALUES (262, 'followmsg', '关注回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '感谢您的关注，快去注册，开启购物之旅吧！点击%s绑定帐号', NULL, NULL, '此回复内容为用户关注了商城的微信公众号后，显示的提示信息<br>\r\n例：感谢您的关注，快去注册，开启购物之旅吧！', 255, 1, NULL, '2018-08-21 13:33:56', '2018-08-21 13:38:23');
-INSERT INTO `system_config` VALUES (263, 'bind_before_msg', '绑定前回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '亲，您还没有绑定任何的帐号哦，点击%s，快去绑定吧！', NULL, NULL, '此回复内容为当用户点击“账户管理”，并且还没有绑定会员回复的提示消息<br>\r\n例：亲，您还没有绑定任何的帐号哦，快去绑定吧！', 255, 1, NULL, '2018-08-21 13:34:32', '2018-08-21 13:38:37');
-INSERT INTO `system_config` VALUES (264, 'bind_after_msg', '绑定后回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '亲，您已经和帐号%s绑定了，您可以点击%s进行更改！', NULL, NULL, '此回复内容为当用户点击“账户管理”，并且已经绑定会员后回复的提示消息<br>\r\n例：亲，您已经和帐号%s绑定了，您可以点击%s进行更改！', 255, 1, NULL, '2018-08-21 13:35:08', '2018-08-21 13:38:47');
-INSERT INTO `system_config` VALUES (265, 'is_auto_reply', '是否开启自动回复', NULL, 'weixin_bind', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '关闭自动回复功能，用户将收不到自动回复内容', 255, 1, NULL, '2018-08-21 13:35:56', '2018-08-21 13:35:56');
-INSERT INTO `system_config` VALUES (266, 'auto_reply_msg', '自动回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '感谢您的关注，您有什么问题可以联系我们的客服进行咨询！', NULL, NULL, '此回复内容为如果客户输入的对话内容没有在自定义回复词中，将收到的回复内容<br>\r\n例：感谢您的关注，您有什么问题可以联系我们的客服进行咨询！', 255, 1, NULL, '2018-08-21 13:36:33', '2018-08-21 13:37:18');
-INSERT INTO `system_config` VALUES (267, 'weixin_poster', '默认海报背景', NULL, 'weixin_poster', 'imagegroup', 1, NULL, NULL, NULL, NULL, '最佳显示尺寸为530*800像素', 255, 1, NULL, '2018-08-21 13:41:10', '2018-08-21 13:41:10');
-INSERT INTO `system_config` VALUES (268, 'weixin_poster_size', '二维码尺寸', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '此二维码为正方形，比如输入200，那么二维码就是200*200像素', 255, 1, NULL, '2018-08-21 13:41:46', '2018-08-21 13:41:46');
-INSERT INTO `system_config` VALUES (269, 'weixin_x_coor', 'X坐标', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '二维码距离海报背景图片左侧的距离', 255, 1, NULL, '2018-08-21 13:42:16', '2018-08-21 13:42:16');
-INSERT INTO `system_config` VALUES (270, 'weixin_y_coor', 'Y坐标', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '二维码距离海报背景图片顶部的距离', 255, 1, NULL, '2018-08-21 13:42:44', '2018-08-21 13:42:44');
-INSERT INTO `system_config` VALUES (271, 'weixin_poster_msg', '生成海报提示语', NULL, 'weixin_poster', 'textarea', 1, NULL, NULL, NULL, NULL, '此提示语为当客户点击菜单中的生成海报时，收到的回复内容<br>\r\n例：海报正在拼命生成中，请稍后！', 255, 1, NULL, '2018-08-21 13:43:14', '2018-08-21 13:43:14');
-INSERT INTO `system_config` VALUES (272, 'weixin_programs_appid', '小程序appid', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:44:00', '2018-08-21 13:44:00');
-INSERT INTO `system_config` VALUES (273, 'weixin_programs_secret', '小程序密钥', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:44:22', '2018-08-21 13:44:22');
-INSERT INTO `system_config` VALUES (274, 'weixin_programs_filename', '业务域名校验文件名字', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, '请输入完成校验文件名字。请不要填写文件名后缀', 255, 1, NULL, '2018-08-21 13:44:47', '2018-08-21 13:44:47');
-INSERT INTO `system_config` VALUES (275, 'weixin_programs_code', '校验码', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, '请输入校验文件里的校验码', 255, 1, NULL, '2018-08-21 13:45:19', '2018-08-21 13:45:19');
-INSERT INTO `system_config` VALUES (276, 'app_seller_ios_is_open', 'iOS状态', NULL, 'app_seller_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将商家版iOS端应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 13:49:06', '2018-08-21 13:49:06');
-INSERT INTO `system_config` VALUES (277, 'app_seller_ios_use_version', 'iOS使用版本', NULL, 'app_seller_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-21 13:50:03', '2018-08-21 13:50:03');
-INSERT INTO `system_config` VALUES (278, 'app_seller_android_is_open', 'Android状态', NULL, 'app_seller_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将商家版Android应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 13:50:54', '2018-08-21 13:51:17');
-INSERT INTO `system_config` VALUES (279, 'app_seller_android_use_version', 'Android使用版本', NULL, 'app_seller_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的Android应用受“Android应用状态”开关控制', 255, 1, NULL, '2018-08-21 13:52:15', '2018-08-21 13:52:15');
-INSERT INTO `system_config` VALUES (280, 'app_seller_close_reason', 'APP关闭原因', NULL, 'app_seller_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP商城处于关闭状态时，商家访问APP端看到的提示原因', 255, 1, NULL, '2018-08-21 13:53:05', '2018-08-21 13:53:05');
-INSERT INTO `system_config` VALUES (281, 'app_seller_ios_version', 'iOS应用版本号', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:53:53', '2018-08-21 13:53:53');
-INSERT INTO `system_config` VALUES (282, 'app_seller_ios_update_url', 'iOS客户端下载地址', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写iOS应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 13:54:40', '2018-08-21 13:54:40');
-INSERT INTO `system_config` VALUES (283, 'app_seller_ios_update_content', 'iOS更新内容', NULL, 'app_seller_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-21 13:55:29', '2018-08-21 13:55:29');
-INSERT INTO `system_config` VALUES (284, 'app_seller_android_version', 'Android应用版本号', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:56:08', '2018-08-21 13:56:08');
-INSERT INTO `system_config` VALUES (285, 'app_seller_android_update_url', 'Android客户端下载地址', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写Android应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 13:56:54', '2018-08-21 13:56:54');
-INSERT INTO `system_config` VALUES (286, 'app_seller_android_update_content', 'Android更新内容', NULL, 'app_seller_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-21 13:57:49', '2018-08-21 13:57:49');
-INSERT INTO `system_config` VALUES (287, 'app_seller_login_bg', 'APP登录背景图', NULL, 'app_seller_setting', 'imagegroup', 0, '个性化', NULL, NULL, NULL, '用于设置商家版APP登录界面的背景图片， 建议尺寸 750*545像素', 255, 1, NULL, '2018-08-21 13:58:46', '2018-08-21 13:58:46');
-INSERT INTO `system_config` VALUES (288, 'app_store_ios_is_open', 'iOS状态', NULL, 'app_store_setting', 'switch', 0, '应用设置', '0', '1::开\r\n0::关', NULL, '可暂时将网点iOS端应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 14:02:12', '2018-08-21 14:02:12');
-INSERT INTO `system_config` VALUES (289, 'app_store_ios_use_version', 'iOS使用版本', NULL, 'app_store_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-21 14:05:29', '2018-08-21 14:05:29');
-INSERT INTO `system_config` VALUES (290, 'app_store_android_is_open', 'Android状态', NULL, 'app_store_setting', 'switch', 0, '应用设置', '0', '1::开\r\n0::关', NULL, '可暂时将网点Android应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 14:06:23', '2018-08-21 14:06:23');
-INSERT INTO `system_config` VALUES (291, 'app_store_android_use_version', 'Android使用版本', NULL, 'app_store_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的Android应用受“Android应用状态”开关控制', 255, 1, NULL, '2018-08-21 14:07:23', '2018-08-21 14:07:23');
-INSERT INTO `system_config` VALUES (292, 'app_store_close_reason', 'APP关闭原因', NULL, 'app_store_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP处于关闭状态时，网点店主访问APP端看到的提示原因', 255, 1, NULL, '2018-08-21 14:08:16', '2018-08-21 14:08:16');
-INSERT INTO `system_config` VALUES (293, 'app_store_ios_version', 'iOS应用版本号', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 14:09:05', '2018-08-21 14:09:05');
-INSERT INTO `system_config` VALUES (294, 'app_store_ios_update_url', 'iOS客户端下载地址', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写iOS应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 14:09:51', '2018-08-21 14:09:51');
-INSERT INTO `system_config` VALUES (295, 'app_store_ios_update_content', 'iOS更新内容', NULL, 'app_store_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-21 14:10:34', '2018-08-21 14:10:34');
-INSERT INTO `system_config` VALUES (296, 'app_store_android_version', 'Android应用版本号', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 14:11:10', '2018-08-21 14:11:10');
-INSERT INTO `system_config` VALUES (297, 'app_store_android_update_url', 'Android客户端下载地址', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写Android应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 14:12:03', '2018-08-21 14:12:03');
-INSERT INTO `system_config` VALUES (298, 'app_store_android_update_content', 'Android更新内容', NULL, 'app_store_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-21 14:12:52', '2018-08-21 14:12:52');
-INSERT INTO `system_config` VALUES (299, 'app_store_login_bg', 'APP登录背景图', NULL, 'app_store_setting', 'imagegroup', 0, '个性化', NULL, NULL, NULL, '用于设置网点APP登录界面的背景图片， 建议尺寸 750*545', 255, 1, NULL, '2018-08-21 14:13:38', '2018-08-21 14:13:38');
-INSERT INTO `system_config` VALUES (300, 'kd_ebusiness_id', '电商ID', NULL, 'kdniao', 'text', 0, NULL, NULL, NULL, NULL, '电商ID，请到快递鸟官网，“<a class=\"btn-link\" target=\"_blank\" href=\"http://kdniao.com/reg\">去申请</a>”', 255, 1, NULL, '2018-09-22 01:46:16', '2018-12-22 12:58:28');
-INSERT INTO `system_config` VALUES (301, 'kd_app_key', '电商加密私钥', NULL, 'kdniao', 'text', 0, NULL, NULL, NULL, NULL, '电商加密私钥，快递鸟提供，注意保管，不要泄漏', 255, 1, NULL, '2018-09-22 01:46:55', '2018-12-22 12:58:29');
-INSERT INTO `system_config` VALUES (302, 'backend_websocket', '平台订单语音提醒是否开启', NULL, 'order', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是：会员下单后，平台收到声音提醒；否：会员下单，平台无法收到声音提醒', 255, 1, NULL, '2018-10-26 13:48:45', '2018-12-24 16:35:03');
-INSERT INTO `system_config` VALUES (303, 'order_refresh', '订单列表自动刷新', NULL, 'order', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '平台方、卖家中心订单列表有新订单，订单列表是否自动刷新，是：表示自动刷新；否：表示不自动刷新', 255, 1, NULL, '2018-10-26 13:49:51', '2018-12-24 16:35:03');
-INSERT INTO `system_config` VALUES (304, 'show_duration', '订单列表默认展示数据', NULL, 'order', 'radio', 0, NULL, '3', '1::当天\r\n3::三天内\r\n7::七天内\r\n30::一个月内', NULL, '控制平台方、卖家中心订单列表默认展示多长时间内的订单数据', 255, 1, NULL, '2018-10-26 13:52:06', '2018-12-24 16:35:03');
-INSERT INTO `system_config` VALUES (305, 'send_time', '送货时间', NULL, 'trade', 'checkbox', 0, '基本设置', '1,2,4,5', '1::立即配送\r\n2::工作日/周末/假日均可\r\n3::仅周末送货\r\n4::仅工作日送货\r\n5::指定送货时间', NULL, '控制结算页面的送货时间选项', 255, 1, NULL, '2018-10-26 13:56:57', '2018-10-26 15:17:27');
-INSERT INTO `system_config` VALUES (306, 'send_time_desc', '送货时间描述', NULL, 'trade', 'textarea', 0, '基本设置', NULL, NULL, NULL, '设置结算页面的送货时间旁边的备注说明', 255, 1, NULL, '2018-10-26 13:58:09', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (307, 'invoice_contents', '发票内容', NULL, 'trade', 'textarea', 0, '基本设置', NULL, NULL, NULL, '控制结算页面内发票的内容，如果为空则默认为：明细、办公用品、电脑配件、耗材；多个选项之间请用回车换行来区分', 255, 1, NULL, '2018-10-26 13:59:10', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (308, 'pay_term', '付款期限', NULL, 'trade', 'short_text', 1, '订单设置', '1', NULL, NULL, '付款期限不能小于15分钟，默认为1天：自下单1天内，买家尚未付款的订单，系统会自动取消订单；', 255, 1, NULL, '2018-10-26 14:01:13', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (309, 'pay_term_unit', '付款期限时间单位', NULL, 'trade', 'select', 1, '订单设置', '0', '0::天\r\n1::小时\r\n2::分钟', NULL, '付款期限不能小于15分钟，默认为1天：自下单1天内，买家尚未付款的订单，系统会自动取消订单；', 255, 1, NULL, '2018-10-26 14:03:31', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (310, 'take_term', '接单期限', NULL, 'trade', 'short_text', 1, '订单设置', '10', NULL, NULL, '用于控制开启接单模式店铺的接单期限，接单期限不能小于5分钟，默认为10分钟：自下单付款后10分钟内，卖家尚未接单的订单，系统将会自动取消订单；', 255, 1, NULL, '2018-10-26 14:05:09', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (311, 'take_term_unit', '接单期限时间单位', NULL, 'trade', 'select', 1, '订单设置', '0', '0::天\r\n1::小时\r\n2::分钟', NULL, '用于控制开启接单模式店铺的接单期限，接单期限不能小于5分钟，默认为10分钟：自下单付款后10分钟内，卖家尚未接单的订单，系统将会自动取消订单；', 255, 1, NULL, '2018-10-26 14:06:38', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (312, 'receiving_term', '确认收货期限', NULL, 'trade', 'text', 1, '订单设置', '7', NULL, NULL, '默认为7天：自发货起7天内，买家尚未确认收货的订单，系统会自动确认收货', 255, 1, NULL, '2018-10-26 14:07:44', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (313, 'extend_receiving_days', '延长收货时间(天)', NULL, 'trade', 'textarea', 1, '订单设置', '3\r\n6\r\n8', NULL, NULL, '买家或卖家可主动延长收货时间，让买家有更多时间来“确认收货”,请用回车添加多项', 255, 1, NULL, '2018-10-26 14:08:51', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (314, 'user_close_trad_reason', '买家关闭交易的理由', NULL, 'trade', 'textarea', 1, '订单设置', '我不想买了\r\n信息填写错误，重新拍\r\n卖家缺货\r\n同城见面交易\r\n付款遇到问题\r\n拍错了\r\n其他原因', NULL, NULL, '买家在关闭订单时，可选择关闭该交易的理由，多个理由请使用回车换行', 255, 1, NULL, '2018-10-26 14:09:55', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (315, 'close_trad_reason', '卖家关闭交易的理由', NULL, 'trade', 'textarea', 1, '订单设置', '未及时付款\r\n买家不想买\r\n买家信息填写错误，重新拍\r\n恶意买家/同行捣乱\r\n缺货\r\n买家拍错了\r\n同城见面交易\r\n其他原因', NULL, NULL, '卖家在关闭订单时，可选择关闭该交易的理由，多个理由请使用回车换行', 255, 1, NULL, '2018-10-26 14:10:51', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (316, 'is_refund_review', '退款申请是否需要审核', NULL, 'trade', 'switch', 0, '退款退货设置', '0', '1::是\r\n0::否', NULL, '退款退货受交易设置处的退款申请是否需要审核控制，如果需要审核，则平台方需要对退款退货信息进行核实和确认', 255, 1, NULL, '2018-10-26 14:12:34', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (317, 'back_seller_term', '申请退款卖家确认期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自买家申请退款（仅退款/退款退货）起7天内，卖家尚未操作的，系统会自动同意申请', 255, 1, NULL, '2018-10-26 14:13:38', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (318, 'buyer_update_back_term', '卖家拒绝退款申请，买家修改退款期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自卖家拒绝退款申请起7天内，买家未修改退款申请信息，系统自动取消申请', 255, 1, NULL, '2018-10-26 14:21:06', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (319, 'back_buyer_send_term', '退款退货买家发货期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自卖家（系统）同意退款退货申请起7天内，买家尚未发货的，系统会自动取消申请', 255, 1, NULL, '2018-10-26 14:23:53', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (320, 'back_seller_recive_term', '退款退货卖家确认收货期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自买家寄回退货商品起7天内，卖家尚未确认收货的，系统会自动将退款退货信息推送至平台方', 255, 1, NULL, '2018-10-26 14:24:45', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (321, 'refund_reason', '申请退款的原因', NULL, 'trade', 'textarea', 1, '退款退货设置', '退运费\r\n收到商品破损\r\n商品错发/漏发\r\n商品需要维修\r\n发票问题\r\n收到商品与描述不符\r\n商品质量问题\r\n未按约定时间发货\r\n未收到货\r\n申请退款后强制发货', NULL, NULL, '买家在申请退款时，可选择退款的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:25:43', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (322, 'customer_service_term', '申请售后期限', NULL, 'trade', 'text', 1, '售后设置', '15', NULL, NULL, '默认为15天：自买家确认收货起15天内，可且申请退款（仅退款/退款退货）、换货维修服务', 255, 1, NULL, '2018-10-26 14:28:08', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (323, 'seller_service_term', '卖家处理售后期限', NULL, 'trade', 'text', 1, '售后设置', '5', NULL, NULL, '默认为5天：自买家申请换货、维修起5天内，卖家未处理换货、维修申请，系统自动同意换货、维修', 255, 1, NULL, '2018-10-26 14:28:54', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (324, 'customer_modify_service_term', '卖家拒绝售后申请，买家修改期限', NULL, 'trade', 'text', 1, '售后设置', '7', NULL, NULL, '默认为7天：自卖家拒绝售后申请起7天内，买家未修改售后申请信息，系统会自动取消申请', 255, 1, NULL, '2018-10-26 14:29:42', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (325, 'customer_finish_service_term', '买家完成售后期限', NULL, 'trade', 'text', 1, '售后设置', '15', NULL, NULL, '默认为15天：自卖家同意换货、维修起15天内，买家未确认完成换货、维修，系统自动触发完成换货、维修', 255, 1, NULL, '2018-10-26 14:30:19', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (326, 'repair_reason', '申请维修的原因', NULL, 'trade', 'textarea', 1, '售后设置', '质量问题', NULL, NULL, '买家在申请维修时，可选择维修的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:31:34', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (327, 'exchange_reason', '申请换货的原因', NULL, 'trade', 'textarea', 1, '售后设置', '大小尺寸与商品描述不符\r\n卖家发错货\r\n尺码拍错/不喜欢/效果差\r\n颜色/款式/图案与描述不符\r\n收到商品少件或破损\r\n材质/面料与商品描述不符\r\n质量问题', NULL, NULL, '买家在申请换货时，可选择换货的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:32:18', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (328, 'complaint_seller_term', '投诉卖家期限', NULL, 'trade', 'text', 1, '投诉设置', '15', NULL, NULL, '默认为15天：自买家确认收货的15天内，可投诉卖家', 255, 1, NULL, '2018-10-26 14:33:12', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (329, 'seller_ps_complain_term', '卖家处理投诉期限', NULL, 'trade', 'text', 1, '投诉设置', '3', NULL, NULL, '默认为3天：自买家发起投诉起3天内，卖家未处理或处理结果买家未满意，买家可申请平台方介入处理', 255, 1, NULL, '2018-10-26 14:34:01', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (330, 'complaint_reason', '投诉卖家的原因', NULL, 'trade', 'textarea', 1, '投诉设置', '承诺的没做到\r\n未按约定时间发货\r\n未按成交价格进行交易\r\n恶意骚扰\r\n拒绝提供售后服务', NULL, NULL, '买家在投诉卖家时，可选择投诉的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:34:55', '2018-10-26 15:17:29');
-INSERT INTO `system_config` VALUES (331, 'mark_term', '评价期限', NULL, 'evaluate', 'short_text', 1, NULL, '30', NULL, NULL, '如设置30，自“确认收货”起30天内可评价', 255, 1, NULL, '2018-10-26 14:41:03', '2018-10-26 15:20:22');
-INSERT INTO `system_config` VALUES (332, 'chase_term', '追评期限', NULL, 'evaluate', 'short_text', 1, NULL, '301', NULL, NULL, '如设置30，自“确认收货”提交起30天内可追评', 255, 1, NULL, '2018-10-26 14:41:58', '2018-10-26 15:20:22');
-INSERT INTO `system_config` VALUES (333, 'auto_mark', '是否开启到期系统自动好评', NULL, 'evaluate', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，“评价期限”到期后买家不评价，系统会自动好评；关闭后，“评价期限”到期后买家不评价，将自动过期不再允许评价和追评', 255, 1, NULL, '2018-10-26 14:43:01', '2018-10-26 15:20:22');
-INSERT INTO `system_config` VALUES (334, 'mark_audit', '评价是否需要审核', NULL, 'evaluate', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，买家发布评价后不会立即生效显示，需平台方审核通过后才能生效', 255, 1, NULL, '2018-10-26 14:44:00', '2018-10-26 15:20:22');
-INSERT INTO `system_config` VALUES (335, 'pay_by_integral', 'pay_by_integral', NULL, 'trade', 'hidden', 0, '基本设置', '1', NULL, NULL, NULL, 255, 1, NULL, '2018-10-26 14:51:24', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (336, 'shipping_time', '指定送货时间段', NULL, 'trade', 'hidden', 0, '基本设置', NULL, NULL, NULL, '买家购物结算时，供选择的指定送货时间的时间间段 <br>说明：消费者下单时间+1个小时小于配送时间段的开始时间或消费者下单时间+1个小时小于配送时间段的结束时间，那么此时间段消费者是可以选择的', 255, 1, NULL, '2018-10-26 15:16:40', '2018-10-26 15:17:28');
-INSERT INTO `system_config` VALUES (337, 'username_prefix', '会员用户名前缀', NULL, 'user', 'short_text', 0, '用户基本信息', NULL, NULL, NULL, '会员注册时生成会员的用户名的前缀，仅支持最多3个大写英文字母，为空则默认为“LRW”', 255, 1, NULL, '2018-10-26 15:34:04', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (338, 'user_auto_login', '会员自动登录', NULL, 'user', 'checkbox', 0, '用户基本信息', '1,2', '1::PC端\r\n2::微商城', NULL, '控制前台登录页面，是否允许自动登录，选择支持自动登录，方便会员快速登录商城系统', 255, 1, NULL, '2018-10-26 15:35:28', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (339, 'register_type', '会员注册方式', NULL, 'user', 'checkbox', 0, '用户基本信息', '1,2', '1::手机注册\r\n2::邮箱注册', NULL, '系统自带以上几种注册方式，如果您没有选择任何注册方式，网站将关闭注册', 255, 1, NULL, '2018-10-26 15:36:39', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (340, 'register_close_reason', '关闭注册原因', NULL, 'user', 'textarea', 0, '用户基本信息', '您好，由于网站系统升级，暂时关闭会员注册，给您带来不便敬请谅解!', NULL, NULL, NULL, 255, 1, NULL, '2018-10-26 15:37:28', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (341, 'show_rank_price', '等级价格', NULL, 'user', 'radio', 1, '用户基本信息', '2', '0::查看全部等级价格\r\n1::查看对应等级价格\r\n2::高等级看低等级价格', NULL, '控制前台商品详情页商品价格的显示规则，可设置不同会员等级对应不同商品价格<br>查看全部等级价格：等级价格对所有会员可见（包括游客）<br>查看对应等级价格：等级价格仅对对应等级会员可见<br>高等级看低等级价格：等级会员可看到对应等级及低于该等级的商品价格<br>店铺自定义商品会员价后，此等级价格设置将不起作用<br>系统开启平台统一会员等级和店铺自定义商品会员价后，此等级价格设置将不起作用', 255, 1, NULL, '2018-10-26 15:39:13', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (342, 'user_validate_password', '登录密码身份验证', NULL, 'user', 'radio', 1, '用户基本信息', '0', '0::不支持\r\n1::支持', NULL, '在用户中心修改密码、手机号码等安全操作时，用于控制当会员绑定了手机号码或者邮箱后还是否支持通过登录密码进行身份验证；<br><span style=\"color: red;\">如果会员未绑定手机号码或者邮箱则仅能通过登录密码进行身份验证，不受此项控制；</span>', 255, 1, NULL, '2018-10-26 15:40:49', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (343, 'monetary_rate', '消费金额与赠送成长值比例', '%', 'user', 'short_text', 0, '用户基本信息', NULL, NULL, NULL, '该值为大于0的数，例:设置为10，表明消费100元赠送10点成长值，取整计算，比如消费88.5元，则赠送8点成长值', 255, 1, NULL, '2018-10-26 15:43:52', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (344, 'max_growth_value', '每笔订单最多赠送成长值', NULL, 'user', 'short_text', 0, '用户基本信息', NULL, NULL, NULL, '填写0表明不限制最多赠送的成长值，例：设置为100，表明每笔订单最多赠送100点成长值', 255, 1, NULL, '2018-10-26 15:44:35', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (345, 'auth_enable', '是否启用', NULL, 'user', 'switch', 0, '用户查看、购买商品权限', '0', '1::是\r\n0::否', NULL, '开启后将控制用户查看、购买商品的权限', 255, 1, NULL, '2018-10-26 15:45:50', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (346, 'auth_see', '查看商品价格权限', NULL, 'user', 'checkbox', 0, '用户查看、购买商品权限', '0', '-1::未登录用户\r\n1::注册会员\r\n2::铜牌会员\r\n3::银牌会员\r\n4::金牌会员\r\n5::钻石会员', NULL, '选择不同权限/会员等级的会员可查看商城商品价格，有购买商品权限必然有查看商品价格权限', 255, 1, NULL, '2018-10-26 15:48:27', '2018-10-26 16:01:16');
-INSERT INTO `system_config` VALUES (347, 'auth_buy', '购买商城商品权限', NULL, 'user', 'checkbox', 0, '用户查看、购买商品权限', '0', '-1::未登录用户\r\n1::注册会员\r\n2::铜牌会员\r\n3::银牌会员\r\n4::金牌会员\r\n5::钻石会员', NULL, '选择不同权限/会员等级的会员可购买商城商品，有购买商品权限必然有查看商品价格权限', 255, 1, NULL, '2018-10-26 15:50:04', '2018-10-26 16:01:17');
-INSERT INTO `system_config` VALUES (348, 'shop_collect_open', '是否开启店铺数据采集', NULL, 'shop_collect', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是：店铺卖家中心即可使用数据采集方式添加商品；否：店铺卖家中心无法看到数据采集菜单', 255, 1, NULL, '2018-10-29 12:01:56', '2018-10-29 12:02:16');
-INSERT INTO `system_config` VALUES (349, 'qq_app_key', 'APP KEY', NULL, 'qq_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://connect.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:48:59', '2018-12-22 12:48:59');
-INSERT INTO `system_config` VALUES (350, 'qq_app_secret', 'APP SECRET', NULL, 'qq_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://connect.qq.com申请的KEY', 255, 1, NULL, '2018-12-22 12:49:38', '2018-12-22 12:49:38');
-INSERT INTO `system_config` VALUES (351, 'weibo_app_key', 'APP KEY', NULL, 'weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:51:58', '2018-12-22 12:51:58');
-INSERT INTO `system_config` VALUES (352, 'weibo_app_secret', 'APP SECRET', NULL, 'weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的KEY', 255, 1, NULL, '2018-12-22 12:52:40', '2018-12-22 12:52:40');
-INSERT INTO `system_config` VALUES (353, 'mobile_weibo_app_key', 'APP KEY', NULL, 'mobile_weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:53:29', '2018-12-22 12:53:29');
-INSERT INTO `system_config` VALUES (354, 'mobile_weibo_app_secret', 'APP SECRET', NULL, 'mobile_weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的KEY', 255, 1, NULL, '2018-12-22 12:54:14', '2018-12-22 12:54:14');
-INSERT INTO `system_config` VALUES (355, 'pc_weixin_app_key', 'APP KEY', NULL, 'pc_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://open.weixin.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:55:49', '2018-12-22 12:55:49');
-INSERT INTO `system_config` VALUES (356, 'pc_weixin_app_secret', 'APP SECRET', NULL, 'pc_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://open.weixin.qq.com申请的APP SECRET', 255, 1, NULL, '2018-12-22 12:56:24', '2018-12-22 12:56:24');
-INSERT INTO `system_config` VALUES (357, 'mobile_weixin_app_key', 'APP KEY', NULL, 'mobile_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://mp.weixin.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:57:11', '2018-12-22 12:57:11');
-INSERT INTO `system_config` VALUES (358, 'mobile_weixin_app_secret', 'APP SECRET', NULL, 'mobile_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://mp.weixin.qq.com申请的APP SECRET', 255, 1, NULL, '2018-12-22 12:57:37', '2018-12-22 12:57:37');
-INSERT INTO `system_config` VALUES (359, 'audit_self_shop_goods', '自营店铺商品是否需要审核', NULL, 'goods', 'radio', 0, '商品审核', '0', '0::无需审核\r\n1::必须审核\r\n2::仅第一次上架时需要审核', NULL, NULL, 255, 1, NULL, '2018-12-24 15:45:28', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (360, 'audit_other_shop_goods', '入驻店铺商品是否需要审核', NULL, 'goods', 'radio', 0, '商品审核', '0', '0::无需审核\r\n1::必须审核\r\n2::仅第一次上架时需要审核', NULL, NULL, 255, 1, NULL, '2018-12-24 15:46:45', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (361, 'goods_price_format', '商品价格显示格式', NULL, 'goods', 'short_text', 0, '商品价格', '￥{0}', NULL, NULL, '用于PC端列表页面、商品详情页面等其他页面的商品价格的显示的格式，“{0}”代表价格的占位符', 255, 1, NULL, '2018-12-24 15:47:56', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (362, 'price_show_rule', '商品价格显示规则', NULL, 'goods', 'radio', 0, '商品价格', '0', '0::不处理\r\n1::保留两位小数\r\n2::不保留小数部分为0的尾数', NULL, '用于列表页面、商品详情页面商品价格的显示计算规则', 255, 1, NULL, '2018-12-24 15:49:41', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (363, 'goods_list_count', '列表页面显示商品数量', NULL, 'goods', 'short_text', 1, '商品列表', '20', NULL, NULL, '用于控制前台商品列表页、搜索结果页面每页显示商品的数量，为了页面的美观建议为20的整数倍', 255, 1, NULL, '2018-12-24 15:50:54', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (364, 'goods_list_cache', '列表页面查询缓存', '秒', 'goods', 'short_text', 1, '商品列表', '600', NULL, NULL, '用于控制前台商品列表页、搜索结果页面缓存时间，单位：秒，默认为600秒', 255, 1, NULL, '2018-12-24 15:52:11', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (365, 'goods_list_filter_count', '列表页面筛选条件默认展示数量', '个', 'goods', 'short_text', 1, '商品列表', '2', NULL, NULL, '用于控制前台商品列表页筛选条件中除品牌、价格其他的属性条件展示数量，默认为2，设置为0则展示所有', 255, 1, NULL, '2018-12-24 15:53:14', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (366, 'sort_order_type', '商品列表页面默认排序类型', NULL, 'goods', 'radio', 0, '商品列表', '0', '0::按综合排序\r\n1::按销量\r\n2::按上架时间\r\n3::按评论数\r\n4::按商品价格\r\n5::按人气', NULL, '根据关键词搜索商品时，如果搜索的关键词与上次搜索的关键词不同则系统自动使用综合排序对搜索结果进行排序；<br>系统支持elasticsearch后，综合排序的规则是按关键词搜索商品将会根据关键词匹配的相关度进行优先排序；', 255, 1, NULL, '2018-12-24 15:55:42', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (367, 'sort_order_method', '商品列表页面默认排序方式', NULL, 'goods', 'radio', 1, '商品列表', '1', '0::升序\r\n1::降序', NULL, '综合排序按仅照商品的排序进行升序排序，不受此排序设置控制；', 255, 1, NULL, '2018-12-24 15:57:22', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (368, 'goods_show_sale_number', '是否显示商品销量', NULL, 'goods', 'radio', 0, '商品列表', '1', '0::隐藏\r\n1::显示', NULL, '控制商品列表页、详情页是否显示商品销量', 255, 1, NULL, '2018-12-24 15:58:34', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (369, 'goods_list_show_style', '商品列表页显示样式', NULL, 'goods', 'radio', 0, '商品列表', 'grid', 'grid::网格\r\nlist::列表', NULL, '控制商品列表页是否显示样式。注：目前只能控制WAP端', 255, 1, NULL, '2018-12-24 16:00:03', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (370, 'goods_info_freight', '商品详情页运费模式', NULL, 'goods', 'radio', 0, '商品详情', '2', '2::隐藏配送地区\r\n0::显示具体运费\r\n1::仅显示“有货”、“无货”等信息，不显示具体运费', NULL, NULL, 255, 1, NULL, '2018-12-24 16:01:56', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (371, 'goods_info_show_stock', '是否显示商品详情页库存', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏，无货时显示“库存不足”\r\n1::显示', NULL, '用于控制商品详情页面是否展示具体的商品库存', 255, 1, NULL, '2018-12-24 16:03:20', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (372, 'goods_info_pickup', '是否显示商品详情页自提点', NULL, 'goods', 'radio', 0, '商品详情', '0', '0::隐藏\r\n1::显示', NULL, '用于控制商品详情页是否展示自提点列表', 255, 1, NULL, '2018-12-24 16:04:18', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (373, 'goods_info_show_collect', '是否显示商品收藏人气', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制商品详情页是否展示具体的收藏人气', 255, 1, NULL, '2018-12-24 16:05:31', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (374, 'shop_show_collect', '是否显示店铺收藏人气', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制店铺相关页面是否展示具体的店铺收藏人气', 255, 1, NULL, '2018-12-24 16:06:26', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (375, 'goods_video_enable', '是否开启商品主图视频', NULL, 'goods', 'radio', 0, '商品视频', '1', '0::关闭\r\n1::开启', NULL, '开启后，卖家中心发布、编辑商品时可以为商品添加主图视频用于在商品详情页展示；关闭后将禁用此功能，上传的主图视频无法在商品详情展示。', 255, 1, NULL, '2018-12-24 16:07:46', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (376, 'goods_video_min_duration', '主图视频时长 最小时长', NULL, 'goods', 'short_text', 1, '商品视频', '0', NULL, NULL, '设置商品主图视频的时长大小，单位：秒，默认为0~90秒', 255, 1, NULL, '2018-12-24 16:09:23', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (377, 'goods_video_max_duration', '主图视频时长 最大时长', NULL, 'goods', 'short_text', 1, '商品视频', '90', NULL, NULL, '设置商品主图视频的时长大小，单位：秒，默认为0~90秒', 255, 1, NULL, '2018-12-24 16:10:19', '2018-12-24 16:34:40');
-INSERT INTO `system_config` VALUES (378, 'goods_video_article', '主图视频规则文章', NULL, 'goods', 'text', 0, '商品视频', NULL, NULL, NULL, '设置描述商品主图视频上传要求规则的文章链接地址，设置后会展示在商品发布、编辑页面中主图视频提示中，便于用户了解视频要求;<br><span style=\"color: red;\">为了兼容各端浏览器，目前暂支持视频格式：mpeg4（H.264）、ogg、webm</span>；<br>Ogg = 带有 Theora 视频编码和 Vorbis 音频编码的 Ogg 文件;<br>MPEG4 = 带有 H.264 视频编码和 AAC 音频编码的 MPEG 4文件;<br>WebM = 带有 VP8 视频编码和 Vorbis 音频编码的 WebM 文件;', 255, 1, NULL, '2018-12-24 16:11:51', '2018-12-24 16:34:40');
+INSERT INTO `system_config` VALUES (1, 'config_group', '配置分组', NULL, 'system', 'textarea', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, NULL, '2018-07-18 23:48:29');
+INSERT INTO `system_config` VALUES (2, 'form_item_type', '配置表单类型', NULL, 'system', 'textarea', 0, NULL, NULL, NULL, NULL, '配置表单元素类型', 255, 1, NULL, NULL, '2018-04-02 22:42:57');
+INSERT INTO `system_config` VALUES (3, 'custom_style_enable', '是否开启自定义改色', NULL, 'site_style', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (4, 'main_color', '主体颜色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城主体颜色 code:main_color', 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (5, 'second_color', '主体辅色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '主体辅色 code:second_color', 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (6, 'second_bg_color', '主体背景辅色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff0000', NULL, NULL, '主体背景辅色 code:second_bg_color', 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (7, 'right_bg_color', '右侧侧边栏背景色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城右侧侧边栏背景色 code:right_bg_color', 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (8, 'left_nav_color', '左侧分类导航背景颜色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城左侧分类导航背景颜色 code:left_nav_color', 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (9, 'cart_image', '购物车图标', NULL, 'site_style', 'imagegroup', 0, NULL, '/goods/brand/2018/06/16/15291637579191.jpg', NULL, NULL, '最佳显示尺寸为50*50像素，建议上传png格式', 255, 1, NULL, NULL, '2022-03-14 22:37:48');
+INSERT INTO `system_config` VALUES (19, 'site_name', '网站名称', NULL, 'website', 'text', 1, '网站设置', '乐融沃商城', NULL, NULL, '网站名称，将显示在商城相关的页面的浏览器标签页上，网站名称不要超过30个字', 255, 1, NULL, '2018-02-23 00:10:48', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (20, 'site_index', '网站首页', NULL, 'website', 'radio', 0, '网站设置', '0', '0::商城首页\r\n1::资讯频道\r\n2::专题页', NULL, '此设置用于定制你的网站首页显示的内容，暂时支持商城首页、资讯频道、专题页', 255, 1, NULL, '2018-02-23 00:15:32', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (21, 'sale_level_names', '经营地区行政级别名称', NULL, 'region', 'text', 0, NULL, '省,市,区/县,镇,街道/村', NULL, NULL, '对应经营地区列表1、2、3、4、5个行政级别的名称，数值越小，行政级别越高。行政级别名称间请用英文半角逗号“,”分割，提交后生效见效果', 255, 1, NULL, '2018-03-19 05:58:52', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (22, 'region_start', '经营地区最高级别', NULL, 'region', 'select', 0, NULL, '1', '1::省\r\n2::市\r\n3::区/县\r\n4::镇\r\n5::街道/村', NULL, '控制系统中经营地区选择的最高行政级别', 255, 1, NULL, '2018-03-19 06:00:56', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (23, 'region_end', '经营地区最低级别', NULL, 'region', 'select', 0, NULL, '3', '1::省\r\n2::市\r\n3::区/县\r\n4::镇\r\n5::街道/村', NULL, '控制系统中经营地区选择的最低行政级别', 255, 1, NULL, '2018-03-19 06:02:09', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (24, 'level_names', '行政地区行政级别名称', NULL, 'region', 'text', 0, NULL, '省,市,区/县,镇,街道/村', NULL, NULL, '对应行政地区列表1、2、3、4、5个行政级别的名称，数值越小，行政级别越高。行政级别名称间请用英文半角逗号“,”分割，提交后生效见效果', 255, 1, NULL, '2018-03-19 06:03:17', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (25, 'region_min_level', '行政地区最低级别', NULL, 'region', 'select', 0, NULL, '4', '1::省\r\n2::市\r\n3::区/县\r\n4::镇\r\n5::街道/村', NULL, '控制系统中非经营地区选择的最低行政级别', 255, 1, NULL, '2018-03-19 06:04:17', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (26, 'user_address_level', '会员收货地址地区选择的最低级别', NULL, 'region', 'select', 0, NULL, '3', '0::最后一级\r\n1::省\r\n2::市\r\n3::区/县\r\n4::镇\r\n5::街道/村', NULL, '控制会员添加/编译收货地址时选择地区的最低级别，此设置请勿小于“行政地区最低级别”', 255, 1, NULL, '2018-03-19 06:05:48', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (27, 'region_short_name', '地区名称是否使用简写', NULL, 'region', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '选择是则地区选择控件将显示地区的简写，例如：内蒙古自治区将显示内蒙古', 255, 1, NULL, '2018-03-19 06:11:56', '2020-04-01 06:29:42');
+INSERT INTO `system_config` VALUES (28, 'default_goods_image', '默认商品图片', NULL, 'default_image', 'imagegroup', 1, NULL, '/site/1/images/2018/07/15/15316375751761.gif', NULL, NULL, '应用于卖家发布商品时，展示的商品图片初始图，最佳显示尺寸为300*300像素', 255, 1, NULL, '2018-04-01 23:13:55', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (29, 'default_shop_logo', '默认店铺Logo', NULL, 'default_image', 'imagegroup', 1, NULL, '/site/1/images/2018/07/15/15316680507825.gif', NULL, NULL, '商家入驻后，默认展示的店铺logo，最佳显示尺寸为120*60像素', 255, 1, NULL, '2018-04-01 23:15:54', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (30, 'default_shop_image', '默认店铺头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295955731722.gif', NULL, NULL, '商家入驻后，默认展示的店铺头像，最佳显示尺寸为120*120像素', 255, 1, NULL, '2018-04-01 23:16:59', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (31, 'default_user_portrait', '默认用户头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/03/15280050844047.png', NULL, NULL, '会员注册后，默认展示的用户头像，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-01 23:17:37', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (32, 'default_micro_shop_image', '默认微店头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295957187340.jpg', NULL, NULL, '会员成为分销商后，微小店展示的默认头像，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-01 23:20:15', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (33, 'default_article_cat_image', '默认文章分类图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/10/15338637696739.png', NULL, NULL, '图片请使用100 * 100像素jpg、gif、png格式的图片，并且图片大小不得超过2M，此图片将在文章咨询频道下的文章列表中展示，展示位置在文章分类名称前', 255, 1, NULL, '2018-04-01 23:20:44', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (34, 'default_lazyload', 'PC端默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/29/15355368456667.png', NULL, NULL, '前台页面访问时，广告或商品图片未展示出来时，默认展示的图片，最佳显示尺寸140*30像素png格式的图片', 255, 1, NULL, '2018-04-01 23:21:21', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (35, 'default_lazyload_mobile', '手机端默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/29/15355370596900.png', NULL, NULL, '最佳显示尺寸70*70像素png格式的图片', 255, 1, NULL, '2018-04-01 23:21:47', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (36, 'default_noresult', '无记录默认图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2020/01/11/15787423573957.png', NULL, NULL, '列表页、搜索页等搜索不到任何记录时显示的默认图片', 255, 1, NULL, '2018-04-01 23:22:22', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (37, 'default_video_image', '默认视频封面图', NULL, 'default_image', 'imagegroup', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-01 23:22:50', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (38, 'idcard_demo_image', '实名认证示例图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295957722848.jpg|/site/1/images/2018/06/21/15295958454033.jpg|/site/1/images/2018/06/21/15295958661606.jpg', NULL, '正面照,背面照,手持照', '分别上传身份证正面照、身份证背面照、本人手持身份证正面照，建议上传400*200像素的图片', 255, 1, NULL, '2018-04-01 23:24:50', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (39, 'company_demo_image', '企业认证示例图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295959073083.jpg', NULL, '营业执照', '上传企业法人营业执照示例图，建议上传595*842像素的图片', 255, 1, NULL, '2018-04-01 23:26:16', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (40, 'image_dir_type', '图片存放方式', NULL, 'image_upload', 'radio', 1, NULL, '3', '3::按照年月日存放（例：/&nbsp;店铺id&nbsp;/&nbsp;年&nbsp;/&nbsp;月&nbsp;/&nbsp;日&nbsp;/&nbsp;图片）', NULL, NULL, 255, 1, NULL, '2018-04-02 01:40:49', '2019-03-17 19:35:13');
+INSERT INTO `system_config` VALUES (41, 'favicon', '网站头像', NULL, 'website', 'imagegroup', 0, '网站设置', '/site/1/images/2018/06/03/15280052637458.png', NULL, NULL, '网站头像将显示在浏览器的选项卡上，请上传“.ico”格式，大小为25*25像素的图片，此图片将被作为部分二维码中心的Logo图片', 255, 1, NULL, '2018-04-02 21:58:42', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (42, 'backend_logo', '后台系统Logo', NULL, 'website', 'imagegroup', 1, '网站设置', '/site/1/2018/06/03/15280049252604.png', NULL, NULL, '用于后台系统登录页面的Logo展示，建议尺寸270*70像素，背景为透明的白色主题图片', 255, 1, NULL, '2018-04-02 22:05:55', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (43, 'site_icp', 'ICP证书号', NULL, 'website', 'text', 0, '网站设置', NULL, NULL, NULL, '用于前台、平台方后台、站点后台、卖家中心页面底部显示ICP备案信息，如果网站已备案，在此输入你的授权码，如果没有请留空', 255, 1, NULL, '2018-04-02 22:09:30', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (44, 'site_copyright', '版权信息', NULL, 'website', 'text', 0, '网站设置', 'Copyright 乐融沃(www.laravelvip.com) 版权所有', NULL, NULL, '用于前台、平台方后台、站点后台、卖家中心页面底部显示版权信息', 255, 1, NULL, '2018-04-02 22:10:29', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (45, 'timezone', '默认时区', NULL, 'website', 'select', 0, '网站设置', '-12', '-12::(GMT -12:00) Eniwetok, Kwajalein\r\n-11::(GMT -11:00) Midway Island, Samoa', NULL, '系统数据库中存储所有时间为格林威治时间，会根据此配置自动转换为本地时间，请根据实际地区选择时区，否则会造成时间错误，请勿随意变更', 255, 1, NULL, '2018-04-02 22:41:20', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (46, 'stats_code', '第三方流量统计代码(PC端)', NULL, 'website', 'textarea', 0, '网站设置', '<script type=\"text/javascript\">var cnzz_protocol = ((\"https:\" == document.location.protocol) ? \" https://\" : \" http://\");document.write(unescape(\"%3Cspan id=\'cnzz_stat_icon_1274894385\'%3E%3C/span%3E%3Cscript src=\'\" + cnzz_protocol + \"s22.cnzz.com/z_stat.php%3Fid%3D1274894385\' type=\'text/javascript\'%3E%3C/script%3E\"));</script>', NULL, NULL, 'PC端前台页面底部可以显示第三方统计', 255, 1, NULL, '2018-04-02 23:07:20', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (47, 'stats_code_wap', '第三方流量统计代码(WAP端)', NULL, 'website', 'textarea', 0, '网站设置', '<script type=\"text/javascript\">var cnzz_protocol = ((\"https:\" == document.location.protocol) ? \" https://\" : \" http://\");document.write(unescape(\"%3Cspan id=\'cnzz_stat_icon_1274894385\'%3E%3C/span%3E%3Cscript src=\'\" + cnzz_protocol + \"s22.cnzz.com/z_stat.php%3Fid%3D1274894385\' type=\'text/javascript\'%3E%3C/script%3E\"));</script>', NULL, NULL, 'WAP端前台页面底部可以显示第三方统计', 255, 1, NULL, '2018-04-02 23:08:01', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (48, 'pc_site_status', 'PC端状态', NULL, 'website', 'radio', 0, 'pc网站状态', '1', '1::开启\r\n0::关闭', NULL, '可以暂时将商城PC端停用，用户无法访问PC端前台页面，不影响管理员后台操作', 255, 1, NULL, '2018-04-02 23:09:59', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (49, 'pc_site_close_image', 'PC端关闭提示图片', NULL, 'website', 'imagegroup', 0, 'pc网站状态', NULL, NULL, NULL, '建议上传白色背景，最佳尺寸为1920*600像素', 255, 1, NULL, '2018-04-02 23:12:29', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (50, 'site_status', '网站状态', NULL, 'website', 'radio', 0, '网站状态', '1', '1::正常\r\n2::升级中\r\n0::暂时关闭', NULL, '可暂时将网站关闭或设为升级中，其他人无法访问，但不影响管理员访问后台', 255, 1, NULL, '2018-04-02 23:14:18', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (51, 'close_comment', '关闭原因', NULL, 'website', 'textarea', 0, '网站状态', '您好，由于网站系统升级，暂时关闭商城，给您带来不便敬请谅解!', NULL, NULL, '当网站处于关闭状态时，关闭原因将显示在前台', 255, 1, NULL, '2018-04-02 23:15:08', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (52, 'upgrade_comment', '升级描述', NULL, 'website', 'textarea', 0, '网站状态', '为了让您更好的使用资源平台，我们正在对平台进行升级。升级期间暂时无法访问。给您带来的不便，敬请谅解。', NULL, NULL, '当网站处于升级状态时，升级提示将显示在前台', 255, 1, NULL, '2018-04-02 23:15:49', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (53, 'captcha_code', '启用图片验证码', NULL, 'captcha', 'checkbox', 0, '图片验证码', '1,2,3', '1::后台管理员登录\r\n2::前台新用户注册\r\n3::前台用户登录\r\n4::前台动态密码登录', NULL, '商城会员在商城内进行身份验证时，如果验证失败次数超过3次后将强制开启图片验证码，验证成功后将重置验证失败次数', 255, 1, NULL, '2018-04-02 23:36:43', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (54, 'captcha_login_fail', '登录失败时显示图片验证码', NULL, 'captcha', 'switch', 1, '图片验证码', '1', '1::是\r\n0::否', NULL, '选择“是”，将在用户登录失败 3 次后才显示验证码；选择“否”，将始终在登录时显示验证码<br/>\r\n注意：只有在启用了后台管理员登录和前台用户登录时本设置才有效', 255, 1, NULL, '2018-04-02 23:50:02', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (55, 'alioss_enable', '是否开启', NULL, 'alioss', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，用户上传图片时将会自动上传至阿里OSS上进行存储', 255, 1, NULL, '2018-04-03 00:21:53', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (56, 'alioss_bucket_name', 'Bucket名称', NULL, 'alioss', 'text', 0, NULL, 'laravelvip', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 16:12:59', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (57, 'alioss_access_key_id', 'AccessKeyID', NULL, 'alioss', 'text', 0, NULL, '', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 16:13:44', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (58, 'alioss_access_key_secret', 'AccessKeySecret', NULL, 'alioss', 'text', 0, NULL, '', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 16:14:16', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (59, 'alioss_root_path', '图片存储根目录', NULL, 'alioss', 'text', 0, NULL, 'images', NULL, NULL, '系统上传的所有图片均将被存放在此目录下，为空则存放在OSS根目录下，默认为“images”', 255, 1, NULL, '2018-04-05 16:15:06', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (60, 'alioss_domain', '自定义绑定域名', NULL, 'alioss', 'text', 0, NULL, NULL, NULL, NULL, '您可以在阿里OSS控制台对Bucket进行自定义域名绑定，绑定后系统将会根据此域名访问图片，此域名仅用于访问图片，与商城链接无关，如果没有特殊要求请置空', 255, 1, NULL, '2018-04-05 16:16:20', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (61, 'alioss_bucket_region', '所属地区', NULL, 'alioss', 'radio', 0, NULL, '8', '0:: 华东2(上海)\r\n1:: 华北1(青岛)\r\n2:: 华北2(北京)\r\n3:: 华东1(杭州)\r\n4:: 华南1(深圳)\r\n5:: 香港\r\n6:: 亚洲(新加坡)\r\n7:: 美西1(美国硅谷)\r\n8:: 美东1(美国弗吉尼亚)', NULL, '<span class=\"c-red\">建议您开通华北2(北京)地区的bucket，否则使用商城内的采集时您无法将采集的图片存入您的OSS，华北2（北京）的OSS与商城系统相当于内网，内部的图片上传下载不耗费您的流量；</span>&nbsp;OSS所属地区与访问域名对照规则请参考官网“<a class=\"btn-link\" href=\"https://help.aliyun.com/document_detail/31837.html?spm=5176.2020520105.147.4.DnzI5j\" target=\"_blank\" title=\"点击进入官网\">OSS域名访问</a>”', 255, 1, NULL, '2018-04-05 16:22:27', '2018-04-07 01:16:33');
+INSERT INTO `system_config` VALUES (62, 'oss_domain', 'OSS外网域名', NULL, 'alioss', 'static', 0, NULL, 'image.laravelvip.com', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 16:36:53', '2018-04-05 16:36:53');
+INSERT INTO `system_config` VALUES (63, 'oss_internal_domain', 'OSS内网域名', NULL, 'alioss', 'static', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 16:43:37', '2018-04-05 16:43:37');
+INSERT INTO `system_config` VALUES (64, 'oss_image_domain', '图片服务域名', NULL, 'alioss', 'static', 0, NULL, NULL, NULL, NULL, '系统会自动根据阿里OSS图片服务规则对部分图片进行缩放裁剪处理', 255, 1, NULL, '2018-04-05 16:44:22', '2018-04-05 16:44:22');
+INSERT INTO `system_config` VALUES (65, 'captcha_noise', '图片验证码干扰点', NULL, 'captcha', 'short_text', 0, '图片验证码', '0', NULL, NULL, '默认无', 255, 1, NULL, '2018-04-07 21:02:46', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (66, 'captcha_curve', '图片验证码干扰线', NULL, 'captcha', 'short_text', 0, '图片验证码', '0', NULL, NULL, '默认无', 255, 1, NULL, '2018-04-07 21:05:30', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (67, 'captcha_sms_max', '短信验证码控制', NULL, 'captcha', 'short_text', 0, '短信验证码', '100', NULL, NULL, '今日已发送短信验证码<span class=\"c-red m-l-5 m-r-5\">0</span>条', 255, 1, NULL, '2018-04-07 21:12:51', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (68, 'captcha_sms_mobile_max', '每个手机号码地址短信验证码控制', NULL, 'captcha', 'html', 0, '短信验证码', '5', NULL, NULL, '两次短信验证码发送的时间间隔为60秒', 255, 1, NULL, '2018-04-07 21:17:57', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (69, 'captcha_sms_ip_max', '每个IP地址短信验证码控制', NULL, 'captcha', 'html', 0, '短信验证码', '5', NULL, NULL, '两次短信验证码发送的时间间隔为60秒', 255, 1, NULL, '2018-04-07 21:20:11', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (70, 'captcha_sms_limit', '短信验证码发送频繁限制方式', NULL, 'captcha', 'radio', 0, '短信验证码', '1', '0:: 禁止发送短信验证码\r\n1:: 强制输入图片验证码', NULL, '短信验证码发送过于频繁后系统采取的策略<br><span style=\"color: red;\">用户在禁止发送短信验证码情况下依然请求发送短信验证码的接口也会被强制要求输入图片验证码的</span>', 255, 1, NULL, '2018-04-07 21:22:30', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (71, 'mall_logo', '商城Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/06/03/15280053454152.png', NULL, NULL, '前台除了用户中心，其它页面展示，最佳显示尺寸为240*80像素，建议上传jpg格式图片，如果上传png格式图片，会导致接收邮件中的logo无法正常展示', 255, 1, NULL, '2018-04-08 23:43:33', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (72, 'user_center_logo', '会员中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/11/17/15424425979257.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 23:44:37', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (73, 'seller_center_logo', '卖家中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/07/15/15316457446277.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 23:45:44', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (74, 'store_center_logo', '网点中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/11/17/15424423965918.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 23:46:35', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (75, 'mall_phone', '平台方客服联系电话', NULL, 'mall', 'text', 0, '商城信息', '400-000-0000', NULL, NULL, '卖家中心欢迎页、站点后台欢迎页、商城前台底部显示，方便商家或会员遇到问题及时咨询', 255, 1, NULL, '2018-04-08 23:47:21', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (76, 'mall_email', '平台方客服电子邮件', NULL, 'mall', 'text', 0, '商城信息', '410284576@qq.com', NULL, NULL, '卖家中心欢迎页、站点后台欢迎页、商城前台底部显示，方便商家或会员遇到问题及时咨询', 255, 1, NULL, '2018-04-08 23:48:07', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (77, 'mall_qq', 'QQ客服', NULL, 'mall', 'text', 0, '商城信息', '410284576', NULL, NULL, '商城前台右侧侧边栏处展示', 255, 1, NULL, '2018-04-08 23:48:54', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (78, 'mall_wangwang', '旺旺客服', NULL, 'mall', 'text', 0, '商城信息', 'laravelvip', NULL, NULL, '商城前台右侧侧边栏处展示', 255, 1, NULL, '2018-04-08 23:50:09', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (79, 'mall_region_code', '所在地区', NULL, 'mall', 'region', 1, '商城信息', '43,01,02', NULL, NULL, '商城的所在位置，如果商城定位不到用户所在地区，则会使用此位置信息', 255, 1, NULL, '2018-04-08 23:51:09', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (80, 'mall_address', '详细地址', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '用于备注商城所在地的详细地址', 255, 1, NULL, '2018-04-08 23:52:05', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (81, 'mall_wx_qrcode', '商城微信二维码', NULL, 'mall', 'imagegroup', 0, '商城信息', '/site/1/images/2018/06/03/15280054684937.png', NULL, NULL, '商城微信公众号二维码，显示在商城前台右侧侧边栏，最佳尺寸为130*130像素', 255, 1, NULL, '2018-04-08 23:53:07', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (82, 'user_protocol', '会员注册协议', NULL, 'mall', 'kindeditor', 0, '商城协议', '<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">使用本公司服务所须遵守的条款和条件。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">1.用户资格</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本公司的服务仅向适用法律下能够签订具有法律约束力的 合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的 服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">2.您的资料（包括但不限于所添加的任何商品）不得：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*具有欺诈性、虚假、不准确或具误导性；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有侮辱或者诽谤他人，侵害他人合法权益的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">3.违约</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(a)您违反本协议或纳入本协议的文件；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(b)本公司无法核证或验证您向本公司提供的任何资料；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">4.责任限制</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本 公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接 或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关 实体对本公司用户的行为的合法性及产生的任何结果不承担责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">5.无代理关系</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">6.一般规定</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。</span>', NULL, NULL, '会员注册时需要遵守的注册协议', 255, 1, NULL, '2018-04-08 23:55:31', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (83, 'seller_protocol', '商家入驻协议', NULL, 'mall', 'kindeditor', 0, '商城协议', '<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">使用本公司服务所须遵守的条款和条件。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">1.用户资格</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本公司的服务仅向适用法律下能够签订具有法律约束力的 合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的 服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">2.您的资料（包括但不限于所添加的任何商品）不得：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*具有欺诈性、虚假、不准确或具误导性；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有侮辱或者诽谤他人，侵害他人合法权益的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">3.违约</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(a)您违反本协议或纳入本协议的文件；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(b)本公司无法核证或验证您向本公司提供的任何资料；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">4.责任限制</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本 公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接 或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关 实体对本公司用户的行为的合法性及产生的任何结果不承担责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">5.无代理关系</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">6.一般规定</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。</span>', NULL, NULL, '商家入驻时需要遵守的入驻协议', 255, 1, NULL, '2018-04-08 23:56:38', '2020-02-07 04:51:37');
+INSERT INTO `system_config` VALUES (84, 'amap_web_key', 'Web服务的Key', NULL, 'amap', 'text', 0, '高德地图', '02612214132beb857010dfca88857d17', NULL, NULL, '用于系统在服务器端调用高德地图相关服务接口，请登录<a class=\"btn-link\" target=\"_blank\" href=\"http://lbs.amap.com/dev/key\">高德地图开放平台控制台</a>&gt;我的应用创建应用，并添加“Web服务”的key', 255, 1, NULL, '2018-04-13 10:26:00', '2019-04-20 21:43:23');
+INSERT INTO `system_config` VALUES (85, 'amap_js_key', 'Web端的Key', NULL, 'amap', 'text', 0, '高德地图', '895b322343baec17c8289ae02c113e6f', NULL, NULL, '用于系统在客户端浏览器中通过JS调用高德地图相关服务接口，请登录<a class=\"btn-link\" target=\"_blank\" href=\"http://lbs.amap.com/dev/key\">高德地图开放平台控制台</a>&gt;我的应用创建应用，并添加“Web端”的key', 255, 1, NULL, '2018-04-13 10:26:39', '2019-04-20 21:43:23');
+INSERT INTO `system_config` VALUES (86, 'bmap_js_key', '百度地图的ak', NULL, 'amap', 'text', 0, '百度地图', 'ThZPomUj8vmkMa9LAxzGYSa1BlLfWGbU', NULL, NULL, '用于系统在服务器端调用百度地图相关服务接口', 255, 1, NULL, '2018-04-13 10:26:39', '2019-04-20 21:43:23');
+INSERT INTO `system_config` VALUES (87, 'is_show_site_nav_category', '是否显示分类导航', NULL, 'nav_category_site', 'switch', 0, NULL, '1', '1::开\r\n0::关', NULL, '控制显示或隐藏分类导航', 255, 1, NULL, '2018-04-15 14:34:31', '2018-08-08 23:03:49');
+INSERT INTO `system_config` VALUES (88, 'site_nav_category_style', '导航样式', NULL, 'nav_category_site', 'radio', 0, NULL, '0', '0::默认样式\r\n1::经典样式', NULL, '您可以选择分类导航的样式', 255, 1, NULL, '2018-04-15 14:35:51', '2018-08-08 23:03:49');
+INSERT INTO `system_config` VALUES (89, 'login_bg_image', '登录页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '前台登录、注册页面设置', '/site/1/images/2018/08/02/15332182498062.jpg', NULL, NULL, '用于替换登录页面的主题图片，最佳显示尺寸1920*535像素', 255, 1, NULL, '2018-04-16 22:35:57', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (90, 'login_bg_url', '登录页面主题图片链接', NULL, 'login_bg', 'text', 0, '前台登录、注册页面设置', NULL, NULL, NULL, '设置后前台登录页面背景图将可以点击并跳转此链接页面，为空则不能点击；<br>如访问网站内的链接请直接输入商城域名后的链接内容即可，以\"/\"开头<br>例：想跳转至商城首页，无需输入\"http://www.XXX.com/index.html\"，只需输入“/index.html”', 255, 1, NULL, '2018-04-16 22:37:01', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (91, 'register_bg_image', '注册页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '前台登录、注册页面设置', '/site/1/images/2018/08/02/15332179867040.jpg', NULL, NULL, '用于替换注册页面的主题图片，最佳显示尺寸420*220像素', 255, 1, NULL, '2018-04-16 22:37:40', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (92, 'admin_login_bg_mode', '后台登录页面主题图片风格', NULL, 'login_bg', 'radio', 0, '后台登录页面设置', '1', '0::系统默认\r\n1::自定义', NULL, '选择“自定义”后“后台登录页面主题图片”将起作用', 255, 1, NULL, '2018-04-16 22:39:25', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (93, 'admin_login_bg_image', '后台登录页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '后台登录页面设置', '||||', NULL, ',,,,', '用于替换后台登录页面的主题图片，最多支持上传5张图片，建议图片尺寸为1920*1080像素\r\n仅在开启“后台登录页面主题图片风格”为“自定义”模式下起作用', 255, 1, NULL, '2018-04-16 22:42:47', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (94, 'loading_style', '缓载样式', NULL, 'login_bg', 'radio', 0, '系统加载动画效果设置', '0', '0::系统默认\r\n1::极简风格', NULL, '定义系统中的加载动画效果，极简风格中间的图片将会自动调用你设置的网站头像图片', 255, 1, NULL, '2018-04-16 22:44:32', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (95, 'loading_color', '缓载颜色', NULL, 'login_bg', 'colorpicker', 0, '系统加载动画效果设置', '#ffffff', NULL, NULL, '仅当缓载样式为“极简风格”时起作用，设置加载动画的颜色，建议与您的网站头像颜色保持一致', 255, 1, NULL, '2018-04-16 22:47:55', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (96, 'cart_loading_image', '购物车缓载和提交结算缓载图片', NULL, 'login_bg', 'imagegroup', 0, '系统加载动画效果设置', NULL, NULL, NULL, '控制购物清单为空时的默认图片和提交订单结算时的缓载页面中的图片，最佳显示尺寸200*150像素，建议为gif动态图片<br><span class=\"c-red\"><strong>此设置仅在商城开启整站改色后才起作用！</strong><br>变更后请重新生成商城首页并清理公共缓存和浏览器缓存</span>', 255, 1, NULL, '2018-04-16 22:49:30', '2018-08-02 22:04:35');
+INSERT INTO `system_config` VALUES (97, 'mall_top_ad_image', '商城顶部广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, '/site/1/images/2019/03/10/15521867366567.jpg', NULL, NULL, '用于替换商城顶部广告图片，最佳显示尺寸宽度1210像素，高度不限（建议80像素）', 255, 1, NULL, '2018-04-16 23:00:06', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (98, 'mall_top_ad_bg_color', '商城顶部广告图背景色', NULL, 'mall_top_ad', 'colorpicker', 0, NULL, '#ffffff', NULL, NULL, '由于用户的浏览器或者分辨率可能会超出你图片的宽度，所以建议设置背景色为您广告图两边的颜色，以保证您商城的美观性', 255, 1, NULL, '2018-04-16 23:00:50', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (99, 'mall_top_ad_url', '商城顶部广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 23:01:27', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (100, 'mall_logo_right_ad_image', '商城搜索框左侧广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, NULL, NULL, NULL, '用于替换商城搜索框左侧广告图片，最佳显示尺寸170*90像素', 255, 1, NULL, '2018-04-16 23:02:05', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (101, 'mall_logo_right_ad_url', '商城搜索框左侧广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 23:02:36', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (102, 'mall_search_right_ad_image', '商城搜索框右侧广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, '/site/1/images/2019/03/10/15521868597160.jpg', NULL, NULL, '用于替换商城搜索框右侧广告图片，最佳显示尺寸180*90像素', 255, 1, NULL, '2018-04-16 23:03:10', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (103, 'mall_search_right_ad_url', '商城搜索框右侧广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 23:03:45', '2019-03-10 19:01:08');
+INSERT INTO `system_config` VALUES (104, 'mall_service', '商城底部广告', NULL, 'mall_bottom_ad', 'kindeditor', 0, NULL, '<div align=\"center\">\r\n	<img src=\"http://image.laravelvip.com/images/backend/1/2019/01/26/15484703058791.jpg\" alt=\"\" height=\"110\" width=\"1210\" /><br />\r\n</div>', NULL, NULL, '商城首页、商品列表页、商品详情页、团购页、店铺街、店铺搜索结果页、店铺首页、店铺商品列表页底部展示，整行建议尺寸为1210*90像素', 255, 1, NULL, '2018-04-16 23:10:48', '2019-01-26 18:39:13');
+INSERT INTO `system_config` VALUES (105, 'mall_service_right', '商城底部右侧广告', NULL, 'mall_bottom_ad', 'kindeditor', 0, NULL, NULL, NULL, NULL, '商城底部帮助文章右侧广告，整行图片尺寸建议为122*150像素', 255, 1, NULL, '2018-04-16 23:11:26', '2019-01-26 18:39:13');
+INSERT INTO `system_config` VALUES (106, 'shop_apply_ad_image', '入驻广告图', NULL, 'register_bg', 'imagegroup', 0, NULL, NULL, NULL, NULL, '前台店铺入驻成功提交页面显示，最佳显示尺寸790*70像素', 255, 1, NULL, '2018-04-16 23:12:10', '2018-06-03 14:08:59');
+INSERT INTO `system_config` VALUES (107, 'shop_apply_ad_url', '入驻广告图片链接', NULL, 'register_bg', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-16 23:13:03', '2018-06-03 14:08:59');
+INSERT INTO `system_config` VALUES (108, 'seo_index_title', 'title', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 10:18:48', '2020-10-24 21:52:41');
+INSERT INTO `system_config` VALUES (109, 'seo_index_keywords', 'keywords', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 10:19:42', '2020-10-24 21:52:41');
+INSERT INTO `system_config` VALUES (110, 'seo_index_discription', 'description', NULL, 'seo_index', 'text', 0, NULL, '致力于B2B2C商城系统开发', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 10:20:20', '2020-10-24 21:52:41');
+INSERT INTO `system_config` VALUES (111, 'seo_index_image', '分享推广图', NULL, 'seo_index', 'imagegroup', 0, NULL, '/site/1/images/2020/10/24/16035185079567.png', NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-22 10:21:27', '2020-10-24 21:52:41');
+INSERT INTO `system_config` VALUES (112, 'captcha_sms_mobile_time', '短信验证码发送间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 20:02:13', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (113, 'captcha_sms_mobile_interval', '限制发送短信恢复正常间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 20:06:04', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (114, 'captcha_sms_ip_time', '每个IP地址短信验证码限制时间', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 20:07:51', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (115, 'captcha_sms_ip_interval', '限制ip短信发送恢复间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 20:08:57', '2018-05-29 22:56:53');
+INSERT INTO `system_config` VALUES (116, 'mail_service', '邮件服务', NULL, 'smtp', 'radio', 1, NULL, '1', '1::采用其他的 SMTP 服务', NULL, NULL, 255, 1, NULL, '2018-05-29 21:11:10', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (117, 'smtp_ssl', '邮件服务器是否要求加密连接(SSL)', NULL, 'smtp', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-05-29 21:12:09', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (118, 'smtp_host', '发送邮件服务器地址(SMTP)', NULL, 'smtp', 'text', 1, NULL, 'smtp.qq.com', NULL, NULL, '邮件服务器主机地址', 255, 1, NULL, '2018-05-29 21:13:30', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (119, 'smtp_port', '服务器端口', NULL, 'smtp', 'text', 1, NULL, '587', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 21:14:01', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (120, 'smtp_user', '邮件发送账号', NULL, 'smtp', 'text', 1, NULL, '290648237@qq.com', NULL, NULL, '发送邮件所需的认证帐号', 255, 1, NULL, '2018-05-29 21:14:53', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (121, 'smtp_pass', '帐号密码', NULL, 'smtp', 'password', 1, NULL, '', NULL, NULL, '如果是QQ邮箱，账号密码为邮箱发送账号的授权码', 255, 1, NULL, '2018-05-29 21:15:46', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (122, 'smtp_mail', '邮件回复地址', NULL, 'smtp', 'text', 1, NULL, '290648237@qq.com', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 21:16:23', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (123, 'mail_charset', '邮件编码', NULL, 'smtp', 'select', 1, NULL, 'utf-8', 'utf-8::国际化编码（utf-8）', NULL, NULL, 255, 1, NULL, '2018-05-29 21:17:27', '2018-11-04 19:33:32');
+INSERT INTO `system_config` VALUES (124, 'sms_sign_name', '短信签名', NULL, 'sms', 'text', 1, NULL, '张升', NULL, NULL, '短信签名请勿随意修改，否则会导致短信发送失败<br>建议使用公司或产品名称，不能包含违禁词汇与其他特殊符号<br>单个签名长度介于2到8个字符之间<br>可以包含汉字、数字、英文，不能为纯数字、纯英文、数字英文组合<br>无需添加【】、()、[]符号，短信发送会自带【】、()、[]符号，避免重复', 255, 1, NULL, '2018-05-29 21:44:08', '2018-10-31 15:40:14');
+INSERT INTO `system_config` VALUES (125, 'sms_api', '短信接口服务', NULL, 'sms', 'radio', 1, NULL, 'aliyunsms', 'aliyunsms::阿里云短信\r\naliyusms::阿里大于短信\r\nyunsms::云短信网（不推荐使用）', NULL, '请选择系统短信服务的运营商，选择后请进行相关接口参数的配置', 255, 1, NULL, '2018-05-29 21:46:59', '2018-10-31 15:40:14');
+INSERT INTO `system_config` VALUES (126, 'aliyunsms_app_key', 'Access Key ID', NULL, 'aliyunsms', 'text', 1, NULL, '', NULL, NULL, 'TOP分配给应用的Access Key ID', 255, 1, NULL, '2018-05-29 21:56:14', '2018-10-31 15:40:36');
+INSERT INTO `system_config` VALUES (127, 'aliyunsms_app_secret', 'Access Key Secret', NULL, 'aliyunsms', 'password', 1, NULL, '', NULL, NULL, '短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 21:57:04', '2018-10-31 15:40:36');
+INSERT INTO `system_config` VALUES (128, 'aliyunsms_api_type', '接口版本类型', NULL, 'aliyunsms', 'radio', 1, NULL, '0', '0::老版本\r\n1::新版本', NULL, '老版本消息模板中支持带下划线的变量，新版本消息模板中不支持下划线的变量，请选择您对应的版本<br>\r\n如果您是从2017年11月中旬开始使用阿里云短信，建议选择新版', 255, 1, NULL, '2018-05-29 21:58:14', '2018-10-31 15:40:36');
+INSERT INTO `system_config` VALUES (129, 'aliyusms_app_key', 'App Key', NULL, 'aliyusms', 'text', 1, NULL, NULL, NULL, NULL, 'TOP分配给应用的AppKey', 255, 1, NULL, '2018-05-29 22:02:23', '2018-05-29 22:02:23');
+INSERT INTO `system_config` VALUES (130, 'aliyusms_app_secret', 'App Secret', NULL, 'aliyusms', 'password', 1, NULL, NULL, NULL, NULL, '短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 22:03:02', '2018-05-29 22:03:02');
+INSERT INTO `system_config` VALUES (131, 'yunsms_accounts', '云短信服务帐号', NULL, 'yunsms', 'text', 1, NULL, NULL, NULL, NULL, '云短信服务商提供的供系统发送短信所需要的账号', 255, 1, NULL, '2018-05-29 22:05:12', '2018-05-29 22:05:12');
+INSERT INTO `system_config` VALUES (132, 'yunsms_password', '云短信服务密码', NULL, 'yunsms', 'password', 1, NULL, NULL, NULL, NULL, '云短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 22:05:44', '2018-05-29 22:05:44');
+INSERT INTO `system_config` VALUES (133, 'yunsms_phones', '平台手机号码', NULL, 'yunsms', 'text', 1, NULL, NULL, NULL, NULL, '请先注册手机短信服务再填写手机号码', 255, 1, NULL, '2018-05-29 22:06:25', '2018-05-29 22:06:25');
+INSERT INTO `system_config` VALUES (134, 'aliim_enable', '是否启用', NULL, 'aliim', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '开启后在线客服将可用', 255, 1, NULL, '2018-05-29 22:09:36', '2018-05-29 22:09:36');
+INSERT INTO `system_config` VALUES (135, 'aliim_app_key', '阿里云旺AppKey', NULL, 'aliim', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 22:10:10', '2018-05-29 22:10:10');
+INSERT INTO `system_config` VALUES (136, 'aliim_secret_key', '阿里云旺AppSecrect', NULL, 'aliim', 'password', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 22:10:49', '2018-05-29 22:10:49');
+INSERT INTO `system_config` VALUES (137, 'aliim_main_customer', '在线主客服账户', NULL, 'aliim', 'text', 1, NULL, NULL, NULL, NULL, '设置在阿里淘宝开放平台已开通云旺客服的帐号，填写的账号必须与淘宝开放平台中的云旺账号一致，否则无法接收消息', 255, 1, NULL, '2018-05-29 22:11:26', '2018-05-29 22:11:26');
+INSERT INTO `system_config` VALUES (138, 'aliim_customer_logo', '在线客服头像Logo', NULL, 'aliim', 'imagegroup', 0, NULL, NULL, NULL, NULL, '头像请上传148px * 135px像素的图片，不上传则使用默认头像', 255, 1, NULL, '2018-05-29 22:12:16', '2018-05-29 22:12:16');
+INSERT INTO `system_config` VALUES (139, 'open_qq_login', '是否开启QQ登录', NULL, 'website_login', 'switch', 1, NULL, '0', '1::是\r\n0::否', NULL, '在实际运营当中，QQ第三方登录使用率非常低，不建议开启使用。', 255, 1, NULL, '2018-05-29 22:15:51', '2020-04-07 03:10:25');
+INSERT INTO `system_config` VALUES (140, 'open_weibo_login', '是否开启微博登录', NULL, 'website_login', 'switch', 1, NULL, '0', '1::是\r\n0::否', NULL, '在实际运营当中，微博第三方登录使用率非常低，不建议开启使用。', 255, 1, NULL, '2018-05-29 22:16:46', '2020-04-07 03:10:25');
+INSERT INTO `system_config` VALUES (141, 'open_weixin_login', '是否开启微信登录', NULL, 'website_login', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, '在实际运营当中，微信第三方登录使用率非常高，使用者非常广泛，建议开启使用。', 255, 1, NULL, '2018-05-29 22:17:27', '2020-04-07 03:10:25');
+INSERT INTO `system_config` VALUES (142, 'website_login_code', '第三方登录验证代码', NULL, 'website_login', 'text', 0, NULL, NULL, NULL, NULL, '当您申请第三方登录时，网站会要求您复制一段代码粘贴到您网站首页或一级目录下HTML代码的head标签中，以验证您是本网站的站长或者管理员，请您将其粘帖至此然后清理首页缓存，此代码会自动出现在网站首页中，然后您即可在对应网站上进行验证', 255, 1, NULL, '2018-05-29 22:18:23', '2020-04-07 03:10:25');
+INSERT INTO `system_config` VALUES (143, 'seo_group_buy_index_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购首页-{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:36:55', '2018-08-14 22:52:55');
+INSERT INTO `system_config` VALUES (144, 'seo_group_buy_index_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购,拼团,{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:37:41', '2018-08-14 22:52:55');
+INSERT INTO `system_config` VALUES (145, 'seo_group_buy_index_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购模式,{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:38:01', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (146, 'seo_group_buy_index_image', '团购分享推广图', NULL, 'seo_group_buy', 'imagegroup', 0, '团购首页', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 21:38:53', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (147, 'seo_group_buy_list_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 21:39:38', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (148, 'seo_group_buy_list_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：【{name}】-{site_name}', 255, 1, NULL, '2018-05-30 21:40:17', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (149, 'seo_group_buy_list_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：【{name}】-{site_name}', 255, 1, NULL, '2018-05-30 21:41:04', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (150, 'seo_group_buy_info_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 21:41:51', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (151, 'seo_group_buy_info_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 21:42:30', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (152, 'seo_group_buy_info_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 21:43:06', '2018-08-14 22:52:56');
+INSERT INTO `system_config` VALUES (153, 'seo_groupon_title', 'title', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:44:47', '2018-05-30 21:44:47');
+INSERT INTO `system_config` VALUES (154, 'seo_groupon_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:45:35', '2018-05-30 21:45:35');
+INSERT INTO `system_config` VALUES (155, 'seo_groupon_discription', 'description', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:46:08', '2018-05-30 21:46:08');
+INSERT INTO `system_config` VALUES (156, 'seo_groupon_image', '分享推广图', NULL, 'seo_groupon', 'imagegroup', 0, '拼团列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 21:46:52', '2018-05-30 21:46:52');
+INSERT INTO `system_config` VALUES (157, 'seo_groupon_info_title', 'title', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：{groupon_num},{name}-{site_name}', 255, 1, NULL, '2018-05-30 21:47:31', '2018-05-30 21:47:31');
+INSERT INTO `system_config` VALUES (158, 'seo_groupon_info_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 21:48:06', '2018-05-30 21:48:06');
+INSERT INTO `system_config` VALUES (159, 'seo_groupon_info_discription', 'description', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：【{name}】{discription}-{site_name}', 255, 1, NULL, '2018-05-30 21:48:46', '2018-05-30 21:48:46');
+INSERT INTO `system_config` VALUES (160, 'seo_groupon_goods_info_title', 'title', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 21:49:23', '2018-05-30 21:49:23');
+INSERT INTO `system_config` VALUES (161, 'seo_groupon_goods_info_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 21:50:05', '2018-05-30 21:50:05');
+INSERT INTO `system_config` VALUES (162, 'seo_groupon_goods_info_discription', 'description', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 21:50:41', '2018-05-30 21:50:41');
+INSERT INTO `system_config` VALUES (163, 'seo_bargain_title', 'title', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:51:49', '2018-05-30 21:51:49');
+INSERT INTO `system_config` VALUES (164, 'seo_bargain_keywords', 'keywords', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:52:23', '2018-05-30 21:52:23');
+INSERT INTO `system_config` VALUES (165, 'seo_bargain_discription', 'description', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:52:55', '2018-05-30 21:52:55');
+INSERT INTO `system_config` VALUES (166, 'seo_bargain_image', '分享推广图', NULL, 'seo_bargain', 'imagegroup', 0, '砍价列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 21:53:35', '2018-05-30 21:53:35');
+INSERT INTO `system_config` VALUES (167, 'seo_bargain_info_title', 'title', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 21:56:38', '2018-05-30 21:56:38');
+INSERT INTO `system_config` VALUES (168, 'seo_bargain_info_keywords', 'keywords', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 21:57:07', '2018-05-30 21:58:21');
+INSERT INTO `system_config` VALUES (169, 'seo_bargain_info_discription', 'description', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 21:57:49', '2018-05-30 21:57:49');
+INSERT INTO `system_config` VALUES (170, 'seo_brand_list_title', 'title', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 21:59:14', '2018-05-30 21:59:14');
+INSERT INTO `system_config` VALUES (171, 'seo_brand_list_keywords', 'keywords', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 21:59:48', '2018-05-30 21:59:48');
+INSERT INTO `system_config` VALUES (172, 'seo_brand_list_discription', 'description', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 22:00:27', '2018-05-30 22:00:27');
+INSERT INTO `system_config` VALUES (173, 'seo_brand_list_image', '分享推广图', NULL, 'seo_brand', 'imagegroup', 0, '品牌列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 22:01:34', '2018-05-30 22:01:34');
+INSERT INTO `system_config` VALUES (174, 'seo_article_list_title', 'title', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:02:45', '2018-08-14 23:16:20');
+INSERT INTO `system_config` VALUES (175, 'seo_article_list_keywords', 'keywords', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:03:13', '2018-08-14 23:16:20');
+INSERT INTO `system_config` VALUES (176, 'seo_article_list_discription', 'description', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:03:58', '2018-08-14 23:16:20');
+INSERT INTO `system_config` VALUES (177, 'seo_article_info_title', 'title', NULL, 'seo_article', 'text', 0, '文章详情', '{name}-{site_name}', NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 22:04:33', '2018-08-14 23:16:20');
+INSERT INTO `system_config` VALUES (178, 'seo_article_info_keywords', 'keywords', NULL, 'seo_article', 'text', 0, '文章详情', '【{name}】{keywords}-{site_name}', NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 22:05:03', '2018-08-14 23:16:20');
+INSERT INTO `system_config` VALUES (179, 'seo_article_info_discription', 'description', NULL, 'seo_article', 'text', 0, '文章详情', '{name}-{description}-{site_name}', NULL, NULL, '默认：{name}-{description}-{site_name}', 255, 1, NULL, '2018-05-30 22:05:38', '2018-08-14 23:16:20');
+INSERT INTO `system_config` VALUES (180, 'seo_goods_title', 'title', NULL, 'seo_goods', 'text', 1, NULL, '{name}-{site_name}', NULL, NULL, '{name}-{site_name}', 255, 1, NULL, '2018-05-30 22:06:56', '2018-08-14 23:06:34');
+INSERT INTO `system_config` VALUES (181, 'seo_goods_keywords', 'keywords', NULL, 'seo_goods', 'text', 1, NULL, '【{name}】{keywords}-{site_name}', NULL, NULL, '【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 22:07:37', '2018-08-14 23:06:34');
+INSERT INTO `system_config` VALUES (182, 'seo_goods_discription', 'description', NULL, 'seo_goods', 'text', 1, NULL, '【{name}】{description}-{site_name}', NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 22:08:06', '2018-08-14 23:06:34');
+INSERT INTO `system_config` VALUES (183, 'seo_shop_title', 'title', NULL, 'seo_shop', 'text', 0, '店铺', '{name}-{site_name}', NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 22:09:04', '2020-10-24 22:48:08');
+INSERT INTO `system_config` VALUES (184, 'seo_shop_keywords', 'keywords', NULL, 'seo_shop', 'text', 0, '店铺', '【{name}】{keywords}-{site_name}', NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 22:09:36', '2020-10-24 22:48:09');
+INSERT INTO `system_config` VALUES (185, 'seo_shop_discription', 'description', NULL, 'seo_shop', 'text', 0, '店铺', '【{name}】{description}-{site_name}', NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 22:10:11', '2020-10-24 22:48:09');
+INSERT INTO `system_config` VALUES (186, 'seo_shop_street_title', 'title', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:10:51', '2020-10-24 22:48:09');
+INSERT INTO `system_config` VALUES (187, 'seo_shop_street_keywords', 'keywords', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:11:25', '2020-10-24 22:48:09');
+INSERT INTO `system_config` VALUES (188, 'seo_shop_street_discription', 'description', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:11:56', '2020-10-24 22:48:09');
+INSERT INTO `system_config` VALUES (189, 'seo_shop_street_image', '店铺街分享推广图', NULL, 'seo_shop', 'imagegroup', 0, '店铺街', '/site/1/images/2019/04/06/15545510576485.gif', NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 22:12:43', '2020-10-24 22:48:09');
+INSERT INTO `system_config` VALUES (190, 'seo_news_title', 'title', NULL, 'seo_news', 'text', 0, '资讯频道首页', '资讯首页 - {site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:13:39', '2020-10-24 21:48:58');
+INSERT INTO `system_config` VALUES (191, 'seo_news_keywords', 'keywords', NULL, 'seo_news', 'text', 0, '资讯频道首页', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:14:10', '2020-10-24 21:48:58');
+INSERT INTO `system_config` VALUES (192, 'seo_news_discription', 'description', NULL, 'seo_news', 'text', 0, '资讯频道首页', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 22:14:46', '2020-10-24 21:48:58');
+INSERT INTO `system_config` VALUES (193, 'seo_news_image', '分享推广图', NULL, 'seo_news', 'imagegroup', 0, '资讯频道首页', '/site/1/images/2020/10/24/16035185079567.png', NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 22:15:30', '2020-10-24 21:48:58');
+INSERT INTO `system_config` VALUES (194, 'image_max_filesize', '图片/附件大小', NULL, 'image_upload', 'short_text', 1, NULL, '4096', NULL, NULL, '当前服务器环境，最大允许上传 4MB的文件，您的设置请勿超过该值，默认最大可上传2MB', 255, 1, NULL, '2018-05-30 23:30:35', '2019-03-17 19:35:13');
+INSERT INTO `system_config` VALUES (195, 'video_max_filesize', '视频大小', NULL, 'image_upload', 'short_text', 1, NULL, '4096', NULL, NULL, '当前服务器环境，最大允许上传4MB的文件，您的设置请勿超过该值，默认最大可上传2MB', 255, 1, NULL, '2018-05-30 23:31:09', '2019-03-17 19:35:13');
+INSERT INTO `system_config` VALUES (196, 'cash_logo', '收银狗Logo', NULL, 'cash', 'imagegroup', 0, NULL, NULL, NULL, NULL, '收银狗Logo，将显示在收银台页面上，建议尺寸为170*46像素、格式为png的图片，大小不超过5.5kb', 255, 1, NULL, '2018-05-30 23:36:23', '2019-12-28 21:31:41');
+INSERT INTO `system_config` VALUES (197, 'custom_style_enable_m_site', '是否开启自定义改色', NULL, 'mobile_site_style', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是否开启自定义改色', 255, 1, NULL, '2018-06-18 12:14:57', '2021-06-28 02:46:00');
+INSERT INTO `system_config` VALUES (198, 'm_main_color', '主体颜色', NULL, 'mobile_site_style', 'colorpicker', 0, NULL, '#00b0f0', NULL, NULL, '商城主体颜色 code:m_main_color', 255, 1, NULL, '2018-06-18 12:16:01', '2021-06-28 02:46:00');
+INSERT INTO `system_config` VALUES (199, 'm_second_color', '主体辅色', NULL, 'mobile_site_style', 'colorpicker', 0, NULL, '#e36c09', NULL, NULL, '主体辅色 code:m_second_color', 255, 1, NULL, '2018-06-18 12:16:40', '2021-06-28 02:46:00');
+INSERT INTO `system_config` VALUES (200, 'base_fee', '平台保证金', NULL, 'open_shop', 'short_text', 1, NULL, '1000', NULL, NULL, '0表示无需支付保证金', 255, 1, NULL, '2018-06-20 22:12:28', '2020-02-07 05:50:35');
+INSERT INTO `system_config` VALUES (201, 'use_fee', '平台使用费', NULL, 'open_shop', 'radio', 0, NULL, '1', '0::免费\r\n1::付费', NULL, NULL, 255, 1, NULL, '2018-06-20 22:20:17', '2020-02-07 05:50:35');
+INSERT INTO `system_config` VALUES (202, 'use_fee_value', '平台使用费值', NULL, 'open_shop', 'textarea', 0, NULL, 'a:3:{s:6:\"number\";a:3:{i:0;s:1:\"1\";i:1;s:1:\"6\";i:2;s:2:\"30\";}s:4:\"unit\";a:3:{i:0;s:4:\"year\";i:1;s:5:\"month\";i:2;s:3:\"day\";}s:3:\"fee\";a:3:{i:0;s:4:\"1000\";i:1;s:3:\"500\";i:2;s:3:\"100\";}}', NULL, NULL, NULL, 255, 1, NULL, '2018-06-20 22:21:54', '2020-02-07 05:50:35');
+INSERT INTO `system_config` VALUES (203, 'first_warn', '首次警告', NULL, 'open_shop', 'short_text', 1, NULL, '30', NULL, NULL, '首次警告：比如：30天，表示店铺还有30天到期时，店铺将自动进入到待续费店铺列表中，且系统会自动向店铺发送到期续费提醒', 255, 1, NULL, '2018-06-20 22:22:35', '2020-02-07 05:50:35');
+INSERT INTO `system_config` VALUES (204, 'second_warn', '再次警告', NULL, 'open_shop', 'short_text', 1, NULL, '10', NULL, NULL, '再次警告：比如：10天，店铺还有10天到期时，会再次向店铺发送到期续费提醒', 255, 1, NULL, '2018-06-20 22:23:08', '2020-02-07 05:50:35');
+INSERT INTO `system_config` VALUES (205, 'third_warn', '三次警告', NULL, 'open_shop', 'short_text', 1, NULL, '3', NULL, NULL, '三次警告：比如：3天，店铺还有3天到期时，会第三次向店铺发送到期续费提醒<br>\r\n如设置为0天，表示不发送续费提醒通知', 255, 1, NULL, '2018-06-20 22:24:04', '2020-02-07 05:50:35');
+INSERT INTO `system_config` VALUES (206, 'shop_apply_banner_img', '入驻轮播图（pc端）', NULL, 'shop_apply_banner', 'imagegroup', 1, NULL, '/site/1/images/2018/06/23/15297626846550.jpg|/site/1/images/2018/06/23/15297624044077.jpg|/site/1/images/2018/06/21/15295831652086.jpg|/site/1/images/2018/06/21/15295831586241.jpg', NULL, ',,,', '最佳显示尺寸为1920*400像素的图片，允许上传的图片格式：png、jpg、jpeg、gif', 255, 1, NULL, '2018-06-20 23:41:24', '2018-06-23 22:06:40');
+INSERT INTO `system_config` VALUES (207, 'm_shop_apply_banner_img', '入驻背景图（wap端）', NULL, 'shop_apply_banner', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295830638156.png', NULL, NULL, '最佳显示尺寸为750*1400像素的图片，允许上传的图片格式：png、jpg、jpeg、gif', 255, 1, NULL, '2018-06-20 23:42:52', '2018-06-23 22:06:40');
+INSERT INTO `system_config` VALUES (208, 'news_header', '去除头部', NULL, 'news_setting', 'checkbox', 0, NULL, '1', '1::商城顶部导航\r\n2::头部信息', NULL, '商城顶部导航指商城最顶部导航栏；头部信息指商城logo、资讯导航、搜索框', 255, 1, NULL, '2018-07-07 21:38:33', '2018-07-07 21:43:25');
+INSERT INTO `system_config` VALUES (209, 'news_footer', '去除底部', NULL, 'news_setting', 'checkbox', 0, NULL, '2', '1::底部广告\r\n2::友情链接\r\n3::帮助中心\r\n4::底部信息', NULL, '底部广告指帮助文章上方的广告图；帮助中心指商城底部的帮助文章；底部信息指帮助文章下方的所有内容', 255, 1, NULL, '2018-07-07 21:40:10', '2018-07-07 21:43:25');
+INSERT INTO `system_config` VALUES (210, 'app_ios_is_open', 'iOS状态', NULL, 'app_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将消费者iOS端应用停用，显示关闭提示页面', 255, 1, NULL, '2018-08-16 21:52:52', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (211, 'app_ios_use_version', 'iOS使用版本', NULL, 'app_setting', 'text', 0, '应用设置', '1.0', NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-16 21:54:04', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (212, 'app_android_is_open', '安卓状态', NULL, 'app_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将消费者安卓端应用停用，显示关闭提示页面', 255, 1, NULL, '2018-08-16 21:55:03', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (213, 'app_android_use_version', '安卓使用版本', NULL, 'app_setting', 'text', 0, '应用设置', '1.0', NULL, NULL, '小于或等于此版本号的安卓应用受“安卓应用状态”开关控制', 255, 1, NULL, '2018-08-16 21:55:50', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (214, 'app_close_reason', 'APP关闭原因', NULL, 'app_setting', 'textarea', 0, '应用设置', '消费者APP已更新，请您升级到最新版本体验，给您带来的不便深表歉意！详情请了解：https://www.laravelvip.com/', NULL, NULL, '设置APP商城处于关闭状态时，用户访问APP端看到的提示原因', 255, 1, NULL, '2018-08-16 21:56:30', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (215, 'open_download_qrcode', '是否开启下载二维码', NULL, 'app_setting', 'switch', 0, '下载设置', '1', '1::开\r\n0::关', NULL, '此项用于开启在商城首页头部APP二维码下载', 255, 1, NULL, '2018-08-16 21:58:03', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (216, 'mall_android_app', '安卓客户端下载地址', NULL, 'app_setting', 'text', 0, '下载设置', 'http://a.app.qq.com/o/simple.jsp?pkgname=com.laravelvip.kehuduan', NULL, NULL, '请填写安卓应用在应用市场的链接', 255, 1, NULL, '2018-08-16 21:58:49', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (217, 'mall_ios_app', 'IOS客户端下载地址', NULL, 'app_setting', 'text', 0, '下载设置', NULL, NULL, NULL, '请填写IOS应用在应用市场的链接', 255, 1, NULL, '2018-08-16 21:59:31', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (218, 'app_ios_version', 'iOS应用版本号', NULL, 'app_setting', 'text', 0, '强制更新', '1.0.0', NULL, NULL, NULL, 255, 1, NULL, '2018-08-16 22:02:01', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (219, 'app_ios_update_url', 'iOS应用下载链接', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, 'http:// 开头', 255, 1, NULL, '2018-08-16 22:02:44', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (220, 'app_ios_update_content', 'iOS更新内容', NULL, 'app_setting', 'textarea', 0, '强制更新', '【新增功能】\r\n1、增加虚拟商品功能；\r\n2、商城首页、商品详情页、店铺首页增加客服功能；\r\n3、店铺商品列表样式整体改版并且增加按照综合、销量、价格排序功能；\r\n4、商城首页所有商品模板增加加入购物车功能；5、订单结算页，增加非营业时间下单提示标识，并且文字内容受店铺后台控制；\r\n6、结算页自提点顺序受到平台方和卖家后台控制；\r\n7、结算页配送时间增加立即配送选项；\r\n8、结算页面的配送方式名称可在平台方后台自定义；\r\n9、商品列表增加各个活动标签展示，并且商品可自动实时调取活动价格；\r\n10、购物车列表商品增加售后保障展示；\r\n11、平台方后台APP首页装修增加批量显示、批量隐藏、批量删除功能。\r\n12、商城商品分类列表增加版式二样式；', NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-16 22:03:27', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (221, 'app_android_version', 'Android应用版本号', NULL, 'app_setting', 'text', 0, '强制更新', '1.0.0', NULL, NULL, NULL, 255, 1, NULL, '2018-08-16 22:04:04', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (222, 'app_android_update_url', 'Android应用下载链接', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, 'http:// 开头', 255, 1, NULL, '2018-08-16 22:04:35', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (223, 'app_android_update_content', 'Android更新内容', NULL, 'app_setting', 'textarea', 0, '强制更新', '【新增功能】\r\n1、增加虚拟商品功能；\r\n2、商城首页、商品详情页、店铺首页增加客服功能；\r\n3、店铺商品列表样式整体改版并且增加按照综合、销量、价格排序功能；\r\n4、商城首页所有商品模板增加加入购物车功能；5、订单结算页，增加非营业时间下单提示标识，并且文字内容受店铺后台控制；\r\n6、结算页自提点顺序受到平台方和卖家后台控制；\r\n7、结算页配送时间增加立即配送选项；\r\n8、结算页面的配送方式名称可在平台方后台自定义；\r\n9、商品列表增加各个活动标签展示，并且商品可自动实时调取活动价格；\r\n10、购物车列表商品增加售后保障展示；\r\n11、平台方后台APP首页装修增加批量显示、批量隐藏、批量删除功能。\r\n12、商城商品分类列表增加版式二样式；', NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-16 22:05:13', '2021-07-18 22:56:45');
+INSERT INTO `system_config` VALUES (224, 'is_guide_open', '是否开启引导图', NULL, 'app_guide', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-16 22:06:31', '2019-07-14 21:40:39');
+INSERT INTO `system_config` VALUES (225, 'app_guide_pic', '引导图片', NULL, 'app_guide', 'imagegroup', 1, NULL, '/site/1/images/2019/07/14/15630825948881.jpg|/site/1/images/2019/07/14/15630825881729.jpg|/site/1/images/2019/07/14/15630825833772.jpg|/site/1/images/2019/07/14/15630825784564.jpg|/site/1/images/2019/07/14/15630825699619.jpg', NULL, ',,,,', '最佳显示尺寸为750*1334像素的图片，允许上传的图片格式：jpg、jpeg、gif，您最多可以上传5张', 255, 1, NULL, '2018-08-16 22:10:10', '2019-07-14 21:40:39');
+INSERT INTO `system_config` VALUES (226, 'app_enter_button', '进入按钮', NULL, 'app_guide', 'imagegroup', 0, NULL, '/site/1/images/2019/07/14/15630828198438.png', NULL, NULL, '最佳显示尺寸350*90 像素，允许上传的图片格式：jpg、jpeg、png', 255, 1, NULL, '2018-08-16 22:11:06', '2019-07-14 21:40:39');
+INSERT INTO `system_config` VALUES (227, 'app_user_center_bgimage', '用户中心背景图片', NULL, 'app_setting_basic', 'imagegroup', 0, '用户中心设置', '/site/1/images/2019/07/14/15630859367636.png', NULL, NULL, '最佳显示尺寸为750*260像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 22:12:06', '2019-07-14 22:32:25');
+INSERT INTO `system_config` VALUES (228, 'app_login_bgimg', '登录页面背景图', NULL, 'app_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2019/07/14/15630857615515.png', NULL, NULL, '最佳显示尺寸为1080*357像素的图片，允许上传的图片格式：jpg、jpeg、gif、png', 255, 1, NULL, '2018-08-16 22:15:01', '2019-07-14 22:33:11');
+INSERT INTO `system_config` VALUES (229, 'app_login_logo', '登录页面LOGO', NULL, 'app_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2019/07/14/15630859831836.png', NULL, NULL, '最佳显示尺寸为600*115像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 22:15:34', '2019-07-14 22:33:11');
+INSERT INTO `system_config` VALUES (230, 'app_search_shop_range', '附近店铺搜索范围', NULL, 'app_setting_index', 'text', 0, '首页模板设置', '100', NULL, NULL, '以km为单位，首页加载附近店铺时搜索多少公里范围的店铺', 255, 1, NULL, '2018-08-16 22:16:39', '2019-07-14 22:36:31');
+INSERT INTO `system_config` VALUES (231, 'app_goods_list_page_count', '滚动商品加载页数', NULL, 'app_setting_index', 'text', 0, '首页模板设置', '3', NULL, NULL, '首页滚动商品允许加载的最大页数，默认为3页', 255, 1, NULL, '2018-08-16 22:17:16', '2019-07-14 22:36:31');
+INSERT INTO `system_config` VALUES (232, 'app_aliim_icon_show', '是否显示首页云旺客服', NULL, 'app_setting_index', 'switch', 0, '首页客服设置', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-16 22:18:26', '2019-07-14 22:36:31');
+INSERT INTO `system_config` VALUES (233, 'app_aliim_icon', '首页云旺客服图标', NULL, 'app_setting_index', 'imagegroup', 0, '首页客服设置', '/site/1/images/2019/07/14/15630861834088.png', NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 22:19:03', '2019-07-14 22:36:31');
+INSERT INTO `system_config` VALUES (234, 'm_site_status', '微商城状态', NULL, 'mobile_setting_basic', 'switch', 0, '微商城状态', '1', '1::开\r\n0::关', NULL, '可以暂时将商城微商城端、 WAP端停用，用户无法访问微商城、WAP端前台页面，不影响管理员后台操作', 255, 1, NULL, '2018-08-16 22:38:24', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (235, 'm_site_close_image', '微商城关闭提示图片', NULL, 'mobile_setting_basic', 'imagegroup', 0, '微商城状态', NULL, NULL, NULL, '系统默认给予关闭提示页面设计，商城可自行修改设计，上传图片，建议上传宽度为589像素的图片', 255, 1, NULL, '2018-08-16 22:39:34', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (236, 'is_webp', '是否开启webp格式转换', NULL, 'mobile_setting_basic', 'switch', 0, '微商城状态', '1', '1::开\r\n0::关', NULL, '开启webp格式转换，会提高网站的访问速度，但是图片会被压缩', 255, 1, NULL, '2018-08-16 22:40:38', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (237, 'm_user_center_bgimage', '用户中心背景图片', NULL, 'mobile_setting_basic', 'imagegroup', 0, '用户中心设置', NULL, NULL, NULL, '最佳显示尺寸为750*260像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 22:41:32', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (238, 'shop_open_hint', '是否开启店铺营业时间提示', NULL, 'mobile_setting_basic', 'switch', 0, '店铺设置', '1', '1::是\r\n0::否', NULL, '是：非营业时间的店铺会有“店铺休息”的提示信息', 255, 1, NULL, '2018-08-16 22:42:26', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (239, 'm_shop_list_style', '店铺商品列表页样式', NULL, 'mobile_setting_basic', 'radio', 0, '店铺设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺全部商品列表页面商品展示的样式', 255, 1, NULL, '2018-08-16 22:44:01', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (240, 'm_shop_street_style', '店铺街样式', NULL, 'mobile_setting_basic', 'radio', 0, '店铺设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺街展示的样式', 255, 1, NULL, '2018-08-16 22:44:55', '2018-11-24 14:42:07');
+INSERT INTO `system_config` VALUES (241, 'm_login_bgimg', '登录页面背景图', NULL, 'mobile_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2018/12/01/15436338325773.png', NULL, NULL, '最佳显示尺寸为1080*357像素的图片，允许上传的图片格式：jpg、jpeg、gif、png', 255, 1, NULL, '2018-08-16 22:47:19', '2018-12-04 13:00:35');
+INSERT INTO `system_config` VALUES (242, 'm_login_logo', '登录页面LOGO', NULL, 'mobile_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2018/12/04/15438991675206.png', NULL, NULL, '最佳显示尺寸为600*115像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 22:47:54', '2018-12-04 13:00:35');
+INSERT INTO `system_config` VALUES (243, 'wx_login_logo', '微信登录页面LOGO', NULL, 'mobile_setting_login', 'imagegroup', 0, '微信登录设置', '/site/1/images/2018/12/04/15438996225886.png', NULL, NULL, '建议上传高度大于80像素的图片，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 22:48:33', '2018-12-04 13:00:35');
+INSERT INTO `system_config` VALUES (244, 'use_weixin_login', '是否优先使用微信登录', NULL, 'mobile_setting_login', 'switch', 0, '微信登录设置', '1', '1::是\r\n0::否', NULL, '开启后在微信中优先使用微信绑定登录', 255, 1, NULL, '2018-08-16 22:49:13', '2018-12-04 13:00:35');
+INSERT INTO `system_config` VALUES (245, 'm_search_shop_range', '附近店铺搜索范围', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '9999', NULL, NULL, '以km为单位，首页加载附近店铺时搜索多少公里范围的店铺', 1, 1, NULL, '2018-08-21 21:07:40', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (246, 'm_goods_list_page_count', '滚动商品加载页数', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '3', NULL, NULL, '首页滚动商品允许加载的最大页数，默认为3页', 4, 1, NULL, '2018-08-21 21:14:38', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (247, 'm_aliim_icon_show', '是否显示首页云旺客服', NULL, 'mobile_setting_index', 'switch', 0, '首页客服设置', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-21 21:15:34', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (248, 'm_aliim_icon', '首页云旺客服图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页客服设置', '/site/1/images/2021/12/22/16401029133155.png', NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 21:16:46', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (249, 'm_app_download', '是否显示首页APP下载', NULL, 'mobile_setting_index', 'switch', 0, '首页APP下载设置', '0', '1::是\r\n0::否', NULL, '控制微商城首页是否显示下载app，设置为是并且APP-设置-商店设置中，安卓和IOS客户端下载地址必须有地址时，相应的安卓和IOS手机才可展示下载 app提示', 255, 1, NULL, '2018-08-21 21:18:01', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (250, 'm_app_icon', '首页APP下载图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页APP下载设置', '/site/1/images/2019/01/23/15482315429041.jpg', NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 21:18:45', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (251, 'm_follow_wechat', '是否显示引导关注微信公众号', NULL, 'mobile_setting_index', 'switch', 0, '首页引导关注微信公众号设置', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显示引导关注微信公众号，设置为是并且没有关注该公众号才显示', 255, 1, NULL, '2018-08-21 21:19:44', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (252, 'm_follow_wechat_icon', '首页引导关注微信公众号图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页引导关注微信公众号设置', '/site/1/images/2019/01/23/15482315429041.jpg', NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 21:20:40', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (253, 'm_wechat_name', '微信公众号名称', NULL, 'mobile_setting_index', 'text', 0, '首页引导关注微信公众号设置', '乐融沃', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:21:23', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (254, 'm_follow_wechat_hint', '首页引导关注微信公众号提示语', NULL, 'mobile_setting_index', 'text', 0, '首页引导关注微信公众号设置', '欢迎关注!', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:21:56', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (255, 'new_order_remind_open', '是否显示新订单提醒', NULL, 'mobile_setting_index', 'switch', 0, '首页新订单提醒', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显新订单提醒', 1, 1, NULL, '2018-08-21 21:22:43', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (256, 'new_order_remind_num', '模拟新订单提醒数量', NULL, 'mobile_setting_index', 'text', 0, '首页新订单提醒', '50', NULL, NULL, '调取订单中的数据模拟新订单提醒,如果想使用真实数据可以设置为0', 2, 1, NULL, '2018-08-21 21:23:32', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (257, 'weixin_name', '名称', NULL, 'weixin', 'text', 0, NULL, '乐融沃', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:25:57', '2021-12-27 21:46:49');
+INSERT INTO `system_config` VALUES (258, 'token', 'Token(令牌)', NULL, 'weixin', 'text', 1, NULL, 'weixin', NULL, NULL, 'Token对应的是微信公众平台的token，要保持一致', 255, 1, NULL, '2018-08-21 21:26:41', '2021-12-27 21:46:49');
+INSERT INTO `system_config` VALUES (259, 'appid', '应用ID', NULL, 'weixin', 'text', 1, NULL, 'wx9b2758846c6e64be', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:27:09', '2021-12-27 21:46:49');
+INSERT INTO `system_config` VALUES (260, 'appsecret', '应用密钥', NULL, 'weixin', 'text', 1, NULL, '6ac5f0f9dff2f7ef5e8030d40cc3539f', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:27:32', '2021-12-27 21:46:49');
+INSERT INTO `system_config` VALUES (261, 'auth_verify', '授权验证码', NULL, 'weixin', 'text', 1, NULL, 'pZ47lSi9Sl5pdrAKZnD8smlb2hDxLX04FWY4W6hWg2d', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:28:00', '2021-12-27 21:46:49');
+INSERT INTO `system_config` VALUES (262, 'followmsg', '关注回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '感谢您的关注，快去注册，开启购物之旅吧！点击%s绑定帐号', NULL, NULL, '此回复内容为用户关注了商城的微信公众号后，显示的提示信息<br>\r\n例：感谢您的关注，快去注册，开启购物之旅吧！', 255, 1, NULL, '2018-08-21 21:33:56', '2018-08-21 21:38:23');
+INSERT INTO `system_config` VALUES (263, 'bind_before_msg', '绑定前回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '亲，您还没有绑定任何的帐号哦，点击%s，快去绑定吧！', NULL, NULL, '此回复内容为当用户点击“账户管理”，并且还没有绑定会员回复的提示消息<br>\r\n例：亲，您还没有绑定任何的帐号哦，快去绑定吧！', 255, 1, NULL, '2018-08-21 21:34:32', '2018-08-21 21:38:37');
+INSERT INTO `system_config` VALUES (264, 'bind_after_msg', '绑定后回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '亲，您已经和帐号%s绑定了，您可以点击%s进行更改！', NULL, NULL, '此回复内容为当用户点击“账户管理”，并且已经绑定会员后回复的提示消息<br>\r\n例：亲，您已经和帐号%s绑定了，您可以点击%s进行更改！', 255, 1, NULL, '2018-08-21 21:35:08', '2018-08-21 21:38:47');
+INSERT INTO `system_config` VALUES (265, 'is_auto_reply', '是否开启自动回复', NULL, 'weixin_bind', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '关闭自动回复功能，用户将收不到自动回复内容', 255, 1, NULL, '2018-08-21 21:35:56', '2018-08-21 21:35:56');
+INSERT INTO `system_config` VALUES (266, 'auto_reply_msg', '自动回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '感谢您的关注，您有什么问题可以联系我们的客服进行咨询！', NULL, NULL, '此回复内容为如果客户输入的对话内容没有在自定义回复词中，将收到的回复内容<br>\r\n例：感谢您的关注，您有什么问题可以联系我们的客服进行咨询！', 255, 1, NULL, '2018-08-21 21:36:33', '2018-08-21 21:37:18');
+INSERT INTO `system_config` VALUES (267, 'weixin_poster', '默认海报背景', NULL, 'weixin_poster', 'imagegroup', 1, NULL, NULL, NULL, NULL, '最佳显示尺寸为530*800像素', 255, 1, NULL, '2018-08-21 21:41:10', '2018-08-21 21:41:10');
+INSERT INTO `system_config` VALUES (268, 'weixin_poster_size', '二维码尺寸', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '此二维码为正方形，比如输入200，那么二维码就是200*200像素', 255, 1, NULL, '2018-08-21 21:41:46', '2018-08-21 21:41:46');
+INSERT INTO `system_config` VALUES (269, 'weixin_x_coor', 'X坐标', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '二维码距离海报背景图片左侧的距离', 255, 1, NULL, '2018-08-21 21:42:16', '2018-08-21 21:42:16');
+INSERT INTO `system_config` VALUES (270, 'weixin_y_coor', 'Y坐标', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '二维码距离海报背景图片顶部的距离', 255, 1, NULL, '2018-08-21 21:42:44', '2018-08-21 21:42:44');
+INSERT INTO `system_config` VALUES (271, 'weixin_poster_msg', '生成海报提示语', NULL, 'weixin_poster', 'textarea', 1, NULL, NULL, NULL, NULL, '此提示语为当客户点击菜单中的生成海报时，收到的回复内容<br>\r\n例：海报正在拼命生成中，请稍后！', 255, 1, NULL, '2018-08-21 21:43:14', '2018-08-21 21:43:14');
+INSERT INTO `system_config` VALUES (272, 'weixin_programs_appid', '小程序appid', NULL, 'weixin_programs', 'text', 1, NULL, '', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:44:00', '2021-12-18 22:03:51');
+INSERT INTO `system_config` VALUES (273, 'weixin_programs_secret', '小程序密钥', NULL, 'weixin_programs', 'text', 1, NULL, '', NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:44:22', '2021-12-18 22:03:51');
+INSERT INTO `system_config` VALUES (274, 'weixin_programs_filename', '业务域名校验文件名字', NULL, 'weixin_programs', 'text', 1, NULL, '12', NULL, NULL, '请输入完成校验文件名字。请不要填写文件名后缀', 255, 1, NULL, '2018-08-21 21:44:47', '2021-12-18 22:03:51');
+INSERT INTO `system_config` VALUES (275, 'weixin_programs_code', '校验码', NULL, 'weixin_programs', 'text', 1, NULL, '12', NULL, NULL, '请输入校验文件里的校验码', 255, 1, NULL, '2018-08-21 21:45:19', '2021-12-18 22:03:51');
+INSERT INTO `system_config` VALUES (276, 'app_seller_ios_is_open', 'iOS状态', NULL, 'app_seller_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将商家版iOS端应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 21:49:06', '2018-08-21 21:49:06');
+INSERT INTO `system_config` VALUES (277, 'app_seller_ios_use_version', 'iOS使用版本', NULL, 'app_seller_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-21 21:50:03', '2018-08-21 21:50:03');
+INSERT INTO `system_config` VALUES (278, 'app_seller_android_is_open', 'Android状态', NULL, 'app_seller_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将商家版Android应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 21:50:54', '2018-08-21 21:51:17');
+INSERT INTO `system_config` VALUES (279, 'app_seller_android_use_version', 'Android使用版本', NULL, 'app_seller_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的Android应用受“Android应用状态”开关控制', 255, 1, NULL, '2018-08-21 21:52:15', '2018-08-21 21:52:15');
+INSERT INTO `system_config` VALUES (280, 'app_seller_close_reason', 'APP关闭原因', NULL, 'app_seller_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP商城处于关闭状态时，商家访问APP端看到的提示原因', 255, 1, NULL, '2018-08-21 21:53:05', '2018-08-21 21:53:05');
+INSERT INTO `system_config` VALUES (281, 'app_seller_ios_version', 'iOS应用版本号', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:53:53', '2018-08-21 21:53:53');
+INSERT INTO `system_config` VALUES (282, 'app_seller_ios_update_url', 'iOS客户端下载地址', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写iOS应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 21:54:40', '2018-08-21 21:54:40');
+INSERT INTO `system_config` VALUES (283, 'app_seller_ios_update_content', 'iOS更新内容', NULL, 'app_seller_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-21 21:55:29', '2018-08-21 21:55:29');
+INSERT INTO `system_config` VALUES (284, 'app_seller_android_version', 'Android应用版本号', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 21:56:08', '2018-08-21 21:56:08');
+INSERT INTO `system_config` VALUES (285, 'app_seller_android_update_url', 'Android客户端下载地址', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写Android应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 21:56:54', '2018-08-21 21:56:54');
+INSERT INTO `system_config` VALUES (286, 'app_seller_android_update_content', 'Android更新内容', NULL, 'app_seller_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-21 21:57:49', '2018-08-21 21:57:49');
+INSERT INTO `system_config` VALUES (287, 'app_seller_login_bg', 'APP登录背景图', NULL, 'app_seller_setting', 'imagegroup', 0, '个性化', NULL, NULL, NULL, '用于设置商家版APP登录界面的背景图片， 建议尺寸 750*545像素', 255, 1, NULL, '2018-08-21 21:58:46', '2018-08-21 21:58:46');
+INSERT INTO `system_config` VALUES (288, 'app_store_ios_is_open', 'iOS状态', NULL, 'app_store_setting', 'switch', 0, '应用设置', '0', '1::开\r\n0::关', NULL, '可暂时将网点iOS端应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 22:02:12', '2018-08-21 22:02:12');
+INSERT INTO `system_config` VALUES (289, 'app_store_ios_use_version', 'iOS使用版本', NULL, 'app_store_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-21 22:05:29', '2018-08-21 22:05:29');
+INSERT INTO `system_config` VALUES (290, 'app_store_android_is_open', 'Android状态', NULL, 'app_store_setting', 'switch', 0, '应用设置', '0', '1::开\r\n0::关', NULL, '可暂时将网点Android应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 22:06:23', '2018-08-21 22:06:23');
+INSERT INTO `system_config` VALUES (291, 'app_store_android_use_version', 'Android使用版本', NULL, 'app_store_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的Android应用受“Android应用状态”开关控制', 255, 1, NULL, '2018-08-21 22:07:23', '2018-08-21 22:07:23');
+INSERT INTO `system_config` VALUES (292, 'app_store_close_reason', 'APP关闭原因', NULL, 'app_store_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP处于关闭状态时，网点店主访问APP端看到的提示原因', 255, 1, NULL, '2018-08-21 22:08:16', '2018-08-21 22:08:16');
+INSERT INTO `system_config` VALUES (293, 'app_store_ios_version', 'iOS应用版本号', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 22:09:05', '2018-08-21 22:09:05');
+INSERT INTO `system_config` VALUES (294, 'app_store_ios_update_url', 'iOS客户端下载地址', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写iOS应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 22:09:51', '2018-08-21 22:09:51');
+INSERT INTO `system_config` VALUES (295, 'app_store_ios_update_content', 'iOS更新内容', NULL, 'app_store_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-21 22:10:34', '2018-08-21 22:10:34');
+INSERT INTO `system_config` VALUES (296, 'app_store_android_version', 'Android应用版本号', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 22:11:10', '2018-08-21 22:11:10');
+INSERT INTO `system_config` VALUES (297, 'app_store_android_update_url', 'Android客户端下载地址', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写Android应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 22:12:03', '2018-08-21 22:12:03');
+INSERT INTO `system_config` VALUES (298, 'app_store_android_update_content', 'Android更新内容', NULL, 'app_store_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-21 22:12:52', '2018-08-21 22:12:52');
+INSERT INTO `system_config` VALUES (299, 'app_store_login_bg', 'APP登录背景图', NULL, 'app_store_setting', 'imagegroup', 0, '个性化', NULL, NULL, NULL, '用于设置网点APP登录界面的背景图片， 建议尺寸 750*545', 255, 1, NULL, '2018-08-21 22:13:38', '2018-08-21 22:13:38');
+INSERT INTO `system_config` VALUES (300, 'kd_ebusiness_id', '电商ID', NULL, 'kdniao', 'text', 0, NULL, '1354664', NULL, NULL, '电商ID，请到快递鸟官网，“<a class=\"btn-link\" target=\"_blank\" href=\"http://kdniao.com/reg\">去申请</a>”', 255, 1, NULL, '2018-09-22 09:46:16', '2020-04-01 06:40:40');
+INSERT INTO `system_config` VALUES (301, 'kd_app_key', '电商加密私钥', NULL, 'kdniao', 'text', 0, NULL, '3bd83b48-1285-41a6-bd9e-467ed417385e', NULL, NULL, '电商加密私钥，快递鸟提供，注意保管，不要泄漏', 255, 1, NULL, '2018-09-22 09:46:55', '2020-04-01 06:40:40');
+INSERT INTO `system_config` VALUES (302, 'backend_websocket', '平台订单语音提醒是否开启', NULL, 'order', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是：会员下单后，平台收到声音提醒；否：会员下单，平台无法收到声音提醒', 255, 1, NULL, '2018-10-26 21:48:45', '2018-12-25 00:35:03');
+INSERT INTO `system_config` VALUES (303, 'order_refresh', '订单列表自动刷新', NULL, 'order', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '平台方、卖家中心订单列表有新订单，订单列表是否自动刷新，是：表示自动刷新；否：表示不自动刷新', 255, 1, NULL, '2018-10-26 21:49:51', '2018-12-25 00:35:03');
+INSERT INTO `system_config` VALUES (304, 'show_duration', '订单列表默认展示数据', NULL, 'order', 'radio', 0, NULL, '3', '1::当天\r\n3::三天内\r\n7::七天内\r\n30::一个月内', NULL, '控制平台方、卖家中心订单列表默认展示多长时间内的订单数据', 255, 1, NULL, '2018-10-26 21:52:06', '2018-12-25 00:35:03');
+INSERT INTO `system_config` VALUES (305, 'send_time', '送货时间', NULL, 'trade', 'checkbox', 0, '基本设置', '1,2,3,4,5', '1::立即配送\r\n2::工作日/周末/假日均可\r\n3::仅周末送货\r\n4::仅工作日送货\r\n5::指定送货时间', NULL, '控制结算页面的送货时间选项', 255, 1, NULL, '2018-10-26 21:56:57', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (306, 'send_time_desc', '送货时间描述', NULL, 'trade', 'textarea', 0, '基本设置', '送货时间仅供参考，快递公司会尽量满足您的要求', NULL, NULL, '设置结算页面的送货时间旁边的备注说明', 255, 1, NULL, '2018-10-26 21:58:09', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (307, 'invoice_contents', '发票内容', NULL, 'trade', 'textarea', 0, '基本设置', '明细\r\n办公用品\r\n电脑配件\r\n耗材', NULL, NULL, '控制结算页面内发票的内容，如果为空则默认为：明细、办公用品、电脑配件、耗材；多个选项之间请用回车换行来区分', 255, 1, NULL, '2018-10-26 21:59:10', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (308, 'pay_term', '付款期限', NULL, 'trade', 'short_text', 1, '订单设置', '1', NULL, NULL, '付款期限不能小于15分钟，默认为1天：自下单1天内，买家尚未付款的订单，系统会自动取消订单；', 255, 1, NULL, '2018-10-26 22:01:13', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (309, 'pay_term_unit', '付款期限时间单位', NULL, 'trade', 'select', 1, '订单设置', '0', '0::天\r\n1::小时\r\n2::分钟', NULL, '付款期限不能小于15分钟，默认为1天：自下单1天内，买家尚未付款的订单，系统会自动取消订单；', 255, 1, NULL, '2018-10-26 22:03:31', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (310, 'take_term', '接单期限', NULL, 'trade', 'short_text', 1, '订单设置', '10', NULL, NULL, '用于控制开启接单模式店铺的接单期限，接单期限不能小于5分钟，默认为10分钟：自下单付款后10分钟内，卖家尚未接单的订单，系统将会自动取消订单；', 255, 1, NULL, '2018-10-26 22:05:09', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (311, 'take_term_unit', '接单期限时间单位', NULL, 'trade', 'select', 1, '订单设置', '0', '0::天\r\n1::小时\r\n2::分钟', NULL, '用于控制开启接单模式店铺的接单期限，接单期限不能小于5分钟，默认为10分钟：自下单付款后10分钟内，卖家尚未接单的订单，系统将会自动取消订单；', 255, 1, NULL, '2018-10-26 22:06:38', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (312, 'receiving_term', '确认收货期限', NULL, 'trade', 'text', 1, '订单设置', '7', NULL, NULL, '默认为7天：自发货起7天内，买家尚未确认收货的订单，系统会自动确认收货', 255, 1, NULL, '2018-10-26 22:07:44', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (313, 'extend_receiving_days', '延长收货时间(天)', NULL, 'trade', 'textarea', 1, '订单设置', '3\r\n6\r\n8', NULL, NULL, '买家或卖家可主动延长收货时间，让买家有更多时间来“确认收货”,请用回车添加多项', 255, 1, NULL, '2018-10-26 22:08:51', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (314, 'user_close_trad_reason', '买家关闭交易的理由', NULL, 'trade', 'textarea', 1, '订单设置', '我不想买了\r\n信息填写错误，重新拍\r\n卖家缺货\r\n同城见面交易\r\n付款遇到问题\r\n拍错了\r\n其他原因', NULL, NULL, '买家在关闭订单时，可选择关闭该交易的理由，多个理由请使用回车换行', 255, 1, NULL, '2018-10-26 22:09:55', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (315, 'close_trad_reason', '卖家关闭交易的理由', NULL, 'trade', 'textarea', 1, '订单设置', '未及时付款\r\n买家不想买\r\n买家信息填写错误，重新拍\r\n恶意买家/同行捣乱\r\n缺货\r\n买家拍错了\r\n同城见面交易\r\n其他原因', NULL, NULL, '卖家在关闭订单时，可选择关闭该交易的理由，多个理由请使用回车换行', 255, 1, NULL, '2018-10-26 22:10:51', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (316, 'is_refund_review', '退款申请是否需要审核', NULL, 'trade', 'switch', 0, '退款退货设置', '0', '1::是\r\n0::否', NULL, '退款退货受交易设置处的退款申请是否需要审核控制，如果需要审核，则平台方需要对退款退货信息进行核实和确认', 255, 1, NULL, '2018-10-26 22:12:34', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (317, 'back_seller_term', '申请退款卖家确认期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自买家申请退款（仅退款/退款退货）起7天内，卖家尚未操作的，系统会自动同意申请', 255, 1, NULL, '2018-10-26 22:13:38', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (318, 'buyer_update_back_term', '卖家拒绝退款申请，买家修改退款期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自卖家拒绝退款申请起7天内，买家未修改退款申请信息，系统自动取消申请', 255, 1, NULL, '2018-10-26 22:21:06', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (319, 'back_buyer_send_term', '退款退货买家发货期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自卖家（系统）同意退款退货申请起7天内，买家尚未发货的，系统会自动取消申请', 255, 1, NULL, '2018-10-26 22:23:53', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (320, 'back_seller_recive_term', '退款退货卖家确认收货期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自买家寄回退货商品起7天内，卖家尚未确认收货的，系统会自动将退款退货信息推送至平台方', 255, 1, NULL, '2018-10-26 22:24:45', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (321, 'refund_reason', '申请退款的原因', NULL, 'trade', 'textarea', 1, '退款退货设置', '退运费\r\n收到商品破损\r\n商品错发/漏发\r\n商品需要维修\r\n发票问题\r\n收到商品与描述不符\r\n商品质量问题\r\n未按约定时间发货\r\n未收到货\r\n申请退款后强制发货', NULL, NULL, '买家在申请退款时，可选择退款的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 22:25:43', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (322, 'customer_service_term', '申请售后期限', NULL, 'trade', 'text', 1, '售后设置', '15', NULL, NULL, '默认为15天：自买家确认收货起15天内，可且申请退款（仅退款/退款退货）、换货维修服务', 255, 1, NULL, '2018-10-26 22:28:08', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (323, 'seller_service_term', '卖家处理售后期限', NULL, 'trade', 'text', 1, '售后设置', '5', NULL, NULL, '默认为5天：自买家申请换货、维修起5天内，卖家未处理换货、维修申请，系统自动同意换货、维修', 255, 1, NULL, '2018-10-26 22:28:54', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (324, 'customer_modify_service_term', '卖家拒绝售后申请，买家修改期限', NULL, 'trade', 'text', 1, '售后设置', '7', NULL, NULL, '默认为7天：自卖家拒绝售后申请起7天内，买家未修改售后申请信息，系统会自动取消申请', 255, 1, NULL, '2018-10-26 22:29:42', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (325, 'customer_finish_service_term', '买家完成售后期限', NULL, 'trade', 'text', 1, '售后设置', '15', NULL, NULL, '默认为15天：自卖家同意换货、维修起15天内，买家未确认完成换货、维修，系统自动触发完成换货、维修', 255, 1, NULL, '2018-10-26 22:30:19', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (326, 'repair_reason', '申请维修的原因', NULL, 'trade', 'textarea', 1, '售后设置', '质量问题', NULL, NULL, '买家在申请维修时，可选择维修的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 22:31:34', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (327, 'exchange_reason', '申请换货的原因', NULL, 'trade', 'textarea', 1, '售后设置', '大小尺寸与商品描述不符\r\n卖家发错货\r\n尺码拍错/不喜欢/效果差\r\n颜色/款式/图案与描述不符\r\n收到商品少件或破损\r\n材质/面料与商品描述不符\r\n质量问题', NULL, NULL, '买家在申请换货时，可选择换货的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 22:32:18', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (328, 'complaint_seller_term', '投诉卖家期限', NULL, 'trade', 'text', 1, '投诉设置', '15', NULL, NULL, '默认为15天：自买家确认收货的15天内，可投诉卖家', 255, 1, NULL, '2018-10-26 22:33:12', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (329, 'seller_ps_complain_term', '卖家处理投诉期限', NULL, 'trade', 'text', 1, '投诉设置', '3', NULL, NULL, '默认为3天：自买家发起投诉起3天内，卖家未处理或处理结果买家未满意，买家可申请平台方介入处理', 255, 1, NULL, '2018-10-26 22:34:01', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (330, 'complaint_reason', '投诉卖家的原因', NULL, 'trade', 'textarea', 1, '投诉设置', '承诺的没做到\r\n未按约定时间发货\r\n未按成交价格进行交易\r\n恶意骚扰\r\n拒绝提供售后服务', NULL, NULL, '买家在投诉卖家时，可选择投诉的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 22:34:55', '2019-06-30 21:25:19');
+INSERT INTO `system_config` VALUES (331, 'mark_term', '评价期限', NULL, 'evaluate', 'short_text', 1, NULL, '30', NULL, NULL, '如设置30，自“确认收货”起30天内可评价', 255, 1, NULL, '2018-10-26 22:41:03', '2020-01-12 11:24:35');
+INSERT INTO `system_config` VALUES (332, 'chase_term', '追评期限', NULL, 'evaluate', 'short_text', 1, NULL, '30', NULL, NULL, '如设置30，自“确认收货”提交起30天内可追评', 255, 1, NULL, '2018-10-26 22:41:58', '2020-01-12 11:24:35');
+INSERT INTO `system_config` VALUES (333, 'auto_mark', '是否开启到期系统自动好评', NULL, 'evaluate', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，“评价期限”到期后买家不评价，系统会自动好评；关闭后，“评价期限”到期后买家不评价，将自动过期不再允许评价和追评', 255, 1, NULL, '2018-10-26 22:43:01', '2020-01-12 11:24:35');
+INSERT INTO `system_config` VALUES (334, 'mark_audit', '评价是否需要审核', NULL, 'evaluate', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '开启后，买家发布评价后不会立即生效显示，需平台方审核通过后才能生效', 255, 1, NULL, '2018-10-26 22:44:00', '2020-01-12 11:24:35');
+INSERT INTO `system_config` VALUES (335, 'pay_by_integral', 'pay_by_integral', NULL, 'trade', 'hidden', 0, '基本设置', '1', NULL, NULL, NULL, 255, 1, NULL, '2018-10-26 22:51:24', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (336, 'shipping_time', '指定送货时间段', NULL, 'trade', 'hidden', 0, '基本设置', '{\"week\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\"],\"begin_hour\":[\"06\",\"09\",\"15\",\"17\"],\"begin_minute\":[\"00\",\"00\",\"00\",\"00\"],\"end_hour\":[\"09\",\"15\",\"17\",\"22\"],\"end_minute\":[\"00\",\"00\",\"00\",\"00\"]}', NULL, NULL, '买家购物结算时，供选择的指定送货时间的时间间段 <br>说明：消费者下单时间+1个小时小于配送时间段的开始时间或消费者下单时间+1个小时小于配送时间段的结束时间，那么此时间段消费者是可以选择的', 255, 1, NULL, '2018-10-26 23:16:40', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (337, 'username_prefix', '会员用户名前缀', NULL, 'user', 'short_text', 0, '用户基本信息', 'LRW', NULL, NULL, '会员注册时生成会员的用户名的前缀，仅支持最多3个大写英文字母，为空则默认为“LRW”', 255, 1, NULL, '2018-10-26 23:34:04', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (338, 'user_auto_login', '会员自动登录', NULL, 'user', 'checkbox', 0, '用户基本信息', '1,2', '1::PC端\r\n2::微商城', NULL, '控制前台登录页面，是否允许自动登录，选择支持自动登录，方便会员快速登录商城系统', 255, 1, NULL, '2018-10-26 23:35:28', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (339, 'register_type', '会员注册方式', NULL, 'user', 'checkbox', 0, '用户基本信息', '1,2', '1::手机注册\r\n2::邮箱注册', NULL, '系统自带以上几种注册方式，如果您没有选择任何注册方式，网站将关闭注册', 255, 1, NULL, '2018-10-26 23:36:39', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (340, 'register_close_reason', '关闭注册原因', NULL, 'user', 'textarea', 0, '用户基本信息', '您好，由于网站系统升级，暂时关闭会员注册，给您带来不便敬请谅解!', NULL, NULL, NULL, 255, 1, NULL, '2018-10-26 23:37:28', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (341, 'show_rank_price', '等级价格', NULL, 'user', 'radio', 1, '用户基本信息', '2', '0::查看全部等级价格\r\n1::查看对应等级价格\r\n2::高等级看低等级价格', NULL, '控制前台商品详情页商品价格的显示规则，可设置不同会员等级对应不同商品价格<br>查看全部等级价格：等级价格对所有会员可见（包括游客）<br>查看对应等级价格：等级价格仅对对应等级会员可见<br>高等级看低等级价格：等级会员可看到对应等级及低于该等级的商品价格<br>店铺自定义商品会员价后，此等级价格设置将不起作用<br>系统开启平台统一会员等级和店铺自定义商品会员价后，此等级价格设置将不起作用', 255, 1, NULL, '2018-10-26 23:39:13', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (342, 'user_validate_password', '登录密码身份验证', NULL, 'user', 'radio', 1, '用户基本信息', '0', '0::不支持\r\n1::支持', NULL, '在用户中心修改密码、手机号码等安全操作时，用于控制当会员绑定了手机号码或者邮箱后还是否支持通过登录密码进行身份验证；<br><span style=\"color: red;\">如果会员未绑定手机号码或者邮箱则仅能通过登录密码进行身份验证，不受此项控制；</span>', 255, 1, NULL, '2018-10-26 23:40:49', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (343, 'monetary_rate', '消费金额与赠送成长值比例', '%', 'user', 'short_text', 0, '用户基本信息', '10', NULL, NULL, '该值为大于0的数，例:设置为10，表明消费100元赠送10点成长值，取整计算，比如消费88.5元，则赠送8点成长值', 255, 1, NULL, '2018-10-26 23:43:52', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (344, 'max_growth_value', '每笔订单最多赠送成长值', NULL, 'user', 'short_text', 0, '用户基本信息', '100', NULL, NULL, '填写0表明不限制最多赠送的成长值，例：设置为100，表明每笔订单最多赠送100点成长值', 255, 1, NULL, '2018-10-26 23:44:35', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (345, 'auth_enable', '是否启用', NULL, 'user', 'switch', 0, '用户查看、购买商品权限', '0', '1::是\r\n0::否', NULL, '开启后将控制用户查看、购买商品的权限', 255, 1, NULL, '2018-10-26 23:45:50', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (346, 'auth_see', '查看商品价格权限', NULL, 'user', 'checkbox', 0, '用户查看、购买商品权限', '0', '-1::未登录用户\r\n1::注册会员\r\n2::铜牌会员\r\n3::银牌会员\r\n4::金牌会员\r\n5::钻石会员', NULL, '选择不同权限/会员等级的会员可查看商城商品价格，有购买商品权限必然有查看商品价格权限', 255, 1, NULL, '2018-10-26 23:48:27', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (347, 'auth_buy', '购买商城商品权限', NULL, 'user', 'checkbox', 0, '用户查看、购买商品权限', '0', '-1::未登录用户\r\n1::注册会员\r\n2::铜牌会员\r\n3::银牌会员\r\n4::金牌会员\r\n5::钻石会员', NULL, '选择不同权限/会员等级的会员可购买商城商品，有购买商品权限必然有查看商品价格权限', 255, 1, NULL, '2018-10-26 23:50:04', '2021-06-21 01:22:52');
+INSERT INTO `system_config` VALUES (348, 'shop_collect_open', '是否开启店铺数据采集', NULL, 'shop_collect', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是：店铺卖家中心即可使用数据采集方式添加商品；否：店铺卖家中心无法看到数据采集菜单', 255, 1, NULL, '2018-10-29 20:01:56', '2018-10-29 20:02:16');
+INSERT INTO `system_config` VALUES (349, 'qq_app_key', 'APP KEY', NULL, 'qq_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://connect.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 20:48:59', '2018-12-22 20:48:59');
+INSERT INTO `system_config` VALUES (350, 'qq_app_secret', 'APP SECRET', NULL, 'qq_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://connect.qq.com申请的KEY', 255, 1, NULL, '2018-12-22 20:49:38', '2018-12-22 20:49:38');
+INSERT INTO `system_config` VALUES (351, 'weibo_app_key', 'APP KEY', NULL, 'weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的APP ID', 255, 1, NULL, '2018-12-22 20:51:58', '2018-12-22 20:51:58');
+INSERT INTO `system_config` VALUES (352, 'weibo_app_secret', 'APP SECRET', NULL, 'weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的KEY', 255, 1, NULL, '2018-12-22 20:52:40', '2018-12-22 20:52:40');
+INSERT INTO `system_config` VALUES (353, 'mobile_weibo_app_key', 'APP KEY', NULL, 'mobile_weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的APP ID', 255, 1, NULL, '2018-12-22 20:53:29', '2018-12-22 20:53:29');
+INSERT INTO `system_config` VALUES (354, 'mobile_weibo_app_secret', 'APP SECRET', NULL, 'mobile_weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的KEY', 255, 1, NULL, '2018-12-22 20:54:14', '2018-12-22 20:54:14');
+INSERT INTO `system_config` VALUES (355, 'pc_weixin_app_key', 'APP KEY', NULL, 'pc_weixin_login', 'text', 1, NULL, '', NULL, NULL, '在https://open.weixin.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 20:55:49', '2018-12-22 20:55:49');
+INSERT INTO `system_config` VALUES (356, 'pc_weixin_app_secret', 'APP SECRET', NULL, 'pc_weixin_login', 'text', 1, NULL, '', NULL, NULL, '在https://open.weixin.qq.com申请的APP SECRET', 255, 1, NULL, '2018-12-22 20:56:24', '2018-12-22 20:56:24');
+INSERT INTO `system_config` VALUES (357, 'mobile_weixin_app_key', 'APP KEY', NULL, 'mobile_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://mp.weixin.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 20:57:11', '2018-12-22 20:57:11');
+INSERT INTO `system_config` VALUES (358, 'mobile_weixin_app_secret', 'APP SECRET', NULL, 'mobile_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://mp.weixin.qq.com申请的APP SECRET', 255, 1, NULL, '2018-12-22 20:57:37', '2018-12-22 20:57:37');
+INSERT INTO `system_config` VALUES (359, 'audit_self_shop_goods', '自营店铺商品是否需要审核', NULL, 'goods', 'radio', 0, '商品审核', '0', '0::无需审核\r\n1::必须审核\r\n2::仅第一次上架时需要审核', NULL, NULL, 255, 1, NULL, '2018-12-24 23:45:28', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (360, 'audit_other_shop_goods', '入驻店铺商品是否需要审核', NULL, 'goods', 'radio', 0, '商品审核', '0', '0::无需审核\r\n1::必须审核\r\n2::仅第一次上架时需要审核', NULL, NULL, 255, 1, NULL, '2018-12-24 23:46:45', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (361, 'goods_price_format', '商品价格显示格式', NULL, 'goods', 'short_text', 0, '商品价格', '￥{0}', NULL, NULL, '用于PC端列表页面、商品详情页面等其他页面的商品价格的显示的格式，“{0}”代表价格的占位符', 255, 1, NULL, '2018-12-24 23:47:56', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (362, 'price_show_rule', '商品价格显示规则', NULL, 'goods', 'radio', 0, '商品价格', '0', '0::不处理\r\n1::保留两位小数\r\n2::不保留小数部分为0的尾数', NULL, '用于列表页面、商品详情页面商品价格的显示计算规则', 255, 1, NULL, '2018-12-24 23:49:41', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (363, 'goods_list_count', '列表页面显示商品数量', NULL, 'goods', 'short_text', 1, '商品列表', '20', NULL, NULL, '用于控制前台商品列表页、搜索结果页面每页显示商品的数量，为了页面的美观建议为20的整数倍', 255, 1, NULL, '2018-12-24 23:50:54', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (364, 'goods_list_cache', '列表页面查询缓存', '秒', 'goods', 'short_text', 1, '商品列表', '600', NULL, NULL, '用于控制前台商品列表页、搜索结果页面缓存时间，单位：秒，默认为600秒', 255, 1, NULL, '2018-12-24 23:52:11', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (365, 'goods_list_filter_count', '列表页面筛选条件默认展示数量', '个', 'goods', 'short_text', 1, '商品列表', '2', NULL, NULL, '用于控制前台商品列表页筛选条件中除品牌、价格其他的属性条件展示数量，默认为2，设置为0则展示所有', 255, 1, NULL, '2018-12-24 23:53:14', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (366, 'sort_order_type', '商品列表页面默认排序类型', NULL, 'goods', 'radio', 0, '商品列表', '0', '0::按综合排序\r\n1::按销量\r\n2::按上架时间\r\n3::按评论数\r\n4::按商品价格\r\n5::按人气', NULL, '根据关键词搜索商品时，如果搜索的关键词与上次搜索的关键词不同则系统自动使用综合排序对搜索结果进行排序；<br>系统支持elasticsearch后，综合排序的规则是按关键词搜索商品将会根据关键词匹配的相关度进行优先排序；', 255, 1, NULL, '2018-12-24 23:55:42', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (367, 'sort_order_method', '商品列表页面默认排序方式', NULL, 'goods', 'radio', 1, '商品列表', '1', '0::升序\r\n1::降序', NULL, '综合排序按仅照商品的排序进行升序排序，不受此排序设置控制；', 255, 1, NULL, '2018-12-24 23:57:22', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (368, 'goods_show_sale_number', '是否显示商品销量', NULL, 'goods', 'radio', 0, '商品列表', '1', '0::隐藏\r\n1::显示', NULL, '控制商品列表页、详情页是否显示商品销量', 255, 1, NULL, '2018-12-24 23:58:34', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (369, 'goods_list_show_style', '商品列表页显示样式', NULL, 'goods', 'radio', 0, '商品列表', 'grid', 'grid::网格\r\nlist::列表', NULL, '控制商品列表页是否显示样式。注：目前只能控制WAP端', 255, 1, NULL, '2018-12-25 00:00:03', '2019-02-10 04:59:20');
+INSERT INTO `system_config` VALUES (370, 'goods_info_freight', '商品详情页运费模式', NULL, 'goods', 'radio', 0, '商品详情', '0', '2::隐藏配送地区\r\n0::显示具体运费\r\n1::仅显示“有货”、“无货”等信息，不显示具体运费', NULL, NULL, 255, 1, NULL, '2018-12-25 00:01:56', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (371, 'goods_info_show_stock', '是否显示商品详情页库存', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏，无货时显示“库存不足”\r\n1::显示', NULL, '用于控制商品详情页面是否展示具体的商品库存', 255, 1, NULL, '2018-12-25 00:03:20', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (372, 'goods_info_pickup', '是否显示商品详情页自提点', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制商品详情页是否展示自提点列表', 255, 1, NULL, '2018-12-25 00:04:18', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (373, 'goods_info_show_collect', '是否显示商品收藏人气', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制商品详情页是否展示具体的收藏人气', 255, 1, NULL, '2018-12-25 00:05:31', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (374, 'shop_show_collect', '是否显示店铺收藏人气', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制店铺相关页面是否展示具体的店铺收藏人气', 255, 1, NULL, '2018-12-25 00:06:26', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (375, 'goods_video_enable', '是否开启商品主图视频', NULL, 'goods', 'radio', 0, '商品视频', '1', '0::关闭\r\n1::开启', NULL, '开启后，卖家中心发布、编辑商品时可以为商品添加主图视频用于在商品详情页展示；关闭后将禁用此功能，上传的主图视频无法在商品详情展示。', 255, 1, NULL, '2018-12-25 00:07:46', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (376, 'goods_video_min_duration', '主图视频时长 最小时长', NULL, 'goods', 'short_text', 1, '商品视频', '0', NULL, NULL, '设置商品主图视频的时长大小，单位：秒，默认为0~90秒', 255, 1, NULL, '2018-12-25 00:09:23', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (377, 'goods_video_max_duration', '主图视频时长 最大时长', NULL, 'goods', 'short_text', 1, '商品视频', '90', NULL, NULL, '设置商品主图视频的时长大小，单位：秒，默认为0~90秒', 255, 1, NULL, '2018-12-25 00:10:19', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (378, 'goods_video_article', '主图视频规则文章', NULL, 'goods', 'text', 0, '商品视频', NULL, NULL, NULL, '设置描述商品主图视频上传要求规则的文章链接地址，设置后会展示在商品发布、编辑页面中主图视频提示中，便于用户了解视频要求;<br><span style=\"color: red;\">为了兼容各端浏览器，目前暂支持视频格式：mpeg4（H.264）、ogg、webm</span>；<br>Ogg = 带有 Theora 视频编码和 Vorbis 音频编码的 Ogg 文件;<br>MPEG4 = 带有 H.264 视频编码和 AAC 音频编码的 MPEG 4文件;<br>WebM = 带有 VP8 视频编码和 Vorbis 音频编码的 WebM 文件;', 255, 1, NULL, '2018-12-25 00:11:51', '2019-02-10 04:59:21');
+INSERT INTO `system_config` VALUES (379, 'shipping_name', '配送方式名称-普通快递', NULL, 'trade', 'text', 0, '基本设置', '普通快递', NULL, NULL, '结算页面，消费者选择的快递配送方式的名称，将影响平台、卖家订单列表搜索条件选项，订单详情配送方式内容展示，结算页面配送方式名称', 255, 1, NULL, '2019-01-12 19:05:49', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (380, 'self_shipping_name', '配送方式名称-上门自提', NULL, 'trade', 'text', 0, '基本设置', '上门自提', NULL, NULL, '结算页面，消费者选择的自提方式的名称，将影响平台、卖家订单列表搜索条件选项，订单详情配送方式内容展示，结算页面配送方式名称、商品详情页查看自提点展示项名称', 255, 1, NULL, '2019-01-12 19:07:30', '2019-06-30 21:25:18');
+INSERT INTO `system_config` VALUES (381, 'default_floor_loading', '装修楼层默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2019/06/16/15606733451669.gif', NULL, NULL, '最佳显示尺寸90*90像素gif格式的图片', 255, 1, NULL, '2019-01-23 01:12:20', '2020-01-12 03:32:45');
+INSERT INTO `system_config` VALUES (382, 'site_web_static', '是否开启静态页面', NULL, 'web_static', 'text', 0, NULL, '1', '0::关闭\r\n1::开启', NULL, '是否开启PC首页静态页面', 255, 1, NULL, '2019-01-23 18:24:54', '2022-01-23 19:54:46');
+INSERT INTO `system_config` VALUES (383, 'm_site_web_static', '是否开启静态页面', NULL, 'web_mobile_static', 'text', 0, NULL, '1', '0::关闭\r\n1::开启', NULL, '是否开启微信端静态页面', 255, 1, NULL, '2019-01-23 18:25:44', '2019-10-20 08:18:11');
+INSERT INTO `system_config` VALUES (384, 'm_search_shop_count', '展示附近店铺数量', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '0', NULL, NULL, '控制搜索范围内的附近店铺展示的数量，比如：搜索距离消费者100公里内的所有店铺，但是只展示其中的10个店铺。0代表不限制。', 2, 1, NULL, '2019-01-24 00:22:28', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (385, 'm_default_shop_count', '调取默认店铺数量', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '12', NULL, NULL, '附近店铺无符合条件的店铺展示时，系统默认调取店铺的数量，默认调取店铺规则：排序越小的店铺优先展示，如果排序相同，则后添加的店铺优先展示。', 3, 1, NULL, '2019-01-24 00:23:18', '2021-12-22 00:08:42');
+INSERT INTO `system_config` VALUES (386, 'integral_slide_img1', '滚动图片1', NULL, 'integral_mall_index_set', 'imagegroup', 0, 'PC端图片设置', '/system/config/integral_mall_index_set/2020/04/06/15861691945182.jpg', NULL, NULL, '请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2019-01-26 20:39:16', '2020-04-07 02:33:26');
+INSERT INTO `system_config` VALUES (387, 'integral_slide_link1', '滚动图片1链接', NULL, 'integral_mall_index_set', 'text', 0, 'PC端图片设置', 'http://backend.lrw.com/dashboard/integral-mall/integral-mall-index-set', NULL, NULL, '请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2019-01-26 20:41:01', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (388, 'integral_slide_img2', '滚动图片2', NULL, 'integral_mall_index_set', 'imagegroup', 0, 'PC端图片设置', '/system/config/integral_mall_index_set/2021/12/28/16406626524513.jpg', NULL, NULL, NULL, 255, 1, NULL, NULL, '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (389, 'integral_slide_link2', '滚动图片2链接', NULL, 'integral_mall_index_set', 'text', 0, 'PC端图片设置', 'http://backend.lrw.com/dashboard/integral-mall/integral-mall-index-set', NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:43:56', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (390, 'integral_slide_img3', '滚动图片3', NULL, 'integral_mall_index_set', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2019-01-26 20:44:35', '2019-10-20 00:38:31');
+INSERT INTO `system_config` VALUES (391, 'integral_slide_link3', '滚动图片3链接', NULL, 'integral_mall_index_set', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:45:46', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (392, 'integral_slide_img4', '滚动图片4', NULL, 'integral_mall_index_set', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2019-01-26 20:46:20', '2019-10-20 00:38:31');
+INSERT INTO `system_config` VALUES (393, 'integral_slide_link4', '滚动图片4链接', NULL, 'integral_mall_index_set', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:46:52', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (394, 'm_integral_slide_img1', '滚动图片1', NULL, 'integral_mall_index_set', 'imagegroup', 0, '手机端图片设置', '/system/config/integral_mall_index_set/2021/12/28/16406626634895.jpg', NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, '2019-01-26 20:49:44', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (395, 'm_integral_slide_link1', '滚动图片1链接', NULL, 'integral_mall_index_set', 'text', 0, '手机端图片设置', 'http://backend.lrw.com/dashboard/integral-mall/integral-mall-index-set', NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:50:46', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (396, 'm_integral_slide_img2', '滚动图片2', NULL, 'integral_mall_index_set', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, '2019-01-26 20:51:46', '2019-10-20 00:38:31');
+INSERT INTO `system_config` VALUES (397, 'm_integral_slide_link2', '滚动图片2链接', NULL, 'integral_mall_index_set', 'text', 0, '手机端图片设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:52:17', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (398, 'm_integral_slide_img3', '滚动图片3', NULL, 'integral_mall_index_set', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, '2019-01-26 20:53:00', '2019-10-20 00:38:31');
+INSERT INTO `system_config` VALUES (399, 'm_integral_slide_link3', '滚动图片3链接', NULL, 'integral_mall_index_set', 'text', 0, '手机端图片设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:54:10', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (400, 'm_integral_slide_img4', '滚动图片4', NULL, 'integral_mall_index_set', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址', 255, 1, NULL, '2019-01-26 20:54:43', '2019-10-20 00:38:31');
+INSERT INTO `system_config` VALUES (401, 'm_integral_slide_link4', '滚动图片4链接', NULL, 'integral_mall_index_set', 'text', 0, '手机端图片设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 20:55:11', '2021-12-28 11:37:56');
+INSERT INTO `system_config` VALUES (402, 'integral_model', '积分商城模式', NULL, 'integral_mall_set', 'radio', 0, NULL, '0', '0::系统统一积分\r\n1::店铺独立积分', NULL, '系统统一积分：积分属于平台方，开启系统统一积分，店铺积分商城功能将变为不可使用。<br>店铺独立积分：积分属于各个店铺，每个店铺的积分独立使用', 255, 1, NULL, '2019-01-26 20:58:39', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (403, 'integral_validity', '积分有效期', '年', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, '“0”表示无限制，积分获得日期开始计算，到超过积分有效期，会员积分自动清零', 255, 1, NULL, '2019-01-26 20:59:16', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (404, 'give_integral_confirm', '主动确认收货送积分', '积分', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, '消费者主动点击确认收货后赠送积分', 255, 1, NULL, '2019-01-26 22:28:47', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (405, 'give_integral_comment', '评价好评送积分', '积分', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, '消费者对宝贝与描述项设置好评后赠送积分', 255, 1, NULL, '2019-01-26 22:29:40', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (406, 'give_integral_register', '会员注册送积分', '积分', 'integral_mall_set', 'short_text', 0, NULL, '0', NULL, NULL, NULL, 255, 1, NULL, '2019-01-26 22:30:14', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (407, 'give_integral_recharge', '平台储值卡充值送积分', '元，送 1 积分', 'integral_mall_set', 'short_text', 0, NULL, '1', NULL, NULL, '例：设置充1元送1积分，则消费者储值卡充值100元，则送100积分', 255, 1, NULL, '2019-01-26 22:31:31', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (408, 'give_integral_consume', '消费金额送积分', '元 = 1 积分', 'integral_mall_set', 'short_text', 0, NULL, '1', NULL, NULL, '比如：设置1元=1积分，则会员消费101元，确认收货后则赠送101积分，按消费金额中的整数部分进行赠送积分，不考虑四舍五入。', 255, 1, NULL, '2019-01-26 22:32:21', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (409, 'give_integral_out_line_balance', '线下消费余额是否累计积分', NULL, 'integral_mall_set', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '控制会员线下消费使用会员余额支付，是否可获取积分，获取的积分规则与线上一致</br>线下消费余额：通过商家APP扫描消费者付款码，或消费者扫描商家APP收款码', 255, 1, NULL, '2019-01-26 22:33:30', '2019-06-02 01:31:11');
+INSERT INTO `system_config` VALUES (410, 'integral_shipping', '积分兑换配送方式', NULL, 'integral_mall_set', 'checkbox', 1, NULL, '0,1', '0::物流配送\r\n1::上门自提', NULL, '积分兑换配送方式将影响消费者积分兑换提交页面是否展示物流配送以及上门自提选项。 <a class=\"c-blue\" href=\"/mall/self-pickup/list\" target=\"_Blank\">设置自提点</a>', 255, 1, NULL, '2019-01-26 22:34:52', '2019-06-02 01:31:12');
+INSERT INTO `system_config` VALUES (411, 'integral_qrcode', '平台积分收款码', NULL, 'integral_mall_set', 'text', 0, NULL, NULL, NULL, NULL, '积分收款码应用于消费者线下扫码进行消费积分和余额，该余额不累计积分', 255, 1, NULL, '2019-01-26 22:36:35', '2019-06-02 01:31:12');
+INSERT INTO `system_config` VALUES (412, 'integral_image', '积分商城头像', NULL, 'integral_mall_set', 'imagegroup', 0, NULL, NULL, NULL, NULL, '该图片应用于开启平台积分时积分商城线下消费积分页面的logo，图片建议上传160*160', 255, 1, NULL, '2019-01-26 22:37:08', '2019-06-02 01:31:12');
+INSERT INTO `system_config` VALUES (413, 'integral_bg_image', '积分商城背景图', NULL, 'integral_mall_set', 'imagegroup', 0, NULL, NULL, NULL, NULL, '该图片应用于积分商城线下消费积分页面的背景图，图片建议上传640*260', 255, 1, NULL, '2019-01-26 22:37:34', '2019-06-02 01:31:12');
+INSERT INTO `system_config` VALUES (414, 'is_distrib', '是否开启推荐分销', NULL, 'distrib', 'switch', 0, '基本信息', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2019-05-16 00:25:47', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (415, 'is_distributor_audit', '分销商申请是否需要审核', NULL, 'distrib', 'switch', 0, '基本信息', '1', '1::是\r\n0::否', NULL, '开启后，会员申请成为分销商后，需要平台进行审核，审核通过才能成为分销商', 255, 1, NULL, '2019-05-16 00:26:53', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (416, 'distributor_condition', '成为分销商的必备条件', NULL, 'distrib', 'radio', 0, '基本信息', '0', '0::关闭\r\n1::订单金额累计达到 xxx 元\r\n2::成交订单笔数累计达到 xxx 笔', NULL, '提示：当会员的订单金额累计达到多少元或者订单成交笔数达到多少笔后，才能申请成为分销商', 255, 1, NULL, '2019-05-16 00:28:47', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (417, 'distrib_order_money', '成为分销商的必备条件【订单金额累计达到】', '元', 'distrib', 'short_text', 0, '基本信息', NULL, NULL, NULL, '提示：当会员的订单金额累计达到多少元或者订单成交笔数达到多少笔后，才能申请成为分销商', 255, 1, NULL, '2019-05-16 00:31:43', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (418, 'distrib_order_count', '成为分销商的必备条件【成交订单笔数累计达到】', '笔', 'distrib', 'short_text', 0, NULL, NULL, NULL, NULL, '提示：当会员的订单金额累计达到多少元或者订单成交笔数达到多少笔后，才能申请成为分销商', 255, 1, NULL, '2019-05-16 00:32:24', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (419, 'is_invite_code', '是否开启邀请码', NULL, 'distrib', 'switch', 0, '基本信息', '1', '1::是\r\n0::否', NULL, '开启后，分销商会拥有自己的推荐码，把推荐码介绍给朋友，新会员注册时输入推荐码就会成为该分销商的下级会员', 255, 1, NULL, '2019-05-16 00:33:39', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (420, 'distrib_reserve_money', '分销账户预留金额', NULL, 'distrib', 'short_text', 1, NULL, '100', NULL, NULL, '预留金额是为防止商家操作撤销分成金额时，会员的分销账户中有余额可撤销，如果账户余额不足，将不能撤回', 255, 1, NULL, '2019-05-16 00:34:39', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (421, 'distrib_rebate_type', '返利方式', NULL, 'distrib', 'radio', 0, '基本信息', '0', '0::自动返利\r\n1::手动返利', NULL, '手动返利：商家需手动点击分成触发分成事件；自动返利：买家确认收货后，系统自动分成', 255, 1, NULL, '2019-05-16 00:35:42', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (422, 'distrib_order_from', '以下订单来源是否参与返利', NULL, 'distrib', 'checkbox', 0, '基本信息', NULL, 'order_from_6::收银台订单', NULL, NULL, 255, 1, NULL, '2019-05-16 00:36:46', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (423, 'is_distrib_goods_audit', '发布分销商品是否需要审核', NULL, 'distrib', 'switch', 0, '基本信息', '0', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2019-05-16 00:37:43', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (424, 'distrib_text', '分销', NULL, 'distrib', 'text', 0, '自定义文字', NULL, NULL, NULL, '微商城分销申请流程中显示，申请结果中显示，申请后用户个人中心显示，分销中心显示', 255, 1, NULL, '2019-05-16 00:38:42', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (425, 'distributor_text', '分销商', NULL, 'distrib', 'text', 0, '自定义文字', NULL, NULL, NULL, '微商城个人中心显示、申请流程中显示、申请结果中显示', 255, 1, NULL, '2019-05-16 00:39:17', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (426, 'share_hint', '推广页面提示语', NULL, 'distrib', 'text', 0, '自定义文字', NULL, NULL, NULL, '已成为分销商的用户，从微商城个人中心点击我的推广进入', 255, 1, NULL, '2019-05-16 00:40:14', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (427, 'distrib_rank_value', '推荐等级设置【现金返利百分比】', NULL, 'distrib', 'array', 0, '分销比例设置', '{\"rank\":[\"10\",\"8\",\"5\"]}', NULL, NULL, '提示：微信官方规定不允许分销超出三级，系统分销等级可以添加至三级，但是不建议做三级分销，最好是做二级分销\r\n比例说明：如会员A推荐B，B推荐C，C购物后，C不获得返利，A、B均可按照以上现金返利百分比获得返利奖励，0表示关闭本级奖励，分佣比例总和不得超过100%', 255, 1, NULL, '2019-05-16 00:42:05', '2019-05-16 01:13:48');
+INSERT INTO `system_config` VALUES (428, 'is_recommend_reg', '是否开启推荐注册', NULL, 'recommend_reg', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2019-05-16 01:16:12', '2019-05-16 01:17:37');
+INSERT INTO `system_config` VALUES (429, 'is_bonus_reward', '推荐注册红包奖励', NULL, 'recommend_reg', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '会员推荐新会员注册成功后即可获得红包奖励，此红包必须是“推荐送红包”类型的红包，“<a class=\"btn-link\" target=\"_blank\" href=\"/dashboard/bonus/add.html?bonus_type=9\">创建推荐送红包</a>”', 255, 1, NULL, '2019-05-16 01:17:15', '2019-05-16 01:17:37');
+INSERT INTO `system_config` VALUES (430, 'is_deposit', '是否开启申请提现', NULL, 'deposit', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启：消费者在用户中心可进行申请提现；关闭：消费者无法申请提现', 255, 1, NULL, '2019-05-16 22:17:02', '2019-05-16 22:17:02');
+INSERT INTO `system_config` VALUES (431, 'is_weixin_auto_deposit', '微信提现自动打款', NULL, 'deposit', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '启用：消费者提现到账户绑定的微信账户中，提现之后，平台同意申请后系统自动将提现金额打到消费者微信账户中<br>禁用：消费者无法提现到绑定的微信中', 255, 1, NULL, '2019-05-16 22:18:02', '2019-05-16 22:18:02');
+INSERT INTO `system_config` VALUES (432, 'shoper_deposit_limit', '商家每月提现次数', NULL, 'deposit', 'text', 0, NULL, NULL, NULL, NULL, '请输入大于0的整数，为空表示不限制', 255, 1, NULL, '2019-05-16 22:18:42', '2019-05-16 22:18:42');
+INSERT INTO `system_config` VALUES (433, 'user_deposit_limit', '每天提现次数', NULL, 'deposit', 'text', 0, NULL, NULL, NULL, NULL, '限制所有会员每天提现次数，请输入大于0的整数，为空表示不限制', 255, 1, NULL, '2019-05-16 22:19:05', '2019-05-16 22:19:05');
+INSERT INTO `system_config` VALUES (434, 'min_deposit_money', '最低提现金额', NULL, 'deposit', 'text', 0, NULL, NULL, NULL, NULL, '个人或店铺申请提现时，最低提现金额，请输入大于1的值', 255, 1, NULL, '2019-05-16 22:19:30', '2019-05-16 22:19:30');
+INSERT INTO `system_config` VALUES (435, 'alipay_procedures_money', '提现手续费【支付宝】', NULL, 'deposit', 'short_text', 0, NULL, NULL, NULL, NULL, '手续费按提现金额的百分比进行收取', 255, 1, NULL, '2019-05-16 22:20:05', '2019-05-16 22:21:22');
+INSERT INTO `system_config` VALUES (436, 'bank_procedures_money', '提现手续费【银行卡】', NULL, 'deposit', 'short_text', 0, NULL, NULL, NULL, NULL, '手续费按提现金额的百分比进行收取', 255, 1, NULL, '2019-05-16 22:20:30', '2019-05-16 22:21:50');
+INSERT INTO `system_config` VALUES (437, 'min_procedures_money', '最低手续费', NULL, 'deposit', 'short_text', 0, NULL, NULL, NULL, NULL, '按提现金额百分比收取手续费后，计算结果保留两位小数后为0的话，则收取的最低手续费', 255, 1, NULL, '2019-05-16 22:22:10', '2019-05-16 22:22:10');
+INSERT INTO `system_config` VALUES (438, 'bonus_remind', '红包到期提醒', NULL, 'bonus', 'checkbox', 0, NULL, '1', '1::差1天过期提醒\r\n3::差3天过期提醒\r\n7::差7天过期提醒', NULL, '此设置只会影响新发放的红包，对于设置改变之前已经发放给用户的红包不会提醒。', 255, 1, NULL, '2019-06-02 07:06:26', '2019-10-20 01:17:35');
+INSERT INTO `system_config` VALUES (439, 'bonus_remind_time', '到期提醒时间', NULL, 'bonus', 'time', 1, NULL, '17:15:28', NULL, NULL, '此设置用于控制红包到期提醒给用户发送短信、邮件等信息的具体时间，合理设计时间以免影响客户休息或工作。', 255, 1, NULL, '2019-06-02 07:07:08', '2019-10-20 01:17:35');
+INSERT INTO `system_config` VALUES (440, 'desc_1', '1分', NULL, 'desc_conform', 'text', 0, NULL, '差的太离谱，与卖家描述的严重不符，非常不满', NULL, NULL, '1分是最低分值，请务必设为差评', 255, 1, NULL, '2019-10-15 22:40:23', '2019-10-16 00:51:20');
+INSERT INTO `system_config` VALUES (441, 'desc_1_eval', '1分值项', NULL, 'desc_conform', 'select', 0, NULL, '0', '2::好评\r\n1::中评\r\n0::差评', NULL, '1分是最低分值，请务必设为差评', 255, 1, NULL, '2019-10-15 22:42:20', '2019-10-16 00:51:20');
+INSERT INTO `system_config` VALUES (442, 'desc_2', '2分', NULL, 'desc_conform', 'text', 0, NULL, '部分有破损，与卖家描述的不符，不满意', NULL, NULL, '2分建议设为中评或者差评', 255, 1, NULL, '2019-10-15 22:44:48', '2019-10-16 00:51:20');
+INSERT INTO `system_config` VALUES (443, 'desc_2_eval', '2分值项', NULL, 'desc_conform', 'select', 0, NULL, '0', '2::好评\r\n1::中评\r\n0::差评', NULL, '2分建议设为中评或者差评', 255, 1, NULL, '2019-10-15 22:46:15', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (444, 'desc_3', '3分', NULL, 'desc_conform', 'text', 0, NULL, '质量一般，没有卖家描述的那么好', NULL, NULL, '3分是中间分值，建议设为中评', 255, 1, NULL, '2019-10-15 22:46:56', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (445, 'desc_3_eval', '3分值项', NULL, 'desc_conform', 'select', 0, NULL, '1', '2::好评\r\n1::中评\r\n0::差评', NULL, '3分是中间分值，建议设为中评', 255, 1, NULL, '2019-10-15 22:48:07', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (446, 'desc_4', '4分', NULL, 'desc_conform', 'text', 0, NULL, '质量不错，与卖家描述的基本一致，还是挺满意的', NULL, NULL, '4分建议设为好评或者中评', 255, 1, NULL, '2019-10-15 22:48:55', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (447, 'desc_4_eval', '4分值项', NULL, 'desc_conform', 'select', 0, NULL, '2', '2::好评\r\n1::中评\r\n0::差评', NULL, '4分建议设为好评或者中评', 255, 1, NULL, '2019-10-15 22:49:46', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (448, 'desc_5', '5分', NULL, 'desc_conform', 'text', 0, NULL, '质量非常好，与卖家描述的完全一致，非常满意', NULL, NULL, '5分是最高分值，请务必设为好评', 255, 1, NULL, '2019-10-15 22:53:12', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (449, 'desc_5_eval', '5分值项', NULL, 'desc_conform', 'select', 0, NULL, '2', '2::好评\r\n1::中评\r\n0::差评', NULL, '5分是最高分值，请务必设为好评', 255, 1, NULL, '2019-10-15 22:53:52', '2019-10-16 00:51:21');
+INSERT INTO `system_config` VALUES (450, 'service_1', '1分', NULL, 'service_desc', 'text', 0, NULL, '卖家态度很差，还骂人、说脏话，简直不把顾客当回事', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:40:23', '2019-10-15 22:40:23');
+INSERT INTO `system_config` VALUES (451, 'service_2', '2分', NULL, 'service_desc', 'text', 0, NULL, '卖家有点不耐烦，承诺的服务也兑现不了', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:44:48', '2019-10-15 22:44:48');
+INSERT INTO `system_config` VALUES (452, 'service_3', '3分', NULL, 'service_desc', 'text', 0, NULL, '卖家回复问题很慢，态度一般，谈不上沟通顺畅', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:46:56', '2019-10-15 22:46:56');
+INSERT INTO `system_config` VALUES (453, 'service_4', '4分', NULL, 'service_desc', 'text', 0, NULL, '卖家服务挺好的，沟通挺顺畅的，总体满意', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:48:55', '2019-10-15 22:48:55');
+INSERT INTO `system_config` VALUES (454, 'service_5', '5分', NULL, 'service_desc', 'text', 0, NULL, '卖家的服务太棒了，考虑非常周到，完全超出期望值', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:53:12', '2019-10-15 22:53:12');
+INSERT INTO `system_config` VALUES (455, 'send_1', '1分', NULL, 'send_desc', 'text', 0, NULL, '再三提醒下，卖家超过一天才发货，耽误我的时间', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:40:23', '2019-10-15 22:40:23');
+INSERT INTO `system_config` VALUES (456, 'send_2', '2分', NULL, 'send_desc', 'text', 0, NULL, '卖家发货有点慢的，催了几次终于发货了', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:44:48', '2019-10-15 22:44:48');
+INSERT INTO `system_config` VALUES (457, 'send_3', '3分', NULL, 'send_desc', 'text', 0, NULL, '卖家发货速度一般，提醒后才发货的', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:46:56', '2019-10-15 22:46:56');
+INSERT INTO `system_config` VALUES (458, 'send_4', '4分', NULL, 'send_desc', 'text', 0, NULL, '卖家发货挺及时的，运费收取很合理', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:48:55', '2019-10-15 22:48:55');
+INSERT INTO `system_config` VALUES (459, 'send_5', '5分', NULL, 'send_desc', 'text', 0, NULL, '卖家发货速度非常快，包装非常仔细、严实', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:53:12', '2019-10-15 22:53:12');
+INSERT INTO `system_config` VALUES (460, 'shipping_1', '1分', NULL, 'shipping_desc', 'text', 0, NULL, '到货速度严重延误，货物破损，派件员态度恶劣', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:40:23', '2019-10-15 22:40:23');
+INSERT INTO `system_config` VALUES (461, 'shipping_2', '2分', NULL, 'shipping_desc', 'text', 0, NULL, '到货速度慢，外包装严重变形，派件员不耐烦，态度差', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:44:48', '2019-10-15 22:44:48');
+INSERT INTO `system_config` VALUES (462, 'shipping_3', '3分', NULL, 'shipping_desc', 'text', 0, NULL, '到货速度一般，外包装变形，派件员态度一般', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:46:56', '2019-10-15 22:46:56');
+INSERT INTO `system_config` VALUES (463, 'shipping_4', '4分', NULL, 'shipping_desc', 'text', 0, NULL, '到货速度及时，派件员态度较好', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:48:55', '2019-10-15 22:48:55');
+INSERT INTO `system_config` VALUES (464, 'shipping_5', '5分', NULL, 'shipping_desc', 'text', 0, NULL, '到货速度非常快，商品完好无损，派件员态度很好', NULL, NULL, '', 255, 1, NULL, '2019-10-15 22:53:12', '2019-10-15 22:53:12');
+INSERT INTO `system_config` VALUES (465, 'mark_cycle', '评分周期', '个月', 'mark_set', 'short_text', 1, NULL, '3', NULL, NULL, '默认取近3个自然月完成的订单计算评分：为了尽可能保证数据的真实性，请不要设置太短或者太长周期', 255, 1, NULL, '2019-10-15 23:50:55', '2019-10-16 00:55:11');
+INSERT INTO `system_config` VALUES (466, 'site_open', '开启站点功能', NULL, 'subsite', 'switch', 0, NULL, '0', '1::开启\r\n0::关闭', NULL, '是否开启站点功能', 255, 1, NULL, '2019-10-16 20:01:27', '2019-10-16 21:37:10');
+INSERT INTO `system_config` VALUES (467, 'log_target', '日志记录方式', NULL, 'log', 'radio', 0, NULL, '1', '0::关闭日志\r\n1::存储至数据库', NULL, '日志可以选择记录在文件中或者数据库中，如果需要减轻系统负担您可以关闭日志', 255, 1, NULL, '2020-02-07 05:23:54', '2020-02-07 05:50:14');
+INSERT INTO `system_config` VALUES (468, 'group_buy_slide_img1', '滚动图片1', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', '/system/config/group_buy_slide/2020/04/06/15861458145466.jpg', NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 20:03:43');
+INSERT INTO `system_config` VALUES (469, 'group_buy_slide_link1', '滚动图片1 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', 'http://backend.lrw.com/dashboard/group-buy/slide-config', NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (470, 'group_buy_slide_img2', '滚动图片2', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (471, 'group_buy_slide_link2', '滚动图片2 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (472, 'group_buy_slide_img3', '滚动图片3', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (473, 'group_buy_slide_link3', '滚动图片3 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (474, 'group_buy_slide_img4', '滚动图片4', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (475, 'group_buy_slide_link4', '滚动图片4 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (476, 'group_buy_slide_img3', '滚动图片3', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (477, 'group_buy_slide_link3', '滚动图片3 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (478, 'group_buy_slide_img4', '滚动图片4', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (479, 'group_buy_slide_link4', '滚动图片4 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (480, 'group_buy_slide_img3', '滚动图片3', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (481, 'group_buy_slide_link3', '滚动图片3 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (482, 'group_buy_slide_img4', '滚动图片4', NULL, 'group_buy_slide', 'imagegroup', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (483, 'group_buy_slide_link4', '滚动图片4 链接', NULL, 'group_buy_slide', 'text', 0, 'PC端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (484, 'm_group_buy_slide_img1', '滚动图片1', NULL, 'group_buy_slide', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (485, 'm_group_buy_slide_link1', '滚动图片1 链接', NULL, 'group_buy_slide', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (486, 'm_group_buy_slide_img2', '滚动图片2', NULL, 'group_buy_slide', 'imagegroup', 0, '手机端图片设置', '/system/config/group_buy_slide/2020/04/06/15861455367049.jpg', NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (487, 'm_group_buy_slide_link2', '滚动图片2 链接', NULL, 'group_buy_slide', 'text', 0, '手机端图片设置', 'http://backend.lrw.com/dashboard/group-buy/slide-config', NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (488, 'm_group_buy_slide_img3', '滚动图片3', NULL, 'group_buy_slide', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (489, 'm_group_buy_slide_link3', '滚动图片3 链接', NULL, 'group_buy_slide', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (490, 'm_group_buy_slide_img4', '滚动图片4', NULL, 'group_buy_slide', 'imagegroup', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:35:12', '2020-04-06 19:59:03');
+INSERT INTO `system_config` VALUES (491, 'm_group_buy_slide_link4', '滚动图片4 链接', NULL, 'group_buy_slide', 'text', 0, '手机端图片设置', NULL, NULL, NULL, '请使用1920*440像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。', 255, 1, NULL, '2020-04-06 19:37:49', '2020-04-06 20:04:01');
+INSERT INTO `system_config` VALUES (492, 'is_enable_buy', '是否开启购买', NULL, 'website', 'switch', 0, '网站状态', '1', '1::是\r\n0::否', NULL, '是否开启购买功能，开启后，在前端能正常购买商品', 255, 1, NULL, '2020-08-09 21:07:50', '2020-10-24 21:50:40');
+INSERT INTO `system_config` VALUES (493, 'lrw_version', '系统版本', NULL, 'system', 'text', 1, NULL, 'v3.1.0', NULL, NULL, '商城系统当前版本', 255, 1, NULL, '2021-03-28 20:53:06', '2022-01-29 16:00:44');
+INSERT INTO `system_config` VALUES (494, 'ios_access_id', 'ACCESS ID（iOS）', NULL, 'app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:32:53', '2021-06-20 08:32:53');
+INSERT INTO `system_config` VALUES (495, 'ios_secret_id', 'SECRET KEY（iOS）', NULL, 'app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:33:27', '2021-06-20 08:33:27');
+INSERT INTO `system_config` VALUES (496, 'android_access_id', 'ACCESS ID（Android）', NULL, 'app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:33:50', '2021-06-20 08:33:50');
+INSERT INTO `system_config` VALUES (497, 'android_secret_id', 'SECRET KEY（Android）', NULL, 'app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:34:12', '2021-06-20 08:34:12');
+INSERT INTO `system_config` VALUES (498, 'android_package_name', '应用包名（Android）', NULL, 'app_push', 'text', 0, NULL, NULL, NULL, NULL, '填写安卓应用包名', 255, 1, NULL, '2021-06-20 08:34:56', '2021-06-20 08:34:56');
+INSERT INTO `system_config` VALUES (499, 'seller_android_package_name', '应用包名（Android）', NULL, 'seller_app_push', 'text', 0, NULL, NULL, NULL, NULL, '填写安卓应用包名', 255, 1, NULL, '2021-06-20 08:34:56', '2021-06-20 20:50:13');
+INSERT INTO `system_config` VALUES (500, 'seller_android_secret_id', 'SECRET KEY（Android）', NULL, 'seller_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:34:12', '2021-06-20 20:50:13');
+INSERT INTO `system_config` VALUES (501, 'seller_android_access_id', 'ACCESS ID（Android）', NULL, 'seller_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:33:50', '2021-06-20 20:50:13');
+INSERT INTO `system_config` VALUES (502, 'seller_ios_secret_id', 'SECRET KEY（iOS）', NULL, 'seller_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:33:27', '2021-06-20 20:50:13');
+INSERT INTO `system_config` VALUES (503, 'seller_ios_access_id', 'ACCESS ID（iOS）', NULL, 'seller_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:32:53', '2021-06-20 20:50:13');
+INSERT INTO `system_config` VALUES (504, 'store_android_package_name', '应用包名（Android）', NULL, 'store_app_push', 'text', 0, NULL, NULL, NULL, NULL, '填写安卓应用包名', 255, 1, NULL, '2021-06-20 08:34:56', '2021-06-20 20:50:25');
+INSERT INTO `system_config` VALUES (505, 'store_android_secret_id', 'SECRET KEY（Android）', NULL, 'store_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:34:12', '2021-06-20 20:50:25');
+INSERT INTO `system_config` VALUES (506, 'store_android_access_id', 'ACCESS ID（Android）', NULL, 'store_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:33:50', '2021-06-20 20:50:25');
+INSERT INTO `system_config` VALUES (507, 'store_ios_secret_id', 'SECRET KEY（iOS）', NULL, 'store_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:33:27', '2021-06-20 20:50:25');
+INSERT INTO `system_config` VALUES (508, 'store_ios_access_id', 'ACCESS ID（iOS）', NULL, 'store_app_push', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2021-06-20 08:32:53', '2021-06-20 20:50:25');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for system_config_copy
+-- ----------------------------
+DROP TABLE IF EXISTS `system_config_copy`;
+CREATE TABLE `system_config_copy` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) NOT NULL COMMENT '配置code',
+  `title` varchar(255) NOT NULL COMMENT '配置标题',
+  `unit` varchar(255) DEFAULT NULL COMMENT '配置单位 如：元',
+  `group` varchar(255) NOT NULL COMMENT '配置分组',
+  `type` varchar(255) NOT NULL COMMENT '表单类型',
+  `required` tinyint NOT NULL DEFAULT '0' COMMENT '字段是否必须 0非必须 1必须',
+  `anchor` varchar(255) DEFAULT NULL COMMENT '页面导航',
+  `value` text COMMENT '配置值',
+  `options` text COMMENT '配置项',
+  `labels` text COMMENT '配置项的label',
+  `tips` text COMMENT '配置提示',
+  `sort` int NOT NULL DEFAULT '255' COMMENT '排序',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态',
+  `storage_dir` text COMMENT '图片存储路径',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=379 DEFAULT CHARSET=utf8mb3;
+
+-- ----------------------------
+-- Records of system_config_copy
+-- ----------------------------
+BEGIN;
+INSERT INTO `system_config_copy` VALUES (1, 'config_group', '配置分组', NULL, 'system', 'textarea', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, NULL, '2018-07-18 15:48:29');
+INSERT INTO `system_config_copy` VALUES (2, 'form_item_type', '配置表单类型', NULL, 'system', 'textarea', 0, NULL, NULL, NULL, NULL, '配置表单元素类型', 255, 1, NULL, NULL, '2018-04-02 14:42:57');
+INSERT INTO `system_config_copy` VALUES (3, 'custom_style_enable', '是否开启自定义改色', NULL, 'site_style', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (4, 'main_color', '主体颜色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城主体颜色 code:main_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (5, 'second_color', '主体辅色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '主体辅色 code:second_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (6, 'second_bg_color', '主体背景辅色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff0000', NULL, NULL, '主体背景辅色 code:second_bg_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (7, 'right_bg_color', '右侧侧边栏背景色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城右侧侧边栏背景色 code:right_bg_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (8, 'left_nav_color', '左侧分类导航背景颜色', NULL, 'site_style', 'colorpicker', 0, NULL, '#ff6600', NULL, NULL, '商城左侧分类导航背景颜色 code:left_nav_color', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (9, 'cart_image', '购物车图标', NULL, 'site_style', 'imagegroup', 0, NULL, '/goods/brand/2018/06/16/15291637579191.jpg', NULL, NULL, '最佳显示尺寸为50*50像素，建议上传png格式', 255, 1, NULL, NULL, '2018-06-22 13:14:04');
+INSERT INTO `system_config_copy` VALUES (19, 'site_name', '网站名称', NULL, 'website', 'text', 1, '网站设置', '乐融沃 · 云商城 · 乐融沃B2C商城演示站', NULL, NULL, '网站名称，将显示在商城相关的页面的浏览器标签页上，网站名称不要超过30个字', 255, 1, NULL, '2018-02-22 16:10:48', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (20, 'site_index', '网站首页', NULL, 'website', 'radio', 0, '网站设置', '0', '0::商城首页\r\n1::资讯频道\r\n2::专题页', NULL, '此设置用于定制你的网站首页显示的内容，暂时支持商城首页、资讯频道、专题页', 255, 1, NULL, '2018-02-22 16:15:32', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (21, 'sale_level_names', '经营地区行政级别名称', NULL, 'region', 'text', 0, NULL, '省,市,区/县,镇,街道/村', NULL, NULL, '对应经营地区列表1、2、3、4、5个行政级别的名称，数值越小，行政级别越高。行政级别名称间请用英文半角逗号“,”分割，提交后生效见效果', 255, 1, NULL, '2018-03-18 21:58:52', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (22, 'region_start', '经营地区最高级别', NULL, 'region', 'select', 0, NULL, '1', '1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制系统中经营地区选择的最高行政级别', 255, 1, NULL, '2018-03-18 22:00:56', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (23, 'region_end', '经营地区最低级别', NULL, 'region', 'select', 0, NULL, '3', '1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制系统中经营地区选择的最低行政级别', 255, 1, NULL, '2018-03-18 22:02:09', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (24, 'level_names', '行政地区行政级别名称', NULL, 'region', 'text', 0, NULL, '省,市,区/县,镇,街道/村', NULL, NULL, '对应行政地区列表1、2、3、4、5个行政级别的名称，数值越小，行政级别越高。行政级别名称间请用英文半角逗号“,”分割，提交后生效见效果', 255, 1, NULL, '2018-03-18 22:03:17', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (25, 'region_min_level', '行政地区最低级别', NULL, 'region', 'select', 0, NULL, '5', '1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制系统中非经营地区选择的最低行政级别', 255, 1, NULL, '2018-03-18 22:04:17', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (26, 'user_address_level', '会员收货地址地区选择的最低级别', NULL, 'region', 'select', 0, NULL, '3', '0:最后一级\r\n1:省\r\n2:市\r\n3:区/县\r\n4:镇\r\n5:街道/村', NULL, '控制会员添加/编译收货地址时选择地区的最低级别，此设置请勿小于“行政地区最低级别”', 255, 1, NULL, '2018-03-18 22:05:48', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (27, 'region_short_name', '地区名称是否使用简写', NULL, 'region', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '选择是则地区选择控件将显示地区的简写，例如：内蒙古自治区将显示内蒙古', 255, 1, NULL, '2018-03-18 22:11:56', '2018-05-29 12:56:52');
+INSERT INTO `system_config_copy` VALUES (28, 'default_goods_image', '默认商品图片', NULL, 'default_image', 'imagegroup', 1, NULL, '/site/1/images/2018/07/15/15316375751761.gif', NULL, NULL, '应用于卖家发布商品时，展示的商品图片初始图，最佳显示尺寸为300*300像素', 255, 1, NULL, '2018-04-01 15:13:55', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (29, 'default_shop_logo', '默认店铺Logo', NULL, 'default_image', 'imagegroup', 1, NULL, '/site/1/images/2018/07/15/15316680507825.gif', NULL, NULL, '商家入驻后，默认展示的店铺logo，最佳显示尺寸为120*60像素', 255, 1, NULL, '2018-04-01 15:15:54', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (30, 'default_shop_image', '默认店铺头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295955731722.gif', NULL, NULL, '商家入驻后，默认展示的店铺头像，最佳显示尺寸为120*120像素', 255, 1, NULL, '2018-04-01 15:16:59', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (31, 'default_user_portrait', '默认用户头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/03/15280050844047.png', NULL, NULL, '会员注册后，默认展示的用户头像，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-01 15:17:37', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (32, 'default_micro_shop_image', '默认微店头像', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295957187340.jpg', NULL, NULL, '会员成为分销商后，微小店展示的默认头像，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-01 15:20:15', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (33, 'default_article_cat_image', '默认文章分类图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/10/15338637696739.png', NULL, NULL, '图片请使用100 * 100像素jpg、gif、png格式的图片，并且图片大小不得超过2M，此图片将在文章咨询频道下的文章列表中展示，展示位置在文章分类名称前', 255, 1, NULL, '2018-04-01 15:20:44', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (34, 'default_lazyload', 'PC端默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/29/15355368456667.png', NULL, NULL, '前台页面访问时，广告或商品图片未展示出来时，默认展示的图片，最佳显示尺寸140*30像素png格式的图片', 255, 1, NULL, '2018-04-01 15:21:21', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (35, 'default_lazyload_mobile', '手机端默认缓载图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/29/15355370596900.png', NULL, NULL, '最佳显示尺寸70*70像素png格式的图片', 255, 1, NULL, '2018-04-01 15:21:47', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (36, 'default_noresult', '无记录默认图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/08/15/15343120351536.png', NULL, NULL, '列表页、搜索页等搜索不到任何记录时显示的默认图片', 255, 1, NULL, '2018-04-01 15:22:22', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (37, 'default_video_image', '默认视频封面图', NULL, 'default_image', 'imagegroup', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-01 15:22:50', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (38, 'idcard_demo_image', '实名认证示例图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295957722848.jpg|/site/1/images/2018/06/21/15295958454033.jpg|/site/1/images/2018/06/21/15295958661606.jpg', NULL, '正面照,背面照,手持照', '分别上传身份证正面照、身份证背面照、本人手持身份证正面照，建议上传400*200像素的图片', 255, 1, NULL, '2018-04-01 15:24:50', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (39, 'company_demo_image', '企业认证示例图片', NULL, 'default_image', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295959073083.jpg', NULL, '营业执照', '上传企业法人营业执照示例图，建议上传595*842像素的图片', 255, 1, NULL, '2018-04-01 15:26:16', '2018-08-29 10:04:29');
+INSERT INTO `system_config_copy` VALUES (40, 'image_dir_type', '图片存放方式', NULL, 'image_upload', 'radio', 1, NULL, '3', '3::按照年月日存放（例：/&nbsp;店铺id&nbsp;/&nbsp;年&nbsp;/&nbsp;月&nbsp;/&nbsp;日&nbsp;/&nbsp;图片）', NULL, NULL, 255, 1, NULL, '2018-04-01 17:40:49', '2018-05-30 15:31:54');
+INSERT INTO `system_config_copy` VALUES (41, 'favicon', '网站头像', NULL, 'website', 'imagegroup', 0, '网站设置', '/site/1/images/2018/06/03/15280052637458.png', NULL, NULL, '网站头像将显示在浏览器的选项卡上，请上传“.ico”格式，大小为25*25像素的图片，此图片将被作为部分二维码中心的Logo图片', 255, 1, NULL, '2018-04-02 13:58:42', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (42, 'backend_logo', '后台系统Logo', NULL, 'website', 'imagegroup', 1, '网站设置', '/site/1/2018/06/03/15280049252604.png', NULL, NULL, '用于后台系统登录页面的Logo展示，建议尺寸270*70像素，背景为透明的白色主题图片', 255, 1, NULL, '2018-04-02 14:05:55', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (43, 'site_icp', 'ICP证书号', NULL, 'website', 'text', 0, '网站设置', NULL, NULL, NULL, '用于前台、平台方后台、站点后台、卖家中心页面底部显示ICP备案信息，如果网站已备案，在此输入你的授权码，如果没有请留空', 255, 1, NULL, '2018-04-02 14:09:30', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (44, 'site_copyright', '版权信息', NULL, 'website', 'text', 0, '网站设置', 'Copyright 乐融沃(www.laravelvip.com) 版权所有', NULL, NULL, '用于前台、平台方后台、站点后台、卖家中心页面底部显示版权信息', 255, 1, NULL, '2018-04-02 14:10:29', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (45, 'timezone', '默认时区', NULL, 'website', 'select', 0, '网站设置', '-12', '-12::(GMT -12:00) Eniwetok, Kwajalein\r\n-11::(GMT -11:00) Midway Island, Samoa', NULL, '系统数据库中存储所有时间为格林威治时间，会根据此配置自动转换为本地时间，请根据实际地区选择时区，否则会造成时间错误，请勿随意变更', 255, 1, NULL, '2018-04-02 14:41:20', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (46, 'stats_code', '第三方流量统计代码(PC端)', NULL, 'website', 'textarea', 0, '网站设置', NULL, NULL, NULL, 'PC端前台页面底部可以显示第三方统计', 255, 1, NULL, '2018-04-02 15:07:20', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (47, 'stats_code_wap', '第三方流量统计代码(WAP端)', NULL, 'website', 'textarea', 0, '网站设置', NULL, NULL, NULL, 'WAP端前台页面底部可以显示第三方统计', 255, 1, NULL, '2018-04-02 15:08:01', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (48, 'pc_site_status', 'PC端状态', NULL, 'website', 'radio', 0, 'pc网站状态', '1', '1::开启\r\n0::关闭', NULL, '可以暂时将商城PC端停用，用户无法访问PC端前台页面，不影响管理员后台操作', 255, 1, NULL, '2018-04-02 15:09:59', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (49, 'pc_site_close_image', 'PC端关闭提示图片', NULL, 'website', 'imagegroup', 0, 'pc网站状态', NULL, NULL, NULL, '建议上传白色背景，最佳尺寸为1920*600像素', 255, 1, NULL, '2018-04-02 15:12:29', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (50, 'site_status', '网站状态', NULL, 'website', 'radio', 0, '网站状态', '1', '1::正常\r\n2::升级中\r\n0::暂时关闭', NULL, '可暂时将网站关闭或设为升级中，其他人无法访问，但不影响管理员访问后台', 255, 1, NULL, '2018-04-02 15:14:18', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (51, 'close_comment', '关闭原因', NULL, 'website', 'textarea', 0, '网站状态', '您好，由于网站系统升级，暂时关闭商城，给您带来不便敬请谅解!', NULL, NULL, '当网站处于关闭状态时，关闭原因将显示在前台', 255, 1, NULL, '2018-04-02 15:15:08', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (52, 'upgrade_comment', '升级描述', NULL, 'website', 'textarea', 0, '网站状态', '为了让您更好的使用资源平台，我们正在对平台进行升级。升级期间暂时无法访问。给您带来的不便，敬请谅解。', NULL, NULL, '当网站处于升级状态时，升级提示将显示在前台', 255, 1, NULL, '2018-04-02 15:15:49', '2021-04-07 22:14:39');
+INSERT INTO `system_config_copy` VALUES (53, 'captcha_code', '启用图片验证码', NULL, 'captcha', 'checkbox', 0, '图片验证码', '1,2,3', '1::后台管理员登录\r\n2::前台新用户注册\r\n3::前台用户登录\r\n4::前台动态密码登录', NULL, '商城会员在商城内进行身份验证时，如果验证失败次数超过3次后将强制开启图片验证码，验证成功后将重置验证失败次数', 255, 1, NULL, '2018-04-02 15:36:43', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (54, 'captcha_login_fail', '登录失败时显示图片验证码', NULL, 'captcha', 'switch', 1, '图片验证码', '1', '1::是\r\n0::否', NULL, '选择“是”，将在用户登录失败 3 次后才显示验证码；选择“否”，将始终在登录时显示验证码<br/>\r\n注意：只有在启用了后台管理员登录和前台用户登录时本设置才有效', 255, 1, NULL, '2018-04-02 15:50:02', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (55, 'alioss_enable', '是否开启', NULL, 'alioss', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，用户上传图片时将会自动上传至阿里OSS上进行存储', 255, 1, NULL, '2018-04-02 16:21:53', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (56, 'alioss_bucket_name', 'Bucket名称', NULL, 'alioss', 'text', 0, NULL, 'laravelvip', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:12:59', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (57, 'alioss_access_key_id', 'AccessKeyID', NULL, 'alioss', 'text', 0, NULL, 'xxxxxxxxx', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:13:44', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (58, 'alioss_access_key_secret', 'AccessKeySecret', NULL, 'alioss', 'text', 0, NULL, 'xxxxxxxxxx', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:14:16', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (59, 'alioss_root_path', '图片存储根目录', NULL, 'alioss', 'text', 0, NULL, 'images', NULL, NULL, '系统上传的所有图片均将被存放在此目录下，为空则存放在OSS根目录下，默认为“images”', 255, 1, NULL, '2018-04-05 08:15:06', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (60, 'alioss_domain', '自定义绑定域名', NULL, 'alioss', 'text', 0, NULL, NULL, NULL, NULL, '您可以在阿里OSS控制台对Bucket进行自定义域名绑定，绑定后系统将会根据此域名访问图片，此域名仅用于访问图片，与商城链接无关，如果没有特殊要求请置空', 255, 1, NULL, '2018-04-05 08:16:20', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (61, 'alioss_bucket_region', '所属地区', NULL, 'alioss', 'radio', 0, NULL, '8', '0:: 华东2(上海)\r\n1:: 华北1(青岛)\r\n2:: 华北2(北京)\r\n3:: 华东1(杭州)\r\n4:: 华南1(深圳)\r\n5:: 香港\r\n6:: 亚洲(新加坡)\r\n7:: 美西1(美国硅谷)\r\n8:: 美东1(美国弗吉尼亚)', NULL, '<span class=\"c-red\">建议您开通华北2(北京)地区的bucket，否则使用商城内的采集时您无法将采集的图片存入您的OSS，华北2（北京）的OSS与商城系统相当于内网，内部的图片上传下载不耗费您的流量；</span>&nbsp;OSS所属地区与访问域名对照规则请参考官网“<a class=\"btn-link\" href=\"https://help.aliyun.com/document_detail/31837.html?spm=5176.2020520105.147.4.DnzI5j\" target=\"_blank\" title=\"点击进入官网\">OSS域名访问</a>”', 255, 1, NULL, '2018-04-05 08:22:27', '2018-04-06 17:16:33');
+INSERT INTO `system_config_copy` VALUES (62, 'oss_domain', 'OSS外网域名', NULL, 'alioss', 'static', 0, NULL, 'image.laravelvip.com', NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:36:53', '2018-04-05 08:36:53');
+INSERT INTO `system_config_copy` VALUES (63, 'oss_internal_domain', 'OSS内网域名', NULL, 'alioss', 'static', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-05 08:43:37', '2018-04-05 08:43:37');
+INSERT INTO `system_config_copy` VALUES (64, 'oss_image_domain', '图片服务域名', NULL, 'alioss', 'static', 0, NULL, NULL, NULL, NULL, '系统会自动根据阿里OSS图片服务规则对部分图片进行缩放裁剪处理', 255, 1, NULL, '2018-04-05 08:44:22', '2018-04-05 08:44:22');
+INSERT INTO `system_config_copy` VALUES (65, 'captcha_noise', '图片验证码干扰点', NULL, 'captcha', 'short_text', 0, '图片验证码', '0', NULL, NULL, '默认无', 255, 1, NULL, '2018-04-07 13:02:46', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (66, 'captcha_curve', '图片验证码干扰线', NULL, 'captcha', 'short_text', 0, '图片验证码', '0', NULL, NULL, '默认无', 255, 1, NULL, '2018-04-07 13:05:30', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (67, 'captcha_sms_max', '短信验证码控制', NULL, 'captcha', 'short_text', 0, '短信验证码', '100', NULL, NULL, '今日已发送短信验证码<span class=\"c-red m-l-5 m-r-5\">0</span>条', 255, 1, NULL, '2018-04-07 13:12:51', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (68, 'captcha_sms_mobile_max', '每个手机号码地址短信验证码控制', NULL, 'captcha', 'html', 0, '短信验证码', '5', NULL, NULL, '两次短信验证码发送的时间间隔为60秒', 255, 1, NULL, '2018-04-07 13:17:57', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (69, 'captcha_sms_ip_max', '每个IP地址短信验证码控制', NULL, 'captcha', 'html', 0, '短信验证码', '5', NULL, NULL, '两次短信验证码发送的时间间隔为60秒', 255, 1, NULL, '2018-04-07 13:20:11', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (70, 'captcha_sms_limit', '短信验证码发送频繁限制方式', NULL, 'captcha', 'radio', 0, '短信验证码', '1', '0:: 禁止发送短信验证码\r\n1:: 强制输入图片验证码', NULL, '短信验证码发送过于频繁后系统采取的策略<br><span style=\"color: red;\">用户在禁止发送短信验证码情况下依然请求发送短信验证码的接口也会被强制要求输入图片验证码的</span>', 255, 1, NULL, '2018-04-07 13:22:30', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (71, 'mall_logo', '商城Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/06/03/15280053454152.png', NULL, NULL, '前台除了用户中心，其它页面展示，最佳显示尺寸为240*80像素，建议上传jpg格式图片，如果上传png格式图片，会导致接收邮件中的logo无法正常展示', 255, 1, NULL, '2018-04-08 15:43:33', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (72, 'user_center_logo', '会员中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/11/17/15424425979257.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 15:44:37', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (73, 'seller_center_logo', '卖家中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/07/15/15316457446277.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 15:45:44', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (74, 'store_center_logo', '网点中心Logo', NULL, 'mall', 'imagegroup', 0, '商城Logo', '/site/1/images/2018/11/17/15424423965918.png', NULL, NULL, '最佳显示尺寸为150*40像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-04-08 15:46:35', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (75, 'mall_phone', '平台方客服联系电话', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '卖家中心欢迎页、站点后台欢迎页、商城前台底部显示，方便商家或会员遇到问题及时咨询', 255, 1, NULL, '2018-04-08 15:47:21', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (76, 'mall_email', '平台方客服电子邮件', NULL, 'mall', 'text', 0, '商城信息', '410284576@qq.com', NULL, NULL, '卖家中心欢迎页、站点后台欢迎页、商城前台底部显示，方便商家或会员遇到问题及时咨询', 255, 1, NULL, '2018-04-08 15:48:07', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (77, 'mall_qq', 'QQ客服', NULL, 'mall', 'text', 0, '商城信息', '410284576', NULL, NULL, '商城前台右侧侧边栏处展示', 255, 1, NULL, '2018-04-08 15:48:54', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (78, 'mall_wangwang', '旺旺客服', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '商城前台右侧侧边栏处展示', 255, 1, NULL, '2018-04-08 15:50:09', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (79, 'mall_region_code', '所在地区', NULL, 'mall', 'region', 1, '商城信息', '50,01,01', NULL, NULL, '商城的所在位置，如果商城定位不到用户所在地区，则会使用此位置信息', 255, 1, NULL, '2018-04-08 15:51:09', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (80, 'mall_address', '详细地址', NULL, 'mall', 'text', 0, '商城信息', NULL, NULL, NULL, '用于备注商城所在地的详细地址', 255, 1, NULL, '2018-04-08 15:52:05', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (81, 'mall_wx_qrcode', '商城微信二维码', NULL, 'mall', 'imagegroup', 0, '商城信息', '/site/1/images/2018/06/03/15280054684937.png', NULL, NULL, '商城微信公众号二维码，显示在商城前台右侧侧边栏，最佳尺寸为130*130像素', 255, 1, NULL, '2018-04-08 15:53:07', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (82, 'user_protocol', '会员注册协议', NULL, 'mall', 'kindeditor', 0, '商城协议', '<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">使用本公司服务所须遵守的条款和条件。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">1.用户资格</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本公司的服务仅向适用法律下能够签订具有法律约束力的 合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的 服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">2.您的资料（包括但不限于所添加的任何商品）不得：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*具有欺诈性、虚假、不准确或具误导性；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有侮辱或者诽谤他人，侵害他人合法权益的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">3.违约</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(a)您违反本协议或纳入本协议的文件；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(b)本公司无法核证或验证您向本公司提供的任何资料；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">4.责任限制</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本 公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接 或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关 实体对本公司用户的行为的合法性及产生的任何结果不承担责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">5.无代理关系</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">6.一般规定</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。</span>', NULL, NULL, '会员注册时需要遵守的注册协议', 255, 1, NULL, '2018-04-08 15:55:31', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (83, 'seller_protocol', '商家入驻协议', NULL, 'mall', 'kindeditor', 0, '商城协议', '<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">使用本公司服务所须遵守的条款和条件。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">1.用户资格</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本公司的服务仅向适用法律下能够签订具有法律约束力的 合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的 服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">2.您的资料（包括但不限于所添加的任何商品）不得：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*具有欺诈性、虚假、不准确或具误导性；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有侮辱或者诽谤他人，侵害他人合法权益的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">3.违约</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(a)您违反本协议或纳入本协议的文件；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(b)本公司无法核证或验证您向本公司提供的任何资料；</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">4.责任限制</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本 公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接 或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关 实体对本公司用户的行为的合法性及产生的任何结果不承担责任。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">5.无代理关系</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。</span><br />\r\n<br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">6.一般规定</span><br />\r\n<span microsoft=\"\" yahei\";font-size:12px;font-style:normal;font-weight:normal;line-height:18px;background-color:#ffffff;\"=\"\" style=\"white-space: normal; color: rgb(102, 102, 102);\">本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。</span>', NULL, NULL, '商家入驻时需要遵守的入驻协议', 255, 1, NULL, '2018-04-08 15:56:38', '2018-12-22 13:04:44');
+INSERT INTO `system_config_copy` VALUES (84, 'amap_web_key', 'Web服务的Key', NULL, 'amap', 'text', 0, '高德地图', '02612214132beb857010dfca88857d17', NULL, NULL, '用于系统在服务器端调用高德地图相关服务接口，请登录<a class=\"btn-link\" target=\"_blank\" href=\"http://lbs.amap.com/dev/key\">高德地图开放平台控制台</a>&gt;我的应用创建应用，并添加“Web服务”的key', 255, 1, NULL, '2018-04-13 02:26:00', '2018-04-13 02:27:09');
+INSERT INTO `system_config_copy` VALUES (85, 'amap_js_key', 'Web端的Key', NULL, 'amap', 'text', 0, '高德地图', '895b322343baec17c8289ae02c113e6f', NULL, NULL, '用于系统在客户端浏览器中通过JS调用高德地图相关服务接口，请登录<a class=\"btn-link\" target=\"_blank\" href=\"http://lbs.amap.com/dev/key\">高德地图开放平台控制台</a>&gt;我的应用创建应用，并添加“Web端”的key', 255, 1, NULL, '2018-04-13 02:26:39', '2018-04-13 02:27:10');
+INSERT INTO `system_config_copy` VALUES (86, 'bmap_js_key', '百度地图的ak', NULL, 'amap', 'text', 0, '百度地图', 'ThZPomUj8vmkMa9LAxzGYSa1BlLfWGbU', NULL, NULL, '用于系统在服务器端调用百度地图相关服务接口', 255, 1, NULL, '2018-04-13 02:26:39', '2018-04-13 02:26:39');
+INSERT INTO `system_config_copy` VALUES (87, 'is_show_site_nav_category', '是否显示分类导航', NULL, 'nav_category_site', 'switch', 0, NULL, '1', '1::开\r\n0::关', NULL, '控制显示或隐藏分类导航', 255, 1, NULL, '2018-04-15 06:34:31', '2018-08-08 15:03:49');
+INSERT INTO `system_config_copy` VALUES (88, 'site_nav_category_style', '导航样式', NULL, 'nav_category_site', 'radio', 0, NULL, '0', '0::默认样式\r\n1::经典样式', NULL, '您可以选择分类导航的样式', 255, 1, NULL, '2018-04-15 06:35:51', '2018-08-08 15:03:49');
+INSERT INTO `system_config_copy` VALUES (89, 'login_bg_image', '登录页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '前台登录、注册页面设置', '/site/1/images/2018/08/02/15332182498062.jpg', NULL, NULL, '用于替换登录页面的主题图片，最佳显示尺寸1920*535像素', 255, 1, NULL, '2018-04-16 14:35:57', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (90, 'login_bg_url', '登录页面主题图片链接', NULL, 'login_bg', 'text', 0, '前台登录、注册页面设置', NULL, NULL, NULL, '设置后前台登录页面背景图将可以点击并跳转此链接页面，为空则不能点击；<br>如访问网站内的链接请直接输入商城域名后的链接内容即可，以\"/\"开头<br>例：想跳转至商城首页，无需输入\"http://www.XXX.com/index.html\"，只需输入“/index.html”', 255, 1, NULL, '2018-04-16 14:37:01', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (91, 'register_bg_image', '注册页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '前台登录、注册页面设置', '/site/1/images/2018/08/02/15332179867040.jpg', NULL, NULL, '用于替换注册页面的主题图片，最佳显示尺寸420*220像素', 255, 1, NULL, '2018-04-16 14:37:40', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (92, 'admin_login_bg_mode', '后台登录页面主题图片风格', NULL, 'login_bg', 'radio', 0, '后台登录页面设置', '1', '0::系统默认\r\n1::自定义', NULL, '选择“自定义”后“后台登录页面主题图片”将起作用', 255, 1, NULL, '2018-04-16 14:39:25', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (93, 'admin_login_bg_image', '后台登录页面主题图片', NULL, 'login_bg', 'imagegroup', 0, '后台登录页面设置', '||||', NULL, ',,,,', '用于替换后台登录页面的主题图片，最多支持上传5张图片，建议图片尺寸为1920*1080像素\r\n仅在开启“后台登录页面主题图片风格”为“自定义”模式下起作用', 255, 1, NULL, '2018-04-16 14:42:47', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (94, 'loading_style', '缓载样式', NULL, 'login_bg', 'radio', 0, '系统加载动画效果设置', '0', '0::系统默认\r\n1::极简风格', NULL, '定义系统中的加载动画效果，极简风格中间的图片将会自动调用你设置的网站头像图片', 255, 1, NULL, '2018-04-16 14:44:32', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (95, 'loading_color', '缓载颜色', NULL, 'login_bg', 'colorpicker', 0, '系统加载动画效果设置', '#ffffff', NULL, NULL, '仅当缓载样式为“极简风格”时起作用，设置加载动画的颜色，建议与您的网站头像颜色保持一致', 255, 1, NULL, '2018-04-16 14:47:55', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (96, 'cart_loading_image', '购物车缓载和提交结算缓载图片', NULL, 'login_bg', 'imagegroup', 0, '系统加载动画效果设置', NULL, NULL, NULL, '控制购物清单为空时的默认图片和提交订单结算时的缓载页面中的图片，最佳显示尺寸200*150像素，建议为gif动态图片<br><span class=\"c-red\"><strong>此设置仅在商城开启整站改色后才起作用！</strong><br>变更后请重新生成商城首页并清理公共缓存和浏览器缓存</span>', 255, 1, NULL, '2018-04-16 14:49:30', '2018-08-02 14:04:35');
+INSERT INTO `system_config_copy` VALUES (97, 'mall_top_ad_image', '商城顶部广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, NULL, NULL, NULL, '用于替换商城顶部广告图片，最佳显示尺寸宽度1210像素，高度不限（建议80像素）', 255, 1, NULL, '2018-04-16 15:00:06', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (98, 'mall_top_ad_bg_color', '商城顶部广告图背景色', NULL, 'mall_top_ad', 'colorpicker', 0, NULL, '#e2283d', NULL, NULL, '由于用户的浏览器或者分辨率可能会超出你图片的宽度，所以建议设置背景色为您广告图两边的颜色，以保证您商城的美观性', 255, 1, NULL, '2018-04-16 15:00:50', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (99, 'mall_top_ad_url', '商城顶部广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 15:01:27', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (100, 'mall_logo_right_ad_image', '商城搜索框左侧广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, '/site/1/images/2018/08/15/15343433458679.jpg', NULL, NULL, '用于替换商城搜索框左侧广告图片，最佳显示尺寸170*90像素', 255, 1, NULL, '2018-04-16 15:02:05', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (101, 'mall_logo_right_ad_url', '商城搜索框左侧广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 15:02:36', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (102, 'mall_search_right_ad_image', '商城搜索框右侧广告图', NULL, 'mall_top_ad', 'imagegroup', 0, NULL, '/site/1/images/2018/08/15/15343433625642.png', NULL, NULL, '用于替换商城搜索框右侧广告图片，最佳显示尺寸180*90像素', 255, 1, NULL, '2018-04-16 15:03:10', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (103, 'mall_search_right_ad_url', '商城搜索框右侧广告图链接', NULL, 'mall_top_ad', 'text', 0, NULL, NULL, NULL, NULL, '设置后可以点击打开此链接页面，为空则不能点击；\r\n如果访问网站内的链接请以“/”开头，无需输入“http://”', 255, 1, NULL, '2018-04-16 15:03:45', '2018-08-15 14:29:33');
+INSERT INTO `system_config_copy` VALUES (104, 'mall_service', '商城底部广告', NULL, 'mall_bottom_ad', 'kindeditor', 0, NULL, NULL, NULL, NULL, '商城首页、商品列表页、商品详情页、团购页、店铺街、店铺搜索结果页、店铺首页、店铺商品列表页底部展示，整行建议尺寸为1210*90像素', 255, 1, NULL, '2018-04-16 15:10:48', '2018-04-16 15:10:48');
+INSERT INTO `system_config_copy` VALUES (105, 'mall_service_right', '商城底部右侧广告', NULL, 'mall_bottom_ad', 'kindeditor', 0, NULL, NULL, NULL, NULL, '商城底部帮助文章右侧广告，整行图片尺寸建议为122*150像素', 255, 1, NULL, '2018-04-16 15:11:26', '2018-04-16 15:11:26');
+INSERT INTO `system_config_copy` VALUES (106, 'shop_apply_ad_image', '入驻广告图', NULL, 'register_bg', 'imagegroup', 0, NULL, NULL, NULL, NULL, '前台店铺入驻成功提交页面显示，最佳显示尺寸790*70像素', 255, 1, NULL, '2018-04-16 15:12:10', '2018-06-03 06:08:59');
+INSERT INTO `system_config_copy` VALUES (107, 'shop_apply_ad_url', '入驻广告图片链接', NULL, 'register_bg', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-04-16 15:13:03', '2018-06-03 06:08:59');
+INSERT INTO `system_config_copy` VALUES (108, 'seo_index_title', 'title', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 02:18:48', '2018-08-16 06:40:56');
+INSERT INTO `system_config_copy` VALUES (109, 'seo_index_keywords', 'keywords', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 02:19:42', '2018-08-16 06:40:56');
+INSERT INTO `system_config_copy` VALUES (110, 'seo_index_discription', 'description', NULL, 'seo_index', 'text', 0, NULL, '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-04-22 02:20:20', '2018-08-16 06:40:56');
+INSERT INTO `system_config_copy` VALUES (111, 'seo_index_image', '分享推广图', NULL, 'seo_index', 'imagegroup', 0, NULL, '/site/1/images/2018/08/16/15344016464656.jpg', NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-04-22 02:21:27', '2018-08-16 06:40:56');
+INSERT INTO `system_config_copy` VALUES (112, 'captcha_sms_mobile_time', '短信验证码发送间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:02:13', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (113, 'captcha_sms_mobile_interval', '限制发送短信恢复正常间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:06:04', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (114, 'captcha_sms_ip_time', '每个IP地址短信验证码限制时间', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:07:51', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (115, 'captcha_sms_ip_interval', '限制ip短信发送恢复间隔', NULL, 'captcha', 'short_text', 0, '短信验证码', '30', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 12:08:57', '2018-05-29 14:56:53');
+INSERT INTO `system_config_copy` VALUES (116, 'mail_service', '邮件服务', NULL, 'smtp', 'radio', 1, NULL, '1', '1::采用其他的 SMTP 服务', NULL, NULL, 255, 1, NULL, '2018-05-29 13:11:10', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (117, 'smtp_ssl', '邮件服务器是否要求加密连接(SSL)', NULL, 'smtp', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-05-29 13:12:09', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (118, 'smtp_host', '发送邮件服务器地址(SMTP)', NULL, 'smtp', 'text', 1, NULL, 'smtp.qq.com', NULL, NULL, '邮件服务器主机地址', 255, 1, NULL, '2018-05-29 13:13:30', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (119, 'smtp_port', '服务器端口', NULL, 'smtp', 'text', 1, NULL, '587', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 13:14:01', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (120, 'smtp_user', '邮件发送账号', NULL, 'smtp', 'text', 1, NULL, '123@qq.com', NULL, NULL, '发送邮件所需的认证帐号', 255, 1, NULL, '2018-05-29 13:14:53', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (121, 'smtp_pass', '帐号密码', NULL, 'smtp', 'password', 1, NULL, '123456', NULL, NULL, '如果是QQ邮箱，账号密码为邮箱发送账号的授权码', 255, 1, NULL, '2018-05-29 13:15:46', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (122, 'smtp_mail', '邮件回复地址', NULL, 'smtp', 'text', 1, NULL, '123@qq.com', NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 13:16:23', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (123, 'mail_charset', '邮件编码', NULL, 'smtp', 'select', 1, NULL, 'utf-8', 'utf-8::国际化编码（utf-8）', NULL, NULL, 255, 1, NULL, '2018-05-29 13:17:27', '2021-04-07 22:16:08');
+INSERT INTO `system_config_copy` VALUES (124, 'sms_sign_name', '短信签名', NULL, 'sms', 'text', 1, NULL, 'lrw', NULL, NULL, '短信签名请勿随意修改，否则会导致短信发送失败<br>建议使用公司或产品名称，不能包含违禁词汇与其他特殊符号<br>单个签名长度介于2到8个字符之间<br>可以包含汉字、数字、英文，不能为纯数字、纯英文、数字英文组合<br>无需添加【】、()、[]符号，短信发送会自带【】、()、[]符号，避免重复', 255, 1, NULL, '2018-05-29 13:44:08', '2021-04-07 22:16:47');
+INSERT INTO `system_config_copy` VALUES (125, 'sms_api', '短信接口服务', NULL, 'sms', 'radio', 1, NULL, 'aliyunsms', 'aliyunsms::阿里云短信\r\naliyusms::阿里大于短信\r\nyunsms::云短信网（不推荐使用）', NULL, '请选择系统短信服务的运营商，选择后请进行相关接口参数的配置', 255, 1, NULL, '2018-05-29 13:46:59', '2021-04-07 22:16:47');
+INSERT INTO `system_config_copy` VALUES (126, 'aliyunsms_app_key', 'Access Key ID', NULL, 'aliyunsms', 'text', 1, NULL, 'aaa', NULL, NULL, 'TOP分配给应用的Access Key ID', 255, 1, NULL, '2018-05-29 13:56:14', '2021-04-07 22:16:23');
+INSERT INTO `system_config_copy` VALUES (127, 'aliyunsms_app_secret', 'Access Key Secret', NULL, 'aliyunsms', 'password', 1, NULL, 'aaaa', NULL, NULL, '短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 13:57:04', '2021-04-07 22:16:23');
+INSERT INTO `system_config_copy` VALUES (128, 'aliyunsms_api_type', '接口版本类型', NULL, 'aliyunsms', 'radio', 1, NULL, '0', '0::老版本\r\n1::新版本', NULL, '老版本消息模板中支持带下划线的变量，新版本消息模板中不支持下划线的变量，请选择您对应的版本<br>\r\n如果您是从2017年11月中旬开始使用阿里云短信，建议选择新版', 255, 1, NULL, '2018-05-29 13:58:14', '2021-04-07 22:16:23');
+INSERT INTO `system_config_copy` VALUES (129, 'aliyusms_app_key', 'App Key', NULL, 'aliyusms', 'text', 1, NULL, NULL, NULL, NULL, 'TOP分配给应用的AppKey', 255, 1, NULL, '2018-05-29 14:02:23', '2018-05-29 14:02:23');
+INSERT INTO `system_config_copy` VALUES (130, 'aliyusms_app_secret', 'App Secret', NULL, 'aliyusms', 'password', 1, NULL, NULL, NULL, NULL, '短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 14:03:02', '2018-05-29 14:03:02');
+INSERT INTO `system_config_copy` VALUES (131, 'yunsms_accounts', '云短信服务帐号', NULL, 'yunsms', 'text', 1, NULL, NULL, NULL, NULL, '云短信服务商提供的供系统发送短信所需要的账号', 255, 1, NULL, '2018-05-29 14:05:12', '2018-05-29 14:05:12');
+INSERT INTO `system_config_copy` VALUES (132, 'yunsms_password', '云短信服务密码', NULL, 'yunsms', 'password', 1, NULL, NULL, NULL, NULL, '云短信服务商提供的供系统发送短信所需要的密码', 255, 1, NULL, '2018-05-29 14:05:44', '2018-05-29 14:05:44');
+INSERT INTO `system_config_copy` VALUES (133, 'yunsms_phones', '平台手机号码', NULL, 'yunsms', 'text', 1, NULL, NULL, NULL, NULL, '请先注册手机短信服务再填写手机号码', 255, 1, NULL, '2018-05-29 14:06:25', '2018-05-29 14:06:25');
+INSERT INTO `system_config_copy` VALUES (134, 'aliim_enable', '是否启用', NULL, 'aliim', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '开启后在线客服将可用', 255, 1, NULL, '2018-05-29 14:09:36', '2018-05-29 14:09:36');
+INSERT INTO `system_config_copy` VALUES (135, 'aliim_app_key', '阿里云旺AppKey', NULL, 'aliim', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 14:10:10', '2018-05-29 14:10:10');
+INSERT INTO `system_config_copy` VALUES (136, 'aliim_secret_key', '阿里云旺AppSecrect', NULL, 'aliim', 'password', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-05-29 14:10:49', '2018-05-29 14:10:49');
+INSERT INTO `system_config_copy` VALUES (137, 'aliim_main_customer', '在线主客服账户', NULL, 'aliim', 'text', 1, NULL, NULL, NULL, NULL, '设置在阿里淘宝开放平台已开通云旺客服的帐号，填写的账号必须与淘宝开放平台中的云旺账号一致，否则无法接收消息', 255, 1, NULL, '2018-05-29 14:11:26', '2018-05-29 14:11:26');
+INSERT INTO `system_config_copy` VALUES (138, 'aliim_customer_logo', '在线客服头像Logo', NULL, 'aliim', 'imagegroup', 0, NULL, NULL, NULL, NULL, '头像请上传148px * 135px像素的图片，不上传则使用默认头像', 255, 1, NULL, '2018-05-29 14:12:16', '2018-05-29 14:12:16');
+INSERT INTO `system_config_copy` VALUES (139, 'open_qq_login', '是否开启QQ登录', NULL, 'website_login', 'switch', 1, NULL, '0', '1::是\r\n0::否', NULL, '在实际运营当中，QQ第三方登录使用率非常低，不建议开启使用。', 255, 1, NULL, '2018-05-29 14:15:51', '2018-05-29 14:22:53');
+INSERT INTO `system_config_copy` VALUES (140, 'open_weibo_login', '是否开启微博登录', NULL, 'website_login', 'switch', 1, NULL, '0', '1::是\r\n0::否', NULL, '在实际运营当中，微博第三方登录使用率非常低，不建议开启使用。', 255, 1, NULL, '2018-05-29 14:16:46', '2018-05-29 14:22:53');
+INSERT INTO `system_config_copy` VALUES (141, 'open_weixin_login', '是否开启微信登录', NULL, 'website_login', 'switch', 1, NULL, '1', '1::是\r\n0::否', NULL, '在实际运营当中，微信第三方登录使用率非常高，使用者非常广泛，建议开启使用。', 255, 1, NULL, '2018-05-29 14:17:27', '2018-05-29 14:22:53');
+INSERT INTO `system_config_copy` VALUES (142, 'website_login_code', '第三方登录验证代码', NULL, 'website_login', 'text', 0, NULL, NULL, NULL, NULL, '当您申请第三方登录时，网站会要求您复制一段代码粘贴到您网站首页或一级目录下HTML代码的head标签中，以验证您是本网站的站长或者管理员，请您将其粘帖至此然后清理首页缓存，此代码会自动出现在网站首页中，然后您即可在对应网站上进行验证', 255, 1, NULL, '2018-05-29 14:18:23', '2018-05-29 14:22:53');
+INSERT INTO `system_config_copy` VALUES (143, 'seo_group_buy_index_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购首页-{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:36:55', '2018-08-14 14:52:55');
+INSERT INTO `system_config_copy` VALUES (144, 'seo_group_buy_index_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购,拼团,{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:37:41', '2018-08-14 14:52:55');
+INSERT INTO `system_config_copy` VALUES (145, 'seo_group_buy_index_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购首页', '团购模式,{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:38:01', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (146, 'seo_group_buy_index_image', '团购分享推广图', NULL, 'seo_group_buy', 'imagegroup', 0, '团购首页', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 13:38:53', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (147, 'seo_group_buy_list_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:39:38', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (148, 'seo_group_buy_list_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：【{name}】-{site_name}', 255, 1, NULL, '2018-05-30 13:40:17', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (149, 'seo_group_buy_list_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购列表', NULL, NULL, NULL, '默认：【{name}】-{site_name}', 255, 1, NULL, '2018-05-30 13:41:04', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (150, 'seo_group_buy_info_title', 'title', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:41:51', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (151, 'seo_group_buy_info_keywords', 'keywords', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:42:30', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (152, 'seo_group_buy_info_discription', 'description', NULL, 'seo_group_buy', 'text', 0, '团购详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 13:43:06', '2018-08-14 14:52:56');
+INSERT INTO `system_config_copy` VALUES (153, 'seo_groupon_title', 'title', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:44:47', '2018-05-30 13:44:47');
+INSERT INTO `system_config_copy` VALUES (154, 'seo_groupon_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:45:35', '2018-05-30 13:45:35');
+INSERT INTO `system_config_copy` VALUES (155, 'seo_groupon_discription', 'description', NULL, 'seo_groupon', 'text', 0, '拼团列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:46:08', '2018-05-30 13:46:08');
+INSERT INTO `system_config_copy` VALUES (156, 'seo_groupon_image', '分享推广图', NULL, 'seo_groupon', 'imagegroup', 0, '拼团列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 13:46:52', '2018-05-30 13:46:52');
+INSERT INTO `system_config_copy` VALUES (157, 'seo_groupon_info_title', 'title', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：{groupon_num},{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:47:31', '2018-05-30 13:47:31');
+INSERT INTO `system_config_copy` VALUES (158, 'seo_groupon_info_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:48:06', '2018-05-30 13:48:06');
+INSERT INTO `system_config_copy` VALUES (159, 'seo_groupon_info_discription', 'description', NULL, 'seo_groupon', 'text', 0, '参团详情', NULL, NULL, NULL, '默认：【{name}】{discription}-{site_name}', 255, 1, NULL, '2018-05-30 13:48:46', '2018-05-30 13:48:46');
+INSERT INTO `system_config_copy` VALUES (160, 'seo_groupon_goods_info_title', 'title', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:49:23', '2018-05-30 13:49:23');
+INSERT INTO `system_config_copy` VALUES (161, 'seo_groupon_goods_info_keywords', 'keywords', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:50:05', '2018-05-30 13:50:05');
+INSERT INTO `system_config_copy` VALUES (162, 'seo_groupon_goods_info_discription', 'description', NULL, 'seo_groupon', 'text', 0, '拼团详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 13:50:41', '2018-05-30 13:50:41');
+INSERT INTO `system_config_copy` VALUES (163, 'seo_bargain_title', 'title', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:51:49', '2018-05-30 13:51:49');
+INSERT INTO `system_config_copy` VALUES (164, 'seo_bargain_keywords', 'keywords', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:52:23', '2018-05-30 13:52:23');
+INSERT INTO `system_config_copy` VALUES (165, 'seo_bargain_discription', 'description', NULL, 'seo_bargain', 'text', 0, '砍价列表', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:52:55', '2018-05-30 13:52:55');
+INSERT INTO `system_config_copy` VALUES (166, 'seo_bargain_image', '分享推广图', NULL, 'seo_bargain', 'imagegroup', 0, '砍价列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 13:53:35', '2018-05-30 13:53:35');
+INSERT INTO `system_config_copy` VALUES (167, 'seo_bargain_info_title', 'title', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 13:56:38', '2018-05-30 13:56:38');
+INSERT INTO `system_config_copy` VALUES (168, 'seo_bargain_info_keywords', 'keywords', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:57:07', '2018-05-30 13:58:21');
+INSERT INTO `system_config_copy` VALUES (169, 'seo_bargain_info_discription', 'description', NULL, 'seo_bargain', 'text', 0, '砍价详情', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 13:57:49', '2018-05-30 13:57:49');
+INSERT INTO `system_config_copy` VALUES (170, 'seo_brand_list_title', 'title', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 13:59:14', '2018-05-30 13:59:14');
+INSERT INTO `system_config_copy` VALUES (171, 'seo_brand_list_keywords', 'keywords', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 13:59:48', '2018-05-30 13:59:48');
+INSERT INTO `system_config_copy` VALUES (172, 'seo_brand_list_discription', 'description', NULL, 'seo_brand', 'text', 0, '品牌列表', NULL, NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:00:27', '2018-05-30 14:00:27');
+INSERT INTO `system_config_copy` VALUES (173, 'seo_brand_list_image', '分享推广图', NULL, 'seo_brand', 'imagegroup', 0, '品牌列表', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 14:01:34', '2018-05-30 14:01:34');
+INSERT INTO `system_config_copy` VALUES (174, 'seo_article_list_title', 'title', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:02:45', '2018-08-14 15:16:20');
+INSERT INTO `system_config_copy` VALUES (175, 'seo_article_list_keywords', 'keywords', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:03:13', '2018-08-14 15:16:20');
+INSERT INTO `system_config_copy` VALUES (176, 'seo_article_list_discription', 'description', NULL, 'seo_article', 'text', 0, '文章列表', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:03:58', '2018-08-14 15:16:20');
+INSERT INTO `system_config_copy` VALUES (177, 'seo_article_info_title', 'title', NULL, 'seo_article', 'text', 0, '文章详情', '{name}-{site_name}', NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 14:04:33', '2018-08-14 15:16:20');
+INSERT INTO `system_config_copy` VALUES (178, 'seo_article_info_keywords', 'keywords', NULL, 'seo_article', 'text', 0, '文章详情', '【{name}】{keywords}-{site_name}', NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 14:05:03', '2018-08-14 15:16:20');
+INSERT INTO `system_config_copy` VALUES (179, 'seo_article_info_discription', 'description', NULL, 'seo_article', 'text', 0, '文章详情', '{name}-{description}-{site_name}', NULL, NULL, '默认：{name}-{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:05:38', '2018-08-14 15:16:20');
+INSERT INTO `system_config_copy` VALUES (180, 'seo_goods_title', 'title', NULL, 'seo_goods', 'text', 1, NULL, '{name}-{site_name}', NULL, NULL, '{name}-{site_name}', 255, 1, NULL, '2018-05-30 14:06:56', '2018-08-14 15:06:34');
+INSERT INTO `system_config_copy` VALUES (181, 'seo_goods_keywords', 'keywords', NULL, 'seo_goods', 'text', 1, NULL, '【{name}】{keywords}-{site_name}', NULL, NULL, '【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 14:07:37', '2018-08-14 15:06:34');
+INSERT INTO `system_config_copy` VALUES (182, 'seo_goods_discription', 'description', NULL, 'seo_goods', 'text', 1, NULL, '【{name}】{description}-{site_name}', NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:08:06', '2018-08-14 15:06:34');
+INSERT INTO `system_config_copy` VALUES (183, 'seo_shop_title', 'title', NULL, 'seo_shop', 'text', 0, '店铺', '{name}-{site_name}', NULL, NULL, '默认：{name}-{site_name}', 255, 1, NULL, '2018-05-30 14:09:04', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (184, 'seo_shop_keywords', 'keywords', NULL, 'seo_shop', 'text', 0, '店铺', '【{name}】{keywords}-{site_name}', NULL, NULL, '默认：【{name}】{keywords}-{site_name}', 255, 1, NULL, '2018-05-30 14:09:36', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (185, 'seo_shop_discription', 'description', NULL, 'seo_shop', 'text', 0, '店铺', '【{name}】{description}-{site_name}', NULL, NULL, '默认：【{name}】{description}-{site_name}', 255, 1, NULL, '2018-05-30 14:10:11', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (186, 'seo_shop_street_title', 'title', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:10:51', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (187, 'seo_shop_street_keywords', 'keywords', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:11:25', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (188, 'seo_shop_street_discription', 'description', NULL, 'seo_shop', 'text', 0, '店铺街', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:11:56', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (189, 'seo_shop_street_image', '店铺街分享推广图', NULL, 'seo_shop', 'imagegroup', 0, '店铺街', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 14:12:43', '2018-08-14 15:15:34');
+INSERT INTO `system_config_copy` VALUES (190, 'seo_news_title', 'title', NULL, 'seo_news', 'text', 0, '资讯频道首页', '资讯首页 - {site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:13:39', '2018-08-14 15:25:21');
+INSERT INTO `system_config_copy` VALUES (191, 'seo_news_keywords', 'keywords', NULL, 'seo_news', 'text', 0, '资讯频道首页', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:14:10', '2018-08-14 15:25:21');
+INSERT INTO `system_config_copy` VALUES (192, 'seo_news_discription', 'description', NULL, 'seo_news', 'text', 0, '资讯频道首页', '{site_name}', NULL, NULL, '默认：{site_name}', 255, 1, NULL, '2018-05-30 14:14:46', '2018-08-14 15:25:21');
+INSERT INTO `system_config_copy` VALUES (193, 'seo_news_image', '分享推广图', NULL, 'seo_news', 'imagegroup', 0, '资讯频道首页', NULL, NULL, NULL, '此推广图应用于分享功能处显示，建议上传正方形图片，最佳显示尺寸为80*80像素', 255, 1, NULL, '2018-05-30 14:15:30', '2018-08-14 15:25:21');
+INSERT INTO `system_config_copy` VALUES (194, 'image_max_filesize', '图片/附件大小', NULL, 'image_upload', 'short_text', 1, NULL, '2048', NULL, NULL, '当前服务器环境，最大允许上传 4MB的文件，您的设置请勿超过该值，默认最大可上传2MB', 255, 1, NULL, '2018-05-30 15:30:35', '2018-05-30 15:31:54');
+INSERT INTO `system_config_copy` VALUES (195, 'video_max_filesize', '视频大小', NULL, 'image_upload', 'short_text', 1, NULL, '2048', NULL, NULL, '当前服务器环境，最大允许上传4MB的文件，您的设置请勿超过该值，默认最大可上传2MB', 255, 1, NULL, '2018-05-30 15:31:09', '2018-05-30 15:31:54');
+INSERT INTO `system_config_copy` VALUES (196, 'cash_logo', '收银狗Logo', NULL, 'cash', 'imagegroup', 0, NULL, NULL, NULL, NULL, '收银狗Logo，将显示在收银台页面上，建议尺寸为170*46像素、格式为png的图片，大小不超过5.5kb', 255, 1, NULL, '2018-05-30 15:36:23', '2018-05-30 15:36:37');
+INSERT INTO `system_config_copy` VALUES (197, 'custom_style_enable_m_site', '是否开启自定义改色', NULL, 'mobile_site_style', 'switch', 0, NULL, '0', '1::是\r\n0::否', NULL, '是否开启自定义改色', 255, 1, NULL, '2018-06-18 04:14:57', '2018-11-15 14:02:11');
+INSERT INTO `system_config_copy` VALUES (198, 'm_main_color', '主体颜色', NULL, 'mobile_site_style', 'colorpicker', 0, NULL, '#7030a0', NULL, NULL, '商城主体颜色 code:m_main_color', 255, 1, NULL, '2018-06-18 04:16:01', '2018-11-15 14:02:11');
+INSERT INTO `system_config_copy` VALUES (199, 'm_second_color', '主体辅色', NULL, 'mobile_site_style', 'colorpicker', 0, NULL, '#e36c09', NULL, NULL, '主体辅色 code:m_second_color', 255, 1, NULL, '2018-06-18 04:16:40', '2018-11-15 14:02:11');
+INSERT INTO `system_config_copy` VALUES (200, 'base_fee', '平台保证金', NULL, 'open_shop', 'short_text', 1, NULL, '1000', NULL, NULL, '0表示无需支付保证金', 255, 1, NULL, '2018-06-20 14:12:28', '2018-06-24 04:34:17');
+INSERT INTO `system_config_copy` VALUES (201, 'use_fee', '平台使用费', NULL, 'open_shop', 'radio', 0, NULL, '1', '0::免费\r\n1::付费', NULL, NULL, 255, 1, NULL, '2018-06-20 14:20:17', '2018-06-24 04:34:17');
+INSERT INTO `system_config_copy` VALUES (202, 'use_fee_value', '平台使用费值', NULL, 'open_shop', 'textarea', 0, NULL, 'a:3:{s:6:\"number\";a:3:{i:0;s:1:\"1\";i:1;s:1:\"6\";i:2;s:2:\"30\";}s:4:\"unit\";a:3:{i:0;s:4:\"year\";i:1;s:5:\"month\";i:2;s:3:\"day\";}s:3:\"fee\";a:3:{i:0;s:4:\"1000\";i:1;s:3:\"500\";i:2;s:3:\"100\";}}', NULL, NULL, NULL, 255, 1, NULL, '2018-06-20 14:21:54', '2018-06-24 04:34:17');
+INSERT INTO `system_config_copy` VALUES (203, 'first_warn', '首次警告', NULL, 'open_shop', 'short_text', 1, NULL, '30', NULL, NULL, '首次警告：比如：30天，表示店铺还有30天到期时，店铺将自动进入到待续费店铺列表中，且系统会自动向店铺发送到期续费提醒', 255, 1, NULL, '2018-06-20 14:22:35', '2018-06-24 04:34:17');
+INSERT INTO `system_config_copy` VALUES (204, 'second_warn', '再次警告', NULL, 'open_shop', 'short_text', 1, NULL, '10', NULL, NULL, '再次警告：比如：10天，店铺还有10天到期时，会再次向店铺发送到期续费提醒', 255, 1, NULL, '2018-06-20 14:23:08', '2018-06-24 04:34:17');
+INSERT INTO `system_config_copy` VALUES (205, 'third_warn', '三次警告', NULL, 'open_shop', 'short_text', 1, NULL, '3', NULL, NULL, '三次警告：比如：3天，店铺还有3天到期时，会第三次向店铺发送到期续费提醒<br>\r\n如设置为0天，表示不发送续费提醒通知', 255, 1, NULL, '2018-06-20 14:24:04', '2018-06-24 04:34:17');
+INSERT INTO `system_config_copy` VALUES (206, 'shop_apply_banner_img', '入驻轮播图（pc端）', NULL, 'shop_apply_banner', 'imagegroup', 1, NULL, '/site/1/images/2018/06/23/15297626846550.jpg|/site/1/images/2018/06/23/15297624044077.jpg|/site/1/images/2018/06/21/15295831652086.jpg|/site/1/images/2018/06/21/15295831586241.jpg', NULL, ',,,', '最佳显示尺寸为1920*400像素的图片，允许上传的图片格式：png、jpg、jpeg、gif', 255, 1, NULL, '2018-06-20 15:41:24', '2018-06-23 14:06:40');
+INSERT INTO `system_config_copy` VALUES (207, 'm_shop_apply_banner_img', '入驻背景图（wap端）', NULL, 'shop_apply_banner', 'imagegroup', 0, NULL, '/site/1/images/2018/06/21/15295830638156.png', NULL, NULL, '最佳显示尺寸为750*1400像素的图片，允许上传的图片格式：png、jpg、jpeg、gif', 255, 1, NULL, '2018-06-20 15:42:52', '2018-06-23 14:06:40');
+INSERT INTO `system_config_copy` VALUES (208, 'news_header', '去除头部', NULL, 'news_setting', 'checkbox', 0, NULL, '1', '1::商城顶部导航\r\n2::头部信息', NULL, '商城顶部导航指商城最顶部导航栏；头部信息指商城logo、资讯导航、搜索框', 255, 1, NULL, '2018-07-07 13:38:33', '2018-07-07 13:43:25');
+INSERT INTO `system_config_copy` VALUES (209, 'news_footer', '去除底部', NULL, 'news_setting', 'checkbox', 0, NULL, '2', '1::底部广告\r\n2::友情链接\r\n3::帮助中心\r\n4::底部信息', NULL, '底部广告指帮助文章上方的广告图；帮助中心指商城底部的帮助文章；底部信息指帮助文章下方的所有内容', 255, 1, NULL, '2018-07-07 13:40:10', '2018-07-07 13:43:25');
+INSERT INTO `system_config_copy` VALUES (210, 'app_ios_is_open', 'iOS状态', NULL, 'app_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将消费者iOS端应用停用，显示关闭提示页面', 255, 1, NULL, '2018-08-16 13:52:52', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (211, 'app_ios_use_version', 'iOS使用版本', NULL, 'app_setting', 'text', 0, '应用设置', '1.0', NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-16 13:54:04', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (212, 'app_android_is_open', '安卓状态', NULL, 'app_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将消费者安卓端应用停用，显示关闭提示页面', 255, 1, NULL, '2018-08-16 13:55:03', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (213, 'app_android_use_version', '安卓使用版本', NULL, 'app_setting', 'text', 0, '应用设置', '1.0', NULL, NULL, '小于或等于此版本号的安卓应用受“安卓应用状态”开关控制', 255, 1, NULL, '2018-08-16 13:55:50', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (214, 'app_close_reason', 'APP关闭原因', NULL, 'app_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP商城处于关闭状态时，用户访问APP端看到的提示原因', 255, 1, NULL, '2018-08-16 13:56:30', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (215, 'open_download_qrcode', '是否开启下载二维码', NULL, 'app_setting', 'switch', 0, '下载设置', '1', '1::开\r\n0::关', NULL, '此项用于开启在商城首页头部APP二维码下载', 255, 1, NULL, '2018-08-16 13:58:03', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (216, 'mall_android_app', '安卓客户端下载地址', NULL, 'app_setting', 'text', 0, '下载设置', NULL, NULL, NULL, '请填写安卓应用在应用市场的链接', 255, 1, NULL, '2018-08-16 13:58:49', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (217, 'mall_ios_app', 'IOS客户端下载地址', NULL, 'app_setting', 'text', 0, '下载设置', NULL, NULL, NULL, '请填写IOS应用在应用市场的链接', 255, 1, NULL, '2018-08-16 13:59:31', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (218, 'app_ios_version', 'iOS应用版本号', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-16 14:02:01', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (219, 'app_ios_update_url', 'iOS应用下载链接', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, 'http:// 开头', 255, 1, NULL, '2018-08-16 14:02:44', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (220, 'app_ios_update_content', 'iOS更新内容', NULL, 'app_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-16 14:03:27', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (221, 'app_android_version', 'Android应用版本号', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-16 14:04:04', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (222, 'app_android_update_url', 'Android应用下载链接', NULL, 'app_setting', 'text', 0, '强制更新', NULL, NULL, NULL, 'http:// 开头', 255, 1, NULL, '2018-08-16 14:04:35', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (223, 'app_android_update_content', 'Android更新内容', NULL, 'app_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-16 14:05:13', '2018-10-03 07:48:05');
+INSERT INTO `system_config_copy` VALUES (224, 'is_guide_open', '是否开启引导图', NULL, 'app_guide', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-16 14:06:31', '2018-08-16 14:06:31');
+INSERT INTO `system_config_copy` VALUES (225, 'app_guide_pic', '引导图片', NULL, 'app_guide', 'imagegroup', 1, NULL, NULL, NULL, ',,,,', '最佳显示尺寸为750*1334像素的图片，允许上传的图片格式：jpg、jpeg、gif，您最多可以上传5张', 255, 1, NULL, '2018-08-16 14:10:10', '2018-08-16 14:10:10');
+INSERT INTO `system_config_copy` VALUES (226, 'app_enter_button', '进入按钮', NULL, 'app_guide', 'imagegroup', 0, NULL, NULL, NULL, NULL, '最佳显示尺寸350*90 像素，允许上传的图片格式：jpg、jpeg、png', 255, 1, NULL, '2018-08-16 14:11:06', '2018-08-16 14:11:06');
+INSERT INTO `system_config_copy` VALUES (227, 'app_user_center_bgimage', '用户中心背景图片', NULL, 'app_setting_basic', 'imagegroup', 0, '用户中心设置', NULL, NULL, NULL, '最佳显示尺寸为750*260像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:12:06', '2018-08-16 14:12:06');
+INSERT INTO `system_config_copy` VALUES (228, 'app_login_bgimg', '登录页面背景图', NULL, 'app_setting_login', 'imagegroup', 0, '登录设置', NULL, NULL, NULL, '最佳显示尺寸为1080*357像素的图片，允许上传的图片格式：jpg、jpeg、gif、png', 255, 1, NULL, '2018-08-16 14:15:01', '2018-08-16 14:15:01');
+INSERT INTO `system_config_copy` VALUES (229, 'app_login_logo', '登录页面LOGO', NULL, 'app_setting_login', 'imagegroup', 0, '登录设置', NULL, NULL, NULL, '最佳显示尺寸为600*115像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:15:34', '2018-08-16 14:15:34');
+INSERT INTO `system_config_copy` VALUES (230, 'app_search_shop_range', '附近店铺搜索范围', NULL, 'app_setting_index', 'text', 0, '首页模板设置', '100', NULL, NULL, '以km为单位，首页加载附近店铺时搜索多少公里范围的店铺', 255, 1, NULL, '2018-08-16 14:16:39', '2018-08-16 14:17:37');
+INSERT INTO `system_config_copy` VALUES (231, 'app_goods_list_page_count', '滚动商品加载页数', NULL, 'app_setting_index', 'text', 0, '首页模板设置', '3', NULL, NULL, '首页滚动商品允许加载的最大页数，默认为3页', 255, 1, NULL, '2018-08-16 14:17:16', '2018-08-16 14:17:16');
+INSERT INTO `system_config_copy` VALUES (232, 'app_aliim_icon_show', '是否显示首页云旺客服', NULL, 'app_setting_index', 'switch', 0, '首页客服设置', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-16 14:18:26', '2018-08-16 14:18:26');
+INSERT INTO `system_config_copy` VALUES (233, 'app_aliim_icon', '首页云旺客服图标', NULL, 'app_setting_index', 'imagegroup', 0, '首页客服设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:19:03', '2018-08-16 14:19:03');
+INSERT INTO `system_config_copy` VALUES (234, 'm_site_status', '微商城状态', NULL, 'mobile_setting_basic', 'switch', 0, '微商城状态', '1', '1::开\r\n0::关', NULL, '可以暂时将商城微商城端、 WAP端停用，用户无法访问微商城、WAP端前台页面，不影响管理员后台操作', 255, 1, NULL, '2018-08-16 14:38:24', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (235, 'm_site_close_image', '微商城关闭提示图片', NULL, 'mobile_setting_basic', 'imagegroup', 0, '微商城状态', NULL, NULL, NULL, '系统默认给予关闭提示页面设计，商城可自行修改设计，上传图片，建议上传宽度为589像素的图片', 255, 1, NULL, '2018-08-16 14:39:34', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (236, 'is_webp', '是否开启webp格式转换', NULL, 'mobile_setting_basic', 'switch', 0, '微商城状态', '1', '1::开\r\n0::关', NULL, '开启webp格式转换，会提高网站的访问速度，但是图片会被压缩', 255, 1, NULL, '2018-08-16 14:40:38', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (237, 'm_user_center_bgimage', '用户中心背景图片', NULL, 'mobile_setting_basic', 'imagegroup', 0, '用户中心设置', NULL, NULL, NULL, '最佳显示尺寸为750*260像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:41:32', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (238, 'shop_open_hint', '是否开启店铺营业时间提示', NULL, 'mobile_setting_basic', 'switch', 0, '店铺设置', '1', '1::是\r\n0::否', NULL, '是：非营业时间的店铺会有“店铺休息”的提示信息', 255, 1, NULL, '2018-08-16 14:42:26', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (239, 'm_shop_list_style', '店铺商品列表页样式', NULL, 'mobile_setting_basic', 'radio', 0, '店铺设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺全部商品列表页面商品展示的样式', 255, 1, NULL, '2018-08-16 14:44:01', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (240, 'm_shop_street_style', '店铺街样式', NULL, 'mobile_setting_basic', 'radio', 0, '店铺设置', '0', '0::默认样式\r\n1::经典样式', NULL, '控制手机端店铺街展示的样式', 255, 1, NULL, '2018-08-16 14:44:55', '2018-11-24 06:42:07');
+INSERT INTO `system_config_copy` VALUES (241, 'm_login_bgimg', '登录页面背景图', NULL, 'mobile_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2018/12/01/15436338325773.png', NULL, NULL, '最佳显示尺寸为1080*357像素的图片，允许上传的图片格式：jpg、jpeg、gif、png', 255, 1, NULL, '2018-08-16 14:47:19', '2018-12-04 05:00:35');
+INSERT INTO `system_config_copy` VALUES (242, 'm_login_logo', '登录页面LOGO', NULL, 'mobile_setting_login', 'imagegroup', 0, '登录设置', '/site/1/images/2018/12/04/15438991675206.png', NULL, NULL, '最佳显示尺寸为600*115像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:47:54', '2018-12-04 05:00:35');
+INSERT INTO `system_config_copy` VALUES (243, 'wx_login_logo', '微信登录页面LOGO', NULL, 'mobile_setting_login', 'imagegroup', 0, '微信登录设置', '/site/1/images/2018/12/04/15438996225886.png', NULL, NULL, '建议上传高度大于80像素的图片，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-16 14:48:33', '2018-12-04 05:00:35');
+INSERT INTO `system_config_copy` VALUES (244, 'use_weixin_login', '是否优先使用微信登录', NULL, 'mobile_setting_login', 'switch', 0, '微信登录设置', '1', '1::是\r\n0::否', NULL, '开启后在微信中优先使用微信绑定登录', 255, 1, NULL, '2018-08-16 14:49:13', '2018-12-04 05:00:35');
+INSERT INTO `system_config_copy` VALUES (245, 'm_search_shop_range', '附近店铺搜索范围', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '9999', NULL, NULL, '以km为单位，首页加载附近店铺时搜索多少公里范围的店铺', 255, 1, NULL, '2018-08-21 13:07:40', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (246, 'm_goods_list_page_count', '滚动商品加载页数', NULL, 'mobile_setting_index', 'text', 0, '首页模板设置', '3', NULL, NULL, '首页滚动商品允许加载的最大页数，默认为3页', 255, 1, NULL, '2018-08-21 13:14:38', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (247, 'm_aliim_icon_show', '是否显示首页云旺客服', NULL, 'mobile_setting_index', 'switch', 0, '首页客服设置', '1', '1::是\r\n0::否', NULL, NULL, 255, 1, NULL, '2018-08-21 13:15:34', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (248, 'm_aliim_icon', '首页云旺客服图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页客服设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 13:16:46', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (249, 'm_app_download', '是否显示首页APP下载', NULL, 'mobile_setting_index', 'switch', 0, '首页APP下载设置', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显示下载app，设置为是并且APP-设置-商店设置中，安卓和IOS客户端下载地址必须有地址时，相应的安卓和IOS手机才可展示下载 app提示', 255, 1, NULL, '2018-08-21 13:18:01', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (250, 'm_app_icon', '首页APP下载图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页APP下载设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 13:18:45', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (251, 'm_follow_wechat', '是否显示引导关注微信公众号', NULL, 'mobile_setting_index', 'switch', 0, '首页引导关注微信公众号设置', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显示引导关注微信公众号，设置为是并且没有关注该公众号才显示', 255, 1, NULL, '2018-08-21 13:19:44', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (252, 'm_follow_wechat_icon', '首页引导关注微信公众号图标', NULL, 'mobile_setting_index', 'imagegroup', 0, '首页引导关注微信公众号设置', NULL, NULL, NULL, '最佳显示尺寸为100*100像素，建议上传png格式，并且背景为透明色', 255, 1, NULL, '2018-08-21 13:20:40', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (253, 'm_wechat_name', '微信公众号名称', NULL, 'mobile_setting_index', 'text', 0, '首页引导关注微信公众号设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:21:23', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (254, 'm_follow_wechat_hint', '首页引导关注微信公众号提示语', NULL, 'mobile_setting_index', 'text', 0, '首页引导关注微信公众号设置', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:21:56', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (255, 'new_order_remind_open', '是否显示新订单提醒', NULL, 'mobile_setting_index', 'switch', 0, '首页新订单提醒', '1', '1::是\r\n0::否', NULL, '控制微商城首页是否显新订单提醒', 255, 1, NULL, '2018-08-21 13:22:43', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (256, 'new_order_remind_num', '模拟新订单提醒数量', NULL, 'mobile_setting_index', 'text', 0, '首页新订单提醒', '20', NULL, NULL, '调取订单中的数据模拟新订单提醒,如果想使用真实数据可以设置为0', 255, 1, NULL, '2018-08-21 13:23:32', '2018-10-03 07:47:59');
+INSERT INTO `system_config_copy` VALUES (257, 'weixin_name', '名称', NULL, 'weixin', 'text', 0, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:25:57', '2018-08-21 13:25:57');
+INSERT INTO `system_config_copy` VALUES (258, 'token', 'Token(令牌)', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, 'Token对应的是微信公众平台的token，要保持一致', 255, 1, NULL, '2018-08-21 13:26:41', '2018-08-21 13:26:41');
+INSERT INTO `system_config_copy` VALUES (259, 'appid', '应用ID', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:27:09', '2018-08-21 13:27:09');
+INSERT INTO `system_config_copy` VALUES (260, 'appsecret', '应用密钥', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:27:32', '2018-08-21 13:27:32');
+INSERT INTO `system_config_copy` VALUES (261, 'auth_verify', '授权验证码', NULL, 'weixin', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:28:00', '2018-08-21 13:28:00');
+INSERT INTO `system_config_copy` VALUES (262, 'followmsg', '关注回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '感谢您的关注，快去注册，开启购物之旅吧！点击%s绑定帐号', NULL, NULL, '此回复内容为用户关注了商城的微信公众号后，显示的提示信息<br>\r\n例：感谢您的关注，快去注册，开启购物之旅吧！', 255, 1, NULL, '2018-08-21 13:33:56', '2018-08-21 13:38:23');
+INSERT INTO `system_config_copy` VALUES (263, 'bind_before_msg', '绑定前回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '亲，您还没有绑定任何的帐号哦，点击%s，快去绑定吧！', NULL, NULL, '此回复内容为当用户点击“账户管理”，并且还没有绑定会员回复的提示消息<br>\r\n例：亲，您还没有绑定任何的帐号哦，快去绑定吧！', 255, 1, NULL, '2018-08-21 13:34:32', '2018-08-21 13:38:37');
+INSERT INTO `system_config_copy` VALUES (264, 'bind_after_msg', '绑定后回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '亲，您已经和帐号%s绑定了，您可以点击%s进行更改！', NULL, NULL, '此回复内容为当用户点击“账户管理”，并且已经绑定会员后回复的提示消息<br>\r\n例：亲，您已经和帐号%s绑定了，您可以点击%s进行更改！', 255, 1, NULL, '2018-08-21 13:35:08', '2018-08-21 13:38:47');
+INSERT INTO `system_config_copy` VALUES (265, 'is_auto_reply', '是否开启自动回复', NULL, 'weixin_bind', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '关闭自动回复功能，用户将收不到自动回复内容', 255, 1, NULL, '2018-08-21 13:35:56', '2018-08-21 13:35:56');
+INSERT INTO `system_config_copy` VALUES (266, 'auto_reply_msg', '自动回复内容', NULL, 'weixin_bind', 'textarea', 0, NULL, '感谢您的关注，您有什么问题可以联系我们的客服进行咨询！', NULL, NULL, '此回复内容为如果客户输入的对话内容没有在自定义回复词中，将收到的回复内容<br>\r\n例：感谢您的关注，您有什么问题可以联系我们的客服进行咨询！', 255, 1, NULL, '2018-08-21 13:36:33', '2018-08-21 13:37:18');
+INSERT INTO `system_config_copy` VALUES (267, 'weixin_poster', '默认海报背景', NULL, 'weixin_poster', 'imagegroup', 1, NULL, NULL, NULL, NULL, '最佳显示尺寸为530*800像素', 255, 1, NULL, '2018-08-21 13:41:10', '2018-08-21 13:41:10');
+INSERT INTO `system_config_copy` VALUES (268, 'weixin_poster_size', '二维码尺寸', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '此二维码为正方形，比如输入200，那么二维码就是200*200像素', 255, 1, NULL, '2018-08-21 13:41:46', '2018-08-21 13:41:46');
+INSERT INTO `system_config_copy` VALUES (269, 'weixin_x_coor', 'X坐标', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '二维码距离海报背景图片左侧的距离', 255, 1, NULL, '2018-08-21 13:42:16', '2018-08-21 13:42:16');
+INSERT INTO `system_config_copy` VALUES (270, 'weixin_y_coor', 'Y坐标', NULL, 'weixin_poster', 'text', 1, NULL, NULL, NULL, NULL, '二维码距离海报背景图片顶部的距离', 255, 1, NULL, '2018-08-21 13:42:44', '2018-08-21 13:42:44');
+INSERT INTO `system_config_copy` VALUES (271, 'weixin_poster_msg', '生成海报提示语', NULL, 'weixin_poster', 'textarea', 1, NULL, NULL, NULL, NULL, '此提示语为当客户点击菜单中的生成海报时，收到的回复内容<br>\r\n例：海报正在拼命生成中，请稍后！', 255, 1, NULL, '2018-08-21 13:43:14', '2018-08-21 13:43:14');
+INSERT INTO `system_config_copy` VALUES (272, 'weixin_programs_appid', '小程序appid', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:44:00', '2018-08-21 13:44:00');
+INSERT INTO `system_config_copy` VALUES (273, 'weixin_programs_secret', '小程序密钥', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:44:22', '2018-08-21 13:44:22');
+INSERT INTO `system_config_copy` VALUES (274, 'weixin_programs_filename', '业务域名校验文件名字', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, '请输入完成校验文件名字。请不要填写文件名后缀', 255, 1, NULL, '2018-08-21 13:44:47', '2018-08-21 13:44:47');
+INSERT INTO `system_config_copy` VALUES (275, 'weixin_programs_code', '校验码', NULL, 'weixin_programs', 'text', 1, NULL, NULL, NULL, NULL, '请输入校验文件里的校验码', 255, 1, NULL, '2018-08-21 13:45:19', '2018-08-21 13:45:19');
+INSERT INTO `system_config_copy` VALUES (276, 'app_seller_ios_is_open', 'iOS状态', NULL, 'app_seller_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将商家版iOS端应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 13:49:06', '2018-08-21 13:49:06');
+INSERT INTO `system_config_copy` VALUES (277, 'app_seller_ios_use_version', 'iOS使用版本', NULL, 'app_seller_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-21 13:50:03', '2018-08-21 13:50:03');
+INSERT INTO `system_config_copy` VALUES (278, 'app_seller_android_is_open', 'Android状态', NULL, 'app_seller_setting', 'switch', 0, '应用设置', '1', '1::开\r\n0::关', NULL, '可暂时将商家版Android应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 13:50:54', '2018-08-21 13:51:17');
+INSERT INTO `system_config_copy` VALUES (279, 'app_seller_android_use_version', 'Android使用版本', NULL, 'app_seller_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的Android应用受“Android应用状态”开关控制', 255, 1, NULL, '2018-08-21 13:52:15', '2018-08-21 13:52:15');
+INSERT INTO `system_config_copy` VALUES (280, 'app_seller_close_reason', 'APP关闭原因', NULL, 'app_seller_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP商城处于关闭状态时，商家访问APP端看到的提示原因', 255, 1, NULL, '2018-08-21 13:53:05', '2018-08-21 13:53:05');
+INSERT INTO `system_config_copy` VALUES (281, 'app_seller_ios_version', 'iOS应用版本号', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:53:53', '2018-08-21 13:53:53');
+INSERT INTO `system_config_copy` VALUES (282, 'app_seller_ios_update_url', 'iOS客户端下载地址', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写iOS应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 13:54:40', '2018-08-21 13:54:40');
+INSERT INTO `system_config_copy` VALUES (283, 'app_seller_ios_update_content', 'iOS更新内容', NULL, 'app_seller_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-21 13:55:29', '2018-08-21 13:55:29');
+INSERT INTO `system_config_copy` VALUES (284, 'app_seller_android_version', 'Android应用版本号', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 13:56:08', '2018-08-21 13:56:08');
+INSERT INTO `system_config_copy` VALUES (285, 'app_seller_android_update_url', 'Android客户端下载地址', NULL, 'app_seller_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写Android应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 13:56:54', '2018-08-21 13:56:54');
+INSERT INTO `system_config_copy` VALUES (286, 'app_seller_android_update_content', 'Android更新内容', NULL, 'app_seller_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-21 13:57:49', '2018-08-21 13:57:49');
+INSERT INTO `system_config_copy` VALUES (287, 'app_seller_login_bg', 'APP登录背景图', NULL, 'app_seller_setting', 'imagegroup', 0, '个性化', NULL, NULL, NULL, '用于设置商家版APP登录界面的背景图片， 建议尺寸 750*545像素', 255, 1, NULL, '2018-08-21 13:58:46', '2018-08-21 13:58:46');
+INSERT INTO `system_config_copy` VALUES (288, 'app_store_ios_is_open', 'iOS状态', NULL, 'app_store_setting', 'switch', 0, '应用设置', '0', '1::开\r\n0::关', NULL, '可暂时将网点iOS端应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 14:02:12', '2018-08-21 14:02:12');
+INSERT INTO `system_config_copy` VALUES (289, 'app_store_ios_use_version', 'iOS使用版本', NULL, 'app_store_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的iOS应用受“iOS应用状态”开关控制', 255, 1, NULL, '2018-08-21 14:05:29', '2018-08-21 14:05:29');
+INSERT INTO `system_config_copy` VALUES (290, 'app_store_android_is_open', 'Android状态', NULL, 'app_store_setting', 'switch', 0, '应用设置', '0', '1::开\r\n0::关', NULL, '可暂时将网点Android应用停用，关闭后不会影响PC端后台操作', 255, 1, NULL, '2018-08-21 14:06:23', '2018-08-21 14:06:23');
+INSERT INTO `system_config_copy` VALUES (291, 'app_store_android_use_version', 'Android使用版本', NULL, 'app_store_setting', 'text', 0, '应用设置', NULL, NULL, NULL, '小于或等于此版本号的Android应用受“Android应用状态”开关控制', 255, 1, NULL, '2018-08-21 14:07:23', '2018-08-21 14:07:23');
+INSERT INTO `system_config_copy` VALUES (292, 'app_store_close_reason', 'APP关闭原因', NULL, 'app_store_setting', 'textarea', 0, '应用设置', NULL, NULL, NULL, '设置APP处于关闭状态时，网点店主访问APP端看到的提示原因', 255, 1, NULL, '2018-08-21 14:08:16', '2018-08-21 14:08:16');
+INSERT INTO `system_config_copy` VALUES (293, 'app_store_ios_version', 'iOS应用版本号', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 14:09:05', '2018-08-21 14:09:05');
+INSERT INTO `system_config_copy` VALUES (294, 'app_store_ios_update_url', 'iOS客户端下载地址', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写iOS应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 14:09:51', '2018-08-21 14:09:51');
+INSERT INTO `system_config_copy` VALUES (295, 'app_store_ios_update_content', 'iOS更新内容', NULL, 'app_store_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'iOS更新内容', 255, 1, NULL, '2018-08-21 14:10:34', '2018-08-21 14:10:34');
+INSERT INTO `system_config_copy` VALUES (296, 'app_store_android_version', 'Android应用版本号', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, NULL, 255, 1, NULL, '2018-08-21 14:11:10', '2018-08-21 14:11:10');
+INSERT INTO `system_config_copy` VALUES (297, 'app_store_android_update_url', 'Android客户端下载地址', NULL, 'app_store_setting', 'text', 0, '强制更新', NULL, NULL, NULL, '请填写Android应用在应用市场的链接，http://开头', 255, 1, NULL, '2018-08-21 14:12:03', '2018-08-21 14:12:03');
+INSERT INTO `system_config_copy` VALUES (298, 'app_store_android_update_content', 'Android更新内容', NULL, 'app_store_setting', 'textarea', 0, '强制更新', NULL, NULL, NULL, 'Android更新内容', 255, 1, NULL, '2018-08-21 14:12:52', '2018-08-21 14:12:52');
+INSERT INTO `system_config_copy` VALUES (299, 'app_store_login_bg', 'APP登录背景图', NULL, 'app_store_setting', 'imagegroup', 0, '个性化', NULL, NULL, NULL, '用于设置网点APP登录界面的背景图片， 建议尺寸 750*545', 255, 1, NULL, '2018-08-21 14:13:38', '2018-08-21 14:13:38');
+INSERT INTO `system_config_copy` VALUES (300, 'kd_ebusiness_id', '电商ID', NULL, 'kdniao', 'text', 0, NULL, NULL, NULL, NULL, '电商ID，请到快递鸟官网，“<a class=\"btn-link\" target=\"_blank\" href=\"http://kdniao.com/reg\">去申请</a>”', 255, 1, NULL, '2018-09-22 01:46:16', '2018-12-22 12:58:28');
+INSERT INTO `system_config_copy` VALUES (301, 'kd_app_key', '电商加密私钥', NULL, 'kdniao', 'text', 0, NULL, NULL, NULL, NULL, '电商加密私钥，快递鸟提供，注意保管，不要泄漏', 255, 1, NULL, '2018-09-22 01:46:55', '2018-12-22 12:58:29');
+INSERT INTO `system_config_copy` VALUES (302, 'backend_websocket', '平台订单语音提醒是否开启', NULL, 'order', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是：会员下单后，平台收到声音提醒；否：会员下单，平台无法收到声音提醒', 255, 1, NULL, '2018-10-26 13:48:45', '2018-12-24 16:35:03');
+INSERT INTO `system_config_copy` VALUES (303, 'order_refresh', '订单列表自动刷新', NULL, 'order', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '平台方、卖家中心订单列表有新订单，订单列表是否自动刷新，是：表示自动刷新；否：表示不自动刷新', 255, 1, NULL, '2018-10-26 13:49:51', '2018-12-24 16:35:03');
+INSERT INTO `system_config_copy` VALUES (304, 'show_duration', '订单列表默认展示数据', NULL, 'order', 'radio', 0, NULL, '3', '1::当天\r\n3::三天内\r\n7::七天内\r\n30::一个月内', NULL, '控制平台方、卖家中心订单列表默认展示多长时间内的订单数据', 255, 1, NULL, '2018-10-26 13:52:06', '2018-12-24 16:35:03');
+INSERT INTO `system_config_copy` VALUES (305, 'send_time', '送货时间', NULL, 'trade', 'checkbox', 0, '基本设置', '1,2,4,5', '1::立即配送\r\n2::工作日/周末/假日均可\r\n3::仅周末送货\r\n4::仅工作日送货\r\n5::指定送货时间', NULL, '控制结算页面的送货时间选项', 255, 1, NULL, '2018-10-26 13:56:57', '2018-10-26 15:17:27');
+INSERT INTO `system_config_copy` VALUES (306, 'send_time_desc', '送货时间描述', NULL, 'trade', 'textarea', 0, '基本设置', NULL, NULL, NULL, '设置结算页面的送货时间旁边的备注说明', 255, 1, NULL, '2018-10-26 13:58:09', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (307, 'invoice_contents', '发票内容', NULL, 'trade', 'textarea', 0, '基本设置', NULL, NULL, NULL, '控制结算页面内发票的内容，如果为空则默认为：明细、办公用品、电脑配件、耗材；多个选项之间请用回车换行来区分', 255, 1, NULL, '2018-10-26 13:59:10', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (308, 'pay_term', '付款期限', NULL, 'trade', 'short_text', 1, '订单设置', '1', NULL, NULL, '付款期限不能小于15分钟，默认为1天：自下单1天内，买家尚未付款的订单，系统会自动取消订单；', 255, 1, NULL, '2018-10-26 14:01:13', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (309, 'pay_term_unit', '付款期限时间单位', NULL, 'trade', 'select', 1, '订单设置', '0', '0::天\r\n1::小时\r\n2::分钟', NULL, '付款期限不能小于15分钟，默认为1天：自下单1天内，买家尚未付款的订单，系统会自动取消订单；', 255, 1, NULL, '2018-10-26 14:03:31', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (310, 'take_term', '接单期限', NULL, 'trade', 'short_text', 1, '订单设置', '10', NULL, NULL, '用于控制开启接单模式店铺的接单期限，接单期限不能小于5分钟，默认为10分钟：自下单付款后10分钟内，卖家尚未接单的订单，系统将会自动取消订单；', 255, 1, NULL, '2018-10-26 14:05:09', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (311, 'take_term_unit', '接单期限时间单位', NULL, 'trade', 'select', 1, '订单设置', '0', '0::天\r\n1::小时\r\n2::分钟', NULL, '用于控制开启接单模式店铺的接单期限，接单期限不能小于5分钟，默认为10分钟：自下单付款后10分钟内，卖家尚未接单的订单，系统将会自动取消订单；', 255, 1, NULL, '2018-10-26 14:06:38', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (312, 'receiving_term', '确认收货期限', NULL, 'trade', 'text', 1, '订单设置', '7', NULL, NULL, '默认为7天：自发货起7天内，买家尚未确认收货的订单，系统会自动确认收货', 255, 1, NULL, '2018-10-26 14:07:44', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (313, 'extend_receiving_days', '延长收货时间(天)', NULL, 'trade', 'textarea', 1, '订单设置', '3\r\n6\r\n8', NULL, NULL, '买家或卖家可主动延长收货时间，让买家有更多时间来“确认收货”,请用回车添加多项', 255, 1, NULL, '2018-10-26 14:08:51', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (314, 'user_close_trad_reason', '买家关闭交易的理由', NULL, 'trade', 'textarea', 1, '订单设置', '我不想买了\r\n信息填写错误，重新拍\r\n卖家缺货\r\n同城见面交易\r\n付款遇到问题\r\n拍错了\r\n其他原因', NULL, NULL, '买家在关闭订单时，可选择关闭该交易的理由，多个理由请使用回车换行', 255, 1, NULL, '2018-10-26 14:09:55', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (315, 'close_trad_reason', '卖家关闭交易的理由', NULL, 'trade', 'textarea', 1, '订单设置', '未及时付款\r\n买家不想买\r\n买家信息填写错误，重新拍\r\n恶意买家/同行捣乱\r\n缺货\r\n买家拍错了\r\n同城见面交易\r\n其他原因', NULL, NULL, '卖家在关闭订单时，可选择关闭该交易的理由，多个理由请使用回车换行', 255, 1, NULL, '2018-10-26 14:10:51', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (316, 'is_refund_review', '退款申请是否需要审核', NULL, 'trade', 'switch', 0, '退款退货设置', '0', '1::是\r\n0::否', NULL, '退款退货受交易设置处的退款申请是否需要审核控制，如果需要审核，则平台方需要对退款退货信息进行核实和确认', 255, 1, NULL, '2018-10-26 14:12:34', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (317, 'back_seller_term', '申请退款卖家确认期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自买家申请退款（仅退款/退款退货）起7天内，卖家尚未操作的，系统会自动同意申请', 255, 1, NULL, '2018-10-26 14:13:38', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (318, 'buyer_update_back_term', '卖家拒绝退款申请，买家修改退款期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自卖家拒绝退款申请起7天内，买家未修改退款申请信息，系统自动取消申请', 255, 1, NULL, '2018-10-26 14:21:06', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (319, 'back_buyer_send_term', '退款退货买家发货期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自卖家（系统）同意退款退货申请起7天内，买家尚未发货的，系统会自动取消申请', 255, 1, NULL, '2018-10-26 14:23:53', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (320, 'back_seller_recive_term', '退款退货卖家确认收货期限', NULL, 'trade', 'text', 1, '退款退货设置', '7', NULL, NULL, '默认为7天：自买家寄回退货商品起7天内，卖家尚未确认收货的，系统会自动将退款退货信息推送至平台方', 255, 1, NULL, '2018-10-26 14:24:45', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (321, 'refund_reason', '申请退款的原因', NULL, 'trade', 'textarea', 1, '退款退货设置', '退运费\r\n收到商品破损\r\n商品错发/漏发\r\n商品需要维修\r\n发票问题\r\n收到商品与描述不符\r\n商品质量问题\r\n未按约定时间发货\r\n未收到货\r\n申请退款后强制发货', NULL, NULL, '买家在申请退款时，可选择退款的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:25:43', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (322, 'customer_service_term', '申请售后期限', NULL, 'trade', 'text', 1, '售后设置', '15', NULL, NULL, '默认为15天：自买家确认收货起15天内，可且申请退款（仅退款/退款退货）、换货维修服务', 255, 1, NULL, '2018-10-26 14:28:08', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (323, 'seller_service_term', '卖家处理售后期限', NULL, 'trade', 'text', 1, '售后设置', '5', NULL, NULL, '默认为5天：自买家申请换货、维修起5天内，卖家未处理换货、维修申请，系统自动同意换货、维修', 255, 1, NULL, '2018-10-26 14:28:54', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (324, 'customer_modify_service_term', '卖家拒绝售后申请，买家修改期限', NULL, 'trade', 'text', 1, '售后设置', '7', NULL, NULL, '默认为7天：自卖家拒绝售后申请起7天内，买家未修改售后申请信息，系统会自动取消申请', 255, 1, NULL, '2018-10-26 14:29:42', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (325, 'customer_finish_service_term', '买家完成售后期限', NULL, 'trade', 'text', 1, '售后设置', '15', NULL, NULL, '默认为15天：自卖家同意换货、维修起15天内，买家未确认完成换货、维修，系统自动触发完成换货、维修', 255, 1, NULL, '2018-10-26 14:30:19', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (326, 'repair_reason', '申请维修的原因', NULL, 'trade', 'textarea', 1, '售后设置', '质量问题', NULL, NULL, '买家在申请维修时，可选择维修的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:31:34', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (327, 'exchange_reason', '申请换货的原因', NULL, 'trade', 'textarea', 1, '售后设置', '大小尺寸与商品描述不符\r\n卖家发错货\r\n尺码拍错/不喜欢/效果差\r\n颜色/款式/图案与描述不符\r\n收到商品少件或破损\r\n材质/面料与商品描述不符\r\n质量问题', NULL, NULL, '买家在申请换货时，可选择换货的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:32:18', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (328, 'complaint_seller_term', '投诉卖家期限', NULL, 'trade', 'text', 1, '投诉设置', '15', NULL, NULL, '默认为15天：自买家确认收货的15天内，可投诉卖家', 255, 1, NULL, '2018-10-26 14:33:12', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (329, 'seller_ps_complain_term', '卖家处理投诉期限', NULL, 'trade', 'text', 1, '投诉设置', '3', NULL, NULL, '默认为3天：自买家发起投诉起3天内，卖家未处理或处理结果买家未满意，买家可申请平台方介入处理', 255, 1, NULL, '2018-10-26 14:34:01', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (330, 'complaint_reason', '投诉卖家的原因', NULL, 'trade', 'textarea', 1, '投诉设置', '承诺的没做到\r\n未按约定时间发货\r\n未按成交价格进行交易\r\n恶意骚扰\r\n拒绝提供售后服务', NULL, NULL, '买家在投诉卖家时，可选择投诉的原因，多个原因请使用回车换行', 255, 1, NULL, '2018-10-26 14:34:55', '2018-10-26 15:17:29');
+INSERT INTO `system_config_copy` VALUES (331, 'mark_term', '评价期限', NULL, 'evaluate', 'short_text', 1, NULL, '30', NULL, NULL, '如设置30，自“确认收货”起30天内可评价', 255, 1, NULL, '2018-10-26 14:41:03', '2018-10-26 15:20:22');
+INSERT INTO `system_config_copy` VALUES (332, 'chase_term', '追评期限', NULL, 'evaluate', 'short_text', 1, NULL, '301', NULL, NULL, '如设置30，自“确认收货”提交起30天内可追评', 255, 1, NULL, '2018-10-26 14:41:58', '2018-10-26 15:20:22');
+INSERT INTO `system_config_copy` VALUES (333, 'auto_mark', '是否开启到期系统自动好评', NULL, 'evaluate', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，“评价期限”到期后买家不评价，系统会自动好评；关闭后，“评价期限”到期后买家不评价，将自动过期不再允许评价和追评', 255, 1, NULL, '2018-10-26 14:43:01', '2018-10-26 15:20:22');
+INSERT INTO `system_config_copy` VALUES (334, 'mark_audit', '评价是否需要审核', NULL, 'evaluate', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '开启后，买家发布评价后不会立即生效显示，需平台方审核通过后才能生效', 255, 1, NULL, '2018-10-26 14:44:00', '2018-10-26 15:20:22');
+INSERT INTO `system_config_copy` VALUES (335, 'pay_by_integral', 'pay_by_integral', NULL, 'trade', 'hidden', 0, '基本设置', '1', NULL, NULL, NULL, 255, 1, NULL, '2018-10-26 14:51:24', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (336, 'shipping_time', '指定送货时间段', NULL, 'trade', 'hidden', 0, '基本设置', NULL, NULL, NULL, '买家购物结算时，供选择的指定送货时间的时间间段 <br>说明：消费者下单时间+1个小时小于配送时间段的开始时间或消费者下单时间+1个小时小于配送时间段的结束时间，那么此时间段消费者是可以选择的', 255, 1, NULL, '2018-10-26 15:16:40', '2018-10-26 15:17:28');
+INSERT INTO `system_config_copy` VALUES (337, 'username_prefix', '会员用户名前缀', NULL, 'user', 'short_text', 0, '用户基本信息', NULL, NULL, NULL, '会员注册时生成会员的用户名的前缀，仅支持最多3个大写英文字母，为空则默认为“LRW”', 255, 1, NULL, '2018-10-26 15:34:04', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (338, 'user_auto_login', '会员自动登录', NULL, 'user', 'checkbox', 0, '用户基本信息', '1,2', '1::PC端\r\n2::微商城', NULL, '控制前台登录页面，是否允许自动登录，选择支持自动登录，方便会员快速登录商城系统', 255, 1, NULL, '2018-10-26 15:35:28', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (339, 'register_type', '会员注册方式', NULL, 'user', 'checkbox', 0, '用户基本信息', '1,2', '1::手机注册\r\n2::邮箱注册', NULL, '系统自带以上几种注册方式，如果您没有选择任何注册方式，网站将关闭注册', 255, 1, NULL, '2018-10-26 15:36:39', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (340, 'register_close_reason', '关闭注册原因', NULL, 'user', 'textarea', 0, '用户基本信息', '您好，由于网站系统升级，暂时关闭会员注册，给您带来不便敬请谅解!', NULL, NULL, NULL, 255, 1, NULL, '2018-10-26 15:37:28', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (341, 'show_rank_price', '等级价格', NULL, 'user', 'radio', 1, '用户基本信息', '2', '0::查看全部等级价格\r\n1::查看对应等级价格\r\n2::高等级看低等级价格', NULL, '控制前台商品详情页商品价格的显示规则，可设置不同会员等级对应不同商品价格<br>查看全部等级价格：等级价格对所有会员可见（包括游客）<br>查看对应等级价格：等级价格仅对对应等级会员可见<br>高等级看低等级价格：等级会员可看到对应等级及低于该等级的商品价格<br>店铺自定义商品会员价后，此等级价格设置将不起作用<br>系统开启平台统一会员等级和店铺自定义商品会员价后，此等级价格设置将不起作用', 255, 1, NULL, '2018-10-26 15:39:13', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (342, 'user_validate_password', '登录密码身份验证', NULL, 'user', 'radio', 1, '用户基本信息', '0', '0::不支持\r\n1::支持', NULL, '在用户中心修改密码、手机号码等安全操作时，用于控制当会员绑定了手机号码或者邮箱后还是否支持通过登录密码进行身份验证；<br><span style=\"color: red;\">如果会员未绑定手机号码或者邮箱则仅能通过登录密码进行身份验证，不受此项控制；</span>', 255, 1, NULL, '2018-10-26 15:40:49', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (343, 'monetary_rate', '消费金额与赠送成长值比例', '%', 'user', 'short_text', 0, '用户基本信息', NULL, NULL, NULL, '该值为大于0的数，例:设置为10，表明消费100元赠送10点成长值，取整计算，比如消费88.5元，则赠送8点成长值', 255, 1, NULL, '2018-10-26 15:43:52', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (344, 'max_growth_value', '每笔订单最多赠送成长值', NULL, 'user', 'short_text', 0, '用户基本信息', NULL, NULL, NULL, '填写0表明不限制最多赠送的成长值，例：设置为100，表明每笔订单最多赠送100点成长值', 255, 1, NULL, '2018-10-26 15:44:35', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (345, 'auth_enable', '是否启用', NULL, 'user', 'switch', 0, '用户查看、购买商品权限', '0', '1::是\r\n0::否', NULL, '开启后将控制用户查看、购买商品的权限', 255, 1, NULL, '2018-10-26 15:45:50', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (346, 'auth_see', '查看商品价格权限', NULL, 'user', 'checkbox', 0, '用户查看、购买商品权限', '0', '-1::未登录用户\r\n1::注册会员\r\n2::铜牌会员\r\n3::银牌会员\r\n4::金牌会员\r\n5::钻石会员', NULL, '选择不同权限/会员等级的会员可查看商城商品价格，有购买商品权限必然有查看商品价格权限', 255, 1, NULL, '2018-10-26 15:48:27', '2018-10-26 16:01:16');
+INSERT INTO `system_config_copy` VALUES (347, 'auth_buy', '购买商城商品权限', NULL, 'user', 'checkbox', 0, '用户查看、购买商品权限', '0', '-1::未登录用户\r\n1::注册会员\r\n2::铜牌会员\r\n3::银牌会员\r\n4::金牌会员\r\n5::钻石会员', NULL, '选择不同权限/会员等级的会员可购买商城商品，有购买商品权限必然有查看商品价格权限', 255, 1, NULL, '2018-10-26 15:50:04', '2018-10-26 16:01:17');
+INSERT INTO `system_config_copy` VALUES (348, 'shop_collect_open', '是否开启店铺数据采集', NULL, 'shop_collect', 'switch', 0, NULL, '1', '1::是\r\n0::否', NULL, '是：店铺卖家中心即可使用数据采集方式添加商品；否：店铺卖家中心无法看到数据采集菜单', 255, 1, NULL, '2018-10-29 12:01:56', '2018-10-29 12:02:16');
+INSERT INTO `system_config_copy` VALUES (349, 'qq_app_key', 'APP KEY', NULL, 'qq_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://connect.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:48:59', '2018-12-22 12:48:59');
+INSERT INTO `system_config_copy` VALUES (350, 'qq_app_secret', 'APP SECRET', NULL, 'qq_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://connect.qq.com申请的KEY', 255, 1, NULL, '2018-12-22 12:49:38', '2018-12-22 12:49:38');
+INSERT INTO `system_config_copy` VALUES (351, 'weibo_app_key', 'APP KEY', NULL, 'weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:51:58', '2018-12-22 12:51:58');
+INSERT INTO `system_config_copy` VALUES (352, 'weibo_app_secret', 'APP SECRET', NULL, 'weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的KEY', 255, 1, NULL, '2018-12-22 12:52:40', '2018-12-22 12:52:40');
+INSERT INTO `system_config_copy` VALUES (353, 'mobile_weibo_app_key', 'APP KEY', NULL, 'mobile_weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:53:29', '2018-12-22 12:53:29');
+INSERT INTO `system_config_copy` VALUES (354, 'mobile_weibo_app_secret', 'APP SECRET', NULL, 'mobile_weibo_login', 'text', 1, NULL, NULL, NULL, NULL, '在http://open.weibo.com申请的KEY', 255, 1, NULL, '2018-12-22 12:54:14', '2018-12-22 12:54:14');
+INSERT INTO `system_config_copy` VALUES (355, 'pc_weixin_app_key', 'APP KEY', NULL, 'pc_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://open.weixin.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:55:49', '2018-12-22 12:55:49');
+INSERT INTO `system_config_copy` VALUES (356, 'pc_weixin_app_secret', 'APP SECRET', NULL, 'pc_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://open.weixin.qq.com申请的APP SECRET', 255, 1, NULL, '2018-12-22 12:56:24', '2018-12-22 12:56:24');
+INSERT INTO `system_config_copy` VALUES (357, 'mobile_weixin_app_key', 'APP KEY', NULL, 'mobile_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://mp.weixin.qq.com申请的APP ID', 255, 1, NULL, '2018-12-22 12:57:11', '2018-12-22 12:57:11');
+INSERT INTO `system_config_copy` VALUES (358, 'mobile_weixin_app_secret', 'APP SECRET', NULL, 'mobile_weixin_login', 'text', 1, NULL, NULL, NULL, NULL, '在https://mp.weixin.qq.com申请的APP SECRET', 255, 1, NULL, '2018-12-22 12:57:37', '2018-12-22 12:57:37');
+INSERT INTO `system_config_copy` VALUES (359, 'audit_self_shop_goods', '自营店铺商品是否需要审核', NULL, 'goods', 'radio', 0, '商品审核', '0', '0::无需审核\r\n1::必须审核\r\n2::仅第一次上架时需要审核', NULL, NULL, 255, 1, NULL, '2018-12-24 15:45:28', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (360, 'audit_other_shop_goods', '入驻店铺商品是否需要审核', NULL, 'goods', 'radio', 0, '商品审核', '0', '0::无需审核\r\n1::必须审核\r\n2::仅第一次上架时需要审核', NULL, NULL, 255, 1, NULL, '2018-12-24 15:46:45', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (361, 'goods_price_format', '商品价格显示格式', NULL, 'goods', 'short_text', 0, '商品价格', '￥{0}', NULL, NULL, '用于PC端列表页面、商品详情页面等其他页面的商品价格的显示的格式，“{0}”代表价格的占位符', 255, 1, NULL, '2018-12-24 15:47:56', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (362, 'price_show_rule', '商品价格显示规则', NULL, 'goods', 'radio', 0, '商品价格', '0', '0::不处理\r\n1::保留两位小数\r\n2::不保留小数部分为0的尾数', NULL, '用于列表页面、商品详情页面商品价格的显示计算规则', 255, 1, NULL, '2018-12-24 15:49:41', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (363, 'goods_list_count', '列表页面显示商品数量', NULL, 'goods', 'short_text', 1, '商品列表', '20', NULL, NULL, '用于控制前台商品列表页、搜索结果页面每页显示商品的数量，为了页面的美观建议为20的整数倍', 255, 1, NULL, '2018-12-24 15:50:54', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (364, 'goods_list_cache', '列表页面查询缓存', '秒', 'goods', 'short_text', 1, '商品列表', '600', NULL, NULL, '用于控制前台商品列表页、搜索结果页面缓存时间，单位：秒，默认为600秒', 255, 1, NULL, '2018-12-24 15:52:11', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (365, 'goods_list_filter_count', '列表页面筛选条件默认展示数量', '个', 'goods', 'short_text', 1, '商品列表', '2', NULL, NULL, '用于控制前台商品列表页筛选条件中除品牌、价格其他的属性条件展示数量，默认为2，设置为0则展示所有', 255, 1, NULL, '2018-12-24 15:53:14', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (366, 'sort_order_type', '商品列表页面默认排序类型', NULL, 'goods', 'radio', 0, '商品列表', '0', '0::按综合排序\r\n1::按销量\r\n2::按上架时间\r\n3::按评论数\r\n4::按商品价格\r\n5::按人气', NULL, '根据关键词搜索商品时，如果搜索的关键词与上次搜索的关键词不同则系统自动使用综合排序对搜索结果进行排序；<br>系统支持elasticsearch后，综合排序的规则是按关键词搜索商品将会根据关键词匹配的相关度进行优先排序；', 255, 1, NULL, '2018-12-24 15:55:42', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (367, 'sort_order_method', '商品列表页面默认排序方式', NULL, 'goods', 'radio', 1, '商品列表', '1', '0::升序\r\n1::降序', NULL, '综合排序按仅照商品的排序进行升序排序，不受此排序设置控制；', 255, 1, NULL, '2018-12-24 15:57:22', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (368, 'goods_show_sale_number', '是否显示商品销量', NULL, 'goods', 'radio', 0, '商品列表', '1', '0::隐藏\r\n1::显示', NULL, '控制商品列表页、详情页是否显示商品销量', 255, 1, NULL, '2018-12-24 15:58:34', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (369, 'goods_list_show_style', '商品列表页显示样式', NULL, 'goods', 'radio', 0, '商品列表', 'grid', 'grid::网格\r\nlist::列表', NULL, '控制商品列表页是否显示样式。注：目前只能控制WAP端', 255, 1, NULL, '2018-12-24 16:00:03', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (370, 'goods_info_freight', '商品详情页运费模式', NULL, 'goods', 'radio', 0, '商品详情', '2', '2::隐藏配送地区\r\n0::显示具体运费\r\n1::仅显示“有货”、“无货”等信息，不显示具体运费', NULL, NULL, 255, 1, NULL, '2018-12-24 16:01:56', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (371, 'goods_info_show_stock', '是否显示商品详情页库存', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏，无货时显示“库存不足”\r\n1::显示', NULL, '用于控制商品详情页面是否展示具体的商品库存', 255, 1, NULL, '2018-12-24 16:03:20', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (372, 'goods_info_pickup', '是否显示商品详情页自提点', NULL, 'goods', 'radio', 0, '商品详情', '0', '0::隐藏\r\n1::显示', NULL, '用于控制商品详情页是否展示自提点列表', 255, 1, NULL, '2018-12-24 16:04:18', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (373, 'goods_info_show_collect', '是否显示商品收藏人气', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制商品详情页是否展示具体的收藏人气', 255, 1, NULL, '2018-12-24 16:05:31', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (374, 'shop_show_collect', '是否显示店铺收藏人气', NULL, 'goods', 'radio', 0, '商品详情', '1', '0::隐藏\r\n1::显示', NULL, '用于控制店铺相关页面是否展示具体的店铺收藏人气', 255, 1, NULL, '2018-12-24 16:06:26', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (375, 'goods_video_enable', '是否开启商品主图视频', NULL, 'goods', 'radio', 0, '商品视频', '1', '0::关闭\r\n1::开启', NULL, '开启后，卖家中心发布、编辑商品时可以为商品添加主图视频用于在商品详情页展示；关闭后将禁用此功能，上传的主图视频无法在商品详情展示。', 255, 1, NULL, '2018-12-24 16:07:46', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (376, 'goods_video_min_duration', '主图视频时长 最小时长', NULL, 'goods', 'short_text', 1, '商品视频', '0', NULL, NULL, '设置商品主图视频的时长大小，单位：秒，默认为0~90秒', 255, 1, NULL, '2018-12-24 16:09:23', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (377, 'goods_video_max_duration', '主图视频时长 最大时长', NULL, 'goods', 'short_text', 1, '商品视频', '90', NULL, NULL, '设置商品主图视频的时长大小，单位：秒，默认为0~90秒', 255, 1, NULL, '2018-12-24 16:10:19', '2018-12-24 16:34:40');
+INSERT INTO `system_config_copy` VALUES (378, 'goods_video_article', '主图视频规则文章', NULL, 'goods', 'text', 0, '商品视频', NULL, NULL, NULL, '设置描述商品主图视频上传要求规则的文章链接地址，设置后会展示在商品发布、编辑页面中主图视频提示中，便于用户了解视频要求;<br><span style=\"color: red;\">为了兼容各端浏览器，目前暂支持视频格式：mpeg4（H.264）、ogg、webm</span>；<br>Ogg = 带有 Theora 视频编码和 Vorbis 音频编码的 Ogg 文件;<br>MPEG4 = 带有 H.264 视频编码和 AAC 音频编码的 MPEG 4文件;<br>WebM = 带有 VP8 视频编码和 Vorbis 音频编码的 WebM 文件;', 255, 1, NULL, '2018-12-24 16:11:51', '2018-12-24 16:34:40');
 COMMIT;
 
 -- ----------------------------
@@ -6882,7 +8901,7 @@ CREATE TABLE `template` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of template
@@ -6981,7 +9000,7 @@ CREATE TABLE `template_cat` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of template_cat
@@ -7042,18 +9061,7 @@ CREATE TABLE `template_item` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of template_item
--- ----------------------------
-BEGIN;
-INSERT INTO `template_item` VALUES (7, '1545453446VDQCZS', 'm_banner', NULL, NULL, NULL, '1', 'app', '0', '0', '0', 1, NULL, NULL, '2018-12-22 04:37:26', '2018-12-22 04:37:26');
-INSERT INTO `template_item` VALUES (9, '1545460445MGCEUD', 'm_banner', 'a:1:{s:3:\"3-1\";a:1:{i:0;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/12/22/15454604783408.jpg\";s:11:\"image_width\";s:4:\"1024\";s:12:\"image_height\";s:3:\"625\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"1\";}}}', 'a:0:{}', NULL, '1', 'm_site', '0', '0', '0', 1, NULL, NULL, '2018-12-22 06:34:05', '2018-12-22 06:34:50');
-INSERT INTO `template_item` VALUES (11, '1545469056UAVZGF', 'm_ad_s1', 'a:1:{s:3:\"3-1\";a:5:{i:0;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296759403924.jpg\";s:11:\"image_width\";s:3:\"270\";s:12:\"image_height\";s:3:\"440\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"1\";}i:1;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296761749947.jpg\";s:11:\"image_width\";s:3:\"270\";s:12:\"image_height\";s:3:\"440\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"2\";}i:2;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296758923562.jpg\";s:11:\"image_width\";s:3:\"178\";s:12:\"image_height\";s:3:\"440\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"3\";}i:3;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296736925509.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:2:\"60\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"4\";}i:4;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/21/15295957187340.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:3:\"120\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"5\";}}}', 'a:0:{}', NULL, '1', 'm_site', '0', '0', '0', 2, NULL, NULL, '2018-12-22 08:57:36', '2018-12-22 09:00:21');
-INSERT INTO `template_item` VALUES (12, '1545469058SGOTJY', 'm_ad_s2', 'a:2:{s:3:\"3-1\";a:1:{i:0;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296761749947.jpg\";s:11:\"image_width\";s:3:\"270\";s:12:\"image_height\";s:3:\"440\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"1\";}}s:3:\"3-2\";a:2:{i:0;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296759403924.jpg\";s:11:\"image_width\";s:3:\"270\";s:12:\"image_height\";s:3:\"440\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"1\";}i:1;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296736925509.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:2:\"60\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"2\";}}}', 'a:0:{}', NULL, '1', 'm_site', '0', '0', '0', 3, NULL, NULL, '2018-12-22 08:57:38', '2018-12-22 09:34:15');
-INSERT INTO `template_item` VALUES (13, '1545469062MHZXNR', 'm_ad_s3', 'a:1:{s:3:\"3-1\";a:8:{i:0;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296736925509.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:2:\"60\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"1\";}i:1;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296736925509.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:2:\"60\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"2\";}i:2;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296771708195.jpg\";s:11:\"image_width\";s:3:\"165\";s:12:\"image_height\";s:2:\"55\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"3\";}i:3;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296771708195.jpg\";s:11:\"image_width\";s:3:\"165\";s:12:\"image_height\";s:2:\"55\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"4\";}i:4;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296736925509.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:2:\"60\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"5\";}i:5;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296771708195.jpg\";s:11:\"image_width\";s:3:\"165\";s:12:\"image_height\";s:2:\"55\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"6\";}i:6;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296736925509.jpg\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:2:\"60\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"7\";}i:7;a:6:{s:4:\"path\";s:44:\"/site/1/images/2018/06/22/15296771708195.jpg\";s:11:\"image_width\";s:3:\"165\";s:12:\"image_height\";s:2:\"55\";s:4:\"link\";N;s:9:\"link_type\";s:1:\"0\";s:4:\"sort\";s:1:\"8\";}}}', 'a:0:{}', NULL, '1', 'm_site', '0', '0', '0', 4, NULL, NULL, '2018-12-22 08:57:42', '2018-12-22 09:40:00');
-COMMIT;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for template_page
@@ -7066,7 +9074,7 @@ CREATE TABLE `template_page` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of template_page
@@ -7106,7 +9114,7 @@ CREATE TABLE `template_selector` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of template_selector
@@ -7168,7 +9176,7 @@ CREATE TABLE `user` (
   `headimg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '会员头像',
   `faceimg1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'faceimg1',
   `faceimg2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'faceimg2',
-  `address_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '地址代码',
+  `address_now` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '地址代码',
   `detail_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '详细地址',
   `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机号',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
@@ -7189,12 +9197,14 @@ CREATE TABLE `user` (
   `type` tinyint NOT NULL DEFAULT '0' COMMENT '用户类型',
   `surplus_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '余额支付密码',
   `pay_point` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0|0' COMMENT '消费积分 平台积分|店铺积分',
+  `frozen_point` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '冻结积分',
   `password_reset_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '重置密码令牌',
   `auth_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '授权码',
   `user_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '会员备注',
   `salt` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '混淆码',
-  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id 默认0 店铺id',
-  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '网点idid 默认0 网点id',
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id 默认0',
+  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '网点id 默认0',
+  `multi_store_id` int NOT NULL DEFAULT '0' COMMENT '多网点id 默认0',
   `is_seller` tinyint NOT NULL DEFAULT '0' COMMENT '个人/店主默认0 0个人 1店主 2网点管理员',
   `reg_from` tinyint NOT NULL DEFAULT '0' COMMENT '注册来源 0其他 1PC端 2WAP端 3微信端 4APP端 5后台添加',
   `address_id` int unsigned NOT NULL DEFAULT '0' COMMENT '默认收货地址id 默认0 0无默认收货地址',
@@ -7205,22 +9215,33 @@ CREATE TABLE `user` (
   `qq_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'qq_key',
   `weibo_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'weibo_key',
   `weixin_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'weixin_key',
+  `github_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'github_key',
+  `qq_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'QQ信息',
+  `weibo_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '微博信息',
+  `weixin_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '微信信息',
   `invite_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邀请码',
   `parent_id` int NOT NULL DEFAULT '0' COMMENT '推荐人ID',
   `is_recommend` int NOT NULL DEFAULT '0' COMMENT '是否被推荐 1 被推荐用户 0 不是被推荐用户',
+  `customs_money` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'customs_money',
+  `security_level` tinyint NOT NULL DEFAULT '0' COMMENT '安全级别',
   `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_user_name_unique` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 BEGIN;
-INSERT INTO `user` VALUES (1, 1, 'LRW186XUHP5369', '云溪荏苒', 1, 3, 0, NULL, NULL, '$2y$10$gCYgnzx9C/352ryf.IB1uee/MpyUZV/Ee3SwTp2TOrno1jMoMvPEa', 1, '2002-09-17', '/user/1/2018/12/28/15459848118688.png', NULL, NULL, '12,01,02', '万宏路', '18669035369', NULL, 1, 1, 1, 0.00, 0.00, 0.00, '2018-12-27 01:57:14', '127.0.0.1', '127.0.0.1', 37, 1, '2018-11-14 02:35:12', 1, 0, 0, NULL, '0|0', NULL, NULL, NULL, NULL, 1, 0, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'uhQNDUYuSzbIFpHdoHw7EtE7WyonpTLIP8LTTC1hqrVup67JaMJSCJTRA3Rh', '2018-08-08 14:20:37', '2018-12-28 08:14:50');
-INSERT INTO `user` VALUES (2, 1, 'zhang', NULL, 0, 0, 0, NULL, NULL, '$2y$10$TycJJ1RTK1LwlWg7wf7aXeWPOBrdUzwrwrtiaa3wg/nGrPEzOLiKW', 0, NULL, NULL, NULL, NULL, NULL, NULL, '13333332221', NULL, 1, 0, 0, 0.00, 0.00, 0.00, '2018-11-17 08:13:36', '127.0.0.1', NULL, 2, 0, NULL, 0, 0, 0, NULL, '0|0', NULL, NULL, NULL, NULL, 1, 2, 2, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2018-11-17 01:31:50', '2018-11-17 08:13:36');
+INSERT INTO `user` VALUES (1, 1, 'LRW186XUHP5369', '云溪荏苒', 1, 50000, 0, NULL, NULL, '$2y$10$qZasLVrBhtqdsApjoqJOjuohoDICa2d6RqF2tcwmEIgZmgpzKXk3i', 1, '1999-04-15', '/user/1/2021/06/19/16240876783552.png', NULL, NULL, '36,02,02', '德运', '18669035369', '410284576@qq.com', 1, 1, 1, 0.00, 0.00, 0.00, '2022-03-22 16:52:07', '192.168.1.191', '127.0.0.1', 383, 1, '2018-11-14 10:35:12', 1, 0, 0, '$2y$10$TTNGGsBgSaEKzdvpCZ99Y.hJ1y9RtHIPVvf3BaUJ.sGu2keJla.t6', '0|0', '0', NULL, '79c5feb5be612941c7082fb923b7a65e', NULL, NULL, 1, 0, 0, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 2, 'pFgBRUp5lP6aV706CO9YfAU9eNAVA9DM42D3atVCjuTAw80azu8Y0HQGFFcn', '2018-08-08 22:20:37', '2022-03-22 16:52:07');
+INSERT INTO `user` VALUES (2, 2, 'zhang', NULL, 0, 0, 0, NULL, NULL, '$2y$10$Qt.G.WXyJm6z/20r768Nh.VO9nkTqtXfLhkR.hu/zSOJY/CggHbhy', 0, NULL, NULL, NULL, NULL, NULL, NULL, '13333332221', NULL, 1, 0, 0, 0.00, 0.00, 0.00, '2021-12-04 14:27:58', '192.168.56.1', NULL, 4, 0, NULL, 0, 0, 0, NULL, '0|0', '0', NULL, 'd0cd2693b3506677e4c55e91d6365bff', NULL, NULL, 1, 2, 0, 2, 0, 0, NULL, NULL, NULL, '5GHlAzvWsixP6DnNs_gQ8aacBRybHRGQ-gWQGi_L4ejaIpwSOSg_3lB-_8kOmqvFJP8WxoBQ7TFkbP8zLdFivPnyfcJqDQAWPYqCeQ8Ruhs-lPI5qj-EPPGUvS8zDSEDu-qSSt5mghADvTsB6QI0ncpy5LJp-m-F_BGkyB_TSo3vLPq_yq7V8hMmoOp1OMJk7fpytBJ5CnMA6bFxGU_U6o2_6WkD7bIqzbLWoN3m9KLFrY5ShA2WacBRKbHRGQ-QWQGi_L4ejaIpwSOSgD8myMKV6OsSAW7mamBR2U5AnLLz2bDibL1j6gI5YhPizZ4yZV8l2mqv0W2ZKiOkDT20rLMUDS1CPF4T-V7pXoAzYRsC1T8QzY4ykJHpqiM1-NF0TPMU3iyPLFq_yj7q_o-z7YmG-FJlqZ3SZLH65gPkHUzBLI_Ayf4jqWovOt1aAWNXrL3VuMH12Z2SZIJ5CWQw6bFxGQ9Abh4PiUq-3mH5we934S5W6C5E3b5iNBGq9VBkWa3xqaNQWg2_G-4SP3iJ1oRK38D3VuPMAfP5SNIHJ6n7Rfd', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, NULL, '2018-11-17 09:31:50', '2021-12-04 14:27:58');
+INSERT INTO `user` VALUES (3, 0, 'LRW153NYDP4406', 'LRW153NYDP4406', 0, 0, 0, NULL, NULL, '$2y$10$mmm56QuijWyUATk5hRd6lecF/PwO0/cGrXBlSwQqDL4C7ub2wXmPG', 0, NULL, NULL, NULL, NULL, NULL, NULL, '15398474406', NULL, 1, 1, 1, 0.00, 0.00, 0.00, '2020-02-09 01:05:21', '127.0.0.1', '127.0.0.1', 3, 0, '2020-02-07 01:32:35', 1, 0, 0, NULL, '0|0', NULL, NULL, NULL, NULL, NULL, 30, 0, 0, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1, 'HR1DOEiOlgIZXISR2GhQIRS41Jryc5xQjAn8CoMcuAuJKg5MNkeoZ0EkVYio', '2020-02-07 01:32:35', '2020-02-09 01:05:21');
+INSERT INTO `user` VALUES (4, 0, 'LRW133MIGM3333', 'LRW133MIGM3333', 0, 0, 0, NULL, NULL, '$2y$10$jz45pkuwaW1aujoqiWDAI.oSNyw/QTX7YolGZmRilMUX2K.CrVFyG', 0, NULL, NULL, NULL, NULL, NULL, NULL, '13333333333', NULL, 1, 1, 1, 0.00, 0.00, 0.00, NULL, NULL, '127.0.0.1', 0, 1, '2020-02-09 19:44:07', 1, 0, 0, NULL, '0|0', NULL, NULL, NULL, NULL, NULL, 31, 0, 0, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1, 'QFSbkdDbm1p69p5DauhaPZXUYYHW84mZqgNUELi2z4k2is4I9Uq31Jxbz5RG', '2020-02-09 19:44:07', '2020-02-09 19:55:30');
+INSERT INTO `user` VALUES (10, 0, 'LRW150QJZW3819', 'LRW150QJZW3819', 0, 0, 0, NULL, NULL, '$2y$10$iiAuCh0JOWp2AWTBOafiD.9fXZ8.nZot0vBmkampSamCihRaFWksW', 0, NULL, NULL, NULL, NULL, NULL, NULL, '15025143819', '234@qq.com', 1, 1, 1, 0.00, 0.00, 0.00, NULL, NULL, '127.0.0.1', 0, 0, '2020-11-07 20:22:36', 1, 0, 0, NULL, '0|0', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, NULL, '2020-11-07 20:22:36', '2020-11-07 20:22:36');
+INSERT INTO `user` VALUES (11, 0, 'LRW186XQQZ5361', 'LRW186XQQZ5361', 0, 0, 0, NULL, NULL, '$2y$10$wDfr4o3yaXlflC//WlqwZu./ocmMQq3QMpeLmk/y.n4O412G/bBFS', 0, NULL, NULL, NULL, NULL, NULL, NULL, '18669035361', NULL, 1, 1, 1, 0.00, 0.00, 0.00, NULL, NULL, '192.168.10.1', 0, 0, '2021-08-03 08:07:24', 1, 0, 0, NULL, '0|0', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, NULL, '2021-08-03 08:07:24', '2021-08-03 08:07:24');
+INSERT INTO `user` VALUES (12, 2, 'multi_store', NULL, 0, 0, 0, NULL, NULL, '$2y$10$5uU2es0yVI5P14W2Q05pLODkIX/YnekRqVhV0epyweaDBkLPKzGoe', 0, NULL, NULL, NULL, NULL, NULL, NULL, '13333333111', NULL, 1, 0, 0, 0.00, 0.00, 0.00, NULL, NULL, NULL, 0, 0, NULL, 0, 0, 0, NULL, '0|0', NULL, NULL, '36f2e871f76d38d0ee4f854f8888edb9', NULL, NULL, 1, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, NULL, '2021-12-12 23:12:27', '2021-12-13 00:30:30');
 COMMIT;
 
 -- ----------------------------
@@ -7260,6 +9281,55 @@ BEGIN;
 INSERT INTO `user_address` VALUES (2, 1, '116.42792', '39.902896', '王立', '11,01,01', NULL, '北京站', '5楼', '家里', '18669035369', '0755-07553333', 1, '2432@qq.com', NULL, NULL, NULL, NULL, NULL, NULL, '2018-08-27 14:23:11', '2018-11-10 13:52:29');
 INSERT INTO `user_address` VALUES (3, 1, '102.709687', '25.039042', '王立1', '53,01,02', NULL, '昆明市西北部汽车客运站', '123a', '公司', '18669035369', '0755-3333222', 0, '2432@qq.com', NULL, NULL, NULL, NULL, NULL, NULL, '2018-08-27 14:42:56', '2018-11-10 13:52:29');
 COMMIT;
+
+-- ----------------------------
+-- Table structure for user_bonus
+-- ----------------------------
+DROP TABLE IF EXISTS `user_bonus`;
+CREATE TABLE `user_bonus` (
+  `user_bonus_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL DEFAULT '0' COMMENT '会员id',
+  `bonus_id` int unsigned NOT NULL DEFAULT '0' COMMENT '红包id',
+  `bonus_sn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '红包sn',
+  `bonus_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '红包金额',
+  `bonus_data` text COLLATE utf8mb4_unicode_ci COMMENT '红包扩展数据 序列化存储',
+  `receive_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包领取时间',
+  `used_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包使用时间',
+  `start_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包发放起始时间',
+  `end_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包发放截至时间',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '红包添加时间',
+  `order_sn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '订单sn',
+  `bonus_status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '红包状态 默认0 0-正常 1-已使用 2-已失效',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0-未删除 1-已删除',
+  `sales_id` int unsigned NOT NULL DEFAULT '0' COMMENT 'sales id',
+  `user_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '会员名',
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `bonus_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '红包类型 默认0 1-主动领红包/到店送红包 2-收藏送红包 4-会员送红包 6-注册送红包 9-推荐送红包 10-积分兑换红包',
+  `use_range` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '使用范围 默认0 0-全部商品 1-指定商品',
+  `bonus_datas` text COLLATE utf8mb4_unicode_ci COMMENT '红包扩展数据 序列化存储',
+  `min_goods_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '最小订单金额限制',
+  `is_original_price` tinyint(1) NOT NULL DEFAULT '1' COMMENT '仅限原价购买时使用 0-可与其他优惠、活动一起使用 1-仅限原价购买时使用',
+  `order_id` int unsigned NOT NULL DEFAULT '0' COMMENT '订单id',
+  `goods_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '红包商品ids 多个以逗号分隔',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`user_bonus_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='会员红包表';
+
+-- ----------------------------
+-- Table structure for user_message
+-- ----------------------------
+DROP TABLE IF EXISTS `user_message`;
+CREATE TABLE `user_message` (
+  `rec_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `msg_id` int unsigned NOT NULL DEFAULT '0' COMMENT '消息id 消息表主键id',
+  `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '消息状态 默认0 0-未读 1-已读',
+  `read_time` int unsigned NOT NULL DEFAULT '0' COMMENT '消息读取时间 默认0 0-未读',
+  `receiver` int unsigned NOT NULL DEFAULT '0' COMMENT '消息接收者会员id',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`rec_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户消息表';
 
 -- ----------------------------
 -- Table structure for user_rank
@@ -7318,6 +9388,72 @@ INSERT INTO `user_real` VALUES (1, 1, '张升', '500234198767891123', '/user/1/2
 INSERT INTO `user_real` VALUES (2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
 INSERT INTO `user_real` VALUES (3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2018-10-31 13:46:53', '2018-10-31 13:46:53');
 COMMIT;
+
+-- ----------------------------
+-- Table structure for user_shop_rank
+-- ----------------------------
+DROP TABLE IF EXISTS `user_shop_rank`;
+CREATE TABLE `user_shop_rank` (
+  `rank_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `rank_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '等级名称',
+  `rank_level` int unsigned NOT NULL COMMENT '等级级别 值范围1-10',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`rank_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of user_shop_rank
+-- ----------------------------
+BEGIN;
+INSERT INTO `user_shop_rank` VALUES (1, '普通会员（VIP1）', 1, '2018-10-28 16:12:44', '2018-10-28 16:12:44');
+INSERT INTO `user_shop_rank` VALUES (2, '高级会员(VIP2)', 2, '2018-10-28 16:14:44', '2018-10-28 16:14:44');
+INSERT INTO `user_shop_rank` VALUES (3, 'VIP会员(VIP3)', 3, '2018-10-28 16:15:03', '2018-10-28 16:15:03');
+INSERT INTO `user_shop_rank` VALUES (4, '至尊VIP会员(VIP4)', 4, '2018-10-28 16:15:14', '2018-10-28 16:15:14');
+INSERT INTO `user_shop_rank` VALUES (5, '钻石会员(VIP5)', 5, '2018-10-28 16:15:33', '2018-10-28 16:15:33');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for video
+-- ----------------------------
+DROP TABLE IF EXISTS `video`;
+CREATE TABLE `video` (
+  `video_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `dir_id` int unsigned NOT NULL COMMENT '相册id',
+  `dirname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '目录名称',
+  `extension` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '视频扩展名 如:jpg',
+  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '视频文件名 不带扩展名后缀',
+  `path` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '视频路径',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '视频原文件名 不带扩展名后缀',
+  `size` int unsigned NOT NULL DEFAULT '0' COMMENT '视频大小',
+  `width` int unsigned NOT NULL DEFAULT '0' COMMENT '视频宽度',
+  `height` int unsigned NOT NULL DEFAULT '0' COMMENT '视频高度',
+  `sort` smallint unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`video_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for video_dir
+-- ----------------------------
+DROP TABLE IF EXISTS `video_dir`;
+CREATE TABLE `video_dir` (
+  `dir_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `site_id` int unsigned NOT NULL DEFAULT '0' COMMENT '站点id',
+  `dir_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '目录名称',
+  `dir_group` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '视频分组 shop店铺视频 site站点视频 backend平台方视频',
+  `dir_cover` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '视频相册封面图',
+  `dir_desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述',
+  `dir_sort` smallint unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否默认视频文件夹',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`dir_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for yly_printer

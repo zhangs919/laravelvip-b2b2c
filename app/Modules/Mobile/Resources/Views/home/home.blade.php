@@ -8,8 +8,8 @@
 {{--header_js--}}
 @section('header_js')
     {{--首页内容--}}
-    <script src="/mobile/js/index.js?v=20180528"></script>
-    <script src="/mobile/js/swiper.jquery.min.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180528"></script>
+    <script src="/js/swiper.jquery.min.js?v=20180528"></script>
     <!-- GPS获取坐标 -->
     <script src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_web_key') }}"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
@@ -31,8 +31,8 @@
 @section('content')
 
     {{--首页内容--}}
-    <link rel="stylesheet" href="/mobile/css/index.css?v=20180428"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/index.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/swiper.min.css?v=20180428"/>
     <div class="app-download">
         <div class="app-download-tip-box">
             <div class="app-download-tip">
@@ -310,7 +310,7 @@
 
     </div>
 
-    <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+    <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
     <script type="text/javascript">
         $().ready(function(){
             //首先将#back-to-top隐藏
@@ -345,8 +345,8 @@
 
 
     <!--底部菜单 start-->
-    <script src="/mobile/js/custom_js.js?v=20180528"></script>
-    <link rel="stylesheet" href="/mobile/css/custom_css.css?v=20180428"/>
+    <script src="/js/custom_js.js?v=20180528"></script>
+    <link rel="stylesheet" href="/css/custom_css.css?v=20180428"/>
     <div style="height: 48px; line-height: 48px; clear: both;"></div>
     <div class="footer-nav">
 
@@ -387,7 +387,7 @@
                 <!---->
                 <a href="/category.html">
 
-                    <i style="background: url(/mobile/images/tab_category_normal.png);background-size: contain;"></i>
+                    <i style="background: url(/images/tab_category_normal.png);background-size: contain;"></i>
 
                     <span>分类列表</span>
                 </a>
@@ -406,7 +406,7 @@
                 <!---->
                 <a href="/cart.html">
 
-                    <i style="background: url(/mobile/images/tab_bought_list_normal.png);background-size: contain;"></i>
+                    <i style="background: url(/images/tab_bought_list_normal.png);background-size: contain;"></i>
 
                     <span>购物车</span>
                 </a>
@@ -425,7 +425,7 @@
                 <!---->
                 <a href="/user.html">
 
-                    <i style="background: url(/mobile/images/tab_cart_normal.png);background-size: contain;"></i>
+                    <i style="background: url(/images/tab_cart_normal.png);background-size: contain;"></i>
 
                     <span>用户中心</span>
                 </a>
@@ -444,7 +444,7 @@
                 <!---->
                 <a href="/group-buy-list-1.html">
 
-                    <i style="background: url(/mobile/images/tab_user_normal.png);background-size: contain;"></i>
+                    <i style="background: url(/images/tab_user_normal.png);background-size: contain;"></i>
 
                     <span>团购</span>
                 </a>
@@ -595,14 +595,14 @@
             <div class="weixin-tip">
                 <div class="tip-info">
 
-                    <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/system/config/mobile_setting_index/m_follow_wechat_icon_0.jpg">
+                    <img src="{{ get_image_url(sysconf('m_follow_wechat_icon')) }}">
 
                     <div class="tip-text">
-                        <h4>同城</h4>
-                        <p>赶快关注辽宁微信公众号</p>
+                        <h4>{{ sysconf('m_wechat_name') }}</h4>
+                        <p>赶快关注{{ sysconf('m_wechat_name') }}微信公众号</p>
                     </div>
                 </div>
-                <a class="attention-btn" href="javascript:void(0);">立即关注</a>
+                <a class="attention-btn" href="javascript:void(0);">{{ sysconf('m_follow_wechat_hint') }}</a>
             </div>
         </div>
     </div>
@@ -612,7 +612,7 @@
                 <p>长按二维码，关注公众号</p>
                 <div class="qr-box ub">
 
-                    <img src="http://images.68mall.com/system/config/mall/mall_wx_qrcode.jpg">
+                    <img src="{{ get_image_url(sysconf('mall_wx_qrcode')) }}">
 
                     <div class="finger-print">
                         <div class="scan-line"></div>
@@ -624,7 +624,7 @@
                 <ul>
                     <li>1、打开微信，点击添加朋友</li>
                     <li>2、点击“公众号”</li>
-                    <li>3、搜索公众号：辽宁</li>
+                    <li>3、搜索公众号：{{ sysconf('m_wechat_name') }}</li>
                     <li>4、点击”关注“，完成</li>
                 </ul>
             </div>

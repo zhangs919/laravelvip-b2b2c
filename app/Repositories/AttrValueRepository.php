@@ -30,11 +30,13 @@ class AttrValueRepository
             foreach ($attr_list as $item) {
                 $attr_values = $item->attr_value;
                 $attr_value_list = [];
-                foreach ($attr_values as $av) {
-                    $attr_value_list[] = [
-                        'id' => $av->attr_vid,
-                        'value' => $av->attr_vname
-                    ];
+                if (!empty($attr_values)) {
+                    foreach ($attr_values as $av) {
+                        $attr_value_list[] = [
+                            'id' => $av->attr_vid,
+                            'value' => $av->attr_vname
+                        ];
+                    }
                 }
                 $data[$item->attr_id] = $attr_value_list;
             }

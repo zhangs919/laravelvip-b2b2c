@@ -30,6 +30,8 @@ use App\Repositories\SeoRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 
 class Frontend extends Foundation
 {
@@ -76,7 +78,24 @@ class Frontend extends Foundation
         $this->copyrightAuth = new CopyrightAuthRepository();
         $this->flinks = new LinksRepository();
 
-        $this->session_id = session()->getId(); // 当前的 session_id
+        $this->session_id = real_cart_mac_ip(); // session()->getId(); // 当前的 session_id 26位
+//        $this->session_id = uuid(); // 当前的 session_id 6kjou63vcob06ilc4g5ihubauf
+
+
+
+        // 初始化一些数据
+        $time = 60 * 24 * 365;
+        $loading_style = cookie('loading_style')->getValue();
+        $loading_color = cookie('loading_color')->getValue();
+        if (empty($loading_style)) {
+            setcookie('loading_style', sysconf('loading_style'));
+//            cookie('loading_style', sysconf('loading_style'), $time); // 缓载样式 0::系统默认 1::极简风格
+        }
+        if (empty($loading_color)) {
+            setcookie('loading_color', sysconf('loading_color'));
+//            cookie('loading_color', sysconf('loading_color'), $time); // 缓载颜色 如：#fff
+        }
+
 
         // 设置模板路径
 //        $this->view_path = 'frontend.web.tpl_2018.';
@@ -136,14 +155,16 @@ class Frontend extends Foundation
 
                 // 会员等级信息
                 $userRep = new UserRepository();
-                $userRankInfo = $userRep->getUserRank($this->user->rank_points);
+                $userRankInfo = $userRep->getUserRank($this->user->rank_point);
                 view()->share('user_rank_info', $userRankInfo);
                 $this->user_rank_info = $userRankInfo;
 
                 // 会员安全级别
                 $userSecurityLevel = $userRep->getUserSecurityLevel($this->user);
-                $this->user->security_level = $userSecurityLevel;
-                view()->share('user_info', $this->user);
+                $user_info = $this->user;
+                $user_info->security_level = $userSecurityLevel;
+
+                view()->share('user_info', $user_info);
 
 
                 // 给用户计算会员价 登录前后不一样 todo 后期完善
@@ -158,7 +179,7 @@ class Frontend extends Foundation
 
             // 如果某些页面需要登录验证 则判断
             if (!auth('user')->check() && $this->need_auth) {
-                if ($request->ajax()) {
+                if ($request->ajax() || is_app()) { // 异步加载、app端访问
                     return result(99, null, '需要登录');
                 } else {
                     redirect('/login.html')->send();exit();
@@ -168,7 +189,8 @@ class Frontend extends Foundation
             // 获取当前登录用户购物车商品数量
             $cart = new CartRepository();
             $cart->setUserId($this->user_id);
-            $cart->setUniqueId(session()->getId());
+//            $cart->setUniqueId(session()->getId());
+            $cart->setUniqueId($this->session_id);
             $this->cart_goods_num = $cart->getUserCartGoodsNum();
             view()->share('cart_goods_num',$this->cart_goods_num);
 
@@ -188,6 +210,9 @@ class Frontend extends Foundation
 //        $this->displayData();
 //        $this->compactPcCommonData(); // 默认输出PC端公共变量
 //        $this->compactMobileCommonData(); // 默认输出Mobile端公共变量
+
+
+
 
     }
 
@@ -285,6 +310,7 @@ class Frontend extends Foundation
      *
      * @param string|array $type 如：seo_goods（商品详情页）
      * @param array $params
+     * @return mixed
      */
     public function show_seo($type, $params = []){
 
@@ -297,11 +323,17 @@ class Frontend extends Foundation
             if (isset($seoArr['image'])) {
                 $seo['image'] = preg_replace("/{.*}/siU",'', $seoArr['image']);
             }
+            $seo['title'] = !empty($seo['title']) ? $seo['title'] : sysconf('site_name');
+            $seo['keywords'] = !empty($seo['keywords']) ? $seo['keywords'] : sysconf('site_name');
+            $seo['discription'] = !empty($seo['discription']) ? $seo['discription'] : sysconf('site_name');
+            $seo['image'] = isset($seo['image']) ? $seo['image'] : '';
 
-            view()->share('seo_title', !empty($seo['title']) ? $seo['title'] : sysconf('site_name'));
-            view()->share('seo_keywords', !empty($seo['keywords']) ? $seo['keywords'] : sysconf('site_name'));
-            view()->share('seo_description', !empty($seo['discription']) ? $seo['discription'] : sysconf('site_name'));
-            view()->share('seo_image', isset($seo['image']) ? $seo['image'] : '');
+            view()->share('seo_title', $seo['title']);
+            view()->share('seo_keywords', $seo['keywords']);
+            view()->share('seo_description', $seo['discription']);
+            view()->share('seo_image', $seo['image']);
+
+            return $seo;
         }
 
     }
@@ -356,6 +388,13 @@ class Frontend extends Foundation
             $user_rank_info = $this->user_rank_info;
             $unreadMsgCnt = "0"; // todo 未读消息数量
 
+            $last_region_code = null;
+            $lrw_last_region_code = session('LRW_LAST_REGION_CODE');
+            if (!empty($lrw_last_region_code)) {
+                $lrw_last_region_code_arr = unserialize(substr($lrw_last_region_code,64));
+                $last_region_code = $lrw_last_region_code_arr[1];
+            }
+
             $user_info = [
                 'user_id' => $user->user_id,
                 'user_name' => $user->user_name,
@@ -369,7 +408,7 @@ class Frontend extends Foundation
                 'shop_id' => $user->shop_id,
                 'last_time' => strtotime($user->last_login),
                 'last_ip' => $user->last_ip,
-                'last_region_code' => null,
+                'last_region_code' => $last_region_code,
                 'user_rank' => [
                     'rank_id' => $user_rank_info['rank_id'],
                     'rank_name' => $user_rank_info['rank_name'],

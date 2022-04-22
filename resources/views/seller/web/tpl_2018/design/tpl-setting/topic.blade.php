@@ -106,13 +106,13 @@
         <div id="NAVIGATIONTPL">
             <!-- 引入头部 -->
             <!-- 引入头部文件 -->
-            <script src="/frontend/js/index.js?v=20180813"></script>
-            <script src="/frontend/js/tabs.js?v=20180813"></script>
-            <script src="/frontend/js/bubbleup.js?v=20180813"></script>
-            <script src="/frontend/js/jquery.hiSlider.js?v=20180813"></script>
-            <script src="/frontend/js/index_tab.js?v=20180813"></script>
-            <script src="/frontend/js/jump.js?v=20180813"></script>
-            <script src="/frontend/js/nav.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/tabs.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/bubbleup.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jquery.hiSlider.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index_tab.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=20180813"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/nav.js?v=20180813"></script>
 
 
             <div class="header">

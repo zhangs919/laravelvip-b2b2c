@@ -36,9 +36,9 @@
                                 </li>
                                 @foreach($shop_category_list as $v)
                                     <li>
-							<span>
-								<i class="icon-minus-sign"></i>
-							</span>
+                                        <span>
+                                            <i class="icon-minus-sign"></i>
+                                        </span>
                                         <a href="/shop/{{ $shop_info['shop']['shop_id'] }}/list.html?cat_id={{ $v['cat_id'] }}"
                                            target="_self" title="{{ $v['cat_name'] }}" class="tree-first">{{ $v['cat_name'] }}</a>
                                         <ul>
@@ -48,9 +48,9 @@
                                             @if(!empty($v['_child']))
                                                 @foreach($v['_child'] as $child)
                                                     <li>
-                                        <span>
-                                            <i class="arrow"></i>
-                                        </span>
+                                                        <span>
+                                                            <i class="arrow"></i>
+                                                        </span>
                                                         <a href="/shop/{{ $shop_info['shop']['shop_id'] }}/list.html?cat_id={{ $v['cat_id'] }}"
                                                            target="_self" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                                                     </li>
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="total">
                                     共
-                                    <span class="color">0</span>
+                                    <span class="color">{{ $goods_total }}</span>
                                     个商品
                                 </div>
                             </div>
@@ -182,7 +182,7 @@
                         <!--当没有数据时，显示如下div-->
                         @if($goods_total == 0)
                         <div class="tip-box">
-                            <img src="/frontend/images/noresult.png" class="tip-icon">
+                            <img src="/images/noresult.png" class="tip-icon">
                             <div class="tip-text">抱歉！没有搜索到您想要的结果……</div>
                         </div>
                         @endif
@@ -201,7 +201,7 @@
             </div>
         </div>
 
-        <script src="/frontend/js/category.js?v=20181123"></script>
+        <script src="/js/category.js?v=20181123"></script>
         <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20181123"></script>
         <script type="text/javascript">
             $().ready(function() {

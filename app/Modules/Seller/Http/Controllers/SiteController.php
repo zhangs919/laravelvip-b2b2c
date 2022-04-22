@@ -22,7 +22,9 @@
 
 namespace App\Modules\Seller\Http\Controllers;
 
+use App\Models\Shop;
 use App\Models\ShopCategory;
+use App\Models\TplBackup;
 use App\Modules\Base\Http\Controllers\Foundation;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ImageDirRepository;
@@ -31,6 +33,9 @@ use App\Repositories\RegionRepository;
 use App\Repositories\ShopCategoryRepository;
 use App\Repositories\ToolsRepository;
 use App\Repositories\TplBackupRepository;
+use App\Repositories\UploadVideoRepository;
+use App\Repositories\VideoDirRepository;
+use App\Repositories\VideoRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -42,17 +47,24 @@ class SiteController extends Foundation
 
     protected $tools; // 工具类 如：图片上传
 
+    protected $uploadVideo; // 上传视频
+
     protected $regions;
 
     protected $category;
 
     protected $shopCategory; // 店铺内分类
 
-    protected $imageDir;
-
     protected $tplBackup; // 模板备份
 
+    protected $imageDir;
+
     protected $image;
+
+    protected $videoDir;
+
+    protected $video;
+
 
     /**
      * SiteController constructor.
@@ -60,27 +72,35 @@ class SiteController extends Foundation
      * @param RegionRepository $regionRepository
      * @param CategoryRepository $categoryRepository
      * @param ShopCategoryRepository $shopCategoryRepository
+     * @param TplBackupRepository $tplBackupRepository
      * @param ImageDirRepository $imageDirRepository
      * @param ImageRepository $imageRepository
-     * @param TplBackupRepository $tplBackupRepository
+     * @param VideoDirRepository $videoDirRepository
+     * @param VideoRepository $videoRepository
      */
     public function __construct(ToolsRepository $tools,
+                                UploadVideoRepository $uploadVideoRepository,
                                 RegionRepository $regionRepository,
                                 CategoryRepository $categoryRepository,
                                 ShopCategoryRepository $shopCategoryRepository,
+                                TplBackupRepository $tplBackupRepository,
                                 ImageDirRepository $imageDirRepository,
                                 ImageRepository $imageRepository,
-                                TplBackupRepository $tplBackupRepository)
+                                VideoDirRepository $videoDirRepository,
+                                VideoRepository $videoRepository)
     {
         parent::__construct();
 
         $this->tools = $tools;
+        $this->uploadVideo = $uploadVideoRepository;
         $this->regions = $regionRepository;
         $this->category = $categoryRepository;
         $this->shopCategory = $shopCategoryRepository;
+        $this->tplBackup = $tplBackupRepository;
         $this->imageDir = $imageDirRepository;
         $this->image = $imageRepository;
-        $this->tplBackup = $tplBackupRepository;
+        $this->videoDir = $videoDirRepository;
+        $this->video = $videoRepository;
     }
 
 
@@ -161,33 +181,80 @@ class SiteController extends Foundation
 
     public function videoGallery(Request $request)
     {
+        // 检查是否有上传视频的权限
+//        return result(-1, '', '您没有权限上传视频，请先开通OSS！');
 
-        if ($request->method() == 'POST') {
-
-            // 检查是否有上传视频的权限
-            return result(-1, '', '您没有权限上传视频，请先开通OSS！');
-
-//            $filename = $request->post('filename', 'name');
-//            $storePath = 'backend/gallery'; // 需要判断是平台方 还是店铺 站点
-////            dd($request->post());
-//            $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
-//
-//            if (isset($uploadRes['error'])) {
-//                // 上传出错
-//                return result(-1, '', $uploadRes['error']);
-//            }
-//
-//            return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
+        $params = $request->all();
+        $uuid = make_uuid();
+        $sort_name = $request->get('sort_name', '');
+        $dir_id = $request->get('dir_id', 0);
+        $sortname = 'created_at';
+        $sortorder = 'desc';
+        $video_name = $request->get('video_name', ''); // 视频名称
+//        dd($params);
+        if ($sort_name != '') {
+            $sortArr = explode('-', $sort_name);
+            $sortname = $sortArr[0];
+            $sortorder = $sortArr[1];
         }
 
-//        $params = $request->all();
-//
-//        $tpl = 'video_gallery';
-//        if (!isset($params['output'])) {
-//            $tpl = 'video_gallery_list';
-//        }
-//        $render = view('site.'.$tpl, $params)->render();
-//        return result(0, $render);
+        $condition = [
+            'where' => [
+                ['dir_group', 'shop'],
+                ['shop_id', seller_shop_info()->shop_id],
+            ],
+            'limit' => 0,
+            'sortname' => 'dir_sort',
+            'sortorder' => 'asc'
+        ];
+        list($video_dir_list, $total) = $this->videoDir->getList($condition);
+
+        if (!$dir_id) {
+            $dir_id = $video_dir_list[0]->dir_id;
+        }
+        $where = [];
+        $where[] = ['dir_id', $dir_id];
+        $where[] = ['is_delete', 0];
+        if (!empty($video_name)) {
+            $where[] = ['name', 'like', "%{$video_name}%"];
+        }
+        $videoCondition = [
+            'where' => $where,
+            'sortname' => $sortname,
+            'sortorder' => $sortorder
+        ];
+
+        list($video_list, $video_total)= $this->video->getList($videoCondition);
+        $pageHtml = short_pagination($video_total); // 分页
+
+        $size = $request->post('size', 1);
+        $tpl = 'video_gallery';
+        if (!isset($params['output'])) {
+            $tpl = 'partials._video_gallery_list';
+        }
+//        $tpl = 'partials._video_gallery_list';
+        if ($request->method() == 'POST') {
+            // 上传图片
+            $dir_id = $request->post('dir_id', 0); // 相册id
+            $filename = $request->post('filename', 'name');
+            $storePath = 'videos/shop/'.seller_shop_info()->shop_id.'/gallery'; // 店铺相册
+            $uploadRes = $this->uploadVideo->uploadVideo($request, $filename, $storePath);
+
+            if (isset($uploadRes['error'])) {
+                // 上传出错
+                return result(-1, '', $uploadRes['error']);
+            }
+
+            // 记录日志
+            shop_log('上传视频，成功：'.$uploadRes['count'].'个。视频相册ID：'.$dir_id);
+
+            return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
+        }
+
+        $params = $request->get('page');
+        $page_id = $params['page_id'];
+        $render = view('site.'.$tpl, compact('page_id', 'size', 'video_dir_list', 'video_list', 'pageHtml', 'uuid', 'dir_id'))->render();
+        return result(0, $render);
     }
 
     public function uploadImage(Request $request)
@@ -247,29 +314,65 @@ class SiteController extends Foundation
         return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
     }
 
+    /**
+     * 视频选择器
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
     public function videoSelector(Request $request)
     {
-        $params = $request->all();
         $uuid = make_uuid();
-        if ($request->method() == 'POST') {
-            $size = $request->post('size', 0);
-            $condition = [
-                'where' => [['dir_group', '=', 'backend']]
-            ];
-            list($video_dir_list, $total)= $this->imageDir->getList($condition); // todo
-            $render = view('site.video_selector', compact('size', 'video_dir_list', 'uuid'))->render();
-            return result(0, $render);
+        $sort_name = $request->get('sort_name', '');
+        $dir_id = $request->get('dir_id', 0);
+        $sortname = 'created_at';
+        $sortorder = 'desc';
+        if ($sort_name != '') {
+            $sortArr = explode('-', $sort_name);
+            $sortname = $sortArr[0];
+            $sortorder = $sortArr[1];
         }
-//        $tpl = 'image_selector';
-//        $render = view('site.'.$tpl, $params)->render();
 
-        if (isset($params['output'])) {
-            $tpl = 'video_selector_list';
+        $condition = [
+            'where' => [
+                ['dir_group', 'shop'],
+                ['shop_id', seller_shop_info()->shop_id],
+            ],
+            'sortname' => 'dir_sort',
+            'sortorder' => 'asc'
+        ];
+        list($video_dir_list, $total) = $this->videoDir->getList($condition);
+
+        if (!$dir_id) {
+            $dir_id = $video_dir_list[0]->dir_id;
         }
-        $render = view('site.'.$tpl)->render();
+        $videoCondition = [
+            'where' => [['dir_id', '=', $dir_id]],
+            'sortname' => $sortname,
+            'sortorder' => $sortorder
+        ];
+        list($video_list, $video_total)= $this->video->getList($videoCondition);
+        $pageHtml = short_pagination($video_total); // 分页
+
+        $size = 1;
+        $tpl = 'partials._video_selector_list';
+        if ($request->method() == 'POST') {
+            $size = $request->post('size', 1);
+            $tpl = 'video_selector';
+        }
+
+        $render = view('site.'.$tpl, compact('size', 'video_dir_list', 'video_list', 'pageHtml', 'uuid', 'dir_id'))->render();
         return result(0, $render);
     }
 
+    /**
+     * 图片选择器
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
     public function imageSelector(Request $request)
     {
         $params = $request->all();
@@ -558,13 +661,28 @@ class SiteController extends Foundation
             $render = view('site.tpl_backup', compact('uuid'))->render();
 
         } elseif ($action == 'usetpl') {
-            // 使用模板
+            // 使用模板/取消使用模板
             $id = $request->get('id');
             $topic_id = $request->get('topic_id', 0);
 
             // todo 如何使用模板
+            $tpl_backup_info = TplBackup::where('back_id', $id)->first();
+            $shop_back_id = Shop::where('shop_id', seller_shop_info()->shop_id)->value('back_id');
+            $update = [
+                'back_id' => $id
+            ];
+            if ($tpl_backup_info->is_theme && $id == $shop_back_id) {
+                // 主题风格 // 取消主题
+                $update = [
+                    'back_id' => 0
+                ];
+            }
+            $ret = Shop::where('shop_id', seller_shop_info()->shop_id)->update($update);
+            if ($ret === false) {
+                return result(-1, null, '设置失败');
+            }
 
-            return result(0, null, '设置成功');
+            return result(0, null, '设置成功！');
 
         } elseif ($action == 'delete') {
             // 删除模板

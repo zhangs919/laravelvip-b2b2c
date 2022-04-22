@@ -28,9 +28,9 @@
     <link rel="stylesheet" href="/assets/d2eace91/bootstrap/switch/css/bootstrap-switch.min.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/js/chosen/chosen.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=1.2"/>
-    <link rel="stylesheet" href="/seller/css/seller.css?v=1.2"/>
+    <link rel="stylesheet" href="/css/seller.css?v=1.2"/>
     <!-- -->
-    <link rel="stylesheet" href="/seller/css/mj-style.css?v=1.2"/>
+    <link rel="stylesheet" href="/css/mj-style.css?v=1.2"/>
     <!-- ================== END BASE CSS STYLE ================== -->
     <!--[if lt IE 9]>
     <script src="/assets/d2eace91/js/html5shiv.min.js?v=1.2"></script>
@@ -53,7 +53,7 @@
     <script src="/assets/d2eace91/js/jquery.cookie.js?v=1.2"></script>
     <script src="/assets/d2eace91/js/clipboard.min.js?v=1.2"></script>
     <!-- 加载Chosen插件 END-->
-    <script src="/seller/js/common.js?v=1.2"></script>
+    <script src="/js/common.js?v=1.2"></script>
     {{--todo 暂时注释--}}
     <script src="/assets/d2eace91/js/lodop/LodopFuncs.js?v=1.2"></script>
     <script type="text/javascript">
@@ -282,7 +282,7 @@
 
     <div id="message-box" class="notice-center">
         <div class="notice-nav">
-            <a class="notice-nav-service" href="https://kf.yunmall.68mall.com/admin/login/witchAccount.html?url=UmIEawE2AjRQOFUfCGpQN1MRBGwDUFEtBC9SJFF6BHBcTVQVUG4HJ1tsAXFcJwZLBzdTKQFVUDsBNQZMBTVSB1JGBH0BKwI%2FUHdVdAhxUChTIgRiAz1RZQR%2BUiJRcwRmXH1UC1BqBzBbMwE0" target='_blank'><span class="icon customer-service"></span>客服消息</a><a class="notice-nav-message"><span class="icon message-reminder"></span>消息<em id="message_logo" class="m-l-5" >1</em></a>
+            <a class="notice-nav-service" href="http://{{ env('KF_DOMAIN') }}/admin/login/witchAccount.html?url=UmIEawE2AjRQOFUfCGpQN1MRBGwDUFEtBC9SJFF6BHBcTVQVUG4HJ1tsAXFcJwZLBzdTKQFVUDsBNQZMBTVSB1JGBH0BKwI%2FUHdVdAhxUChTIgRiAz1RZQR%2BUiJRcwRmXH1UC1BqBzBbMwE0" target='_blank'><span class="icon customer-service"></span>客服消息</a><a class="notice-nav-message"><span class="icon message-reminder"></span>消息<em id="message_logo" class="m-l-5" >{{ $messageCount ?? '' }}</em></a>
         </div>
         <div class="noticePanel" style="display: none;">
             <div class="noticePanel-title">消息通知<span id="notice-close" class="icon-close">×</span></div>

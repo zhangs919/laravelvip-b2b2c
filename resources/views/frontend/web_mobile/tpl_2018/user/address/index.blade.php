@@ -2,24 +2,12 @@
 
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/mobile/css/user.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/user.css?v=20180702"/>
 @stop
 
 {{--header_js--}}
 @section('header_js')
-    <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/yii.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
-    <script src="/mobile/js/user.js?v=20180813"></script>
-    <script src="/mobile/js/address.js?v=20180813"></script>
-    <script src="/mobile/js/center.js?v=20180813"></script>
-    <!-- 图片缓载js -->
-    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/szy.page.more.js?v=20180813"></script>
+
 @stop
 
 
@@ -51,7 +39,7 @@
                         <!--没有收货地址时 start-->
                         <div class="no-data-div">
                             <div class="no-data-img">
-                                <img src="/mobile/images/bg_empty_data.png">
+                                <img src="/images/bg_empty_data.png">
                             </div>
                             <dl>
                                 <dt>没有收货地址</dt>
@@ -72,7 +60,7 @@
                                             @if(!empty($address->address_label))
                                                 <em class="company-address-icon">{{ $address->address_label }}</em>
                                             @endif
-                                            {{ $address->region_code }} {{ $address->address_detail }}
+                                            {{ get_region_names_by_region_code($address->region_code, ' ') }} {{ $address->address_detail }}
                                         </dd>
                                     </dl>
                                     <div class="address-bottom">
@@ -146,7 +134,7 @@
             @endif
         })
     </script>
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
     <div class="show-menu-info" id="menu">

@@ -8,7 +8,7 @@
                 <a href="{{ route('mobile_shop_home', ['shop_id'=>$v->shop_id]) }}">
                     <div class="shop-logo">
 
-                        <img src="{{ get_image_url($v->shop_logo, 'shop_logo') }}" alt="{{ $v->shop_name }}">
+                        <img src="{{ get_image_url($v->shop_image, 'shop_image') }}" alt="{{ $v->shop_name }}">
 
                     </div>
                     <dl class="shop-content">
@@ -18,7 +18,7 @@
 
                         <dd class="is-opening-{{ $v->shop_id }}">
 <span class="shop-rank">
-<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/" title="" />
+<img src="{{ get_image_url($v->shop_rank) }}" title="" />
 </span>
                             <span class="shop-rank-num">5.00</span>
                             <span class="shop-sold">
@@ -28,6 +28,7 @@
 
 </span>
                         </dd>
+                        @if($distance > 0)
                         <dd>
                             <span class="shop-start-price">起送  ￥{{ $v->start_price }}</span>
 
@@ -38,10 +39,10 @@
 <em>分钟</em>
 </span>
                             <span class="line"></span>
-                            <span class="shop-distance-num">1740.05km</span>
+                            <span class="shop-distance-num">{{ $v->distance }}km</span>
 
                         </dd>
-
+                        @endif
 
                         <div class="activity-tag">
 
@@ -51,7 +52,9 @@
 
                     </dl>
                 </a>
+                @if($distance > 0)
                 <span class="shop-distance SZY-MAP-NAV" style="cursor: pointer;" id="distance_{{ $v->shop_id }}" data-lat="{{ $v->shop_lat }}" data-lng="{{ $v->shop_lng }}" data-title="{{ $v->shop_name }}" data-content="{{ $v->address }}"> 导航 </span>
+                @endif
             </div>
             @endforeach
 

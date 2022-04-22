@@ -14,7 +14,7 @@
             <span>店铺运营的首要任务</span>
         </p>
         <div class="guide-content" style="width:990px;">
-            <img class="guide-content-image m-r-30" src="/seller/images/guide/step1.png" alt="第一步：店铺基本设置" width="655">
+            <img class="guide-content-image m-r-30" src="/images/guide/step1.png" alt="第一步：店铺基本设置" width="655">
             <dl class="step-text left" style="top: 140px; left: 50px;">
                 <dt>1</dt>
                 <dd>维护店铺头像、logo等基本信息以及店铺经营信息</dd>
@@ -50,7 +50,7 @@
         </p>
 
         <div class="guide-content" style="width:990px;">
-            <img class="guide-content-image m-r-20" src="/seller/images/guide/step2.png" alt="店铺与消费者之间的互动工具设置" width="746">
+            <img class="guide-content-image m-r-20" src="/images/guide/step2.png" alt="店铺与消费者之间的互动工具设置" width="746">
             <dl class="step-text left" style="top: 120px; left: 0px; width: 220px">
                 <dt>1</dt>
                 <dd>设置店铺不同的管理员，分别打理店铺</dd>
@@ -87,7 +87,7 @@
         </p>
 
         <div class="guide-content" style="height:360px; width:990px">
-            <img class="guide-content-image" style="margin-right: 120px;" src="/seller/images/guide/step3.png" alt="第三步：会员整理" width="570">
+            <img class="guide-content-image" style="margin-right: 120px;" src="/images/guide/step3.png" alt="第三步：会员整理" width="570">
             <dl class="step-text left" style="top: 140px; left: 80px;">
                 <dd class="p-l-0">设置成为店铺会员的条件以及享受的折扣</dd>
             </dl>
@@ -115,7 +115,7 @@
         </p>
 
         <div class="guide-content" style="width:990px;">
-            <img class="guide-content-image" style="margin-right: 160px;" src="/seller/images/guide/step4.png" alt="第四步：商品维护" width="440">
+            <img class="guide-content-image" style="margin-right: 160px;" src="/images/guide/step4.png" alt="第四步：商品维护" width="440">
             <dl class="step-text left" style="top: 280px; left: 240px;">
                 <dt>1</dt>
                 <dd>添加店铺商品分类</dd>
@@ -159,7 +159,7 @@
             <span>店铺会员等级设置</span>
         </p>
         <div class="guide-content" style="width:990px;">
-            <img class="guide-content-image" style="margin-right: 160px;" src="/seller/images/guide/step5.png" alt="第五步：交易设置" width="485">
+            <img class="guide-content-image" style="margin-right: 160px;" src="/images/guide/step5.png" alt="第五步：交易设置" width="485">
             <dl class="step-text left" style="top: 305px; left: 80px;">
                 <dd class="p-l-0">设置订单是否自动打印、店铺发货和退货地址配置</dd>
             </dl>
@@ -187,7 +187,7 @@
         </p>
 
         <div class="guide-content" style="width:990px;">
-            <img class="guide-content-image" style="margin-right: 120px;" src="/seller/images/guide/step6.png" alt="第六步：装修" width="800">
+            <img class="guide-content-image" style="margin-right: 120px;" src="/images/guide/step6.png" alt="第六步：装修" width="800">
             <dl class="step-text left" style="top: 240px; left: 80px;">
                 <dt>1</dt>
                 <dd>店铺导航菜单设置</dd>

@@ -34,11 +34,16 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
         Route::get('region-list', 'SiteController@regionList'); // regionList
         Route::get('region-list.html', 'SiteController@regionList'); // regionList
         Route::get('cat-list', 'SiteController@catList'); // 异步加载商品分类
+        Route::get('cat-list.html', 'SiteController@catList'); // 异步加载商品分类
         Route::get('shop-cat-list', 'SiteController@shopCatList'); // 异步加载店铺分类列表
-        Route::post('video-selector', 'SiteController@videoSelector'); // videoSelector
+        Route::any('video-selector', 'SiteController@videoSelector'); // videoSelector
+        Route::any('video-selector.html', 'SiteController@videoSelector'); // videoSelector
         Route::any('image-selector', 'SiteController@imageSelector'); // imageSelector
+        Route::any('image-selector.html', 'SiteController@imageSelector'); // imageSelector
         Route::any('tpl-backup', 'SiteController@tplBackup'); // tplBackup 模板备份
+        Route::any('tpl-backup.html', 'SiteController@tplBackup'); // tplBackup 模板备份
         Route::get('update-message', 'SiteController@updateMessage'); // updateMessage
+        Route::get('update-message.html', 'SiteController@updateMessage'); // updateMessage
         Route::post('message-update', 'SiteController@messageUpdate'); // messageUpdate
 
         Route::get('sale-region-list.html', 'SiteController@regionList'); // regionList 售卖地区列表

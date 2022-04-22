@@ -6,6 +6,7 @@ use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\BuyRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\UserAddressRepository;
+use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 
 class BuyController extends Frontend
@@ -35,46 +36,46 @@ class BuyController extends Frontend
      */
     public function checkout(Request $request)
     {
-        $seo_title = '结算页面';
+        return abort(404, '暂未开放购买功能'); // todo 暂时关闭购买功能
 
+
+        $seo_title = '结算页面';
 
         // 获取数据
 
         // 购买类型 1-直接购买 0购物车购买
         $userBuy = session('user_buy_'.$this->user_id);
 
-        // 用户收货地址
-        $address_list = $this->userAddress->getUserAddressList($this->user_id, 'buy');
-        // 送货时间
-        $checked = 0; // 选中项 默认0 无选中项 todo
-        $send_time_list = $this->buy->getSendTime($checked);
-        // 送货时间描述
-        $send_time_desc = sysconf('send_time_desc');
-        // 最近送货时间
-        $best_time = $this->buy->getBestTime($checked);
-        // 是否显示送货时间
-        $send_time_show = !empty($send_time_list) ? true : false;
-        // 购物车信息
-        $cart_info = $this->buy->getCartInfo($this->user_id, $userBuy);
-        // 是否显示配送方式
-        $shipping_list_show = true;
-        // 是否显示发票信息
-        $invoice_show = false;
-        // 发票信息列表
-        $invoice_info = [];
-        $invoice_desc = '不开发票';
-        // 支付方式列表 多个店铺 数组取交集
-        $pay_list = [];
+        // 购买第一步 返回下单页面数据
+        $result = $this->buy->buyStep1($userBuy, $this->user_id);
+
+        if ($result['code'] != 0) {
+            // 客户端判断
+            if (is_app()) { // app
+                return result($result['code'], $result['data'], $result['message']);
+            } elseif (is_mobile() || (request()->getHost() == env('MOBILE_DOMAIN'))) { // 微信端
+                // 购买参数错误 跳转到购物车页面
+                return redirect(route('mobile_cart_list'));
+            } else { // pc端
+                // 购买参数错误 跳转到购物车页面
+                return redirect(route('pc_cart_list'));
+            }
+        }
+
+        extract($result['data']); // 将数据从 $result['data']中取出
+
+        $check_address = 1; // 是否检查地址 如果是上门自提 则不需要检查地址 如果是普通快递 需要检查地址
 
 
-
-
-        $compact = compact('seo_title', 'address_list');
+        $compact = compact('seo_title', 'address_list',
+            'send_time_list','send_time_desc','send_time_show','best_time',
+            'cart_info','shipping_list_show','invoice_show','invoice_info',
+            'invoice_desc', 'pay_list', 'check_address');
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [
                 'address_list' => $address_list,
-                'address_list_show' => true,
+                'address_list_show' => $address_list_show,
                 'send_time_list' => $send_time_list,
                 'send_time_desc' => $send_time_desc,
                 'best_time' => $best_time,
@@ -105,7 +106,7 @@ class BuyController extends Frontend
             'compact_data' => $compact,
             'tpl_view' => 'buy.checkout'
         ];
-        dd($data);
+//        dd($data);
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
@@ -119,8 +120,46 @@ class BuyController extends Frontend
     public function changeAddress(Request $request)
     {
         $address_id = $request->post('address_id');
+        $userBuy = session('user_buy_'.$this->user_id);
+        $userBuy['selected_address'] = $address_id;
+        session(['user_buy_'.$this->user_id => $userBuy]);
 
         return result(0);
+    }
+
+    /**
+     * 切换送货时间
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function changeBestTime(Request $request)
+    {
+        $send_time_id = $request->post('send_time_id');
+        $send_time = $request->post('send_time');
+        if (empty($send_time)) {
+            $send_time = $this->buy->getBestTime($send_time_id);
+        }
+        $userBuy = session('user_buy_'.$this->user_id);
+        $userBuy['send_time_id'] = $send_time_id;
+        $userBuy['send_time'] = $send_time;
+        session(['user_buy_'.$this->user_id => $userBuy]);
+
+        $data = [
+            'best_time' => $send_time,
+            'best_time_id' => $send_time_id
+        ];
+        return result(0, $data);
+    }
+
+    /**
+     * 修改发票信息
+     *
+     * @param Request $request
+     */
+    public function changeInvoice(Request $request)
+    {
+
     }
 
     /**
@@ -132,20 +171,35 @@ class BuyController extends Frontend
      */
     public function userAddress(Request $request)
     {
-        $address_list = $this->userAddress->getUserAddressList($this->user_id, 'user_center');
-
+        $address_list = $this->userAddress->getUserAddressList($this->user_id, 'buy');
         $render = view('buy.user_address', compact('address_list'))->render();
 
         return result(0, $render);
     }
 
 
-
+    /**
+     * 订单提交
+     *
+     * 1. 验证订单提交信息
+     * 2. 生成订单并返回订单编号
+     *
+     * @param Request $request
+     * @return array
+     */
     public function submit(Request $request)
     {
-        $postscript = $request->post('postscript'); // 多个是数组
+        // 多个是数组 如：postscript[133]: 留言了 下标为：店铺id
+        $postscript = $request->post('postscript');
+        $userBuy = session('user_buy_'.$this->user_id);
 
-        $order_sn = '20181003093704768950';
+        $ret = $this->buy->submitOrder($userBuy, $this->user, $postscript);
+
+        if ($ret['code'] != 0) {
+            return result($ret['code'], $ret['data'], $ret['message']);
+        }
+
+        $order_sn = $ret['data']['order_sn'];
         $data = route('pc_payment').'?order_sn='.$order_sn; // 支付页面url
         $extra = [
             'group_sn' => null,
@@ -203,84 +257,99 @@ class BuyController extends Frontend
     }
 
 
+    /**
+     * 修改支付方式
+     *
+     * @param Request $request
+     * @return array
+     */
     public function changePayment(Request $request)
     {
         $integral_enable = $request->post('integral_enable', false);
+        $balance = $request->post('balance', false);
         $balance_enable = $request->post('balance_enable', false);
         $pay_code = $request->post('pay_code');
 
+        $userBuy = session('user_buy_'.$this->user_id);
+        $userBuy['integral_enable'] = $integral_enable;
+        $userBuy['balance'] = $balance;
+        $userBuy['balance_enable'] = $balance_enable;
+        $userBuy['pay_code'] = $pay_code;
+        session(['user_buy_'.$this->user_id => $userBuy]);
+
+
         $order = [
-            'balance' => 0,
-            'balance_format' => "￥0",
+            'balance' => 116,
+            'balance_format' => "￥116.00",
             'bonus_amount' => 0,
-            'bonus_amount_format' => "￥0",
+            'bonus_amount_format' => "￥0.00",
             'bonus_id' => 0,
             'buyer_type' => 0,
             'cash_more' => 0,
-            'cash_more_format' => "￥0",
+            'cash_more_format' => "￥0.00",
             'discount_fee' => 0,
-            'discount_fee_format' => "￥0",
+            'discount_fee_format' => "￥0.00",
             'full_cut_amount' => 0,
             'full_cut_amount_format' => "￥0",
             'full_cut_bonus' => 0,
             'full_cut_point' => 0,
             'give_integral' => 0,
-            'goods_amount' => 0,
-            'goods_amount_format' => "￥1.8",
+            'goods_amount' => 110,
+            'goods_amount_format' => "￥118.00",
             'integral' => 0,
             'integral_amount' => 0,
-            'integral_amount_format' => "￥0",
+            'integral_amount_format' => "￥0.00",
             'inv_fee' => 0,
-            'is_cash' => true,
-            'is_cod' => 1,
-            'money_pay' => 1880,
-            'money_pay_format' => "￥1880",
-            'order_amount' => 1880,
-            'order_amount_format' => "￥1880",
+            'is_cash' => 0,
+            'is_cod' => 0,
+            'money_pay' => 0,
+            'money_pay_format' => "￥0.00",
+            'order_amount' => 116,
+            'order_amount_format' => "￥116.00",
             'order_data' => [],
             'order_type' => 0,
-            'pay_code' => "cod",
-            'pay_id' => -1,
-            'pay_name' => "货到付款",
+            'pay_code' => "weixin",
+            'pay_id' => null, //-1,
+            'pay_name' => null, //"货到付款",
             'shipping_fee' => 6,
-            'shipping_fee_format' => "￥6",
+            'shipping_fee_format' => "￥6.00",
             'shop_bonus_amount' => 0,
-            'shop_bonus_amount_format' => "￥0",
+            'shop_bonus_amount_format' => "￥0.00",
             'shop_store_card_amount' => 0,
-            'shop_store_card_amount_format' => "￥0",
+            'shop_store_card_amount_format' => "￥0.00",
             'total_bonus_amount' => 0,
-            'total_bonus_amount_format' => "￥0",
+            'total_bonus_amount_format' => "￥0.00",
         ];
         $pay_list = $this->payment->getPaymentList($pay_code);
         // 按店铺分为多个数组
         $shop_orders = [
             [
                 'bonus_amount' => 0,
-                'bonus_amount_format' => "￥0",
+                'bonus_amount_format' => "￥0.00",
                 'buy_type' => 0,
                 'buyer_type' => 0,
                 'card_id' => 0,
                 'cash_more' => 0,
-                'cash_more_format' => "￥0",
+                'cash_more_format' => "￥0.00",
                 'discount_fee' => 0,
-                'discount_fee_format' => "￥0",
+                'discount_fee_format' => "￥0.00",
                 'full_cut_amount' => 0,
-                'full_cut_amount_format' => "￥0",
+                'full_cut_amount_format' => "￥0.00",
                 'full_cut_bonus' => [],
                 'full_cut_point' => 0,
                 'give_integral' => 0,
-                'goods_amount' => 118,
+                'goods_amount' => 110,
                 'inv_fee' => 0,
-                'is_cash' => 1,
-                'order_amount' => 124,
-                'order_amount_format' => "￥124",
+                'is_cash' => 0,
+                'order_amount' => 116,
+                'order_amount_format' => "￥116.00",
                 'order_type' => 0,
                 'other_amount' => 0,
                 'pre_sale_mode' => null,
                 'shipping_fee' => 6,
-                'shipping_fee_format' => "￥6",
+                'shipping_fee_format' => "￥6.00",
                 'shop_bonus_amount' => 0,
-                'shop_bonus_amount_format' => "￥0",
+                'shop_bonus_amount_format' => "￥0.00",
                 'shop_bonus_id' => 0,
                 'shop_id' => 1,
                 'shop_store_card_amount' => 0,
@@ -288,12 +357,13 @@ class BuyController extends Frontend
             ]
         ];
         $user_info = [
-            'balance' => 0,
-            'balance_format' => "￥0",
-            'balance_password_enable' => 1,
-            'pay_point' => "0|0",
+            'balance' => 15550,
+            'balance_format' => "￥15550.00",
+            'balance_password_enable' => 0,
+            'online_balance' => 15550,
+            'pay_point' => "0|9000",
             'pay_point_amount' => 0,
-            'pay_point_amount_format' => "￥0"
+            'pay_point_amount_format' => "￥0.00"
         ];
 
         $extra = [

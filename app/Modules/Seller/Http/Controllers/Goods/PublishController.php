@@ -857,10 +857,10 @@ class PublishController extends Seller
 
         // 商品规格
         $goods_specs = $this->goodsSpec->getGoodsSpecs($goods_id);
-
+//        dd($goods_specs);
         // 选中商品规格
         $goods_checked_specs = array_collapse(array_values($goods_specs));
-
+//        dd($spec_list);
         // 商品规格描述
         $goods_specs_desc = $this->goodsSpec->getGoodsSpecsDesc($goods_id);
 
@@ -952,7 +952,7 @@ class PublishController extends Seller
         $cat_edit = 1; // 是否允许编辑分类
 
         $goods_info = $model;
-        $compact = compact('goods_info', 'cat_names', 'attr_list', 'spec_list', 'cat_list', 'other_cat_ids','attr_values','spec_values',
+        $compact = compact('title','goods_info', 'cat_names', 'attr_list', 'spec_list', 'cat_list', 'other_cat_ids','attr_values','spec_values',
             'goods_attrs','goods_specs','goods_checked_specs','goods_specs_desc','goods_other_specs','spec_alias','goods_sku_list',
             'goods_image','date_list','hour_list','minute_list','cat_id','top_layouts','bottom_layouts','packing_layouts','service_layouts',
             'freight_list','shop_cat_list','contract_list','brand_list','goods_unit_list','edit_items','shop_freight_fee','is_supply',

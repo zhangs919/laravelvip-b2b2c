@@ -19,15 +19,15 @@
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=20180702"/>
-    <link rel="stylesheet" href="/frontend/css/common.css?v=20180702"/>
-    <link rel="stylesheet" href="/frontend/css/shop_index.css?v=20180702"/>
-    <link rel="stylesheet" href="/frontend/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/shop_index.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/template.css?v=20180702"/>
 
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
     <!-- ================== END BASE CSS STYLE ================== -->
@@ -36,21 +36,24 @@
     <script src="/assets/d2eace91/js/layer/layer.js?v=20180710"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180710"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180710"></script>
-    <script src="/frontend/js/common.js?v=20180710"></script>
+    <script src="/js/common.js?v=20180710"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180710"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180710"></script>
+    {{--header_js--}}
+    @section('header_js')@show
+
 </head>
 <body>
 <!-- 引入头部文件 -->
 <!-- 引入头部文件 -->
-<script src="/frontend/js/index.js?v=20180710"></script>
-<script src="/frontend/js/tabs.js?v=20180710"></script>
-<script src="/frontend/js/bubbleup.js?v=20180710"></script>
-<script src="/frontend/js/jquery.hiSlider.js?v=20180710"></script>
-<script src="/frontend/js/index_tab.js?v=20180710"></script>
-<script src="/frontend/js/jump.js?v=20180710"></script>
-<script src="/frontend/js/nav.js?v=20180710"></script>
+<script src="/js/index.js?v=20180710"></script>
+<script src="/js/tabs.js?v=20180710"></script>
+<script src="/js/bubbleup.js?v=20180710"></script>
+<script src="/js/jquery.hiSlider.js?v=20180710"></script>
+<script src="/js/index_tab.js?v=20180710"></script>
+<script src="/js/jump.js?v=20180710"></script>
+<script src="/js/nav.js?v=20180710"></script>
 <!-- 站点选择 -->
 {{-- include header_top --}}
 @include('layouts/partials/header_top')
@@ -273,12 +276,12 @@
             if (result.code == 0) {
                 $(".collect-count").html(result.collect_count);
                 $(obj).parent().toggleClass("fav-shop-box-select");
-                if ($(obj).html() == "收藏本店") {
-                    $(obj).html("取消收藏");
-                    $(".collect-tip").html("已收藏");
+                if ($(obj).html() == "关注本店") {
+                    $(obj).html("取消关注");
+                    $(".collect-tip").html("已关注");
                 } else {
-                    $(obj).html("收藏本店");
-                    $(".collect-tip").html("收藏");
+                    $(obj).html("关注本店");
+                    $(".collect-tip").html("关注");
                 }
 
                 if(result.show_collect_count == 1 && result.collect_count > 0){
@@ -302,11 +305,11 @@
                 var collect_count = result.data.collect_count;
                 var duration_time = result.data.duration_time;
                 if (is_collect == false) {
-                    $(".collect-btn").html("收藏本店");
-                    $(".collect-tip").html("收藏");
+                    $(".collect-btn").html("关注本店");
+                    $(".collect-tip").html("关注");
                 } else {
-                    $(".collect-btn").html("取消收藏");
-                    $(".collect-tip").html("已收藏");
+                    $(".collect-btn").html("取消关注");
+                    $(".collect-tip").html("已关注");
                 }
 
                 $('.duration-time').html(duration_time);
@@ -373,7 +376,7 @@
 
 </body>
 <script src="/assets/d2eace91/js/design/shop_index.js?v=20180710"></script>
-<script src="/frontend/js/jquery.fly.min.js?v=20180710"></script>
+<script src="/js/jquery.fly.min.js?v=20180710"></script>
 <script src="/assets/d2eace91/js/szy.cart.js?v=20180710"></script>
 <script type="text/javascript">
     $().ready(function(){

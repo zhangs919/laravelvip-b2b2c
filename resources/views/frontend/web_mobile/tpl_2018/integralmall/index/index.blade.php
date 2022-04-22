@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180919"></script>
-    <script src="/mobile/js/common.js?v=20180919"></script>
+    <script src="/js/common.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180919"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180919"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180919"></script>
+    <script src="/js/jquery.fly.min.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180919"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -34,7 +34,7 @@
 
     <!-- 内容 -->
     <div id="index_content">
-        <link rel="stylesheet" href="/mobile/css/exchange.css?v=20180927"/>
+        <link rel="stylesheet" href="/css/exchange.css?v=20180927"/>
         <header>
             <div class="tab_nav">
                 <div class="header">
@@ -67,25 +67,25 @@
             <ul>
                 <li>
                     <a href="/index.html">
-                        <img src="/mobile/images/exchange/index_icon.png">
+                        <img src="/images/exchange/index_icon.png">
                         <span>商城首页</span>
                     </a>
                 </li>
                 <li>
                     <a href="/integralmall.html?sort=&order=&is_self=&can_exchange=1">
-                        <img src="/mobile/images/exchange/exchange_icon.png">
+                        <img src="/images/exchange/exchange_icon.png">
                         <span>我可兑换</span>
                     </a>
                 </li>
                 <li>
                     <a href="/integralmall/index/bonus-list.html">
-                        <img src="/mobile/images/exchange/coupons_icon.png">
+                        <img src="/images/exchange/coupons_icon.png">
                         <span>红包兑换</span>
                     </a>
                 </li>
                 <li>
                     <a href="/user/integral.html">
-                        <img src="/mobile/images/exchange/user_exchange_icon.png">
+                        <img src="/images/exchange/user_exchange_icon.png">
                         <span>我的积分</span>
                     </a>
                 </li>

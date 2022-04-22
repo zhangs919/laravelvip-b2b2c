@@ -1,0 +1,69 @@
+@if($discount_mode == 1)
+{{--1-团长优惠价格--}}
+<div class="simple-form-field" >
+    <div class="form-group">
+        <label for="fightgroupmodel-discount_price" class="col-sm-4 control-label">
+
+            <span class="ng-binding">团长优惠价格：</span>
+        </label>
+        <div class="col-sm-8">
+            <div class="form-control-box">
+                <input type="text" id="fightgroupmodel-discount_price" class="form-control ipt m-r-10" name="FightGroupModel[discount_price]">元
+
+            </div>
+
+            <div class="help-block help-block-t"><div class="help-block help-block-t">团长优惠价格是以拼团价为计算基数的；例如：商品拼团价为10元，团长优惠价格为2元，那么团长购买此商品最终的价格为8元</div></div>
+        </div>
+    </div>
+</div>
+<!-- 表单验证 -->
+<script src="/assets/d667b223/js/validate/jquery.validate.js?v=20190121"></script>
+<script src="/assets/d667b223/js/validate/jquery.validate.custom.js?v=20190121"></script>
+<script src="/assets/d667b223/js/validate/messages_zh.js?v=20190121"></script>
+<!-- 验证规则 -->
+<script id="client_rules" type="text">
+[{"id": "fightgroupmodel-goods_id", "name": "FightGroupModel[goods_id]", "attribute": "goods_id", "rules": {"required":true,"messages":{"required":"商品ID不能为空。"}}},{"id": "fightgroupmodel-cat_id", "name": "FightGroupModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"活动分类不能为空。"}}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"required":true,"messages":{"required":"拼团价格不能为空。"}}},{"id": "fightgroupmodel-act_stock", "name": "FightGroupModel[act_stock]", "attribute": "act_stock", "rules": {"required":true,"messages":{"required":"活动库存不能为空。"}}},{"id": "fightgroupmodel-fight_num", "name": "FightGroupModel[fight_num]", "attribute": "fight_num", "rules": {"required":true,"messages":{"required":"参团人数不能为空。"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"required":true,"messages":{"required":"成团时限不能为空。"}}},{"id": "fightgroupmodel-start_time", "name": "FightGroupModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "fightgroupmodel-end_time", "name": "FightGroupModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "fightgroupmodel-shop_id", "name": "FightGroupModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "fightgroupmodel-discount_mode", "name": "FightGroupModel[discount_mode]", "attribute": "discount_mode", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"优惠模式必须是整数。"}}},{"id": "fightgroupmodel-ext_info", "name": "FightGroupModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"拼团价格必须是一个数字。","max":"拼团价格必须不大于999999。"},"max":999999}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"拼团价格的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-number", "name": "FightGroupModel[number]", "attribute": "number", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"Number的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"match":{"pattern":/^[0-9]+(.[0-9]{1,2})?$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入整数或小数点后2位的数字"}}},{"id": "fightgroupmodel-act_stock", "name": "FightGroupModel[act_stock]", "attribute": "act_stock", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"活动库存必须是整数。","min":"活动库存必须不小于2。","max":"活动库存必须不大于999999。"},"min":2,"max":999999}},{"id": "fightgroupmodel-fight_num", "name": "FightGroupModel[fight_num]", "attribute": "fight_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"参团人数必须是整数。","min":"参团人数必须不小于2。"},"min":2}},{"id": "fightgroupmodel-purchase_num", "name": "FightGroupModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购必须是整数。","min":"限购必须不小于0。","max":"限购必须不大于999999。"},"min":0,"max":999999}},{"id": "fightgroupmodel-discount_price", "name": "FightGroupModel[discount_price]", "attribute": "discount_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"团长优惠价格必须是一个数字。","min":"团长优惠价格必须不小于0。","max":"团长优惠价格必须不大于999999。"},"min":0,"max":999999}},{"id": "fightgroupmodel-discount_price", "name": "FightGroupModel[discount_price]", "attribute": "discount_price", "rules": {"compare":{"operator":"<=","type":"number","compareAttribute":"fightgroupmodel-act_price","skipOnEmpty":1},"messages":{"compare":"团长优惠价格不能大于拼团价"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"成团时限的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-number", "name": "FightGroupModel[number]", "attribute": "number", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"Number的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"compare":{"operator":"<","type":"string","compareValue":10000,"skipOnEmpty":1},"messages":{"compare":"成团时限的值必须小于\"10000\"。"}}},{"id": "fightgroupmodel-number", "name": "FightGroupModel[number]", "attribute": "number", "rules": {"compare":{"operator":"<","type":"string","compareValue":10000,"skipOnEmpty":1},"messages":{"compare":"Number的值必须小于\"10000\"。"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"match":{"pattern":/^[0-9]+(.[0-9]{1,2})?$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入整数或小数点后2位的数字"}}},{"id": "fightgroupmodel-start_time", "name": "FightGroupModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"fightgroupmodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "fightgroupmodel-end_time", "name": "FightGroupModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"fightgroupmodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
+</script>
+<script type="text/javascript">
+    $().ready(function() {
+        var validator = $("#FightGroupModel").validate();
+// 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+        $.validator.addRules($("#client_rules").html());
+    });
+</script>
+
+@else
+
+{{--0-团长享受折扣--}}
+<div class="simple-form-field" >
+    <div class="form-group">
+        <label for="fightgroupmodel-first_discount" class="col-sm-4 control-label">
+
+            <span class="ng-binding">团长享受折扣：</span>
+        </label>
+        <div class="col-sm-8">
+            <div class="form-control-box">
+                <input type="text" id="fightgroupmodel-first_discount" class="form-control ipt m-r-10" name="FightGroupModel[first_discount]">%
+
+            </div>
+
+            <div class="help-block help-block-t"><div class="help-block help-block-t">团长享受折扣价是以拼团价格为计算基数的；例如：商品拼团价为10元，团长享受折扣为90%，那么团长购买此商品最终的价格即为9元</div></div>
+        </div>
+    </div>
+</div>
+<!-- 表单验证 -->
+<script src="/assets/d667b223/js/validate/jquery.validate.js?v=20190121"></script>
+<script src="/assets/d667b223/js/validate/jquery.validate.custom.js?v=20190121"></script>
+<script src="/assets/d667b223/js/validate/messages_zh.js?v=20190121"></script>
+<!-- 验证规则 -->
+<script id="client_rules" type="text">
+[{"id": "fightgroupmodel-goods_id", "name": "FightGroupModel[goods_id]", "attribute": "goods_id", "rules": {"required":true,"messages":{"required":"商品ID不能为空。"}}},{"id": "fightgroupmodel-cat_id", "name": "FightGroupModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"活动分类不能为空。"}}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"required":true,"messages":{"required":"拼团价格不能为空。"}}},{"id": "fightgroupmodel-act_stock", "name": "FightGroupModel[act_stock]", "attribute": "act_stock", "rules": {"required":true,"messages":{"required":"活动库存不能为空。"}}},{"id": "fightgroupmodel-fight_num", "name": "FightGroupModel[fight_num]", "attribute": "fight_num", "rules": {"required":true,"messages":{"required":"参团人数不能为空。"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"required":true,"messages":{"required":"成团时限不能为空。"}}},{"id": "fightgroupmodel-start_time", "name": "FightGroupModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "fightgroupmodel-end_time", "name": "FightGroupModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "fightgroupmodel-shop_id", "name": "FightGroupModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "fightgroupmodel-discount_mode", "name": "FightGroupModel[discount_mode]", "attribute": "discount_mode", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"优惠模式必须是整数。"}}},{"id": "fightgroupmodel-ext_info", "name": "FightGroupModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"拼团价格必须是一个数字。","max":"拼团价格必须不大于999999。"},"max":999999}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"拼团价格的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-number", "name": "FightGroupModel[number]", "attribute": "number", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"Number的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-act_price", "name": "FightGroupModel[act_price]", "attribute": "act_price", "rules": {"match":{"pattern":/^[0-9]+(.[0-9]{1,2})?$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入整数或小数点后2位的数字"}}},{"id": "fightgroupmodel-act_stock", "name": "FightGroupModel[act_stock]", "attribute": "act_stock", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"活动库存必须是整数。","min":"活动库存必须不小于2。","max":"活动库存必须不大于999999。"},"min":2,"max":999999}},{"id": "fightgroupmodel-fight_num", "name": "FightGroupModel[fight_num]", "attribute": "fight_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"参团人数必须是整数。","min":"参团人数必须不小于2。"},"min":2}},{"id": "fightgroupmodel-purchase_num", "name": "FightGroupModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购必须是整数。","min":"限购必须不小于0。","max":"限购必须不大于999999。"},"min":0,"max":999999}},{"id": "fightgroupmodel-first_discount", "name": "FightGroupModel[first_discount]", "attribute": "first_discount", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"团长享受折扣必须是整数。","min":"团长享受折扣必须不小于1。","max":"团长享受折扣必须不大于100。"},"min":1,"max":100}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"成团时限的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-number", "name": "FightGroupModel[number]", "attribute": "number", "rules": {"compare":{"operator":">","type":"string","compareValue":0,"skipOnEmpty":1},"messages":{"compare":"Number的值必须大于\"0\"。"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"compare":{"operator":"<","type":"string","compareValue":10000,"skipOnEmpty":1},"messages":{"compare":"成团时限的值必须小于\"10000\"。"}}},{"id": "fightgroupmodel-number", "name": "FightGroupModel[number]", "attribute": "number", "rules": {"compare":{"operator":"<","type":"string","compareValue":10000,"skipOnEmpty":1},"messages":{"compare":"Number的值必须小于\"10000\"。"}}},{"id": "fightgroupmodel-fight_time", "name": "FightGroupModel[fight_time]", "attribute": "fight_time", "rules": {"match":{"pattern":/^[0-9]+(.[0-9]{1,2})?$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入整数或小数点后2位的数字"}}},{"id": "fightgroupmodel-start_time", "name": "FightGroupModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"fightgroupmodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "fightgroupmodel-end_time", "name": "FightGroupModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"fightgroupmodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
+</script>
+<script type="text/javascript">
+    $().ready(function() {
+        var validator = $("#FightGroupModel").validate();
+// 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+        $.validator.addRules($("#client_rules").html());
+    });
+</script>
+@endif

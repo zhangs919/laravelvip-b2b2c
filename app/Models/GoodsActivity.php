@@ -34,8 +34,29 @@ class GoodsActivity extends BaseModel
     protected $table = 'goods_activity';
 
     protected $fillable = [
-        'act_id','sku_id','goods_id','cat_id','sale_base','act_price','act_stock','click_count'
+        'act_id','sku_id','goods_id','cat_id','sale_base','act_price','act_stock','ext_info','click_count'
     ];
 
     protected $primaryKey = 'id';
+
+
+    /**
+     * 设置活动商品扩展数据 json_encode
+     *
+     * @param $value
+     */
+    public function setExtInfoAttribute($value)
+    {
+        $this->attributes['ext_info'] = json_encode($value);
+    }
+
+    /**
+     * 获取活动商品扩展数据 json_decode
+     *
+     * @return mixed
+     */
+    public function getExtInfoAttribute()
+    {
+        return json_decode($this->attributes['ext_info'],true);
+    }
 }

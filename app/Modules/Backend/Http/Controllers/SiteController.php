@@ -11,12 +11,18 @@ use App\Repositories\RegionRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\ToolsRepository;
 use App\Repositories\TplBackupRepository;
+use App\Repositories\UploadVideoRepository;
+use App\Repositories\VideoDirRepository;
+use App\Repositories\VideoRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SiteController extends Backend
 {
 
     protected $tools; // 工具类 如：图片上传
+
+    protected $uploadVideo; // 上传视频
 
     protected $regions;
 
@@ -32,17 +38,25 @@ class SiteController extends Backend
 
     protected $shop;
 
+    protected $videoDir;
+
+    protected $video;
+
 
     public function __construct(ToolsRepository $tools,
+                                UploadVideoRepository $uploadVideoRepository,
                                 RegionRepository $regionRepository,
                                 CategoryRepository $categoryRepository,
                                 ImageDirRepository $imageDirRepository,
                                 ImageRepository $imageRepository,
-                                TplBackupRepository $tplBackupRepository)
+                                TplBackupRepository $tplBackupRepository,
+                                VideoDirRepository $videoDirRepository,
+                                VideoRepository $videoRepository)
     {
         parent::__construct();
 
         $this->tools = $tools;
+        $this->uploadVideo = $uploadVideoRepository;
         $this->regions = $regionRepository;
         $this->category = $categoryRepository;
         $this->imageDir = $imageDirRepository;
@@ -50,7 +64,8 @@ class SiteController extends Backend
         $this->tplBackup = $tplBackupRepository;
         $this->goods = new GoodsRepository();
         $this->shop = new ShopRepository();
-
+        $this->videoDir = $videoDirRepository;
+        $this->video = $videoRepository;
     }
 
 
@@ -127,33 +142,80 @@ class SiteController extends Backend
 
     public function videoGallery(Request $request)
     {
+        // 检查是否有上传视频的权限
+//        return result(-1, '', '您没有权限上传视频，请先开通OSS！');
 
-        if ($request->method() == 'POST') {
-
-            // 检查是否有上传视频的权限
-            return result(-1, '', '您没有权限上传视频，请先开通OSS！');
-
-//            $filename = $request->post('filename', 'name');
-//            $storePath = 'backend/gallery'; // 需要判断是平台方 还是店铺 站点
-////            dd($request->post());
-//            $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
-//
-//            if (isset($uploadRes['error'])) {
-//                // 上传出错
-//                return result(-1, '', $uploadRes['error']);
-//            }
-//
-//            return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
+        $params = $request->all();
+        $uuid = make_uuid();
+        $sort_name = $request->get('sort_name', '');
+        $dir_id = $request->get('dir_id', 0);
+        $sortname = 'created_at';
+        $sortorder = 'desc';
+        $video_name = $request->get('video_name', ''); // 视频名称
+//        dd($params);
+        if ($sort_name != '') {
+            $sortArr = explode('-', $sort_name);
+            $sortname = $sortArr[0];
+            $sortorder = $sortArr[1];
         }
 
-//        $params = $request->all();
-//
-//        $tpl = 'video_gallery';
-//        if (!isset($params['output'])) {
-//            $tpl = 'video_gallery_list';
-//        }
-//        $render = view('site.'.$tpl, $params)->render();
-//        return result(0, $render);
+        $condition = [
+            'where' => [
+                ['dir_group', 'backend'],
+//                ['site_id', 0], // 站点id
+            ],
+            'limit' => 0,
+            'sortname' => 'dir_sort',
+            'sortorder' => 'asc'
+        ];
+        list($video_dir_list, $total) = $this->videoDir->getList($condition);
+
+        if (!$dir_id) {
+            $dir_id = $video_dir_list[0]->dir_id;
+        }
+        $where = [];
+        $where[] = ['dir_id', $dir_id];
+        $where[] = ['is_delete', 0];
+        if (!empty($video_name)) {
+            $where[] = ['name', 'like', "%{$video_name}%"];
+        }
+        $videoCondition = [
+            'where' => $where,
+            'sortname' => $sortname,
+            'sortorder' => $sortorder
+        ];
+
+        list($video_list, $video_total)= $this->video->getList($videoCondition);
+        $pageHtml = short_pagination($video_total); // 分页
+
+        $size = $request->post('size', 1);
+        $tpl = 'video_gallery';
+        if (!isset($params['output'])) {
+            $tpl = 'partials._video_gallery_list';
+        }
+//        $tpl = 'partials._video_gallery_list';
+        if ($request->method() == 'POST') {
+            // 上传图片
+            $dir_id = $request->post('dir_id', 0); // 相册id
+            $filename = $request->post('filename', 'name');
+            $storePath = 'videos/site/1/gallery'; // 平台视频相册
+            $uploadRes = $this->uploadVideo->uploadVideo($request, $filename, $storePath);
+
+            if (isset($uploadRes['error'])) {
+                // 上传出错
+                return result(-1, '', $uploadRes['error']);
+            }
+
+            // 记录日志
+            admin_log('上传视频，成功：'.$uploadRes['count'].'个。视频相册ID：'.$dir_id);
+
+            return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
+        }
+
+        $params = $request->get('page');
+        $page_id = $params['page_id'];
+        $render = view('site.'.$tpl, compact('page_id', 'size', 'video_dir_list', 'video_list', 'pageHtml', 'uuid', 'dir_id'))->render();
+        return result(0, $render);
     }
 
     public function uploadImage(Request $request)
@@ -213,26 +275,60 @@ class SiteController extends Backend
         return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
     }
 
+    /**
+     * 视频选择器
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
     public function videoSelector(Request $request)
     {
-        $params = $request->all();
-        $uuid = make_uuid();
-        if ($request->method() == 'POST') {
-            $size = $request->post('size', 0);
-            $condition = [
-                'where' => [['dir_group', '=', 'backend']]
-            ];
-            list($video_dir_list, $total)= $this->imageDir->getList($condition); // todo
-            $render = view('site.video_selector', compact('size', 'video_dir_list', 'uuid'))->render();
-            return result(0, $render);
-        }
-//        $tpl = 'image_selector';
-//        $render = view('site.'.$tpl, $params)->render();
 
-        if (isset($params['output'])) {
-            $tpl = 'video_selector_list';
+        // 创建平台默认视频相册
+//        $videoDirRep = new VideoDirRepository();
+//        $videoDirRep->createDefaultDirs(0, 0, 'backend');die;
+
+        $uuid = make_uuid();
+        $sort_name = $request->get('sort_name', '');
+        $dir_id = $request->get('dir_id', 0);
+        $sortname = 'created_at';
+        $sortorder = 'desc';
+        if ($sort_name != '') {
+            $sortArr = explode('-', $sort_name);
+            $sortname = $sortArr[0];
+            $sortorder = $sortArr[1];
         }
-        $render = view('site.'.$tpl)->render();
+
+        $condition = [
+            'where' => [
+                ['dir_group', 'backend'],
+//                ['site_id', 0], // 站点id
+            ],
+            'sortname' => 'dir_sort',
+            'sortorder' => 'asc'
+        ];
+        list($video_dir_list, $total) = $this->videoDir->getList($condition);
+
+        if (!$dir_id) {
+            $dir_id = $video_dir_list[0]->dir_id;
+        }
+        $videoCondition = [
+            'where' => [['dir_id', '=', $dir_id]],
+            'sortname' => $sortname,
+            'sortorder' => $sortorder
+        ];
+        list($video_list, $video_total)= $this->video->getList($videoCondition);
+        $pageHtml = short_pagination($video_total); // 分页
+
+        $size = 1;
+        $tpl = 'partials._video_selector_list';
+        if ($request->method() == 'POST') {
+            $size = $request->post('size', 1);
+            $tpl = 'video_selector';
+        }
+
+        $render = view('site.'.$tpl, compact('size', 'video_dir_list', 'video_list', 'pageHtml', 'uuid', 'dir_id'))->render();
         return result(0, $render);
     }
 
@@ -504,8 +600,8 @@ class SiteController extends Backend
         $is_last = $request->get('is_last', '');
 
         // 附近店铺
-        $lat = $request->get('lat', '');
-        $lng = $request->get('lng', '');
+        $lat = $request->get('lat', 0); // 经度
+        $lng = $request->get('lng', 0); // 纬度
 
 
         // 列表
@@ -538,10 +634,14 @@ class SiteController extends Backend
             // 根据经纬度查询附近店铺 todo 待完成
             // ...
 
+            // 6378.138 为地球半径
+            $earth_radius = 6378.138;
             $condition = [
                 'where' => $where,
                 'sortname' => 'shop_sort',
-                'sortorder' => 'asc'
+                'sortorder' => 'asc',
+                // 计算附近店铺 distance（当前位置经纬度与每个店铺的经纬度距离，单位：m）
+                'field' => DB::raw("shop.*,({$earth_radius} * 2 * asin(sqrt(pow(sin((shop_lat * pi() / 180 - {$lat} * pi() / 180) / 2),2) + cos(shop_lat * pi() / 180) * cos({$lat} * pi() / 180) * pow(sin((shop_lng * pi() / 180 - {$lng} * pi() / 180) / 2),2))) * 1000) as distance")
             ];
             list($m_near_shop, $total) = $this->shop->getList($condition);
             $compact = compact('m_near_shop');

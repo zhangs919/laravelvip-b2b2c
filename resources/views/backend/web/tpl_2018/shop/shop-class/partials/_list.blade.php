@@ -32,7 +32,7 @@
                 </a>
                 <span class="btn btn-success btn-xs pos-r upload-img" data-url="upload-cls_image" data-id="{{ $v['cls_id'] }}"> 更换 </span>
             @else
-                <a href="javascript:void(0);" ref="/backend/images/default/goods.gif" class="preview">
+                <a href="javascript:void(0);" ref="/images/default/goods.gif" class="preview">
                     <i class="fa fa-picture-o"></i>
                 </a>
                 <span class="btn btn-primary btn-xs pos-r upload-img" data-url="upload-cls_image" data-id="{{ $v['cls_id'] }}"> 添加 </span>
@@ -90,7 +90,7 @@
                             </a>
                             <span class="btn btn-success btn-xs pos-r upload-img" data-url="upload-cls_image" data-id="{{ $child['cls_id'] }}"> 更换 </span>
                         @else
-                            <a href="javascript:void(0);" ref="/backend/images/default/goods.gif" class="preview">
+                            <a href="javascript:void(0);" ref="/images/default/goods.gif" class="preview">
                                 <i class="fa fa-picture-o"></i>
                             </a>
                             <span class="btn btn-primary btn-xs pos-r upload-img" data-url="upload-cls_image" data-id="{{ $child['cls_id'] }}"> 添加 </span>

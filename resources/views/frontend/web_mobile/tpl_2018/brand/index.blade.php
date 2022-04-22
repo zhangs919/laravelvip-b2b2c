@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20181123"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20181123"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20181123"></script>
-    <script src="/mobile/js/common.js?v=20181123"></script>
+    <script src="/js/common.js?v=20181123"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20181123"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20181123"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20181123"></script>
+    <script src="/js/jquery.fly.min.js?v=20181123"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20181123"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -34,10 +34,10 @@
 
     <!-- 内容 -->
     <div id="index_content">
-        <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=2018112301"/>
-        <link rel="stylesheet" href="/mobile/css/brand.css?v=2018112301"/>
-        <script src="/mobile/js/jquery-1.9.1.min.js?v=20181123"></script>
-        <script src="/mobile/js/swiper.jquery.min.js?v=20181123"></script>
+        <link rel="stylesheet" href="/css/swiper.min.css?v=2018112301"/>
+        <link rel="stylesheet" href="/css/brand.css?v=2018112301"/>
+        <script src="/js/jquery-1.9.1.min.js?v=20181123"></script>
+        <script src="/js/swiper.jquery.min.js?v=20181123"></script>
         <div class="sort-menu ">
             <ul class="all-brands swiper-wrapper">
                 <li class="active swiper-slide"><a href="javascript:void(0);">全部品牌</a></li>
@@ -71,7 +71,7 @@
             @endforeach
 
         </div>
-        <script src="/mobile/js/brand.js?v=20181123"></script>
+        <script src="/js/brand.js?v=20181123"></script>
 
         {{--引入底部菜单--}}
         @include('frontend.web_mobile.modules.library.site_footer_menu')

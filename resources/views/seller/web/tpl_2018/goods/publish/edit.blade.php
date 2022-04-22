@@ -422,7 +422,7 @@
 
                                         <div class="goods-attr-tit">
                                             <span>店铺自定义属性</span>
-                                            <i class="fa fa-question-circle f16 c-ccc pull-right cur-p m-t-5" data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true" data-content="<img width='260' height='173' src='/seller/images/goods/custom-attributes.png'>"></i>
+                                            <i class="fa fa-question-circle f16 c-ccc pull-right cur-p m-t-5" data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true" data-content="<img width='260' height='173' src='/images/goods/custom-attributes.png'>"></i>
                                         </div>
                                         <div class="other-attrs-list">
 
@@ -2186,7 +2186,7 @@
 
                 var list = [];
 
-                if (parseInt("10") > 1) {
+                if (parseInt("{{ count($goods_specs) }}") > 1) {
                     for (var i = 0; i < spec_ids.length; i++) {
                         var key = "spec-" + spec_ids[i];
                         list.push(spec_values[key]);

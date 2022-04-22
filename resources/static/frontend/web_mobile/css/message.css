@@ -1,0 +1,24 @@
+body{ background:#f3f5f7;}
+.message-list { background-color: #FFF;}
+.message-list li {position: relative; z-index: 1; height: 3rem; border-bottom: solid 0.05rem #f8f8f8;}
+.message-list li:last-child{ border-bottom: solid 0.05rem #eee;}
+.message-list li .message-pic{ position: absolute; z-index: 1; top: 0.4rem; bottom: 0.4rem; left:0.5rem; display: block; width: 2.2rem; height: 2.2rem;border-radius: 100%;}
+.message-list li .message-pic img { width: 100%; height: 100%; border-radius: 100%;}
+.message-list li .message-tip{ position:absolute; z-index: 1; top: 0.4rem; bottom: 0.4rem; left:2.4rem; height:0.3rem; width:0.3rem; background:#f23030; border-radius:50%;}
+.message-list li dl{ display: block; padding: 0.4rem 0; margin: 0 0.5rem 0 3.2rem;}
+.message-list li dt { display: block; height: 1.2rem; font-size: 0.7rem; line-height: 1.2rem; color: #222;}
+.message-list li dt .messgae-name{width: 150px;overflow: hidden;height: 1.2rem;line-height: 1.2rem;white-space: nowrap;text-overflow: ellipsis;display: inline-block;}
+.message-list li dt .messgae-time{ float:right; line-height:1.2rem; font-size:0.6rem; color:#999;}
+.message-list li dd {display: block; height: 1rem; font-size: 0.6rem; line-height: 1rem; color: #999; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+
+
+/*弹出层*/
+.mask-div {opacity: 0.8;}
+.message-info-box{ position:fixed; height:100%; width:100%; z-index:202; top:0; right:0; bottom:0; left:0; display:none;}
+.message-info-title{font-size: 0.65rem;position: relative;z-index: 1;overflow: hidden;color: #fff;text-align: center;margin-top:6rem;}
+.message-info-title font {display: inline-block;width:20%;height:0.05rem;background: #fff;position: relative;top:0.6rem;vertical-align: top;}
+.message-info-title span{ display:inline-block;line-height:1.25rem;padding:0px 8px;font-size: 0.65rem;z-index: 10;font-weight: normal; border:1px solid #fff; border-radius:20px;max-width: 50%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+.message-info{ width:94%; margin:10px auto 0;color:#fff; line-height:20px; font-size:14px;word-break:break-all;}
+.message-info-close{ position:absolute; bottom:40px; width:100%; margin:auto;}
+.message-info-close a.close-btn{ display:block; margin:auto;height:40px; width:40px; border-radius:50%; border:1px solid #fff;}
+.message-info-close a.close-btn i{ display:block; height:40px; line-height:40px; text-align:center; background:url(../images/message_close.png) no-repeat center center; background-size:17px;}

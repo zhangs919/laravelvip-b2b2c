@@ -4,7 +4,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>微信支付</title>
+    <title>{{ $seo_title }}</title>
     <!-- 头部元数据 -->
     <meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,7 +18,7 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link rel="stylesheet" href="/frontend/css/wechat-pay.css?v=20180927"/>
+    <link rel="stylesheet" href="/css/wechat-pay.css?v=20180927"/>
 </head>
 <body>
 <div class="header">
@@ -29,25 +29,49 @@
 </div>
 <div class="content w990">
     <div class="order clearfix">
-        <span class="order-pay"> 乐融沃-订单支付 </span>
-        <span class="pay-price">
-				<strong>1880</strong>
-				元
-			</span>
+        <div class="orderDetail-base">
+            <span class="order-pay"> {{ $subject }} </span>
+            <span class="pay-price">
+					<strong>{{ $total_fee }}</strong>
+					元
+				</span>
+        </div>
+        <a class="order-ext-trigger">订单详情</a>
+        <div class="order-detail-container hide">
+            <table>
+                <tbody><tr>
+                    <td class="sub-th">订单号：</td>
+                    <td>{{ $order_sn }}</td>
+                </tr>
+                <tr>
+                    <td class="sub-th">配送方式：</td>
+                    <td>{{ $order_info['best_time'] }}</td>
+                </tr>
+                <tr>
+                    <td class="sub-th">运费：</td>
+                    <td>￥{{ $order_info['shipping_fee'] }}</td>
+                </tr>
+                <tr>
+                    <td class="sub-th">交易金额：</td>
+                    <td>￥{{ $order_info['order_amount'] }}</td>
+                </tr>
+                </tbody></table>
+        </div>
     </div>
+
     <div class="scan-pay">
         <div class="qrcode-area">
             <div class="qrcode-header">
                 <p>扫一扫付款（元）</p>
-                <p class="qrcode-header-money">1880</p>
+                <p class="qrcode-header-money">{{ $total_fee }}</p>
             </div>
 
             <div class="qrcode-img-wrapper">
                 <div class="qrcode-img-area">
-                    <img src='http://qr.liantu.com/api.php?text=weixin://wxpay/bizpayurl?pr=vnSFDEs132' alt='扫码支付'>
+                    {!! $pay_info !!}
                 </div>
                 <div class="qrcode-img-explain clearfix">
-                    <img src="/frontend/images/wechat-scan.png" alt="扫一扫标识" />
+                    <img src="/images/wechat-scan.png" alt="扫一扫标识" />
                     <div>
                         打开手机微信
                         <br>扫一扫继续付款
@@ -60,17 +84,27 @@
             </div>
         </div>
         <div class="qrguide-area">
-            <img src="/frontend/images/wechat-scan1.jpg" class="qrguide-area-img active">
-            <img src="/frontend/images/wechat-scan2.jpg" class="qrguide-area-img background">
+            <img src="/images/wechat-scan1.jpg" class="qrguide-area-img active">
+            <img src="/images/wechat-scan2.jpg" class="qrguide-area-img background">
         </div>
     </div>
 </div>
 </body>
-<script src="/frontend/js/jquery-1.9.1.min.js?v=20180919"></script>
+<script src="/js/jquery-1.9.1.min.js?v=20180919"></script>
 <script type="text/javascript">
     $().ready(function() {
         $(".qrguide-area").on("click", "img", function() {
             $(this).removeClass("active").addClass("background").siblings("img").removeClass("background").addClass("active");
+        });
+
+        $('.order-ext-trigger').click(function() {
+            if ($(this).hasClass('fn-more')) {
+                $(this).removeClass('fn-more');
+                $('.order-detail-container').addClass('hide');
+            } else {
+                $(this).addClass('fn-more');
+                $(".order-detail-container").removeClass('hide');
+            }
         });
     });
 </script>
@@ -80,7 +114,7 @@
         $.ajax({
             url: '/payment/check-is-pay',
             data: {
-                order_sn: 'MP201810031228356202598'
+                order_sn: '{{ $order_sn }}'
             },
             type : 'GET',
             dataType : 'json',

@@ -10,27 +10,27 @@
             <div class="cart-item ">
                 <div class="item-goods">
                     <span class="p-img">
-                        <a href="{{ route('pc_show_goods',['goods_id'=>$v->goods_id]) }}">
-                        <img src="{{ get_image_url($v->goods->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
-                             width="50" height="50" alt="{{ $v->goods_name }}">
+                        <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}">
+                        <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
+                             width="50" height="50" alt="{{ $v['goods_name'] }}">
                         </a>
                     </span>
                     <div class="p-name">
-                        <a href="{{ route('pc_show_goods',['goods_id'=>$v->goods_id]) }}"
-                           title="{{ $v->goods_name }}">
+                        <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}"
+                           title="{{ $v['goods_name'] }}">
                             <!-- 如果商品已失效，显示下面的font标签 _start -->
 
                             {{--<font>失效</font>--}}
 
                             <!-- 如果商品已失效，显示下面的font标签 _end -->
-                            {{ $v->goods_name }}
+                            {{ $v['goods_name'] }}
                         </a>
                     </div>
                     <div class="p-price">
-                        <strong class="second-color">￥{{ $v->goods_price }}</strong>
-                        ×{{ $v->goods_num }}
+                        <strong class="second-color">￥{{ $v['goods_price'] }}</strong>
+                        ×{{ $v['goods_number'] }}
                     </div>
-                    <a href="javascript:void(0);" class="p-del" onClick="$.cart.remove('{{ $v->cart_id }}')">删除</a>
+                    <a href="javascript:void(0);" class="p-del" onClick="$.cart.remove('{{ $v['cart_id'] }}')">删除</a>
                 </div>
             </div>
             @endforeach
@@ -40,7 +40,7 @@
         @else
         <!-- 没有商品的展示形式 _start -->
             <div class="tip-box">
-                <img src="/frontend/images/noresult.png" class="tip-icon">
+                <img src="/images/noresult.png" class="tip-icon">
                 <div class="tip-text">
                     您的购物车里什么都没有哦
                     <br>
@@ -58,7 +58,7 @@
     <div class="cart-footer-checkout">
         <div class="number">
             共
-            <strong class="count second-color">{{ $cart_price_info['goods_num'] }}</strong>
+            <strong class="count second-color">{{ $cart_price_info['goods_number'] }}</strong>
             件商品
         </div>
         <div class="sum">

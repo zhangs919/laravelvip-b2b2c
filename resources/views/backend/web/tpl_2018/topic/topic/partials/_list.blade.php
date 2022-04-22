@@ -23,11 +23,11 @@
             </td>
             <td class="text-c">{{ $v->topic_id }}</td>
             <td>{{ $v->topic_name }}</td>
-            <td>{{ route('show_topic', ['topic_id' => $v->topic_id], false) }}</td>
+            <td>{{ route('pc_show_topic', ['topic_id' => $v->topic_id], false) }}</td>
             <td>{{ $v->created_at }}</td>
             <td>{{ $v->updated_at }}</td>
             <td class="handle">
-                <a href="{{ route('show_topic', ['topic_id' => $v->topic_id]) }}" target="_blank">查看</a>
+                <a href="{{ route('pc_show_topic', ['topic_id' => $v->topic_id]) }}" target="_blank">查看</a>
                 <span>|</span>
                 <a href="design?id={{ $v->topic_id }}" target="_blank">装修</a>
                 <span>|</span>

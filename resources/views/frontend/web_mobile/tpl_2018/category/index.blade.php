@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -34,9 +34,9 @@
 
     <!-- 内容 -->
     <div id="index_content"><!-- 默认缓载图片 -->
-        <link rel="stylesheet" href="/mobile/css/catalog.css?v=20180702"/>
-        <script src="/mobile/js/category.js?v=20180813"></script>
-        <script src="/mobile/js/szy_rotate.js?v=20180813"></script>
+        <link rel="stylesheet" href="/css/catalog.css?v=20180702"/>
+        <script src="/js/category.js?v=20180813"></script>
+        <script src="/js/szy_rotate.js?v=20180813"></script>
         <section id="catalog_content">
             <header class="header" style="position: fixed; top: 0">
                 <div class="header-left">
@@ -102,7 +102,7 @@
 
                                         @foreach($vv['items'] as $vvv)
                                         <div class="catalog-info">
-                                            <a class="catalog-info-link" href="{{ route('mobile_goods_list', ['cat_id'=>$vvv['cat_id']]) }}" style="background: url('/mobile/images/no_image.png') no-repeat center center; background-size: 55px;">
+                                            <a class="catalog-info-link" href="{{ route('mobile_goods_list', ['cat_id'=>$vvv['cat_id']]) }}" style="background: url('/images/no_image.png') no-repeat center center; background-size: 55px;">
                                                 <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url($vvv['cat_image']) }}" data-original-webp="{{ get_image_url($vvv['cat_image']) }}?x-oss-process=image/format,webp/quality,q_75" alt=" {{ $vvv['cat_name'] }} " />
                                             </a>
                                             <a href="{{ route('mobile_goods_list', ['cat_id'=>$vvv['cat_id']]) }}"><em> {{ $vvv['cat_name'] }} </em></a>

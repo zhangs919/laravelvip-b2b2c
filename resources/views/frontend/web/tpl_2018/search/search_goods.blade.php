@@ -14,13 +14,13 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180528"></script>
-    <script src="/frontend/js/tabs.js?v=20180528"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180528"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/frontend/js/index_tab.js?v=20180528"></script>
-    <script src="/frontend/js/jump.js?v=20180528"></script>
-    <script src="/frontend/js/nav.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180528"></script>
+    <script src="/js/tabs.js?v=20180528"></script>
+    <script src="/js/bubbleup.js?v=20180528"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
+    <script src="/js/index_tab.js?v=20180528"></script>
+    <script src="/js/jump.js?v=20180528"></script>
+    <script src="/js/nav.js?v=20180528"></script>
 @stop
 
 
@@ -29,7 +29,7 @@
 
     <!-- 内容 -->
 
-    <link rel="stylesheet" href="/frontend/css/category.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/category.css?v=20180428"/>
     <!---------------------以上为公共内容顶部及头部导航---------------------------->
     <div class="w1210">
         <!--当前位置，面包屑-->
@@ -454,9 +454,9 @@ if (document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/) != null) {
     document.body.scrollTop = parseInt(arr[1]);
 }
 </script> -->
-    <script src="/frontend/js/category.js?v=20180528"></script>
+    <script src="/js/category.js?v=20180528"></script>
     <!--[if lte IE 9]>
-    <script src="/frontend/js/requestAnimationFrame.js?v=20180528"></script>
+    <script src="/js/requestAnimationFrame.js?v=20180528"></script>
     <![endif]-->
     <!-- 飞入购物车js _end -->
 

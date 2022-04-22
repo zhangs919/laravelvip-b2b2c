@@ -10,9 +10,9 @@
     <!--页面css/js-->
     <script src="/assets/d2eace91/js/design/shop_index.js?v=20180710"></script>
     <!-- 公共css -->
-    <link rel="stylesheet" href="/frontend/css/common.css?v=20180702"/>
-    <link rel="stylesheet" href="/frontend/css/shop_index.css?v=20180702"/>
-    <link rel="stylesheet" href="/frontend/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/shop_index.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/template.css?v=20180702"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
     <!-- 装修js -->
     <script src="/assets/d2eace91/js/jquery.design.js?v=20180710"></script>
@@ -38,9 +38,9 @@
             <a class="topBar-logo"> <img src="{{ get_image_url(sysconf('seller_center_logo')) }}" /></a>
             <div class="topBar-navbar-r">
                 <div class="topBar-navbar">
-                    <a class="SZY-WEB-STATIC" href="javascript:void(0);" data-value="1">
+                    <a class="SZY-WEB-STATIC @if(!$webStatic){{ 'active' }}@endif" href="javascript:void(0);" data-value="{{ $webStatic }}">
                         <div class="topBar-button">
-                            <span class="title">开启静态页面</span>
+                            <span class="title">@if($webStatic){{ '关闭静态页面' }}@else{{ '开启静态页面' }}@endif</span>
                         </div>
                     </a>
                 </div>
@@ -93,13 +93,13 @@
         <div class="SZY-TPL-HEADER">
             <!-- 引入头部 -->
             <!-- 引入头部文件 -->
-            <script src="/frontend/js/index.js?v=20180710"></script>
-            <script src="/frontend/js/tabs.js?v=20180710"></script>
-            <script src="/frontend/js/bubbleup.js?v=20180710"></script>
-            <script src="/frontend/js/jquery.hiSlider.js?v=20180710"></script>
-            <script src="/frontend/js/index_tab.js?v=20180710"></script>
-            <script src="/frontend/js/jump.js?v=20180710"></script>
-            <script src="/frontend/js/nav.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/tabs.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/bubbleup.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jquery.hiSlider.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index_tab.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=20180710"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/nav.js?v=20180710"></script>
 
 
             <div class="header">
@@ -226,7 +226,7 @@
 
 
                                                 <a id="" href="http://www.b2b2c.yunmall.68mall.com/shop/index/license.html?id=1&code=special_aptitude" target="_blank">
-                                                    <img src="/frontend/images/national_emblem_light2.png" width="20" height="22" border="0" alt="特殊行业资质" />
+                                                    <img src="/images/national_emblem_light2.png" width="20" height="22" border="0" alt="特殊行业资质" />
                                                 </a>
 
                                             </div>

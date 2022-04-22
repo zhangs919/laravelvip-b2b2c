@@ -19,9 +19,9 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link type="text/css" rel="stylesheet" href="/frontend/css/common.css">
+    <link type="text/css" rel="stylesheet" href="/css/common.css">
     <script src="/assets/d2eace91/js/jquery.js?v=20180418"></script>
-    <script type="text/javascript" src="/frontend/js/common.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
 
     <!-- 加载Layer插件 -->
     <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
@@ -66,13 +66,13 @@
         <div class="w990 pos-r">
 
 
-            <link type="text/css" rel="stylesheet" href="/frontend/css/login.css">
+            <link type="text/css" rel="stylesheet" href="/css/login.css">
             <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
             <!--整站改色 _start-->
             @if(sysconf('custom_style_enable') == 1)
-                <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6"/>
+                <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6"/>
             @else
-                <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6"/>
+                <link rel="stylesheet" href="/css/color-style.css?v=1.6"/>
             @endif
             <!--整站改色 _end-->
             <script src="/assets/d2eace91/js/layer/layer.js?v=20180418"></script>
@@ -142,7 +142,7 @@
                                 <div class="item-coagent">
 
                                 </div>
-                                <input type="hidden" name="back_url" value="http://seller.laravelvip.com/shop/account/add" />
+                                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                             </form>
                         </div>
@@ -195,7 +195,7 @@
                                 <div class="item-coagent">
 
                                 </div>
-                                <input type="hidden" name="back_url" value="http://seller.laravelvip.com/shop/account/add" />
+                                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                             </form>
                         </div>

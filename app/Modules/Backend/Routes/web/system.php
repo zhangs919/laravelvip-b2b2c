@@ -9,6 +9,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
         Route::group(['prefix' => 'config'], function () {
             Route::get('index/{group?}', 'System\ConfigController@index')->name('system-config-'.request()->get('group')); // index get请求
             Route::post('index/{group?}', 'System\ConfigController@updateConfig')->name('system-config-'.request()->get('group')); // index post请求 保存设置信息
+            Route::post('clear', 'System\ConfigController@clear'); // 配置值清空数据
         });
 
         // System 网站配置管理控制器

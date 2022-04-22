@@ -1,4 +1,4 @@
-@if(count($hot_sale_goods) > 0)
+@if(!empty($hot_sale_goods))
 <div id="hotsale">
     <div class="hd bg-color">热卖推荐</div>
     <div class="mc">
@@ -7,7 +7,7 @@
         <dl>
             <dt>
                 <a target="_blank" href="{{ route('pc_show_goods', ['goods_id'=>$v->goods_id]) }}" title="{{ $v->goods_name }} " style="">
-                    <img class="lazy" src="/frontend/images/common/blank.png" data-original="{{ get_image_url($v->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" alt="">
+                    <img class="lazy" src="/images/common/blank.png" data-original="{{ get_image_url($v->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" alt="">
                 </a>
             </dt>
             <dd>

@@ -707,6 +707,104 @@ function backend_menu() {
         ]
     ];
 
+    // 会员
+    $_menu[] = [
+        'name' => '会员',
+        'url' => '',
+        'menus' => 'user',
+        'child' => [
+            [
+                'name' => '会员',
+                'icon' => 'fa fa-user fa-fw',
+                'url' => '',
+                'menus' => 'user-user',
+                'child' => [
+                    [
+                        'name' => '会员列表',
+                        'url' => '/user/user/list',
+                        'menus' => 'user-user-list'
+                    ],
+                    [
+                        'name' => '会员标签',
+                        'url' => '/user/label/list',
+                        'menus' => 'user-user-label'
+                    ],
+                ],
+            ],
+            [
+                'name' => '运营',
+                'icon' => 'fa fa-line-chart fa-fw',
+                'url' => '',
+                'menus' => 'user-operative',
+                'child' => [
+                    [
+                        'name' => '智能营销',
+                        'url' => '/dashboard/customer-analysis/index',
+                        'menus' => 'user-operative-smart'
+                    ],
+                    [
+                        'name' => '商圈营销',
+                        'url' => '/dashboard/trade-area/list',
+                        'menus' => 'user-operative-district'
+                    ],
+                ],
+            ],
+            [
+                'name' => '分析',
+                'icon' => 'fa fa-user fa-fw',
+                'url' => '',
+                'menus' => 'user-analyse',
+                'child' => [
+                    [
+                        'name' => '会员数据',
+                        'url' => '/finance/users-statistics/index',
+                        'menus' => 'user-analyse-data'
+                    ],
+                    [
+                        'name' => '会员分析',
+                        'url' => '/finance/users-statistics/users-list',
+                        'menus' => 'user-analyse-statistics'
+                    ],
+                    [
+                        'name' => '群组分析',
+                        'url' => '/dashboard/group-analysis/list',
+                        'menus' => 'user-group-analysis'
+                    ],
+                    [
+                        'name' => '商圈分析',
+                        'url' => '/dashboard/trade-area-analysis/list',
+                        'menus' => 'user-analyse-area-analysis'
+                    ],
+
+                ],
+            ],
+            [
+                'name' => '设置',
+                'icon' => 'fa fa-cogs fa-fw',
+                'url' => '',
+                'menus' => 'user-setting',
+                'child' => [
+                    [
+                        'name' => '会员设置',
+                        'url' => '/system/config/index?group=user',
+                        'menus' => 'user-setting-default'
+                    ],
+                    [
+                        'name' => '会员等级',
+                        'url' => '/user/user-rank/list',
+                        'menus' => 'user-setting-rank-list'
+                    ],
+                    [
+                        'name' => '店铺会员等级',
+                        'url' => '/user/shop/list',
+                        'menus' => 'user-setting-shop-list'
+                    ],
+
+                ],
+            ],
+        ]
+    ];
+
     // 财务
     $_menu[] = [
         'name' => '财务',
@@ -782,11 +880,11 @@ function backend_menu() {
                         'url' => '/finance/shops-statistics/index',
                         'menus' => 'finance-shops-statistics'
                     ],
-                    [
-                        'name' => '会员统计',
-                        'url' => '/finance/users-statistics/index',
-                        'menus' => 'finance-users-statistics'
-                    ],
+//                    [
+//                        'name' => '会员统计',
+//                        'url' => '/finance/users-statistics/index',
+//                        'menus' => 'finance-users-statistics'
+//                    ],
                     [
                         'name' => '销售分析',
                         'url' => '/finance/sales-analyse/index',
@@ -1051,10 +1149,11 @@ function backend_menu() {
 }
 
 function get_backend_active_menus() {
+//    $lastmenus = cookie('lastmenus'); // data-menus=mall|mall-setting|mall-setting-message
     if (request()->getPathInfo() == '/') {
         $active_url = '/index/index/index';
     } else {
-        $active_url = request()->getPathInfo();
+        $active_url = request()->getRequestUri();
     }
 
     $menus = backend_menu();

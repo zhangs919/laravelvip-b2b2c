@@ -134,7 +134,7 @@
                                     </div>
                                     <!--当点击上传时，显示的缓载效果-->
                                     <div class="loading-wrap" style="display: none">
-                                        <img src="/frontend/images/apply/apply-loading.gif">
+                                        <img src="/images/apply/apply-loading.gif">
                                     </div>
                                     <!--当已经上传情况下，显示-->
                                     <div class="image-wrap">
@@ -152,7 +152,7 @@
                                     </div>
                                     <!--当点击上传时，显示的缓载效果-->
                                     <div class="loading-wrap" style="display: none">
-                                        <img src="/frontend/images/apply/apply-loading.gif">
+                                        <img src="/images/apply/apply-loading.gif">
                                     </div>
                                     <!--当已经上传情况下，显示-->
                                     <div class="image-wrap">
@@ -170,7 +170,7 @@
                                     </div>
                                     <!--当点击上传时，显示的缓载效果-->
                                     <div class="loading-wrap" style="display: none">
-                                        <img src="/frontend/images/apply/apply-loading.gif">
+                                        <img src="/images/apply/apply-loading.gif">
                                     </div>
                                     <!--当已经上传情况下，显示-->
                                     <div class="image-wrap">
@@ -208,7 +208,7 @@
                                     </div>
                                     <!--当点击上传时，显示的缓载效果-->
                                     <div class="loading-wrap" style="display: none">
-                                        <img src="/frontend/images/apply/apply-loading.gif">
+                                        <img src="/images/apply/apply-loading.gif">
                                     </div>
                                     <!--当已经上传情况下，显示-->
                                     <div class="image-wrap">
@@ -256,7 +256,7 @@
                                     </div>
                                     <!--当点击上传时，显示的缓载效果-->
                                     <div class="loading-wrap" style="display: none">
-                                        <img src="/frontend/images/apply/apply-loading.gif">
+                                        <img src="/images/apply/apply-loading.gif">
                                     </div>
                                     <!--当已经上传情况下，显示-->
                                     <div class="image-wrap">
@@ -305,7 +305,7 @@
                                     </div>
                                     <!--当点击上传时，显示的缓载效果-->
                                     <div class="loading-wrap" style="display: none">
-                                        <img src="/frontend/images/apply/apply-loading.gif">
+                                        <img src="/images/apply/apply-loading.gif">
                                     </div>
                                     <!--当已经上传情况下，显示-->
                                     <div class="image-wrap">

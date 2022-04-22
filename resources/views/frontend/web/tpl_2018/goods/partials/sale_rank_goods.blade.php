@@ -11,7 +11,7 @@
                     @endif
                     <div class="p-img">
                         <a target="_blank" title="{{ $v['goods_name'] }}" href="{{ route('pc_show_goods', ['goods_id'=>$v['goods_id']]) }}" style="">
-                            <img class="lazy" alt="" src="/frontend/images/common/blank.png" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450">
+                            <img class="lazy" alt="" src="/images/common/blank.png" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450">
                         </a>
                     </div>
                     <div class="p-name">

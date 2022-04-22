@@ -115,6 +115,9 @@ class Seller extends Foundation
             view()->share('seller_id', $this->seller_id);
             view()->share('shop_info', seller_shop_info());
 
+            $messageCount = 0; // todo 获取店铺未读消息
+            view()->share('messageCount', $messageCount);
+
             return $next($request);
         });
 

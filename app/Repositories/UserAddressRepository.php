@@ -64,6 +64,21 @@ class UserAddressRepository
         }
     }
 
+    /**
+     * 根据地址id获取用户地址详情
+     *
+     * @param $user_id
+     * @param $address_id
+     * @return array
+     */
+    public function getUserAddressInfo($user_id, $address_id)
+    {
+        $info = UserAddress::where([['user_id',$user_id],['address_id',$address_id]])->first();
+        if (empty($info)) {
+            return [];
+        }
+        return $info->toArray();
+    }
 
     /**
      * 获取用户收货地址列表
@@ -72,15 +87,15 @@ class UserAddressRepository
      * @param string $scene user_center:用户中心地址列表  buy:购物结算页面地址列表
      * @return mixed
      */
-    public function getUserAddressList($user_id, $scene = 'user_center')
+    public function getUserAddressList($user_id, $scene = 'user_center', $selected_address = 0)
     {
-        $list = UserAddress::where([['user_id', $user_id]])->get()->toArray();
+        $list = UserAddress::where([['user_id', $user_id]])->orderBy('is_default', 'desc')->get()->toArray();
         if (!empty($list)) {
             foreach ($list as &$item) {
                 $regionName = get_region_names_by_region_code($item['region_code'], ' ');
                 if ($scene == 'user_center') {
                     $item['region_code_format'] = $regionName;
-                    $item['region_names'] = $regionName;
+                    $item['region_name'] = $regionName;
                 } elseif ($scene == 'buy') {
                     // 是否实名认证
                     $userReal = $this->userReal->checkUserReal($user_id);
@@ -96,10 +111,19 @@ class UserAddressRepository
                     $item['is_real'] = $isReal;
                     $item['real_name'] = $realName;
                     $item['id_code'] = $idCode;
-                    $item['selected'] = $item['is_default'];
+                    if (!empty($selected_address)) {
+                        if ($selected_address == $item['address_id']) {
+                            $selected = 1;
+                        } else {
+                            $selected = 0;
+                        }
+                    } else {
+                        $selected = $item['is_default'];
+                    }
+                    $item['selected'] = $selected;
                     $item['region_name'] = $regionName;
                     $item['mobile_format'] = hide_tel($item['mobile']);
-                    $item['id_code_format'] = '**********';
+                    $item['id_code_format'] = hide_id_card($item['id_code']);
                 }
             }
         }

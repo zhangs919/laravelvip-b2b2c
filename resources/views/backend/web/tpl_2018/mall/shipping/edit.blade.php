@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.2">
     <link rel="stylesheet" href="/assets/d2eace91/css/base.css?v=1.2">
     <link rel="stylesheet" href="/assets/d2eace91/css/jquery-ui.css?v=1.2">
-    <link rel="stylesheet" href="/backend/css/waybill.css?v=1.2">
+    <link rel="stylesheet" href="/css/waybill.css?v=1.2">
     <script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-    <script src="/backend/js/jquery-ui.js?v=1.2"></script>
+    <script src=/js/jquery-ui.js?v=1.2"></script>
 @stop
 
 {{--alet message page元素同级上面--}}

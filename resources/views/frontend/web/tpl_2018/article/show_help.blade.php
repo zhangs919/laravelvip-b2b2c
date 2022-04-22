@@ -18,18 +18,18 @@
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=20180428"/>
-    <link rel="stylesheet" href="/frontend/css/common.css?v=20180428"/>
-    <link rel="stylesheet" href="/frontend/css/help.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/help.css?v=20180428"/>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
     <script src="/assets/d2eace91/js/jquery.js?v=20180528"></script>
-    <script src="/frontend/js/common.js?v=20180528"></script>
-    <script src="/frontend/js/help.js?v=20180528"></script>
+    <script src="/js/common.js?v=20180528"></script>
+    <script src="/js/help.js?v=20180528"></script>
 </head>
 <body>
 <!---商城公共头部--->
@@ -102,6 +102,6 @@
 @include('layouts.partials.short_footer')
 
 </body>
-<script src="/frontend/js/jquery.fly.min.js?v=20180528"></script>
+<script src="/js/jquery.fly.min.js?v=20180528"></script>
 <script src="/assets/d2eace91/js/szy.cart.js?v=1.2"></script>
 </html>

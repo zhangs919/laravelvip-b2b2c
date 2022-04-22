@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header_css')
-    <link rel="stylesheet" href="/frontend/css/compare.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/compare.css?v=20180702"/>
 @stop
 
 @section('header_js')
@@ -57,8 +57,8 @@
         var local_region_code = "53,01";
         var local_region_name = "云南省 昆明市";
     </script>
-    <script src="/frontend/js/compare.js?v=20180027"></script>
-    <script src="/frontend/js/tabs.js?v=20180027"></script>
+    <script src="/js/compare.js?v=20180027"></script>
+    <script src="/js/tabs.js?v=20180027"></script>
     <script type="text/javascript">
         $("body").on("click", "a[class='cart-btn add-to-cart'],a[class='list-item-btn add-to-cart']", function() {
             var buy_enable = $(this).data("buy-enable");
@@ -197,10 +197,10 @@
 @stop
 
 @section('footer_js')
-    <script src="/frontend/js/jquery.fly.min.js?v=20180027"></script>
+    <script src="/js/jquery.fly.min.js?v=20180027"></script>
     <script src="/assets/d2eace91/js/szy.cart.js?v=20180027"></script>
     <!--[if lte IE 9]>
-    <script src="/frontend/js/requestAnimationFrame.js?v=20180027"></script>
+    <script src="/js/requestAnimationFrame.js?v=20180027"></script>
     <![endif]-->
     <script type="text/javascript">
         $().ready(function(){

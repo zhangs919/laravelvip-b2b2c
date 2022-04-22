@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -35,10 +35,10 @@
     <!-- 内容 -->
     <div id="index_content"><!-- 默认缓载图片 -->
         <!-- 加载列表页CSS -->
-        <link rel="stylesheet" href="/mobile/css/category.css?v=20180702"/>
-        <script src="/mobile/js/jquery.rotate.min.js?v=20180813"></script>
-        <script src="/mobile/js/jquery-ui.min.js?v=20180813"></script>
-        <script src="/mobile/js/jquery.ui.touch-punch.min.js?v=20180813"></script>
+        <link rel="stylesheet" href="/css/category.css?v=20180702"/>
+        <script src="/js/jquery.rotate.min.js?v=20180813"></script>
+        <script src="/js/jquery-ui.min.js?v=20180813"></script>
+        <script src="/js/jquery.ui.touch-punch.min.js?v=20180813"></script>
 
         <!--列表页内容start-->
         <section class="category-content-section">
@@ -139,29 +139,29 @@
                                 </script>
                             </div>
 
+                            @if(!empty($filter['brand']['items']))
+                                <div class="attr-info">
+                                    <div class="filtrate-list">
+                                        <a href="javascript:void(0);">
+                                            <label>品牌</label>
 
-                            <div class="attr-info">
-                                <div class="filtrate-list">
-                                    <a href="javascript:void(0);">
-                                        <label>品牌</label>
+                                            <span>
+                                        全部
+                                        <i class="iconfont">&#xe607;</i>
+                                    </span>
 
-                                        <span>
-									全部
-									<i class="iconfont">&#xe607;</i>
-								</span>
+                                        </a>
+                                    </div>
+                                    <ul class="brand-list attr-info-ul" data-type="brand" style="display: block">
+                                        <!--品牌-->
 
-                                    </a>
+                                        @foreach($filter['brand']['items'] as $k=>$v)
+                                        <li data-brand_id="{{ $v['value'] }}" @if($k > 2)class="hide"@endif>{{ $v['name'] }}</li>
+                                        @endforeach
+
+                                    </ul>
                                 </div>
-                                <ul class="brand-list attr-info-ul" data-type="brand" style="display: block">
-                                    <!--品牌-->
-
-                                    @foreach($filter['brand']['items'] as $k=>$v)
-                                    <li data-brand_id="{{ $v['value'] }}" @if($k > 2)class="hide"@endif>{{ $v['name'] }}</li>
-                                    @endforeach
-
-                                </ul>
-                            </div>
-
+                            @endif
 
 
 
@@ -225,7 +225,7 @@
                 @include('goods.partials._goods_list')
 
             </div>
-            <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+            <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
             <script type="text/javascript">
                 $().ready(function(){
                     //首先将#back-to-top隐藏
@@ -365,7 +365,7 @@
         <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
         <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
         <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
-        <script src="/mobile/js/goods_list.js?v=20180813"></script>
+        <script src="/js/goods_list.js?v=20180813"></script>
         <script type='text/javascript'>
             $(document).ready(function() {
                 //加入购物车

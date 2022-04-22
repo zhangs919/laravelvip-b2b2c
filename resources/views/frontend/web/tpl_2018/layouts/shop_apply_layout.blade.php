@@ -18,15 +18,15 @@
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.2"/>
-    <link rel="stylesheet" href="/frontend/css/common.css?v=1.2"/>
+    <link rel="stylesheet" href="/css/common.css?v=1.2"/>
 
-    <link rel="stylesheet" href="/frontend/css/apply.css?v=1.2"/>
+    <link rel="stylesheet" href="/css/apply.css?v=1.2"/>
 
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
     <script src="/assets/d2eace91/js/jquery.js?v=1.2"></script>
@@ -34,7 +34,7 @@
     <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=1.2"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=1.2"></script>
-    <script src="/frontend/js/common.js?v=1.2"></script>
+    <script src="/js/common.js?v=1.2"></script>
 
 </head>
 <body style="background: #eee">

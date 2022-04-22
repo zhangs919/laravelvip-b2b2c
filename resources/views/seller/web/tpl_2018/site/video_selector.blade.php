@@ -3,48 +3,30 @@
     <div class="tab-content">
         <!-- 分组 -->
         <div class="category-list-region pull-left">
-            <ul class="category-list dir-list" data-dir_id="6">
+            <ul class="category-list dir-list" data-dir_id="{{ $dir_id }}">
 
-                <li id="dir_6" class="category-item selected" data-dir_id="6" title="默认视频">
-                    默认视频
-                    <span></span>
-                </li>
-
-                <li id="dir_7" class="category-item " data-dir_id="7" title="默认商品视频">
-                    默认商品视频
-                    <span></span>
-                </li>
-
-                <li id="dir_8" class="category-item " data-dir_id="8" title="默认商品详情视频">
-                    默认商品详情视频
-                    <span></span>
-                </li>
-
-                <li id="dir_9" class="category-item " data-dir_id="9" title="默认广告视频">
-                    默认广告视频
-                    <span></span>
-                </li>
-
-                <li id="dir_10" class="category-item " data-dir_id="10" title="默认手机视频">
-                    默认手机视频
-                    <span></span>
-                </li>
+                @foreach($video_dir_list as $key=>$v)
+                    <li id="dir_{{ $v->dir_id }}" class="category-item @if($key == 0) selected @endif" data-dir_id="{{ $v->dir_id }}" title="{{ $v->dir_name }}">
+                        {{ $v->dir_name }}
+                        <span></span>
+                    </li>
+                @endforeach
 
             </ul>
         </div>
         <!-- 视频列表 -->
         <div class="attachment-list-region">
             <div class="search-container">
-<span class="pull-left">
-<select id="sort_name" class="form-control form-control-xs m-l-2 w150"> <option value="add_time-desc">按上传时间从晚到早</option><option value="add_time-asc">按上传时间从早到晚</option><option value="size-asc">按视频从小到大</option><option value="size-desc">按视频从大到小</option><option value="name-asc">按视频名升序</option><option value="name-desc">按视频名降序</option>
-</select>
-</span>
+                <span class="pull-left">
+					<select id="sort_name" class="form-control form-control-xs m-l-2 w150"> <option value="add_time-desc">按上传时间从晚到早</option><option value="add_time-asc">按上传时间从早到晚</option><option value="size-asc">按视频从小到大</option><option value="size-desc">按视频从大到小</option><option value="name-asc">按视频名升序</option><option value="name-desc">按视频名降序</option>
+					</select>
+				</span>
                 <span class="pull-right">
-<a class="btn btn-primary btn-sm m-r-2 image-selector-upload">
-<i class="fa fa-upload"></i>
-上传视频
-</a>
-</span>
+					<input type="text" id="video_name" class="form-control form-control-sm w150" placeholder="请输入视频名称">
+					<a class="btn btn-primary btn-sm video-search"><i class="fa fa-search m-l-0"></i>搜索</a>
+					<a class="btn btn-primary btn-sm image-selector-upload"><i class="fa fa-upload m-l-0"></i>上传视频 </a>
+				</span>
+
             </div>
 
 
@@ -59,10 +41,10 @@
             <div class="selected-pic-title">
                 已选择
                 <span class="num">
-<span class="image-selector-number">0</span>
-/
-<span>1</span>
-</span>
+                    <span class="image-selector-number">0</span>
+                    /
+                    <span>{{ $size }}</span>
+                </span>
                 个视频（拖动可修改插入顺序）
             </div>
             <div class="mod-selected">
@@ -102,7 +84,7 @@
 // 选中的视频编号
         var video_list = {};
 
-        var size = "1";
+        var size = "{{ $size }}";
 
         var container = $("#{{ $uuid }}");
 
@@ -293,11 +275,11 @@
 
             if ($.isPlainObject(options)) {
                 options = $.extend({
-                    maxSize: "2097152"
+                    maxSize: "{{ sysconf('video_max_filesize')*1020 ?? '4194304' }}"
                 }, options);
             } else {
                 options = {
-                    maxSize: "2097152"
+                    maxSize: "{{ sysconf('video_max_filesize')*1020 ?? '4194304' }}"
                 };
             }
 

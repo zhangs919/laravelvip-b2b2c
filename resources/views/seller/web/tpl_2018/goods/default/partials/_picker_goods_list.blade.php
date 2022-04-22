@@ -6,16 +6,17 @@
         @foreach($list as $v)
         <li class="sku-item">
             <input type="hidden" name="goods_id" value="{{ $v->goods_id }}" />
-            <input type="hidden" name="sku_id" value="930" />
+            <input type="hidden" name="sku_id" value="{{ $v->sku_id }}" />
             <input type="hidden" name="goods_name" value="{{ $v->goods_name }}" />
-            <input type="hidden" name="sku_name" value="圣芝红酒 法国进口超级波尔多AOC干红葡萄酒 750ml" />
+            <input type="hidden" name="sku_name" value="{{ $v->sku_name }}" />
             <input type="hidden" name="goods_name" value="{{ $v->goods_name }}" />
             <input type="hidden" name="goods_number" value="{{ $v->goods_number }}" />
             <input type="hidden" name="goods_price" value="{{ $v->goods_price }}" />
             <input type="hidden" name="sku_open" value="{{ $v->sku_open }}" />
 
 
-            <input type="hidden" name="sku_image" value="http://68products.oss-cn-beijing.aliyuncs.com/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" />
+            {{--<input type="hidden" name="sku_image" value="http://68products.oss-cn-beijing.aliyuncs.com/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" />--}}
+            <input type="hidden" name="sku_image" value="{{ get_image_url($v->sku_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" />
 
 
 
@@ -25,7 +26,7 @@
             <dl>
                 <dt>
                     <div class="picture m-b-5">
-                        <a href="http://www.b2b2c.yunmall.68mall.com/930" target="_blank">
+                        <a href="{{ route('pc_show_goods', ['goods_id'=>$v->goods_id]) }}" target="_blank">
 
                             <img src="{{ get_image_url($v->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220">
 
@@ -43,12 +44,12 @@
                         <span class="pull-right allattr">
 
                             @if(in_array($v->goods_id, $goods_ids))
-                                <a data-sku-id="674" data-goods-id="{{ $v->goods_id }}" data-selected="true" href="javascript:void(0);" class="btn btn-xs btn-default btn-goodspicker">
+                                <a data-sku-id="{{ $v->sku_id }}" data-goods-id="{{ $v->goods_id }}" data-selected="true" href="javascript:void(0);" class="btn btn-xs btn-default btn-goodspicker">
                                     <i class="fa fa-check"></i>
                                     <span>已选</span>
                                 </a>
                             @else
-                                <a data-sku-id="674" data-goods-id="{{ $v->goods_id }}" data-selected="false" href="javascript:void(0);" class="btn btn-xs btn-primary btn-goodspicker">
+                                <a data-sku-id="{{ $v->sku_id }}" data-goods-id="{{ $v->goods_id }}" data-selected="false" href="javascript:void(0);" class="btn btn-xs btn-primary btn-goodspicker">
                                     <i class="fa fa-plus"></i>
                                     <span>选择</span>
                                 </a>

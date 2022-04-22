@@ -1,0 +1,63 @@
+/** 初始化样式  **/
+img { border: 0; vertical-align: middle;}
+/** 日期组件样式 **/
+.dropdown-menu { position: absolute; top: 100%; left: 0; z-index: 1000; float: left; display: none; min-width: 160px; padding: 5px 0; margin: 2px 0 0; font-size: 14px; text-align: left; list-style: none; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #ccc; border: 1px solid rgba(0, 0, 0, .15); border-radius: 4px; -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175); box-shadow: 0 6px 12px rgba(0, 0, 0, .175);}
+.dropdown-menu.pull-right { right: 0; left: auto;}
+.dropdown-menu .divider { height: 1px; margin: 9px 0; overflow: hidden; background-color: #e5e5e5;}
+.dropdown-menu>li>a { display: block; padding: 3px 20px; clear: both; font-weight: 400; line-height: 1.42857143; color: #333; white-space: nowrap;}
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover { color: #262626; text-decoration: none; background-color: #f5f5f5;}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover { color: #fff; text-decoration: none; background-color: #337ab7; outline: 0;}
+.dropdown-menu>.disabled>a, .dropdown-menu>.disabled>a:focus, .dropdown-menu>.disabled>a:hover { color: #777;}
+.dropdown-menu>.disabled>a:focus, .dropdown-menu>.disabled>a:hover { text-decoration: none; cursor: not-allowed; background-color: transparent; background-image: none; filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);}
+.open>.dropdown-menu { display: block;}
+.open>a { outline: 0;}
+.dropdown-menu-right { right: 0; left: auto;}
+.dropdown-menu-left { right: auto; left: 0;}
+.dropdown-header { display: block; padding: 3px 20px; font-size: 12px; line-height: 1.42857143; color: #777; white-space: nowrap;}
+.dropdown-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 990;}
+.glyphicon { display: inline-block; font: normal normal normal 14px/1 FontAwesome; font-size: 18px; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; cursor: pointer;}
+.glyphicon.icon-arrow-left:before { content: "\f104";}
+.glyphicon.icon-arrow-right:before { content: "\f105";}
+.datetimepicker { padding: 4px; margin-top: 1px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; direction: ltr;}
+.datetimepicker table { border-spacing: 0; border-collapse: collapse;}
+.datetimepicker td, .datetimepicker th { text-align: center; width: 20px; height: 20px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; border: none; box-sizing: border-box;}
+.datetimepicker th.switch { width: 145px;}
+.datetimepicker table tr td.day:hover { background: #eee; cursor: pointer;}
+.datetimepicker fieldset { min-width: 0; border: 0;}
+.datetimepicker .datetimepicker-hours fieldset legend, .datetimepicker .datetimepicker-minutes fieldset legend { display: block; width: 100%; padding: 0; margin-bottom: inherit; font-size: 21px; line-height: 30px; color: #333; border: 0; border-bottom: 1px solid #e5e5e5;}
+.datetimepicker table tr td span { display: block; width: 23%; height: 54px; line-height: 54px; float: left; margin: 1%; cursor: pointer; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
+.datetimepicker .datetimepicker-hours span { height: 26px; line-height: 26px;}
+.datetimepicker .datetimepicker-hours table tr td span.hour_am, .datetimepicker .datetimepicker-hours table tr td span.hour_pm { width: 14.6%;}
+.datetimepicker .datetimepicker-minutes span { height: 26px; line-height: 26px;}
+.datetimepicker table tr td.active, .datetimepicker table tr td span.active { color: #fff; background: #58b3ff !important;}
+/** 万能表单特殊样式  **/
+.ui-sortable-placeholder { background-color: #fff8dc;}
+#dropzone { min-height: 30px;}
+.editor-body, .editor-header {border: 1px solid #ccc;}
+.editor-header { box-sizing: content-box !important;}
+.editor-body { margin-top: 5px !important; padding: 6px; width: 232px !important; height: 200px;}
+.editor-body .w-e-text { overflow-y: auto;}
+.description .w-e-toolbar.editor-header { display: inline-block; height: auto;}
+.w-e-toolbar div.w-e-menu { float: left; padding: 5px 5px;}
+.image-preview { width: 245px; min-height: 96px; border: 1px dashed #848484; margin-bottom: 10px;}
+.clearfix { zoom: 1;}
+.clearfix:after { content: ''; display: block; clear: both;}
+.disabled { background-color: #fff;}
+.radio-add { cursor: pointer;}
+#map_scale { margin-top: 7px;}
+#color-picker { width: 60px;}
+.operate-nr { overflow: visible;}
+.map-init { height: 300px;}
+.ui-state-focus { outline: none;}
+.ui-slider .ui-slider-handle { cursor: pointer;}
+.evo-cp-wrap { width: auto !important;}
+.render-selector { margin-left: 0 !important;}
+.question-conent .inline li { float: left; margin-right: 15px;}
+.map_container { height: 300px;}
+.form-control-error { float: none;}
+/* wangeditor最右侧下拉框位置调整 */
+.editor-header .w-e-menu:last-child .w-e-droplist { left: -60px;}
+.operateEdit{ top: 0;}
+/* 背景不滚动 */
+.bg-fixed{background-repeat: no-repeat; background-position: center top; background-attachment: fixed;}
+.drop-field img { max-width: 100%; height: auto;}

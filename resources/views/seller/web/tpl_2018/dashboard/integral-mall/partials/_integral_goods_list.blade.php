@@ -93,7 +93,7 @@
     <tfoot>
     <tr>
         <td class="text-c w10">
-            <input type="checkbox" class="checkBox" value="14" />
+            <input type="checkbox" class="checkBox" value="" />
         </td>
         <td colspan="9">
             <div class="pull-left">

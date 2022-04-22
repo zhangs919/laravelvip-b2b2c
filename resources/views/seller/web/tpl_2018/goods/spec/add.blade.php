@@ -33,7 +33,7 @@
 
 
                             <input type="text" id="attribute-attr_name" class="form-control" name="Attribute[attr_name]" value="{{ $info->attr_name ?? '' }}">
-                            <i class="fa fa-question-circle f16 c-ddd m-l-10 cur-p" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='200' height='155' src='/seller/images/goods/spec-sample.png'>"></i>
+                            <i class="fa fa-question-circle f16 c-ddd m-l-10 cur-p" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='200' height='155' src='/images/goods/spec-sample.png'>"></i>
 
 
                         </div>

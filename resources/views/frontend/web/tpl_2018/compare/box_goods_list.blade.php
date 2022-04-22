@@ -45,7 +45,7 @@
 
         <!-- 没有对比商品的展示形式 _start -->
         <div class="tip-box">
-            <img src="/frontend/images/noresult.png" class="tip-icon" />
+            <img src="/images/noresult.png" class="tip-icon" />
             <div class="tip-text">
                 您还没有选择任何的对比商品哦
                 <br />

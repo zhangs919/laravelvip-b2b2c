@@ -17,6 +17,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
         Route::group(['prefix' => 'list'], function () {
             Route::get('index', 'Goods\ListController@index')->name('shop-goods-list'); // index
             Route::get('sku-list', 'Goods\ListController@skuList'); // skuList
+            Route::get('sku-list.html', 'Goods\ListController@skuList'); // skuList
             Route::any('sku-member', 'Goods\ListController@skuMember'); // skuMember
             Route::post('edit-goods-info', 'Goods\ListController@editGoodsInfo'); // editGoodsInfo
             Route::post('edit-goods-sku-info', 'Goods\ListController@editGoodsSkuInfo'); // editGoodsSkuInfo

@@ -22,7 +22,11 @@
 
 namespace App\Modules\Frontend\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\DefaultSearch;
+use App\Models\Goods;
+use App\Models\Shop;
+use App\Models\TplBackup;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\CollectRepository;
 use App\Repositories\NavBannerRepository;
@@ -40,6 +44,8 @@ use App\Repositories\TemplateSelectorRepository;
 use App\Repositories\ToolsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShopController extends Frontend
 {
@@ -496,6 +502,10 @@ class ShopController extends Frontend
     {
         $output = $request->get('output', 0);
 
+        // 附近店铺
+        $lat = !empty($request->get('lat', 0)) ? $request->get('lat', 0) : 0; // 经度
+        $lng = !empty($request->get('lng', 0)) ? $request->get('lng', 0) : 0; // 纬度
+
         // 筛选条件
         $cls_id = $request->get('cls_id', 0); // 店铺分类id
         $cls_id_arr = explode('_', $cls_id);
@@ -541,17 +551,31 @@ class ShopController extends Frontend
         $where = [];
         $where[] = ['shop_status',1];
         $where[] = ['show_in_street',1];
+
+        $distance = $request->get('distance',''); // 距离 单位：km
+        if (!empty($distance) && !empty($lat) && !empty($lng)) { // 距离、经纬度都不为空时 才通过距离查询附近店铺
+            $distance = $distance * 1000; // 距离 单位：m
+            $where[] = ['distance', '<', $distance]; // 当前距离与店铺距离小于 $distance 的距离
+        }
         $condition = [
             'where' => $where,
             'sortname' => 'shop_sort',
-            'sortorder' => 'asc'
+            'sortorder' => 'asc',
+            // 计算附近店铺 distance（当前位置经纬度与每个店铺的经纬度距离，单位：m）
+            'field' => DB::raw("shop.*,(6378.138 * 2 * asin(sqrt(pow(sin((shop_lat * pi() / 180 - {$lat} * pi() / 180) / 2),2) + cos(shop_lat * pi() / 180) * cos({$lat} * pi() / 180) * pow(sin((shop_lng * pi() / 180 - {$lng} * pi() / 180) / 2),2))) * 1000) as distance")
         ];
         list($list, $total) = $this->shop->getList($condition);
+        if (!$list->isEmpty()) {
+            foreach ($list as $item) {
+                $item->distance = $item->distance > 0 ? round($item->distance/1000,2) : 0;
+            }
+        }
+
         $pageHtml = frontend_pagination($total);
         $pageArr = frontend_pagination($total, true);
         $page_json = json_encode($pageArr);
 
-        $compact = compact('page_json', 'pageHtml', 'list', 'cat_list', 'child_class_list', 'query_parent_cls_id', 'cls_id', 'cls_id_arr');
+        $compact = compact('page_json', 'pageHtml', 'list', 'cat_list', 'child_class_list', 'query_parent_cls_id', 'cls_id', 'cls_id_arr', 'distance');
 
         if ($request->ajax()) {
             if ($output) {
@@ -568,6 +592,21 @@ class ShopController extends Frontend
         return view('shop.street', $compact);
     }
 
+    public function openList(Request $request)
+    {
+        $ids = $request->get('ids');
+
+        $data = [];
+        foreach ($ids as $id) {
+            $data[] = [
+                'is_opening' => true, // todo 获取 店铺开店时间状态
+                'shop_id' => $id
+            ];
+        }
+
+        return result(0, $data);
+    }
+
     /**
      * 店铺主页
      *
@@ -577,6 +616,9 @@ class ShopController extends Frontend
      */
     public function shopHome(Request $request, $shop_id)
     {
+
+        $cat_id = $request->get('cat_id', 0);
+
 
         if (is_app()) {
             $page = 'app';
@@ -623,6 +665,9 @@ class ShopController extends Frontend
 
         list($tplHtml, $navContainerHtml) = $this->templateItem->getPageTplHtml($page, $shop_id); // 模板Html数据
 
+        // 判断首页静态页面开启状态
+        $webStatic = (is_mobile() && !is_app()) ? shopconf('m_shop_web_static',false,$shop_id) : shopconf('shop_web_static',false,$shop_id);
+
         // 默认搜索词
         $default_keywords = [];
         $default_search = DefaultSearch::where('is_show', 1)->orderBy('sort', 'asc')->get();
@@ -649,14 +694,39 @@ class ShopController extends Frontend
             }
         }
 
-        $compact = compact('page', 'tplHtml', 'navContainerHtml', 'shop_info','region_name','duration_time','is_collect','collect_count',
-            'shop_navigation', 'shop_category_list', 'default_keywords');
+        // 自由购功能是否开启
+        $freebuy_enable = true; // 0-关闭 1-开启
 
-        $this->show_seo('seo_shop',['name'=>$shop_info['shop']['shop_name']]); // SEO
+        // 分享
+        $share = $this->show_seo('seo_shop',['name'=>$shop_info['shop']['shop_name']]); // SEO
 
-        $webData = []; // web端（pc、mobile）数据对象
-        $data = [
-            'app_prefix_data' => [
+        $share = [
+            'seo_shop_title' => $share['title'],
+            'seo_shop_keywords' => $share['keywords'],
+            'seo_shop_discription' => $share['discription'],
+            'seo_shop_image' => $share['image'],
+        ];
+
+        // 判断是否是外卖风格 rule_url
+        $is_takeout_mode = TplBackup::where([['back_id',$shop_info['shop']['back_id']], ['is_sys', 1], ['is_theme', 1]])->count();
+
+        $compact = compact('cat_id', 'page', 'tplHtml', 'navContainerHtml', 'webStatic', 'shop_info','region_name','duration_time','is_collect','collect_count',
+            'shop_navigation', 'shop_category_list', 'default_keywords', 'freebuy_enable', 'share', 'is_takeout_mode');
+
+        if ($is_takeout_mode) { // 外卖模式
+            $rule_url = 'theme/takeout/'.$shop_id;
+
+            if (is_mobile() && !is_app()) {
+                return redirect($rule_url);
+            }
+
+            $app_prefix_data = [
+                'rule_url' => $rule_url,
+                'freebuy_enable' => $freebuy_enable,
+                'share' => $share
+            ];
+        } else {
+            $app_prefix_data = [
                 'shop_id' => $shop_id,
                 'shop_info' => $shop_info,// 店铺信息对象
                 'region_name' => $region_name,
@@ -675,8 +745,14 @@ class ShopController extends Frontend
                         'cat_name' => '全部商品'
                     ]
                 ],
-                'freebuy_enable' => 0,
-            ],
+                'freebuy_enable' => $freebuy_enable,
+                'share' => $share
+            ];
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_prefix_data' => $app_prefix_data,
             'app_suffix_data' => [],
             'web_data' => $webData,
             'compact_data' => $compact,
@@ -716,7 +792,7 @@ class ShopController extends Frontend
             // 已收藏
             $is_collect = true;
         }
-
+        $shop_info['shop']['is_collect'] = $is_collect;
         $collect_count = $shop_info['shop']['collect_num'];
 
         // ajax 请求 店铺首页 获取店铺信息json数据
@@ -724,22 +800,28 @@ class ShopController extends Frontend
         $data = [
             'bonus_count' => '0',
             'collect_count' => $collect_count,
+            'customer_types' => [], // todo 客服列表
             'duration_time' => $duration_time,
             'goods_count' => 0,
             'im_enable' => '',
             'is_collect' => $is_collect,
+            'is_opening' => true, // todo 如何判断
             'position' => 'info',
             'region_name' => $region_name,
             'shop_id' => $shop_id,
             'shop_info' => $shop_info,
-            'show_collect_count' => sysconf('shop_show_collect') // 是否显示店铺收藏人气
+            'show_collect_count' => sysconf('shop_show_collect'), // 是否显示店铺收藏人气
+            'yikf_url' => 'http://'.env('KF_DOMAIN').'/index/index/home?business_id=eb5bf6642a5afe7621241a51842b901c&groupid=0&shop_id=1&goods_id=0&visiter_id=26_15164&visiter_name=SZY186SJAC5369&avatar=http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/user/26/images/2018/08/17/15344845108283.jpeg&domain='
+//                .route('mobile_home')
+                .'http://'.env('MOBILE_DOMAIN')
+                .'&product=&goods_type=0'
         ];
 
         if ($request->ajax()) { // 微商城 异步加载
             return result(0, $data);
         }
 
-        $compact = compact('shop_info');
+        $compact = compact('shop_info', 'region_name');
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [
@@ -775,6 +857,10 @@ class ShopController extends Frontend
      */
     public function shopGoodsList(Request $request, $filter_str)
     {
+        // 获取数据
+        $params = $request->all();
+        extract($params);
+
         $navigation_limit = 13;
 
         $filter_arr = explode('-', $filter_str);
@@ -792,9 +878,6 @@ class ShopController extends Frontend
             'sortorder' => 'asc',
         ];
         list($shop_category_list, $total) = $this->shopCategory->getList($condition, '', true);
-
-        $goods_total = 0;
-        $pageHtml = frontend_pagination($goods_total);
 
 
 
@@ -816,15 +899,77 @@ class ShopController extends Frontend
         $collect_count = $shop_info['shop']['collect_num'];
 
 
-        $list = [];
+        // 商品列表
+        $curPage = isset($page['cur_page']) ? $page['cur_page'] : 1;
+        $pageSize = isset($page['page_size']) ? $page['page_size'] : 12;
+        $cat_id = isset($cat_id) ? $cat_id : 0;
+        $sort = isset($sort) ? $sort : 1;
+        $order = isset($order) ? $order : 'DESC';
+        $keyword = isset($keyword) ? $keyword : '';
+
+        /*
+        * 筛选条件
+        *
+        */
+        $where = [];
+        $where[] = ['goods_status',1]; // 商品状态 已发布
+        $where[] = ['goods_audit',1]; // 审核通过
+        $field = ['goods_id','goods_name','cat_id','shop_id','sku_id','sku_open','goods_price','market_price','mobile_price','give_integral','goods_number','warn_number','goods_image','brand_id','click_count','sale_num','comment_num','collect_num','is_best','is_new','is_hot','is_promote','freight_id','sales_model','goods_sort','last_time',
+//            'shop_name','shop_type','is_supply','show_price','show_content','button_content', 'is_free', 'brand_name','button_url'
+            'goods_freight_fee'
+        ];
+        $goods_total = Goods::where($where)
+            ->select($field)->count();
+        $list = Goods::where($where)
+            ->select($field)
+            ->forPage($curPage, $pageSize)
+            ->orderBy(str_replace([0,1,2,3], ['goods_sort', 'sale_num', 'comment_num', 'goods_price'], $sort), $order)
+            ->get()->toArray();
+        if (!empty($list)) {
+            foreach ($list as &$v) {
+                $goods_shop_info = Shop::where('shop_id',$v['shop_id'])
+                    ->select(['shop_name','shop_type','is_supply','show_price','show_content','button_content','button_url'])
+                    ->first()->toArray();
+                $brand_name = Brand::where('brand_id',$v['brand_id'])->value('brand_name');
+                $isCollected = 0;
+                if ($this->collect->checkIsCollected($this->user_id, 0, 0, $v['goods_id'])) {
+                    // 已收藏
+                    $isCollected = 1;
+                }
+                $v = array_merge($v,$goods_shop_info);
+                $v['is_free'] = $v['goods_freight_fee'] > 0 ? 0 : 1;
+                $v['brand_name'] = $brand_name;
+                $v['act_type'] = null;
+                $v['default_spec_id'] = null;
+                $v['goods_gift'] = 0;
+                $v['price_show'] = ['code'=>1];
+                $v['goods_price_format'] = '￥'.$v['goods_price'];
+                $v['market_price_format'] = '￥'.$v['market_price'];
+                $v['buy_enable'] = [ // 判断是否登录
+                    'code' => 1,
+                    'button_content' => '请登录'
+                ];
+                $v['is_collected'] = $isCollected; // 判断是否收藏商品
+                $v['cart_num'] = 0; // 该商品购物车数量
+            }
+        }
+        $pageHtml = frontend_pagination($goods_total);
         $page_array = frontend_pagination($goods_total,true);
+        $page_json = json_encode($page_array);
         $filter = [];
-        $params = [];
-        $keyword = null;
+//        $params = [];
+//        $keyword = null;
         $category = [];
+//        dd($goods_total);
 
         $compact = compact('shop_info', 'shop_navigation', 'shop_category_list', 'pageHtml', 'goods_total',
-            'duration_time','region_name', 'list', 'page_array');
+            'duration_time','region_name', 'list', 'page_json', 'keyword');
+
+        if ($request->ajax()) {
+            $render = view('shop.partials._shop_goods', $compact)->render();
+            return result(0, $render);
+        }
+//        dd($shop_info);
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [
@@ -939,5 +1084,35 @@ class ShopController extends Frontend
     public function mobileShopInfo(Request $request)
     {
 
+    }
+
+    /**
+     * 生成二维码
+     * @param Request $request
+     * @return mixed
+     */
+    public function qrCode(Request $request)
+    {
+        $shop_id = $request->get('id',0);
+        $shop_info = $this->shop->getById($shop_id);
+
+        // todo 如何获取手机端商品详情url
+        if (!is_mobile()) {
+            $url = route('pc_shop_home', ['shop_id'=>$shop_id]);
+        } else {
+            $url = route('mobile_shop_home', ['shop_id'=>$shop_id]);
+        }
+
+        $qrCode = QrCode::errorCorrection('L')
+            ->format('png')
+            ->size(148)
+//            ->merge('/public/qrcodes/water.png',.15) // 合并水印图片到二维码
+//            ->merge(get_image_url($shop_info->shop_image),.15) // 合并水印图片到二维码
+            ->margin(2)
+//            ->color(255,0,255)
+//            ->backgroundColor(125,245,0)
+            ->encoding('UTF-8')
+            ->generate($url);
+        return response()->make($qrCode, 200, ['Content-Type' => 'image/png']);
     }
 }

@@ -28,7 +28,7 @@
                     <div class="user-tab-right">
 				<span>
 					我的成长值：
-					<font class="second-color">{{ $user_info->rank_points ?? 0 }}</font>
+					<font class="second-color">{{ $user_info->rank_point ?? 0 }}</font>
 				</span>
                         <span>
 					会员级别：
@@ -100,7 +100,7 @@
                                 </thead>
                             </table>
                             <div class="tip-box">
-                                <img src="/frontend/images/noresult.png" class="tip-icon" />
+                                <img src="/images/noresult.png" class="tip-icon" />
                                 <div class="tip-text">暂无成长值</div>
                             </div>
                         </div>

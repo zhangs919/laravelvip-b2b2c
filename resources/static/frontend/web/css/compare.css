@@ -1,0 +1,134 @@
+@charset "utf-8"; 
+/*区别于其他页面头部、底部的展示*/
+.header-box, .header, .w1210{ width: 990px;}
+.header .search{ float: right;}
+.footer-info{ margin-top: 0px;}
+.footer-info .info-text{ width: 990px;}
+
+.compare{ background-color: #fff; width: 988px; margin: 10px 0; border: 1px solid #eee; border-bottom: 0;}
+.compare-content { -webkit-user-select: none; -webkit-user-drag: none; border-bottom: 1px solid #eee;}
+.compare-side { float: left; width: 117px; background-color: #fafafa; position: relative; border-right: 1px solid #eee; color: #a6a6a6; text-align: left;}
+.compare-goods-list .nav-item .nav-sel{ background:url(/images/compare-icon.png) no-repeat;}
+
+/*对比商品列表*/
+.compare-nav .compare-side{ height: 110px;}
+.compare-nav .compare-side .compare-side-title { color: #666; display: block; font-weight: 700; font-size: 14px; line-height: 20px; margin-left: 20px; height: 20px; padding: 17px 0 0;}
+.compare-goods-list { float: left; padding-left: 13px;}
+.compare-goods-list .nav-item { float: left; position: relative; height: 88px; width: 88px; margin: 14px 3px 0; cursor: pointer;}
+.compare-goods-list .nav-item img { border: 1px solid #eee; width: 78px; height: 78px; cursor: pointer;}
+.compare-goods-list .nav-item .nav-sel { background-poaition: 0px 0px; width: 14px; height: 14px; position: absolute; display: none;}
+.compare-goods-list .nav-item.active img { border: 1px solid #f60; width: 78px; height: 78px;}
+.compare-goods-list .nav-item.active .nav-sel { display: block; left: 65px; top: 65px;}
+
+/*商品的详细对比*/
+.compare-header { color: #666; background-color: #f2f2f2; height: 40px; border-bottom: 1px solid #eee;}
+.compare-header .compare-header-title { font-weight: 700; font-size: 14px; line-height: 40px; margin-left: 20px;}
+
+.compare-current { margin: 10px 0; position: relative; z-index: 1;}
+.compare-current .compare-side { position: static; border-right: 0;}
+.compare-current .compare-side li { width: 100%; position: relative; float: left;}
+.compare-current .compare-side li.info { height: 266px; line-height: 1; padding: 20px 0 0;}
+.compare-current .compare-side li.freight{ height: 59px;}
+.compare-current .compare-side li.reputation{ height: 124px;}
+.compare-current .compare-side li .side-label { display: block; position: absolute; right: 10px; top: 19px;}
+.compare-current .compare-side li.sales .side-label{ top: 0px;}
+.compare-current .compare-side li.reputation .side-label { line-height: 108px; top: 0;}
+
+.compare-current .compare-list { float: left;}
+
+.compare-content .compare-goods { float: left; width: 289px; border-bottom: 0; border-left: 1px solid #eee;}
+.compare-content .list-row-item { position: relative; z-index: 2; height: 58px;}
+.compare-content .list-row-item.goods-info{ height: 266px; padding: 20px 25px 0;}
+.compare-content .list_row_hover { background-color: #fcfcfc;}
+.compare-content .list-row-item, .compare-content .side_label_item { border-bottom: 1px solid #f2f2f2;}
+.compare-content .list-row-item.sales{ padding-top: 0px; line-height: 58px;}
+
+.compare-list-con .price { overflow: hidden; color: #f40; font-size: 15px; line-height: 60px; text-align: center;}
+.compare-list-con .price .old_price { text-decoration: line-through; color: #999; margin-right: 8px; font-size: 12px; font-family: verdana;}
+.compare-list-con .price .old_price .rmb-num { font-size: 12px;}
+.compare-list-con .freight { text-align: center; color: #f40; line-height: 20px; padding-top: 10px; height: 49px;}
+.compare-list-con .freight .distance { color: #999;}
+.compare-list-con .freight .rmb-num { font-size: 12px;}
+.sales { line-height: 58px; padding: 0px; text-align: center;}
+.compare-list-con .rmb-num { font-weight: 700; font-family: verdana; font-size: 20px;}
+
+.compare-list-con .reputation { height: 124px; z-index: 1;}
+.compare-list-con .reputation span.kcharts-label { line-height: 1.5; cursor: pointer; display: block; color: #36c; white-space: nowrap;}
+.compare-list-con .reputation span.disabled-label { color: #666; cursor: default;}
+.compare-list-con .pi-con { position: relative; height: 100%; width: 100%; overflow: hidden; z-index: 0;}
+
+.compare-list-con .goods-info_novalue{ text-align: center; color: #333; line-height: 266px;}
+.compare-list-con .price_novalue{ color: #333;}
+.compare-list-con .freight_novalue{ color: #333;}
+.compare-list-con .sales_novalue{ color: #333;}
+.compare-list-con .reputation_novalue { text-align: center; color: #333; line-height: 124px;}
+
+.list-row-item .goods-name { color: #333; line-height: 1.2; margin-top: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.list-row-item .goods-name a { color: #333;}
+.list-row-item .list-item-slide { position: relative; text-align: left;}
+.list-row-item .list-item-slide .item-pic-box { width: 168px; height: 168px; overflow: hidden; border: 1px solid #ececec; position: relative;}
+.list-row-item .list-item-slide .tab-content { width: 170px; height: 400px; overflow: hidden; z-index: 1;}
+.list-row-item .list-item-slide .tab-content .tab-con-item { float: none; overflow: hidden; height: 400px; display: none;}
+.list-row-item .list-item-slide .tab-content .tab-con-item p { text-align: center;}
+.list-row-item .list-item-slide .tab-content .tab-con-item p .item-link { text-align: center; width: 170px; height: 170px; display: table-cell; vertical-align: middle;}
+.list-row-item .list-item-slide .tab-content .tab-con-item p .item-link img{ width: 170px; height: 170px;}
+.list-row-item .list-item-slide .tab-nav { width: 50px; position: absolute; right: -1px; top: -6px;}
+.list-row-item .list-item-slide .tab-nav .slide-nav-btn { border: 0; margin: 6px 0 0px; display: inline-block;}
+.list-row-item .list-item-slide .tab-nav .slide-nav-btn .slide-nav-img { width: 46px; height: 46px; padding: 1px; border: 1px solid #ececec;}
+.list-row-item .list-item-slide .tab-nav .slide-nav-btn.current .slide-nav-img { border: 1px solid #f60;}
+.list-row-item .slide-buy-box { position: relative; margin-top: 10px; line-height: 1.2;}
+.list-row-item .slide-buy-box .btns { position: relative; z-index: 1; margin-top: 19px; width: 190px;}
+.list-row-item .slide-buy-box .btns .cart-btn { margin-right: 15px; background-color: #f7f7f7; border: 1px solid #ccc; border-radius: 3px; height: 24px; width: 58px; text-align: center; line-height: 24px; color: #666; float: left; text-decoration: none;}
+.list-row-item .slide-buy-box .btns .buy:hover { color: #f60;}
+.list-row-item .slide-buy-box .btns .add-to-cart{ color: #fff; border-color: #f60; background-color: #f60;}
+.list-row-item .slide-buy-box .btns .add-to-cart:hover { color: #fff;}
+.list-row-item .slide-buy-box .btns .add-to-cart, .list-row-item .slide-buy-box .btns .go-cart { width: 78px;}
+.list-row-item .slide-buy-box .btns .buy:hover, .list-row-item .slide-buy-box .btns .go-cart:hover { color: #f60;}
+.list-row-item .slide-buy-box .edit-btns { text-align: right; height: 60px; top: 0; right: 4px; position: relative; margin-top: -60px; width: auto;}
+.list-row-item .slide-buy-box .edit-btns .btn-del-sku{ display: block; position: absolute; height: 20px; line-height: 20px; color: #666;}
+.list-row-item .slide-buy-box .edit-btns a.del { bottom: 3px; right: 0;}
+.list-row-item .slide-buy-box .edit-btns a.del:hover { color: #f60;}
+
+/*店铺对比详情*/
+.ww-light { width: 25px; height: 25px; vertical-align: middle; margin: 5px 0px 0 5px; display: inline-block;}
+.ww-light a{ width: 25px; height: 25px; line-height: 25px; display: inline-block; overflow: hidden;}
+
+.compare-shop .compare-content .list-row-item{ height: 59px;}
+.compare-shop .compare-list-con .list-row-item { height: 59px; text-align: center; line-height: 59px;}
+.compare-shop .compare-content .grade{ height: 90px; padding-top: 15px;}
+.compare-shop .compare-list-con .grade{ padding-top: 15px;}
+.compare-shop .compare-list-con .grade p{ line-height: 2;}
+.compare-shop .compare-list-con .security_services a{ margin: 2px; display: inline-block; vertical-align: middle;}
+.compare-shop .compare-list-con .security_services a img{ width: 16px; height: 16px;}
+
+.compare-shop .compare-content .shop_item_blank{ text-align: center; line-height: 59px; cursor: pointer;}
+.compare-shop .more-shop-info{ display: none;}
+
+.fixed-nav { display: none; position: fixed; _position: absolute; top: 0; margin: 0; z-index: 99999; -webkit-box-shadow: 0 6px 5px -3px #eee; -moz-box-shadow: 0 6px 5px -3px #eee; box-shadow: 0 6px 5px -3px #eee;}
+.fixed-nav .compare-side { height: 92px; border-right: 1px solid #eee;}
+.fixed-nav .compare-list .box-list-item { position: relative; height: 90px; border-left: 0; float: left; width: 289px;}
+.fixed-nav .compare-list .box-list-item .list-item-pic { border: 1px solid #ececec; position: absolute; top: 20px; left: 20px; width: 48px; height: 48px;}
+.fixed-nav .compare-list .box-list-item .box-content { margin: 20px 0 20px 78px; _margin-bottom: 0; border: 0; background: url(/images/compare-line.png) no-repeat right center;}
+.fixed-nav .compare-list .box-list-item .list-item-title { display: block; width: 100%; line-height: 13px; height: 13px; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.fixed-nav .compare-list .box-list-item .list-item-title a { color: #333;}
+.fixed-nav .compare-list .box-list-item .list-item-btn { float: left; border: 1px solid #c6c6c6; color: #666; background-color: #f7f7f7; border-radius: 3px; height: 25px; line-height: 25px; padding: 0 4px; margin-right: 15px;}
+.fixed-nav .compare-list .box-list-item .list-item-btn:hover { color: #f60;}
+.fixed-nav .compare-list .box-list-item .add-to-cart{ color: #fff; border-color: #f60; background-color: #f60;}
+.fixed-nav .compare-list .box-list-item .add-to-cart:hover { color: #fff;}
+.fixed-nav .compare-list .box-list-item .list-item-btn.buy { margin-right: 0;}
+.fixed-nav .compare-list .box-list-item .list-item-btn.list-item-del { margin-right: 10px; background: 0 0; background-size: 18px 18px; border: 0; float: right;}
+
+
+/*没有商品的对比页面*/
+.compare-none .compare-side { height: 330px; border-right: 1px solid #e4e4e4;}
+.compare-none .compare-content { position: relative;}
+.compare-none .compare-content .list-row-item{ border: none;}
+.compare-none-info { top: 60px;	left: 280px; height: 200px; width: 500px;position: absolute;}
+.compare-none-info .compare-none-info-cry { width: 160px; height: 160px; margin: 20px 0 0 20px; background: url(/images/no-query.png);}
+.compare-none-info .compare-none-text { width: 290px; position: absolute; right: 10px; top: 90px; font-size: 14px;}
+.compare-none-info .compare-none-text .notice { color: #f40;}
+
+
+
+
+

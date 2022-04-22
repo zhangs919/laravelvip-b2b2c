@@ -125,7 +125,7 @@ class ActivityGoodsController extends Seller
             'where' => $where,
             'limit' => 0, // 不分页
             'sortname' => 'created_at',
-            'sortorder' => 'desc',
+            'sortorder' => 'asc',
         ];
         list($category_list, $category_total) = $this->category->getList($condition, '', false, true);
 

@@ -386,6 +386,27 @@ class SystemConfigRepository
     }
 
     /**
+     * 清空配置值
+     *
+     * @param string $code code1|code2|code3 ...
+     * @return array
+     */
+    public function clear($code)
+    {
+        if (empty($code)) {
+            return result(-1, null, '设置失败', [], false);
+        }
+
+        $code = explode('|', $code);
+        $ret = SystemConfig::whereIn('code', $code)->update(['value'=>'']);
+        if ($ret === false) {
+            return result(-1, null, '设置失败', [], false);
+        }
+
+        return result(0, null, '设置成功', [], false);
+    }
+
+    /**
      * 构造查询条件
      *
      * @param $condition

@@ -11,21 +11,21 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180813"></script>
-    <script src="/frontend/js/tabs.js?v=20180813"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180813"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180813"></script>
-    <script src="/frontend/js/index_tab.js?v=20180813"></script>
-    <script src="/frontend/js/jump.js?v=20180813"></script>
-    <script src="/frontend/js/nav.js?v=20180813"></script>
+    <script src="/js/index.js?v=20180813"></script>
+    <script src="/js/tabs.js?v=20180813"></script>
+    <script src="/js/bubbleup.js?v=20180813"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180813"></script>
+    <script src="/js/index_tab.js?v=20180813"></script>
+    <script src="/js/jump.js?v=20180813"></script>
+    <script src="/js/nav.js?v=20180813"></script>
 @stop
 
 
 
 @section('content')
 
-    <link rel="stylesheet" href="/frontend/css/category_all.css?v=20180702"/>
-    <script src="/frontend/js/category_all.js?v=20180813"></script>
+    <link rel="stylesheet" href="/css/category_all.css?v=20180702"/>
+    <script src="/js/category_all.js?v=20180813"></script>
     <!-- 判断url链接 -->
 
     <div class="w1210 category-all-box">

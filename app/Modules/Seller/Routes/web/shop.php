@@ -32,7 +32,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('region-picker', 'Shop\FreightController@regionPicker'); // ajax加载地区列表
 
             Route::get('default', 'Shop\FreightController@default'); // default 店铺统一运费
-            Route::get('calculate', 'Shop\FreightController@calculate'); // calculate 运费模拟计算
+            Route::any('calculate', 'Shop\FreightController@calculate'); // calculate 运费模拟计算
 
             Route::get('desc', 'Shop\FreightController@desc'); // desc
         });
@@ -40,7 +40,9 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
         // Config 网站设置控制器
         Route::group(['prefix' => 'config'], function () {
             Route::get('index/{group?}', 'Shop\ConfigController@index'); // index get请求
+            Route::get('index.html/{group?}', 'Shop\ConfigController@index'); // index get请求
             Route::post('index/{group?}', 'Shop\ConfigController@updateConfig'); // index post请求 保存设置信息
+            Route::post('index.html/{group?}', 'Shop\ConfigController@updateConfig'); // index post请求 保存设置信息
             Route::any('auto-delivery', 'Shop\ConfigController@autoDelivery'); // 交易设置 - 自动发货设置
 
         });
@@ -206,6 +208,15 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::post('delete', 'Shop\CustomerController@delete'); // delete
             Route::post('batch-delete', 'Shop\CustomerController@batchDelete'); // 批量删除
             Route::any('customer-set', 'Shop\CustomerController@customerSet'); // 客服设置
+
+        });
+
+        /**
+         * 微信设置
+         */
+        Route::group(['prefix' => 'weixin-config'], function () {
+            Route::get('index.html', 'Shop\WeixinConfigController@index'); // index
+            Route::get('clear', 'Shop\WeixinConfigController@clear'); // clear
 
         });
     });

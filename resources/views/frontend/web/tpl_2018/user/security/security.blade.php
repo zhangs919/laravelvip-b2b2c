@@ -20,17 +20,17 @@
                     <h3>您的账户信息</h3>
                     <div class="user-pic">
 				<span>
-										<img src="http://images.68mall.com/system/config/default_image/default_user_portrait_0.png" />
+										<img src="{{ get_image_url($user_info->headimg, 'headimg') }}" />
 									</span>
                     </div>
                     <div class="user-intro">
                         <dl>
                             <dt>登录账号：</dt>
-                            <dd>SZY186SJAC5369</dd>
+                            <dd>{{ $user_info->user_name }}</dd>
                         </dl>
                         <dl>
                             <dt>绑定手机：</dt>
-                            <dd> 186****5369 </dd>
+                            <dd> {{ hide_tel($user_info->mobile) }} </dd>
                         </dl>
                         <dl>
                             <dt>绑定邮箱：</dt>
@@ -39,8 +39,8 @@
                         <dl>
                             <dt>上次登录：</dt>
                             <dd>
-                                2018-06-03 14:32:11{ |						<span> IP地址：</span>
-                                180.130.2.122
+    {{ $user_info->last_login }}（ |						<span> IP地址：</span>
+                                {{ $user_info->last_ip }}
 
                                 <span>
 							（不是您登录的？请立即
@@ -55,7 +55,7 @@
                     <p>
                         <span>当前安全级别：</span>
                         <strong>低</strong>
-                        <i class="validated2"></i>
+                        <i class="validated{{ $user_info->security_level ?? 1 }}"></i>
                         <span>（建议您启动全部安全设置，以保障账户及资金安全）</span>
                     </p>
                 </div>
@@ -81,7 +81,7 @@
                         <div class="fore2">
 					<span>
 						 您绑定的手机：
-						<font class="color">186****5369</font>
+						<font class="color">{{ hide_tel($user_info->mobile) }}</font>
 						，该手机可用于账号登录，快速找回登录密码、支付密码，接收账户余额变动提醒等。 					</span>
                         </div>
                         <div class="fore3">

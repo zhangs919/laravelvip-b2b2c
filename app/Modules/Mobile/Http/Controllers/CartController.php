@@ -232,7 +232,7 @@ class CartController extends Mobile
         // 购物车商品以店铺ID分组显示
         $shop_cart_list = [];
         foreach ($cart_list as $cart) {
-            $cart->goods_total = $cart->goods_price * $cart->goods_num;
+            $cart->goods_total = $cart->goods_price * $cart->goods_number;
             $shop_cart_list[$cart->shop_id][] = $cart;
         }
         $cart_price_info = $this->cart->getCartPriceInfo($cart_list);

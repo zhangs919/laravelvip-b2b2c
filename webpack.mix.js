@@ -1,4 +1,5 @@
-let mix = require('laravel-mix');
+// const { mix } = require('laravel-mix');
+const { env } = require('minimist')(process.argv.slice(2));
 
 /*
  |--------------------------------------------------------------------------
@@ -11,5 +12,29 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+// mix.js('resources/js/app.js', 'public/js')
+// .version();
+
+/*平台后台资源*/
+if (env && env.backend) {
+    require(`${__dirname}/webpack.backend.js`);
+    return;
+}
+
+/*前端资源*/
+if (env && env.frontend) {
+    require(`${__dirname}/webpack.frontend.js`);
+    return;
+}
+
+/*商家后台资源*/
+if (env && env.seller) {
+    require(`${__dirname}/webpack.seller.js`);
+    return;
+}
+
+/*网点后台资源*/
+if (env && env.store) {
+    require(`${__dirname}/webpack.store.js`);
+    return;
+}

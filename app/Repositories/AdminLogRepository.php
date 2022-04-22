@@ -10,9 +10,9 @@ class AdminLogRepository
 
     protected $model;
 
-    public function __construct(AdminLog $adminLog)
+    public function __construct()
     {
-        $this->model = $adminLog;
+        $this->model = new AdminLog();
     }
 
 }

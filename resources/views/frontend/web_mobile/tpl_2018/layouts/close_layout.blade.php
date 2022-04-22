@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>水果</title>
+    <title>{{ sysconf('site_name') }}</title>
     <!-- 头部元数据 -->
     <meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -24,15 +24,15 @@
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <!--公用css-->
-    <link rel="stylesheet" href="/mobile/css/common.css?v=2018112301"/>
-    <link rel="stylesheet" href="/mobile/css/upgrade.css?v=2018112301"/>
+    <link rel="stylesheet" href="/css/common.css?v=2018112301"/>
+    <link rel="stylesheet" href="/css/upgrade.css?v=2018112301"/>
 
 </head>
 <body style="background: #fff;">
 
 
 <div class="mobile-close">
-    <img src="@if(!empty(sysconf('m_site_close_image'))) {{ get_image_url(sysconf('m_site_close_image')) }} @else /mobile/images/mobile_close.gif @endif">
+    <img src="@if(!empty(sysconf('m_site_close_image'))) {{ get_image_url(sysconf('m_site_close_image')) }} @else /images/mobile_close.gif @endif">
 
 </div>
 <!---->

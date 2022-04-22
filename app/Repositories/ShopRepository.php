@@ -7,6 +7,7 @@ use App\Models\Goods;
 use App\Models\Shop;
 use App\Models\ShopBindClass;
 use App\Models\ShopFieldValue;
+use App\Models\TplBackup;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,18 @@ class ShopRepository
         }
 
         $info->opening_hour = $opening_hour;
+
+        if (empty($info->shipping_time)) {
+            $shipping_time = [
+                'begin_hour' => 0,
+                'begin_minute' => 0,
+                'end_hour' => 0,
+                'end_minute' => 0,
+            ];
+        } else {
+            $shipping_time = unserialize($info->shipping_time);
+        }
+        $info->shipping_time = $shipping_time;
 
         return $info;
     }
@@ -136,6 +149,10 @@ class ShopRepository
             $imageDirRep = new ImageDirRepository();
             $imageDirRep->createDefaultDirs($shop_result->shop_id, 0, 'shop');
 
+            // 添加店铺视频文件夹
+            $videoDirRep = new VideoDirRepository();
+            $videoDirRep->createDefaultDirs($shop_result->shop_id, 0, 'shop');
+
             // 添加店铺配置信息
             $shopConfigRep = new ShopConfigRepository();
             $shopConfigRep->createShopConfigData($shop_result->shop_id);
@@ -152,6 +169,20 @@ class ShopRepository
                     $shopBindClass->save();
                 }
             }
+
+            // 添加店铺手机端首页外卖风格模板 tpl_backup
+            $tplBackupInsert = TplBackup::where('back_id', 1)
+                ->select(['name', 'is_sys','site_id','page','remark','type','topic_id','img','is_theme','ext_info'])
+                ->first();
+            if (!empty($tplBackupInsert)) {
+                $tplBackupInsert = $tplBackupInsert->toArray();
+                $tplBackupInsert['shop_id'] = $shop_result->shop_id;
+                $tplBackupInsert['add_time'] = time();
+            }
+            $tplBackup = new TplBackup();
+            $tplBackup->fill($tplBackupInsert);
+            $tplBackup->save();
+
 
             DB::commit();
             return true;

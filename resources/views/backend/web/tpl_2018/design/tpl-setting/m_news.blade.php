@@ -26,16 +26,16 @@
     <script src="/assets/d2eace91/js/design/jquery-hdscroll.js?v=20180418"></script>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/public.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/index.css?v=1.6"/>
-    <link rel="stylesheet" href="/mobile/css/news.css?v=1.6"/>
-    <link rel="stylesheet" href="/mobile/css/dianpu.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/news.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/dianpu.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/design.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
         {{-- todo 暂时不确定移动端是否能整站改色 暂时注释掉 --}}
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
 
 
@@ -279,6 +279,12 @@
                         <a>模板助手</a>
                     </li>
 
+                    @if(!empty($tpl_backup_theme))
+                        <li class="mobiTemColumn">
+                            <a>主题</a>
+                        </li>
+                    @endif
+
                 </ul>
                 <div class="design_right_body">
                     <!--模块设置-->
@@ -297,6 +303,17 @@
                         </table>
                     </div>
                     <div class="template_select design_right_child" style="display: none">
+
+                        @if(!empty($tpl_backup_theme))
+                            @foreach($tpl_backup_theme as $theme)
+                                <li class="SZY-THEME-TPL" data-id="{{ $theme['back_id'] }}">
+                                <span class="template_select_bg">
+                                    <img src="{{ $theme['img'] }}">
+                                </span>
+                                    <span class="template_select_name">{{ $theme['name'] }}</span>
+                                </li>
+                            @endforeach
+                        @endif
 
                     </div>
                 </div>

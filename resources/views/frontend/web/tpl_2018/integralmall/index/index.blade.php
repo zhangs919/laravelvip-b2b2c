@@ -15,7 +15,7 @@
 @section('content')
 
     <!-- 内容 -->
-    <link rel="stylesheet" href="/frontend/css/exchange.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/exchange.css?v=20180428"/>
     <!-- 积分商城内容部分 _start -->
     <div class="w1210">
 
@@ -346,7 +346,7 @@
     </div>
     <!-- 积分商城内容部分 _end -->
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
-    <script src="/frontend/js/group_buy.js?v=20180528"></script>
+    <script src="/js/group_buy.js?v=20180528"></script>
     <script type="text/javascript">
         $().ready(function() {
 

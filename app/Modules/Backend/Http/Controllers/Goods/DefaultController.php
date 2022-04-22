@@ -99,7 +99,7 @@ class DefaultController extends Backend
         if (!empty($list)) {
             foreach ($list as $item) {
                 $item->shop_name = DB::table('shop')->where('shop_id', $item->shop_id)->value('shop_name');
-                $item->mobile_desc = unserialize($item->mobile_desc);
+//                $item->mobile_desc = unserialize($item->mobile_desc);
             }
         }
 

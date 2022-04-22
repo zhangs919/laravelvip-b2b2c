@@ -1,8 +1,6 @@
 <!-- 默认缓载图片 -->
-@if($is_design)
 <!-- 前台首页店铺街模板 -->
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- 店铺街 _star -->
     <div class="w1210 store-wall1">
@@ -90,9 +88,7 @@
     </div>
     <!-- 店铺街 _end -->
 
-@if($is_design)
 </div>
-@endif
 
 
 

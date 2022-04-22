@@ -40,7 +40,7 @@
                     </a>
                     <span class="btn btn-success btn-xs pos-r upload-img" data-url="upload-brand_logo" data-id="{{ $v->brand_id }}"> 更换 </span>
                 @else
-                    <a href="javascript:void(0);" ref="/backend/images/default/goods.gif" class="preview">
+                    <a href="javascript:void(0);" ref="/images/default/goods.gif" class="preview">
                         <i class="fa fa-picture-o"></i>
                     </a>
                     <span class="btn btn-primary btn-xs pos-r upload-img" data-url="upload-brand_logo" data-id="{{ $v->brand_id }}"> 添加 </span>
@@ -54,7 +54,7 @@
                     </a>
                     <span class="btn btn-success btn-xs pos-r upload-img" data-url="upload-promotion_image" data-id="{{ $v->brand_id }}"> 更换 </span>
                 @else
-                    <a href="javascript:void(0);" ref="/backend/images/default/goods.gif" class="preview">
+                    <a href="javascript:void(0);" ref="/images/default/goods.gif" class="preview">
                         <i class="fa fa-picture-o"></i>
                     </a>
                     <span class="btn btn-primary btn-xs pos-r upload-img" data-url="upload-promotion_image" data-id="{{ $v->brand_id }}"> 添加 </span>

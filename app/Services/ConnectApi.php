@@ -25,7 +25,7 @@ namespace App\Services;
 
 
 use App\Repositories\SmsLogRepository;
-use App\Tools\IP;
+use App\Services\IP;
 use App\User;
 
 class ConnectApi
@@ -161,7 +161,7 @@ class ConnectApi
             }
             if($state == true){
                 $sms = new SmsService();
-                $result = $sms->send($phone,$log_msg);
+                $result = $sms->send($phone,$log_msg, $captcha);
 
                 if($result){ // 短信发送成功 新增短信日志记录
                     $log_array['log_phone'] = $phone;

@@ -323,7 +323,6 @@
                     success: function(result, status) {
                         if (result.code == 0 && result.data) {
                             var path = result.data.path;
-                            // var image_url = "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164//" + path;
                             var image_url = "{{ get_oss_host() }}" + path;
 
                             $("#goods_image_tag").attr("src", image_url);

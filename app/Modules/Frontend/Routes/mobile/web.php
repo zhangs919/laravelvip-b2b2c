@@ -28,6 +28,11 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
     // 首页
     Route::get('/index.html', 'HomeController@home')->name('mobile_home'); // todo ok
     Route::get('/', 'HomeController@home')->name('mobile_home'); // todo ok
+    // 店铺红包推广
+    Route::get('bonus-success-{bonus_id}', 'HomeController@bonusSuccess'); // 红包领取成功页面
+    Route::get('bonus-{bonus_id}', 'HomeController@bonusPush'); // 店铺红包推广
+
+    Route::post('activity/bonus/index.html', 'Activity\BonusController@index'); // 领取红包
 
     // 商品全部分类
     Route::get('/category.html', 'CategoryController@index')->name('mobile_category'); // todo ok
@@ -54,6 +59,8 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
 
         Route::get('ajax-render.html', 'SiteController@ajaxRender'); // 异步加载模板内容
 
+        Route::get('alioss.html', 'SiteController@alioss'); // 阿里云oss 文件上传
+
     });
 
 
@@ -63,11 +70,16 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
 
         Route::get('box-goods-list.html', 'CartController@boxGoodsList'); // 顶部和右边购物车盒子
         Route::post('add.html', 'CartController@add'); // 添加购物车
+        Route::post('add', 'CartController@add'); // 添加购物车
         Route::post('remove.html', 'CartController@remove'); // 移除购物车
+        Route::post('remove', 'CartController@remove'); // 移除购物车
         Route::post('delete.html', 'CartController@delete'); // 移除购物车
+        Route::post('delete', 'CartController@delete'); // 移除购物车
         Route::post('select.html', 'CartController@select'); // 选择购物车商品
+        Route::post('select', 'CartController@select'); // 选择购物车商品
         Route::post('change-number.html', 'CartController@changeNumber'); // 更改购物车商品数量
-        Route::post('go-checkout', 'CartController@goCheckout'); // 跳转到提交订单页面
+        Route::post('change-number', 'CartController@changeNumber'); // 更改购物车商品数量
+        Route::post('go-checkout.html', 'CartController@goCheckout'); // 跳转到提交订单页面
 
 
 
@@ -93,11 +105,21 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
     });
 
 
+    // 外卖风格店铺首页
+    Route::get('/theme/takeout/{shop_id}.html', 'Theme\TakeoutController@shopHome');
+    Route::get('/theme/takeout/{shop_id}', 'Theme\TakeoutController@shopHome');
+
+    // 自由购
+    Route::get('/freebuy/scan/{shop_id}.html', 'Freebuy\ScanController@scan'); // 自由购扫码
+
 
     /*旧的路由写法 增加一个方法就需要写一条路由*/
     // /shop-list-1.html /shop-list-1-0.html /shop-list-1-549.html
     Route::get('shop-list-{filter_str}.html', 'ShopController@shopGoodsList')->name('mobile_shop_goods_list'); // 店铺内商品列表 第一个参数是店铺id 第二个参数是店铺内分类id
     Route::group(['prefix'=>'shop'], function () {
+        Route::get('qrcode.html', 'ShopController@qrCode'); // 店铺二维码
+
+
         Route::get('apply.html', 'ShopController@apply');
         Route::get('apply/index.html', 'ShopController@apply');
         Route::get('apply/agreement-type1.html', 'ShopController@agreementType1');
@@ -106,8 +128,18 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
         Route::get('apply/client-validate', 'ShopController@clientValidate'); // clientValidate
 
         Route::get('street/index.html', 'ShopController@street')->name('mobile_shop_street'); // 店铺街
+        Route::get('street/index', 'ShopController@street')->name('mobile_shop_street'); // 店铺街
+        Route::get('street/open-list', 'ShopController@openList'); //
+
         Route::get('{shop_id}.html', 'ShopController@shopHome')->name('mobile_shop_home'); // 店铺首页
+
+        /*if (isset($is_takeout_mode) && $is_takeout_mode) { // 是否是外卖模式
+            Route::get('{shop_id}.html', 'Theme\TakeoutController@shopHome')->name('mobile_shop_home');
+        } else {
+            Route::get('{shop_id}.html', 'ShopController@shopHome')->name('mobile_shop_home'); // 店铺首页
+        }*/
         Route::get('{shop_id}/info.html', 'ShopController@shopDetail')->name('mobile_shop_info'); // 店铺详情
+        Route::get('{shop_id}/list.html', 'ShopController@shopGoodsList')->name('mobile_shop_goods_list'); // 店铺内商品列表
         Route::get('{shop_id}/search.html', 'ShopController@shopSearch')->name('mobile_shop_search'); // 店铺内搜索
         Route::get('index/info', 'ShopController@shopDetail'); // 店铺信息 异步加载
         Route::get('index/shop-cat-list', 'ShopController@shopCatList'); // 店铺内分类
@@ -136,7 +168,7 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
     $router->post('register/sms-captcha', 'PassportController@smsCaptcha'); // 发送短信验证码
     $router->post('register/email-captcha', 'PassportController@emailCaptcha'); // 发送邮箱验证码
 
-    $router->post('site/logout.html', 'PassportController@logout')->name('user.logout'); // logout
+    $router->any('site/logout.html', 'PassportController@logout')->name('user.logout'); // logout
 
 
     // 专题活动 Route
@@ -187,6 +219,7 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
 
         Route::get('desc', 'GoodsController@desc'); // goods_desc
         Route::get('qrcode.html', 'GoodsController@qrcode'); // qrcode
+        Route::get('goods-share', 'GoodsController@goodsShare'); // goodsShare
         Route::get('comment', 'GoodsController@comment'); // comment
         Route::get('change-location.html', 'GoodsController@changeLocation'); // changeLocation
         Route::get('pickup-info.html', 'GoodsController@pickupInfo'); // 自提点详情
@@ -210,7 +243,17 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
 
     });
 
+    // 万能表单
+    Route::get('/form/{form_id}.html', 'CustomFormController@show')->name('show_form'); // 万能表单
+//    Route::get('/customform/form/form-qrcode.html', 'CustomFormController@formQrcode'); // 生成表单二维码
+    Route::post('/customform/form/add.html', 'CustomFormController@add'); // 提交表单
 
+    // 自提点
+    Route::get('pickup/{shop_id}.html', 'PickupController@pickup'); // 自提点列表
+
+
+    // 微信公众号开发
+    Route::any('wxapi/index', 'WxApiController@index'); // 微信配置 URL
 
 
 
@@ -219,3 +262,8 @@ Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
     Route::get('collect-goods', 'HomeController@collectGoods'); // 测试 商品采集
 
 });
+
+// 商品详情二级域名解析 后期在平台后台做一个开关,是否开启商品详情二级域名解析
+//Route::group(['domain' => env('MOBILE_GOODS_DETAIL_DOMAIN')], function ($router) {
+//    Route::get('/goods-{goods_id}.html', 'GoodsController@showGoods')->name('mobile_show_goods'); // showGoods
+//});

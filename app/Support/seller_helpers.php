@@ -175,12 +175,12 @@ function seller_top_menus($module = '')
             'menus' => 'trade',
             'url' => '',
             'child' => [
-                [
+                /*[
                     'title' => '接单列表',
                     'parent_menu' => 'trade',
                     'menus' =>'trade|trade-order-take',
                     'url' => '/trade/order/take-list'
-                ],
+                ],*/
                 [
                     'title' => '订单管理',
                     'parent_menu' => 'trade',
@@ -191,7 +191,7 @@ function seller_top_menus($module = '')
                     'title' => '虚拟兑换订单',
                     'parent_menu' => 'trade',
                     'menus' =>'trade|virtual-order-list',
-                    'url' => '/trade/order/take-list'
+                    'url' => '/trade/virtual-order/take-list'
                 ],
                 [
                     'title' => '发货单管理',
@@ -260,6 +260,48 @@ function seller_top_menus($module = '')
                     'parent_menu' => 'member',
                     'menus' =>'member|member-list',
                     'url' => '/member/member/user-list?type=1&order=1'
+                ],
+                [
+                    'title' => '会员标签',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|member-label',
+                    'url' => '/member/label/list'
+                ],
+                [
+                    'title' => '智能营销',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|customer-analysis',
+                    'url' => '/dashboard/customer-analysis/index'
+                ],
+                [
+                    'title' => '商圈营销',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|trade-area',
+                    'url' => '/dashboard/trade-area/list'
+                ],
+                [
+                    'title' => '会员数据',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|user-data',
+                    'url' => '/statistics/users-statistics/index'
+                ],
+                [
+                    'title' => '会员分析',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|user-statistics',
+                    'url' => '/statistics/users-statistics/list'
+                ],
+                [
+                    'title' => '群组分析',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|group-analysis',
+                    'url' => '/dashboard/group-analysis/list'
+                ],
+                [
+                    'title' => '商圈分析',
+                    'parent_menu' => 'member',
+                    'menus' =>'member|trade-area-analysis',
+                    'url' => '/trade-area-analysis'
                 ],
                 [
                     'title' => '会员等级',
@@ -506,7 +548,7 @@ function seller_top_menus($module = '')
                     'title' => '微信设置',
                     'parent_menu' => 'weixin',
                     'menus' =>'weixin|shop-weixin-config',
-                    'url' => '/shop/config/index?group=weixin'
+                    'url' => '/shop/weixin-config/index.html'
                 ],
                 [
                     'title' => '自定义菜单',
@@ -519,6 +561,12 @@ function seller_top_menus($module = '')
                     'parent_menu' => 'weixin',
                     'menus' =>'weixin|shop-weixin-keyword',
                     'url' => '/shop/weixin-keyword/list'
+                ],
+                [
+                    'title' => '小程序码管理',
+                    'parent_menu' => 'weixin',
+                    'menus' =>'weixin|shop-weixin-programs-qrcode',
+                    'url' => '/shop/programs-qrcode/list'
                 ],
             ]
         ],
@@ -699,6 +747,18 @@ if (! function_exists('get_shop_config_group'))
                 'explain' => [],
                 'anchor' => [],
             ],
+            'web_static' => [
+                'code' => 'web_static',
+                'title' => 'PC静态页面设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+            'web_mobile_static' => [
+                'code' => 'web_mobile_static',
+                'title' => 'Mobile静态页面设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
             'trade' => [
                 'code' => 'trade',
                 'title' => '交易设置',
@@ -769,6 +829,12 @@ if (! function_exists('get_shop_config_group'))
                 'explain' => [
                     '可以给店铺导航添加背景颜色'
                 ],
+                'anchor' => [],
+            ],
+            'm_shop_header' => [
+                'code' => 'm_shop_header',
+                'title' => '店铺头部设置',
+                'explain' => [],
                 'anchor' => [],
             ],
         ];

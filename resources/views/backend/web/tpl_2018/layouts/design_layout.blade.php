@@ -12,8 +12,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- 网站头像 -->
-    <link rel="icon" type="image/x-icon" href="/oss/images/system/config/website/favicon_0.jpg">
-    <link rel="shortcut icon" type="image/x-icon" href="/oss/images/system/config/website/favicon_0.jpg">
+    <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}">
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
     <link rel="stylesheet" href="/assets/d2eace91/fonts/css/font-awesome.min.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/scrollBar/jquery.mCustomScrollbar.css?v=1.2"/>

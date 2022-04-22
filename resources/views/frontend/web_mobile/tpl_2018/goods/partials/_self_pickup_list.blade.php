@@ -22,7 +22,7 @@
 @else
     <div class="no-data-div">
         <div class="no-data-img">
-            <img src="/mobile/images/bg_empty_data.png" />
+            <img src="/images/bg_empty_data.png" />
         </div>
         <dl>
             <dt>暂无相关记录</dt>

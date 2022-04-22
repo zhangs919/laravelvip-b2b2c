@@ -1,7 +1,7 @@
 <!---->
 <script src="/assets/d2eace91/js/jquery.js?v=20180027"></script>
 <script src="/assets/d2eace91/js/placeholder.js?v=20180027"></script>
-<script src="/frontend/js/login.js?v=20180027"></script>
+<script src="/js/login.js?v=20180027"></script>
 <script src="/assets/d2eace91/js/layer/layer.js?v=20180027"></script>
 <script src="/assets/d2eace91/js/jquery.method.js?v=20180027"></script>
 <script src="/assets/d2eace91/js/jquery.modal.js?v=20180027"></script>
@@ -75,7 +75,7 @@
                             </a>
                         </div>
                         <div class="seller">
-                            <img src="/frontend/images/shop-type/shop-icon1.png" />
+                            <img src="/images/shop-type/shop-icon1.png" />
                             <a href="{{ route('pc_shop_home',['shop_id'=>$v['shop_id']]) }}" target="_blank" class="seller-link">{{ $v['shop_name'] }}</a>
                             <span class="ww-light">
     <!-- 旺旺不在线 i 标签的 class="ww-offline" -->
@@ -153,7 +153,7 @@
             </form>
         @else
             <div class="tip-box">
-                <img src="/frontend/images/noresult.png" class="tip-icon">
+                <img src="/images/noresult.png" class="tip-icon">
                 <div class="tip-text">暂无收藏的店铺</div>
             </div>
         @endif

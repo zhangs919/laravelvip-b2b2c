@@ -4,23 +4,36 @@
 乐融沃b2b2c多商户开源版，是2021年全新推出的一款轻量级、高性能的电商系统，支持H5 + 公众号，前后端源码100%开源，看见及所得，完美支持二次开发，让您快速搭建个性化独立商城。 技术架构：PHP7.2 + Laravel5.7，专注轻量可持续稳定的高可用系统，可学习可商用。
 
     如果对您有帮助，您可以点右上角 “Star” 收藏一下 ，获取第一时间更新，谢谢！
+    最近将会陆续开放商业版完整功能源码，欢迎+星关注。
 
 #### 技术特点
-* 采用PHP 7.2 (强类型严格模式)
-* Laravel 5.7（优雅的PHP开发框架）
+* 采用PHP 8.0 (强类型严格模式)
+* Laravel 8.*（优雅的PHP开发框架）
 * RBAC（基于角色的权限控制管理）
+
+#### 商城系统开发说明
+* [哔哩哔哩](https://space.bilibili.com/419068454/)
 
 #### 系统演示
 
-- 商城后台演示：http://backend.mall.laravelvip.com/
+- PC端后台演示：http://www.mall.laravelvip.com/
+
+- 微信端后台演示：http://m.mall.laravelvip.com/
+
+- 平台端后台演示：http://backend.mall.laravelvip.com/
 - 用户名和密码：test 123456
 
-- 商城后台演示：http://seller.mall.laravelvip.com/
+- 商家端后台演示：http://seller.mall.laravelvip.com/
 - 用户名和密码：18669035369 111111
 
 #### 源码下载
+1. 主商城端（又称后端、服务端，PHP开发 用于管理后台和提供api接口）
 
-下载地址：https://gitee.com/laravelmall/laravelvip-b2b2c
+    下载地址：[https://gitee.com/laravelmall/laravelvip-b2b2c](https://gitee.com/laravelmall/laravelvip-b2b2c)
+
+2. 用户端（也叫客户端、前端，uniapp开发 用于生成H5和微信小程序）(注：用户端项目正在开发中...)
+
+    下载地址：[https://gitee.com/laravelmall/laravelvip-uni-app](https://gitee.com/laravelmall/laravelvip-uni-app)
 
 #### 环境要求
 - CentOS 7.0+
@@ -29,25 +42,8 @@
 - MySQL 5.6+
 
 
-#### 如何安装
-- composer install
-- php artisan key:generate
-- cp .env.example .env
-- 修改 .env配置文件中的数据库连接信息和域名配置
-    - 配置二级域名\
-      BACKEND_DOMAIN=backend.lrw.com
-      FRONTEND_DOMAIN=www.lrw.com
-      MOBILE_DOMAIN=m.lrw.com
-      PUSH_DOMAIN=push.lrw.com #配置 Websocket 域名
-    - 数据库配置\
-      DB_CONNECTION=mysql
-      DB_HOST=127.0.0.1
-      DB_PORT=3306
-      DB_DATABASE=lrw
-      DB_USERNAME=homestead
-      DB_PASSWORD=secret
-- 导入mysql文件
-    - 将 ./database/laravelvip_b2b2c.sql导入数据库
+#### 如何安装（同样适用于本地其他开发环境，如：homestead）
+- [宝塔面板部署文档](./宝塔面板部署教程.md)
 
 #### 后台地址
 

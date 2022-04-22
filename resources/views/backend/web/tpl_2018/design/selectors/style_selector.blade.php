@@ -485,7 +485,6 @@
         // 上传图片
         var image_container = $("#{{ $page_id }}").find(".szy-imagegroup");
         image_container.imagegroup({
-            // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
             host: "{{ get_oss_host() }}",
             values: image_container.parent().find('.bg-image').val().split("|"),
             callback: function(data) {

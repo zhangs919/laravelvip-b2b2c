@@ -2,7 +2,7 @@
 
 {{--header_css--}}
 @section('header_css')
-
+    <link rel="stylesheet" href="/css/iconfont/iconfont.css?v=20190231"/>
 @stop
 
 {{--header_js--}}
@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -34,17 +34,23 @@
 
     <!-- 内容 -->
     <div id="index_content">
-        <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180702"/>
-        <link rel="stylesheet" href="/mobile/css/goods.css?v=20180702"/>
-        <link rel="stylesheet" href="/mobile/css/bonus_message.css?v=20180702"/>
+        <link rel="stylesheet" href="/css/swiper.min.css?v=20180702"/>
+        <link rel="stylesheet" href="/css/goods.css?v=20180702"/>
+        <link rel="stylesheet" href="/css/bonus_message.css?v=20180702"/>
+        <link rel="stylesheet" href="/css/distributor-reg-check.css?v=20190231"/>
         <!-- 地区选择器 -->
-        <script src="/assets/d2eace91/js/jquery.region.mobile.js?v=20180813"></script>
+        <script src="/assets/d2eace91/js/jquery.region.mobile.js?v=20180815"></script>
         <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-        <script src="/mobile/js/goods.js?v=20180813"></script>
-        <script src="/mobile/js/swiper.jquery.min.js?v=20180813"></script>
-        <div class="goods-header">
+        <script src="/js/goods.js?v=20180813"></script>
+        <script src="/js/swiper.jquery.min.js?v=20180813"></script>
+
+
+
+        <div class="goods-header fixed-header">
             <div class="goods-header-left">
-                <a href="javascript:history.back(-1)"></a>
+                <a href="javascript:history.back(-1)">
+                    <i class="iconfont">&#xe606;</i>
+                </a>
             </div>
             <ul class="goods-header-nav ub">
                 <li class="cur ub-f1">商品</li>
@@ -60,9 +66,7 @@
                     <em class="SZY-CART-COUNT bg-color">0</em>
                 </a>
                 <aside class="show-menu-btn">
-                    <div class="show-menu" id="show_more">
-                        <a href="javascript:void(0)"></a>
-                    </div>
+                    <div class="show-menu iconfont icon-gengduo3" id="show_more"></div>
                 </aside>
             </div>
         </div>
@@ -74,7 +78,9 @@
                 <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
             </ul>
         </div>
+
         <!--商品-->
+
         <div class="goods-content user-goods-ka">
             <div class="swiper-container swiper-container-horizontal" id="goods_pic">
                 <div class="swiper-wrapper SZY-GOODS-IMAGE">
@@ -82,7 +88,7 @@
                     @foreach($sku['sku_images'] as $v)
                     <div class="swiper-slide">
                         <a href="javascript:void(0)">
-                            <img data-src="{{ $v[1] }}" class="swiper-lazy">
+                            <img data-src="{{ $v[1] }}" src="/images/m_blank.png" class="swiper-lazy">
                             <div class="swiper-lazy-preloader"></div>
                         </a>
                     </div>
@@ -91,14 +97,39 @@
                 </div>
                 <div class="swiper-pagination"></div>
 
-                <a href="javascript:void(0)" class="qr-code" onclick="code_coupon()">
-                    <i></i>
-                </a>
-
 
             </div>
-            <!-- 商品团购倒计时 -->
 
+            <!-- 商品团购倒计时 -->
+            {{--todo 判断 团购商品展示 后期再做促销功能--}}
+            {{--<div class="goods-promotion-box clearfix">
+                <div class="goods-promotion-left">
+                    <dt>
+                        <em>￥40.00</em>
+                    </dt>
+                    <dd>
+                        <p>
+                            <del>￥50.00</del>
+                        </p>
+                        <span>
+					100
+					<em>件已售</em>
+				</span>
+                    </dd>
+                </div>
+                <div class="goods-promotion-right">
+                    <div class="goods-promotion-text">距结束仅剩</div>
+                    <div class="goods-promotion-time" id="groupbuy_countdown">
+                        <span class="time">00</span>
+                        <span class="separator">:</span>
+                        <span class="time">00</span>
+                        <span class="separator">:</span>
+                        <span class="time">00</span>
+                        <span class="separator">:</span>
+                        <span class="time">00</span>
+                    </div>
+                </div>
+            </div>--}}
             <!--团购未开始样式-->
 
 
@@ -110,22 +141,93 @@
                     <h3 class="SZY-GOODS-NAME">{{$sku['sku_name'] }}</h3>
 
                 </div>
-                <span class="goods-depict color"></span>
+                <span class="goods-depict color">{{ $goods['goods_subname'] }}</span>
 
                 <div class="goods-price">
                     <div class="now-prices">
                         <em class="SZY-GOODS-PRICE price-color">￥{{ $sku['goods_price'] }}</em>
-                        <del class="SZY-MARKET-PRICE" style="display: none;">￥{{ $sku['market_price'] }}</del>
+                        <del class="SZY-MARKET-PRICE" @if(empty($sku['market_price']))style="display: none;"@endif>￥{{ $sku['market_price'] }}</del>
                     </div>
 
+                    <span class="sold">销量：{{ $goods['sale_num'] }}件</span>
+
                 </div>
+
+                {{--todo 判断显示 限时折扣标签 后期再做促销功能--}}
+                {{--<div class="limit-discount-con">
+                    <span class="limit-discount-tag">
+                        <i class="label-icon-div">
+                            <i class="label-icon"></i>
+                            <span class="label-text">标签</span>
+                        </i>
+                    </span>
+                    <span class="activity-text">
+                        <em class="discount"> 减5元 </em>
+                        <span id="limit_discount_countdown" class="promotion-time">
+                            <span class="time">00</span>
+                            <span class="separator">:</span>
+                            <span class="time">00</span>
+                            <span class="separator">:</span>
+                            <span class="time">00</span>
+                            <span class="separator">:</span>
+                            <span class="time">00</span>
+                        </span>
+                        后结束，请尽快购买！
+                    </span>
+                </div>--}}
 
                 <!-- 商品赠品 -->
                 <div class="SZY-GIFT-LIST">
 
+                    {{--todo 判断是否显示 商品赠品 后期再做促销功能--}}
+                    <!--买即送-->
+                    {{--<div class="prom-gift ub">
+                        <div class="dt">赠品</div>
+                        <div class="dd ub-f1">
+
+                            <div class="prom-gift-list">
+                                <a href="/1112.html" title="彩椒  C之王">
+                                    <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2019/01/15/15475140324781.png?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" width="20" height="20" class="gift-img" />
+                                </a>
+                                <em class="gift-number color">× 1</em>
+                            </div>
+
+                            <div class="prom-gift-list">
+                                <a href="/1127.html" title="彩椒 123 1">
+                                    <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2019/01/11/15472021222241.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" width="20" height="20" class="gift-img" />
+                                </a>
+                                <em class="gift-number color">× 1</em>
+                            </div>
+
+                        </div>
+                    </div>--}}
+
+
+
                 </div>
                 <!-- 红包 -->
+                {{--todo 判断是否显示 红包--}}
+                @if(!empty($bonus_list))
+                    <div class="shop-prom" onclick="select_coupon()">
+                        <div class="shop-prom-title ub">
+                            <dt>领红包</dt>
+                            <div class="coupons ub-f1">
+                                <!-- -->
 
+                                @foreach($bonus_list as $bonus)
+                                <span>满{{ $bonus['min_goods_amount'] }}减{{ $bonus['bonus_amount_format'] }}</span>
+
+                                <!-- -->
+                                @endforeach
+
+
+                            </div>
+                            <span class="more">
+                                <i class="iconfont">&#xe607;</i>
+                            </span>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- 促销 -->
                 <div class="prom-box" >
@@ -133,12 +235,22 @@
                         <dt>促销</dt>
                         <div class="prom-lists">
                             <!--会员特价-->
-
+                            {{--todo 有会员特价时显示--}}
+                            {{--<dd class="SZY-RANK-PRICES">
+                                <div class="pro-item">
+                                    <div class="pro-type">
+                                        <span class="pro-type-name">会员特价</span>
+                                    </div>
+                                    <div class="pro-info">
+                                        <span class="SZY-RANK-MESSAGE">@if(!empty($user))成为店铺会员，可享受更多优惠价格@else请登录，确认是否享受优惠@endif</span>
+                                    </div>
+                                </div>
+                            </dd>--}}
 
 
                             <!-- 满减、满折 _start -->
-
-                            <dd>
+                            {{--todo 有满减、满折时显示 后期再做促销功能--}}
+                            {{--<dd>
                                 <div class="pro-item">
 
                                     <div class="pro-type">
@@ -152,11 +264,12 @@
 
 
                                 </div>
-                            </dd>
+                            </dd>--}}
 
                             <!-- 满减、满折 _end -->
 
                             <!--搭配套餐-->
+                            {{--todo 有搭配套餐时显示--}}
 
                         </div>
                         <span class="more">
@@ -169,10 +282,10 @@
                 <!-- 促销活动弹出层 _start -->
                 <div class="f_block" id="proms_coupon">
                     <div class="prom-coupon">
-                        <h2>
-                            促销
-                            <a class="c-close-attr1" href="javascript:void(0)" onclick="close_choose_proms();">×</a>
-                        </h2>
+                        <div class="discount-coupon-header">
+                            <h2>促销</h2>
+                            <a class="choose-attribute-close" href="javascript:void(0)" onclick="close_choose_proms();"></a>
+                        </div>
                         <ul class="coupon-list">
 
 
@@ -183,10 +296,10 @@
                                     </div>
                                     <div class="pro-info">
                                         <span class="SZY-RANK-MESSAGE"></span>
+                                        <div class="member-rules-bd">
+
+                                        </div>
                                     </div>
-                                    <span class="more">
-                                        <i class="iconfont">&#xe607;</i>
-                                    </span>
                                 </div>
                             </li>
                             <!-- <li class="items hide">
@@ -199,6 +312,8 @@
                                     </div>
                                 </div>
                             </li> -->
+
+                            <!-- -->
                             <li class="items hide">
                                 <div class="pro-item">
                                     <div class="pro-type">
@@ -206,65 +321,16 @@
                                     </div>
                                     <div class="pro-info">
 
-                                        <p>满100元，减10元、包邮；</p>
+                                        <p>满5元，减3元、包邮；</p>
 
-                                        <p>满200元，减20元、包邮；</p>
-
-                                        <p>满500元，减30元、包邮；</p>
+                                        <p>满10元，减5元；</p>
 
                                     </div>
                                 </div>
                             </li>
+
                             <!-- 搭配套餐弹出层 _start -->
                             <!-- 搭配套餐弹出层 _end -->
-                            <!--会员等级价格-->
-                            <script>
-                                $('.more-member-info').click(function() {
-                                    $('.member-section').addClass('show');
-                                });
-                                $('.member-section-back').click(function() {
-                                    $('.member-section').removeClass('show');
-                                });
-                            </script>
-                            <link rel="stylesheet" href="/mobile/css/shop_member.css?v=20180702"/>
-                            <div class="member-section">
-                                <div class="header">
-                                    <div class="header-left">
-                                        <a class="sb-back member-section-back" href="javascript:void(0)" title="返回"></a>
-                                    </div>
-                                    <div class="header-middle">会员特价</div>
-                                    <div class="header-right"></div>
-                                </div>
-                                <!-- <div class="member-info">
-                                    <div class="member-info-box">
-                                        <div class="member-info-left">
-                                            <span class="avatar-img">
-                                                <img src="http://lrw.oss-cn-beijing.aliyuncs.com/images/15164/">
-                                            </span>
-                                        </div>
-                                        <div class="cell member-info-center">
-                                            <p class="info-m-hd">您好，</p>
-                                            <div class="info-m-bd">
-                                                <span class="level-no">您还不是本店会员</span>
-                                            </div>
-                                            <p class="info-m-ft">完成首单即可成为V1会员</p>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <!---会员价规则-->
-                                <div class="member-rules">
-                                    <div class="member-rules-bd">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!--会员等级价格-->
-                            <script>
-                                $('.member-section-back').click(function() {
-                                    $('.member-section').removeClass('show');
-                                });
-                            </script>
-
 
                         </ul>
                     </div>
@@ -292,20 +358,23 @@
             </div>
             @endif
 
-            {{--判断 是否显示--}}
-            <div class="send-to region-box">
-                <dt>送至</dt>
-                <dd class="ub">
-                    <em></em>
-                    <div class="region-chooser-container region-chooser ub-f1"></div>
-                </dd>
-                <span class="more">
-                    <i class="iconfont">&#xe607;</i>
-                </span>
+            <!-- 虚拟商品判断 -->
+            {{--todo 判断 是否显示--}}
+            @if(sysconf('goods_info_freight') == 0)
+                {{--goods_info_freight=0 显示具体运费--}}
+                <div class="send-to region-box">
+                    <dt>送至</dt>
+                    <dd class="ub">
+                        <em></em>
+                        <div class="region-chooser-container region-chooser ub-f1"></div>
+                    </dd>
+                    <span class="more">
+                        <i class="iconfont">&#xe607;</i>
+                    </span>
 
-            </div>
-            <div class="freight freight-info"></div>
-
+                </div>
+                <div class="freight freight-info">￥12.00</div>
+            @endif
 
             <!-- 自提点 -->
             @if(sysconf('goods_info_pickup'))
@@ -321,8 +390,22 @@
             @endif
 
 
+            {{--保障服务 如果无保障服务 不显示--}}
+            @if(!empty($goods['contract_list']))
+            <div class="service-con">
 
+                @foreach($goods['contract_list'] as $v)
+                <div class="service-item">
 
+                    <i class="support-service-icon"></i>
+
+                    <span class="service-icon-text">{{ $v['contract_name'] }}</span>
+
+                </div>
+                @endforeach
+
+            </div>
+            @endif
 
             <!-- 拼团活动_start -->
 
@@ -336,8 +419,51 @@
 
             <!-- 砍价活动_end -->
 
+            {{--获取商品最新的一条评价信息 没有时 不显示--}}
+            @if(!empty($goods['comment']))
+            <div class="blank-div"></div>
+            <div class="good-comment-box">
+                <div class="good-comment-item">
+                    <div class="good-comment-item-top clearfix">
+                        <h3>宝贝评价({{ $goods['comment_count'] }})</h3>
+                        <span class="SZY-ALL-COMMENT color">
+					查看全部
+					<i class="iconfont"></i>
+				</span>
+                    </div>
+                    <ul>
+                        <li>
+                            <div class="user-info">
+						<span class="face">
+							<img src="{{ get_image_url($goods['comment']['headimg'], 'headimg') }}" class="user_img">
+						</span>
+                                <span class="user-name">
 
+							{{ $goods['comment']['user_name_encrypt'] }}
 
+						</span>
+
+                                <!-- <span class="user-level">
+                                    <img alt="{{ $goods['comment']['rank_name'] }}" src="{{ $goods['comment']['rank_img'] }}">
+                                </span> -->
+
+                            </div>
+                            <div class="rate-list">
+                                <p>{!! $goods['comment']['comment_desc'] !!}</p>
+                                <p class="attr-info">
+                                    <em>{{ format_time($goods['comment']['comment_time'], 'Y-m-d H:i:s') }}</em>
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <div class="app-detail">
+                    <div class="sys-btn">
+                        <span class="SZY-ALL-COMMENT">查看全部评价</span>
+                    </div>
+                </div> -->
+            </div>
+            @endif
 
             <!-- 店铺信息 _star-->
 
@@ -352,6 +478,9 @@
                             <div class="store-name">
                                 <span>{{ $shop_info['shop']['shop_name'] }}</span>
 
+                                @if($shop_info['shop']['is_own_shop'])
+                                    <em class="bg-color">自营</em>
+                                @endif
                             </div>
                             <p class="score-sum">综合评分：5.00</p>
                         </div>
@@ -462,6 +591,7 @@
             </div>
 
         </div>
+
         <!--详情-->
         <div class="blank-div"></div>
         <div class="goods-desc-main user-goods-ka" style="display: none;">
@@ -472,7 +602,7 @@
             <div class="product_images product_desc goods-details-tab" id="product_desc">
                 <div class="detail-content goods-detail-content product_tab_chr">
                     <div class="more-loader-spinner">
-                        <img src="/mobile/images/loading.gif" width="20" height="20">
+                        <img src="/images/loading.gif" width="20" height="20">
                         数据加载中...
                     </div>
                 </div>
@@ -533,20 +663,102 @@
                 </table>
             </div>
         </div>
+
         <!--用户评价-->
-        <div class="goods-evaluate user-goods-ka" id="goods-evaluate" style="display: none"></div>
+        <div class="goods-evaluate user-goods-ka hide" id="goods-evaluate"></div>
+        <!-- 服务承诺 -->
         <!--红包弹出层-->
-        <div class="f_block" id="select_coupon">
+        <div class="f_block spec-menu-hide" id="select_coupon">
             <div class="discount-coupon">
-                <h2>
-                    领取红包
-                    <a class="c-close-attr1" href="javascript:void(0)" onclick=" close_choose_coupon();">x</a>
-                </h2>
-                <ul class="coupon-list">
+                <div class="discount-coupon-header">
+                    <h2>
+                        领取红包
+                        <a class="choose-attribute-close" href="javascript:void(0)" onclick=" close_choose_coupon();"></a>
+                    </h2>
+                </div>
+                <div class="coupon-list">
+                    <ul class="coupon-item-ing">
+                        @foreach($bonus_list as $bonus)
+                        <li>
+                            <div class="coupon-info ">
+                                <div class="coupon-dots">
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                </div>
+                                <div class="coupon-item-left bg-color">
+							<span class="coupon-money">
+								<i>￥</i>
+								<em>{{ format_price($bonus['bonus_amount'],0) }}</em>
+							</span>
+                                    <h3>满{{ format_price($bonus['min_goods_amount'], 0) }}元使用</h3>
+                                </div>
+                                <div class="coupon-item-right">
+                                    <div class="coupon-left-top">
+                                        <p class="coupon-name">{{ $bonus['bonus_name'] }}</p>
+                                    </div>
+                                    <div class="coupon-left-bottom">
+                                        <span class="coupon-time"> {{ $bonus['start_time_format'] }}-{{ $bonus['end_time_format'] }} </span>
+                                        <div class="op-btns">
 
+                                        @if($bonus['is_receive'])
 
-                </ul>
+                                            <!-- 已领取的红包 _start -->
+                                            <a href="javascript:void(0);" class="coupon-btn border-color bonus-received">已领取</a>
+                                            <!-- 领取的红包 _end -->
+                                        @else
+                                            <!-- 未领取的红包 _start -->
+                                            <a href="javascript:void(0);" title="点击领取红包" data-bonus-id="{{ $bonus['bonus_id'] }}" class="bonus-receive color coupon-btn border-color">领取</a>
+                                            <!-- 未领取的红包 _end -->
+                                        @endif
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                        @endforeach
+
+                    </ul>
+                </div>
             </div>
+        </div>
+
+        <!--会员等级价格弹出层-->
+        <div class="rank-price-content rank-price-back">
+
+            <ul>
+
+
+
+                <li>
+
+                    <p>高级会员(VIP2)：</p>
+
+                    <span>￥48.89</span>
+
+                </li>
+
+
+
+            </ul>
+
+            <div class="rank-price-btn">
+
+                <a href="javascript:void(0);" class="bg-color">关闭</a>
+
+            </div>
+
         </div>
 
         <!-- 自提点弹框 _start-->
@@ -608,40 +820,133 @@
         </script>
         <!-- 自提点 _end -->
         <!-- 自提点弹框 _end-->
-        <!--分享弹出层-->
-        <div class="bdshare-popup-box" onclick="colse_bdshare_popup()">
-            <div class="bdshare-popup-top">
-                <img src="/mobile/images/goods/share_popup_top.png">
-            </div>
-            <div class="bdshare-popup-bottom">
-                <img src="/mobile/images/goods/share_popup_bottom.png">
-            </div>
-        </div>
 
-        <!-- 二维码弹出层 start-->
-        <div class="code-bg" onclick="close_coupon();"></div>
-        <div class="code-mask">
-            <div class="code-box">
-                <div class="code-close" onclick="close_code_coupon();"></div>
-                <div class="code-logo">
-                    <img src="{{ get_image_url(sysconf('mall_logo')) }}">
-                </div>
-                <div class="code-img">
-                    <div id="qrcode">
-                        <img src="/goods/qrcode.html?id={{ $goods['goods_id'] }}" />
-                    </div>
-                </div>
-                <h3>截屏保存二维码到手机，分享给好友</h3>
-                <div class="code-footer">
-                    <img src="{{ get_image_url($goods['goods_image']) }}">
-                    <div class="code-footer-fr">
-                        <p>{{ $goods['goods_name'] }}</p>
-                        <span>￥{{ $goods['goods_price'] }}</span>
-                    </div>
-                </div>
-            </div>
+
+        <a href="javascript:void(0)" class="qr-code" data-uuid="" style="display: none">
+            <i></i>
+        </a>
+        <!--微信分享弹出层-->
+        <div class="give-share-popup hide" onclick="colse_bdshare_popup()">
+            <img src="/images/give-share-popup.png">
         </div>
-        <!-- 二维码弹出层 end-->
+        <!--小程序分享弹出层-->
+        <div class="mini-program-share-popup hide">
+            <img src="/images/mini-program-share-popup.png">
+        </div>
+        <script type="text/javascript">
+            $('.mini-program-share-popup').click(function () {
+                $(this).addClass('hide');
+                $("body").css("top", "auto");
+                $("body").removeClass("visibly");
+                $(window).scrollTop(scrollheight);
+            })
+        </script>
+
+        <!-- 分享 -->
+        <script src="http://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+        <script type="text/javascript">
+            $().ready(function() {
+
+                // $("body").append('<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"><\/script>');
+
+                var url =  location.href;
+
+                if ("" != "" && url.indexOf("user_id=") == -1 && window.history && history.pushState){
+                    if(url.indexOf("?") == -1){
+                        url += "?user_id=";
+                    }else{
+                        url += "&user_id=";
+                    }
+                }else{
+                    url = location.href.split('#')[0];
+                }
+
+                if ("{{ $user_info['user_id'] ?? '' }}" != "" && url.indexOf("user_id=") == -1 && window.history && history.pushState){
+                    if(url.indexOf("?") == -1){
+                        url += "?user_id=" + "{{ $user_info['user_id'] ?? '' }}";
+                    }else{
+                        url += "&user_id=" + "{{ $user_info['user_id'] ?? '' }}";
+                    }
+                }else{
+                    url = location.href.split('#')[0];
+                }
+
+                        @if(!empty($user_info))
+                var share_url = "{{ route('mobile_show_goods',['goods_id'=>$goods['goods_id']]) }}?user_id={{ $user_info['user_id'] }}";
+                        @else
+                var share_url = "";
+                @endif
+
+                if (share_url == '') {
+                    share_url = url;
+                }
+
+                $.ajax({
+                    type: "GET",
+                    url: "/index/information/get-weixinconfig.html",
+                    dataType: "json",
+                    data: {
+                        url: url
+                    },
+                    success: function(result) {
+                        if (result.code == 0) {
+                            wx.config({
+                                debug: false,
+                                appId: result.data.appId,
+                                timestamp: result.data.timestamp,
+                                nonceStr: result.data.nonceStr,
+                                signature: result.data.signature,
+                                jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+                            });
+                        }
+                    }
+                });
+
+                // 微信JSSDK开发
+                wx.ready(function() {
+                    // 分享给朋友
+                    wx.onMenuShareAppMessage({
+                        title: '{{ $seo_title }}', // 标题
+                        desc: '{{ $seo_description }}', // 描述
+                        imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
+                        link: share_url,
+                        fail: function(res) {
+                            alert(JSON.stringify(res));
+                        }
+                    });
+
+                    // 分享到朋友圈
+                    wx.onMenuShareTimeline({
+                        title: '{{ $seo_title }}', // 标题
+                        desc: '{{ $seo_description }}', // 描述
+                        imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
+                        link: share_url,
+                        fail: function(res) {
+                            alert(JSON.stringify(res));
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            function miniprogramready() {
+                var share_info = {
+                    title: '陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很-商之翼1',
+                    imgUrl: 'http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036307529844.jpg'
+                };
+                wx.miniProgram.postMessage({
+                    data: share_info
+                });
+            }
+            if (!window.WeixinJSBridge || !WeixinJSBridge.invoke) {
+                document.addEventListener('WeixinJSBridgeReady', miniprogramready, false);
+            } else {
+                miniprogramready();
+            }
+        </script>
+
+
         <script type="text/javascript">
             $('.procedure-tip-btn').click(function(){
                 $('.pre-sale-rule-box').addClass('show');
@@ -651,7 +956,44 @@
                 $('.pre-sale-rule-box').removeClass('show');
                 $('.pre-sale-rule-close').removeClass('show');
             });
+
+            $('body').on('click', '.content-down',function(){
+                $(".give-share-popup").removeClass('hide');
+                scrollheight = $(document).scrollTop();
+                $("body").css("top", "-" + scrollheight + "px");
+                $("body").addClass("visibly");
+            });
+
+
+            /* 分享弹出 */
+            function bdshare_popup() {
+                if (window.__wxjs_environment !== 'miniprogram') {
+                    $(".give-share-popup").removeClass('hide');
+                } else {
+                    $('.mini-program-share-popup').removeClass('hide');
+                }
+                scrollheight = $(document).scrollTop();
+                $("body").css("top", "-" + scrollheight + "px");
+                $("body").addClass("visibly");
+            }
+
+
+            function colse_bdshare_popup() {
+                $(".give-share-popup").addClass('hide');
+                $("body").css("top", "auto");
+                $("body").removeClass("visibly");
+                $(window).scrollTop(scrollheight);
+            }
+
+            $('body').on('click','.colse-bdshare-popup',function(){
+                $(".give-share-popup").addClass('hide');
+                $("body").css("top", "auto");
+                $("body").removeClass("visibly");
+                $(window).scrollTop(scrollheight);
+            });
         </script>
+
+
         <!-- 预售规则弹出层end -->
         <script type="text/javascript">
             $('.SZY-RANK-PRICE').click(function(){
@@ -689,29 +1031,126 @@
                 //document.compatMode有两个取值。BackCompat：标准兼容模式关闭。CSS1Compat：标准兼容模式开启。
                 return (document.compatMode == "CSS1Compat")? document.documentElement.clientHeight : document.body.clientHeight;
             }
+            var widthmobile=$(document).width()-50;
+            console.info(widthmobile);
+            if (IsPC()) {
+                $(window).scroll(function() {
+                    if ($(window).scrollTop() <= widthmobile) {
+                        $(".goods-header").addClass('fixed-header');
+                    } else {
+                        $(".goods-header").removeClass('fixed-header');
+                    }
+                    if($('.goods-evaluate').is(':hidden')){
+
+                        if($(window).scrollTop() >= $('.user-goods-ka').eq(1).offset().top){
+                            $('.goods-header-nav li').eq(1).addClass('cur').siblings().removeClass('cur');
+                        }else{
+                            $('.goods-header-nav li').eq(0).addClass('cur').siblings().removeClass('cur');
+                        }
+                    }
+                });
+            } else {
+                $(document).bind("touchmove", function(event) {
+                    $(window).scroll(function() {
+                        if ($(window).scrollTop() <= widthmobile) {
+                            $(".goods-header").addClass('fixed-header');
+                        } else {
+                            $(".goods-header").removeClass('fixed-header');
+                        }
+                        if($('.goods-evaluate').is(':hidden')){
+                            if($(window).scrollTop() >= $('.user-goods-ka').eq(1).offset().top){
+                                $('.goods-header-nav li').eq(1).addClass('cur').siblings().removeClass('cur');
+                            }else{
+                                $('.goods-header-nav li').eq(0).addClass('cur').siblings().removeClass('cur');
+                            }
+                        }
+                    });
+                });
+            }
+            function IsPC() {
+                var userAgentInfo = navigator.userAgent;
+                var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+                var flag = true;
+                for (var v = 0; v < Agents.length; v++) {
+                    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
+            }
+
+            function getHistoryUrl(url){
+                url = url.split('&split');
+                return url[0];
+            }
+
+            window.addEventListener("popstate",function(res) {
+
+                document.title = '陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很';
+                if(location.href.indexOf('&goods') != -1){
+                    $('.goods-header-nav li').eq(0).addClass('cur').siblings().removeClass('cur');
+                    $('.goods-header').addClass('fixed-header');
+                    $('.user-goods-ka').show().siblings('.goods-evaluate').hide();
+                    $('html,body').scrollTop($('.user-goods-ka').eq(0).offset().top + 5);
+                }else if(location.href.indexOf('&desc') != -1){
+                    $('.goods-header-nav li').eq(1).addClass('cur').siblings().removeClass('cur');
+                    $('.goods-header').removeClass('fixed-header');
+                    $('.user-goods-ka').show().siblings('.goods-evaluate').hide();
+                    $('html,body').scrollTop($('.user-goods-ka').eq(1).offset().top + 5);
+                }else if(location.href.indexOf('&comment') != -1){
+                    $('.goods-header-nav li').eq(2).addClass('cur').siblings().removeClass('cur');
+                    $('.goods-header').removeClass('fixed-header');
+                    $('.goods-evaluate').show().siblings('.user-goods-ka').hide();
+                    $('.goods-header').addClass('fixed-header-two');
+                }else{
+                    $('.goods-header-nav li').eq(0).addClass('cur').siblings().removeClass('cur');
+                    $('.goods-header').addClass('fixed-header');
+                    $('.user-goods-ka').show().siblings('.goods-evaluate').hide();
+                    $('html,body').scrollTop($('.user-goods-ka').eq(0).offset().top + 5);
+                }
+            });
 
             $('.goods-header-nav li').click(function(){
-                $('html,body').scrollTop(0);
-                $(this).addClass('cur').siblings().removeClass('cur');
-                $('.user-goods-ka').eq($(this).index()).show().siblings('.user-goods-ka').hide();
-                if($(this).index() == 1){
-                    $('.goods-details-nav').addClass('fixed');
-                    $('.goods-details-tab').css('margin-top','84px');
+                if($(this).hasClass('cur')){
+                    return;
+                }
+                if($('.goods-header').hasClass('fixed-header-two')){
+                    $('.goods-header').removeClass('fixed-header-two');
+                }
+                if($(this).index() == 0){
+                    $('.goods-header').addClass('fixed-header');
+                    $('.user-goods-ka').show().siblings('.goods-evaluate').hide();
+                    $('html,body').animate({
+                        scrollTop: $('.user-goods-ka').eq(0).offset().top + 5
+                    }, 500);
+                    history.pushState({}, '陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很', getHistoryUrl(location.href)+'&split&goods');
+                }else if($(this).index() == 1){
+                    $('.goods-header').removeClass('fixed-header');
+                    $('.user-goods-ka').show().siblings('.goods-evaluate').hide();
+                    $('html,body').animate({
+                        scrollTop: $('.user-goods-ka').eq(1).offset().top + 5
+                    }, 500);
+                    history.pushState({}, '陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很', getHistoryUrl(location.href)+'&split&desc');
+                }else if($(this).index() == 2){
+                    $(this).addClass('cur').siblings().removeClass('cur');
+                    $('.goods-header').removeClass('fixed-header');
+                    $('.goods-evaluate').show().siblings('.user-goods-ka').hide();
+                    $('.goods-header').addClass('fixed-header-two');
+                    history.pushState({}, '陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很', getHistoryUrl(location.href)+'&split&comment');
                 }
             });
             $('.goods-details-nav li').click(function(){
-                //$(this).parents('.goods-details-nav').addClass('fixed');
                 $(this).addClass('current').siblings().removeClass('current');
-                //$('.goods-desc-main').css('top','95px');
                 $('.goods-details-tab').eq($(this).index()).show().siblings('.goods-details-tab').hide();
             });
 
-            //销量和收藏数切换
+            // 销量和收藏数切换
             $('.sale-collect-nav li').click(function(){
                 $(this).addClass('current').siblings().removeClass('current');
                 $('.sale-collect-tab').eq($(this).index()).show().siblings('.sale-collect-tab').hide();
             });
-            //点击跳转详情
+            // 点击跳转详情
             $('.scroll-tips').click(function() {
                 $('html,body').scrollTop(0);
                 $('.goods-header-nav li').removeClass('cur');
@@ -719,29 +1158,26 @@
                 $('.user-goods-ka').eq(1).show().siblings('.user-goods-ka').hide();
             });
 
-            //点击跳转到评价详情
+            // 点击跳转到评价详情
             $('.SZY-ALL-COMMENT').click(function(){
-                $('html,body').scrollTop(0);
                 $('.goods-header-nav li').removeClass('cur');
                 $('.goods-header-nav li').eq(2).addClass('cur');
                 $('.user-goods-ka').eq(2).show().siblings('.user-goods-ka').hide();
+                $('.goods-header').addClass('fixed-header-two');
+                history.pushState({}, '', getHistoryUrl(location.href)+'&split&comment');
             });
         </script>
+
+
         <!--底部菜单 start-->
 
-        <div style="height: 50px;"></div>
         <div class="goods-footer-nav bdr-top">
-
-
-
-
 
             <a href="{{ route('mobile_shop_home', ['shop_id'=>$shop_info['shop']['shop_id']]) }}" class="nav-button">
                 <em class="goods-index-nav"></em>
                 <span>店铺</span>
             </a>
             <!--商品已收藏时给em标签添加selected样式-->
-
             <a href="javascript:void(0);" class="nav-button goods-col right collect-goods" data-goods-id="{{ $goods['goods_id'] }}">
                 @if($goods['is_collect'])
                     <em class="goods-collect-nav selected"></em>
@@ -754,57 +1190,63 @@
 
             <!-- 是否配置了云旺客服 -->
 
-
             <!-- 微商城客服调用qq -->
-
-
-
-
-
-
-
-            <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=xxxxx&amp;site=qq&amp;menu=yes" class="nav-button customer">
+            <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=410284576&amp;site=qq&amp;menu=yes" class="nav-button customer">
                 <em class="goods-qq-nav"></em>
                 <span>客服</span>
-            </a>
+            </a>	<div class="btn-group">
+                <dl class="ub">
 
 
 
-
-
-            <dl class="ub-f1 ub">
-
-
-
-                <dd class="flow">
-                    <a href="javascript:void(0)" class="button" onclick="select_spec('add-cart')">加入购物车</a>
-                </dd>
-                <dd>
-                    <a href="javascript:void(0)" class="button" onclick="select_spec('buy-goods')">立即购买</a>
-                </dd>
+                    <dd class="flow">
+                        <a href="javascript:void(0)" class="button" onclick="select_spec('add-cart')">加入购物车</a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:void(0)" class="button" onclick="select_spec('buy-goods')">立即购买</a>
+                    </dd>
 
 
 
-            </dl>
+                </dl>
+            </div>
         </div>
 
         <div class="choose-attribute-mask"></div>
         <div class="choose-attribute-main" id="choose_attr">
-            <div class="choose-attribute-header">
-                <img class="SZY-GOODS-IMAGE-THUMB" src="{{ get_image_url($sku['sku_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450" />
+            <div class="choose-attribute-header clearfix">
+                <div class="choose-attribute-pic">
+                    <img class="SZY-GOODS-IMAGE-THUMB" src="{{ get_image_url($sku['sku_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450" />
+                </div>
                 <div class="attribute-header-right">
                     <span class="goodprice price-color choose-result-price SZY-GOODS-PRICE"> ￥{{ $sku['goods_price'] }} </span>
                     <p>
 
                         <i class="SZY-GOODS-NUMBER">库存：{{ $sku['goods_number'] }}件</i>
 
+                        {{--todo 限购商品展示--}}
+                        <i>（每人限购5件）</i>
 
                     </p>
 
-                </div>
-                <a class="choose-attribute-close show" href="javascript:close_choose_spec();" title="关闭">
+                    {{--判断 有规格时显示--}}
+                    @if(!empty($sku['spec_attr_value']))
+                    <span class="choose-result-attr SZY-GOODS-SPEC">
+                        已选：
+                        <i>
 
-                </a>
+
+
+                            {{ $sku['spec_attr_value'] }}
+
+
+
+                        </i>
+                    </span>
+                    @endif
+
+                </div>
+                <a class="choose-attribute-close" href="javascript:close_choose_spec();" title="关闭"> </a>
             </div>
             <div class="choose-attribute-content">
                 <div class="attr-list choose SZY-GOODS-SPEC-ITEMS">
@@ -836,12 +1278,13 @@
                         <div class="title1">购买数量</div>
                         <div class="item1">
                             <div class="goods-num amount amount-btn cart-box">
-                                <span class="decrease amount-minus disabled">
-                                    <i class="iconfont"></i>
+                                <span class="decrease amount-minus">
+                                    <i class="row"></i>
                                 </span>
                                 <input type="number" class="amount-input num" value="1" data-amount-min="1" data-amount-max="{{ $sku['goods_number'] }}" maxlength="8" title="请输入购买量" onclick="$(this).select();">
                                 <span class="increase amount-plus">
-                                    <i class="iconfont"></i>
+                                    <i class="row"></i>
+                                    <i class="col"></i>
                                 </span>
                             </div>
                         </div>
@@ -886,12 +1329,29 @@
 
                 // 立即购买
                 $('body').on('click', '.buy-goods', function() {
+
+                    var act_type = "11";
+                    var purchase = "15";
+                    var pre_sale = "2";
+                    var virtual = "0";
+                    var is_lib_goods = "";
+                    if (is_lib_goods == true) {
+                        return;
+                    }
                     if ($(this).hasClass("disabled")) {
                         return;
                     }
+
                     var sku_id = getSkuId();
                     var number = $(".goods-num").find('.num').val();
-                    $.cart.quickBuy(sku_id, number);
+                    var data = {};
+                    if (act_type == 'purchase' || act_type == 'pre_sale') {
+                        data.act_type = act_type;
+                    }
+                    if (virtual > 0) {
+                        data.virtual = virtual;
+                    }
+                    $.cart.quickBuy(sku_id, number, data);
                 });
 
                 // 添加购物车
@@ -904,12 +1364,12 @@
                     var sku_id = getSkuId();
                     $.cart.add(sku_id, number, {
                         is_sku: true,
-
                         //image_url: image_url,
                         //event: event,
                         callback: function(result) {
                             if (result.code == 0) {
                                 close_choose_spec();
+                                $(".goods-num").find('.num').val(1);
                             }
                         }
                     });
@@ -936,8 +1396,8 @@
                 });
 
                 // 小程序控制客服
-                if (window.__wxjs_environment === 'miniprogram') {
-                    var service_tel = '';
+                /* if (window.__wxjs_environment === 'miniprogram') {
+                    var service_tel = '18108765433';
                     if (service_tel != '' || service_tel != null) {
                         $('.customer').attr('href', 'tel:' + service_tel);
                         $('.customer').attr('class', 'nav-button customer');
@@ -947,78 +1407,30 @@
                         $('.customer').attr('onClick', '$.msg("卖家没有设置联系电话")');
                         $('.customer').attr('class', 'nav-button customer');
                     }
-                }
+                } */
             });
         </script>
+
         <!--底部菜单 end-->
         <section class="mask-div" style="display: none;" onclick="close_coupon();"></section>
-        <!-- 分享 -->
-        <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+        {{--判断 登录状态显示--}}
+        @if(!empty($user_info))
         <script type="text/javascript">
-            $().ready(function() {
-                $.get("/index/information/is-weixin.html", function(result) {
-                    if (result.code == 0) {
-                        var url = location.href.split('#')[0];
-
-                        var share_url = "";
-
-                        if (share_url == '') {
-                            share_url = url;
-                        }
-
-                        $.ajax({
-                            type: "GET",
-                            url: "/site/index",
-                            dataType: "json",
-                            data: {
-                                url: url
-                            },
-                            success: function(result) {
-                                if (result.code == 0) {
-                                    wx.config({
-                                        debug: false,
-                                        appId: result.data.appId,
-                                        timestamp: result.data.timestamp,
-                                        nonceStr: result.data.nonceStr,
-                                        signature: result.data.signature,
-                                        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
-                                    });
-
-                                }
-                            }
-                        });
-
-                        // 微信JSSDK开发
-                        wx.ready(function() {
-                            // 分享给朋友
-                            wx.onMenuShareAppMessage({
-                                title: '{{ $seo_title }}', // 标题
-                                desc: '{{ $seo_description }}', // 描述
-                                imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
-                                link: share_url,
-                                fail: function(res) {
-                                    alert(JSON.stringify(res));
-                                }
-                            });
-
-                            // 分享到朋友圈
-                            wx.onMenuShareTimeline({
-                                title: '{{ $seo_title }}', // 标题
-                                desc: '{{ $seo_description }}', // 描述
-                                imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
-                                link: share_url,
-                                fail: function(res) {
-                                    alert(JSON.stringify(res));
-                                }
-                            });
-                        });
-                    }
-                }, 'json');
-            });
+            var url =  location.href;
+            if (url.indexOf("user_id=") == -1 && window.history && history.pushState){
+                if(url.indexOf("?") == -1){
+                    url += "?user_id=" + "{{ $user_info['user_id'] }}";
+                }else{
+                    url += "&user_id=" + "{{ $user_info['user_id'] }}";
+                }
+                history.replaceState(null, document.title, url);
+            }
         </script>
+        @endif
+
 
         <!-- 返回顶部 -->
-        <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+        <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
         <script type="text/javascript">
             $().ready(function(){
                 //首先将#back-to-top隐藏
@@ -1051,7 +1463,7 @@
             });
         </script>
         <!--身份验证-->
-        <link rel="stylesheet" href="/mobile/css/login.css?v=20180702"/>
+        <link rel="stylesheet" href="/css/login.css?v=20180702"/>
         <!--pop-login-main增加show样式为显示状态-->
         <div class="pop-login-main">
             <header id="header" class="header">
@@ -1107,25 +1519,108 @@
                 </div>
             </div>
         </div>
+        <div class="preview-attribute-pic hide"></div>
 
+        <script type="text/javascript">
+            $(document).ready(function(){
+                /*图片预览 start*/
+                $("#goods_pic .SZY-GOODS-IMAGE").on("click", ".swiper-slide a img", function() {
+                    //$(this).parents('#goods_pic').addClass('preview-picture');
+                    if ($(this).parents('#goods_pic').hasClass('preview-picture')) {
+                        $('#goods_pic').removeClass('preview-picture');
+                        $('.icon-guanbi').remove();
+                    }
+                    else{
+                        $('#goods_pic').addClass('preview-picture');
+                        //document.getElementById("goods_pic").innerHTML+'<i class='iconfont icon-guanbi'></i>';
+                        var em=document.createElement("i");
+                        em.setAttribute("class", "iconfont icon-guanbi");
+                        $('#goods_pic').append(em);
+                    }
+                });
+                $(document).bind("click",function(e){
+                    if($('#goods_pic').hasClass('preview-picture')){
+                        var target  = $(e.target);
+                        if(target.closest(".swiper-slide").length == 0){
+                            $('#goods_pic').removeClass('preview-picture');
+                            $('.icon-guanbi').remove();
+                        }
+                    }
+                })
+                $('body').on('click','.icon-guanbi',function(){
+                    $('#goods_pic').removeClass('preview-picture');
+                    $('.icon-guanbi').remove();
+                })
+            });
+            /*图片预览 end*/
+            /*弹层内容预览*/
+            $('.choose-attribute-pic').on('click','img',function(){
+                var imgBox = $(this).parents(".choose-attribute-pic").find("img");
+                $(".preview-attribute-pic").append('<img src="' + imgBox.attr("src") + '" / >');
+                $(".preview-attribute-pic").removeClass('hide');
+                var em=document.createElement("i");
+                em.setAttribute("class", "iconfont icon-guanbi");
+                $('.preview-attribute-pic').append(em);
+            })
+            $(".preview-attribute-pic,.preview-attribute-pic .icon-guanbi").on("click",
+                function() {
+                    $(this).addClass('hide');
+                    $(".preview-attribute-pic img").remove();
+                    $('.icon-guanbi').remove();
+                });
+        </script>
+
+
+        {{--todo 判断 团购商品倒计时显示--}}
+        <script type="text/javascript">
+            $().ready(function() {
+                // <font id="groupbuy_countdown">此商品正在参加团购活动 3天19时28秒后结束</font>
+                $("#groupbuy_countdown").countdown({
+                    time: "604741000",
+                    leadingZero: true,
+
+                    htmlTemplate: "<span class='time'>%{d}</span><span class='separator'>:</span><span class='time'>%{h}</span><span class='separator'>:</span><span class='time'>%{m}</span><span class='separator'>:</span><span class='time'>%{s}</span>",
+
+                    onComplete: function(event) {
+                        $(this).parent('.goods-promotion-right').html("团购活动已结束！");
+                        $.go("{{ route('mobile_show_goods',['goods_id'=>$goods['goods_id']]) }}");
+                    }
+                });
+            });
+        </script>
+
+        {{--todo 判断 限时折扣倒计时显示--}}
+        <!-- 倒计时 -->
+        <script type="text/javascript">
+            $().ready(function() {
+                // <font id="groupbuy_countdown">此商品正在参加团购活动 3天19时28秒后结束</font>
+                $("#limit_discount_countdown").countdown({
+                    time: "603248000",
+                    leadingZero: true,
+
+                    htmlTemplate: "<span class='time'>%{d}</span><span class='separator'>:</span><span class='time'>%{h}</span><span class='separator'>:</span><span class='time'>%{m}</span><span class='separator'>:</span><span class='time'>%{s}</span>",
+
+                    onComplete: function(event) {
+                        //$(this).parent().html("活动已结束！");
+                        $.go("{{ route('mobile_show_goods',['goods_id'=>$goods['goods_id']]) }}");
+                    }
+                });
+            });
+        </script>
 
         <!-- 预售倒计时 -->
 
         <script type="text/javascript">
-            var swiper = new Swiper('#goods_pic', {
-                pagination: '.swiper-pagination',
-                paginationClickable: true,
-                autoplay: 3000,
+            var goods_pic_swiper = new Swiper('#goods_pic', {
                 lazyLoading : true,
                 lazyLoadingInPrevNext: true,
                 autoplayDisableOnInteraction: true,
-                // paginationType: 'fraction',
-                onTouchEnd: function(swiper, event){
-                    if(swiper.isEnd && (swiper.touches.startX-swiper.touches.currentX) > 150){
-                        $('.goods-header-nav li').eq(1).click();
-                    }
-                }
+                pagination : '.swiper-pagination',
+                paginationType : 'fraction',
+                loop: true,
+                observer:true,//修改swiper自己或子元素时，自动初始化swiper
             });
+
         </script>
         <script id="SZY_SKU_LIST" type="text">
             {{--sku list--}}
@@ -1146,6 +1641,10 @@
                     });
                 })
 
+                // 门店自提
+                $("body").on('click', '.pickup', function() {
+                    $.go('/pickup/{{ $shop_info['shop']['shop_id'] }}.html');
+                });
 
             });
 
@@ -1183,7 +1682,8 @@
                     }
                 });
             }
-
+            //
+            //
             //加载评论
             function loadComment() {
                 $.ajax({
@@ -1191,7 +1691,7 @@
                     url: '/goods/comment',
                     dataType: 'json',
                     data: {
-                        sku_id: '{{ $sku['sku_id'] }}',
+                        sku_id: '1127',
                         output: 1,
                     },
                     success: function(result) {
@@ -1205,12 +1705,12 @@
                     }
                 });
             }
-
+            //
+            //
         </script>
-        <script src="/assets/d2eace91/js/jquery.history.js?v=20180813"></script>
-
+        <script src="/assets/d2eace91/js/jquery.history.js?v=20190121"></script>
         <script type="text/javascript">
-            var main_image_size = "1";
+            var main_image_size = "2";
             var sku_ids = $.parseJSON($("#SZY_SKU_LIST").html());
             function getSkuId() {
                 var spec_ids = [];
@@ -1275,7 +1775,8 @@
                 if (goods_number > 0) {
                     if (sku_freights[local_region_code]) {
                         if (sku_freights[local_region_code].limit_sale == 1) {
-                            goods_number = sku_freights[local_region_code].goods_number;
+                            // 区域限售商品
+                            //goods_number = sku_freights[local_region_code].goods_number;
                         }
                     } else {
                         changeLocation(local_region_code).always(function(result) {
@@ -1296,7 +1797,8 @@
                     $(".SZY-RANK-PRICES").hide();
                 }
                 // 商品规格
-                $(".SZY-GOODS-SPEC").html("已选：<i class='i_dd'>"+sku.spec_attr_value+"</i>	<span class='more'><i class='iconfont'>&#xe607;</i></span>");
+                $(".selected-attr.SZY-GOODS-SPEC").html("已选：<i class='i_dd ub-f1'>"+sku.spec_attr_value+"</i>	<span class='more'><i class='iconfont'>&#xe607;</i></span>");
+                $(".choose-result-attr.SZY-GOODS-SPEC").html("已选：<i class='i_dd'>"+sku.spec_attr_value+"</i>");
                 // 商品名称
                 $(".SZY-GOODS-NAME").html(sku.sku_name);
 
@@ -1377,13 +1879,12 @@
 
                 // 处理赠品
                 if (sku.gift_list && sku.gift_list.length > 0) {
-                    $(".SZY-GIFT-LIST").html('');
+                    $(".SZY-GIFT-LIST").html("");
                     var element = $($.parseHTML('<div class="prom-gift"></div>'));
                     element.append('<div class="dt">赠品</div><div class="dd"></div>');
                     for (var i = 0; i < sku.gift_list.length; i++) {
                         var gift = sku.gift_list[i];
-                        element.find('.dd').append('<div class="prom-gift-list"><a href="/'+ gift.gift_sku_id +'.html" title="'+gift.sku_name+'"><img src="'+gift.goods_image_thumb+'" width="20" height="20" class="gift-img" /></a></div>')
-                        element.find('.dd').find('.prom-gift-list').append('<em class="gift-number color">× '+gift.gift_number+'</em>');
+                        element.find('.dd:last').append('<div class="prom-gift-list"><a href="/'+ gift.gift_sku_id +'.html" title="'+gift.sku_name+'"><img src="'+gift.goods_image_thumb+'" width="20" height="20" class="gift-img" /></a><em class="gift-number color">× '+gift.gift_number+'</em></div>')
                     }
                     $(".SZY-GIFT-LIST").append($(element));
                 } else {
@@ -1415,7 +1916,7 @@
                     // SKU不存在
                     setSkuInfo(false);
 
-                    $("title").html("{{ $goods['goods_name'] }}");
+                    $("title").html("彩椒");
                 });
 
 
@@ -1443,13 +1944,16 @@
                     var target = $(this);
                     $.bonus.receive(bonus_id, function(result) {
                         if (result.code == 0) {
-                            $(target).html("已领取").removeClass("color").removeClass("bonus-receive").addClass("bonus-received");
+                            if(result.data == 0){
+                                $(target).html("已领取").removeClass("color").removeClass("bonus-receive").addClass("bonus-received");
+                            }
                             $.msg(result.message);
                             return;
                         } else if (result.code == 130) {
                             $(target).html("已领取").removeClass("color").removeClass("bonus-receive").addClass("bonus-received");
                         } else if (result.code == 131) {
                             $(target).html("已抢光").removeClass("color").removeClass("bonus-receive").addClass("bonus-received");
+                            $(target).parents('.coupon-info').addClass('coupon-item-ed');
                         }
                         $.msg(result.message, {
                             time: 5000
@@ -1476,7 +1980,7 @@
                                 $('#act_bargain_info').html(result.bar_info_data); */
                                 $('.mask-div').show();
                                 $('.cut-money-info').show();
-                                $('.bar-amount').html(result.bar_info.bar_amount);
+                                $('.bar-amount').html('￥'+result.bar_info.bar_amount);
                                 replaceUrl('bar_id', result.bar_info.bar_id);
                             }else{
                                 $.msg(result.message);
@@ -1502,13 +2006,14 @@
                                 $('#act_bargain_footer').html(result.bar_foot_data); */
                                 $('.mask-div').show();
                                 $('.cut-money-info').show();
-                                $('.bar-amount').html(result.bar_amount);
+                                $('.bar-amount').html('￥'+result.bar_amount);
                             }else{
                                 $.msg(result.message);
                             }
                         }
                     })
                 });
+
             });
 
             function replaceUrl(name, value) {
@@ -1517,6 +2022,36 @@
                 History.replaceState(obj, '', '?' + name + '=' + value);
             }
         </script>
+
+        <script type="text/javascript">
+            var goods_share_mode = "php"
+            var qrcode_type = '0';
+            var click_loading = false;
+
+            // 商品分享
+            $('body').on('click', '.qr-code', function(event){
+                var obj = $(this);
+                if($('#goods_share_'+$(obj).attr('data-uuid')).length > 0){
+                    $('#goods_share_'+$(obj).attr('data-uuid')).show();
+                    return ;
+                }
+                if(click_loading == false){
+                    click_loading = true;
+                    $(obj).goodsshare({
+                        goods_id: '{{ $goods['goods_id'] }}',
+                        mode: goods_share_mode,
+                        qrcode_type: qrcode_type,
+                        callback: function(res){
+                            click_loading = false;
+                            $(obj).attr('data-uuid',res.uuid);
+                        }
+                    });
+                }
+            });
+            $('.qr-code').show();
+
+        </script>
+
         <!-- 定位 -->
         <script type="text/javascript">
             var local_region_code = '0';
@@ -1576,7 +2111,7 @@
 
         <script src="http://webapi.amap.com/maps?v=1.4.6&key={{ sysconf('amap_js_key') }}"></script>
         <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-        <script src="/assets/d2eace91/js/geolocation/amap.js?v=20180813"></script>
+        <script src="/assets/d2eace91/js/geolocation/amap.js?v=20190121"></script>
         <script type="text/javascript">
             $().ready(function() {
                 if (sessionStorage.geolocation) {
@@ -1613,8 +2148,24 @@
                 }
             });
         </script>
-
-
+        <div class="copyright">
+            <div class="footer-copyright">
+                <a class="copyright-img" href="javascript:go_laravelvip()">
+                    <img src="/images/support-logo.png">
+                    技术支持：乐融沃
+                </a>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function go_laravelvip() {
+                if (window.__wxjs_environment !== 'miniprogram') {
+                    window.location.href = 'http://m.laravelvip.com/statistics.html?product_type=shop&domain=http://{{ env('MOBILE_DOMAIN') }}';
+                } else {
+                    window.location.href = 'http://{{ env('MOBILE_DOMAIN') }}';
+                }
+            }
+        </script>
+        <div style="height: 50px;"></div>
     </div>
     <div class="show-menu-info" id="menu">
         <ul>

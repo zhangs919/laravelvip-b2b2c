@@ -13,96 +13,43 @@
     <meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/shop_header.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/shop_coupon.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/bonus_message.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.3dmin.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/shop_header.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/shop_coupon.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/bonus_message.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/swiper.min.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/swiper.3dmin.css?v=20180702"/>
     <!---->
-    <link rel="stylesheet" href="/mobile/css/dianpu.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/dianpu.css?v=20180702"/>
     <!---->
 
     <!-- ================== END BASE CSS STYLE ================== -->
-    <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
-    <script src="/mobile/js/zepto.min.js?v=20180813"></script>
-    <script src="/mobile/js/zepto.waypoints.js?v=20180813"></script>
-    <script src="/mobile/js/swiper.jquery.min.js?v=20180813"></script>
-    <script src="/mobile/js/shop.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/yii.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
+    <script src="/assets/d2eace91/js/jquery.js?v=20190121"></script>
+    <script src="/js/swiper.jquery.min.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/yii.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js?v=20190121"></script>
+    <script src="/js/common.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20190121"></script>
     <!-- 图片缓载js -->
-    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/szy.page.more.js?v=20180813"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/szy.page.more.js?v=20190121"></script>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
 </head>
 <body>
 <!-- 引入头部文件 -->
 <!-- -->
 
+{{--引入店铺头部--}}
+@include('shop.partials._shop_top_box')
 
-<div class="shop-top-box shop-top-con1">
-    <div class="shop-top-bg">
-
-        <img src="{{ get_image_url($shop_info['shop']['shop_sign_m']) }}">
-
-    </div>
-    <header class="header">
-        <div class="header-bcak-bar">
-            <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
-        </div>
-        <!-- 如果有自由购功能，给下面标签添加class,'header-middle-freebuy' -->
-        <div class="header-middle-box  SZY-SHOP-HEADER">
-            <div class="header-middle-con">
-                <form name="searchForm" method="get" action="{{ route('mobile_shop_goods_list', ['shop_id'=>$shop_info['shop']['shop_id']]) }}">
-                    <div class="header-search">
-                        <i class="search-icon"></i>
-                        <input type="text" name="keyword" value="" class="search-input" placeholder="搜索店铺内商品">
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- 如果有自由购功能，给下面标签添加class,'header-right-freebuy'，然后扫码的a标签显示 -->
-        <div class="header-right-bar">
-            <aside class="top_bar">
-                <div class="show-menu" id="show_more">
-                    <a href="javascript:void(0);"></a>
-                </div>
-            </aside>
-        </div>
-    </header>
-    <div class="shop-info">
-        <div class="shop-logo">
-            <img src="{{ get_image_url($shop_info['shop']['shop_logo']) }}" alt="{{ $shop_info['shop']['shop_name'] }}">
-        </div>
-
-        <div class="shop-collect-btn SZY-SHOP-IS-COLLENT" data-shop_id="{{ $shop_info['shop']['shop_id'] }}">
-            <i class="iconfont">&#xe615;</i>
-            <span>收藏</span>
-        </div>
-        <div class="shop-info-right">
-            <div class="shop-name">{{ $shop_info['shop']['shop_name'] }}</div>
-
-            <div class="shop-notice">
-                <em>公告</em>
-                <ul class="SZY-SHOP-ARTICLE">
-                    <li>
-                        <a href="javascript:void(0)">{!! $shop_info['shop']['detail_introduce'] !!}</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="shop-nav clearfix">
     <ul class="nav-ul">
         <li class="current">
@@ -128,10 +75,10 @@
 <!--分享弹出层 start-->
 <div class="bdshare-popup-box colse-bdshare-popup">
     <div class="bdshare-popup-top">
-        <img src="/mobile/images/goods/share_popup_top.png">
+        <img src="/images/goods/share_popup_top.png">
     </div>
     <div class="bdshare-popup-bottom">
-        <img src="/mobile/images/goods/share_popup_bottom.png">
+        <img src="/images/goods/share_popup_bottom.png">
     </div>
 </div>
 
@@ -166,10 +113,10 @@
         }, function(result) {
             $(".SZY-SHOP-COLLENT-COUNT").html(result.data.collect_count);
             if (result.data.is_collect == null || result.data.is_collect == false) {
-                $(".SZY-SHOP-IS-COLLENT").find('span').html('收藏');
+                $(".SZY-SHOP-IS-COLLENT").find('span').html('关注');
                 $(".SZY-SHOP-IS-COLLENT").removeClass("is-collect");
             } else {
-                $(".SZY-SHOP-IS-COLLENT").find('span').html('已收藏');
+                $(".SZY-SHOP-IS-COLLENT").find('span').html('已关注');
                 $(".SZY-SHOP-IS-COLLENT").addClass("is-collect");
             }
             //数量统计
@@ -218,11 +165,11 @@
             var shop_id = obj.data('shop_id');
             $.collect.toggleShop(shop_id, function(callback) {
                 if (callback.code == 0) {
-                    if (obj.find('span').html() == "收藏") {
-                        obj.find('span').html("已收藏");
+                    if (obj.find('span').html() == "关注") {
+                        obj.find('span').html("已关注");
                         obj.addClass("is-collect");
                     } else {
-                        obj.find('span').html("收藏");
+                        obj.find('span').html("关注");
                         obj.removeClass("is-collect");
                     }
                 }
@@ -274,73 +221,141 @@
 
 <!-- #tpl_region_end -->
 <!-- 分享 -->
-<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <script type="text/javascript">
     $().ready(function() {
-        $.get("/index/information/is-weixin.html", function(result) {
-            if (result.code == 0) {
-                var url = location.href.split('#')[0];
 
-                var share_url = "";
+        // $("body").append('<script src="http://res.wx.qq.com/open/js/jweixin-1.3.2.js"><\/script>');
 
-                if (share_url == '') {
-                    share_url = url;
-                }
+        var url =  location.href;
 
-                $.ajax({
-                    type: "GET",
-                    url: "/site/index",
-                    dataType: "json",
-                    data: {
-                        url: url
-                    },
-                    success: function(result) {
-                        if (result.code == 0) {
-                            wx.config({
-                                debug: false,
-                                appId: result.data.appId,
-                                timestamp: result.data.timestamp,
-                                nonceStr: result.data.nonceStr,
-                                signature: result.data.signature,
-                                jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
-                            });
-
-                        }
-                    }
-                });
-
-                // 微信JSSDK开发
-                wx.ready(function() {
-                    // 分享给朋友
-                    wx.onMenuShareAppMessage({
-                        title: '{{ $seo_title }}', // 标题
-                        desc: '{{ $seo_description }}', // 描述
-                        imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
-                        link: share_url,
-                        fail: function(res) {
-                            alert(JSON.stringify(res));
-                        }
-                    });
-
-                    // 分享到朋友圈
-                    wx.onMenuShareTimeline({
-                        title: '{{ $seo_title }}', // 标题
-                        desc: '{{ $seo_description }}', // 描述
-                        imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
-                        link: share_url,
-                        fail: function(res) {
-                            alert(JSON.stringify(res));
-                        }
-                    });
-                });
+        if ("" != "" && url.indexOf("user_id=") == -1 && window.history && history.pushState){
+            if(url.indexOf("?") == -1){
+                url += "?user_id=";
+            }else{
+                url += "&user_id=";
             }
-        }, 'json');
+        }else{
+            url = location.href.split('#')[0];
+        }
+
+        var share_url = "";
+
+        if (share_url == '') {
+            share_url = url;
+        }
+
+        //
+
+        $.ajax({
+            type: "GET",
+            url: "/index/information/get-weixinconfig.html",
+            dataType: "json",
+            data: {
+                url: url
+            },
+            success: function(result) {
+                if (result.code == 0) {
+                    wx.config({
+                        debug: false,
+                        appId: result.data.appId,
+                        timestamp: result.data.timestamp,
+                        nonceStr: result.data.nonceStr,
+                        signature: result.data.signature,
+                        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+                    });
+                }
+            }
+        });
+
+        //
+
+        // 微信JSSDK开发
+        wx.ready(function() {
+
+            // 分享给朋友
+            wx.onMenuShareAppMessage({
+                title: '{{ $seo_title }}', // 标题
+                desc: '{{ $seo_description }}', // 描述
+                imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
+                link: share_url,
+                fail: function(res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+
+            // 分享到朋友圈
+            wx.onMenuShareTimeline({
+                title: '{{ $seo_title }}', // 标题
+                desc: '{{ $seo_description }}', // 描述
+                imgUrl: '{{ get_image_url($seo_image) }}', // 分享的图标
+                link: share_url,
+                fail: function(res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+
+            window.history.replaceState(null, document.title, url);
+        });
     });
 </script>
 
-<a href="javascript:void(0);" id="back-to-top" class="gotop hide">
-    <img src="/mobile/images/topup.png" />
-</a>
+<script type="text/javascript">
+    function miniprogramready() {
+        var share_info = {
+            title: '{{ $seo_title }}',
+            imgUrl: '{{ get_image_url($seo_image) }}'
+        };
+        wx.miniProgram.postMessage({
+            data: share_info
+        });
+    }
+    if (!window.WeixinJSBridge || !WeixinJSBridge.invoke) {
+        document.addEventListener('WeixinJSBridgeReady', miniprogramready, false);
+    } else {
+        miniprogramready();
+    }
+</script>
+
+<!--购物车-->
+<div class="shopcar cartbox">
+    <a href="/cart.html">
+        <span class="flow-cartnum SZY-CART-COUNT bg-color">0</span>
+    </a>
+</div>
+
+<a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
+<script type="text/javascript">
+    $().ready(function(){
+        //首先将#back-to-top隐藏
+        //$("#back-to-top").addClass('hide');
+        //当滚动条的位置处于距顶部1000像素以下时，跳转链接出现，否则消失
+        $(function ()
+        {
+            $(window).scroll(function()
+            {
+                if ($(window).scrollTop()>600)
+                {
+                    $('body').find(".back-to-top").removeClass('hide');
+                }
+                else
+                {
+                    $('body').find(".back-to-top").addClass('hide');
+                }
+            });
+            //当点击跳转链接后，回到页面顶部位置
+            $(".back-to-top").click(function()
+            {
+                $('body,html').animate(
+                    {
+                        scrollTop:0
+                    }
+                    ,600);
+                return false;
+            });
+        });
+    });
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         //当滚动条的位置处于距顶部100像素以下时，跳转链接出现，否则消失
@@ -359,6 +374,27 @@
                 }, 600);
                 return false;
             });
+        });
+    });
+</script>
+
+@if(!$webStatic){{--静态页面关闭时 显示--}}
+    <script type="text/javascript">
+        $.templateloading();
+    </script>
+@endif
+
+<script type="text/javascript">
+    $().ready(function() {
+        $('body').on('click', '.add-cart', function(event) {
+            var goods_id = $(this).data("goods_id");
+            var image_url = $(this).data("image_url");
+            $.cart.add(goods_id, 1, {
+                is_sku: false,
+                event: event,
+                image_url: image_url
+            });
+            return false;
         });
     });
 </script>
@@ -565,7 +601,7 @@
 <!-- 隐藏菜单_end -->
 <!---->
 <!-- 购物车js -->
-<script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+<script src="/js/jquery.fly.min.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
 

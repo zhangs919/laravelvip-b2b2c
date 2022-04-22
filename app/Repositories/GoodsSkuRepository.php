@@ -132,7 +132,7 @@ class GoodsSkuRepository
             'goods_number' => $info->goods_number,
             'original_number' => '', // todo
             'spec_ids' => explode('|', $info->spec_ids),
-            'is_enable' => $info->is_enable,
+            'is_enable' => $info->checked,
             'goods_image' => $goods_info->goods_image,
             'shop_id' => $goods_info->shop_id,
             'goods_status' => $goods_info->goods_status,

@@ -54,7 +54,7 @@ class BrandController extends Frontend
 
         $this->show_seo('seo_brand_list'); // SEO
 
-        $compact = compact('seo_title', 'cat_list', 'banner_list');
+        $compact = compact('cat_list', 'banner_list');
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [

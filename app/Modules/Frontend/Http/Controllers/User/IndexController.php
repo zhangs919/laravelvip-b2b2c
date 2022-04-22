@@ -29,10 +29,11 @@ class IndexController extends UserCenter
         // 购物车列表
         $this->cart->setUserId($this->user_id);
         $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
         $user_cart_list = $this->cart->getCartList(); // 购物车数据
         $user_cart_num = 0;
         foreach ($user_cart_list as $cart) {
-            $user_cart_num += $cart->goods_num;
+            $user_cart_num += $cart['goods_number'];
         }
 
         // 我的足迹

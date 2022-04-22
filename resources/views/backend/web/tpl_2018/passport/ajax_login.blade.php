@@ -58,7 +58,7 @@
             <a href="javascript:void(0);" id="btn_submit_{{ $uid }}" class="form-login-btn">立即登录</a>
         </div>
 
-        <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">
+        <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
         <input type="hidden" name="ajax_layout" value="1">
     </form>
 </div>

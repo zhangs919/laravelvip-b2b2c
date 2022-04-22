@@ -198,7 +198,7 @@
 
                                 <!-- 没有商品的展示形式 _start -->
                                 <div class="tip-box">
-                                    <img src="/frontend/images/noresult.png" class="tip-icon" />
+                                    <img src="/images/noresult.png" class="tip-icon" />
                                     <div class="tip-text">
                                         您的购物车里什么都没有哦
                                         <br />
@@ -231,7 +231,7 @@
                         <!---->
                         <!-- 没有浏览历史的展示形式 _start -->
                         <div class="tip-box">
-                            <img src="/frontend/images/noresult.png" class="tip-icon" />
+                            <img src="/images/noresult.png" class="tip-icon" />
                             <div class="tip-text">
                                 您还没有在商城留下任何足迹哦
                                 <br />
@@ -264,7 +264,7 @@
 
                             <!-- 没有对比商品的展示形式 _start -->
                             <div class="tip-box">
-                                <img src="/frontend/images/noresult.png" class="tip-icon" />
+                                <img src="/images/noresult.png" class="tip-icon" />
                                 <div class="tip-text">
                                     您还没有选择任何的对比商品哦
                                     <br />

@@ -1,7 +1,7 @@
 @extends('layouts.buy_layout')
 
 @section('header_css')
-    <link rel="stylesheet" href="/frontend/css/flow.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/flow.css?v=20180702"/>
 @stop
 
 @section('content')
@@ -59,7 +59,86 @@
                 @include('buy.user_address')
 
                 <!-- 送货时间 -->
+                @if($send_time_show)
+                    <div class="time-container border-line">
+                        <div class="main-content">
+                            <h2 class="title">
+                                送货时间
+                                <span>{!! $send_time_desc !!}</span>
+                            </h2>
+                            <div class="delivery-time clearfix">
+                                <!-- 选中的送货时间 给下面的div增加class值"active" 也就是class="box active" _star-->
 
+                                @foreach($send_time_list as $st_key=>$send_time)
+
+                                    @if($send_time['set_time']){{--指定送货时间--}}
+                                    <div class="box box-spe @if($send_time['checked'] == 'checked'){{ 'active2' }}@endif">
+                                        <label>
+                                            <input type="radio" data="1" name="best_time" value="{{ $st_key }}" id="set_best_time" @if($send_time['checked'] == 'checked'){{ 'checked' }}@endif />
+                                            <span>{{ $send_time['value'] }}</span>
+                                            <font class="best-time-desc color">{{ $best_time ?? '' }}</font>
+                                        </label>
+
+                                        <!-- 指定送货具体时间 _star-->
+                                        <div class="seltimebox" id="seltimebox">
+                                            <table cellpadding=0 cellspacing=0 width="100%">
+                                                <tr>
+                                                    <td>
+                                                        <span>时间段</span>
+                                                    </td>
+                                                    @foreach($send_time['best_time'] as $bt_value)
+                                                    <td align=center>
+                                                        <span>
+                                                            {{ $bt_value['name'] }}
+                                                            <br />
+                                                            {{ $bt_value['week'] }}
+                                                        </span>
+                                                    </td>
+                                                    @endforeach
+                                                </tr>
+
+                                                @foreach(array_first($send_time['best_time'])['time'] as $time_key=>$time_text)
+                                                    <tr>
+                                                        <td>
+                                                            <span>{{ $time_text['text'] }}</span>
+                                                        </td>
+
+                                                        @foreach($send_time['best_time'] as $bt_value)
+                                                        <td align=center>
+                                                            @if($bt_value['time'][$time_key]['use'] == 1)
+                                                                <a href="javascript:void(0);" data="{{ $bt_value['name'] }}{{ $bt_value['week'] }}:{{ $bt_value['time'][$time_key]['text'] }}"
+                                                                   class="set_time @if($best_time == $bt_value['name'].$bt_value['week'].':'.$bt_value['time'][$time_key]['text']){{ 'current' }}@endif">
+                                                                    可选
+                                                                </a>
+                                                            @else
+                                                                &nbsp;
+                                                            @endif
+                                                        </td>
+                                                        @endforeach
+
+                                                    </tr>
+                                                @endforeach
+
+                                            </table>
+                                        <!-- 指定送货具体时间 _end-->
+                                        </div>
+                                    </div>
+                                    @else
+                                        <div class="box @if($send_time['checked'] == 'checked'){{ 'active' }}@endif">
+                                            <label>
+                                                <input type="radio" data="0" class="best_time" name="best_time" value="{{ $st_key }}" @if($send_time['checked'] == 'checked'){{ 'checked' }}@endif />
+                                                <span>{{ $send_time['value'] }}</span>
+                                            </label>
+                                        </div>
+                                    @endif
+
+
+                                @endforeach
+
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
 
 
@@ -69,6 +148,7 @@
                         <h2 class="title">商品清单</h2>
                         <div class="order-goods">
                             <!-- 根据店铺对商品进行拆单 每个table是一个店铺的商品 _star-->
+                            @foreach($cart_info['shop_list'] as $shop_id=>$shop)
                             <table cellpadding="0" cellspacing="0" border="0" width="100%" class="order-goods-list">
                                 <tr>
                                     <th class="goods-title" colspan="3">
@@ -76,10 +156,10 @@
                                             <div class="shop">
                                                 <div class="shop-info">
 									<span class="shop-icon">
-										<img src="/frontend/images/shop-type/shop-icon1.png" />
+										<img src="/images/shop-type/shop-icon1.png" />
 									</span>
                                                     <span class="shop-name">店铺：</span>
-                                                    <a href='http://www.b2b2c.yunmall.68mall.com/shop/1.html' target="_blank" title="" class="shop-info-name">东和MRO平台</a>
+                                                    <a href='{{ route('pc_shop_home', ['shop_id'=>$shop_id]) }}' target="_blank" title="" class="shop-info-name">{{ $shop['shop_info']['shop_name'] }}</a>
                                                     <span class="shop-customer">
 										<!-- 客服 -->
 
@@ -89,8 +169,8 @@
 
 
                                                         <!-- s等于1时带文字，等于2时不带文字 -->
-<a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=zlww26837&site=cntaobao&s=2&groupid=0&charset=utf-8">
-	<img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=zlww26837&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
+<a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=xxxxxxxx&site=cntaobao&s=2&groupid=0&charset=utf-8">
+	<img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=xxxxxxxx&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
 	<span></span>
 </a>
 
@@ -106,18 +186,19 @@
                                 </tr>
                                 <tr>
                                     <td colspan="6" class="goods-content">
+                                        @foreach($shop['goods_list'] as $goods)
                                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                             <!-- 如果该商品有赠品，那么当前商品的tr的class="have-gift" _star-->
                                             <tr class="goods_178 ">
                                                 <td class="goods-img">
-                                                    <a href="http://www.b2b2c.yunmall.68mall.com/871.html" title="" target="_blank" class="img">
-                                                        <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2018/08/01/15331135083409.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" width="50" height="50" />
+                                                    <a href="{{ route('pc_show_goods',['goods_id'=>$goods['goods_id']]) }}" title="" target="_blank" class="img">
+                                                        <img src="{{ get_image_url($goods['goods_image'], 'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" width="50" height="50" />
                                                     </a>
 
                                                 </td>
                                                 <td class="goods-master">
                                                     <p class="item-title">
-                                                        <a href="http://www.b2b2c.yunmall.68mall.com/871.html" target="_blank" title="古古怪怪">
+                                                        <a href="{{ route('pc_show_goods',['goods_id'=>$goods['goods_id']]) }}" target="_blank" title="{{ $goods['goods_name'] }}">
 
 
                                                             <!-- 活动 -->
@@ -126,7 +207,7 @@
 
                                                             <em class="activity-tag activity-tag3">限时折扣</em>
 
-                                                            古古怪怪
+                                                            {{ $goods['goods_name'] }}
                                                         </a>
                                                     </p>
                                                     <div class="item-other-info">
@@ -139,19 +220,24 @@
                                                     </div>
                                                 </td>
                                                 <td class="goods-attr">
-                                                    <p class="sku-line">颜色：均色</p>
+                                                    @if(!empty($goods['spec_names']))
+                                                        @foreach($goods['spec_names'] as $spec_name)
+                                                            <p class="sku-line">{{ $spec_name }}</p>
+                                                        @endforeach
+                                                    @endif
 
                                                 </td>
-                                                <td class="goods-price"> ￥1.80 </td>
-                                                <td class="goods-amount">1</td>
+                                                <td class="goods-price"> {{ $goods['goods_price_format'] }} </td>
+                                                <td class="goods-amount">{{ $goods['goods_number'] }}</td>
                                                 <td class="goods-sum">
 
-                                                    <p class="sum second-color">￥1.8</p>
+                                                    <p class="sum second-color">{{ $goods['goods_amount_format'] }}</p>
 
                                                 </td>
                                             </tr>
                                             <!-- 如果该商品有赠品，那么当前商品的tr的class="have-gift" _end-->
                                         </table>
+                                        @endforeach
 
                                     </td>
 
@@ -160,60 +246,25 @@
                                 <tr>
                                     <td colspan="6" class="goods-postage"><div class="postage">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                            @foreach($shop['shipping_list'] as $shipping_info)
                                             <div class="postage-out-box">
-                                                <div class="postage-box postage-box-1 active" id="postage-box-0-1" data-shop-id="1" data-id="0" data-name="普通快递 " data-price="6" data-price-format="￥6">
-                                                    <label>普通快递 </label>
+                                                <div class="postage-box postage-box-{{ $shop_id }} @if($shipping_info['selected'] == 'selected'){{ 'active' }}@endif" id="postage-box-{{ $shipping_info['id'] }}-1" data-shop-id="{{ $shop_id }}" data-id="{{ $shipping_info['id'] }}" data-name="{{ $shipping_info['name'] }} " data-price="{{ $shipping_info['price'] }}" data-price-format="{{ $shipping_info['price_format'] }}">
+                                                    <label>{{ $shipping_info['name'] }} </label>
                                                 </div>
                                             </div>
+                                            @endforeach
 
-
-                                            <!-- -->
-
-
-
-
-                                            <div class="postage-out-box">
-                                                <div class="postage-box postage-box-1 " id="postage-box-1-1" data-shop-id="1" data-id="1" data-name="上门自提 " data-price="0" data-price-format="￥0">
-                                                    <label>上门自提 </label>
-                                                </div>
-                                            </div>
-
-
-                                            <!---->
-
-
-
-
-
-
-
-
-                                            <!---->
                                         </div>
                                         <div class="pickup-address" >
                                             <label>
                                                 自提点：
                                                 <span id='pickup_name'></span>
-                                                <a class="pickup-edit" data-shop-id=1>修改</a>
+                                                <a class="pickup-edit" data-shop-id={{ $shop_id }}>修改</a>
                                             </label>
                                         </div>
 
 
-                                        <div class="postage-price postage-info-1" style="">
+                                        <div class="postage-price postage-info-{{ $shop_id }}" style="">
 
                                             ￥6
 
@@ -226,11 +277,11 @@
                                         <div class="memo">
                                             <span>买家留言：</span>
                                             <div class="buyer-msg">
-                                                <textarea class="text postscript" data-shop-id="1" placeholder="选填，可填写您与卖家达成一致的要求"></textarea>
+                                                <textarea class="text postscript" data-shop-id="{{ $shop_id }}" placeholder="选填，可填写您与卖家达成一致的要求"></textarea>
                                             </div>
                                         </div>
                                     </td>
-                                    <td colspan="3" class="goods-bill" id="shop_count_1"><div class="bill">
+                                    <td colspan="3" class="goods-bill" id="shop_count_{{ $shop_id }}"><div class="bill">
                                             <p class="order-pay-vice">
 
 
@@ -238,7 +289,7 @@
                                             </p>
 
                                             <div class="order-pay second-color">
-                                                店铺合计（含运费）：<strong class="second-color SZY-SHOP-ORDER-AMOUNT-1" data-shop-id="1">￥7.8</strong>
+                                                店铺合计（含运费）：<strong class="second-color SZY-SHOP-ORDER-AMOUNT-{{ $shop_id }}" data-shop-id="{{ $shop_id }}">￥{{ $shop['order']['order_amount'] }}</strong>
                                             </div>
 
 
@@ -249,120 +300,40 @@
                             <!-- 新加 start  选择自提点 -->
                             <div class="bomb-box pickup-bomb-box logistics-choosen-1" style="display: none">
                                 <div class="box-title">选择自提点</div>
-                                <div class="box-oprate" data-name=普通快递  data-price=6 data-shop-id=1 data-id=0></div>
+                                <div class="box-oprate" data-name=普通快递  data-price={{ $shop['order']['shipping_fee'] }} data-shop-id={{ $shop_id }} data-id=0></div>
                                 <div class="content-info">
                                     <form class="">
                                         <div class="logistics-search-box">
                                             <input class="logistics-search-input" placeholder="请输入自提点名称或自提点所在地" type="text" />
-                                            <a class="btn btn-primary" data-shop_id=1>搜索</a>
+                                            <a class="btn btn-primary" data-shop_id={{ $shop_id }}>搜索</a>
                                         </div>
-                                        <ul class="logistics-store-list logistics-store-list-1">
+                                        <ul class="logistics-store-list logistics-store-list-{{ $shop_id }}">
 
-                                            <li class="logistics-item" >
-                                                <label class="logistics-inner" >
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="燕大门店" data-pickup_id="1">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">燕大门店</p>
-                                                        <p class="logistics-address" title="白塔岭街道燕东路燕山大学">
-                                                            <i></i>白塔岭街道燕东路燕山大学
-                                                        </p>
-                                                        <p class="logistics-tel">
-                                                            <i></i>0335-7106712
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <!--   -->
-                                            <li class="logistics-item" >
-                                                <label class="logistics-inner" >
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="太阳城门店" data-pickup_id="2">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">太阳城门店</p>
-                                                        <p class="logistics-address" title="建设大街街道新华街18号江东路步行街">
-                                                            <i></i>建设大街街道新华街18号江东路步行街
-                                                        </p>
-                                                        <p class="logistics-tel">
-                                                            <i></i>0335-7106716
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <!--   -->
-                                            <li class="logistics-item" >
-                                                <label class="logistics-inner" >
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="北戴河刘庄" data-pickup_id="3">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">北戴河刘庄</p>
-                                                        <p class="logistics-address" title="东山街道联峰路育花2区">
-                                                            <i></i>东山街道联峰路育花2区
-                                                        </p>
-                                                        <p class="logistics-tel">
-                                                            <i></i>0335-8535668
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <!--   -->
-                                            <li class="logistics-item" >
-                                                <label class="logistics-inner" >
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="123" data-pickup_id="7">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">123</p>
-                                                        <p class="logistics-address" title="禅城区祖庙街道佛山禅城区祖庙街道气象服务站">
-                                                            <i></i>禅城区祖庙街道佛山禅城区祖庙街道气象服务站
-                                                        </p>
-                                                        <p class="logistics-tel">
-                                                            <i></i>13035887777
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <!--   -->
-                                            <li class="logistics-item" >
-                                                <label class="logistics-inner" style="height: 50px;">
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="广场北路122号" data-pickup_id="8">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">广场北路122号</p>
-                                                        <p class="logistics-address" title="甘肃兰州城关区广武门街道广场北路122号陆都嘉邸">
-                                                            <i></i>甘肃兰州城关区广武门街道广场北路122号陆都嘉邸
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <!--   -->
-                                            <li class="logistics-item" >
-                                                <label class="logistics-inner" >
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="鲜农乐一号门店" data-pickup_id="9">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">鲜农乐一号门店</p>
-                                                        <p class="logistics-address" title="金沙街道中海金沙馨园">
-                                                            <i></i>金沙街道中海金沙馨园
-                                                        </p>
-                                                        <p class="logistics-tel">
-                                                            <i></i>13111111111
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <!--   -->
-                                            <li class="logistics-item" style="border:none;">
-                                                <label class="logistics-inner" style="height: 50px;">
-                                                    <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="1" data-id="1" data-pickup_name="西安" data-pickup_id="10">
-                                                    <div class="logistics-info">
-                                                        <p class="logistics-name">西安</p>
-                                                        <p class="logistics-address" title="陕西西安新城区自强路街道联志路52号中国石油西安市销售分公司家属院">
-                                                            <i></i>陕西西安新城区自强路街道联志路52号中国石油西安市销售分公司家属院
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </li>
+                                            @if(!empty($shop['shop_info']['pickup_list']))
+                                                @foreach($shop['shop_info']['pickup_list'] as $pickup)
+                                                    <li class="logistics-item" @if($pickup == end($shop['shop_info']['pickup_list']))style="border: none;"@endif>
+                                                        <label class="logistics-inner" >
+                                                            <input class="logistics-radio" type="radio"   name="logistics" data-shop_id="{{ $pickup['shop_id'] }}" data-id="1" data-pickup_name="{{ $pickup['pickup_name'] }}" data-pickup_id="{{ $pickup['pickup_id'] }}">
+                                                            <div class="logistics-info">
+                                                                <p class="logistics-name">{{ $pickup['pickup_name'] }}</p>
+                                                                <p class="logistics-address" title="{{ $pickup['pickup_address'] }}">
+                                                                    <i></i>{{ $pickup['pickup_address'] }}
+                                                                </p>
+                                                                <p class="logistics-tel">
+                                                                    <i></i>{{ $pickup['pickup_tel'] }}
+                                                                </p>
+                                                            </div>
+                                                        </label>
+                                                    </li>
+                                                @endforeach
+                                            @endif
 
                                         </ul>
                                     </form>
                                 </div>
                             </div>
                             <!-- 新加 end  选择自提点 -->
-
+                            @endforeach
 
                             <!-- 根据店铺对商品进行拆单 每个table是一个店铺的商品 _end-->
 
@@ -386,6 +357,29 @@
                 </div> -->
 
                 <!-- 发票信息 -->
+                @if($invoice_show)
+                    <div class="invoice-info border-line">
+                        <div class="main-content">
+                            <h2 class="title">发票信息</h2>
+                            <div class="invoice-content">
+                                <!--
+                                <label>
+                                    <input type="checkbox" value="" id="invoice" checked="checked"/>
+                                    <span>索要发票</span>
+                                </label>
+                                 -->
+                                <!-- 发票详细信息 _star -->
+                                <div class="inv-info">
+
+                                    <span>不开发票</span>
+
+                                    <a class="modify color" href="javascript:void(0);">修改</a>
+                                </div>
+                                <!-- 发票详细信息 _end -->
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- 支付方式 -->
 
@@ -399,14 +393,42 @@
                             <!-- 积分支付 end -->
 
                             <!-- 余额支付 start -->
+                            <div id="pay_balance" class="other-pay">
 
+
+                                <div class="hd">
+                                    <label>
+                                        <input type="checkbox" id="balance_enable" class="other-pay-choose">
+                                        <img src="/assets/d2eace91/images/payment/balance.jpg" alt="" class="pay-img">
+                                        <span class="discharge">
+			（当前可用账户余额：
+			<strong class="second-color SZY-USER-BALANCE">{{ $cart_info['user_info']['balance_format'] }}</strong>
+			）
+		</span>
+                                    </label>
+                                </div>
+
+                                <div class="bd SZY-BALANCE-INFO" style="display: none;">
+                                    <span class="colon">：</span>
+                                    <span class="txtBox">
+		<input type="text" id="balance" class="tc-text SZY-ORDER-BALANCE" value="">
+		元
+	</span>
+                                    <span class="discharge second-color">
+		-
+		<strong class="SZY-ORDER-BALANCE"></strong>
+	</span>
+
+                                </div>
+                            </div>
+                            <!-- 余额支付 end -->
 
                             <!-- 余额支付后面显示的应付款信息 -->
                             <p class="surplus-pay" id="balance_money_pay" >
                                 剩余应付金额
                                 <strong class="second-color SZY-ORDER-MONEY-PAY">
 
-                                    ￥7.8
+                                    {{ $cart_info['user_info']['pay_point_amount_format'] }}
 
                                 </strong>
                                 请选择以下支付方式支付
@@ -416,54 +438,26 @@
                             <div class="pay-all" id="pay_bank">
 
 
-                                <ul id="paylist" class="payment-tab" >
+                                <ul id="paylist" class="payment-tab">
 
+                                    @foreach($pay_list as $pay_info)
                                     <!-- 货到付款特殊处理 -->
-                                    <li class="clearfix" >
+                                    <li class="clearfix" @if($pay_info['disabled'] == 1)style="display: none;"@endif>
                                         <label>
-                                            <input type="radio" id="pac_code_-1" name="pay_code" class="pay_code" value="cod" >
-                                            <img src="/assets/d2eace91/images/payment/cod.jpg" alt="" class="pay-img" />
+                                            <input type="radio" id="pac_code_{{ $pay_info['id'] }}" name="pay_code" class="pay_code" value="{{ $pay_info['code'] }}" @if($pay_info['checked'] == 'checked'){{ 'checked' }}@endif>
+                                            <img src="/assets/d2eace91/images/payment/{{ $pay_info['code'] }}.jpg" alt="" class="pay-img">
                                         </label>
                                         <div class="pay-tips" style="display: none;">
                                             <div class="pay-tips-name">
                                                 <i></i>
-
+                                                {!! $pay_info['tips'] !!}
                                             </div>
                                         </div>
                                     </li>
-
-                                    <!-- 货到付款特殊处理 -->
-                                    <li class="clearfix" >
-                                        <label>
-                                            <input type="radio" id="pac_code_2" name="pay_code" class="pay_code" value="union" checked>
-                                            <img src="/assets/d2eace91/images/payment/union.jpg" alt="" class="pay-img" />
-                                        </label>
-                                        <div class="pay-tips" style="display: none;">
-                                            <div class="pay-tips-name">
-                                                <i></i>
-
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <!-- 货到付款特殊处理 -->
-                                    <li class="clearfix" >
-                                        <label>
-                                            <input type="radio" id="pac_code_3" name="pay_code" class="pay_code" value="weixin" >
-                                            <img src="/assets/d2eace91/images/payment/weixin.jpg" alt="" class="pay-img" />
-                                        </label>
-                                        <div class="pay-tips" style="display: none;">
-                                            <div class="pay-tips-name">
-                                                <i></i>
-
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <!-- 货到付款特殊处理 -->
+                                    @endforeach
 
                                 </ul>
-                                <div id="other_pay" >
+                                <div id="other_pay">
                                     <h2 class="title">其它支付</h2>
                                     <div class="other-pay">
                                         <div class="hd">
@@ -474,7 +468,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                             </div>
                             <!-- 银行支付方式调用 end -->
@@ -489,7 +482,7 @@
                             <div class="total-count-pay-info">
 			<span class="first">
 				订单总额：
-				<span class="SZY-ORDER-AMOUNT">￥7.8</span>
+				<span class="SZY-ORDER-AMOUNT">{{ $cart_info['order']['order_amount_format'] }}</span>
 			</span>
                             </div>
                             <div class="total-count-pay-info">
@@ -497,46 +490,46 @@
 
 				商品总额：
 
-				<span class="SZY-GOODS-AMOUNT">￥1.8</span>
+				<span class="SZY-GOODS-AMOUNT">{{ $cart_info['order']['goods_amount_format'] }}</span>
 			</span>
                                 <em>+</em>
                                 <span>
 				运费：
-				<span class="SZY-SHIPPING-FEE-AMOUNT">￥6</span>
+				<span class="SZY-SHIPPING-FEE-AMOUNT">{{ $cart_info['order']['shipping_fee_format'] }}</span>
 			</span>
                                 <span class="SZY-ORDER-CASH-MORE-AMOUNT" style='display: none;'>
 				<em>+</em>
 				<span>
 					货到付款加价：
-					<span>￥0</span>
+					<span>{{ $cart_info['order']['cash_more_format'] }}</span>
 				</span>
 			</span>
                                 <em>-</em>
                                 <span>
 				红包：
-				<span class="SZY-ORDER-BONUS-AMOUNT">￥0</span>
+				<span class="SZY-ORDER-BONUS-AMOUNT">{{ $cart_info['order']['total_bonus_amount_format'] }}</span>
 			</span>
                                 <em>-</em>
                                 <span>
 				优惠：
-				<span class="">￥0</span>
+				<span class="">{{ $cart_info['order']['discount_fee_format'] }}</span>
 			</span>
                                 <span class="SZY-ORDER-STORE-CARD" style='display: none;'>
 				<em>-</em>
 				<span>
 					店铺购物卡：
-					<span class="SZY-ORDER-STORE-CARD-AMOUNT">￥0</span>
+					<span class="SZY-ORDER-STORE-CARD-AMOUNT">{{ $cart_info['order']['shop_store_card_amount_format'] }}</span>
 				</span>
 			</span>
                                 <em>-</em>
                                 <span>
 				余额：
-				<span class="SZY-ORDER-BALANCE">￥0</span>
+				<span class="SZY-ORDER-BALANCE">{{ $cart_info['order']['balance_format'] }}</span>
 			</span>
                                 <em>=</em>
                                 <span class="end second-color">
 				应付款：
-				<span class="SZY-ORDER-MONEY-PAY">￥7.8</span>
+				<span class="SZY-ORDER-MONEY-PAY">{{ $cart_info['order']['money_pay_format'] }}</span>
 			</span>
                             </div>
                         </div>
@@ -588,17 +581,16 @@
                             </li>
 
 
-                            <li class="tab-nav-item disabled " data-invoice-type="1" data-invoice-name="增值税普通发票">
+                            <li class="tab-nav-item  " data-invoice-type="1" data-invoice-name="增值税普通发票">
                                 增值税普通发票
                                 <b></b>
                             </li>
 
 
-                            <li class="tab-nav-item disabled " data-invoice-type="2" data-invoice-name="增值税专用发票">
+                            <li class="tab-nav-item  " data-invoice-type="2" data-invoice-name="增值税专用发票">
                                 增值税专用发票
                                 <b></b>
                             </li>
-
 
                         </ul>
                     </div>
@@ -615,10 +607,168 @@
                     </form>
                     <!-- 增值税发票 _end -->
 
+
+
+
+                    <form id="invoice_type_1" action="" method="post" class="form-horizontal" style="display: none;">
+                        <input type="hidden" name="inv_type" value="1">
+                        <input type="hidden" name="inv_name" value="增值税普通发票">
+                        <div class="form-group form-group-spe">
+                            <label class="input-left">
+                                <span>发票抬头：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <div class="invoice-list invoice-tit-list" id="invoice-tit-list">
+                                    <!-- 选中的发票抬头 给下面的 div 追加 class 值为 'invoice-item-selected' _star-->
+                                    <div class="invoice-item invoice-title invoice-item-selected">
+						<span class="fore2">
+							<input type="radio" id="inv_title_0" name="inv_title" value="个人" readonly onFocus="javascript:$(this).blur();" style="display: none;" checked="checked">
+							个人
+							<b></b>
+						</span>
+                                    </div>
+                                    <!-- 选中的发票抬头 给下面的 div 追加 class 值为 'invoice-item-selected' _end-->
+                                    <div id="add-invoice" class="invoice-item invoice-title ">
+						<span class="fore2">
+							<input type="radio" id="inv_title_1" name="inv_title" value="单位" readonly onFocus="javascript:$(this).blur();" style="display: none;" >
+							单位
+							<b></b>
+						</span>
+                                    </div>
+                                    <div id="save-invoice" class="hide">
+                                        <div class="add-invoice-tit">
+                                            <input type="text" name="inv_company" value="" class="add-invoice" placeholder="单位名称" />
+                                        </div>
+                                        <div class="add-invoice-tit" style="margin-top: 10px;">
+                                            <input type="text" id="inv_taxpayers" name="inv_taxpayers" value="" class="add-invoice" placeholder="纳税人识别号" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-spe">
+                            <label class="input-left">
+                                <span>发票内容：</span>
+                            </label>
+                            <div class="form-control-box invoice-content">
+                                <div class="invoice-list">
+                                    <ul>
+                                        <!-- invoice-item-selected -->
+                                        <li class="invoice-item invoice-type invoice-item-selected" data="明细" title="明细">
+                                            <label for="inv_content_0">
+                                                <input type="radio" id="inv_content_0" name="inv_content" value="0" class="add-invoice" style="display: none;" checked="checked">
+                                                明细
+                                            </label>
+                                            <b></b>
+                                        </li>
+                                        <li class="invoice-item invoice-type " data="办公用品" title="办公用品">
+                                            <label for="inv_content_1">
+                                                <input type="radio" id="inv_content_1" name="inv_content" value="1" class="add-invoice" style="display: none;" >
+                                                办公用品
+                                            </label>
+                                            <b></b>
+                                        </li>
+                                        <li class="invoice-item invoice-type " data="电脑配件" title="电脑配件">
+                                            <label for="inv_content_2">
+                                                <input type="radio" id="inv_content_2" name="inv_content" value="2" class="add-invoice" style="display: none;" >
+                                                电脑配件
+                                            </label>
+                                            <b></b>
+                                        </li>
+                                        <li class="invoice-item invoice-type " data="耗材" title="耗材">
+                                            <label for="inv_content_3">
+                                                <input type="radio" id="inv_content_3" name="inv_content" value="3" class="add-invoice" style="display: none;" >
+                                                耗材
+                                            </label>
+                                            <b></b>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="act">
+                            <input type="button" value="保存发票信息" class="inv_submit">
+                            <input type="button" value="取消" class="m-l-10 inv_cancle">
+                        </div>
+                    </form>
+                    <!-- 普通税发票 _end -->
                     <!-- 增值税发票 _end -->
 
-                    <!-- 增值税发票 _end -->
 
+
+
+
+                    <!-- 增值税发票 _star -->
+                    <form action="" id="invoice_type_2" method="post" class="form-horizontal" style="display: none;">
+                        <input type="hidden" name="inv_type" value="2">
+                        <input type="hidden" name="inv_name" value="增值税专用发票">
+                        <input type="hidden" name="inv_content" value="明细">
+                        <div class="form-group form-group-spe form-control-box">
+                            <label class="input-left">
+                                <span class="spark">*</span>
+                                <span>单位名称：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <input type="text" name="inv_company" value="" placeholder="请输入单位名称" class="" data-rule-required="true" data-msg-required="请输入单位名称">
+                            </div>
+                            <span class="form-control-error 2"></span>
+                        </div>
+                        <div class="form-group form-group-spe form-control-box">
+                            <label class="input-left">
+                                <span class="spark">*</span>
+                                <span>纳税人识别号：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <input type="text" name="inv_taxpayers" value="" placeholder="请输入纳税人识别号" class="" data-rule-required="true" data-msg-required="请输入纳税人识别号">
+                            </div>
+                            <span class="form-control-error 2"></span>
+                        </div>
+                        <div class="form-group form-group-spe form-control-box">
+                            <label class="input-left">
+                                <span class="spark">*</span>
+                                <span>注册地址：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <input type="text" name="inv_address" value="" placeholder="请输入注册地址" class="" data-rule-required="true" data-msg-required="请输入注册地址">
+                            </div>
+                            <span class="form-control-error 2"></span>
+                        </div>
+                        <div class="form-group form-group-spe form-control-box">
+                            <label class="input-left">
+                                <span class="spark">*</span>
+                                <span>注册电话：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <input type="text" name="inv_tel" value="" placeholder="请输入注册电话" class="" data-rule-required="true" data-msg-required="请输入注册电话">
+                            </div>
+                            <span class="form-control-error 2"></span>
+                        </div>
+                        <div class="form-group form-group-spe form-control-box">
+                            <label class="input-left">
+                                <span class="spark">*</span>
+                                <span>开户银行：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <input type="text" name="inv_account" value="" placeholder="请输入开户银行" class="" data-rule-required="true" data-msg-required="请输入开户银行">
+                            </div>
+                            <span class="form-control-error 2"></span>
+                        </div>
+                        <div class="form-group form-group-spe form-control-box">
+                            <label class="input-left">
+                                <span class="spark">*</span>
+                                <span>银行账户：</span>
+                            </label>
+                            <div class="form-control-box">
+                                <input type="text" name="inv_bank" value="" placeholder="请输入银行账户" class="" data-rule-required="true" data-msg-required="请输入银行账户">
+                            </div>
+                            <span class="form-control-error 2"></span>
+                        </div>
+                        <div class="act">
+                            <input type="button" value="保存发票信息" class="inv_submit">
+                            <input type="button" value="取消" class="m-l-10 inv_cancle">
+                        </div>
+                    </form>
+                    <!-- 增值税发票 _end -->
                 </div></div>
         </div>
     </div>
@@ -675,8 +825,8 @@
 
 @section('outside_body_script')
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
-    <script src="/frontend/js/checkout.js?v=20180919"></script>
-    <script src="/frontend/js/common.js?v=20180919"></script>
+    <script src="/js/checkout.js?v=20180919"></script>
+    <script src="/js/common.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/szy.cart.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/jquery.region.js?v=20180919"></script>
     <!-- 表单验证 -->

@@ -18,16 +18,16 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180428"/>
 
     {{--header_css--}}
     @section('header_css')@show
 
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
 
 
@@ -36,7 +36,8 @@
     @section('header_js')@show
 
 
-
+    {{--第三方登录验证代码--}}
+    {!! sysconf('website_login_code') !!}
 
 </head>
 <body>

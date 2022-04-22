@@ -32,9 +32,10 @@ class SmsService
     /**
      * @param $mobile
      * @param string $content
+     * @param string $captcha
      * @return bool
      */
-    public function send($mobile, $content = '')
+    public function send($mobile, $content = '', $captcha = '')
     {
         $config = [
             // HTTP 请求的超时时间（秒）
@@ -80,13 +81,19 @@ class SmsService
         $gateway = 'aliyun';
 
         try {
-//            $res = $easySms->send($mobile, [
-//                'content'  => $content, //'您的验证码为：6379，该验证码 5 分钟内有效，请勿泄漏于他人。',
-//                'template' => 'SMS_141615486',
-//                'data' => [
-//                    'code' => 6379
-//                ],
-//            ]);
+            /*todo 暂时注释 上线后打开注释*/
+            /*$res = $easySms->send($mobile, [
+                'content'  => $content, //'您的验证码为：6379，该验证码 5 分钟内有效，请勿泄漏于他人。',
+                'template' => 'SMS_141615486',
+                'data' => [
+                    'code' => $captcha
+                ],
+            ]);
+            if ($res[$gateway]['status'] == 'failure') {
+                // 发送失败 返回错误信息
+
+            }*/
+
 
             /*
              * aliyun" => array:3 [▼
@@ -101,10 +108,7 @@ class SmsService
               ]
              */
 
-//            if ($res[$gateway]['status'] == 'failure') {
-//                // 发送失败 返回错误信息
-//
-//            }
+
             return true;
         } catch (Exception $e) {
 //            dd($e->getResults());

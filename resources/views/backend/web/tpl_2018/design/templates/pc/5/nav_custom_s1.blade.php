@@ -1,7 +1,5 @@
 <!-- 默认缓载图片 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- 内容开始 -->
     <div class="nav-custom">
@@ -30,7 +28,5 @@
     </div>
     <!-- 内容结束 -->
 
-@if($is_design)
 </div>
-@endif
 

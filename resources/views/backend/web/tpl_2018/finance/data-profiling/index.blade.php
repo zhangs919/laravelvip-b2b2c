@@ -4,8 +4,8 @@
 {{--css style page元素同级上面--}}
 @section('style')
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.2">
-    {{--<script src="/backend/js/chart.js?v=1.2"></script>--}}
-    {{--<script src="/backend/js/chart-data.js?v=1.2"></script>--}}
+    {{--<script src=/js/chart.js?v=1.2"></script>--}}
+    {{--<script src=/js/chart-data.js?v=1.2"></script>--}}
 @stop
 
 {{--alet message page元素同级上面--}}

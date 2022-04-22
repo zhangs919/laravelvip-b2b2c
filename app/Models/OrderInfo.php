@@ -55,7 +55,12 @@ class OrderInfo extends BaseModel
         'send_mark', 'shipping_mark', 'buyer_type', 'evaluate_status', 'evaluate_time', 'end_time', 'is_distrib',
         'distrib_status', 'is_show', 'is_delete', 'order_data', 'mall_remark', 'site_remark', 'shop_remark', 'store_remark',
         'close_reason', 'cash_user_id', 'last_time', 'order_cancel', 'refuse_reason', 'sub_order_id', 'buy_type', 'reachbuy_code',
-        'growth_value', 'virtual_code', 'pickup_name', 'shop_name', 'shop_type', 'customer_tool', 'customer_account', 'complaint_id', 'complaint_status',
+        'growth_value', 'virtual_code',
+        'revision_user_id',
+
+//        'terminal_no',
+
+//        'pickup_name', 'shop_name', 'shop_type', 'customer_tool', 'customer_account', 'complaint_id', 'complaint_status',
 
         // 以下字段app接口上返回 不用存储到订单信息表中
 //        'sn', 'order_amount_format', 'order_status_format', 'order_from_format', 'comment_type',

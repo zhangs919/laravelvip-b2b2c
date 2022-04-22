@@ -36,7 +36,7 @@
                     <label for="text4" class="col-sm-2 control-label"><span class="ng-binding"><div id="brand_name">推荐品牌 </div></span> </label>
                     <div class="col-sm-8">
                         <!--<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/" id="brand_logo" height="30px">-->
-                        <img src="/backend/images/default/goods.gif" id="brand_logo" height="30px" />
+                        <img src="/images/default/goods.gif" id="brand_logo" height="30px" />
                     </div>
                     <input type="hidden" id="brand_id" name="NavBrandModel[brand_id]" value="{{ $info->brand_id ?? ''}}">
                 </div>

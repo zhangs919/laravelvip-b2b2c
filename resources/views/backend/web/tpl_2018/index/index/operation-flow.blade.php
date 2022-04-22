@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('style')
-    <link rel="stylesheet" href="/backend/css/welcome.css">
+    <link rel="stylesheet" href="/css/welcome.css">
 @stop
 
 @section('content')
@@ -67,28 +67,28 @@
     <div class="item-type-model"@if ($type != 'user') style="display: none"@endif>
         <h3 class="guide-title guide-line">会员来源</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/member-source.jpg" alt="会员来源" width="900">
+            <img class="guide-content-image" src="/images/guide/member-source.jpg" alt="会员来源" width="900">
         </div>
     </div>
     <!--店铺来源-->
     <div class="item-type-model"@if ($type != 'shop') style="display: none"@endif>
         <h3 class="guide-title guide-line">店铺来源</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/shop-source.jpg" alt="店铺来源" width="900">
+            <img class="guide-content-image" src="/images/guide/shop-source.jpg" alt="店铺来源" width="900">
         </div>
     </div>
     <!--商品数据来源-->
     <div class="item-type-model"@if ($type != 'goods') style="display: none"@endif>
         <h3 class="guide-title guide-line">商品数据来源</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/goods-source.jpg" alt="商品数据来源" width="900">
+            <img class="guide-content-image" src="/images/guide/goods-source.jpg" alt="商品数据来源" width="900">
         </div>
     </div>
     <!--交易管理-->
     <div class="item-type-model"@if ($type != 'trade') style="display: none"@endif>
         <h3 class="guide-title guide-line">交易管理</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/trade.jpg" alt="交易管理" width="900">
+            <img class="guide-content-image" src="/images/guide/trade.jpg" alt="交易管理" width="900">
         </div>
     </div>
     <!--佣金计算及账单结算-->
@@ -125,35 +125,35 @@
         </div>
         <h5 class="guide-title text-l">账单结算</h5>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/bill.jpg" alt="账单结算" width="900">
+            <img class="guide-content-image" src="/images/guide/bill.jpg" alt="账单结算" width="900">
         </div>
     </div>
     <!--提现流程-->
     <div class="item-type-model"@if ($type != 'deposit') style="display: none"@endif>
         <h3 class="guide-title guide-line">提现流程</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/withdraw-cash.jpg" alt="提现流程" width="900">
+            <img class="guide-content-image" src="/images/guide/withdraw-cash.jpg" alt="提现流程" width="900">
         </div>
     </div>
     <!--分销-->
     <div class="item-type-model"@if ($type != 'distrib') style="display: none"@endif>
         <h3 class="guide-title guide-line">分销流程</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/distribution.jpg" alt="分销流程" width="900">
+            <img class="guide-content-image" src="/images/guide/distribution.jpg" alt="分销流程" width="900">
         </div>
     </div>
     <!--店铺对接嗖嗖快送系统-->
     <div class="item-type-model"@if ($type != 'logistics') style="display: none"@endif>
         <h3 class="guide-title guide-line">店铺对接同城物流系统</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/sousou56.jpg" alt="店铺对接同城物流系统" width="900">
+            <img class="guide-content-image" src="/images/guide/sousou56.jpg" alt="店铺对接同城物流系统" width="900">
         </div>
     </div>
     <!--店铺对接收银系统-->
     <div class="item-type-model"@if ($type != 'cash') style="display: none"@endif>
         <h3 class="guide-title guide-line">店铺对接收银系统</h3>
         <div class="guide-content">
-            <img class="guide-content-image" src="/backend/images/guide/cashier.jpg" alt="店铺对接收银系统" width="900">
+            <img class="guide-content-image" src="/images/guide/cashier.jpg" alt="店铺对接收银系统" width="900">
         </div>
     </div>
     <!--新手向导-->
@@ -179,7 +179,7 @@
                         <p class="guide-item-desc m-t-10">接口配置是商城运营的首要工作，未设置将导致商城无法运营</p>
                         <!-- -->
                         <div class="guide-content">
-                            <img class="guide-content-image" src="/backend/images/guide/step1.png" alt="第一步：接口配置" width="450">
+                            <img class="guide-content-image" src="/images/guide/step1.png" alt="第一步：接口配置" width="450">
                             <dl class="step-text left" style="top: 30px; left: 0px;">
                                 <dt>1</dt>
                                 <dd>
@@ -229,7 +229,7 @@
                         <p class="guide-item-desc m-t-10">接口配置是商城运营的首要工作，商城基本配置信息，未设置将影响商城展示、商家入驻等</p>
                         <!-- -->
                         <div class="guide-content">
-                            <img class="guide-content-image" src="/backend/images/guide/step2.png" alt="第二步：基本信息配置" width="600">
+                            <img class="guide-content-image" src="/images/guide/step2.png" alt="第二步：基本信息配置" width="600">
                             <dl class="step-text left" style="top: 30px; left: 10px; width: 160px">
                                 <dt>1</dt>
                                 <dd>
@@ -254,7 +254,7 @@
                         <p class="guide-item-desc m-t-10">清理商城初始化店铺、商品、商品分类、会员等数据，只能清理一次数据，慎用。确保商城开始运营时，无垃圾数据存在</p>
                         <!-- -->
                         <div class="guide-content">
-                            <img class="guide-content-image" src="/backend/images/guide/step3.png" alt="第三步：清理数据" width="350">
+                            <img class="guide-content-image" src="/images/guide/step3.png" alt="第三步：清理数据" width="350">
                             <dl class="step-text left" style="top: 240px; left: 40px;">
                                 <dd class="p-l-0">
                                     商城运营打理之前，请把系统初始化的店铺、商品、商品分类等数据进行清空，只能清理一次数据，慎用。确保数据最新，
@@ -270,7 +270,7 @@
                         <p class="guide-item-desc m-t-10">基础数据，商城运营必备的设置数据</p>
                         <!-- -->
                         <div class="guide-content">
-                            <img class="guide-content-image m-b-30" src="/backend/images/guide/step4.png" alt="第四步：维护基础数据" width="620">
+                            <img class="guide-content-image m-b-30" src="/images/guide/step4.png" alt="第四步：维护基础数据" width="620">
                             <dl class="step-text left" style="top: 240px; left: 0px; width: 150px;">
                                 <dt>3</dt>
                                 <dd>
@@ -316,7 +316,7 @@
                         <p class="guide-item-desc m-t-10">装修是为了更好的推广商城，更好的吸纳消费者</p>
                         <!-- -->
                         <div class="guide-content">
-                            <img class="guide-content-image" src="/backend/images/guide/step5.png" alt="第五步：装修" width="390" style="margin-left: 190px;">
+                            <img class="guide-content-image" src="/images/guide/step5.png" alt="第五步：装修" width="390" style="margin-left: 190px;">
                             <dl class="step-text left" style="top: 50px; left: 0px;">
                                 <dt>5</dt>
                                 <dd>
@@ -362,7 +362,7 @@
                         <p class="guide-item-desc m-t-10">前五步设置完成后，即可开始招商入驻啦！商城包含“自营”和“入驻”两种经营方式</p>
                         <!-- -->
                         <div class="guide-content">
-                            <img class="guide-content-image" src="/backend/images/guide/step6.jpg" alt="第六步：招商入驻" width="900">
+                            <img class="guide-content-image" src="/images/guide/step6.jpg" alt="第六步：招商入驻" width="900">
                         </div>
 
                         <!-- -->
@@ -389,7 +389,7 @@
                         <span class="c-red">接口配置是商城运营的首要工作，未设置将导致商城无法运营</span>
                     </p>
                     <div class="guide-content">
-                        <img class="guide-content-image" src="/backend/images/guide/step1.png" alt="第一步：接口配置" width="505">
+                        <img class="guide-content-image" src="/images/guide/step1.png" alt="第一步：接口配置" width="505">
                         <dl class="step-text left" style="top: 40px; left: 50px;">
                             <dt>1</dt>
                             <dd>
@@ -454,7 +454,7 @@
                         <span class="c-red">商城基本配置信息，未设置将影响商城展示、商家入驻等</span>
                     </p>
                     <div class="guide-content">
-                        <img class="guide-content-image" src="/backend/images/guide/step2.png" alt="第二步：基本信息配置" width="705">
+                        <img class="guide-content-image" src="/images/guide/step2.png" alt="第二步：基本信息配置" width="705">
                         <dl class="step-text left" style="top: 40px; left: 20px; width: 160px">
                             <dt>1</dt>
                             <dd>
@@ -493,7 +493,7 @@
                         <span class="c-red">清理商城初始化店铺、商品、商品分类、会员等数据，确保商城开始运营时，无垃圾数据存在</span>
                     </p>
                     <div class="guide-content">
-                        <img class="guide-content-image" src="/backend/images/guide/step3.png" alt="第三步：清理数据" width="380">
+                        <img class="guide-content-image" src="/images/guide/step3.png" alt="第三步：清理数据" width="380">
                         <dl class="step-text left" style="top: 280px; left: 95px;">
                             <dd class="p-l-0">
                                 商城运营打理之前，请把系统初始化的店铺、商品、商品分类等数据进行清空，确保数据最新，
@@ -523,7 +523,7 @@
                         <span class="c-red">基础数据，商城运营必备的设置数据</span>
                     </p>
                     <div class="guide-content">
-                        <img class="guide-content-image m-b-30" src="/backend/images/guide/step4.png" alt="第四步：维护基础数据" width="760">
+                        <img class="guide-content-image m-b-30" src="/images/guide/step4.png" alt="第四步：维护基础数据" width="760">
                         <dl class="step-text left" style="top: 270px; left: 30px; width: 120px;">
                             <dt>3</dt>
                             <dd>
@@ -582,7 +582,7 @@
                         <span class="c-red">装修是为了更好的推广商城，更好的吸纳消费者。</span>
                     </p>
                     <div class="guide-content">
-                        <img class="guide-content-image" src="/backend/images/guide/step5.png" alt="第五步：装修" width="452">
+                        <img class="guide-content-image" src="/images/guide/step5.png" alt="第五步：装修" width="452">
                         <dl class="step-text left" style="top: 60px; left: 120px;">
                             <dt>5</dt>
                             <dd>
@@ -641,7 +641,7 @@
                         <span class="c-red">前五步设置完成后，即可开始招商入驻啦！商城包含"自营"和"入驻"两种经营方式。</span>
                     </p>
                     <div class="guide-content">
-                        <img class="guide-content-image" src="/backend/images/guide/step6.jpg" alt="第六步：招商入驻" width="900">
+                        <img class="guide-content-image" src="/images/guide/step6.jpg" alt="第六步：招商入驻" width="900">
                     </div>
 
                 </div>

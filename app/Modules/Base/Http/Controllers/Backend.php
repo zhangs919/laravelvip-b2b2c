@@ -4,6 +4,7 @@ namespace App\Modules\Base\Http\Controllers;
 
 use App\Models\AdminRole;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class Backend extends Foundation
 {
@@ -35,6 +36,10 @@ class Backend extends Foundation
             list($active_url, $active_menus) = get_backend_active_menus();
             view()->share('active_url', $active_url);
             view()->share('active_menus', $active_menus);
+
+
+//            Response::withCookie('lastmenus', implode('|', $active_menus), 7);
+//            cookie('lastmenus', implode('|', $active_menus));
 
             if (auth('admin')->check()) {
                 $this->admin_info = session('admin');

@@ -1,4 +1,4 @@
-@if(request()->routeIs('pc_goods_list'))
+@if(request()->routeIs('pc_goods_list') || request()->routeIs('pc_show_goods'))
 {{--商品列表 分类面包屑--}}
 <div class="breadcrumb clearfix">
     <a href="/" class="index">首页</a>

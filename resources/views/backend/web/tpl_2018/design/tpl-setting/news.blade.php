@@ -24,22 +24,22 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!--页面css/js-->
-    <script src="http://www.b2b2c.yunmall.68mall.com/js/jump.js?v=20180418"></script>
+    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=20180418"></script>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="/frontend/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css?v=1.6"/>
 
-    <link rel="stylesheet" href="/frontend/css/index.css?v=1.6"/>
-    <link rel="stylesheet" href="/frontend/css/news.css?v=1.6"/>
-    <link rel="stylesheet" href="/frontend/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/index.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/news.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/template.css?v=20180702"/>
 
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
@@ -577,7 +577,7 @@
     </script>
 
 
-    <script src="/frontend/js/news.js?v=20180418"></script>
+    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/news.js?v=20180418"></script>
 
 @stop
 

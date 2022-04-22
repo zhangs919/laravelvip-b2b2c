@@ -31,9 +31,9 @@
 
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.2" id="site_style"/>
     @endif
     <!--整站改色 _end-->
     <!-- GPS获取坐标 -->
@@ -101,9 +101,9 @@
                 </a>
             </div>
             <div class="topBar-navbar">
-                <a class="SZY-WEB-STATIC active" href="javascript:void(0);" data-value="1">
+                <a class="SZY-WEB-STATIC @if(!$webStatic){{ 'active' }}@endif" href="javascript:void(0);" data-value="{{ $webStatic }}">
                     <div class="topBar-button">
-                        <span class="title">开启静态页面</span>
+                        <span class="title">@if($webStatic){{ '关闭静态页面' }}@else{{ '开启静态页面' }}@endif</span>
                     </div>
                 </a>
             </div>
@@ -494,9 +494,11 @@
                         <a>模板助手</a>
                     </li>
 
-                    <li class="mobiTemColumn">
-                        <a>主题</a>
-                    </li>
+                    @if(!empty($tpl_backup_theme))
+                        <li class="mobiTemColumn">
+                            <a>主题</a>
+                        </li>
+                    @endif
 
                 </ul>
                 <div class="design_right_body">
@@ -532,12 +534,16 @@
                     </div>
                     <div class="template_select design_right_child" style="display: none">
 
-                        <li class="SZY-THEME-TPL" data-id="64">
-						<span class="template_select_bg">
-							<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/">
-						</span>
-                            <span class="template_select_name">2018.10.25</span>
-                        </li>
+                        @if(!empty($tpl_backup_theme))
+                            @foreach($tpl_backup_theme as $theme)
+                                <li class="SZY-THEME-TPL" data-id="{{ $theme['back_id'] }}">
+                                <span class="template_select_bg">
+                                    <img src="{{ $theme['img'] }}">
+                                </span>
+                                    <span class="template_select_name">{{ $theme['name'] }}</span>
+                                </li>
+                            @endforeach
+                        @endif
 
                     </div>
                 </div>

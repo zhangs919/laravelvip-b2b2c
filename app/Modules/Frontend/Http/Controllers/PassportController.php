@@ -79,7 +79,8 @@ class PassportController extends Frontend
 
     protected function redirectPath()
     {
-        return '/';
+        $back_url = \request()->post('back_url','/');
+        return $back_url;
     }
 
     /**
@@ -317,5 +318,16 @@ class PassportController extends Frontend
 //            return result(-1, null, '邮箱验证码发送失败');
 //        }
 //        return result(0, null, '邮箱验证码发送成功');
+    }
+
+    /**
+     * 重写退出登录
+     *
+     * @param Request $request
+     * @return string
+     */
+    protected function loggedOut(Request $request)
+    {
+        return redirect('/login');
     }
 }

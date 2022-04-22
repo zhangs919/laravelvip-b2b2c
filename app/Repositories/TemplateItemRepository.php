@@ -20,10 +20,13 @@ class TemplateItemRepository
 
     protected $template;
 
+    protected $article;
+
     public function __construct()
     {
         $this->model = new TemplateItem();
         $this->template = new TemplateRepository();
+        $this->article = new ArticleRepository();
     }
 
     public function detail($condition)
@@ -81,6 +84,13 @@ class TemplateItemRepository
             $nQSRep = new NavQuickServiceRepository();
             list($quickService, $total) = $nQSRep->getList($nQSCondition);
             view()->share('quickService', $quickService);
+        }
+
+        if ($tplItem->code == 'nav_notice_s1' || $tplItem->code == 'nav_notice_s2') {
+            // 公告版式一、公告版式二 获取商城公告文章列表
+            $cat_type = 2; // 商城公告
+            $navNotice = $this->article->getArticlesByCatType($cat_type, 6);
+            view()->share('navNotice', $navNotice);
         }
 
         $itemData = !empty($tplItem['data']) ? unserialize($tplItem['data']) : '';
@@ -154,6 +164,13 @@ class TemplateItemRepository
                 }
             }
 
+            // 导航模板
+            if (!empty($itemData['8-'.$i])) {
+                foreach ($itemData['8-'.$i] as $k8=>$item) {
+
+                }
+            }
+
             // 店铺 店铺名称相关信息 todo
             if (!empty($itemData['9-'.$i])) {
                 foreach ($itemData['9-'.$i] as &$item) {
@@ -173,7 +190,7 @@ class TemplateItemRepository
         $params = [
             'tpl_name' => $tplInfo['tpl_name'],
             'tpl_type' => design_tpl_type($tplInfo['type']), // 获取模板类型名称 如：广告模板
-            'is_valid' => $tplItem['is_valid'],
+            'is_valid' => $is_design ? $tplItem['is_valid'] : '',
             'shop_id' => !empty(seller_shop_info()) ? seller_shop_info()->shop_id : '', // 店铺id
             'type' => $tplInfo['selector_type'],
             'uid' => $uid,
@@ -219,8 +236,24 @@ class TemplateItemRepository
         foreach ($templateItems as $item)
         {
             // 判断首页静态页面开启状态
-            $webStatic = false;
-            if ($webStatic) {
+            if (request()->routeIs('pc_home')) {
+                // PC端首页
+                $webStatic = sysconf('site_web_static');
+            } elseif (request()->routeIs('pc_shop_home')) {
+                // PC端店铺首页
+                $webStatic = shopconf('shop_web_static',false,$shop_id);
+            } elseif (request()->routeIs('mobile_home')) {
+                // 微信端首页
+                $webStatic = sysconf('m_site_web_static');
+            } elseif (request()->routeIs('mobile_shop_home')) {
+                // 微信端店铺首页
+                $webStatic = shopconf('m_shop_web_static',false,$shop_id);
+            } else {
+                // 默认开启静态页面
+                $webStatic = 1;
+            }
+
+            if ($webStatic == 1) {
                 // 开启-同步请求
                 // todo PC首页导航 后期再判断其他端
                 $navTpl = $this->template->getTplList(1, 5, 'code');
@@ -236,7 +269,9 @@ class TemplateItemRepository
                 $navTpl = $this->template->getTplList(1, 5, 'code');
                 if (in_array($item['code'], $navTpl)) {
                     // 如果是导航模板
-                    $navContainerHtml .= $item->file;
+//                    $navContainerHtml .= $item->file;
+                    $is_last = 0; // 是否是最后一个
+                    $navContainerHtml .= "<div class='floor-template floor-loading' tpl_file='/0/goods/goods_floor.tpl' id='".$item->uid."' style='height:200px;background-image: url(".get_image_url(sysconf('default_floor_loading')).")' is_last='".$is_last."'></div>\n";
                 }else {
                     $is_last = 0; // 是否是最后一个
                     $tplHtml .= "<div class='floor-template floor-loading' tpl_file='/0/goods/goods_floor.tpl' id='".$item->uid."' style='height:200px;background-image: url(".get_image_url(sysconf('default_floor_loading')).")' is_last='".$is_last."'></div>\n";

@@ -7,8 +7,8 @@
     <td>
         <select id="categorymodel-parent_id" name="cat_id[]" data-rule-required="true" class="chosen-select form-control">
 
-            @foreach($category_list as $v)
-                <option value="{{ $v['cat_id'] }}">{!! $v['title_show'] !!}</option>
+            @foreach($category_list as $cat_id=>$title_show)
+                <option value="{{ $cat_id }}">{!! $title_show !!}</option>
             @endforeach
 
         </select>

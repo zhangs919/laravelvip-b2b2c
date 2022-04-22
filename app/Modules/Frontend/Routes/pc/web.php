@@ -52,7 +52,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
         Route::post('upload-image', 'SiteController@uploadImage'); // 用户上传图片
 
         Route::get('ajax-render.html', 'SiteController@ajaxRender'); // 异步加载模板内容
+        Route::get('get-qrcode-login-key', 'SiteController@getQrcodeLoginKey'); // 获取二维码登录key信息
 
+        Route::get('alioss.html', 'SiteController@alioss'); // 阿里云oss 文件上传
 
     });
 
@@ -99,6 +101,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
     // /shop-list-1.html /shop-list-1-0.html /shop-list-1-549.html
     Route::get('shop-list-{filter_str}.html', 'ShopController@shopGoodsList')->name('pc_shop_goods_list'); // 店铺内商品列表 第一个参数是店铺id 第二个参数是店铺内分类id
     Route::group(['prefix'=>'shop'], function () {
+        Route::get('qrcode.html', 'ShopController@qrCode'); // 店铺二维码
+
         // 店铺入驻路由
         Route::get('apply.html', 'ShopController@apply');
         Route::get('apply/index.html', 'ShopController@apply');
@@ -133,8 +137,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
 
 
     // Passport Route
-    $router->get('login.html', 'PassportController@showLoginForm')->name('user.login'); // showLoginForm
-    $router->post('login', 'PassportController@login'); // login
+    $router->any('login.html', 'PassportController@showLoginForm')->name('user.login'); // showLoginForm
+    $router->any('login', 'PassportController@login'); // login
     $router->any('register.html', 'PassportController@showRegisterForm'); // showRegisterForm
     $router->any('register/mobile.html', 'PassportController@showRegisterForm'); // showRegisterForm
 
@@ -143,7 +147,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
     $router->post('register/sms-captcha', 'PassportController@smsCaptcha'); // 发送短信验证码
     $router->post('register/email-captcha', 'PassportController@emailCaptcha'); // 发送邮箱验证码
 
-    $router->post('site/logout.html', 'PassportController@logout')->name('user.logout'); // logout
+    $router->any('site/logout.html', 'PassportController@logout')->name('user.logout'); // logout
 
 
     // 专题活动 Route
@@ -163,6 +167,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
     Route::group(['prefix' => 'checkout'], function () {
         Route::get('user-address', 'BuyController@userAddress'); // 用户收货地址
         Route::post('change-address', 'BuyController@changeAddress'); // 修改收货地址
+        Route::post('change-best-time', 'BuyController@changeBestTime'); // 修改送货时间
+        Route::post('change-invoice', 'BuyController@changeInvoice'); // 修改发票信息
         Route::post('change-payment', 'BuyController@changePayment'); // 修改支付订单信息
         Route::post('search-pickup.html', 'BuyController@searchPickup'); // 搜索自提点
         Route::post('submit.html', 'BuyController@submit'); // 提交订单
@@ -177,35 +183,67 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
     Route::get('/payment.html', 'PaymentController@payment')->name('pc_payment'); // 订单支付 支付宝/微信
     Route::group(['prefix' => 'payment'], function () {
         Route::get('check-is-pay', 'PaymentController@checkIsPay'); // ajax检查订单是否支付
+        Route::get('qr-code', 'PaymentController@qrCode')->name('pc_qrcode'); // ajax检查订单是否支付
 
     });
 
 //    dd($router->routePrefix);
     // 商品
-    Route::get('/goods-{goods_id}.html', 'GoodsController@showGoods')->name('pc_show_goods'); // showGoods
-    Route::get('/list-{filter_str?}.html', 'GoodsController@lists')->name('pc_goods_list'); // goodsList
-    Route::get('/list.html', 'GoodsController@lists'); // goodsList
+    $goodsDetailDomainState = false; // 是否开启商品详情二级域名 todo 还有问题,在二级域名下,其他控制器的方法没法正常访问, 后期完善
+    if ($goodsDetailDomainState) {
+        // 商品详情二级域名解析 后期在平台后台做一个开关,是否开启商品详情二级域名解析
+        Route::group(['domain' => env('GOODS_DETAIL_DOMAIN')], function ($router) {
+            Route::get('/goods-{goods_id}.html', 'GoodsController@showGoods')->name('pc_show_goods'); // showGoods
+            Route::get('/list-{filter_str?}.html', 'GoodsController@lists')->name('pc_goods_list'); // goodsList
+            Route::get('/list.html', 'GoodsController@lists'); // goodsList
 //    Route::get('/list-{cat_id}-{p1?}-{p2?}-{is_platform?}-{is_free_shipping?}-{is_offpay?}-{has_goods_number?}-{sort_type?}-{p9?}-{area_code?}-{p11?}-{brand_id?}-{min_price?}-{max_price?}.html', 'GoodsController@goodsList')->name('goods_list'); // 商品列表 筛选条件
-    Route::get('/{sku_id}.html', 'GoodsController@showGoods')->name('pc_show_sku_goods'); // showSkuGoods
+            Route::get('/{sku_id}.html', 'GoodsController@showGoods')->name('pc_show_sku_goods'); // showSkuGoods
 
-    Route::group(['prefix' => 'goods'], function () {
-        Route::get('sku.html', 'GoodsController@sku'); // sku
-        Route::get('sku', 'GoodsController@sku'); // sku
+            Route::group(['prefix' => 'goods'], function () {
+                Route::get('sku.html', 'GoodsController@sku'); // sku
+                Route::get('sku', 'GoodsController@sku'); // sku
 
-        Route::get('desc.html', 'GoodsController@desc'); // goods_desc
-        Route::get('qrcode.html', 'GoodsController@qrcode'); // qrcode
-        Route::get('comment.html', 'GoodsController@comment'); // comment
-        Route::get('change-location.html', 'GoodsController@changeLocation'); // changeLocation
-        Route::get('pickup-info.html', 'GoodsController@pickupInfo'); // 自提点详情
-        Route::post('search-pickup.html', 'GoodsController@searchPickup'); // 搜索自提点
+                Route::get('desc.html', 'GoodsController@desc'); // goods_desc
+                Route::get('qrcode.html', 'GoodsController@qrcode'); // qrcode
+                Route::get('comment.html', 'GoodsController@comment'); // comment
+                Route::get('comment', 'GoodsController@comment'); // comment
+                Route::get('change-location.html', 'GoodsController@changeLocation'); // changeLocation
+                Route::get('pickup-info.html', 'GoodsController@pickupInfo'); // 自提点详情
+                Route::post('search-pickup.html', 'GoodsController@searchPickup'); // 搜索自提点
 
-    });
+            });
+        });
+    } else {
+        Route::get('/goods-{goods_id}.html', 'GoodsController@showGoods')->name('pc_show_goods'); // showGoods
+        Route::get('/list-{filter_str?}.html', 'GoodsController@lists')->name('pc_goods_list'); // goodsList
+        Route::get('/list.html', 'GoodsController@lists'); // goodsList
+//    Route::get('/list-{cat_id}-{p1?}-{p2?}-{is_platform?}-{is_free_shipping?}-{is_offpay?}-{has_goods_number?}-{sort_type?}-{p9?}-{area_code?}-{p11?}-{brand_id?}-{min_price?}-{max_price?}.html', 'GoodsController@goodsList')->name('goods_list'); // 商品列表 筛选条件
+        Route::get('/{sku_id}.html', 'GoodsController@showGoods')->name('pc_show_sku_goods'); // showSkuGoods
+
+        Route::group(['prefix' => 'goods'], function () {
+            Route::get('sku.html', 'GoodsController@sku'); // sku
+            Route::get('sku', 'GoodsController@sku'); // sku
+
+            Route::get('desc.html', 'GoodsController@desc'); // goods_desc
+            Route::get('qrcode.html', 'GoodsController@qrcode'); // qrcode
+            Route::get('comment.html', 'GoodsController@comment'); // comment
+            Route::get('comment', 'GoodsController@comment'); // comment
+            Route::get('change-location.html', 'GoodsController@changeLocation'); // changeLocation
+            Route::get('pickup-info.html', 'GoodsController@pickupInfo'); // 自提点详情
+            Route::post('search-pickup.html', 'GoodsController@searchPickup'); // 搜索自提点
+
+        });
+    }
+
+
+
 
     // 商品对比
     Route::get('/user/compare.html', 'CompareController@compare')->name('pc_compare'); // 对比商品页面
     Route::group(['prefix' => 'compare'], function () {
 //        Route::post('add', 'CompareController@add'); // add
         Route::post('add', 'CompareController@toggle'); // 加入对比
+        Route::post('toggle', 'CompareController@toggle'); // 加入对比
         Route::post('remove', 'CompareController@remove'); // 加入对比
         Route::get('box-goods-list', 'CompareController@boxGoodsList'); // 对比商品列表
         Route::get('freight', 'CompareController@freight'); //
@@ -223,10 +261,23 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
     Route::get('/subsite/index.html', 'SubSiteController@index'); // 跳转站点域名
 
 
+    // 万能表单
+    Route::get('/form/{form_id}.html', 'CustomFormController@show')->name('show_form'); // 万能表单
+    Route::get('/customform/form/form-qrcode.html', 'CustomFormController@formQrcode'); // 生成表单二维码
+    Route::post('/customform/form/add.html', 'CustomFormController@add'); // 提交表单
 
+
+
+
+    // Auth
+//    Route::post('auth/register', 'AuthController@register');
+    Route::get('oauth/redirect-url/{platform}', 'OAuthController@getRedirectUrl');
+    Route::get('oauth/callback/{platform}', 'OAuthController@handleCallback');
 
     // 测试路由
     Route::get('send', 'HomeController@send');
     Route::get('collect-goods', 'HomeController@collectGoods'); // 测试 商品采集
 
 });
+
+

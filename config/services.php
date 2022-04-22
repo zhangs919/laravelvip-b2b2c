@@ -34,5 +34,28 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+    
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_REDIRECT_URL'),
+    ],
 
+    'wechat' => [
+        'client_id' => 'appid',
+        'client_secret' => 'appSecret',
+        'redirect' => 'http://localhost/oauth/callback/driver/wechat',
+    ],
+
+    'weibo' => [
+        'client_id' => 'appid',
+        'client_secret' => 'appSecret',
+        'redirect' => 'http://localhost/oauth/callback/driver/weibo',
+    ],
+
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_REDIRECT_URL'),
+    ],
 ];

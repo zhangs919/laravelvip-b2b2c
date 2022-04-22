@@ -10,7 +10,7 @@
     <!-- 正文，由view提供 -->
     <div class="con-right fr">
         <!-- 动态登录，设置密码 star -->
-        <script src="/frontend/js/user_center.js?v=20180528"></script>
+        <script src="/js/user_center.js?v=20180528"></script>
         <div class="set-password" style="display: none">
             您尚未设置登录密码，赶快去
             <a href="/user/security/edit-password" target="_self" title="前往去设置登录密码">设置密码</a>
@@ -29,7 +29,7 @@
                             <p>
 						<span>
 							我的成长值：
-							<a href="/user/growth-value" class="second-color" target="_self">{{ $user_info->rank_points ?? 0 }}</a>
+							<a href="/user/growth-value" class="second-color" target="_self">{{ $user_info->rank_point ?? 0 }}</a>
 						</span>
 
                                 <span>
@@ -183,7 +183,7 @@
                                 </div>
                                 <p>
 
-                                    <a href="/user/growth-value.html">{{ $user_info->rank_points }}</a>
+                                    <a href="/user/growth-value.html">{{ $user_info->rank_point }}</a>
                                 </p>
                             </li>
                             <li class="third">
@@ -311,7 +311,7 @@
                     <span>我的购物车</span>
                 </h3>
                 <div class="model-con">
-                    @if(!$user_cart_list->isEmpty())
+                    @if(!empty($user_cart_list))
                         <div>
                             <ul>
 
@@ -319,10 +319,10 @@
                                     <!-- -->
                                     <li>
 
-                                        <a href="{{ route('pc_show_goods', ['goods_id'=>$v->goods_id]) }}" title="{{ $v->goods_name }}" target="_blank" class="img">
-                                            <img src="{{ get_image_url($v->goods->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" alt="{{ $v->goods_name }}" />
+                                        <a href="{{ route('pc_show_goods', ['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}" target="_blank" class="img">
+                                            <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" alt="{{ $v['goods_name'] }}" />
                                         </a>
-                                        <p class="price">￥{{ $v->goods_price }}</p>
+                                        <p class="price">￥{{ $v['goods_price'] }}</p>
                                     </li>
                                 @endforeach
 

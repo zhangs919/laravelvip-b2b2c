@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header_css')
-    <link rel="stylesheet" href="/frontend/css/flow.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/flow.css?v=20180702"/>
 @stop
 
 @section('header_js')
@@ -39,7 +39,7 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180726"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180726"></script>
     <script src="/assets/d2eace91/js/szy.cart.js?v=20180726"></script>
-    <script src="/frontend/js/common.js?v=20180726"></script>
-    <script src="/frontend/js/tabs.js?v=20180726"></script>
-    <script src="/frontend/js/cart.js?v=20180726"></script>
+    <script src="/js/common.js?v=20180726"></script>
+    <script src="/js/tabs.js?v=20180726"></script>
+    <script src="/js/cart.js?v=20180726"></script>
 @stop

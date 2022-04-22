@@ -8,7 +8,7 @@
     <meta name="Keywords" content="" />
     <meta name="Description" content="" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-    <link rel="stylesheet" href="/frontend/css/license.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/license.css?v=20181217"/>
 </head>
 <body>
 

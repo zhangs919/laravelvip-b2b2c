@@ -5,9 +5,7 @@
     $bg_color = @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515';
 @endphp
 
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
@@ -289,12 +287,13 @@
     </div>
     <!-- 楼层 _end -->
 
-@if($is_design)
 </div>
+
+@if($is_design)
 <script type="text/javascript">
     $('#{{ $uid }}').find('.operateEdit').prepend('<a class="decor-btn style-btn SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="99" data-style_colorpicker="1"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>样式</div></a>');
 </script>
-
+@endif
 
 <script type="text/javascript">
     $(function() {
@@ -370,4 +369,3 @@
         }));
     });
 </script>
-@endif

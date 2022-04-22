@@ -55,7 +55,8 @@
 
 
             <div class="bottom-btn p-b-30">
-                <input type="hidden" name="back_url" value="/system/log/set">
+                {{--<input type="hidden" name="back_url" value="/system/log/set">--}}
+                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
                 <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary btn-lg">
             </div>
 

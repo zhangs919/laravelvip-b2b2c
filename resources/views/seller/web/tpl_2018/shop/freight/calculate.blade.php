@@ -4,7 +4,7 @@
 {{--css style page元素同级上面--}}
 @section('style')
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
-    <link rel="stylesheet" href="/seller/css/mj-style.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/mj-style.css?v=20180702"/>
 @stop
 
 {{--content--}}

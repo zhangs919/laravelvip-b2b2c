@@ -1,8 +1,6 @@
 <!-- 默认缓载图片 -->
 <!-- 手机端广告模板板式四 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <div class="activity-img-groups clearfix @if(count(@$data['3-1']) > 0) activity-img-groups{{ count(@$data['3-1']) }} @endif" @if(!empty(@$data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
 
@@ -29,9 +27,9 @@
 
     </div>
 
-@if($is_design)
 </div>
 
+@if($is_design)
 <script type="text/javascript">
     $('#{{ $uid }}').find('.operateEdit').prepend('<a href="javascript:void(0);" class="decor-btn style-btn SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="99" data-style_colorpicker="1"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>设置样式</div></a>')
 </script>

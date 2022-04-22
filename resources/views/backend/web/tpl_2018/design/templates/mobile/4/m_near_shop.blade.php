@@ -1,7 +1,5 @@
 <!-- 手机端附近店铺模板 -->
-@if($is_design)
 <div class="drop-item SZY-PAGINATION-TPL {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     @if($tpl_name != '' && $is_design)
         <a title="编辑" class="content-selector shop-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="9" data-number="99" data-show_shop_class="1">
@@ -69,8 +67,6 @@
     </script>
 
 
-@if($is_design)
 </div>
-@endif
 <!--附近商家start-->
 <!--附近商家end--->

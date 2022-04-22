@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180919"></script>
-    <script src="/mobile/js/common.js?v=20180919"></script>
+    <script src="/js/common.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180919"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180919"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180919"></script>
+    <script src="/js/jquery.fly.min.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180919"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -33,14 +33,14 @@
 @section('content')
 
     <!-- 内容 -->
-    <div id="index_content"><link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180927"/>
-        <link rel="stylesheet" href="/mobile/css/goods.css?v=20180927"/>
-        <link rel="stylesheet" href="/mobile/css/bonus_message.css?v=20180927"/>
+    <div id="index_content"><link rel="stylesheet" href="/css/swiper.min.css?v=20180927"/>
+        <link rel="stylesheet" href="/css/goods.css?v=20180927"/>
+        <link rel="stylesheet" href="/css/bonus_message.css?v=20180927"/>
         <!-- 地区选择器 -->
         <script src="/assets/d2eace91/js/jquery.region.mobile.js?v=20180919"></script>
         <script src="/assets/d2eace91/js/jquery.widget.js?v=20180919"></script>
-        <script src="/mobile/js/goods.js?v=20180919"></script>
-        <script src="/mobile/js/swiper.jquery.min.js?v=20180919"></script>
+        <script src="/js/goods.js?v=20180919"></script>
+        <script src="/js/swiper.jquery.min.js?v=20180919"></script>
         <div class="goods-header">
             <div class="goods-header-left">
                 <a href="javascript:history.back(-1)"></a>
@@ -293,10 +293,10 @@
         <!--分享弹出层-->
         <div class="bdshare-popup-box" onclick="colse_bdshare_popup()">
             <div class="bdshare-popup-top">
-                <img src="/mobile/images/goods/share_popup_top.png">
+                <img src="/images/goods/share_popup_top.png">
             </div>
             <div class="bdshare-popup-bottom">
-                <img src="/mobile/images/goods/share_popup_bottom.png">
+                <img src="/images/goods/share_popup_bottom.png">
             </div>
         </div>
 
@@ -573,7 +573,7 @@
         </script>
 
         <!-- 返回顶部 -->
-        <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+        <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
         <script type="text/javascript">
             $().ready(function(){
                 //首先将#back-to-top隐藏

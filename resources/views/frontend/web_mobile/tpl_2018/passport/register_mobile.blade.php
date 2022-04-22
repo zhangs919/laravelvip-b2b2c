@@ -18,21 +18,21 @@
     <meta name="Keywords" content="{{ $seo_keywords ?? '乐融沃B2B2C商城演示站' }}" />
     <meta name="Description" content="{{ $seo_description ?? '乐融沃B2B2C商城演示站' }}" />
 
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/login.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/bonus_message.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/login.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/bonus_message.css?v=20180702"/>
     <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/placeholder.js?v=20180813"></script>
-    <script src="/mobile/js/login.js?v=20180813"></script>
+    <script src="/js/login.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
 </head>
 <body>

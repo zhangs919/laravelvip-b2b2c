@@ -60,11 +60,14 @@ class CartController extends Frontend
      */
     public function boxGoodsList(Request $request)
     {
-        if ($request->ajax()) {
-            $this->cart->setUserId($this->user_id);
-            $this->cart->setUniqueId(session()->getId());
-            $cart_list = $this->cart->getCartList(); // 购物车数据
-            $cart_price_info = $this->cart->getCartPriceInfo($cart_list);
+        $this->cart->setUserId($this->user_id);
+//            $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
+        $cart_list = $this->cart->getCartList(); // 购物车数据
+        $cart_price_info = $this->cart->getCartPriceInfo($cart_list);
+
+        if (!is_mobile() && !is_app()) { // PC 端
+
             $renderTop = view('cart.dropdown_goods', compact('cart_list', 'cart_price_info'))->render(); // 顶部购物车
             $renderRight = view('cart.cart_pannel', compact('cart_list', 'cart_price_info'))->render(); // 右侧购物车
             $data = [
@@ -77,6 +80,22 @@ class CartController extends Frontend
             ];
 
             return result(0, $data,'', $extra);
+        } elseif (is_mobile()) { // 微信端
+
+            $extra = [
+                'amount' => $cart_price_info['total_fee'],
+                'count' => $this->cart_goods_num,
+                'dif_price' => '-22221',
+                'dif_price_format' => '￥-22221.00',
+                'select_goods_number' => $cart_price_info['goods_number'],
+                'start_price' => '1.00',
+                'start_price_format' => '￥1.00'
+            ];
+
+            $render = view('cart.dropdown_goods', compact('cart_list', 'cart_price_info'))->render();
+
+
+            return result(0, $render, '', $extra);
         }
 
         $compact = compact('seo_title');
@@ -120,7 +139,8 @@ class CartController extends Frontend
         // 设置页面传入的参数
         $this->cart->setGoodsBuyNum($number);
         $this->cart->setUserId($this->user_id);
-        $this->cart->setUniqueId(session()->getId());
+//        $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
 
         $goods_info = $this->goods->getById($goods_id);
 
@@ -170,11 +190,11 @@ class CartController extends Frontend
 
         $result = $this->cart->addGoodsToCart();
 
-        if ($result['code'] < 0) {
-            return result(-1, $data, $result['message']);
+        if ($result['code'] != 0) {
+            return result($result['code'], $data, $result['message']);
         }
 
-        return result(0, $data, $result['message']);
+        return result($result['code'], $data, $result['message']);
     }
 
     /**
@@ -186,7 +206,8 @@ class CartController extends Frontend
     public function remove(Request $request)
     {
         $this->cart->setUserId($this->user_id);
-        $this->cart->setUniqueId(session()->getId());
+//        $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
 
         $cart_ids = $request->input('cart_ids', 0);
         if (!$cart_ids) {
@@ -217,7 +238,8 @@ class CartController extends Frontend
     public function delete(Request $request)
     {
         $this->cart->setUserId($this->user_id);
-        $this->cart->setUniqueId(session()->getId());
+//        $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
 
         $cart_ids = $request->input('cart_ids', 0);
         if (!$cart_ids) {
@@ -246,7 +268,8 @@ class CartController extends Frontend
         $cart_ids = $request->post('cart_ids', '');
 
         $this->cart->setUserId($this->user_id);
-        $this->cart->setUniqueId(session()->getId());
+//        $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
         // 选中购物车商品
         $selectRet = $this->cart->cartSelect($cart_ids);
         if ($selectRet['code'] == -1) {
@@ -269,13 +292,14 @@ class CartController extends Frontend
      */
     private function getCartListData() {
         $this->cart->setUserId($this->user_id);
-        $this->cart->setUniqueId(session()->getId());
+//        $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
         $cart_list = $this->cart->getCartList(); // 购物车数据
         // 购物车商品以店铺ID分组显示
         $shop_cart_list = [];
         foreach ($cart_list as $cart) {
-            $cart->goods_total = $cart->goods_price * $cart->goods_num;
-            $shop_cart_list[$cart->shop_id][] = $cart;
+            $cart['goods_total'] = $cart['goods_price'] * $cart['goods_number'];
+            $shop_cart_list[$cart['shop_id']][] = $cart;
         }
         $cart_price_info = $this->cart->getCartPriceInfo($cart_list);
         view()->share('shop_cart_list',$shop_cart_list);
@@ -319,8 +343,24 @@ class CartController extends Frontend
             return result(99, null, '需要登录');
         }
 
+        // 购买类型 0-加入购物车购买 1-立即购买 2-去结算 3-兑换 4-自由购 5-到店购 6-礼品提货
+        // 将用户购买类型等信息存入session 方便checkout页面判断
+        // 从购物车表中取当前登录用户的选中购物车商品列表
+        $this->cart->setUserId($this->user_id);
+//        $this->cart->setUniqueId(session()->getId());
+        $this->cart->setUniqueId($this->session_id);
+        $cart_list = $this->cart->getCartList(); // 购物车数据
+//        $cart_price_info = $this->cart->getCartPriceInfo($cart_list);
+        $cart_id = [];
+        foreach ($cart_list as $v) {
+            $cart_id[] = $v['cart_id'].'|'.$v['sku_id'].'|'.$v['goods_number'];
+        }
 
-        session(['user_buy_'.$this->user_id => ['buy_type'=>0,'goods_id'=>0,'sku_id'=>0,'number'=>0]]); // 0-购物车购买 将用户购买类型存入session 方便checkout页面判断
+        $userBuy = [
+            'buy_type' => 0,
+            'cart_id' => $cart_id
+        ];
+        session(['user_buy_'.$this->user_id => $userBuy]);
         $data = '/checkout.html'; // 提交订单页面url
 
         return result(0, $data);
@@ -342,15 +382,60 @@ class CartController extends Frontend
         $sku_id = $request->post('sku_id');
         $goods_id = $this->goods->getGoodsId($sku_id);
         $number = $request->post('number');
-        // todo 对商品进行判断
-        // 商品不存在
-//        return result(-1,null,'商品不存在');
+        $goods_info = $this->goods->getOnSaleGoodsInfo($goods_id, $sku_id, $number);
+
+        if (empty($goods_info)) {
+            // 商品不存在
+            return result(-1,null,'商品不存在');
+        }
 
 //        return result(0,null,'请跳转到结算页！');
 
-        session(['user_buy_'.$this->user_id => ['buy_type'=>1,'goods_id'=>$goods_id,'sku_id'=>$sku_id,'number'=>$number]]); // 1-直接购买 将用户购买类型存入session 方便checkout页面判断
+
+        $cart_id[] = $goods_id.'|'.$sku_id.'|'.$number;
+
+        $userBuy = [
+            'buy_type' => 1,
+            'cart_id' => $cart_id
+        ];
+
+        // 购买类型 0-加入购物车购买 1-立即购买 2-去结算 3-兑换 4-自由购 5-到店购 6-礼品提货
+        // 将用户购买类型等信息存入session 方便checkout页面判断
+        session(['user_buy_'.$this->user_id => $userBuy]);
 
         $data = '/checkout.html'; // 提交订单页面url
         return result(0, $data);
+    }
+
+    /**
+     * 将打包一口价商品加入到购物车
+     * /frontend/web/index.php
+     * /frontend/web_mobile/index.php
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function fixedPriceAdd(Request $request)
+    {
+        $goods_id_list = $request->post('goods_ids', []);
+        $act_id = $request->post('act_id', null);
+        if (empty($act_id) || empty($goods_id_list)) {
+            abort(500, '无效的活动！');
+        }
+        $sku_ids = [];
+        foreach ($goods_id_list as &$item) {
+            $temp_list = explode(',', $item);
+            foreach ($temp_list as &$value) {
+                $temp_goods = explode('-', $value);
+                $sku_ids[] = $temp_goods[1];
+            }
+        }
+
+        $data = [
+            'act_id' => $act_id,
+            'sku_ids' => $sku_ids
+        ];
+
+        return result(0, $data, '加入购物车成功');
     }
 }

@@ -17,18 +17,18 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link rel="stylesheet" href="/frontend/css/common.css?v=20180428"/>
-    <link rel="stylesheet" href="/frontend/css/register.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/register.css?v=20180428"/>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6"/>
+        <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.6"/>
     @endif
     <!--整站改色 _end-->
     <script src="/assets/d2eace91/js/jquery.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/placeholder.js?v=20180528"></script>
-    <script src="/frontend/js/login.js?v=20180528"></script>
+    <script src="/js/login.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/layer/layer.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180528"></script>

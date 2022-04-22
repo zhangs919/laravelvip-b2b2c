@@ -2,24 +2,12 @@
 
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/mobile/css/user.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/user.css?v=20180702"/>
 @stop
 
 {{--header_js--}}
 @section('header_js')
-    <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/yii.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
-    <script src="/mobile/js/user.js?v=20180813"></script>
-    <script src="/mobile/js/address.js?v=20180813"></script>
-    <script src="/mobile/js/center.js?v=20180813"></script>
-    <!-- 图片缓载js -->
-    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/szy.page.more.js?v=20180813"></script>
+
 @stop
 
 
@@ -45,7 +33,7 @@
         </div>
     </header>
     <div class="addressmone1">
-        <form id="UserAddressModel" class="form-horizontal" name="UserAddressModel" action="/user/address/add.html?back_url=/user/address.html" method="post">
+        <form id="UserAddressModel" class="form-horizontal" name="UserAddressModel" action="/user/address/add.html?back_url={{ $_SERVER['HTTP_REFERER'] ?? '' }}" method="post">
             {{ csrf_field() }}
 
             <input type="hidden" id="address_lng" class="address_lng" name="UserAddressModel[address_lng]">
@@ -539,7 +527,7 @@
             @endif
         })
     </script>
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
     <div class="show-menu-info" id="menu">

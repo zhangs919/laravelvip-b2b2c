@@ -1,7 +1,7 @@
 @extends('layouts.buy_layout')
 
 @section('header_css')
-    <link rel="stylesheet" href="/frontend/css/flow.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/flow.css?v=20180702"/>
 @stop
 
 @section('content')
@@ -219,8 +219,8 @@
 
 @section('outside_body_script')
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
-    <script src="/frontend/js/checkout.js?v=20180919"></script>
-    <script src="/frontend/js/common.js?v=20180919"></script>
+    <script src="/js/checkout.js?v=20180919"></script>
+    <script src="/js/common.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/szy.cart.js?v=20180919"></script>
     <script src="/assets/d2eace91/js/jquery.region.js?v=20180919"></script>
     <!-- 表单验证 -->

@@ -8,14 +8,15 @@
 
                     <div class="shop">
                         <div class="shop-info">
-                            <div class="cart-checkbox shop-checkbox select " data-shop-id="{{ $shop_id }}">
+                            {{--选中状态 加class "select"--}}
+                            <div class="cart-checkbox shop-checkbox " data-shop-id="{{ $shop_id }}">
                                 <label></label>
                             </div>
                             <div class="shop-title-content">
                                 <span class="shop-title-icon">
-                                    <img src="/mobile/images/flow/icon_shop.png" />
+                                    <img src="/images/flow/icon_shop.png" />
                                 </span>
-                                <a class="shop-title-name" href='{{ route('mobile_shop_home', ['shop_id'=>$shop_id]) }}' title="{{ $cart_list[0]->shop->shop_name }}">{{ $cart_list[0]->shop->shop_name }} </a>
+                                <a class="shop-title-name" href='{{ route('mobile_shop_home', ['shop_id'=>$shop_id]) }}' title="{{ $cart_list[0]['shop']['shop_name'] }}">{{ $cart_list[0]['shop']['shop_name'] }} </a>
 
                             </div>
                         </div>
@@ -41,47 +42,48 @@
 
                         @foreach($cart_list as $v)
                         <li class="item-other-activity">
-                            <div class="cart-checkbox goods-checkbox select" data-shop-id="{{ $v->shop->shop_id }}">
+                            <div class="cart-checkbox goods-checkbox @if($v['select'] == 1){{ 'select' }}@endif" data-shop-id="{{ $v['shop']['shop_id'] }}">
 
 
-                                <input type="checkbox" name="checkbox" value="{{ $v->cart_id }}" @if($v->checked == 1) checked="checked" @endif>
+                                <input type="checkbox" name="checkbox" value="{{ $v['cart_id'] }}" @if($v['select'] == 1) checked="checked" @endif>
                                 <label></label>
                             </div>
                             <div class="inner">
                                 <div class="goods-pic">
-                                    <img src="{{ get_image_url($v->goods->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_180,w_180" class="itempic">
+                                    <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_180,w_180" class="itempic">
                                 </div>
 
 
                                 <dl class="goods-info">
                                     <!--此处商品名称需要控制显示字数-->
                                     <dt class="goods-name">
-                                        <a href="{{ route('mobile_show_goods',['goods_id'=>$v->goods->goods_id]) }}" class="item-title">{{ $v->goods->goods_name }}</a>
+                                        <a href="{{ route('mobile_show_goods',['goods_id'=>$v['goods']['goods_id']]) }}" class="item-title">{{ $v['goods']['goods_name'] }}</a>
                                     </dt>
                                     <dd class="goods-attr">
 
 
-                                        <span>电压：60V</span>
+                                        {{--todo 暂时注释规格--}}
+                                        {{--<span>电压：60V</span>--}}
 
-                                        <span>颜色分类：60V20A 1000W空车</span>
+                                        {{--<span>颜色分类：60V20A 1000W空车</span>--}}
 
 
                                     </dd>
                                     <dd class="good-info-bottom ub">
-                                        <em class="goods-price price-color ub-f1">￥{{ $v->goods->goods_price }}</em>
+                                        <em class="goods-price price-color ub-f1">￥{{ $v['goods']['goods_price'] }}</em>
                                         <div class="goods-num amount amount-btn">
                                             <span class="decrease amount-minus"><i></i></span>
-                                            <input type="text" class="num" value="{{ $v->goods_num }}" data-goods-number="{{ $v->goods_num }}"
-                                                   data-sku-id="{{ $v->goods->sku_id }}" id="number{{ $v->cart_id }}"
-                                                   data-amount-min="1" data-amount-max="{{ $v->goods->goods_number }}" maxlength="8" title="请输入购买量">
+                                            <input type="text" class="num" value="{{ $v['goods_number'] }}" data-goods-number="{{ $v['goods_number'] }}"
+                                                   data-sku-id="{{ $v['goods']['sku_id'] }}" id="number{{ $v['cart_id'] }}"
+                                                   data-amount-min="1" data-amount-max="{{ $v['goods']['goods_number'] }}" maxlength="8" title="请输入购买量">
                                             <span class="increase amount-plus"><i></i></span>
-                                            <div class="edit-quantity-mask hide" id="quantity_{{ $v->goods->sku_id }}">
+                                            <div class="edit-quantity-mask hide" id="quantity_{{ $v['goods']['sku_id'] }}">
                                                 <div class="edit-quantity-con">
                                                     <div class="edit-quantity-hd">修改购买数量</div>
                                                     <div class="edit-quantity-bd">
                                                         <div class="quantity-info">
                                                             <a class="quantity-decrease"></a>
-                                                            <input type="number" size="4" value="{{ $v->goods_num }}" class="quantity">
+                                                            <input type="number" size="4" value="{{ $v['goods_number'] }}" class="quantity">
                                                             <a class="quantity-increase"></a>
                                                         </div>
                                                     </div>
@@ -94,27 +96,27 @@
 
                                             <script type="text/javascript">
                                                 $().ready(function() {
-                                                    $('#quantity_{{ $v->goods->sku_id }}').find('.quantity-decrease').click(function() {
+                                                    $('#quantity_{{ $v['goods']['sku_id'] }}').find('.quantity-decrease').click(function() {
                                                         var goods_number = parseInt($(this).parent().find('.quantity').val());
                                                         if (goods_number > 1) {
                                                             $(this).parent().find('.quantity').val(goods_number - 1);
                                                         }
                                                     });
-                                                    $('#quantity_{{ $v->goods->sku_id }}').find('.quantity-increase').click(function() {
+                                                    $('#quantity_{{ $v['goods']['sku_id'] }}').find('.quantity-increase').click(function() {
                                                         var goods_number = parseInt($(this).parent().find('.quantity').val());
                                                         $(this).parent().find('.quantity').val(goods_number + 1);
 
                                                     });
 
-                                                    $('#quantity_{{ $v->goods->sku_id }}').find('#btn_cancel').click(function() {
-                                                        $('#quantity_{{ $v->goods->sku_id }}').hide();
+                                                    $('#quantity_{{ $v['goods']['sku_id'] }}').find('#btn_cancel').click(function() {
+                                                        $('#quantity_{{ $v['goods']['sku_id'] }}').hide();
                                                     });
 
-                                                    $('#quantity_{{ $v->goods->sku_id }}').find('#btn_submit').click(function() {
+                                                    $('#quantity_{{ $v['goods']['sku_id'] }}').find('#btn_submit').click(function() {
                                                         $('.SZY-CART-SUBMIT-LOADING').show();
                                                         $('.SZY-CART-SUBMIT').hide();
-                                                        var number = parseInt($('#quantity_{{ $v->goods->sku_id }}').find('.quantity').val());
-                                                        var sku_id = '{{ $v->goods->sku_id }}';
+                                                        var number = parseInt($('#quantity_{{ $v['goods']['sku_id'] }}').find('.quantity').val());
+                                                        var sku_id = '{{ $v['goods']['sku_id'] }}';
                                                         $.cart.changeNumber(sku_id, number, null, function(result) {
                                                             if (result.code == 0) {
                                                                 $(".content").replaceWith(result.data);
@@ -192,7 +194,7 @@
                     <dl class="total-money">
                         <dt>合计:</dt>
                         <dd>
-                            <em class="SZY-CART-SELECT-GOODS-AMOUNT price-color">￥{{ $v->goods_total }}</em>
+                            <em class="SZY-CART-SELECT-GOODS-AMOUNT price-color">￥{{ $v['goods_total'] }}</em>
                         </dd>
                     </dl>
                 </div>
@@ -215,7 +217,7 @@
         <!--没有收藏店铺时-->
         <div class="no-data-div m-b-50">
             <div class="no-data-img">
-                <img src="/mobile/images/bg_empty_data.png" />
+                <img src="/images/bg_empty_data.png" />
             </div>
             <dl>
                 <dt>购物车还是空空的呢</dt>

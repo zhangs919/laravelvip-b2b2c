@@ -8,6 +8,7 @@
         "php": ">=7.1.3",
         "barryvdh/laravel-debugbar": "^3.2",
         "caffeinated/modules": "^5.0",
+        "elasticsearch/elasticsearch": "^6.1",
         "fideloper/proxy": "~4.0",
         "gregwar/captcha": "^1.1",
         "jacobcyl/ali-oss-storage": "^2.1",
@@ -19,10 +20,13 @@
         "overtrue/easy-sms": "^1.0",
         "overtrue/laravel-pinyin": "^4.0",
         "overtrue/laravel-wechat": "^4.0",
+        "overtrue/socialite": "^2.0",
         "phpoffice/phpspreadsheet": "^1.5",
+        "predis/predis": "^1.1",
         "simplesoftwareio/simple-qrcode": "1.3.*",
+        "workerman/gateway-worker": "^3.0",
         "workerman/workerman": "^3.5",
-        "elasticsearch/elasticsearch": "^6.0"
+        "yansongda/pay": "^2.6"
     },
     "require-dev": {
         "filp/whoops": "~2.3",
@@ -74,14 +78,22 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "kylekatarnls/update-helper": false,
+            "easywechat-composer/easywechat-composer": false,
+            "symfony/thanks": false
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": {
-        "packagist": {
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
             "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+            "url": "https://mirrors.aliyun.com/composer/"
         }
-    }
+    ]
 }

@@ -3,10 +3,10 @@
 namespace App\Modules\Store\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Repositories\CopyrightAuthRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -61,7 +61,8 @@ class PassportController extends Controller
 
         // 记录日志
         shop_log('网点管理员【'.store_info()->user_name.'】登录网点中心。');
-        return '/index';
+        $back_url = \request()->post('back_url','/index');
+        return $back_url;
     }
 
     /**
@@ -162,6 +163,17 @@ class PassportController extends Controller
     public function username()
     {
         return 'user_name';
+    }
+
+    /**
+     * 重写退出登录
+     *
+     * @param Request $request
+     * @return string
+     */
+    protected function loggedOut(Request $request)
+    {
+        return redirect('/login');
     }
 
 }

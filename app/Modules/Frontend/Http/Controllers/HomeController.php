@@ -23,8 +23,10 @@
 namespace App\Modules\Frontend\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Shop;
 use App\Models\User;
 use App\Modules\Base\Http\Controllers\Frontend;
+use App\Repositories\BonusRepository;
 use App\Repositories\CartRepository;
 use App\Repositories\NavBannerRepository;
 use App\Repositories\NavigationRepository;
@@ -97,7 +99,7 @@ class HomeController extends Frontend
         list($tplHtml, $navContainerHtml) = $this->templateItem->getPageTplHtml($page); // 模板Html数据
 
         // 判断首页静态页面开启状态
-        $webStatic = false;
+        $webStatic = (is_mobile() && !is_app()) ? sysconf('m_site_web_static') : sysconf('site_web_static');
 
 
         $compact = compact('page', 'tplHtml', 'navContainerHtml', 'nav_banner', 'webStatic');
@@ -135,6 +137,38 @@ class HomeController extends Frontend
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
 //        return view('home.home', $compact);
+    }
+
+    public function bonusPush(Request $request, $bonus_id)
+    {
+        $seo_title = sysconf('site_name');
+
+        $bonusRep = new BonusRepository();
+        $bonus_info = $bonusRep->getById($bonus_id);
+        if (empty($bonus_info)) {
+            return abort(404, '红包id无效');
+        }
+
+        $bonus_info->shop_name = Shop::where('shop_id', $bonus_info->shop_id)->value('shop_name');
+
+        return view('home.bonus_push', compact('seo_title', 'bonus_info'));
+    }
+
+    public function bonusSuccess(Request $request, $bonus_id)
+    {
+        $seo_title = sysconf('site_name');
+
+        $bonusRep = new BonusRepository();
+        $bonus_info = $bonusRep->getById($bonus_id);
+
+        if (empty($bonus_info)) {
+            return abort(404, '红包id无效');
+        }
+
+        $bonus_info->user_name = $this->user['user_name'] ?? null;
+        $bonus_info->shop_name = Shop::where('shop_id', $bonus_info->shop_id)->value('shop_name');
+
+        return view('home.bonus_success', compact('seo_title', 'bonus_info'));
     }
 
 

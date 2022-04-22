@@ -32,10 +32,12 @@ use App\Models\Shop;
 use App\Models\ShopFieldValue;
 use App\Models\UserAddress;
 use App\Modules\Base\Http\Controllers\Frontend;
+use App\Repositories\BonusRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CollectRepository;
 use App\Repositories\CompareRepository;
 use App\Repositories\CustomerRepository;
+use App\Repositories\GoodsCommentRepository;
 use App\Repositories\GoodsHistoryRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\GoodsSkuRepository;
@@ -45,7 +47,9 @@ use App\Repositories\ShopCreditRepository;
 use App\Repositories\ShopRepository;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GoodsController extends Frontend
 {
@@ -63,6 +67,10 @@ class GoodsController extends Frontend
     protected $shopCredit;
     protected $customer;
 
+    protected $bonus;
+
+    protected $goodsComment; // 商品评价
+
     public function __construct()
     {
         parent::__construct();
@@ -78,6 +86,10 @@ class GoodsController extends Frontend
         $this->goodsSku = new GoodsSkuRepository();
         $this->shopCredit = new ShopCreditRepository();
         $this->customer = new CustomerRepository();
+
+        $this->bonus = new BonusRepository();
+
+        $this->goodsComment = new GoodsCommentRepository();
 
     }
 
@@ -671,9 +683,8 @@ class GoodsController extends Frontend
 
         // 商品售后服务保障列表
         $contract_ids = [];
-        $contract_ids_arr = unserialize($goods['contract_ids']);
-        if (!empty($contract_ids_arr)) {
-            foreach ($contract_ids_arr as $k=>$v) {
+        if (!empty($goods['contract_ids'])) {
+            foreach ($goods['contract_ids'] as $k=>$v) {
                 if ($v == 1) {
                     $contract_ids[] = $k;
                 }
@@ -773,7 +784,11 @@ class GoodsController extends Frontend
         $comment_count = '0';
         $collect_count = '0';
         $show_collect_count = sysconf('goods_info_show_collect'); // 是否显示商品收藏人气;
-        $bonus_list = null;
+
+        // 红包列表
+        $bonus_list = $this->bonus->getGoodsDetailBonusList($goods_id, $goods['shop_id'], $this->user_id);
+
+//        dd($bonus_list);
         $rank_prices = null;
         $rank_message = '请登录，确认是否享受优惠';
         $show_freight_region = 1;
@@ -829,10 +844,18 @@ class GoodsController extends Frontend
         // 商品分类列表
         $goods_category = Category::where('is_show',1)->select(['cat_id','cat_name','parent_id', 'cat_level'])->orderBy('cat_sort', 'asc')->get();
         // 分类面包屑导航
-        $navigate_cat = navigate_goods($goods_id,1);
+        $navigate_cat = navigate_goods($goods_id, 1);
         $navigate_cat_type = 1;
-        /* PC端独有 END */
 
+
+        $region_code = $shop_info['shop']['region_code'];
+        $lrw_last_region_code = session('LRW_LAST_REGION_CODE');
+        if (!empty($lrw_last_region_code)) {
+            $lrw_last_region_code_arr = unserialize(substr($lrw_last_region_code,64));
+//            dd($lrw_last_region_code_arr);
+            $region_code = $lrw_last_region_code_arr[1];
+        }
+        /* PC端独有 END */
         $compact = compact(
             'goods', 'sku', 'is_weixin','shop_goods_count','shop_collect_count',
             'sale_top_list','collect_top_list','im_enable','shop_info','comment_count',
@@ -841,6 +864,7 @@ class GoodsController extends Frontend
             'shop_category_list','goods_category','navigate_cat','navigate_cat_type' // PC端独有
             );
         $webData = []; // web端（pc、mobile）数据对象
+//        dd($shop_info);
         $data = [
             'app_prefix_data' => [
                 'goods' => $goods,
@@ -860,7 +884,7 @@ class GoodsController extends Frontend
                 'rank_message' => $rank_message,
                 'show_freight_region' => $show_freight_region,
                 'show_stock' => $show_stock,
-                'region_code' => $shop_info['shop']['region_code'],
+                'region_code' => $region_code,
                 'pickup' => $pickup->toArray(),
                 'unit_list' => $unit_list,
                 'share' => $share
@@ -879,7 +903,7 @@ class GoodsController extends Frontend
     }
 
     /**
-     * PC商品描述
+     * 商品描述
      *
      * @param Request $request
      * @return mixed
@@ -901,12 +925,36 @@ class GoodsController extends Frontend
 //            $pc_desc = $goods_info->pc_desc;
 //            $pc_desc_render = view('goods.pc_desc', compact('pc_desc'))->render();
 //        }
+
+        // 手机端图文
+        $mobile_desc = $goods_info->mobile_desc;
+
+        // PC端图文
         $pc_desc = $goods_info->pc_desc;
         $pc_desc_render = view('goods.pc_desc', compact('pc_desc'))->render();
 
+        if (is_mobile() && !is_app()) {
+            // 微信端访问
+            if (empty($mobile_desc)) { // 如果手机端图文为空 则使用PC端图文
+                $desc_type = 0;
+            } else {
+                $desc_type = 1;
+                foreach ($mobile_desc as $key=>$item) {
+                    if ($mobile_desc[$key]['type'] == 1) {
+                        $mobile_desc[$key]['content'] = get_image_url($item['content']);
+                    }
+                }
+                $pc_desc_render = null;
+            }
+        } else {
+            // PC端访问
+            $desc_type = 0;
+            $mobile_desc = null;
+        }
+
         $extra = [
-            'desc_type' => 0,
-            'mobile_desc' => $mobile_desc_render,
+            'desc_type' => $desc_type,
+            'mobile_desc' => $mobile_desc,
             'need_load' => 0,
             'pc_desc' => $pc_desc_render
         ];
@@ -1017,9 +1065,27 @@ class GoodsController extends Frontend
         return result(0, $data);
     }
 
+    /**
+     * 修改配送至
+     *
+     * @param Request $request
+     * @return array
+     */
     public function changeLocation(Request $request)
     {
         $sku_id = $request->get('sku_id');
+        $region_code = $request->get('region_code');
+//        session('LRW_LAST_REGION_CODE', null);
+        // 设置最近的地区code
+        // SZY_LAST_REGION_CODE=82abf20d4117457546a12fd94ca5abbbc1aac3df8674d78f6dd78d7e9efcdccea:2:{i:0;s:20:"SZY_LAST_REGION_CODE";i:1;s:8:"21,08,82";};
+        $lrw_last_region_code = session('LRW_LAST_REGION_CODE');
+//        dd($region_code);
+        if (empty($lrw_last_region_code) || !empty($region_code)) {
+//            session('LRW_LAST_REGION_CODE',strtolower(Str::random(64)).serialize(['LRW_LAST_REGION_CODE',$region_code]));
+            session(['LRW_LAST_REGION_CODE'=>strtolower(Str::random(64)).serialize(['LRW_LAST_REGION_CODE',$region_code])]);
+        }
+//        dd($lrw_last_region_code);
+
         $sku_info = $this->goodsSku->getById($sku_id);
 
         $data = [
@@ -1034,9 +1100,70 @@ class GoodsController extends Frontend
     public function comment(Request $request)
     {
         $sku_id = $request->get('sku_id');
+        $output = $request->get('output');
 
-        $render = view('goods.comment', compact('sku_id'))->render();
-        return result(0, $render);
+        // 获取数据
+        $goods_id = $this->goods->getGoodsId($sku_id);
+
+        $page_output = $output ? true : false;
+
+        // 查询条件
+        $where[] = ['is_show', 1]; // 是否显示初次评价
+        $where[] = ['add_is_show', 1]; // 是否显示追加评价
+        $where[] = ['is_delete', 0];
+        $where[] = ['goods_id', $goods_id];
+        $condition = [
+            'where' => $where,
+            'limit' => 0,
+            'sortname' => 'comment_id',
+            'sortorder' => 'desc',
+        ];
+        list($list, $total) = $this->goodsComment->getList($condition);
+
+        $desc_mark_avg = '5.00'; // 宝贝与描述相符 平均得分
+        $comment_counts = [
+            '1', // 全部评价
+            '1', // 图片
+            '0', // 好评
+            '0', // 中评
+            '0' // 差评
+        ];
+
+        // 分页
+        $pageHtml = frontend_pagination($total);
+        $page_array = frontend_pagination($total,true);
+        $page_json = json_encode($page_array);
+
+        $compact = compact('page_output', 'pageHtml', 'list', 'page_json',
+            'sku_id', 'goods_id', 'desc_mark_avg', 'comment_counts');
+        if (empty($page_output) && !is_app()) { // web端访问 ajax请求
+            $render = view('goods.partials._comment_list', $compact)->render();
+            return result(0, $render);
+        }
+
+        if (!is_app() && $page_output) { // web端访问
+            $render = view('goods.comment', $compact)->render();
+            return result(0, $render);
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_prefix_data' => [
+                'page_output' => $page_output,
+                'page' => $page_array,
+                'list' => $list,
+                'sku_id' => $sku_id,
+                'goods_id' => $goods_id,
+                'desc_mark_avg' => $desc_mark_avg,
+                'comment_counts' => $comment_counts
+            ],
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'goods.comment'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     /**
@@ -1081,12 +1208,36 @@ class GoodsController extends Frontend
             'where' => $where,
             'limit' => 0,
             'sortname' => 'pickup_id',
-            'sortorder' => 'desc',
+            'sortorder' => 'asc',
         ];
         list($self_pickup_list, $self_pickup_total) = $this->selfPickup->getList($condition);
         $render = view('goods.partials._self_pickup_list', compact('self_pickup_list'))->render();
 
         return result(0, $render);
+    }
+
+    /**
+     * 商品分享
+     * 微商城用到
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
+    public function goodsShare(Request $request)
+    {
+        $goods_id = $request->get('goods_id');
+        $qrcode_type = $request->get('qrcode_type');
+        $mode = $request->get('mode');
+        $read_cache = $request->get('read_cache');
+        $uuid = make_uuid();
+
+        $goods = $this->goods->getById($goods_id);
+        $goods_qrcode = $this->goods->generateGoodsQrCode($goods_id);
+
+        $render = view('goods.goods_share', compact('goods', 'uuid', 'goods_qrcode'))->render();
+
+        return result(0, $render, '',['uuid'=> $uuid]);
     }
 
 }

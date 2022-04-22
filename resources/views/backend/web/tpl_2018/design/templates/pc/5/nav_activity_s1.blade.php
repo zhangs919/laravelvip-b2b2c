@@ -1,7 +1,5 @@
 <!-- 促销活动版式1 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- banner右侧限时抢购 _start -->
     <div class="sale-discount">
@@ -90,9 +88,7 @@
     </div>
     <!-- banner右侧限时抢购 _end -->
 
-@if($is_design)
 </div>
-@endif
 
 <script type="text/javascript">
     $(document).ready(function() {

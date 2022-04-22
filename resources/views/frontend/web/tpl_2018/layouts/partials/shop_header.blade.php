@@ -63,7 +63,7 @@
                     <p class="collect-tip" style="display: none;">收藏</p>
                     <!-- 店铺二维码 _start -->
                     <p class="shop-qr-code">
-                        <img src="" alt="店铺二维码" />
+                        <img src="/shop/qrcode.html?id={{ $shop_info['shop']['shop_id'] }}" alt="店铺二维码" />
                     </p>
                     <!-- 店铺二维码 end -->
                 </div>

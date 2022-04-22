@@ -18,7 +18,8 @@
         {{ csrf_field() }}
         <input type="hidden" name="group" value="open_shop">
         <input type="hidden" name="tabs" value="">
-        <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">
+{{--        <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">--}}
+        <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
         <div class="table-content m-t-30">
             <div class="simple-form-field">
                 <div class="form-group">

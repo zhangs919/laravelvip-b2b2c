@@ -34,7 +34,7 @@
         </table>
     @else
         <div class="tip-box">
-            <img src="/frontend/images/noresult.png" class="tip-icon" />
+            <img src="/images/noresult.png" class="tip-icon" />
             <div class="tip-text">没有符合条件的记录</div>
         </div>
     @endif

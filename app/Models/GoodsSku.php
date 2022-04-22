@@ -38,7 +38,9 @@ class GoodsSku extends BaseModel
         'spec_ids','spec_vids', 'spec_names',
         'goods_price','mobile_price','market_price','goods_number','sku_number_version',
         'goods_sn', 'goods_barcode','warn_number','goods_stockcode','goods_weight','goods_volume',
-        'pc_desc','mobile_desc','is_spu','is_enable'
+        'pc_desc','mobile_desc','is_spu',
+        'checked'
+//        'is_enable'
     ];
 
     protected $primaryKey = 'sku_id';

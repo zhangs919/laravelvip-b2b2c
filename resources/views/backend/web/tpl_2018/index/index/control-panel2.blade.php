@@ -2,7 +2,7 @@
 
 @section('style')
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.2">
-    <link rel="stylesheet" href="/backend/css/welcome.css?v=1.2">
+    <link rel="stylesheet" href="/css/welcome.css?v=1.2">
 @stop
 
 @section('content')
@@ -27,7 +27,7 @@
                 <div class="col-md-7 left-info">
                     <div class="user-box m-r-15">
                         <a class="user-img">
-                            <img src="http://{{ env('BACKEND_DOMAIN') }}/backend/images/default/admin.jpg">
+                            <img src="http://{{ env('BACKEND_DOMAIN') }}/images/default/admin.jpg">
                         </a>
                         <a class="c-blue" href="javascript:;">老板</a>
                     </div>

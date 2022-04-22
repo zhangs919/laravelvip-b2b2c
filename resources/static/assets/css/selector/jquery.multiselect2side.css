@@ -1,0 +1,26 @@
+.ms2side__div {clear: left;width: 100%;padding: 1px;float: left;background: url('') repeat-x; /* HACK FOR CHROME */}
+.ms2side__select {float: left;}
+.ms2side__header {color: #888;width: 100%;height:auto;line-height: 32px;background-color: #F5F5F5;padding: 2px 5px; border:1px solid #D7D7D7; border-bottom:none;}
+.ms2side__options, .ms2side__updown {float: left;font-size: 12px;margin: 0;padding: 0 8px;width: 50px;color: black;text-align: center;overflow: hidden;}
+.ms2side__updown {width:auto !important}
+
+.ms2side__options p, .ms2side__updown p {margin: 6px 0;padding: 1px;cursor: pointer;border: 1px solid #078AEB;background: #1B9AF7 none repeat scroll 0% 0%; color:#fff; border-radius:2px; font-size:16px;}
+.ms2side__options p.ms2side_hover, .ms2side__updown p.ms2side_hover {cursor: pointer;background: #078AEB none repeat scroll 0% 0%;border-color: #0681DB;}
+.ms2side__options p.ms2side__hide, .ms2side__updown p.ms2side__hide {cursor: default;color: gray;border: 1px solid #ccc;background-color: #F0F0F0; cursor:not-allowed;}
+.ms2side__updown p{ font-size:12px;}
+.ms2side__div select {width: 250px;float: left; height:250px; border:1px solid #D7D7D7}
+.ms2side__div select option{ padding:3px 10px; cursor:pointer; outline:none; blr:expression(this.onFocus=this.blur());border:1px solid #fff;}
+/* INPUT FOR SEARCH */
+.ms2side__header input {width:75%;height: 26px !important;font-size: 12px;border-radius: 2px;background-image: none;border: 1px solid #CCC; padding:2px;transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;}
+.ms2side__header input:hover,.ms2side__header input:active,.ms2side__header input:focus{background-color: #FFF;border: 1px solid #1B9AF7;box-shadow: 0px 0px 0px 2px rgba(82, 168, 236, 0.15);outline: 0px none;}
+.ms2side__header input.wait {width: 80px;height: 12px;background: #FFFFFF url(../../images/selector/loading.gif) no-repeat center right;}
+.ms2side__header input.small {width: 50px;height: 12px;}
+
+/* INPUT FOR SELECT SEARCH */
+.ms2side__header select {width: 100px;font-size: 11px;height: 18px;float: none;}
+.ms2side__header select.small {width: 70px;}
+
+/* REMOVE FILTER OPTION FOR SEARCH */
+.ms2side__header a {font-size: 10pt;padding: 0 8px;width: 16px;height: 16px;color: black;text-align: center;text-decoration: none;background:url(../../images/selector/close.gif) no-repeat center center;margin: 0 0 0 3px;}
+
+.ms2side__header a:hover {background:url(../../images/selector/close-hover.gif) no-repeat center center;width: 16px;height: 16px;font-size: 10pt;padding: 0 8px;color: black;margin: 0 0 0 3px;}

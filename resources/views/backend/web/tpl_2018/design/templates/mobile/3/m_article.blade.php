@@ -1,8 +1,6 @@
 <!-- 默认缓载图片 -->
 <!-- 微商城文章模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!--商城热点 start-->
     <div class="hot" style="position: relative; overflow: hidden;">
@@ -67,9 +65,7 @@
     </div>
     <!--商城热点 end-->
 
-@if($is_design)
 </div>
-@endif
 
 <script type="text/javascript">
     function comments_scroll() {

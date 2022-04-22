@@ -17,8 +17,8 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link rel="stylesheet" href="/frontend/css/common.css"/>
-    <link rel="stylesheet" href="/frontend/css/apply.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/apply.css"/>
 </head>
 <body>
 <!--开店流程头部-->
@@ -189,9 +189,9 @@
 @include('layouts.partials.short_footer')
 
 
-<script src="/frontend/js/jquery-1.9.1.min.js?v=20180428"></script>
-<script src="/frontend/js/jquery.superslide.2.1.1.js?v=20180428"></script>
-<script src="/frontend/js/common.js?v=20180428"></script>
-<script src="/frontend/js/apply_index.js?v=20180428"></script>
+<script src="/js/jquery-1.9.1.min.js?v=20180428"></script>
+<script src="/js/jquery.superslide.2.1.1.js?v=20180428"></script>
+<script src="/js/common.js?v=20180428"></script>
+<script src="/js/apply_index.js?v=20180428"></script>
 </body>
 </html>

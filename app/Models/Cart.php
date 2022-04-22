@@ -14,7 +14,7 @@ class Cart extends BaseModel
 //        'goods_attr','goods_attr_id',
 
         'user_id','session_id','shop_id','goods_id','sku_id','cart_act_id','goods_name','goods_number',
-        'goods_price','goods_type','parent_id','is_gift','buyer_type','add_time',
+        'goods_price','goods_type','parent_id','is_gift','buyer_type','add_time','select'
 
 //        'buy_type',
 //        'ext_info','cart_key',

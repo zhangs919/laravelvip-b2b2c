@@ -20,21 +20,21 @@
     <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
 </head>
 <body>
 <!--登录页css-->
-<link rel="stylesheet" href="/mobile/css/common.css?v=20180702"/>
-<link rel="stylesheet" href="/mobile/css/login.css?v=20180702"/>
+<link rel="stylesheet" href="/css/common.css?v=20180702"/>
+<link rel="stylesheet" href="/css/login.css?v=20180702"/>
 <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/placeholder.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/jquery.supersized.min.js?v=20180813"></script>
-<script src="/mobile/js/login.js?v=20180813"></script>
-<script src="/mobile/js/common.js?v=20180813"></script>
+<script src="/js/login.js?v=20180813"></script>
+<script src="/js/common.js?v=20180813"></script>
 
 
 <div class="login-top" style='background: url({{ get_image_url(sysconf('m_login_bgimg'), 'm_login_bgimg') }}) no-repeat; background-size:cover'>
@@ -139,10 +139,10 @@
             </div>
             <div class="submit-btn">
                 <input type="hidden" name="act" value="act_login" />
-                <input type="hidden" name="back_act" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
+                <input type="hidden" name="back_act" value="" />
                 <input type="submit" class="btn-submit" id="login_btn" value="登 录">
             </div>
-            <input type="hidden" name="back_url" value="/user.html">
+            <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
         </form>
     </div>
 
@@ -226,10 +226,10 @@
             </div>
             <div class="submit-btn">
                 <input type="hidden" name="act" value="act_login" />
-                <input type="hidden" name="back_act" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
+                <input type="hidden" name="back_act" value="" />
                 <input type="submit" class="btn-submit" id="login_btn" value="登 录">
             </div>
-            <input type="hidden" name="back_url" value="/user.html">
+            <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
 
         </form>
     </div>

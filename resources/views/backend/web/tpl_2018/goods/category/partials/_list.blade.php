@@ -45,7 +45,7 @@
 
             </td>
             <td class="text-c">
-                <a href="javascript:void(0);" ref="@if(!empty($v['cat_image'])) {{ get_image_url($v['cat_image']) }} @else /backend/images/default/goods.gif @endif" class="preview">
+                <a href="javascript:void(0);" ref="@if(!empty($v['cat_image'])) {{ get_image_url($v['cat_image']) }} @else /images/default/goods.gif @endif" class="preview">
                     <i class="fa fa-picture-o"></i>
                 </a>
 
@@ -105,7 +105,7 @@
 
                     </td>
                     <td class="text-c">
-                        <a href="javascript:void(0);" ref="@if(!empty($child['cat_image'])) {{ get_image_url($child['cat_image']) }} @else /backend/images/default/goods.gif @endif" class="preview">
+                        <a href="javascript:void(0);" ref="@if(!empty($child['cat_image'])) {{ get_image_url($child['cat_image']) }} @else /images/default/goods.gif @endif" class="preview">
                             <i class="fa fa-picture-o"></i>
                         </a>
 

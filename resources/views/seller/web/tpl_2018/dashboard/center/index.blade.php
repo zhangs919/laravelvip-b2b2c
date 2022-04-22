@@ -15,7 +15,7 @@
             <ul class="clear row">
                 @if(!empty($app['child']))
                     @foreach($app['child'] as $child)
-                        @if(in_array($child['field'], $shop_auth) || $shop_auth == 'all_auth')
+                        @if($shop_auth == 'all_auth' || in_array($child['field'], $shop_auth))
                         <li class="application-item col-md-3 col-sm-4 col-xs-12" @if(!empty($child['is_hide'])) style="display: none" @endif>
 
                             <a href="{{ $child['url'] }}">

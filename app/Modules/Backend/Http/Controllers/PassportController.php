@@ -43,7 +43,7 @@ class PassportController extends Controller
             $login_bg = implode('|', $login_bg);
         } else {
             // 系统默认
-            $login_bg = '/backend/images/login/login_bg1.jpg|/backend/images/login/login_bg2.jpg|/backend/images/login/login_bg3.jpg|/backend/images/login/login_bg4.jpg|/backend/images/login/login_bg5.jpg';
+            $login_bg = '/images/login/login_bg1.jpg|/images/login/login_bg2.jpg|/images/login/login_bg3.jpg|/images/login/login_bg4.jpg|/images/login/login_bg5.jpg';
         }
 
         return view('passport.login', compact('login_bg'));

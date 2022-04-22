@@ -120,6 +120,7 @@
                     <label for="text4" class="col-sm-4 control-label"></label>
                     <div class="col-xs-8">
                         <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}" />
+                        {{--<input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />--}}
                         <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary" />
                     </div>
                 </div>

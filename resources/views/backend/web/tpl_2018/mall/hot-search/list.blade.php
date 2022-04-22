@@ -73,7 +73,7 @@
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script src="/frontend/js/edit.js?v=20180726"></script>
+    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/edit.js?v=20180726"></script>
     <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180726"></script>
 
     <script type="text/javascript">

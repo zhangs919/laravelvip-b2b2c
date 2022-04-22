@@ -16,8 +16,8 @@
 // | 如需使用，请移步官网购买正版授权。
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
-// | Date:2018-12-4
-// | Description:
+// | Date:2019-3-23
+// | Description:团购
 // +----------------------------------------------------------------------
 
 namespace app\Modules\Seller\Http\Controllers\Dashboard;
@@ -26,6 +26,7 @@ use App\Models\Goods;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ActivityCategoryRepository;
 use App\Repositories\ActivityRepository;
+use App\Repositories\ToolsRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -41,10 +42,12 @@ class GroupBuyController extends Seller
         ['url' => 'dashboard/group-buy/list', 'text' => '列表'],
         ['url' => 'dashboard/group-buy/add', 'text' => '添加'],
         ['url' => 'dashboard/group-buy/edit', 'text' => '编辑'],
+        ['url' => 'dashboard/group-buy/view', 'text' => '团购商品列表'],
     ];
 
     protected $activity;
     protected $activityCategory;
+    protected $tools;
 
     public function __construct()
     {
@@ -52,6 +55,7 @@ class GroupBuyController extends Seller
 
         $this->activity = new ActivityRepository();
         $this->activityCategory = new ActivityCategoryRepository();
+        $this->tools = new ToolsRepository();
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -79,7 +83,8 @@ class GroupBuyController extends Seller
 
         $explain_panel = [
             '商家添加团购活动->平台方审核->审核通过->团购活动在前台团购页面展示',
-            '团购活动结束之后，将会在前台团购页面消失'
+            '团购活动结束之后，将会在前台团购页面消失',
+            '虚拟商品参与团购活动'
         ];
         $blocks = [
             'explain_panel' => $explain_panel,
@@ -106,20 +111,35 @@ class GroupBuyController extends Seller
             }
         }
         // 列表
-        $condition = [
-            'where' => $where,
-            'sortname' => 'act_id',
-            'sortorder' => 'asc',
-        ];
-        list($list, $total) = $this->activity->getList($condition);
+        list($list, $total) = $this->activity->getGroupBuyActivityList($where);
 
         $pageHtml = pagination($total);
+        $page = frontend_pagination($total, true);
 
         if ($request->ajax()) {
             $render = view('dashboard.group-buy.partials._list', compact('list', 'total', 'pageHtml'))->render();
             return result(0, $render);
         }
-        return view('dashboard.group-buy.list', compact('title', 'list', 'pageHtml'));
+
+        // 获取数据
+
+        $compact = compact('title', 'list', 'pageHtml');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'list' => $list,
+                'page' => $page
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.group-buy.list'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     public function add(Request $request)
@@ -127,14 +147,48 @@ class GroupBuyController extends Seller
         $title = '添加';
 
         $id = $request->get('id', 0);
-        $this->sublink($this->links, 'add');
+        $this->sublink($this->links, 'add', '', '', 'view,edit');
+
+        $model = [
+            'sort' => 255
+        ];
+        $start_time = date('Y-m-d H:i:s', time());
+        $end_time = date("Y-m-d H:i:s",strtotime("+7 day"));
+        $goods_list = [];
+        $cat_list = [];
 
         if ($id) {
             // 更新操作
-            $info = $this->activity->getById($id);
-            view()->share('info', $info);
+            $model = $this->activity->getById($id);
+            $model = $model->toArray();
+
+            $start_time = $model['start_time'];
+            $end_time = $model['end_time'];
+
+            // 团购活动商品列表
+            $goods_list = $this->activity->getGroupBuyGoodsActivityList($id);
+
+            // 团购活动商品分类列表
+            // 查询活动分类列表（树形）
+            $where = [];
+            $where[] = ['is_show',1];
+            $condition = [
+                'where' => $where,
+                'limit' => 0, // 不分页
+                'sortname' => 'created_at',
+                'sortorder' => 'desc',
+            ];
+            list($category_data, $category_total) = $this->activityCategory->getList($condition, '', false, true);
+
+            $cat_list = [];
+            if (!empty($category_data)) {
+                foreach ($category_data as $v) {
+                    $cat_list[$v['id']] = $v['title_show'];
+                }
+            }
+
             $title = '编辑';
-            $this->sublink($this->links, 'edit');
+            $this->sublink($this->links, 'edit', '', '', 'add,view');
         }
 
         $fixed_title = '团购活动 - '.$title;
@@ -156,7 +210,31 @@ class GroupBuyController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('dashboard.group-buy.add', compact('title', 'info'));
+        // 获取数据
+        $app_prefix_data['model'] = $model;
+        if ($id) {
+            $app_prefix_data['goods_list'] = $goods_list;
+            $app_prefix_data['cat_list'] = $cat_list;
+        } else {
+            $app_prefix_data['start_time'] = $start_time;
+            $app_prefix_data['end_time'] = $end_time;
+        }
+
+        $compact = compact('title', 'model', 'start_time', 'end_time', 'goods_list', 'cat_list');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => $app_prefix_data,
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.group-buy.add'
+        ];
+        $this->setData($data); // 设置数据
+
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     public function edit(Request $request)
@@ -172,18 +250,46 @@ class GroupBuyController extends Seller
      */
     public function saveData(Request $request)
     {
-        $post = $request->post('ActivityModel');
+        $post = $request->post();
+        $postModel = $request->post('ActivityModel');
 
-        if (!empty($post['act_id'])) {
+        // 活动扩展数据
+        $ext_info = null; // 团购活动没有活动扩展数据
+
+        $postModel['ext_info'] = $ext_info;
+        $postModel['act_type'] = 3; // 3-团购活动
+
+        // 活动数据
+        $activityData = $postModel;
+
+        if (empty($post['goods_spu'])) {
+            return result(-1, '', '您还没有添加团购商品！');
+        }
+        // 活动商品数据
+        $goodsActivityData =[];
+        foreach ($post['goods_spu'] as $k=>$v) {
+            $goodsActivityData[] = [
+                'goods_id' => $v,
+                'sku_id' => $post['goods_sku'][$k],
+                'cat_id' => $post['cat_id'][$k],
+                'sale_base' => $post['virtual_sales_num'][$k], // 历史销量
+                'act_price' => $post['activity_price'][$k],
+                'act_stock' => $post['activity_stock'][$k], // 活动库存 为0
+            ];
+        }
+
+        if (!empty($postModel['act_id'])) {
             // 编辑
-            $ret = $this->activity->update($post['store_id'], $post);
+            $ret = $this->activity->modifyActivity($activityData, $goodsActivityData);
             $msg = '团购活动编辑';
+            $act_id = $postModel['act_id'];
         }else {
             // 添加
-            $post['shop_id'] = seller_shop_info()->shop_id;
+            $activityData['shop_id'] = seller_shop_info()->shop_id;
 
-            $ret = $this->activity->store($post);
+            $ret = $this->activity->addActivity($activityData, $goodsActivityData);
             $msg = '团购活动添加';
+            $act_id = @$ret->act_id;
         }
 
         if ($ret === false) {
@@ -191,8 +297,61 @@ class GroupBuyController extends Seller
             return result(-1, null, $msg.'失败');
         }
         // success
+        shop_log($msg.'成功。ID：'.$act_id);
         return result(0, null, $msg.'成功');
     }
+
+    public function view(Request $request)
+    {
+        $title = '团购商品列表';
+
+        $id = $request->get('id', 0);
+//        $this->sublink($this->links, 'view', '', '', 'add,edit');
+        $fixed_title = '团购活动 - '.$title;
+
+        $action_span = [
+            [
+                'url' => 'list',
+                'icon' => 'fa-reply',
+                'text' => '返回团购活动列表'
+            ],
+        ];
+
+        $explain_panel = [];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+        // 获取数据
+        list($list, $total) = $this->activity->getGroupBuyActivityInfo($id);
+
+        $pageHtml = pagination($total);
+        $page = frontend_pagination($total, true);
+
+        $compact = compact('title', 'list', 'pageHtml');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'list' => $list,
+                'page' => $page,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.group-buy.view'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+
 
     /**
      * 删除
@@ -202,30 +361,33 @@ class GroupBuyController extends Seller
     public function delete(Request $request)
     {
         $id = $request->post('id');
-        $ret = $this->activity->del($id);
+        $ret = $this->activity->deleteActivity(0, [$id]);
 
         if ($ret === false) {
             // Log
+            shop_log('团购活动删除失败。ID：'.$id);
             return result(-1, null, '删除失败');
         }
 
         // Log
+        shop_log('团购活动删除成功。ID：'.$id);
         return result(0, null, '删除成功');
     }
 
     public function batchDelete(Request $request)
     {
         $ids = $request->post('ids');
-        $ret = $this->activity->batchDel($ids);
+        $ids = !is_array($ids) ? [$ids] : $ids;
+        $ret = $this->activity->deleteActivity(0, $ids);
 
         $ids = implode(',', $ids);
         if ($ret === false) {
             // Log
-            admin_log('团购活动删除失败。ID：'.$ids);
+            shop_log('团购活动删除失败。ID：'.$ids);
             return result(-1, '', '删除失败');
         }
         // Log
-        admin_log('删除了多个团购活动。ID：'.$ids);
+        shop_log('删除了多个团购活动。ID：'.$ids);
         return result(0, '', '删除成功');
     }
 
@@ -256,10 +418,43 @@ class GroupBuyController extends Seller
             'sortname' => 'created_at',
             'sortorder' => 'desc',
         ];
-        list($category_list, $category_total) = $this->activityCategory->getList($condition, '', false, true);
+        list($category_data, $category_total) = $this->activityCategory->getList($condition, '', false, true);
+
+        $category_list = [];
+        if (!empty($category_data)) {
+            foreach ($category_data as $v) {
+                $category_list[$v['id']] = $v['title_show'];
+            }
+        }
 
         $render = view('dashboard.group-buy.goods_info', compact('goods_info', 'category_list'))->render();
         return result(0, $render, '');
+    }
+
+    /**
+     * 上传活动图片
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function uploadActImg(Request $request)
+    {
+        $act_id = $request->post('act_id');
+        $filename = $request->post('filename', 'name');
+        $storePath = 'activity/group_buy';
+        $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
+
+        if (isset($uploadRes['error'])) {
+            // 上传出错
+            return result(-1, '', $uploadRes['error']);
+        }
+
+        $ret = $this->activity->update($act_id, ['act_img' => $uploadRes['data']['path']]);
+        if ($ret === false) {
+            return result(-1, '', '上传失败！');
+        }
+
+        return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
     }
 
 }

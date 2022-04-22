@@ -21,6 +21,61 @@
 // +----------------------------------------------------------------------
 
 /**
+ * 获取浏览器 phpsessionid
+ *
+ * @return null|string
+ */
+function real_cart_mac_ip()
+{
+    $upperDomain = str_replace('.','_', strtoupper(env('ROOT_DOMAIN'))).'_USER_PHPSESSID';
+
+    session_name($upperDomain);
+    $session_id_ip = cookie($upperDomain)->getValue();
+
+    if (empty($session_id_ip) && $upperDomain != '_USER_PHPSESSID') {
+        session_start();
+//        $session_id_ip = md5(session_id() . dirname(__DIR__));
+        $session_id_ip = session_id();
+        $time = 60 * 24 * 365;
+        cookie($upperDomain, $session_id_ip, $time);
+    }
+
+    return $session_id_ip;
+}
+
+if (!function_exists('get_client_ip')) {
+    /**
+     * 获取客户端IP地址
+     * @param int $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
+     * @param bool $adv 是否进行高级模式获取（有可能被伪装）
+     * @return mixed
+     */
+    function get_client_ip($type = 0, $adv = false) {
+        $type       =  $type ? 1 : 0;
+        static $ip  =   NULL;
+        if ($ip !== NULL) return $ip[$type];
+        if($adv){
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $arr    =   explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $pos    =   array_search('unknown',$arr);
+                if(false !== $pos) unset($arr[$pos]);
+                $ip     =   trim($arr[0]);
+            }elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip     =   $_SERVER['HTTP_CLIENT_IP'];
+            }elseif (isset($_SERVER['REMOTE_ADDR'])) {
+                $ip     =   $_SERVER['REMOTE_ADDR'];
+            }
+        }elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        // IP地址合法验证
+        $long = sprintf("%u",ip2long($ip));
+        $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
+        return $ip[$type];
+    }
+}
+
+/**
  * 获取实名认证示例图片
  *
  * @return array
@@ -44,6 +99,11 @@ if (! function_exists('sysconf')) {
 //        static $config = [];
         $config = [];
         $systemConfigRep = new \App\Repositories\SystemConfigRepository();
+
+        // 将值为0的情况转换为字符串形式:'0',防止不能更新
+        if (is_int($value)) {
+            $value = strval($value);
+        }
         if ($value !== false) {
             list($config, $data) = [[], ['code' => $code, 'value' => $value]];
 
@@ -82,7 +142,10 @@ if (! function_exists('shopconf')) {
         $condition[] = ['config_code',$code];
         $condition[] = ['shop_id',$shop_id];
 
-
+        // 将值为0的情况转换为字符串形式:'0',防止不能更新
+        if (is_int($value)) {
+            $value = strval($value);
+        }
         if ($value !== false) {
             if (\App\Models\ShopConfig::where($condition)->count() == 0) {
                 return false;
@@ -851,7 +914,7 @@ if (! function_exists('get_config_groups'))
 {
 
     /**
-     *
+     * 平台后台配置分组
      *
      * @param $group
      * @return bool|mixed
@@ -865,6 +928,18 @@ if (! function_exists('get_config_groups'))
                 'explain' => [],
                 'anchor' => [],
 //                'validate_json' => ''
+            ],
+            'web_static' => [
+                'code' => 'web_static',
+                'title' => 'PC静态页面设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+            'web_mobile_static' => [
+                'code' => 'web_mobile_static',
+                'title' => 'Mobile静态页面设置',
+                'explain' => [],
+                'anchor' => [],
             ],
             'site_style' => [
                 'code' => 'site_style',
@@ -1289,6 +1364,27 @@ if (! function_exists('get_config_groups'))
                 'anchor' => [],
             ],
 
+            /*商城-营销*/
+            'integral_mall_index_set' => [
+                'code' => 'integral_mall_index_set',
+                'title' => '营销中心 - 积分商城首页设置',
+                'explain' => [
+                    '该组幻灯片滚动图片应用于积分商城页面',
+                    'pc端图片要求使用910*350像素；手机端要求使用1000*400像素jpg、gif、png格式的图片',
+                    '上传图片后请添加格式为“http://网址...”链接地址，设定后将在显示页面中点击幻灯片将以另打开窗口的形式跳转到指定网址'
+                ],
+                'anchor' => [
+                    'PC端图片设置',
+                    '手机端图片设置',
+                ],
+            ],
+            'integral_mall_set' => [
+                'code' => 'integral_mall_set',
+                'title' => '营销中心 - 积分商城设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+
             /*商城-装修*/
             'nav_category_site' => [
                 'code' => 'nav_category_site',
@@ -1482,7 +1578,7 @@ if (! function_exists('get_config_groups'))
 if (! function_exists('admin_log'))
 {
     /**
-     * 记录后台管理日志
+     * 记录平台后台管理日志
      *
      * @param $log_content
      * @return \App\Repositories\User|bool
@@ -1501,7 +1597,7 @@ if (! function_exists('admin_log'))
             'url' => request()->path()
         ];
 
-        $adminLog = new \App\Repositories\AdminLogRepository(new \App\Models\AdminLog());
+        $adminLog = new \App\Repositories\AdminLogRepository();
         $ret = $adminLog->store($insert);
 
         return $ret;
@@ -1531,8 +1627,34 @@ if (! function_exists('image_dir_group'))
     }
 }
 
+function get_video_url($path = '', $type = '', $isOss = true, $isCover = false)
+{
+    if (empty($path)) {
+        return null;
+    }
+    if ($isOss) {
+        // Oss 视频
+        $domain = sysconf('oss_domain');
+    } else {
+        // 本地视频
+        $domain = env('BACKEND_DOMAIN');
+    }
+    $host = request()->getScheme().'://'.$domain.'/'.sysconf('alioss_root_path').'/';
+
+    $url = $host.ltrim($path, '/');
+    if ($isCover) {
+        $url .= '!poster.png';
+    }
+//    dd($url);
+    return $url;
+}
+
 function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shopId = 0)
 {
+    if (str_contains($path, 'http')) {
+        // url已经包含域名 直接返回
+        return $path;
+    }
 
     // 默认图片设置
     if ($type == 'shop_logo') { // 默认店铺logo
@@ -1550,7 +1672,7 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
     } elseif ($type == 'goods_image') { // 默认商品图片
         $default = get_image_url(sysconf('default_goods_image'));
     } elseif ($type == 'm_login_bgimg') { // 微信端 登录页面背景图
-        $default = '/mobile/images/login_top_bg.png';
+        $default = '/images/login_top_bg.png';
     }
     else {
         $default = '/assets/d2eace91/images/default/album.gif';
@@ -1646,7 +1768,7 @@ if (!function_exists('format_bytes')) {
 if (!function_exists('msubstr')) {
     /**
      * 截取中文字符串
-     * 模板调用 {$str|msubstr=0,46}
+     * 模板调用 {{ msubstr($str,0,20) }}
      * @param $str
      * @param int $start
      * @param int $length
@@ -1655,7 +1777,7 @@ if (!function_exists('msubstr')) {
      * @return string
      * @author 雲溪荏苒 <290648237@qq.com>
      */
-    function msubstr($str, $start=0, $length, $suffix=true, $charset="utf-8"){
+    function msubstr($str, $start, $length, $suffix=true, $charset="utf-8"){
         if(mb_strlen($str,$charset)>$length)
         {
             if(function_exists("mb_substr")){
@@ -1685,26 +1807,29 @@ if (!function_exists('msubstr')) {
     }
 }
 
+/**
+ * 获取阿里云OSS host
+ * @return string
+ */
 function get_oss_host()
 {
     $host = 'http://'.sysconf('oss_domain').'/'.sysconf('alioss_root_path').'/';
     return $host;
 }
 
-function reg_from_list($key)
+/**
+ * 生成32位唯一标识字符串
+ *
+ * 带分隔符：9689015e-b41b-3b21-9364-fcc3613123b4
+ * 无分隔符：be0e4cf2a42f35b38322b09fae17a0dc
+ *
+ * @param string $separate 分隔符 默认为空
+ * @return string
+ */
+function uuid($separate = '')
 {
-    $data = [
-        '1' => 'PC端',
-        '2' => 'WAP端',
-        '3' => '微信端',
-        '4' => 'APP端',
-        '5' => '后台添加',
-        '0' => '其他',
-    ];
-    if ($key != '') {
-        return isset($data[$key]) ? $data[$key] : false;
-    }
-    return $data;
+    $uuid = str_replace('-', $separate, \Faker\Provider\Uuid::uuid());
+    return $uuid;
 }
 
 /**
@@ -2445,6 +2570,53 @@ function hide_tel($phone, $replace = '****')
 }
 
 /**
+ * 将身份证号码中间10位用指定字符串替换
+ *
+ * @param $id_card
+ * @param string $replace
+ * @return mixed|string
+ */
+function hide_id_card($id_card, $replace = '**********')
+{
+    return strlen($id_card)==15?substr_replace($id_card,"****",4,7):(strlen($id_card)==18?substr_replace($id_card,$replace,4,10):"身份证位数不正常！");
+}
+
+/**
+ * 隐藏字符串
+ *
+ * @param $str
+ * @param string $replace
+ * @param int $start
+ * @param int $end
+ * @return mixed|string
+ */
+//function hide_str($str, $replace = '**', $start = 1, $end = -1)
+//{
+//    $isChinese = preg_match('/^[\x{4e00}-\x{9fa5}]+$/u',$str);
+//    if ($isChinese) {
+//        $start = $start*2;
+//        $end = $end*2;
+//    }
+//    return empty($str) ? $replace : substr_replace($str, $replace, $start, $end);
+//}
+
+/**
+ * 只保留字符串首尾字符，隐藏中间用*代替（两个字符时只显示第一个）
+ * @param string $user_name 姓名
+ * @return string 格式化后的姓名
+ */
+function substr_cut($user_name){
+    if ($user_name == '') {
+        return '**';
+    }
+
+    $strlen     = mb_strlen($user_name, 'utf-8');
+    $firstStr     = mb_substr($user_name, 0, 1, 'utf-8');
+    $lastStr     = mb_substr($user_name, -1, 1, 'utf-8');
+    return $strlen == 2 ? $firstStr . str_repeat('*', mb_strlen($user_name, 'utf-8') - 1) : $firstStr . str_repeat("*", $strlen - 2) . $lastStr;
+}
+
+/**
  * 获取随机字母
  *
  * @param int $length
@@ -2617,7 +2789,8 @@ function check_is_mobile($num)
     if (!$num) {
         return false;
     }
-    return preg_match('#^13[\d]{9}$|14^[0-9]\d{8}|^15[0-9]\d{8}$|^18[0-9]\d{8}$#', $num) ? true : false;
+    return preg_match('/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/', $num) ? true : false;
+//    return preg_match('#^13[\d]{9}$|14^[0-9]\d{8}|^15[0-9]\d{8}$|^18[0-9]\d{8}$#', $num) ? true : false;
 }
 
 /**
@@ -2764,12 +2937,103 @@ function format_order_from($order_from = 1)
 {
     $data = [
         1 => 'PC端',
-        2 => 'WAP端'
+        2 => 'WAP端',
+        3 => 'Android客户端',
+        4 => 'iOS客户端',
+        5 => '小程序端'
     ];
     if (!isset($data[$order_from])) {
         return '';
     }
     return $data[$order_from];
+}
+
+/**
+ * 格式化订单状态
+ *
+ * @param $k
+ * @return mixed|string
+ */
+function format_order_status($k)
+{
+//    订单状态 0-订单已确认 1-交易成功 2-卖家取消 3-买家取消 4-系统自动取消 10-抢单中
+    $data = [
+        0 => '订单已确认',
+        1 => '交易成功',
+        2 => '卖家取消',
+        3 => '买家取消',
+        4 => '系统自动取消', // 交易关闭
+        /*todo 中间有可能还有其他状态*/
+        10 => '抢单中'
+    ];
+    if (!isset($data[$k])) {
+        return '';
+    }
+    return $data[$k];
+}
+
+/**
+ * 格式化配送状态
+ *
+ * @param $k
+ * @return mixed|string
+ */
+function format_shipping_status($k)
+{
+//    配送状态 0-待发货 1-已发货 2-发货中 3-已提交物流系统
+    $data = [
+        0 => '待发货',
+        1 => '已发货',
+        2 => '发货中',
+        3 => '已提交物流系统',
+    ];
+    if (!isset($data[$k])) {
+        return '';
+    }
+    return $data[$k];
+}
+
+/**
+ * 格式化红包类型
+ *
+ * 红包类型 默认0 1-主动领红包/到店送红包 2-收藏送红包 4-会员送红包 6-注册送红包 9-推荐送红包 10-积分兑换红包
+ * @param int $bonus_type
+ * @return mixed|string
+ */
+function format_bonus_type($bonus_type = 0)
+{
+    $data = [
+        1 => '到店送红包',
+        2 => '收藏送红包',
+        4 => '会员送红包',
+        6 => '注册送红包',
+        9 => '推荐送红包',
+        10 => '积分兑换红包'
+    ];
+    if (!isset($data[$bonus_type])) {
+        return '';
+    }
+    return $data[$bonus_type];
+}
+
+/**
+ * 检查订单来源
+ *
+ * @return int
+ */
+function check_order_from()
+{
+    if (is_app('weapp')) { // 微信小程序端访问
+        return 5;
+    } elseif (is_app('ios')) { // Ios端访问
+        return 4;
+    } elseif (is_app('android')) { // Android端访问
+        return 3;
+    } elseif (is_mobile() && !is_app()) { // 手机端访问 针对微信端
+        return 2;
+    } else { // PC端
+        return 1;
+    }
 }
 
 /**
@@ -2862,7 +3126,7 @@ function get_cart_image()
     if(sysconf('custom_style_enable')) {
         $data = get_image_url(sysconf('cart_image'));
     } else {
-        $data = '/frontend/images/add-cart.jpg';
+        $data = __HTTP__.env('FRONTEND_DOMAIN').'/images/add-cart.jpg';
     }
     return $data;
 }
@@ -3957,3 +4221,29 @@ function get_shop_application_list()
 
     return $data;
 }
+
+/**
+ * 格式化价格
+ *
+ * @param int $price 价格
+ * @param int $number 小数位数
+ * @return string
+ */
+function format_price($price, $number = 2)
+{
+    return number_format($price,$number,'.','');
+}
+
+/**
+ * 将图片地址转换为base64字符串
+ *
+ * @param $image_file
+ * @return string
+ */
+function base64_encode_image($image_file) {
+    $image_info             = getimagesize($image_file);
+    $base64_image_content   = "data:{$image_info['mime']};base64," . chunk_split(base64_encode(file_get_contents($image_file)));
+
+    return $base64_image_content;
+}
+

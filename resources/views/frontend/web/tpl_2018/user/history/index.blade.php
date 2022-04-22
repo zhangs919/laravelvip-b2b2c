@@ -100,4 +100,4 @@
         </script>
     </div>
 
-@endsection
+@stop

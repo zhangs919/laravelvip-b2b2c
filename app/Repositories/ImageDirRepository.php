@@ -44,7 +44,7 @@ class ImageDirRepository
      * @param string $dir_group 相册分组 shop店铺相册 site站点相册 backend平台方相册
      * @return mixed
      */
-    public function createDefaultDirs($shop_id = 0, $site_id = 0, $dir_group)
+    public function createDefaultDirs($shop_id = 0, $site_id = 0, $dir_group = '')
     {
         $defaultDirs = [
             [

@@ -11,7 +11,7 @@
 
     <!-- 搜索条件 -->
     <div class="search-term m-b-10">
-        <form id="searchForm" action="/shop/shipping/list" method="GET">
+        <form id="searchForm" action="/shop/shipping/list.html" method="GET">
             <div class="simple-form-field simple-form-search">
                 <div class="form-group">
                     <label class="control-label">
@@ -31,10 +31,23 @@
                 </div>
             </div>
             <div class="simple-form-field">
+                <div class="form-group">
+                    <label class="control-label">
+                        <span>是否支持电子面单：</span>
+                    </label>
+                    <div class="form-control-wrap">
+                        <select id="is_sheet" name="is_sheet" class="form-control">
+                            <option value="">全部</option>
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="simple-form-field">
                 <input type="submit" id="btn_submit" class="btn btn-primary" value="搜索" />
             </div>
-        </form>
-    </div>
+        </form>	</div>
 
     <div class="common-title">
         <div class="ftitle">

@@ -17,7 +17,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/animate.css?v=1.2"/>
-    <link rel="stylesheet" href="/backend/css/login.css?v=1.2"/>
+    <link rel="stylesheet" href="/css/login.css?v=1.2"/>
     <!-- [if lt IE 9]-->
     <script src="/assets/d2eace91/js/html5shiv.min.js?v=1.2"></script>
     <script src="/assets/d2eace91/js/respond.min.js?v=1.2"></script>
@@ -54,7 +54,7 @@
             <p>{{ sysconf('site_name') }}平台系统管理中心</p>
         </div>
         <div class="line">
-            <img src="/backend/images/login/line.png">
+            <img src="/images/login/line.png">
         </div>
         <div class="form-info">
             <form id="AdminLoginModel" name="AdminLoginModel" action="{{ route('admin.login') }}" method="POST" autocomplete="off">

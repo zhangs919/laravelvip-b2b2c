@@ -1,6 +1,6 @@
 <!--底部菜单 start-->
-<script src="/mobile/js/custom_js.js?v=20180528"></script>
-<link rel="stylesheet" href="/mobile/css/custom_css.css?v=20180428"/>
+<script src="/js/custom_js.js?v=20180528"></script>
+<link rel="stylesheet" href="/css/custom_css.css?v=20180428"/>
 <div style="height: 48px; line-height: 48px; clear: both;"></div>
 <div class="footer-nav">
 
@@ -28,7 +28,7 @@
             <a href="{{ $v->nav_link }}">
 
                 {{--导航菜单有两种显示方式 todo--}}
-                {{--<i style="background: url(/mobile/images/tab_home_normal.png);background-size: contain;"></i>--}}
+                {{--<i style="background: url(/images/tab_home_normal.png);background-size: contain;"></i>--}}
                 <i style="background-image: url({{ get_image_url($v->nav_icon) }});background-size: contain;background-repeat: no-repeat;"></i>
 
                 <span>{{ $v->nav_name }}</span>

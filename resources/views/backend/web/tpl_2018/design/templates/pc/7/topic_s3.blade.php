@@ -1,9 +1,7 @@
 <!-- 默认缓载图片 -->
 <!-- 专题商品模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
-    
+
     <div class="w1210 topic-goods-border">
 
         @if($tpl_name != '' && $is_design)
@@ -66,6 +64,4 @@
 
     </div>
 
-@if($is_design)
 </div>
-@endif

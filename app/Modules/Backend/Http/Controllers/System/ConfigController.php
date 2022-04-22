@@ -150,9 +150,17 @@ class ConfigController extends Backend
      */
     public function updateConfig(Request $request)
     {
+        // system/config/ default_image/ default_floor_loading_0.jpg
+        // backend/gallery/ 2019/01/19/ 15479117075520.jpg
+
         $group = $request->post('group', '');
         $backUrl = $request->input('back_url');
         $updateInfo = $request->post('SystemConfigModel');
+
+        if ($group == 'integral_mall_index_set') {
+            // todo 积分商城首页设置 图片上传待处理保存
+
+        }
 
         $result = $this->systemConfig->update_sysconf($updateInfo);
         if ($request->ajax()) {
@@ -209,5 +217,26 @@ class ConfigController extends Backend
         admin_log('配置设置成功，配置分组：'.$group);
         flash('success', $result['message']);
         return redirect($backUrl);
+    }
+
+    /**
+     * 配置值清空
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function clear(Request $request)
+    {
+        $code = $request->post('code'); // integral_slide_img1|integral_slide_link1
+        $ret = $this->systemConfig->clear($code);
+        if ($ret['code'] == -1) {
+            // fail
+            admin_log('配置值清空失败，配置code：'.$code);
+            return result(-1, null, $ret['message']);
+        }
+
+        // success
+        admin_log('配置值清空成功，配置code：'.$code);
+        return result(0, null, $ret['message']);
     }
 }

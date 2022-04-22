@@ -66,10 +66,16 @@ trait BaseRepository
      */
     public function getById($id, $field = [])
     {
+//        if (!empty($field)) {
+//            return $this->model->select($field)->findOrFail($id);
+//        } else {
+//            return $this->model->findOrFail($id);
+//        }
+
         if (!empty($field)) {
-            return $this->model->select($field)->findOrFail($id);
+            return $this->model->select($field)->find($id);
         } else {
-            return $this->model->findOrFail($id);
+            return $this->model->find($id);
         }
     }
 

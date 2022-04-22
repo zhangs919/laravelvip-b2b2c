@@ -1,7 +1,5 @@
 <!-- 手机端资讯板式二 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!--内容区域 start-->
     <div class="article-list">
@@ -62,6 +60,4 @@
     </div>
     <!--内容区域 end-->
 
-@if($is_design)
 </div>
-@endif

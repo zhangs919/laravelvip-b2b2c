@@ -2,18 +2,18 @@
 
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/mobile/css/flow.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/flow.css?v=20180702"/>
 @stop
 
 {{--header_js--}}
 @section('header_js')
-    <script src="/mobile/js/jquery-1.9.1.min.js?v=20180813"></script>
+    <script src="/js/jquery-1.9.1.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
-    <script src="/mobile/js/tabs.js?v=20180813"></script>
-    <script src="/mobile/js/cart.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
+    <script src="/js/tabs.js?v=20180813"></script>
+    <script src="/js/cart.js?v=20180813"></script>
 @stop
 
 
@@ -58,7 +58,7 @@
     @include('frontend.web_mobile.modules.library.site_footer_menu')
 
     <!-- 加入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
     <!-- 第三方流量统计 -->

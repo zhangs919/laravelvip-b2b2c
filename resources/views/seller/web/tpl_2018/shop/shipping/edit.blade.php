@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20181020"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/base.css?v=20181020"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/jquery-ui.css?v=20181020"/>
-    <link rel="stylesheet" href="/seller/css/waybill.css?v=20181020"/>
+    <link rel="stylesheet" href="/css/waybill.css?v=20181020"/>
     <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180919"></script>
-    <script src="/seller/js/jquery-ui.js?v=20180919"></script>
+    <script src="/js/jquery-ui.js?v=20180919"></script>
 @stop
 
 {{--content--}}

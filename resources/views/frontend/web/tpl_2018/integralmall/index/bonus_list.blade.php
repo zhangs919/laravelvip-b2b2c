@@ -15,7 +15,7 @@
 @section('content')
 
     <!-- 内容 -->
-    <link rel="stylesheet" href="/frontend/css/exchange.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/exchange.css?v=20180428"/>
     <div class="w1210">
         <div class="breadcrumb clearfix">
             <a href="/" class="index">首页</a>

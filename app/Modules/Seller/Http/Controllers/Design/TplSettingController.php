@@ -11,6 +11,7 @@ use App\Models\Shop;
 use App\Models\Template;
 use App\Models\TemplateCat;
 use App\Models\TemplateItem;
+use App\Models\TplBackup;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\LinkTypeRepository;
 use App\Repositories\NavBannerRepository;
@@ -23,6 +24,7 @@ use App\Repositories\TemplateItemRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\TemplateSelectorRepository;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class TplSettingController extends Seller
 {
@@ -111,18 +113,39 @@ class TplSettingController extends Seller
 
         }
         $jsonData = $templateItems;
+
+        $webStatic = 0;
+
         switch ($page) {
             case 'shop':
                 // 电脑端店铺首页装修
                 $sTitle = '店铺首页';
                 // 测试数据
 //                $jsonData = '';
+
+                // 判断首页静态页面开启状态
+                $webStatic = shopconf('shop_web_static',false,$shop_id);
+
                 break;
-            case 'm_site':
+            case 'm_shop':
                 // 微商城店铺首页装修
                 $sTitle = '微商城店铺首页';
                 // 测试数据
 //                $jsonData = '';
+
+                // 当前激活的模板备份id 如果是主题 则选中主题风格
+                $back_id = $shop_info->back_id; // 模板备份id
+                if ($back_id > 0) {
+                    $tpl_backup_info = TplBackup::where('back_id', $back_id)->first();
+                    if (!empty($tpl_backup_info) && $tpl_backup_info->is_theme == 1) {
+                        $theme_id = $back_id;
+                        view()->share('theme_id', $theme_id);
+                        view()->share('theme_img', $tpl_backup_info->img);
+                    }
+                }
+
+                // 判断首页静态页面开启状态
+                $webStatic = shopconf('m_shop_web_static',false,$shop_id);
 
                 break;
 
@@ -166,8 +189,21 @@ class TplSettingController extends Seller
                 break;
         }
 
+        // 获取装修主题列表 tpl_backup is_theme=1
+        $tpl_backup_theme_where[] = ['shop_id', $shop_id];
+//        $tpl_backup_theme_where[] = ['site_id', 0];
+        $tpl_backup_theme_where[] = ['page', $page];
+        $tpl_backup_theme_where[] = ['topic_id', $topic_id];
+        $tpl_backup_theme_where[] = ['is_theme', 1]; // 主题模板
+        $tpl_backup_theme = TplBackup::where($tpl_backup_theme_where)->orderBy('back_id', 'asc')->get()->toArray();
+
+
         $title = sysconf('site_name').'-'.$sTitle.'装修设置';
-        $compact = compact('shop_info', 'page', 'topic_id', 'title', 'jsonData', 'shop_navigation', 'shop_category_list');
+        $is_design = true; // 是否装修模式
+
+
+
+        $compact = compact('shop_info', 'page', 'topic_id', 'title', 'jsonData', 'shop_navigation', 'shop_category_list', 'tpl_backup_theme', 'is_design', 'webStatic');
 
         return view('design.tpl-setting.'.$page, $compact);
     }
@@ -264,7 +300,7 @@ class TplSettingController extends Seller
     {
 //        $page = 'topic', $uid = '1518927139SWHG1K'
         $page = $request->get('page');
-        $uid = $request->get('uid');
+        $uid = $request->get('uid', ''); // 当uid为空时 刷新页面的所有数据
         $tplItem = $this->templateItem->detail(['uid'=>$uid]);
 
         $tplInfo = $this->template->detail(['code'=>$tplItem['code']]);
@@ -312,6 +348,30 @@ class TplSettingController extends Seller
         ];
 
         return result(0, $data, '设置成功');
+    }
+
+    /**
+     * 批量设置模板模块显示/隐藏
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function batchValidTpls(Request $request)
+    {
+        $uids = $request->post('uids');
+        $is_valid = $request->post('is_valid');
+        $uids_str = implode(',', $uids);
+
+        $ret = TemplateItem::whereIn('uid', $uids)->update(['is_valid'=>$is_valid]);
+        if ($ret === false) {
+            // Log
+            shop_log('装修模块批量显示/隐藏失败。UID：'.$uids_str);
+            return result(-1, '', '设置失败');
+        }
+
+        // Log
+        shop_log('装修模块批量显示/隐藏成功。UID：'.$uids_str);
+        return result(0, $uids, '设置成功');
     }
 
     public function addData(Request $request)
@@ -508,10 +568,40 @@ class TplSettingController extends Seller
 
         $extra = [
             // 微商城首页二维码
-            'qrcode' => 'http://images.68mall.com/14719/gqrcode/site/qrcode_CD4B99D2C262AF1AA6E32E4861F3580B.png',
+            'qrcode' => '/design/tpl-setting/qrcode.html?id='.$shop_id, // todo 'http://images.68mall.com/14719/gqrcode/site/qrcode_CD4B99D2C262AF1AA6E32E4861F3580B.png',
             'url' => $url // 设置成功 跳转url地址
         ];
         return result(0, null, '保存成功', $extra);
+    }
+
+    /**
+     * 生成二维码
+     * @param Request $request
+     * @return mixed
+     */
+    public function qrCode(Request $request)
+    {
+        $shop_id = $request->get('id',0);
+//        $shop_info = $this->shop->getById($shop_id);
+
+        // todo 如何获取手机端商品详情url
+        if (!is_mobile()) {
+            $url = route('pc_shop_home', ['shop_id'=>$shop_id]);
+        } else {
+            $url = route('mobile_shop_home', ['shop_id'=>$shop_id]);
+        }
+
+        $qrCode = QrCode::errorCorrection('L')
+            ->format('png')
+            ->size(148)
+//            ->merge('/public/qrcodes/water.png',.15) // 合并水印图片到二维码
+//            ->merge(get_image_url($shop_info->shop_image),.15) // 合并水印图片到二维码
+            ->margin(2)
+//            ->color(255,0,255)
+//            ->backgroundColor(125,245,0)
+            ->encoding('UTF-8')
+            ->generate($url);
+        return response()->make($qrCode, 200, ['Content-Type' => 'image/png']);
     }
 
     /**
@@ -529,9 +619,9 @@ class TplSettingController extends Seller
         if ($group == 'site_style') {
             if (sysconf('custom_style_enable') == 1) {
 //                $url = 'http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/css/custom/site-color-style-0.css';
-                $url = 'http://'.env('FRONTEND_DOMAIN').'/frontend/css/custom/site-color-style-0.css';
+                $url = __HTTP__.env('FRONTEND_DOMAIN').'/css/custom/site-color-style-0.css';
             } else {
-                $url = 'http://'.env('FRONTEND_DOMAIN').'/frontend/css/color-style.css';
+                $url = __HTTP__.env('FRONTEND_DOMAIN').'/css/color-style.css';
             }
         }
 
@@ -559,6 +649,30 @@ class TplSettingController extends Seller
         // Log
         admin_log('装修模块删除成功。UID：'.$uid);
         return result(0, '', '模块删除成功');
+    }
+
+    /**
+     * 批量删除模板模块
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function batchDelete(Request $request)
+    {
+        $uids = $request->post('uids');
+        $ret = TemplateItem::whereIn('uid', $uids)->delete();
+
+        $uids_str = implode(',', $uids);
+
+        if ($ret === false) {
+            // Log
+            shop_log('装修模块批量删除失败。UID：'.$uids_str);
+            return result(-1, '', '删除失败');
+        }
+
+        // Log
+        shop_log('装修模块批量删除成功。UID：'.$uids_str);
+        return result(0, $uids, '删除成功');
     }
 
     public function ajaxRender(Request $request)
@@ -670,8 +784,39 @@ class TplSettingController extends Seller
     public function setStatic(Request $request)
     {
         $code = $request->post('code'); // site-PC首页 m_site-微信端首页 shop-店铺首页 m_shop-微信端店铺首页
+        if ($code == 'shop') {
+            $ret = shopconf('shop_web_static', shopconf('shop_web_static') == 1 ? 0 : 1, seller_shop_info()->shop_id);
+            $web_static = shopconf('shop_web_static',false,seller_shop_info()->shop_id);
+        } elseif ($code == 'm_shop') {
+            $ret = shopconf('m_shop_web_static', shopconf('m_shop_web_static') == 1 ? 0 : 1, seller_shop_info()->shop_id);
+            $web_static = shopconf('m_shop_web_static',false,seller_shop_info()->shop_id);
+        } else {
+            $ret = false;
+            $web_static = 0;
+        }
 
+        if ($ret === false) {
+            return result(-1, null, '设置失败');
+        }
 
-        return result(0, 0, '设置成功');
+        return result(0, $web_static, '设置成功');
+    }
+
+    /**
+     * 刷新店铺头部
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
+    public function refShopHeader(Request $request)
+    {
+        $code = $request->get('code'); // shop_header_style-店铺头部样式
+        $group = $request->get('group'); // m_shop_header-店铺头部设置
+
+        $render = view('design.tpl-setting.ref_shop_header')->render();
+
+        return result(0, $render);
+
     }
 }

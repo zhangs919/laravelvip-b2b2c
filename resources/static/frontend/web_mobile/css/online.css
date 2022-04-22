@@ -1,0 +1,82 @@
+.yikf-form {
+	filter: alpha(opacity = 0);
+	transition: 0.2s ease-out;
+	position: fixed;
+	top: 50%;
+	width: 70px;
+	right: 40px;
+	font-size: 12px;
+	background-color: #488bff;
+	z-index: 9999;
+	padding-bottom: 10px;
+}
+
+.yikf-form .yikf-item {
+	position: relative;
+	box-sizing: border-box;
+	display: block;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+	z-index: 9999;
+	margin: 0;
+}
+
+.yikf-item:hover {
+	color: red;
+}
+
+.yikf-form input {
+	cursor: pointer;
+	border: none;
+	background: transparent;
+	color: #fff;
+	margin: 3px 0;
+}
+
+.yikf-form input:hover {
+	color: #043b9a
+}
+
+.yikf-icon {
+	display: block;
+	width: 31px;
+	height: 30px;
+	background: url(../images/yikf/chat.png);
+	margin: 20px auto;
+	margin-bottom: 4px;
+}
+
+.yikf-close {
+	display: block;
+	width: 18px;
+	height: 18px;
+	background: url(../images/yikf/close.png) no-repeat;
+	position: pox;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	position: pox
+}
+
+#yikf-talk {
+	width: 400px;
+	height: 500px;
+	position: fixed;
+	bottom: 10px;
+	right: 90px;
+	z-index: 999999;
+}
+
+#yikf-iframe {
+	width: 100%;
+	height: 100%;
+	box-shadow: rgba(15, 66, 76, 0.25) 0px 0px 24px 0px;
+	border-radius: 10px 10px 0 0;
+	border: none;
+	border-left: 1px solid #ddd;
+}

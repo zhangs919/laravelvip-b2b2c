@@ -1,8 +1,6 @@
 <!-- 默认缓载图片 -->
 <!-- 专题模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
 
 
@@ -81,8 +79,9 @@
     <!-- 推荐的商品 _end -->
 
 
-@if($is_design)
 </div>
+
+@if($is_design)
 <script type="text/javascript">
     $('#{{ $uid }}').find('.handle').prepend('<button type="button" class="decor-btn SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="99" data-style_colorpicker="1"><i class="fa fa-arrow-circle-o-up"></i>设置</button>');
 </script>

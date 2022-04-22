@@ -9,29 +9,29 @@
         <!-- 如果商品已失效，给下面的div追加class "invalid" -->
         <li class=" ">
             <div class="p-img">
-                <a href="{{ route('pc_show_goods',['goods_id'=>$v->goods_id]) }}" target="_blank">
-                    <img src="{{ get_image_url($v->goods->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
+                <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}" target="_blank">
+                    <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
                          width="50" height="50" alt="">
                 </a>
             </div>
             <div class="p-name">
-                <a href="{{ route('pc_show_goods',['goods_id'=>$v->goods_id]) }}" title="{{ $v->goods_name }}"
+                <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}"
                    target="_blank">
                     <!-- 如果商品已失效，显示下面的font标签 _start -->
 
                     {{--<font>失效</font>--}}
 
                     <!-- 如果商品已失效，显示下面的font标签 _end -->
-                    {{ $v->goods_name }}
+                    {{ $v['goods_name'] }}
                 </a>
             </div>
             <div class="p-detail">
                 <span class="p-price">
-                <strong class="second-color">￥{{ $v->goods_price }}</strong>
-                ×{{ $v->goods_num }}
+                <strong class="second-color">￥{{ $v['goods_price'] }}</strong>
+                ×{{ $v['goods_number'] }}
                 </span>
                 <br>
-                <a class="delete" href="javascript:void(0)" onClick="$.cart.remove('{{ $v->cart_id }}')">删除</a>
+                <a class="delete" href="javascript:void(0)" onClick="$.cart.remove('{{ $v['cart_id'] }}')">删除</a>
             </div>
         </li>
         @endforeach
@@ -41,7 +41,7 @@
 <div class="dropdown-footer clearfix">
     <div class="p-total">
         共
-        <b class="second-color">{{ $cart_price_info['goods_num'] }}</b>
+        <b class="second-color">{{ $cart_price_info['goods_number'] }}</b>
         件商品 共计
         <strong class="second-color">￥{{ $cart_price_info['total_fee'] }}</strong>
     </div>

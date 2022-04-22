@@ -4,10 +4,10 @@
 {{--css style page元素同级上面--}}
 @section('style')
     <!-- 卖家中心首页样式 -->
-    <link rel="stylesheet" href="/seller/css/index.css?v=4.0"/>
+    <link rel="stylesheet" href="/css/index.css?v=4.0"/>
     <!-- 图表 -->
-    <script src="/seller/js/chart.js?v=20190110"></script>
-    <script src="/seller/js/chart-data.js?v=20190110"></script>
+    <script src="/js/chart.js?v=20190110"></script>
+    <script src="/js/chart-data.js?v=20190110"></script>
     <div class="alert renew-box hide">
         <div class="renew-box-text">
             <!-- <a href="#" class="close" data-dismiss="alert"> &times; </a> -->

@@ -125,7 +125,7 @@
                 <!---->
             @else
                 <div class="tip-box">
-                    <img src="/frontend/images/noresult.png" class="tip-icon">
+                    <img src="/images/noresult.png" class="tip-icon">
                     <div class="tip-text">暂无收藏的宝贝</div>
                 </div>
             @endif

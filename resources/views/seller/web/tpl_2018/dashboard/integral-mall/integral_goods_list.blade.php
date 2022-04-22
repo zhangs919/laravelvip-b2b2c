@@ -55,7 +55,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true>2</span>
+                <span data-total-record=true></span>
                 条记录&nbsp;)
             </h5>
 

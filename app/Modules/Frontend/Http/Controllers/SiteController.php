@@ -107,7 +107,7 @@ class SiteController extends Frontend
 
     public function getSessionId(Request $request)
     {
-        $session_id = md5($this->user_id); // todo 暂时用md5加密 用户id返回给前端 后面再看
+        $session_id = $this->session_id; //md5($this->user_id); // todo 暂时用md5加密 用户id返回给前端 后面再看
         return result(0, $session_id);
     }
 
@@ -116,12 +116,12 @@ class SiteController extends Frontend
 
         $data = [
             [
-                'headimg' => 'http://images.68mall.com/system/config/default_image/default_user_portrait_0.png',
-                'user_name' => '鲜农乐一号门店管理员'
+                'headimg' => get_image_url(sysconf('default_user_portrait')),
+                'user_name' => '乐融沃一号门店管理员'
             ],
             [
-                'headimg' => 'http://images.68mall.com/system/config/default_image/default_user_portrait_0.png',
-                'user_name' => '鲜农乐一号门店管理员'
+                'headimg' => get_image_url(sysconf('default_user_portrait')),
+                'user_name' => '乐融沃一号门店管理员'
             ],
         ];
         $count = 20;
@@ -249,7 +249,9 @@ class SiteController extends Frontend
                     'field' => [
                         'center', 'city_code', 'is_enable', 'is_scope', 'level',
                         'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                    ]
+                    ],
+                    'sortname' => 'region_id',
+                    'sortorder' => 'asc'
                 ];
                 list($region_list, $total) = $this->regions->getList($condition);
                 $data[$key] = $region_list;
@@ -265,7 +267,9 @@ class SiteController extends Frontend
                 'field' => [
                     'center', 'city_code', 'is_enable', 'is_scope', 'level',
                     'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                ]
+                ],
+                'sortname' => 'region_id',
+                'sortorder' => 'asc'
             ];
             list($region_list, $total) = $this->regions->getList($condition);
 
@@ -357,7 +361,6 @@ class SiteController extends Frontend
      */
     public function ajaxRender(Request $request)
     {
-        // /site/ajax-render.html?uid=154797592964HJCM&tpl_file=%2F0%2Fgoods%2Fgoods_floor.tpl&is_last=0
         $uid = $request->get('uid');
         $tpl_file = $request->get('tpl_file'); // /0/goods/goods_floor.tpl
         $is_last = $request->get('is_last');
@@ -390,5 +393,48 @@ class SiteController extends Frontend
         ];
 
         return result(0, $data);
+    }
+
+    public function addressParse(Request $request)
+    {
+        $address = $request->post('address');
+
+    }
+
+    /**
+     * 获取二维码登录信息
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function getQrcodeLoginKey(Request $request)
+    {
+        $data = [
+            'user_id' => 'h7ci760hmcg3um28bmsv4o00us', // 26位
+            'key' => 'F79FA86071C0DD4CBEE63415ED1090DE' // 32位
+        ];
+        return result(0, $data);
+    }
+
+    public function alioss(Request $request)
+    {
+        if ($this->user_id) {
+            // 登录状态
+            $dir = 'user/'.$this->user_id.'/files/'.format_time(time(), 'Y/m/d').'/';
+        } else {
+            // 未登录状态
+            $dir = 'user/all/files/'.format_time(time(), 'Y/m/d').'/';
+        }
+        $data = [
+            'accessid' =>sysconf('alioss_access_key_id'),
+            'callback' => '',
+            'dir' => $dir,
+            'expire' => time(),
+            'host' => get_oss_host(),
+            'policy' => '',
+            'signature' => '',
+        ];
+
+        return response()->json($data);
     }
 }

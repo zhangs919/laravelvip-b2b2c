@@ -1,7 +1,5 @@
 <!-- 登录版式 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- banner右侧公告 _start -->
     <div class="nav-login">
@@ -84,6 +82,4 @@
     </div>
     <!-- banner右侧公告 _end -->
 
-@if($is_design)
 </div>
-@endif

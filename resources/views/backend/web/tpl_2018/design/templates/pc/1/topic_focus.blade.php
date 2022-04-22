@@ -1,46 +1,42 @@
 <!-- 店铺首页轮播广告模板 -->
-@if($is_design)
-    <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-@endif
+<div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
 
-        <!-- banner模块 _start -->
-        <div class="banner">
+    <!-- banner模块 _start -->
+    <div class="banner">
 
-            @if($tpl_name != '' && $is_design)
-                <a title="编辑" href="javascript:void(0)" class="selector pic-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="3" data-number="5">
-                    <i class="fa fa-edit"></i>
-                    编辑
-                </a>
-            @endif
+        @if($tpl_name != '' && $is_design)
+            <a title="编辑" href="javascript:void(0)" class="selector pic-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="3" data-number="5">
+                <i class="fa fa-edit"></i>
+                编辑
+            </a>
+        @endif
 
-            @if(isset($data['3-1']))
-                <ul id="fullScreenSlides" class="full-screen-slides">
-                    @foreach($data['3-1'] as $k=>$v)
-                        <li @if($k == 0) style="display: list-item;" @else style="display: none;" @endif>
-                            <a href="{{ $v['link'] ?? 'javascript:void(0)' }}" target="_blank" title="" style="background:url({{ get_image_url($v['path']) }}) no-repeat center center;"></a>
-                        </li>
-                    @endforeach
-                </ul>
-                <ul class="full-screen-slides-pagination">
-                    @foreach($data['3-1'] as $k=>$v)
-                        <li class="@if($k == 0) current @endif">
-                            <a href="javascript:void(0);">{{ $k }}</a>
-                        </li>
-                    @endforeach
-                </ul>
-            @else
-                <ul class="full-screen-slides">
-                    <li class="example-text">
-                        <span>此处添加【1920*400】图片</span>
+        @if(isset($data['3-1']))
+            <ul id="fullScreenSlides" class="full-screen-slides">
+                @foreach($data['3-1'] as $k=>$v)
+                    <li @if($k == 0) style="display: list-item;" @else style="display: none;" @endif>
+                        <a href="{{ $v['link'] ?? 'javascript:void(0)' }}" target="_blank" title="" style="background:url({{ get_image_url($v['path']) }}) no-repeat center center;"></a>
                     </li>
-                </ul>
-            @endif
-        </div>
-        <!-- banner模块 _end -->
-
-@if($is_design)
+                @endforeach
+            </ul>
+            <ul class="full-screen-slides-pagination">
+                @foreach($data['3-1'] as $k=>$v)
+                    <li class="@if($k == 0) current @endif">
+                        <a href="javascript:void(0);">{{ $k }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <ul class="full-screen-slides">
+                <li class="example-text">
+                    <span>此处添加【1920*400】图片</span>
+                </li>
+            </ul>
+        @endif
     </div>
-@endif
+    <!-- banner模块 _end -->
+
+</div>
 
 
 <script type="text/javascript">

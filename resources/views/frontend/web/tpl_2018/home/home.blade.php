@@ -11,15 +11,15 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <link rel="stylesheet" href="/frontend/css/index.css?v=1.1"/>
-    <link rel="stylesheet" href="/frontend/css/template.css?v=20180702"/>
-    <script src="/frontend/js/index.js?v=1.1"></script>
-    <script src="/frontend/js/tabs.js?v=1.1"></script>
-    <script src="/frontend/js/bubbleup.js?v=1.1"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=1.1"></script>
-    <script src="/frontend/js/index_tab.js?v=1.1"></script>
-    <script src="/frontend/js/jump.js?v=1.1"></script>
-    <script src="/frontend/js/nav.js?v=1.1"></script>
+    <link rel="stylesheet" href="/css/index.css?v=1.1"/>
+    <link rel="stylesheet" href="/css/template.css?v=20180702"/>
+    <script src="/js/index.js"></script>
+    <script src="/js/tabs.js?v=1.1"></script>
+    <script src="/js/bubbleup.js?v=1.1"></script>
+    <script src="/js/jquery.hiSlider.js?v=1.1"></script>
+    <script src="/js/index_tab.js?v=1.1"></script>
+    <script src="/js/jump.js?v=1.1"></script>
+    <script src="/js/nav.js?v=1.1"></script>
 @stop
 
 
@@ -156,7 +156,7 @@
         }
     </style>
 
-    @if(!$webStatic)
+    @if(!$webStatic){{--静态页面关闭时 显示--}}
     <script type="text/javascript">
         $.templateloading();
     </script>

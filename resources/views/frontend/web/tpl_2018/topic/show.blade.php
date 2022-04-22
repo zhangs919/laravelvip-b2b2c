@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header_css')
-    <link rel="stylesheet" href="/frontend/css/topic_activity.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/topic_activity.css?v=20180428"/>
 @stop
 
 {{--follow_box 注意此效果只在首页面展示--}}
@@ -11,13 +11,13 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180528"></script>
-    <script src="/frontend/js/tabs.js?v=20180528"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180528"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/frontend/js/index_tab.js?v=20180528"></script>
-    <script src="/frontend/js/jump.js?v=20180528"></script>
-    <script src="/frontend/js/nav.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180528"></script>
+    <script src="/js/tabs.js?v=20180528"></script>
+    <script src="/js/bubbleup.js?v=20180528"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
+    <script src="/js/index_tab.js?v=20180528"></script>
+    <script src="/js/jump.js?v=20180528"></script>
+    <script src="/js/nav.js?v=20180528"></script>
 @stop
 
 

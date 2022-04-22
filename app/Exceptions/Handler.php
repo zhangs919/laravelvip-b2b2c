@@ -50,14 +50,14 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         /* 错误页面 */
-//        if ($exception instanceof HttpException) {
-//            $code = $exception->getStatusCode();
-//
-//            if (view()->exists('errors.' . $code)) {
-//                $message  = $exception->getMessage();
-//                return response()->view('errors.' . $code, ['message'=>$message, 'exception'=>$exception], $code);
-//            }
-//        }
+        if ($exception instanceof HttpException) {
+            $code = $exception->getStatusCode();
+
+            if (view()->exists('errors.' . $code)) {
+                $message  = $exception->getMessage();
+                return response()->view('errors.' . $code, ['message'=>$message, 'exception'=>$exception], $code);
+            }
+        }
 //        dd($exception->getMessage());
         return parent::render($request, $exception);
     }

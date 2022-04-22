@@ -2,25 +2,12 @@
 
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/mobile/css/user.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/user.css?v=20180702"/>
 @stop
 
 {{--header_js--}}
 @section('header_js')
-    <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/yii.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
 
-    <script src="/mobile/js/user.js?v=20180813"></script>
-    <script src="/mobile/js/address.js?v=20180813"></script>
-    <script src="/mobile/js/center.js?v=20180813"></script>
-    <!-- 图片缓载js -->
-    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/szy.page.more.js?v=20180813"></script>
 @stop
 
 
@@ -29,7 +16,7 @@
 
     <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/image_upload/lrz.all.bundle.js?v=20180813"></script>
+    <script src="/js/image_upload/lrz.all.bundle.js?v=20180813"></script>
     <div class="user-info-box">
         <header>
             <div class="header">
@@ -86,7 +73,7 @@
                     <h5>2010-05-14<i class="iconfont">&#xe607;</i></h5>
                 </dt>
             </dl>-->
-        <link rel="stylesheet" href="/mobile/css/mobiscroll.custom-3.0.0-beta.min.css?v=20180702"/> <script src="/mobile/js/mobiscroll.custom-3.0.0-beta.min.js?v=20180813"></script>
+        <link rel="stylesheet" href="/css/mobiscroll.custom-3.0.0-beta.min.css?v=20180702"/> <script src="/js/mobiscroll.custom-3.0.0-beta.min.js?v=20180813"></script>
         <dl class="birthday_dl" id="showbirth">
             <dt>
                 <h3>出生日期</h3>
@@ -187,7 +174,7 @@
                     </div>
                 </div>
             </header>
-            <input type="hidden" id="user_sex" name="UserModel[sex]" value="0">
+            <input type="hidden" id="user_sex" name="UserModel[sex]" value="{{ $user_info->sex }}">
             <ul class="user-sex">
                 <li>
                     <span data-sex='0' @if($user_info->sex == 0) class="selected" @endif>保密</span>
@@ -578,7 +565,7 @@
             @endif
         })
     </script>
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
     <div class="show-menu-info" id="menu">

@@ -1,0 +1,109 @@
+/**
+万能表单特殊样式
+**/
+.ui-sortable-placeholder {
+	background-color: #fff8dc;
+}
+
+#dropzone {
+	min-height: 30px;
+}
+
+.editor-body, .editor-header {
+	border: 1px solid #ccc;
+}
+
+.editor-header {
+	box-sizing: content-box !important;
+}
+
+.editor-body {
+	margin-top: 5px !important;
+	padding: 6px;
+	width: 232px !important;
+	height: 200px;
+}
+
+.editor-body .w-e-text {
+	overflow-y: auto;
+}
+
+.description .w-e-toolbar.editor-header {
+	display: inline-block;
+	height: auto;
+}
+
+.w-e-toolbar div.w-e-menu {
+	float: left;
+	padding: 5px 5px;
+}
+
+.image-preview {
+	width: 245px;
+	min-height: 96px;
+	border: 1px dashed #848484;
+	margin-bottom: 10px;
+}
+
+.clearfix {
+	zoom: 1;
+}
+
+.clearfix:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.disabled {
+	background-color: #fff;
+}
+
+.radio-add {
+	cursor: pointer;
+}
+
+#map_scale {
+	margin-top: 7px;
+}
+
+#color-picker {
+	width: 60px;
+}
+
+.operate-nr {
+	overflow: visible;
+}
+
+.map-init {
+	height: 300px;
+}
+
+.ui-state-focus {
+	outline: none;
+}
+
+.ui-slider .ui-slider-handle {
+	cursor: pointer;
+}
+
+.evo-cp-wrap {
+	width: auto !important;
+}
+
+.render-selector {
+	margin-left: 0 !important;
+}
+
+.question-conent .inline li {
+	float: left;
+	margin-right: 15px;
+}
+
+.map_container {
+	height: 300px;
+}
+
+.form-control-error {
+	float: none;
+}

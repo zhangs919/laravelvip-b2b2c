@@ -57,16 +57,11 @@
 
 
 
-
-            <div class="simple-form-field p-b-30">
-                <div class="form-group">
-                    <label for="text4" class="col-sm-4 control-label"></label>
-                    <div class="col-xs-8">
-                        <input type="hidden" name="back_url" value="/shop/shipping/self" />
-                        <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary" />
-                    </div>
-                </div>
+            <div class="bottom-btn p-b-30">
+                <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}" />
+                <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary btn-lg">
             </div>
+
         </div>
     </form>
 

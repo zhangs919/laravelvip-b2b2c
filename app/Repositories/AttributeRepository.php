@@ -179,11 +179,13 @@ class AttributeRepository
                 $attr_info =  Attribute::where('attr_id', $item['attr_id'])->first();
                 $attr_values = $item->attr_value;
                 $attr_value_list = [];
-                foreach ($attr_values as $av) {
-                    $attr_value_list[] = [
-                        'id' => $av->attr_vid,
-                        'value' => $av->attr_vname
-                    ];
+                if (!empty($attr_values)) {
+                    foreach ($attr_values as $av) {
+                        $attr_value_list[] = [
+                            'id' => $av->attr_vid,
+                            'value' => $av->attr_vname
+                        ];
+                    }
                 }
 
                 $data[] = [

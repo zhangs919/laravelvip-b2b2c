@@ -28,9 +28,7 @@
 
 
     <div class="footer-service">
-        <div align="center">
-            <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/images/backend/1/images/2016/11/28/14803038465459.jpg" alt="" height="110" width="1210" /><br />
-        </div>
+        {!! sysconf('mall_service') !!}
     </div>
 
 
@@ -45,8 +43,8 @@
 
         <div class="footer-article w1210">
             <dl class="col-article col-article-spe">
-                <dt class="phone color">400-000-0000</dt>
-                <dd class="email color">lrw@laravelvip.com</dd>
+                <dt class="phone color">{{ sysconf('mall_phone') }}</dt>
+                <dd class="email color">{{ sysconf('mall_email') }}</dd>
 
                 <dd class="customer">
                     <span>联系我们</span>

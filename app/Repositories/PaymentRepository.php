@@ -17,6 +17,24 @@ class PaymentRepository
     }
 
     /**
+     * 根据支付方式code获取支付方式id
+     *
+     * @param string $pay_code 支付方式code
+     * @return null
+     */
+    public function getPayIdByPayCode($pay_code)
+    {
+        if ($pay_code == 'cod') { // 货到付款
+            return '-1';
+        }
+        $pay_id = $this->model->where('pay_code', $pay_code)->value('pay_id');
+        if (empty($pay_id)) {
+            return null;
+        }
+        return $pay_id;
+    }
+
+    /**
      * PC 获取支付方式列表
      *
      * @param string $checked_pay_code 选中的支付方式代码 $checked_pay_code
@@ -35,7 +53,7 @@ class PaymentRepository
                 // PC端支付 alipay union weixin
                 if (!in_array($v->pay_code,['alipay','union','weixin'])) {
                     unset($list[$k]);
-                    break;
+                    continue;
                 }
             }
             // todo WAP端支付

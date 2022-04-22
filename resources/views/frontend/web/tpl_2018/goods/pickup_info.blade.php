@@ -15,13 +15,13 @@
 @section('style_js')
     <!--页面css/js-->
 
-    <script src="/frontend/js/index.js?v=20180813"></script>
-    <script src="/frontend/js/tabs.js?v=20180813"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180813"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180813"></script>
-    <script src="/frontend/js/index_tab.js?v=20180813"></script>
-    <script src="/frontend/js/jump.js?v=20180813"></script>
-    <script src="/frontend/js/nav.js?v=20180813"></script>
+    <script src="/js/index.js?v=20180813"></script>
+    <script src="/js/tabs.js?v=20180813"></script>
+    <script src="/js/bubbleup.js?v=20180813"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180813"></script>
+    <script src="/js/index_tab.js?v=20180813"></script>
+    <script src="/js/jump.js?v=20180813"></script>
+    <script src="/js/nav.js?v=20180813"></script>
 @stop
 
 
@@ -44,7 +44,7 @@
         }
     </style>
     <!-- css -->
-    <link rel="stylesheet" href="/frontend/css/goods.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/goods.css?v=20180702"/>
     <!-- 自提详情 _start -->
     <div class="w1210">
         <div class="pickup-box">

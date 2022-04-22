@@ -17,6 +17,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
         Route::get('growth-value.html', 'User\RankController@growthValue'); // 会员成长值
         Route::get('history.html', 'User\HistoryController@index'); // 我的足迹
         Route::get('order.html', 'User\OrderController@index'); // 我的订单
+        Route::get('bonus.html', 'User\BonusController@lists'); // 我的红包
+        Route::get('complaint.html', 'User\ComplaintController@lists'); // 我的投诉
 
         // 个人资料
         Route::group(['prefix' => 'profile'], function () {
@@ -36,6 +38,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
             Route::get('bind.html', 'User\BindController@index'); // index
         });
 
+        // 我的消息
+        Route::get('message.html', 'User\MessageController@message'); // 系统公告
+        Route::group(['prefix' => 'message'], function () {
+            Route::get('internal.html', 'User\MessageController@internal'); // 站内信
+        });
+
         // 我的收藏
         Route::group(['prefix' => 'collect'], function () {
             Route::get('goods.html', 'User\CollectController@index'); //
@@ -50,6 +58,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
         Route::group(['prefix' => 'address'], function () {
             Route::get('index.html', 'User\AddressController@index'); // index
             Route::get('add', 'User\AddressController@add'); // add
+            Route::get('add.html', 'User\AddressController@add'); // add
             Route::get('edit', 'User\AddressController@edit'); // edit
             Route::get('edit.html', 'User\AddressController@edit'); // edit
             Route::post('add.html', 'User\AddressController@saveData'); // saveData
@@ -69,10 +78,34 @@ Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
 
         // 我的订单
         Route::group(['prefix' => 'order'], function () {
-            Route::get('list.html', 'User\OrderController@lists'); // 订单详情
+            Route::get('list.html', 'User\OrderController@lists'); // 订单列表
+            Route::get('list', 'User\OrderController@lists'); // 订单列表
             Route::get('info.html', 'User\OrderController@info'); // 订单详情
-            Route::get('edit-order.html', 'User\OrderController@editOrder'); // 订单详情
+            Route::get('edit-order.html', 'User\OrderController@editOrder');
             Route::post('cancel.html', 'User\OrderController@orderCancel'); // 取消订单
+
+        });
+
+        // 我的红包
+        Route::group(['prefix' => 'bonus'], function () {
+            Route::post('receive.html', 'User\BonusController@receive'); // 领取红包
+
+        });
+
+        // 我的投诉
+        Route::group(['prefix' => 'complaint'], function () {
+            Route::get('list.html', 'User\ComplaintController@lists'); // 列表
+            Route::get('list', 'User\ComplaintController@lists'); // 列表
+            Route::get('view.html', 'User\ComplaintController@view'); // 详情
+
+        });
+
+        // 我的评价
+        Route::group(['prefix' => 'evaluate'], function () {
+            Route::get('index.html', 'User\EvaluateController@lists'); // 列表
+            Route::get('list.html', 'User\EvaluateController@lists'); // 列表
+            Route::get('list', 'User\EvaluateController@lists'); // 列表
+            Route::get('info.html', 'User\EvaluateController@info'); // 详情
 
         });
     });

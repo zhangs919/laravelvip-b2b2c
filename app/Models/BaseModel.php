@@ -91,6 +91,10 @@ class BaseModel extends Model
 
         $query = $this->select($field)->where($where);
 
+        if (!empty($condition['where_raw'])) { // 查询某个字段中包含某个值
+            $query = $query->whereRaw($condition['where_raw']['field'], $condition['where_raw']['condition']);
+        }
+
         if (!empty($condition['not_in'])) {
             $query = $query->whereNotIn($condition['not_in']['field'], $condition['not_in']['condition']);
         }

@@ -15,19 +15,19 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180702"/>
-    <link rel="stylesheet" href="/mobile/css/topic_activity.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/common.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/swiper.min.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/topic_activity.css?v=20180702"/>
     <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
-    <script src="/mobile/js/swiper.jquery.min.js?v=20180813"></script>
-    <script src="/mobile/js/index.js?v=20180813"></script>
+    <script src="/js/swiper.jquery.min.js?v=20180813"></script>
+    <script src="/js/index.js?v=20180813"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
     <script type="text/javascript">
@@ -38,9 +38,9 @@
     </script>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
 </head>
 <body>
@@ -168,7 +168,7 @@
 </div>
 <!-- 底部 _end-->
 <!-- 飞入购物车 -->
-<script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+<script src="/js/jquery.fly.min.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
 <script type="text/javascript">

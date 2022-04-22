@@ -93,4 +93,44 @@ class Activity extends BaseModel
     {
         return $this->hasMany(GoodsActivity::class, 'act_id', 'act_id');
     }
+
+    public function setStartTimeAttribute($value)
+    {
+        $this->attributes['start_time'] = is_int($value) ? $value : strtotime($value);
+    }
+
+    public function getStartTimeAttribute()
+    {
+        return date('Y-m-d H:i:s', $this->attributes['start_time']);
+    }
+
+    public function setEndTimeAttribute($value)
+    {
+        $this->attributes['end_time'] = is_int($value) ? $value : strtotime($value);
+    }
+
+    public function getEndTimeAttribute()
+    {
+        return date('Y-m-d H:i:s', $this->attributes['end_time']);
+    }
+
+    /**
+     * 设置活动扩展数据 json_encode
+     *
+     * @param $value
+     */
+    public function setExtInfoAttribute($value)
+    {
+        $this->attributes['ext_info'] = json_encode($value);
+    }
+
+    /**
+     * 获取活动扩展数据 json_decode
+     *
+     * @return mixed
+     */
+    public function getExtInfoAttribute()
+    {
+        return json_decode($this->attributes['ext_info'],true);
+    }
 }

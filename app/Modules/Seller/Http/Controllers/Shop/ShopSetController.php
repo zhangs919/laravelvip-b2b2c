@@ -2,6 +2,7 @@
 
 namespace App\Modules\Seller\Http\Controllers\Shop;
 
+use App\Models\Topic;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ShopConfigFieldRepository;
 use App\Repositories\ShopRepository;
@@ -52,16 +53,16 @@ class ShopSetController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        $info = $this->shop->getShopInfo($shop_id);
-
-//        dd(get_hour_minutes());
-        $compact = compact('title', 'info');
 
         if ($request->method() == 'POST') {
 //            dd($request->post());
             $shopModel = $request->post()['ShopModel'];
             $opening_hour = $request->post()['opening_hour'];
             $shopModel['opening_hour'] = serialize($opening_hour);
+
+            $shipping_time = $request->post('shipping_time');
+            $shopModel['shipping_time'] = serialize($shipping_time);
+
             $ret = $this->shop->update($shop_id, $shopModel);
             if ($ret == false) {
                 flash('error', '设置失败');
@@ -70,9 +71,33 @@ class ShopSetController extends Seller
             flash('success', '设置成功');
             return redirect('/shop/shop-set/edit');
         }
-//        dd($info);
 
-        return view('shop.shop-set.edit', $compact);
+
+
+        // 获取数据
+
+        $model = $this->shop->getShopInfo($shop_id);
+        $region_name = get_region_names_by_region_code($model['region_code']);
+        $qrcode = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gsFV8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyczUwLUZFN1pkWjIxMDAwMHcwM3AAAgRz299bAwQAAAAA';
+
+        $compact = compact('title', 'model', 'region_name', 'qrcode');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'model' => $model,
+                'region_name' => $region_name,
+                'qrcode' => $qrcode
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'shop.shop-set.edit'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     /**
@@ -108,10 +133,30 @@ class ShopSetController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        $group = 'shop_other'; // 当前配置分组
-        $config_info = $this->shopConfigField->getSpecialConfigsByGroup($group, 'code');
-        $compact = compact('title', 'config_info', 'group');
 
-        return view('shop.shop-set.other', $compact);
+        // 获取数据
+        $group = 'shop_other'; // 当前配置分组
+        $model = $this->shopConfigField->getSpecialConfigsByGroup($group, 'code', true);
+        $back_url = $request->fullUrl();
+
+        // 专题列表
+        $topic_list = Topic::where([['is_delete',0],['shop_id', seller_shop_info()->shop_id]])->orderBy('topic_id', 'asc')->get()->toArray();
+        $compact = compact('title', 'model', 'back_url', 'topic_list');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'model' => $model,
+                'back_url' => $back_url,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'shop.shop-set.other'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 }

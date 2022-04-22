@@ -76,7 +76,7 @@
                                     我的成长值：
 
                                     <font class="second-color">
-                                        <a href="/user/growth-value.html">{{ $user_info->rank_points ?? 0 }}</a>
+                                        <a href="/user/growth-value.html">{{ $user_info->rank_point ?? 0 }}</a>
                                     </font>
                                 </span>
 
@@ -341,7 +341,7 @@
                     <div class="update-face-cont">
                         <div class="update-left">
                             <div class="update-btn">
-                                <link rel="stylesheet" href="/frontend/css/style.css?v=20180428"/>
+                                <link rel="stylesheet" href="/css/style.css?v=20180428"/>
                                 <div class="btn">
                                     <a href="javascript:void(0);" class="upload-img">
                                         <label for="upload-file">选择您要上传的头像</label>
@@ -388,7 +388,7 @@
                 </div>
             </div>
         </div>
-        <script src="/frontend/js/cropbox.js?v=20180528"></script>
+        <script src="/js/cropbox.js?v=20180528"></script>
         <script src="/assets/d2eace91/js/jquery.region.js?v=20180528"></script>
         <script type="text/javascript">
             $(window).load(function() {

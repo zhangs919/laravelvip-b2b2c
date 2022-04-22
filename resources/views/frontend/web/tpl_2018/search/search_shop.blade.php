@@ -14,13 +14,13 @@
 
 @section('style_js')
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180528"></script>
-    <script src="/frontend/js/tabs.js?v=20180528"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180528"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/frontend/js/index_tab.js?v=20180528"></script>
-    <script src="/frontend/js/jump.js?v=20180528"></script>
-    <script src="/frontend/js/nav.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180528"></script>
+    <script src="/js/tabs.js?v=20180528"></script>
+    <script src="/js/bubbleup.js?v=20180528"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
+    <script src="/js/index_tab.js?v=20180528"></script>
+    <script src="/js/jump.js?v=20180528"></script>
+    <script src="/js/nav.js?v=20180528"></script>
 @stop
 
 
@@ -28,7 +28,7 @@
 @section('content')
 
     <!-- 内容 -->
-    <link type="text/css" rel="stylesheet" href="/frontend/css/shop_street.css" />
+    <link type="text/css" rel="stylesheet" href="/css/shop_street.css" />
     <div class="w1210">
         <div id="filter">
             <!--排序-->

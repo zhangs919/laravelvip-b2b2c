@@ -13,12 +13,12 @@
     <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <script src="/mobile/js/common.js?v=20180813"></script>
+    <script src="/js/common.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
     <script type="text/javascript">
         $().ready(function() {
@@ -34,8 +34,8 @@
 
     <!-- 内容 -->
     <div id="index_content">
-        <link rel="stylesheet" href="/mobile/css/shop_street.css?v=20180702"/>
-        <script src="/mobile/js/shopstreet.js?v=20180813"></script>
+        <link rel="stylesheet" href="/css/shop_street.css?v=20180702"/>
+        <script src="/js/shopstreet.js?v=20180813"></script>
         <div class="shop-street-top">
             <div class="header">
                 <div class="shop-street-left">
@@ -585,31 +585,25 @@
         <script type="text/javascript">
             $().ready(function() {
                 var tablelist = null;
-
-                if(sessionStorage.shop_street_0__){
-                    $('.shop-street-list').html(sessionStorage.shop_street_0__);
-                    is_opening();
+                $('.shop-street-list').html('<div class="shop-loading-con"><img src="/assets/d2eace91/images/common/shop_loading_icon.png"><div class="shop-loading-text">正在为您定位,搜索附近店铺...</div></div>');
+                if (sessionStorage.geolocation) {
+                    var data = $.parseJSON(sessionStorage.geolocation);
+                    loadlist(data);
                     return;
-                }else{
-                    $('.shop-street-list').html('<div class="shop-loading-con"><img src="/assets/d2eace91/images/common/shop_loading_icon.png"><div class="shop-loading-text">正在为您定位,搜索附近店铺...</div></div>');
-                    if (sessionStorage.geolocation) {
-                        var data = $.parseJSON(sessionStorage.geolocation);
-                        loadlist(data);
-                        return;
-                    }else{
-                        //获取坐标
-                        $.geolocation({
-                            callback: function(data) {
-                                loadlist(data);
-                            }
-                        });
-                    }
+                } else {
+                    //获取坐标
+                    $.geolocation({
+                        callback: function(data) {
+                            loadlist(data);
+                        }
+                    });
                 }
+
             });
             function loadlist(data) {
                 if (data) {
                     $.ajax({
-                        url: '/shop/street/index.html',
+                        url: '/shop/street/index',
                         dataType: 'json',
                         data: {
                             output: 1,
@@ -617,14 +611,12 @@
                             lng: data.lng,
                             sort: 'distance-asc',
                             name: $('#shop_name').val(),
-                            cls_id: ''
+                            cls_id: '',
                         },
                         success: function(result) {
                             $('.shop-street-list').html(result.data);
                             $('.shop-nav a').removeClass('invalid');
                             is_opening();
-                            sessionStorage.shop_street_0__ = result.data;
-
                         }
                     });
                 }
@@ -632,7 +624,7 @@
             //判断商家是否休息
             function is_opening() {
                 var ids = [];
-                $.each($('.SZY-IS-OPEN.valid'),function(a,b){
+                $.each($('.SZY-IS-OPEN.valid'), function(a, b) {
                     ids.push($(b).data('shop_id'));
                     $(b).removeClass('valid');
                 });
@@ -658,7 +650,7 @@
             </ul>
         </div>
         <!-- 返顶 -->
-        <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+        <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
         <script type="text/javascript">
             $().ready(function(){
                 //首先将#back-to-top隐藏

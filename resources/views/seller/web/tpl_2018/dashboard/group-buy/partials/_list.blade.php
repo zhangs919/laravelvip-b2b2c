@@ -17,49 +17,38 @@
     @foreach($list as $v)
     <tr>
         <td class="tcheck">
-            <input type="checkbox" class="checkBox" value="{{ $v->act_id }}" />
+            <input type="checkbox" class="checkBox" value="{{ $v['act_id'] }}" />
         </td>
-        <td>{{ $v->act_name }}</td>
+        <td>{{ $v['act_name'] }}</td>
         <td class="text-c">
-            <a href="javascript:void(0);" ref="{{ get_image_url($v->act_img) }}" class="preview">
+            <a href="javascript:void(0);" ref="{{ get_image_url($v['act_img']) }}" class="preview">
                 <i class="fa fa-picture-o"></i>
             </a>
-            <span class="btn btn-success btn-xs pos-r upload-img" data-url="upload-act_img" data-id="{{ $v->act_id }}"> 更换 </span>
+            <span class="btn btn-success btn-xs pos-r upload-img" data-url="upload-act_img" data-id="{{ $v['act_id'] }}"> 更换 </span>
         </td>
         <td>
-            {{ $v->start_time }}
+            {{ $v['start_time'] }}
             <br>
             ~
             <br>
-            {{ $v->end_time }}
+            {{ $v['end_time'] }}
             <br>
         </td>
-        <td>1</td>
+        <td>{{ $v['goods_count'] }}</td>
         <td class="text-c">
-            @if($v->act_status == 0)
-                <font class="c-red">未开始</font>
-            @elseif($v->act_status == 1)
-                <font class="c-warning">进行中</font>
-            @elseif($v->act_status == 2)
-                <font class="c-green">已结束</font>
-            @endif
+            <font class="{{ str_replace([0,1,2],['c-red','c-warning','c-999'],$v['is_finish']) }}">{{ str_replace([0,1,2],['未开始','进行中','已结束'],$v['is_finish']) }}</font>
         </td>
         <td class="text-c">
-            @if($v->act_status == 0)
-                <font class="c-red">待审核</font>
-            @elseif($v->act_status == 1)
-                <font class="c-warning">已审核</font>
-            @elseif($v->act_status == 2)
-                <font class="c-green">审核不通过</font>
-            @endif
-            <br>
+            <font class="{{ str_replace([0,1,2],['c-red','c-green','c-999'],$v['status']) }}">{{ str_replace([0,1,2],['待审核','已审核','审核不通过'],$v['status']) }}</font>
         </td>
         <td class="handle">
-            <a href="view?id={{ $v->act_id }}" class="border-none">查看</a>
+            <a href="view?id={{ $v['act_id'] }}" class="border-none">查看</a>
             <span>|</span>
-            <a href="edit?id={{ $v->act_id }}">编辑</a>
+            @if($v['status'] == 0){{--待审核 可以编辑--}}
+            <a href="edit?id={{ $v['act_id'] }}">编辑</a>
             <span>|</span>
-            <a href="javascript:void(0);" data-id="{{ $v->act_id }}" class="del border-none">删除</a>
+            @endif
+            <a href="javascript:void(0);" data-id="{{ $v['act_id'] }}" class="del border-none">删除</a>
         </td>
     </tr>
     @endforeach

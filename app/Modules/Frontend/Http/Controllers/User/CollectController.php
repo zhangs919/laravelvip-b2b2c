@@ -58,11 +58,12 @@ class CollectController extends UserCenter
 
         list($list, $total) = $this->collect->getUserCollect($this->user_id, 0, $curPage, $pageSize);
         $pageHtml = frontend_pagination($total);
-        $page_json = frontend_pagination($total, true);
+        $page_array = frontend_pagination($total, true);
+        $page_json = json_encode($page_array);
         $goods_collect_count = $this->collect->getUserCollectCount($this->user_id, 0);
         $shop_collect_count = $this->collect->getUserCollectCount($this->user_id, 1);
 
-        $compact = compact('seo_title', 'list','pageHtml', 'total','goods_collect_count','shop_collect_count');
+        $compact = compact('seo_title', 'list','pageHtml', 'page_json', 'total','goods_collect_count','shop_collect_count');
 
         if ($tab == 'goods_list') {
             $render = view('user.collect.partials._goods_list', $compact)->render();
@@ -72,7 +73,7 @@ class CollectController extends UserCenter
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [
-                'page' => $page_json,
+                'page' => $page_array,
                 'list' => $list,
                 'nav_default' => 'collect',
                 'goods_collect_count' => $goods_collect_count,
@@ -98,11 +99,12 @@ class CollectController extends UserCenter
 
         list($list, $total) = $this->collect->getUserCollect($this->user_id, 1, $curPage, $pageSize);
         $pageHtml = frontend_pagination($total);
-        $page_json = frontend_pagination($total, true);
+        $page_array = frontend_pagination($total, true);
+        $page_json = json_encode($page_array);
         $goods_collect_count = $this->collect->getUserCollectCount($this->user_id, 0);
         $shop_collect_count = $this->collect->getUserCollectCount($this->user_id, 1);
 
-        $compact = compact('seo_title', 'list','pageHtml', 'total','goods_collect_count','shop_collect_count');
+        $compact = compact('seo_title', 'list','pageHtml','page_json', 'total','goods_collect_count','shop_collect_count');
 
         if ($tab == 'all_shop') {
             $render = view('user.collect.partials._shop_list', $compact)->render();
@@ -129,7 +131,7 @@ class CollectController extends UserCenter
     }
 
     /**
-     * 商品/店铺 收藏/取消收藏
+     * 商品/店铺 关注/取消关注
      *
      * @param Request $request
      * @return array
@@ -144,13 +146,13 @@ class CollectController extends UserCenter
 
         $collect_count = null;
 
-        if ($shop_id) { // 店铺收藏/取消收藏
+        if ($shop_id) { // 店铺关注/取消关注
             if ($this->collect->checkIsCollected($this->user_id, 1, $shop_id)) {
-                // 取消收藏
-                $msg = '取消收藏';
+                // 取消关注
+                $msg = '取消关注';
             } else {
-                // 收藏
-                $msg = '收藏';
+                // 关注
+                $msg = '关注';
             }
             $ret = $this->collect->toggle($this->user_id, 1, $shop_id);
             if ($ret === false) {
@@ -158,7 +160,7 @@ class CollectController extends UserCenter
                 return result(-1, null, $msg.'失败');
             }
             if ($show_count == 1) {
-                // 显示收藏数量
+                // 显示关注数量
                 $collect_count = Shop::where('shop_id', $shop_id)->value('collect_num');
             }
         } elseif ($goods_id && $sku_id) { // 商品收藏/取消收藏
@@ -195,6 +197,29 @@ class CollectController extends UserCenter
         return result(0, $ret, $msg.'成功', $extra);
     }
 
+    /**
+     * 删除收藏
+     * @param Request $request
+     * @return array
+     */
+    public function deleteCollect(Request $request)
+    {
+        $id = $request->get('id');
+        $id = explode(',', $id);
 
+        $ret = $this->collect->batchDel($id);
+        if ($ret === false) {
+            return result(-1, null, '删除失败');
+        }
+
+        $extra = [
+            'buy_count' => 0,
+            'collect_count' => 0,
+            'invalid_count' => 0,
+            'shop_count' => 0,
+            'shop_count_list' => 0
+        ];
+        return result(0, null, '删除成功！', $extra);
+    }
 
 }

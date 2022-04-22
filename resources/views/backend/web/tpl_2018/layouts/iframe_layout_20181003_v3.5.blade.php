@@ -4288,7 +4288,7 @@
 <script src="/assets/d2eace91/js/jquery.method.js?v=1.2"></script>
 <script src="/assets/d2eace91/js/jquery.modal.js?v=1.2"></script>
 
-<script src="/backend/js/main.js?v=1.2"></script>
+<script src=/js/main.js?v=1.2"></script>
 
 
 <div id="attention" class="modal-body" style="display: none">

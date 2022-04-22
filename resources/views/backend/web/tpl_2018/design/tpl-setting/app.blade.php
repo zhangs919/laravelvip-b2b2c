@@ -30,10 +30,10 @@
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
         {{-- todo 暂时不确定移动端是否能整站改色 暂时注释掉 --}}
-        {{--<link rel="stylesheet" href="/mobile/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>--}}
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.6" id="site_style"/>
+        {{--<link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>--}}
+        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!-- GPS获取坐标 -->
     <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_web_key') }}"></script>

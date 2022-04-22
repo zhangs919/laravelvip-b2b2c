@@ -1,0 +1,126 @@
+@charset "utf-8";
+/* CSS Document */
+body, td, input, textarea, select, button,label,ul, ol, li, dl, dt, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset,a,i{ -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+body { color: #333; background: #f5f5f5;}
+body, td, input, textarea, select, button { font-size: 12px; font-family: "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif; color: #333;}
+label { font-weight: normal;}
+body, ul, ol, li, dl, dt, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset { padding: 0; margin: 0;}
+ul, ol, li { list-style-image: none; list-style-type: none;}
+a { color: #666; text-decoration: none; blr: expression(this.onFocus=this.blur());
+outline: none;}
+a:active { star: expression_r(this.onFocus=this.blur()); text-decoration: none;}
+a:hover { color: #1b9af7; text-decoration: none; cursor: pointer;}
+a:focus, input[type=button], input[type=submit] { outline: none; text-decoration: none;}
+input, button, select, textarea { outline: none;}
+a img { border: none;}
+i.fa { margin-right: 4px; font-size: 14px;}
+
+/*公用*/
+.clear { height: 0; font-size: 0; line-height: 0; clear: both;}
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.clearfix { zoom: 1;}
+table { border-spacing: 0; border-collapse: collapse;}
+.pull-right { float: right;}
+.text-c { text-align: center;}
+.text-r { text-align: right;}
+
+/******************新打印模板页面设计*****************/
+.print-admin-top{background-color: #FFF; box-shadow: 2px 0 2px rgba(0,0,0,.5); width: 100%; position: fixed; z-index: 40; top: 0; left: 0;}
+.print-admin-top .admin-top { min-width: 1003px;}
+.admin-btn-r{ height: 50px; float: right; margin-right: 10px;}
+.admin-btn-r a{ cursor: pointer; height: 26px; font-size: 13px; padding: 0px 12px; text-align: center; font-weight: 400; border-radius: 25px; margin: 12px 10px 0 0;width: 82px; line-height: 26px; display: inline-block;}
+.admin-btn-r a i{ font-size: 16px; display: inline-block; background: url(../images/common/combine_img.png) no-repeat; vertical-align:middle; margin-right:5px; margin-top: -2px;}
+.admin-btn-r a.preview-a{ border:1px solid #0096FF; color: #0096FF;}
+.admin-btn-r a.preview-a i{ background-position: -196px -95px; width: 20px; height: 16px;}
+.admin-btn-r a.print-a{ background: #0096FF; color: #fff;}
+.admin-btn-r a.print-a i{ background-position:-198px -124px; width:18px; height: 17px;}
+.admin-btn-r a.save-a{ background: #0096FF;  color: #fff;}
+.admin-btn-r a.save-a i{ background-position: -234px -124px; width: 20px; height: 18px;}
+.admin-btn-r a.set-a{ background: #0096FF;  color: #fff;}
+.admin-btn-r a.set-a i{ background-position: -234px -93px; width: 20px; height: 18px;}
+.ruler-tool{margin-right: 15px; float: right;}
+.ruler-tool a{ cursor: pointer; display: inline-block;}
+.ruler-tool a span{display: inline-block; line-height: 50px; font-size: 14px; font-weight: 400; color: #555; vertical-align: middle;}
+/*左侧模板设计选择*/
+.toolbar-fun-wrap { position:fixed; z-index: 3; height: 100%;  top: 0; left: 0px; background-color: #FFF; display: none;}
+.toolbar-fun-wrap .toolbar-fun-inner {top: 50px; height: 100%; display: block; border-right: solid 1px #dbdbdb; background-color: #FFF; position: relative; overflow: hidden;}
+.toolbar-fun-head{ height: 54px; border-bottom: 1px solid #dbdbdb; position: relative;}
+.toolbar-fun-head strong { display: inline-block; height: 20px; border-left: 3px solid #36b0f3; margin: 18px 0 0 16px; padding: 0 0 0 10px; line-height: 20px; font-size: 13px;}
+.toolbar-fun-head .toolbar-close{ position: absolute; cursor: pointer; right: 15px; top: 20px; width: 20px; height: 20px; font-size: 24px; line-height: 14px;}
+.toolbar-fun-list .tool-box-item-tab{float: left; height: 100%; position: absolute; border-right: 1px dashed #dadada; padding: 20px 0; width: 97px; text-align: center;}
+.toolbar-fun-list .tool-box-item-tab ul li{margin: 0 0 18px; text-align: center;}
+.toolbar-fun-list .tool-box-item-tab ul li span{display: inline-block; border-radius: 25px; width: 80px; height: 30px; line-height: 30px;color: #888; cursor: pointer; font-size: 14px;}
+.toolbar-fun-list .tool-box-item-tab ul li.selected span{ background: #36B0F3; color: #fff;}
+.toolbar-fun-list .tool-box-item-center{padding: 20px 0; overflow: hidden; width: 306px; float: right;}
+.tool-row-box{ position: absolute; height:73%; width:302px; overflow: hidden; overflow-y: auto;}
+.tool-row-list li{width: 260px; border: 1px solid #ededed; margin: 0 auto 13px;}
+.tool-row-list li.selected{ border-color: #36B0F3;}
+.tool-row-list .temp-pic{margin: 3px; overflow: hidden; position: relative; text-align: center; cursor: pointer;}
+.tool-row-list .temp-pic img{ max-width: 100%; max-height: 100%; vertical-align: middle;}
+/*打印模板设置*/
+.toolbar-fun-wrap.r{ left:auto; right:0px; width:405px;}
+.toolbar-fun-wrap.r .toolbar-fun-inner {border-left: solid 1px #dbdbdb; border-right:0px }
+.toolbar-fun-wrap.r .toolbar-fun-body{height: calc(100% - 110px); overflow-y: auto;}
+.toolbar-fun-wrap .group-list-title { margin: 10px 12px 5px; border-radius: 3px; color: #000; background-color: #f5f5f5; overflow: hidden; height: 26px; padding: 0px 10px; line-height: 26px;}
+.toolbar-fun-wrap .group-list-title strong { display: inline-block; color: #666; margin-right: 10px;}
+.toolbar-fun-wrap .group-list-title span{ font-size: 12px; color: #999;}
+.toolbar-fun-wrap .group-list-panel{ overflow: hidden; margin: 0px 12px; padding: 5px;}
+.toolbar-fun-wrap .group-list-panel h5.small-title{ position: relative; display: block; border-bottom: 1px solid #e9e9e9; height: 15px; margin-bottom: 15px;}
+.toolbar-fun-wrap .group-list-panel h5 span{ position: absolute; left: 15px; font-weight: 200; font-size: 12px; color: #000; line-height: 26px; background: #fff; padding: 0px 10px;}
+.page-type-select{ border:1px solid #ddd; cursor: pointer; width:100px; height: 30px;}
+.page-type-select option:hover{ background: #36B0F3;}
+.page-type-select.w140{ width: 140px;}
+.group-control-wrap{ display: inline-block; margin-right:10px; vertical-align: middle;}
+.group-control-wrap input,.input-text{border: 1px solid #ddd; height: 30px; width: 60px; padding: 0px 5px;}
+.input-text.w180{ width:180px }
+.group-control-wrap .text-button{box-sizing: border-box; float: left; vertical-align: middle; margin-right: 5px; width: 25px; position: relative; white-space: nowrap; display: inline-block; height: 24px; cursor: pointer; overflow: hidden; border-width: 1px; border-style: solid; border-radius: 3px; color: #666; border-color: #ddd; background-color: rgba(0,0,0,0);}
+.group-control-wrap .text-button span{display: block; font-size: 13px; height: 22px; line-height: 22px; overflow: hidden; margin: 0 3px 0 3px; padding: 0 4px; text-align: center; vertical-align: middle;}
+.group-control-wrap .text-button.selected{color: #fff; background-color: #0096FF; border-color: #0096FF;}
+.group-control-wrap .text-button:last-child,.group-control-wrap.last{ margin-right: 0px;}
+.print-project{ overflow: hidden; margin-bottom: 5px;}
+.print-project ul.head{ display: inline-block; float: left;}
+.print-project ul li{display:inline-block; cursor: pointer;float: left; min-width: 95px; padding:0px 5px; height: 30px;line-height: 30px; overflow: hidden; vertical-align: middle}
+.print-project ul li label{ cursor: pointer; color:#888;}
+.print-project ul li label input{ margin-right: 5px; margin-top: -1px; vertical-align: middle; cursor: pointer;}
+.print-project ul li:hover label{ color: #555;}
+
+/*右侧模板设计内容面板*/
+.print-module_wrap{position:absolute; top: 72px; left: 15px; right: 420px; z-index: 15; }
+.print-module_wrap .print-paper{max-width: 241mm; min-width: 50mm; margin: 0px auto; background: none repeat scroll 0 0 #fff; border: 1px solid #dbdbdb;  position: relative;  }
+
+/*模板尺寸*/
+.m50 { width: 50mm; }
+.m60 { width: 60mm; }
+.m70 { width: 70mm; }
+.m80 { width: 80mm; }
+.m100 { width: 100mm; }
+.m120m93 { width: 120mm; height: 93mm; min-height: 93mm; }
+.m120m140 { width: 120mm; height: 140mm; min-height: 140mm; }
+.m120m280 { width: 120mm; height: 280mm; min-height: 280mm; }
+.m190m93 { width: 190mm; height: 93mm; min-height: 93mm;}
+.m190m140 { width: 190mm; height: 140mm; min-height: 140mm;}
+.m190m280 { width: 190mm; height: 280mm; min-height: 280mm;}
+.m210m145 { width: 210mm; height: 145mm; min-height: 145mm;}
+.m241m93 { width: 241mm; height: 93mm; min-height: 93mm;}
+.m241m139 { width: 241mm; height: 139mm; min-height: 139mm;}
+.m241m280 { width: 241mm; height: 280mm; min-height: 280mm;}
+.a4{width:210mm; height:297mm; min-height: 297mm;}
+.m190m93 .print-paper-inner,.m190m140 .print-paper-inner,.m190m280 .print-paper-inner,.a4 .print-paper-inner,.m210m145 .print-paper-inner,.m241m93 .print-paper-inner,.m241m139 .print-paper-inner,.m241m280 .print-paper-inner{ padding: 5mm;}
+.m120m280 .print-paper-inner,.m120m140 .print-paper-inner,.m120m93 .print-paper-inner,.m100 .print-paper-inner,.m80 .print-paper-inner,.m70 .print-paper-inner,.m60 .print-paper-inner,.m50 .print-paper-inner{ padding: 2mm;}
+/*模板内容设计*/
+.print-model-text{ display: block; margin: 15px auto; overflow: hidden;}
+.print-model-text ul li{ width: 100%; display: block; }
+.print-model-text.average2 ul li{width: 50%; display: inline-block; float: left;}
+.print-model-text.average3 ul li{ width:33%; display: inline-block; float: left;}
+.print-model-text ul li span{ min-width: 60px;}
+.print-model-text ul li.block{ display: block !important; width:100% !important} 
+.print-trim-div{border: 1px solid transparent; z-index: 99; position: relative;  }
+.print-trim-div.print-trim-selected{ background: #fff; border: 1px dashed #0096FF;}
+.print-trim-div input,.print-trim-div input:hover{ border:none; position: absolute; background: none; box-shadow: none; left:0px; top:0px; right:0px; bottom:0px;}
+.top-right-box{ position: absolute; top:0px; right: 0px; z-index: 2;}
+.top-right-box img{ float: left; margin-left: 25px;}
+.store-box{ overflow: hidden;}
+.store-box .store-logo{ float: left; display: inline-block; margin-right: 20px;}
+.store-box .store-info{ float: left;}
+.store-info .print-model-text{ margin: 0;}
+

@@ -36,7 +36,6 @@
                                 <li class="search-li curr" num="1">店铺</li>
                                 <li class="search-li" num="0">宝贝</li>
                             @endif
-
                         </ul>
                         <i></i>
                     </div>

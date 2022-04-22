@@ -8,10 +8,9 @@ use App\Repositories\CopyrightAuthRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Workerman\Worker;
+use Illuminate\Support\Facades\URL;
 
 class PassportController extends Controller
 {
@@ -65,7 +64,8 @@ class PassportController extends Controller
 
         // 记录日志
         shop_log('卖家管理员【'.seller_info()->user_name.'】登录卖家中心。');
-        return '/index';
+        $back_url = \request()->post('back_url','/index');
+        return $back_url;
     }
 
     /**
@@ -168,4 +168,14 @@ class PassportController extends Controller
         return 'user_name';
     }
 
+    /**
+     * 重写退出登录
+     *
+     * @param Request $request
+     * @return string
+     */
+    protected function loggedOut(Request $request)
+    {
+        return redirect('/login');
+    }
 }

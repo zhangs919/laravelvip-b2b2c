@@ -28,7 +28,7 @@
             <h5 class="m-b-30 m-t-0">店铺基本信息</h5>
 
             <!-- 店铺ID -->
-            <input type="hidden" id="shopmodel-shop_id" class="form-control" name="ShopModel[shop_id]" value="{{ $info->shop_id }}">
+            <input type="hidden" id="shopmodel-shop_id" class="form-control" name="ShopModel[shop_id]" value="{{ $model['shop_id'] }}">
             <!-- 店铺名称  -->
             <div class="simple-form-field" >
                 <div class="form-group">
@@ -40,7 +40,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-shop_name" class="form-control" name="ShopModel[shop_name]" value="{{ $info->shop_name }}">
+                            <input type="text" id="shopmodel-shop_name" class="form-control" name="ShopModel[shop_name]" value="{{ $model['shop_name'] }}">
 
 
                         </div>
@@ -62,9 +62,13 @@
 
                             <!-- 图片组 start -->
 
-                            <div id="shop_image_imagegroup_container" class="szy-imagegroup" data-id="shopmodel-shop_image" data-size="1"></div>
+                            <div id="shop_image_imagegroup_container" class="szy-imagegroup pull-left" data-id="shopmodel-shop_image" data-size="1"></div>
 
-                            <input type="hidden" id="shopmodel-shop_image" class="form-control" name="ShopModel[shop_image]" value="{{ $info->shop_image }}">
+                            <input type="hidden" id="shopmodel-shop_image" class="form-control" name="ShopModel[shop_image]" value="{{ $model['shop_image'] }}">
+                            <span class="c-blue pull-left" style="margin: 20px 0 0 50px;">
+			查看示例
+			<i data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='200' height='180' src='/images/shop/pattern-shop-head.png'>" class="fa fa-question-circle f16 c-orange m-l-5 cur-p"></i>
+		</span>
                             <!-- 图片组 end -->
 
                         </div>
@@ -85,9 +89,13 @@
 
                             <!-- 图片组 start -->
 
-                            <div id="shop_logo_imagegroup_container" class="szy-imagegroup" data-id="shopmodel-shop_logo" data-size="1"></div>
+                            <div id="shop_logo_imagegroup_container" class="szy-imagegroup pull-left" data-id="shopmodel-shop_logo" data-size="1"></div>
 
-                            <input type="hidden" id="shopmodel-shop_logo" class="form-control" name="ShopModel[shop_logo]" value="{{ $info->shop_logo }}">
+                            <input type="hidden" id="shopmodel-shop_logo" class="form-control" name="ShopModel[shop_logo]" value="{{ $model['shop_logo'] }}">
+                            <span class="c-blue pull-left" style="margin: 20px 0 0 50px;">
+			查看示例
+			<i data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='200' height='180' src='/images/shop/pattern-shop-logo.png'>" class="fa fa-question-circle f16 c-orange m-l-5 cur-p"></i>
+		</span>
                             <!-- 图片组 end -->
 
                         </div>
@@ -108,9 +116,13 @@
 
                             <!-- 图片组 start -->
 
-                            <div id="shop_poster_imagegroup_container" class="szy-imagegroup" data-id="shopmodel-shop_poster" data-size="1"></div>
+                            <div id="shop_poster_imagegroup_container" class="szy-imagegroup pull-left" data-id="shopmodel-shop_poster" data-size="1"></div>
 
-                            <input type="hidden" id="shopmodel-shop_poster" class="form-control" name="ShopModel[shop_poster]" value="{{ $info->shop_poster }}">
+                            <input type="hidden" id="shopmodel-shop_poster" class="form-control" name="ShopModel[shop_poster]" value="{{ $model['shop_poster'] }}">
+                            <span class="c-blue pull-left" style="margin: 20px 0 0 50px;">
+			查看示例
+			<i data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='200' height='180' src='/images/shop/pattern-shop-poster.png'>" class="fa fa-question-circle f16 c-orange m-l-5 cur-p"></i>
+		</span>
                             <!-- 图片组 end -->
 
                         </div>
@@ -131,9 +143,13 @@
 
                             <!-- 图片组 start -->
 
-                            <div id="shop_sign_imagegroup_container" class="szy-imagegroup" data-id="shopmodel-shop_sign" data-size="1"></div>
+                            <div id="shop_sign_imagegroup_container" class="szy-imagegroup pull-left" data-id="shopmodel-shop_sign" data-size="1"></div>
 
-                            <input type="hidden" id="shopmodel-shop_sign" class="form-control" name="ShopModel[shop_sign]" value="{{ $info->shop_sign }}">
+                            <input type="hidden" id="shopmodel-shop_sign" class="form-control" name="ShopModel[shop_sign]" value="{{ $model['shop_sign'] }}">
+                            <span class="c-blue pull-left" style="margin: 20px 0 0 50px;">
+			查看示例
+			<i data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='300' height='130' src='/images/shop/pattern-shop-sign.png'>" class="fa fa-question-circle f16 c-orange m-l-5 cur-p"></i>
+		</span>
                             <!-- 图片组 end -->
 
                         </div>
@@ -154,9 +170,13 @@
 
                             <!-- 图片组 start -->
 
-                            <div id="shop_sign_m_imagegroup_container" class="szy-imagegroup" data-id="shopmodel-shop_sign_m" data-size="1"></div>
+                            <div id="shop_sign_m_imagegroup_container" class="szy-imagegroup pull-left" data-id="shopmodel-shop_sign_m" data-size="1"></div>
 
-                            <input type="hidden" id="shopmodel-shop_sign_m" class="form-control" name="ShopModel[shop_sign_m]" value="{{ $info->shop_sign_m }}">
+                            <input type="hidden" id="shopmodel-shop_sign_m" class="form-control" name="ShopModel[shop_sign_m]" value="{{ $model['shop_sign_m'] }}">
+                            <span class="c-blue pull-left" style="margin: 20px 0 0 50px;">
+			查看示例
+			<i data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="<img width='200' height='180' src='/images/shop/pattern-shop-w-sign.png'>" class="fa fa-question-circle f16 c-orange m-l-5 cur-p"></i>
+		</span>
                             <!-- 图片组 end -->
 
                         </div>
@@ -176,7 +196,7 @@
                         <div class="form-control-box">
 
 
-                            <textarea id="shopmodel-detail_introduce" class="form-control" name="ShopModel[detail_introduce]" rows="5">{{ $info->detail_introduce }}</textarea>
+                            <textarea id="shopmodel-detail_introduce" class="form-control" name="ShopModel[detail_introduce]" rows="5">{!! $model['detail_introduce'] !!}</textarea>
 
 
                         </div>
@@ -196,7 +216,7 @@
                         <div class="form-control-box">
 
 
-                            <textarea id="shopmodel-shop_keywords" class="form-control" name="ShopModel[shop_keywords]" rows="5">{{ $info->shop_keywords }}</textarea>
+                            <textarea id="shopmodel-shop_keywords" class="form-control" name="ShopModel[shop_keywords]" rows="5">{{ $model['shop_keywords'] }}</textarea>
 
 
                         </div>
@@ -216,7 +236,7 @@
                         <div class="form-control-box">
 
 
-                            <textarea id="shopmodel-shop_description" class="form-control" name="ShopModel[shop_description]" rows="5">{{ $info->shop_description }}</textarea>
+                            <textarea id="shopmodel-shop_description" class="form-control" name="ShopModel[shop_description]" rows="5">{!! $model['shop_description'] !!}</textarea>
 
 
                         </div>
@@ -239,7 +259,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-start_price" class="form-control ipt m-r-10" name="ShopModel[start_price]" value="{{ $info->start_price ?? '0.00' }}">元
+                            <input type="text" id="shopmodel-start_price" class="form-control ipt m-r-10" name="ShopModel[start_price]" value="{{ $model['start_price'] ?? '0.00' }}">元
 
 
                         </div>
@@ -275,9 +295,9 @@
                                 <tr>
                                     @foreach(range(0, 6) as $item)
                                     <td>
-                                        @if(!empty($info->opening_hour['week']))
+                                        @if(!empty($model['opening_hour']['week']))
                                         <input class="check" type="checkbox" name="opening_hour[week][]"
-                                               value="{{ $item }}" @if(in_array($item, @$info->opening_hour['week'])) checked="checked" @endif  />
+                                               value="{{ $item }}" @if(in_array($item, @$model['opening_hour']['week'])) checked="checked" @endif  />
                                         @else
                                             <input class="check" type="checkbox" name="opening_hour[week][]"
                                                    value="{{ $item }}"  />
@@ -288,8 +308,8 @@
                                     <td class="time-panel" colspan="3">
                                         <!--点击新建营业时间按钮每次添加time-subtime一个DIV内容，默认只显示一个-->
 
-                                        @if(!empty($info->opening_hour['time_arr']))
-                                        @foreach($info->opening_hour['time_arr'] as $item)
+                                        @if(!empty($model['opening_hour']['time_arr']))
+                                        @foreach($model['opening_hour']['time_arr'] as $item)
                                             <div class="time-subtime">
                                                 <div class="time-select">
                                                     <select name="opening_hour[begin_hour][]" class="select form-control m-r-5">
@@ -393,7 +413,7 @@
                     <div class="col-sm-8">
                         <div class="form-control-box">
 
-                            <textarea id="shopmodel-close_tips" class="form-control valid" name="ShopModel[close_tips]" rows="5">{!! $info->close_tips ?? '' !!}</textarea>
+                            <textarea id="shopmodel-close_tips" class="form-control valid" name="ShopModel[close_tips]" rows="5">{!! $model['close_tips'] !!}</textarea>
 
 
                         </div>
@@ -402,17 +422,115 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 店铺是否统一额外配送费 -->
             <div class="simple-form-field" >
                 <div class="form-group">
-                    <label for="shopmodel-opening_hour" class="col-sm-4 control-label">
+                    <label for="shopmodel-is_other_shpping_fee" class="col-sm-4 control-label">
+
+                        <span class="ng-binding">店铺是否统一额外配送费：</span>
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="form-control-box">
+
+                            <label class="control-label control-label-switch">
+                                <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
+                                    <input type="hidden" name="ShopModel[is_other_shpping_fee]" value="0">
+                                    <label><input type="checkbox" id="shopmodel-is_other_shpping_fee" class="form-control b-n" name="ShopModel[is_other_shpping_fee]" value="1" @if($model['is_other_shpping_fee'] == 1) checked @endif data-on-text="是" data-off-text="否"> </label>
+                                </div>
+                            </label>
+
+
+                        </div>
+
+                        <div class="help-block help-block-t"><div class="help-block help-block-t">是：超过店铺设置的下单时间超过几点，收取额外配送费，全店铺所有商品统一额外配送费金额，无论订单购买多少商品，仅收一次额外配送费；<br>否：每个商品的额外配送金额受运费模板中控制，一笔订单多个商品，每个商品所属的运费模板均不同，则额外配送费累加</div></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 额外配送费  -->
+            <div class="simple-form-field" >
+                <div class="form-group">
+                    <label for="shopmodel-other_shipping_fee" class="col-sm-4 control-label">
 
 
                     </label>
                     <div class="col-sm-8">
                         <div class="form-control-box">
 
+                            下单时间不在
+                            <select name="shipping_time[begin_hour]" class="select form-control m-l-5 m-r-5">
+                                @foreach(get_day_hours() as $hk=>$h)
+                                    <!--   -->
+                                    <option value="{{ $h }}" @if($model['shipping_time']['begin_hour'] == $h) selected="selected" @endif>{{ $h }}</option>
+                                @endforeach
+                            </select>
+                            :
+                            <select name="shipping_time[begin_minute]" class="select form-control m-l-5 m-r-5">
+                                @foreach(get_hour_minutes() as $hk=>$h)
+                                    <!--   -->
+                                    <option value="{{ $h }}" @if($model['shipping_time']['begin_minute'] == $h) selected="selected" @endif>{{ $h }}</option>
+                                @endforeach
+                            </select>
+                            至
+                            <select name="shipping_time[end_hour]" class="select form-control m-l-5 m-r-5">
+                            @foreach(get_day_hours() as $hk=>$h)
+                                <!--   -->
+                                <option value="{{ $h }}" @if($model['shipping_time']['end_hour'] == $h) selected="selected" @endif>{{ $h }}</option>
+                            @endforeach
 
-                            <input type="hidden" id="shopmodel-opening_hour" class="form-control" name="ShopModel[opening_hour]" value="">
+                            </select>
+                            :
+                            <select name="shipping_time[end_minute]" class="select form-control m-l-5 m-r-5">
+                            @foreach(get_hour_minutes() as $hk=>$h)
+                                <!--   -->
+                                <option value="{{ $h }}" @if($model['shipping_time']['end_minute'] == $h) selected="selected" @endif>{{ $h }}</option>
+                            @endforeach
+
+                            </select>
+                            范围内，额外增加配送费 <input type="text" id="shopmodel-other_shipping_fee" class="form-control ipt m-r-10" name="ShopModel[other_shipping_fee]" value="{{ $model['other_shipping_fee'] }}">元
+
+
+                        </div>
+
+                        <div class="help-block help-block-t"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 店铺是否统一包装费 -->
+            <div class="simple-form-field" >
+                <div class="form-group">
+                    <label for="shopmodel-is_packing_fee" class="col-sm-4 control-label">
+
+                        <span class="ng-binding">店铺是否统一包装费：</span>
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="form-control-box">
+
+                            <label class="control-label control-label-switch">
+                                <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
+                                    <input type="hidden" name="ShopModel[is_packing_fee]" value="0">
+                                    <label><input type="checkbox" id="shopmodel-is_packing_fee" class="form-control b-n" name="ShopModel[is_packing_fee]" value="1" @if($model['is_packing_fee'] == 1) checked @endif data-on-text="是" data-off-text="否"> </label>
+                                </div>
+                            </label>
+
+
+                        </div>
+
+                        <div class="help-block help-block-t"><div class="help-block help-block-t">是：全店铺所有商品统一包装费，无论订单购买多少商品，仅收一次包装费；<br>否：每个商品的包装费金额受运费模板中控制，一笔订单多个商品，每个商品所属的运费模板均不同，则包装费累加</div></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 包装费  -->
+            <div class="simple-form-field" >
+                <div class="form-group">
+                    <label for="shopmodel-packing_fee" class="col-sm-4 control-label">
+
+
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="form-control-box">
+
+                            包装费 <input type="text" id="shopmodel-packing_fee" class="form-control ipt m-r-10" name="ShopModel[packing_fee]" value="{{ $model['packing_fee'] }}">元
 
 
                         </div>
@@ -449,7 +567,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-address" class="form-control valid address" name="ShopModel[address]" value="{{ $info->address }}">
+                            <input type="text" id="shopmodel-address" class="form-control valid address" name="ShopModel[address]" value="{{ $model['address'] }}">
                             <input type="button" class="btn btn-primary" id="map_search" name="map_search" value="搜索地图" />
 
                         </div>
@@ -468,12 +586,12 @@
                         <div class="form-control-box">
                             <div id="container" style="margin-bottom: 5px; width: 700px; height: 400px; border: 1px solid #D7D7D7; overflow: hidden;"></div>
                             <div id="panel"></div>
-                            <div class="help-block help-block-t">您可通过移动蓝点来设置您店铺的精确位置，双击地图可查看更精确的地区</div>
+                            <div class="help-block help-block-t">单击地图出现蓝点，您可通过移动蓝点来设置您店铺的精准位置，双击地图可查看更精确的地区</div>
                             <br />
                             经度：
-                            <input class="form-control ipt m-r-20" type="text" id="shop_lng" name="ShopModel[shop_lng]" value="{{ $info->shop_lng }}" readonly="readonly" />
+                            <input class="form-control ipt m-r-20" type="text" id="shop_lng" name="ShopModel[shop_lng]" value="{{ $model['shop_lng'] }}" readonly="readonly" />
                             纬度：
-                            <input class="form-control ipt" type="text" id="shop_lat" name="ShopModel[shop_lat]" value="{{ $info->shop_lat }}" readonly="readonly" />
+                            <input class="form-control ipt" type="text" id="shop_lat" name="ShopModel[shop_lat]" value="{{ $model['shop_lat'] }}" readonly="readonly" />
                         </div>
                     </div>
                 </div>
@@ -495,7 +613,7 @@
                                 <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
                                     <input type="hidden" name="ShopModel[show_price]" value="0">
                                     <label><input type="checkbox" id="shopmodel-show_price" class="form-control b-n"
-                                                  name="ShopModel[show_price]" value="1" @if($info->show_price == 1) checked @endif data-on-text="是" data-off-text="否"> </label>
+                                                  name="ShopModel[show_price]" value="1" @if($model['show_price'] == 1) checked @endif data-on-text="是" data-off-text="否"> </label>
                                 </div>
                             </label>
 
@@ -518,7 +636,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-show_content" class="form-control" name="ShopModel[show_content]" value="{{ $info->show_content }}">
+                            <input type="text" id="shopmodel-show_content" class="form-control" name="ShopModel[show_content]" value="{{ $model['show_content'] }}">
 
 
                         </div>
@@ -539,7 +657,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-button_content" class="form-control" name="ShopModel[button_content]" value="{{ $info->button_content }}">
+                            <input type="text" id="shopmodel-button_content" class="form-control" name="ShopModel[button_content]" value="{{ $model['button_content'] }}">
 
 
                         </div>
@@ -639,7 +757,7 @@
     <script src="/assets/d2eace91/js/jquery.region.js?v=20180702"></script>
     <!-- 验证规则 -->
     <script id="client_rules" type="text">
-[{"id": "shopmodel-shop_id", "name": "ShopModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"required":true,"messages":{"required":"店铺名称不能为空。"}}},{"id": "shopmodel-region_code", "name": "ShopModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"联系地址不能为空。"}}},{"id": "shopmodel-address", "name": "ShopModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "shopmodel-shop_image", "name": "ShopModel[shop_image]", "attribute": "shop_image", "rules": {"required":true,"messages":{"required":"店铺头像不能为空。"}}},{"id": "shopmodel-shop_logo", "name": "ShopModel[shop_logo]", "attribute": "shop_logo", "rules": {"required":true,"messages":{"required":"店铺LOGO不能为空。"}}},{"id": "shopmodel-shop_poster", "name": "ShopModel[shop_poster]", "attribute": "shop_poster", "rules": {"required":true,"messages":{"required":"店铺海报不能为空。"}}},{"id": "shopmodel-start_price", "name": "ShopModel[start_price]", "attribute": "start_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"起送金额必须是一个数字。","min":"起送金额必须不小于0。","max":"起送金额必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"string":true,"messages":{"string":"店铺名称必须是一条字符串。","maxlength":"店铺名称只能包含至多20个字符。"},"maxlength":20}},{"id": "shopmodel-shop_description", "name": "ShopModel[shop_description]", "attribute": "shop_description", "rules": {"string":true,"messages":{"string":"店铺简介必须是一条字符串。","maxlength":"店铺简介只能包含至多100个字符。"},"maxlength":100}},{"id": "shopmodel-shop_keywords", "name": "ShopModel[shop_keywords]", "attribute": "shop_keywords", "rules": {"string":true,"messages":{"string":"店铺关键词必须是一条字符串。","maxlength":"店铺关键词只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-detail_introduce", "name": "ShopModel[detail_introduce]", "attribute": "detail_introduce", "rules": {"string":true,"messages":{"string":"店铺公告必须是一条字符串。","maxlength":"店铺公告只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"ajax":{"url":"/shop/shop-set/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcU2hvcE1vZGVs","attribute":"shop_name","params":["ShopModel[shop_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
+[{"id": "shopmodel-shop_id", "name": "ShopModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"required":true,"messages":{"required":"店铺名称不能为空。"}}},{"id": "shopmodel-region_code", "name": "ShopModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"联系地址不能为空。"}}},{"id": "shopmodel-address", "name": "ShopModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "shopmodel-shop_image", "name": "ShopModel[shop_image]", "attribute": "shop_image", "rules": {"required":true,"messages":{"required":"店铺头像不能为空。"}}},{"id": "shopmodel-shop_logo", "name": "ShopModel[shop_logo]", "attribute": "shop_logo", "rules": {"required":true,"messages":{"required":"店铺LOGO不能为空。"}}},{"id": "shopmodel-shop_poster", "name": "ShopModel[shop_poster]", "attribute": "shop_poster", "rules": {"required":true,"messages":{"required":"店铺海报不能为空。"}}},{"id": "shopmodel-start_price", "name": "ShopModel[start_price]", "attribute": "start_price", "rules": {"match":{"pattern":/^[0-9]+(.[0-9]{1,2})?$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入整数或小数点后2位的数字"}}},{"id": "shopmodel-other_shipping_fee", "name": "ShopModel[other_shipping_fee]", "attribute": "other_shipping_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"额外增加配送费必须是一个数字。","min":"额外增加配送费必须不小于0。","max":"额外增加配送费必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-packing_fee", "name": "ShopModel[packing_fee]", "attribute": "packing_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"包装费必须是一个数字。","min":"包装费必须不小于0。","max":"包装费必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"string":true,"messages":{"string":"店铺名称必须是一条字符串。","maxlength":"店铺名称只能包含至多20个字符。"},"maxlength":20}},{"id": "shopmodel-shop_description", "name": "ShopModel[shop_description]", "attribute": "shop_description", "rules": {"string":true,"messages":{"string":"店铺简介必须是一条字符串。","maxlength":"店铺简介只能包含至多100个字符。"},"maxlength":100}},{"id": "shopmodel-shop_keywords", "name": "ShopModel[shop_keywords]", "attribute": "shop_keywords", "rules": {"string":true,"messages":{"string":"店铺关键词必须是一条字符串。","maxlength":"店铺关键词只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-detail_introduce", "name": "ShopModel[detail_introduce]", "attribute": "detail_introduce", "rules": {"string":true,"messages":{"string":"店铺公告必须是一条字符串。","maxlength":"店铺公告只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-close_tips", "name": "ShopModel[close_tips]", "attribute": "close_tips", "rules": {"string":true,"messages":{"string":"非营业时间下单提示必须是一条字符串。","maxlength":"非营业时间下单提示只能包含至多255个字符。"},"maxlength":255}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"ajax":{"url":"/shop/shop-set/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcU2VsZlNob3BNb2RlbA==","attribute":"shop_name","params":["ShopModel[shop_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
 </script>
     <script type="text/javascript">
         $().ready(function() {
@@ -714,7 +832,7 @@
     <script type="text/javascript">
         $().ready(function() {
             $("#region_container").regionselector({
-                value: '{{ $info->region_code }}',
+                value: '{{ $model['region_code'] }}',
                 select_class: 'form-control',
                 change: function(value, names, is_last) {
                     if (value == '') {
@@ -1220,7 +1338,7 @@
                     var array = $("#region_name").val().split(",");
                     var keyword = array.join("");
 
-                    var keyword = keyword + $("#shopmodel-address").val();
+                    var keyword = keyword + $("#selfshopmodel-address").val();
 
                     // 关键字查询
                     placeSearch.search(keyword);
@@ -1282,7 +1400,7 @@
                 if ($("#load").val() == 1) {
                     $("#load").val(0);
 
-                    openInfo($("#shopmodel-address").val());
+                    openInfo($("#selfshopmodel-address").val());
 
                 } else {
                     var address = data.regeocode.formattedAddress;
@@ -1293,7 +1411,7 @@
                     address = address.replace('省', '');
                     address = address.replace('市', '');
 
-                    $("#shopmodel-address").val(address);
+                    $("#selfshopmodel-address").val(address);
 
                     openInfo(address);
                 }

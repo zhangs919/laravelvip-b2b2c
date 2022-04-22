@@ -25,7 +25,7 @@
     <script src="/assets/d2eace91/js/design/index_tab.js?v=20180418"></script>
     <script src="/assets/d2eace91/js/design/jquery-hdscroll.js?v=20180418"></script>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/public.css?v=1.6"/>
-    <link rel="stylesheet" href="/mobile/css/goods.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/goods.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
 
     <div class="page">

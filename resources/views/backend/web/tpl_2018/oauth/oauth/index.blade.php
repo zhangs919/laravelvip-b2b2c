@@ -19,7 +19,7 @@
 
             <li>
                 <div class="swiper-box-item">
-                    <img src="/backend/images/oauth/logistics.png">
+                    <img src="/images/oauth/logistics.png">
                     <div class="needs-cont">
                         <h1>对接同城物流</h1>
                         <p title="轻松整合城市闲散的兼职配送人员与车辆资源为己所用，拥有定位、抢单、议价等功能，进而实现1小时快速送达，解决配送大难题！">轻松整合城市闲散的兼职配送人员与车辆资源为己所用，拥有定位、抢单、议价等功能，进而实现1小时快速送达...</p>
@@ -42,7 +42,7 @@
 
             <li>
                 <div class="swiper-box-item">
-                    <img src="/backend/images/oauth/cash.png">
+                    <img src="/images/oauth/cash.png">
                     <div class="needs-cont">
                         <h1>对接收银系统</h1>
                         <p title="商品数据、库存、订单线上线下一体化管理，轻松上手，满足多行业、多场景收银需求。线下网点收银支持采购、销售、盘点、结算等各个环节，帮您轻松实现业绩翻倍涨，成本直线降！">商品数据、库存、订单线上线下一体化管理，轻松上手，满足多行业、多场景收银需求。线下网点收银支持采购、...</p>

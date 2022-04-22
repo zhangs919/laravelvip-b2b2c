@@ -1,7 +1,5 @@
 <!-- 自定义模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>
-@endif
 
     <!-- 内容开始 -->
     <div class="custom-box">
@@ -26,9 +24,7 @@
     </div>
     <!-- 内容结束 -->
 
-@if($is_design)
 </div>
-@endif
 
 <!-- 调用需要的JS -->
 <script type="text/javascript">

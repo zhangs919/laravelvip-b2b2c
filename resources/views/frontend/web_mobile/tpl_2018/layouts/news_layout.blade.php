@@ -14,28 +14,28 @@
     <meta name="Description" content="{{ $seo_description ?? '乐融沃B2B2C商城演示站' }}" />
 </head>
 <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=20180702"/>
-<link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180702"/>
-<link rel="stylesheet" href="/mobile/css/common.css?v=20180702"/>
-<link rel="stylesheet" href="/mobile/css/article.css?v=20180702"/>
+<link rel="stylesheet" href="/css/swiper.min.css?v=20180702"/>
+<link rel="stylesheet" href="/css/common.css?v=20180702"/>
+<link rel="stylesheet" href="/css/article.css?v=20180702"/>
 <!--整站改色 _start-->
 @if(sysconf('custom_style_enable_m_site') == 1)
-    <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+    <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
 @else
-    <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+    <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
 @endif
 <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
-<script src="/mobile/js/common.js?v=20180813"></script>
+<script src="/js/common.js?v=20180813"></script>
 <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180813"></script>
-<link rel="stylesheet" href="/mobile/css/news.css?v=20180702"/>
+<link rel="stylesheet" href="/css/news.css?v=20180702"/>
 <!-- 图片缓载js -->
 <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180813"></script>
-<script src="/mobile/js/swiper.jquery.min.js?v=20180813"></script>
-<script src="/mobile/js/iscroll-probe.min.js?v=20180813"></script>
-<script src="/mobile/js/index.js?v=20180813"></script>
-<script src="/mobile/js/news.js?v=20180813"></script>
+<script src="/js/swiper.jquery.min.js?v=20180813"></script>
+<script src="/js/iscroll-probe.min.js?v=20180813"></script>
+<script src="/js/index.js?v=20180813"></script>
+<script src="/js/news.js?v=20180813"></script>
 <body>
 
 

@@ -19,9 +19,9 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link type="text/css" rel="stylesheet" href="/frontend/css/common.css">
+    <link type="text/css" rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css">
     <script src="/assets/d2eace91/js/jquery.js?v=20180418"></script>
-    <script type="text/javascript" src="/frontend/js/common.js"></script>
+    <script type="text/javascript" src="http://{{ env('FRONTEND_DOMAIN') }}/js/common.js"></script>
 
     <!-- 加载Layer插件 -->
     <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
@@ -66,13 +66,13 @@
         <div class="w990 pos-r">
 
 
-            <link type="text/css" rel="stylesheet" href="/frontend/css/login.css">
+            <link type="text/css" rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/login.css">
             <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
             <!--整站改色 _start-->
             @if(sysconf('custom_style_enable') == 1)
-                <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6"/>
+                <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6"/>
             @else
-                <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6"/>
+                <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6"/>
             @endif
             <!--整站改色 _end-->
             <script src="/assets/d2eace91/js/layer/layer.js?v=20180418"></script>
@@ -90,7 +90,7 @@
 
                         <div class="login-tit">
                             还不是卖家？
-                            <a href="http://www.laravelvip.com/shop/apply.html" class="regist-link color">
+                            <a href="http://{{ env('FRONTEND_DOMAIN') }}/shop/apply.html" class="regist-link color">
                                 立即申请
                                 <i>&gt;</i>
                             </a>
@@ -140,7 +140,7 @@
                                         <span>自动登录</span>
                                     </label>
 
-                                    <a class="forget-password fr" href="http://www.laravelvip.com/user/find-password">忘记密码？</a>
+                                    <a class="forget-password fr" href="http://{{ env('FRONTEND_DOMAIN') }}/user/find-password">忘记密码？</a>
                                 </div>
                                 <div class="login-btn">
                                     <input type="hidden" name="act" value="act_login" />
@@ -150,7 +150,7 @@
                                 <div class="item-coagent">
 
                                 </div>
-                                <input type="hidden" name="back_url" value="http://seller.laravelvip.com/shop/account/add" />
+                                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                             </form>
                         </div>
@@ -203,7 +203,7 @@
                                 <div class="item-coagent">
 
                                 </div>
-                                <input type="hidden" name="back_url" value="http://seller.laravelvip.com/shop/account/add" />
+                                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                             </form>
                         </div>
@@ -234,7 +234,7 @@
                             </div>
                             <div class="login-links">
                                 <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                                <a href="http://www.laravelvip.com/register.html" class="register" target="_blank">免费注册</a>
+                                <a href="http://{{ env('FRONTEND_DOMAIN') }}/register.html" class="register" target="_blank">免费注册</a>
                             </div>
                         </div>
                     </div>
@@ -290,7 +290,7 @@
                     });
                     $("body").on('click', '.website-login', function() {
                         var type = $(this).data("id");
-                        $.go("http://www.laravelvip.com"+"/website/login?type="+type);
+                        $.go("http://{{ env('FRONTEND_DOMAIN') }}"+"/website/login?type="+type);
                     })
 
                     var container = $("#1524381447rads9d");
@@ -498,7 +498,7 @@
                         $('.SZY-QRCODE-LOGIN').qrcode({
                             width:150,
                             height:150,
-                            text: 'http://www.laravelvip.com/site/qrcode-login.html?k=' + result.data.key
+                            text: 'http://{{ env('FRONTEND_DOMAIN') }}/site/qrcode-login.html?k=' + result.data.key
                         });
 
                         var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';

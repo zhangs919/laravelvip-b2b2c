@@ -11,6 +11,10 @@
                         </li>
 
                         <li>
+                            <a href="javascript:void(0)" class="goods-status" data-goods-status="0">仓库中</a>
+                        </li>
+
+                        <li>
                             <a href="javascript:void(0)" class="is-selected">
                                 已选择（
                                 <span class="selected_number">0</span>
@@ -42,7 +46,7 @@
                         <span class="text-explode m-r-2">|</span>
                         <input type="button" class="btn btn-default m-r-2 selectall-page" value="本页全选">
                         <input type="button" class="btn btn-default m-r-2 unselectall" value="全部取消">
-                        <!-- 
+                        <!--
                         <input type="button" class="btn btn-default m-r-2 selectall" value="一键全选">
                         <span class="text-explode m-r-2">|</span>
                         <label class="input-label">
@@ -165,7 +169,7 @@
             tablelist.load();
         });
 
-// 全部取消 
+// 全部取消
         $(container).find(".unselectall").click(function(){
 // 渲染页面
             var values = goodspicker.values;

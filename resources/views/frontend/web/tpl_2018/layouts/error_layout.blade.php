@@ -20,16 +20,16 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <!-- 网站头像 -->
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.3"/>
-    <link rel="stylesheet" href="/frontend/css/common.css?v=1.3"/>
+    <link rel="stylesheet" href="/css/common.css?v=1.3"/>
     <!--整站改色 _start-->
-    <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.3"/>
+    <link rel="stylesheet" href="/css/color-style.css?v=1.3"/>
     <!--整站改色 _end-->
     <script src="/assets/d2eace91/js/jquery.js?v=1.3"></script>
     <script src="/assets/d2eace91/js/jquery.cookie.js?v=1.3"></script>
     <script src="/assets/d2eace91/js/layer/layer.js?v=1.3"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=1.3"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=1.3"></script>
-    <script src="/frontend/js/common.js?v=1.3"></script>
+    <script src="/js/common.js?v=1.3"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=1.3"></script>
     <script type="text/javascript">
@@ -353,7 +353,7 @@
 
 <!-- 内容 -->
 
-<link href="/frontend/css/error.css" rel="stylesheet" type="text/css" />
+<link href="/css/error.css" rel="stylesheet" type="text/css" />
 <div class="error-content">
     <div class="w990">
         <div class="error">
@@ -475,10 +475,10 @@
 </div>
 <!-- 底部 _end-->
 
-<script src="/frontend/js/jquery.fly.min.js?v=1.3"></script>
+<script src="/js/jquery.fly.min.js?v=1.3"></script>
 <script src="/assets/d2eace91/js/szy.cart.js?v=1.3"></script>
 <!--[if lte IE 9]>
-<script src="/frontend/js/requestAnimationFrame.js?v=1.3"></script>
+<script src="/js/requestAnimationFrame.js?v=1.3"></script>
 <![endif]-->
 <script type="text/javascript">
     $().ready(function(){

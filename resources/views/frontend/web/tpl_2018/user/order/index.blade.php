@@ -16,35 +16,35 @@
 			<span class="user-statu active">
 				<a id='order_all' class="tabs- color">
 					<span>所有订单</span>
-					<em class="tag-em">12</em>
+					<em class="tag-em">{{ $order_counts['all'] }}</em>
 					<span class="vertical-line">|</span>
 				</a>
 			</span>
                     <span class="user-statu">
 				<a id='order_unpayed' class="tabs-">
 					<span>待付款</span>
-					<em class="tag-em">0</em>
+					<em class="tag-em">{{ $order_counts['unpayed'] }}</em>
 					<span class="vertical-line">|</span>
 				</a>
 			</span>
                     <span class="user-statu">
 				<a id='order_unshipped' class="tabs-">
 					<span>待发货</span>
-					<em class="tag-em">0</em>
+					<em class="tag-em">{{ $order_counts['unshipped'] }}</em>
 					<span class="vertical-line">|</span>
 				</a>
 			</span>
                     <span class="user-statu">
 				<a id='order_shipped' class="tabs-">
 					<span>待收货</span>
-					<em class="tag-em">0</em>
+					<em class="tag-em">{{ $order_counts['shipped'] }}</em>
 					<span class="vertical-line">|</span>
 				</a>
 			</span>
                     <span class="user-statu">
 				<a id='order_unevaluate' class="tabs- tp-tag-a">
 					<span>待评价</span>
-					<em class="tag-em">0</em>
+					<em class="tag-em">{{ $order_counts['unevaluate'] }}</em>
 				</a>
 			</span>
                 </div>
@@ -67,51 +67,43 @@
                             <label style="width: 30%;">
                                 <span>交易状态：</span>
                                 <span class="select">
-<select id="order_status" class="form-control" name="order_status">
-<option value="">全部</option>
-<option value="unpayed">等待买家付款</option>
-<option value="unshipped">等待卖家发货</option>
-<option value="shipped">卖家已发货</option>
-<option value="finished">交易成功</option>
-<option value="closed">交易关闭</option>
-<option value="backing">退款中的订单</option>
-</select>
-</span>
+                                    <select id="order_status" class="form-control" name="order_status">
+                                        @foreach($order_status_list as $k=>$v)
+                                            <option value="{{ $k }}">{{ $v }}</option>
+                                        @endforeach
+                                    </select>
+                                </span>
                             </label>
                             <label style="width: 30%;">
                                 <span>成交时间：</span>
                                 <span class="select">
-<select id="order_time" class="form-control" name="order_time">
-<option value="">全部</option>
-<option value="ThreeMonth">近三个月订单</option>
-<option value="ThisYear">今年内订单</option>
-<option value="OneYear">2017年订单</option>
-<option value="TwoYear">2016年订单</option>
-<option value="ThreeYear">2015年订单</option>
-<option value="OldYear">2015年以前订单</option>
-</select>
-</span>
+                                    <select id="order_time" class="form-control" name="order_time">
+                                        @foreach($order_time_list as $k=>$v)
+                                            <option value="{{ $k }}">{{ $v }}</option>
+                                        @endforeach
+                                    </select>
+                                </span>
                             </label>
 
                             <label style="width: 30%;">
                                 <span>物流方式：</span>
                                 <span class="select">
-<select id="pickup" class="form-control" name="pickup">
-<option value="0">全部</option>
-<option value="1">普通快递</option>
-<option value="2">上门自提</option>
-</select>
-</span>
+                                    <select id="pickup" class="form-control" name="pickup">
+                                        @foreach($pickup_list as $k=>$v)
+                                            <option value="{{ $k }}">{{ $v }}</option>
+                                        @endforeach
+                                    </select>
+                                </span>
                             </label>
                             <label style="display: none">
                                 <span>评价状态：</span>
                                 <span class="select">
-<select id="evaluate_status" class="form-control" name="evaluate_status">
-<option value="">全部</option>
-<option value="unevaluate">待评价</option>
-<option value="evaluate">已评价</option>
-</select>
-</span>
+                                    <select id="evaluate_status" class="form-control" name="evaluate_status">
+                                        @foreach($evaluate_status_list as $k=>$v)
+                                            <option value="{{ $k }}">{{ $v }}</option>
+                                        @endforeach
+                                    </select>
+                                </span>
                             </label>
 
                             <label style="width: 10%;">
@@ -207,7 +199,7 @@
             });
 
         </script>
-        <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=fa78e2878a855b797089dfd08d5ac961&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+        <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
         <script type="text/javascript">
             var tablelist = null;
             $().ready(function() {
@@ -226,7 +218,7 @@
                 $("#searchForm").submit(function() {
                     $.loading.start();
 
-                    var is_exchange = "0";
+                    var is_exchange = "{{ $is_exchange }}";
                     if(!is_exchange) {
                         // 控制下方快速选择tab样式
                         if ($("#order_status").val() != '') {
@@ -297,7 +289,7 @@
             function order_delete(order_id, type)
             {
                 var text = "";
-                var is_exchange = "0";
+                var is_exchange = "{{ $is_exchange }}";
                 var url = "/user/order/list.html?is_exchange=" + is_exchange;
                 if (type == 2)
                 {
@@ -346,7 +338,7 @@
             function order_deletes(type) {
                 var order_ids = document.getElementsByName("order_delete");
                 var order_id = new Array();
-                var is_exchange = "0";
+                var is_exchange = "{{ $is_exchange }}";
 
                 for (var i = 0; i < order_ids.length; i++) {
                     if (order_ids[i].checked == true) {
@@ -448,6 +440,7 @@
                 });
             });
             //
-        </script></div>
+        </script>
+    </div>
 
 @endsection

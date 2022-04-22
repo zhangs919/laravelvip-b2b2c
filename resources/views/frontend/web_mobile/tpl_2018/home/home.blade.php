@@ -9,7 +9,7 @@
 @section('header_js')
     {{--首页内容--}}
     <script src="/assets/d2eace91/js/jquery.js?v=20180528"></script>
-    <script src="/mobile/js/common.js?v=20180528"></script>
+    <script src="/js/common.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20180528"></script>
     <!-- JS -->
     <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180528"></script>
@@ -19,12 +19,12 @@
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
 
     <!-- 飞入购物车 -->
-    <script src="/mobile/js/index.js?v=20180813"></script>
-    <script src="/mobile/js/swiper.jquery.min.js?v=20180813"></script>
-    <script src="/mobile/js/jquery.fly.min.js?v=20180813"></script>
-    <script src="/mobile/js/swiper.jquery.min.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180813"></script>
+    <script src="/js/swiper.jquery.min.js?v=20180813"></script>
+    <script src="/js/jquery.fly.min.js?v=20180813"></script>
+    <script src="/js/swiper.jquery.min.js?v=20180529"></script>
     <!-- GPS获取坐标 -->
-    <script src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_web_key') }}"></script>
+    <script src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script src="/assets/d2eace91/js/geolocation/amap.js?v=20180528"></script>
     <script type="text/javascript">
@@ -44,8 +44,10 @@
 @section('content')
 
     {{--首页内容--}}
-    <link rel="stylesheet" href="/mobile/css/index.css?v=20180428"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/index.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/swiper.min.css?v=20180428"/>
+    {{--是否显示首页APP下载--}}
+    @if(sysconf('m_app_download'))
     <div class="app-download">
         <div class="app-download-tip-box">
             <div class="app-download-tip">
@@ -54,7 +56,6 @@
                 </a>
                 <div class="tip-info">
 
-                    {{--<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/system/config/mobile_setting_index/m_app_icon_0.jpg">--}}
                     <img src="{{ get_image_url(sysconf('m_app_icon')) }}">
 
                     <div class="tip-text">
@@ -108,6 +109,8 @@
             }
         };
     </script>
+    @endif
+
     <header class="header-con header-con1">
         <div class="header">
             <div class="header-content">
@@ -320,7 +323,7 @@
             <!-- #tpl_region_end -->
         </div>
 
-        @if(!$webStatic)
+        @if(!$webStatic){{--静态页面关闭时 显示--}}
             <script type="text/javascript">
                 $.templateloading();
             </script>
@@ -328,7 +331,7 @@
 
     </div>
 
-    <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+    <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
     <script type="text/javascript">
         $().ready(function(){
             //首先将#back-to-top隐藏
@@ -508,11 +511,11 @@
             <div class="weixin-tip">
                 <div class="tip-info">
 
-                    <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/system/config/mobile_setting_index/m_follow_wechat_icon_0.jpg">
+                    <img src="{{ get_image_url(sysconf('m_follow_wechat_icon')) }}">
 
                     <div class="tip-text">
-                        <h4>同城</h4>
-                        <p>赶快关注辽宁微信公众号</p>
+                        <h4>{{ sysconf('m_follow_wechat_hint') }}</h4>
+                        <p>赶快关注{{ sysconf('m_wechat_name') }}微信公众号</p>
                     </div>
                 </div>
                 <a class="attention-btn" href="javascript:void(0);">立即关注</a>
@@ -537,7 +540,7 @@
                 <ul>
                     <li>1、打开微信，点击添加朋友</li>
                     <li>2、点击“公众号”</li>
-                    <li>3、搜索公众号：辽宁</li>
+                    <li>3、搜索公众号：{{ sysconf('m_wechat_name') }}</li>
                     <li>4、点击”关注“，完成</li>
                 </ul>
             </div>

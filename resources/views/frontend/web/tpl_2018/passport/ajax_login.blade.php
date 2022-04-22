@@ -1,10 +1,10 @@
-<link type="text/css" rel="stylesheet" href="/frontend/css/login.css">
+<link type="text/css" rel="stylesheet" href="/css/login.css">
 <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 <!--整站改色 _start-->
 @if(sysconf('custom_style_enable') == 1)
-    <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6"/>
+    <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6"/>
 @else
-    <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6"/>
+    <link rel="stylesheet" href="/css/color-style.css?v=1.6"/>
 @endif
 <!--整站改色 _end-->
 <script src="/assets/d2eace91/js/layer/layer.js?v=20180418"></script>
@@ -82,7 +82,8 @@
                     <div class="item-coagent">
 
                     </div>
-                    <input type="hidden" name="back_url" value="http://seller.b2b2c.yunmall.68mall.com/index.html" />
+                    {{--<input type="hidden" name="back_url" value="http://seller.b2b2c.yunmall.68mall.com/index.html" />--}}
+                    <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                     <input type="hidden" name="ajax_layout" value="1" />
 
@@ -137,7 +138,8 @@
                     <div class="item-coagent">
 
                     </div>
-                    <input type="hidden" name="back_url" value="http://seller.b2b2c.yunmall.laravelvip.com/index.html" />
+                    {{--<input type="hidden" name="back_url" value="http://seller.b2b2c.yunmall.laravelvip.com/index.html" />--}}
+                    <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                     <input type="hidden" name="ajax_layout" value="1" />
 

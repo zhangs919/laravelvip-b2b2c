@@ -15,13 +15,13 @@
 @section('style_js')
 
     <!--页面css/js-->
-    <script src="/frontend/js/index.js?v=20180528"></script>
-    <script src="/frontend/js/tabs.js?v=20180528"></script>
-    <script src="/frontend/js/bubbleup.js?v=20180528"></script>
-    <script src="/frontend/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/frontend/js/index_tab.js?v=20180528"></script>
-    <script src="/frontend/js/jump.js?v=20180528"></script>
-    <script src="/frontend/js/nav.js?v=20180528"></script>
+    <script src="/js/index.js?v=20180528"></script>
+    <script src="/js/tabs.js?v=20180528"></script>
+    <script src="/js/bubbleup.js?v=20180528"></script>
+    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
+    <script src="/js/index_tab.js?v=20180528"></script>
+    <script src="/js/jump.js?v=20180528"></script>
+    <script src="/js/nav.js?v=20180528"></script>
 @stop
 
 
@@ -30,12 +30,12 @@
 
     <!-- 内容 -->
     <!-- css -->
-    <link rel="stylesheet" href="/frontend/css/goods.css?v=20180428"/>
+    <link rel="stylesheet" href="/css/goods.css?v=20180428"/>
     <!-- 地区选择器 -->
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
     <script src="/assets/d2eace91/js/jquery.history.js?v=20180528"></script>
     <!-- 放大镜 _start -->
-    <script type="text/javascript" src="/frontend/js/magiczoom.js"></script>
+    <script type="text/javascript" src="/js/magiczoom.js"></script>
     <!-- 放大镜 _end -->
     <div class="w1210">
 
@@ -370,10 +370,10 @@
     </div>
 
     <!-- 头部右侧鼠标经过图片放大效果 _start -->
-    <script type="text/javascript" src="/frontend/js/bubbleup.js"></script>
+    <script type="text/javascript" src="/js/bubbleup.js"></script>
     <!-- 头部右侧鼠标经过图片放大效果 _end -->
     <!-- 右侧商品信息等定位切换效果 _start -->
-    <script type="text/javascript" src="/frontend/js/tabs_totop.js"></script>
+    <script type="text/javascript" src="/js/tabs_totop.js"></script>
     <!-- 右侧商品信息等定位切换效果 _end -->
     <!-- 控制图片经过放大 -->
     <script type="text/javascript">

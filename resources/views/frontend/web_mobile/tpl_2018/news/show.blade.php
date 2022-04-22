@@ -109,7 +109,7 @@
         });
     </script>
 
-    <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/mobile/images/topup.png"></a>
+    <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
     <script type="text/javascript">
         $().ready(function(){
             //首先将#back-to-top隐藏
@@ -142,7 +142,7 @@
         });
     </script>
     <!--底部菜单 start-->
-    <script src="/mobile/js/custom_js.js?v=20180919"></script> <link rel="stylesheet" href="/mobile/css/custom_css.css?v=2.0"/>
+    <script src="/js/custom_js.js?v=20180919"></script> <link rel="stylesheet" href="/css/custom_css.css?v=2.0"/>
     <div style="height: 48px; line-height: 48px; clear: both;"></div>
     <div class="footer-nav">
 

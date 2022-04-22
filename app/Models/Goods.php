@@ -183,5 +183,52 @@ class Goods extends BaseModel
         return $this->hasMany(Collect::class, 'goods_id', 'goods_id');
     }
 
+    /**
+     * 手机端描述
+     *
+     * @return array|mixed
+     */
+    public function getMobileDescAttribute()
+    {
+        $mobile_desc = unserialize($this->attributes['mobile_desc']);
 
+        if (empty($mobile_desc)) {
+            return [];
+        }
+
+        return $mobile_desc;
+    }
+
+    public function getOtherAttrsAttribute()
+    {
+        $other_attrs = unserialize($this->attributes['other_attrs']);
+
+        if (empty($other_attrs)) {
+            return [];
+        }
+
+        return $other_attrs;
+    }
+
+    public function getContractIdsAttribute()
+    {
+        $contract_ids = unserialize($this->attributes['contract_ids']);
+
+        if (empty($contract_ids)) {
+            return [];
+        }
+
+        return $contract_ids;
+    }
+
+    public function getGoodsImagesAttribute()
+    {
+        $goods_images = unserialize($this->attributes['goods_images']);
+
+        if (empty($goods_images)) {
+            return [];
+        }
+
+        return $goods_images;
+    }
 }

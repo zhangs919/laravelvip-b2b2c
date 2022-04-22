@@ -124,4 +124,42 @@ class ArticleRepository
 
         return $list;
     }
+
+    /**
+     * 根据分类类型id获取文章列表
+     *
+     * @param int $cat_type 分类类型id 如：2-商城公告
+     * @param int $size
+     * @param string $ordertype
+     * @param string $articleFields
+     * @return mixed
+     */
+    public function getArticlesByCatType($cat_type, $size = 5, $ordertype = 'asc', $articleFields = '')
+    {
+        if ($articleFields == '') {
+            $articleFields = ['article_id','title','content','keywords','article_thumb','add_time','link','summary'];
+        }
+        // 入驻指南文章 asc排序
+        $condition = [
+            'where' => [
+                ['status', 1],
+                ['cat_type', $cat_type],
+            ],
+            'sortname' => 'sort',
+            'sortorder' => $ordertype,
+            'page_size' => $size,
+            'field' => $articleFields,
+        ];
+        list($list, $total) = $this->getList($condition);
+        $list = $list->toArray();
+        if (!empty($list)) {
+            foreach ($list as &$v) {
+                if (isset($v['article_thumb'])) {
+                    $v['article_thumb'] = get_image_url($v['article_thumb']);
+                }
+            }
+        }
+
+        return $list;
+    }
 }

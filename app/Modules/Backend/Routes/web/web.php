@@ -28,8 +28,10 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
         Route::get('region-list', 'SiteController@regionList'); // regionList
         Route::get('region-list.html', 'SiteController@regionList'); // regionList
         Route::get('cat-list', 'SiteController@catList'); // catList
-        Route::post('video-selector', 'SiteController@videoSelector'); // videoSelector
+        Route::any('video-selector', 'SiteController@videoSelector'); // videoSelector
+        Route::any('video-selector.html', 'SiteController@videoSelector'); // videoSelector
         Route::any('image-selector', 'SiteController@imageSelector'); // imageSelector
+        Route::any('image-selector.html', 'SiteController@imageSelector'); // imageSelector
         Route::any('tpl-backup', 'SiteController@tplBackup'); // tplBackup 模板备份
         Route::get('tpl-data', 'SiteController@tplData'); // tplData ajax 渲染模板数据
 

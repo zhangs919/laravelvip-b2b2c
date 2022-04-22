@@ -6,8 +6,15 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-//class User extends Authenticatable
-class User extends BaseModel
+/**
+ * 用户模型
+ * 主要用于登录授权验证
+ *
+ * Class User
+ * @package App\Models
+ */
+class User extends Authenticatable
+//class User extends BaseModel
 {
     use Notifiable;
 
@@ -22,7 +29,7 @@ class User extends BaseModel
         'address_id', 'mobile_supplier', 'mobile_province', 'mobile_city', 'auth_codes',
         'qq_key', 'weibo_key', 'weixin_key', 'invite_code', 'parent_id', 'is_recommend',
 
-//        'security_level' // 这个应该是算出来 不能存数据
+        'security_level' // 这个应该是算出来 不能存数据
 
         /*
          * 新加字段

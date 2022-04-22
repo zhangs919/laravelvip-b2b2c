@@ -9,7 +9,7 @@
     {{--<div class="copyright">
         <p>
             <a href="http://www.laravelvip.com" target="_blank" class="copyright-logo">
-                <img src="/frontend/images/power-by-logo.png">
+                <img src="/images/power-by-logo.png">
                 提供技术支持
             </a>
         </p>

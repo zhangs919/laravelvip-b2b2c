@@ -313,6 +313,26 @@ class FreightController extends Seller
 
         $compact = compact('title');
 
+        if ($request->method() == 'POST') {
+            $post = $request->post();
+            $position = $post['position']; // 经纬度数组
+            $region_code = $post['region_code'];
+            $sku_list = $post['sku_list'];
+
+            $region_names = get_region_names_by_region_code($region_code);
+
+            // 计算运费
+            $shipping_fee = '￥0.00';
+            $shipping_fee_format = '￥0.00';
+            $is_cash = '否'; // 是否货到付款
+            $cash_more = '0.00';
+            $cash_more_format = '￥0.00';
+
+            $render = view('shop.freight.partials._calculate', compact('region_names', 'shipping_fee_format', 'is_cash','cash_more_format'))->render();
+
+            return result(0, $render);
+        }
+
         return view('shop.freight.calculate', $compact);
     }
 
@@ -346,19 +366,20 @@ class FreightController extends Seller
         if (empty($freight_info)) {
             return result(-1, null, '模板编号不能为空');
         }
-        $freight_info['region_names'] = get_region_names_by_region_code($freight_info['region_code'], '|');
+        $freight_info['region_names'] = get_region_names_by_region_code($freight_info['region_code'], ' ');
 
         // freight record
         $default_freight_record = FreightRecord::where([['freight_id', $id], ['is_default', 1]])->first();
-        if (empty($default_freight_record)) {
+        if (empty($default_freight_record) || $freight_info['limit_sale']) { // 支持区域限售
             $freight_record = FreightRecord::where([['freight_id', $id]])->first();
             $default_desc = '无';
         } else {
-            $freight_record = $default_freight_record;
+            $freight_record = FreightRecord::where([['freight_id', $id], ['is_default', 0]])->first();
             $default_desc = $freight_record->start_num.'件内'.$freight_record->start_money.'元，每增加'.$freight_record->plus_num.'件，加'.$freight_record->plus_money.'元';
         }
         $desc = $freight_record->start_num.'件内'.$freight_record->start_money.'元，每增加'.$freight_record->plus_num.'件，加'.$freight_record->plus_money.'元';
 
+//        dd($freight_record);
         $data = [
             'freight' => $freight_info,
             'default_desc' => $default_desc,

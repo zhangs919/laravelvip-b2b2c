@@ -59,16 +59,34 @@ class RouteServiceProvider extends ServiceProvider
         });*/
 
         /* 将web中的路由按模块分成多个子文件 */
-        foreach(glob(module_path('frontend', 'Routes/pc/*.php'))as $file){
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group($file);
+        // 手机端访问
+        $design_page = request()->get('page','');
+//        $design_page = empty($design_page) ? str_contains($design_page, 'm_') : false;
+        if (is_mobile() || (request()->getHost() == env('MOBILE_DOMAIN')) || $design_page) {
+            foreach(glob(module_path('frontend', 'Routes/mobile/*.php'))as $file){
+                Route::middleware('web')
+                    ->namespace($this->namespace)
+                    ->group($file);
+            }
         }
-        foreach(glob(module_path('frontend', 'Routes/mobile/*.php'))as $file){
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group($file);
+
+        // PC或app访问
+        if (!is_mobile() || (request()->getHost() == env('FRONTEND_DOMAIN'))) {
+            foreach(glob(module_path('frontend', 'Routes/pc/*.php'))as $file){
+                Route::middleware('web')
+                    ->namespace($this->namespace)
+                    ->group($file);
+            }
         }
+//        else { // PC或app访问
+//            foreach(glob(module_path('frontend', 'Routes/pc/*.php'))as $file){
+//                Route::middleware('web')
+//                    ->namespace($this->namespace)
+//                    ->group($file);
+//            }
+//        }
+
+
     }
 
     /**

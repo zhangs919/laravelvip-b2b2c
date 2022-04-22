@@ -168,21 +168,21 @@ class CartRepository
         }
         // 查询购物车是否存在该商品
         if (!$this->user_id) {
-            $condition = [];
             $condition = [
                 ['user_id',$this->user_id],
                 ['session_id',$this->session_id],
                 ['goods_id',$this->goods->goods_id],
-                ['spec_key', (!empty($this->goodsSku) ? $this->goodsSku->key : null)]
+                ['sku_id',$this->goods->sku_id]
+//                ['spec_key', (!empty($this->goodsSku) ? $this->goodsSku->key : null)]
             ];
 
             $userCartGoods = Cart::where($condition)->first();
         } else {
-            $condition = [];
             $condition = [
                 ['user_id',$this->user_id],
                 ['goods_id',$this->goods->goods_id],
-                ['spec_key', (!empty($this->goodsSku) ? $this->goodsSku->key : null)]
+                ['sku_id',$this->goods->sku_id],
+//                ['spec_key', (!empty($this->goodsSku) ? $this->goodsSku->key : null)]
             ];
 
             $userCartGoods = Cart::where($condition)->first();
@@ -191,14 +191,14 @@ class CartRepository
         if (count($userCartGoods) > 0) {
 
             // 该商品已经加入购物车
-            $userWantGoodsNum = $this->goodsBuyNum + $userCartGoods['goods_num'];//本次要购买的数量加上购物车的本身存在的数量
+            $userWantGoodsNum = $this->goodsBuyNum + $userCartGoods['goods_number'];//本次要购买的数量加上购物车的本身存在的数量
             if($userWantGoodsNum > 200){ // 限制购物车总数量不大于200
                 $userWantGoodsNum = 200;
             }
             if ($userWantGoodsNum > $goods_number) {
-                return arr_result(-4, '', '商品库存不足，剩余'.$goods_number.',当前购物车已有'.$userCartGoods['goods_num'].'件');
+                return arr_result(-4, '', '商品库存不足，剩余'.$goods_number.',当前购物车已有'.$userCartGoods['goods_number'].'件');
             }
-            $update = ['goods_num' => $userWantGoodsNum,'goods_price'=>$price,'member_goods_price'=>$price];
+            $update = ['goods_number' => $userWantGoodsNum,'goods_price'=>$price,'member_goods_price'=>$price];
 //            $cartRes = Cart::where($condition)->update($update);
             $cartRes = $userCartGoods->update($update); // 更新购物车商品信息
         } else {
@@ -207,24 +207,32 @@ class CartRepository
                 return arr_result(-4, '', '商品库存不足，剩余'.$this->goods['store_count']);
             }
             $cartInsertData = array(
-                'shop_id' => $this->goods->shop_id,   // 店铺id
                 'user_id' => $this->user_id,   // 用户id
                 'session_id' => $this->session_id,   // session_id
+                'shop_id' => $this->goods->shop_id,   // 店铺id
                 'goods_id' => $this->goods->goods_id,   // 商品id
-                'goods_sn' => $this->goods->goods_sn,   // 商品货号
+                'sku_id' => $this->goods->sku_id,
+                'cart_act_id' => 0, // 活动id
                 'goods_name' => $this->goods->goods_name,   // 商品名称
-                'market_price' => $this->goods->market_price,   // 市场价
+                'goods_number' => $this->goodsBuyNum, // 购买数量
                 'goods_price' => $price,  // 原价
-                'member_goods_price' => $price,  // 会员折扣价 默认为 购买价
-                'goods_num' => $this->goodsBuyNum, // 购买数量
-                'prom_type' => 0,   // 0 普通订单,1 限时抢购, 2 团购 , 3 促销优惠
-                'prom_id' => 0,   // 活动id
+                'goods_type' => 0, // 商品类型
+                'parent_id' => 0, // 父id
+                'is_gift' => 0, // 是否赠品
+                'buyer_type' => 0, // 买家类型 0-个人 1-店铺
+                'add_time' => time(),
+                'select' => 1, // 是否选中
+
+//                'goods_sn' => $this->goods->goods_sn,   // 商品货号
+//                'member_goods_price' => $price,  // 会员折扣价 默认为 购买价
+//                'prom_type' => 0,   // 0 普通订单,1 限时抢购, 2 团购 , 3 促销优惠
+//                'prom_id' => 0,   // 活动id
             );
-            if(!empty($this->goodsSku)){
-                $cartInsertData['spec_key'] = $this->goodsSku->key;
-                $cartInsertData['spec_key_name'] = $this->goodsSku->key_name; // 规格 key_name
+//            if(!empty($this->goodsSku)){
+//                $cartInsertData['spec_key'] = $this->goodsSku->key;
+//                $cartInsertData['spec_key_name'] = $this->goodsSku->key_name; // 规格 key_name
 //                $cartInsertData['sku'] = $this->goodsSku->sku; // todo 不知道是什么
-            }
+//            }
             $cartRes = Cart::create($cartInsertData);
             if (!empty($cartRes->cart_id)) {
                 $cartRes = true;
@@ -242,26 +250,26 @@ class CartRepository
     /**
      * 获取用户购物车列表
      *
-     * @param int $selected 是否被用户勾选中的 0 为全部 1为选中  一般没有查询不选中的商品情况
+     * @param int $select 是否被用户勾选中的 0 为全部 1为选中  一般没有查询不选中的商品情况
      * @return mixed
      */
-    public function getCartList($selected = 0)
+    public function getCartList($select = 0)
     {
         if ($this->user_id) {
             $cartCondition[] = ['user_id', $this->user_id];
         } else {
             $cartCondition[] = ['session_id', $this->session_id];
         }
-        if ($selected != 0) {
-            $cartCondition[] = ['selected', 1];
+        if ($select != 0) {
+            $cartCondition[] = ['select', 1];
         }
         $cartList = Cart::with(['goods','shop'])->where($cartCondition)->get();
         $afterCheckCartList = $this->checkCartList($cartList);
 //        dd(Cookie::get('cart_goods_num'));
-        $cartGoodsTotalNum = array_sum(array_map(function($val){return $val['goods_num'];}, $afterCheckCartList->toArray()));//购物车购买的商品总数
+        $cartGoodsTotalNum = array_sum(array_map(function($val){return $val['goods_number'];}, $afterCheckCartList->toArray()));//购物车购买的商品总数
 //        \cookie('cart_goods_num', $cartGoodsTotalNum, 0, null, '/');
         setcookie('cart_goods_num', (int)$cartGoodsTotalNum, null, '/');
-        return $afterCheckCartList;
+        return $afterCheckCartList->toArray(); // 转成数组返回
     }
 
     /**
@@ -272,8 +280,7 @@ class CartRepository
     public function checkCartList($cartList)
     {
         foreach ($cartList as $k=>$cart) {
-
-            if (!count($cart->goods) || $cart->goods->goods_status != 1 || $cart->goods->goods_audit != 1) {
+            if ($cart->goods->count() <= 0 || $cart->goods->goods_status != 1 || $cart->goods->goods_audit != 1) {
                 Cart::where('cart_id', $cart->cart_id)->delete(); // 删除
                 unset($cartList[$k]);
                 continue;
@@ -290,7 +297,7 @@ class CartRepository
      */
     public function getUserCartOrderCount()
     {
-        $count = Cart::where([['user_id',$this->user_id],['selected',1]])->count();
+        $count = Cart::where([['user_id',$this->user_id],['select',1]])->count();
         return $count;
     }
 
@@ -335,7 +342,7 @@ class CartRepository
         if($goods_num > 200){
             $goods_num = 200;
         }
-        $cart->goods_num = $goods_num;
+        $cart->goods_number = $goods_num;
 
         // 判断商品库存
         $sku_goods_number = GoodsSku::where('sku_id', $sku_id)->value('goods_number');
@@ -380,16 +387,16 @@ class CartRepository
      */
     public function getCartPriceInfo($cartList = null)
     {
-        $total_fee = $goods_num = 0;//初始化数据。商品总额/商品总共数量
+        $total_fee = $goods_number = 0;//初始化数据。商品总额/商品总共数量
         if($cartList){
             foreach ($cartList as $cartKey => $cartItem) {
-                if ($cartItem->selected == 1) {
-                    $total_fee += $cartItem->goods_num * $cartItem->goods_price;
-                    $goods_num += $cartItem->goods_num;
+                if ($cartItem['select'] == 1) {
+                    $total_fee += $cartItem['goods_number'] * $cartItem['goods_price'];
+                    $goods_number += $cartItem['goods_number'];
                 }
             }
         }
-        return compact('total_fee', 'goods_num');
+        return compact('total_fee', 'goods_number');
     }
 
     /**
@@ -410,19 +417,19 @@ class CartRepository
 
             DB::beginTransaction();
             try{
-                Cart::where($condition)->whereIn('cart_id', $cart_ids_arr)->update(['selected' => 1]);
-                Cart::where($condition)->whereNotIn('cart_id', $cart_ids_arr)->update(['selected' => 0]); // 将未选中商品设置为0
+                Cart::where($condition)->whereIn('cart_id', $cart_ids_arr)->update(['select' => 1]);
+                Cart::where($condition)->whereNotIn('cart_id', $cart_ids_arr)->update(['select' => 0]); // 将未选中商品设置为0
                 DB::commit();
                 $ret = true;
             } catch (\Exception $e) {
                 DB::rollback();//事务回滚
-//                echo $e->getMessage();
-//                echo $e->getCode();
+                echo $e->getMessage();
+                echo $e->getCode();
                 $ret = false;
             }
         } else {
             // 如果cart_ids 为空 则将用户所有购物车商品取消选中
-            $ret = Cart::where($condition)->update(['selected' => 0]);
+            $ret = Cart::where($condition)->update(['select' => 0]);
         }
 
         if ($ret === false) {
@@ -438,16 +445,16 @@ class CartRepository
         $count = $goods_num = $select_goods_number = 0;
         $goods_price = "0.00";
         foreach ($cart_list as $cart) {
-            if ($cart->selected) {
+            if ($cart['select']) {
                 // 选中商品
-                $select_goods_amount += $cart->goods_price;
-                $select_shop_amount[$cart->shop_id] = $select_goods_amount;
-                $select_goods_number += $cart->goods_num;
+                $select_goods_amount += $cart['goods_price'];
+                $select_shop_amount[$cart['shop_id']] = $select_goods_amount;
+                $select_goods_number += $cart['goods_number'];
             }
             // 全部商品
             $count = $goods_num = $this->getUserCartGoodsNum();
-            $goods_amount += $cart->goods_price;
-            $shop_delivery_enable[$cart->shop_id] = 1; // todo 如何获取值
+            $goods_amount += $cart['goods_price'];
+            $shop_delivery_enable[$cart['shop_id']] = 1; // todo 如何获取值
         }
 
 

@@ -8,7 +8,7 @@
     <!-- 头部元数据 -->
     <meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="Keywords" content="{{ $seo_keywords ?? '乐融沃B2B2C商城演示站' }}" />
@@ -22,27 +22,33 @@
     <meta name="is_webp" content="no" />
     <!-- #is_wabp_end -->
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.1"/>
-    <link rel="stylesheet" href="/frontend/css/common.css?v=1.1"/>
-    {{--header_css--}}
-    @section('header_css')@show
+    <link rel="stylesheet" href="/css/common.css?v=1.1"/>
+
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
+
+    {{--header_css--}}
+    @section('header_css')@show
+
     <script src="/assets/d2eace91/js/jquery.js?v=1.1"></script>
 
+    <script src="/js/common.js?v=1.1"></script>
+    <!-- 图片缓载js -->
+    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=1.1"></script>
     {{--header_js--}}
     @section('header_js')@show
 
-    <script src="/frontend/js/common.js?v=1.1"></script>
-    <!-- 图片缓载js -->
-    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=1.1"></script>
+
+    {{--第三方登录验证代码--}}
+    {!! sysconf('website_login_code') !!}
 
 </head>
-<body class="pace-done">
+<body class="pace-done {{ $body_class ?? ''}}" {{ $body_style ?? ''}}>
 
 
 
@@ -145,7 +151,7 @@
 <script src="/assets/d2eace91/js/jquery.cookie.js?v=1.1"></script>
 <script src="/assets/d2eace91/js/layer/layer.js?v=1.1"></script>
 <script src="/assets/d2eace91/js/jquery.method.js?v=1.1"></script>
-<script src="/frontend/js/jquery.fly.min.js?v=1.1"></script>
+<script src="/js/jquery.fly.min.js?v=1.1"></script>
 <script src="/assets/d2eace91/js/szy.cart.js?v=1.1"></script>
 
 
@@ -154,7 +160,7 @@
 
 
 <!--[if lte IE 9]>
-<script src="/frontend/js/requestAnimationFrame.js?v=1.1"></script>
+<script src="/js/requestAnimationFrame.js?v=1.1"></script>
 <![endif]-->
 <script type="text/javascript">
     // 缓载图片

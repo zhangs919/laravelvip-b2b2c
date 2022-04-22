@@ -1,0 +1,135 @@
+@charset "utf-8";
+/* CSS Document */
+a:hover { color: #53a4f4;}
+.table tbody tr td { padding: 4px 8px;}
+/*重新定义与前台common.css冲突    end*/
+
+/***万能表单***/
+.score-type-box i,.geographical-content .geographical-result .mark-ico,.upFile.small .upFile-con i.icon-upload{background: url(../../images/design/renovation-bg.png) no-repeat;}
+
+/****创建表单****/
+/*中间内容*/
+.center-form { position: relative; z-index: 21; height: auto; margin: auto; color: #666; background: #fff; box-shadow: 0 2px 5px 1px rgba(124,124,124,.2);}
+.top-images img { vertical-align: top;}
+.center-content { margin: 1rem 1rem 0; line-height: 1.4;}
+.center-content .form-title { padding-bottom: .5rem; font-size: 1rem; color: #333; text-align: center;}
+.center-content .form-desc { font-size: .7rem;}
+.ui-sortable { position: relative;}
+.type-content { position: relative;}
+.type-content img{ max-width: 100%; }
+.question-title { position: relative; padding: 5px 0 5px 0; font-size: .8rem; line-height: 1.8; color: #333; overflow: hidden;}
+.question-title .required { display: inline-block; width: 15px; font: bold 14px/20px tahoma, verdana; color: #f60; text-align: center; vertical-align: middle;}
+.question-title .question-id { margin-right: .3rem;}
+.question-conent { padding: 5px 0; overflow: hidden;}
+.question-conent > ul > li { margin-bottom: .5rem; overflow: hidden;}
+.question-conent > ul > li > label { display: block; font-size: .7rem; line-height: .9rem; cursor: pointer;}
+.question-conent .item-input-box { display: -webkit-box; display: -webkit-flex; display: flex;}
+.question-conent .item-input-box span { padding: 5px 0 5px 15px; line-height: 24px;}
+.question-conent .item-input-box input[name*='number'] { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; min-width: 50%;}
+.question-conent input[type="radio"], .question-conent input[type="checkbox"] { position: relative; width: 18px; height: 18px; margin: 0 .4rem 0 0; vertical-align: top; cursor: pointer; border: 1px solid #ddd;}
+.question-conent input[type="radio"] { border-radius: 50%;}
+.question-conent input[type="radio"]:checked { background: #53a4f4; border-color: #53a4f4;}
+.question-conent input[type="radio"]:checked:after { content: ''; position: absolute; top: 4px; left: 4px; display: block; width: 8px; height: 8px; background: #fff; border-radius: 50%;}
+.question-conent input[type="checkbox"] { border-radius: 2px;}
+.question-conent input[type="checkbox"]:checked { background: #53a4f4; border-color: #53a4f4;}
+.question-conent input[type="checkbox"]:checked:after { content: ''; position: absolute; top: 3px; left: 3px; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); transform: rotate(-45deg);}
+.question-conent input[type="text"], .question-conent input[type="password"], .question-conent textarea { width: 100%; padding: .5rem .5rem; margin: 0; border: 1px solid #dbdbdb; box-shadow: none; box-sizing: border-box; resize: none;}
+.question-conent input[type="text"] { width: 100% !important; height: 1.8rem;}
+.question-conent input[type="text"]:focus, .question-conent input[type="password"]:focus, .question-conent textarea:focus { border-color: #1b9af7;}
+.question-conent select { width: 100% !important; height: 1.8rem; padding: 0 .5rem; margin-top: .5rem; line-height: 1.8rem; color: #666; vertical-align: middle; cursor: pointer; border: 1px solid #dbdbdb; border-radius: 1px;}
+.question-conent select:first-child { margin-top: 0;}
+.type-content:hover .operateEdit a { visibility: visible;}
+.type-content .form-control-error i { background: none;}
+.score-type-box { display: block; height: 26px; margin-bottom: 10px;}
+.score-type-box i { float: left; width: 26px; height: 26px; margin-right: 10px;}
+.score-type-box i.op-star { background-position: -98px 1px;}
+.score-type-box i.op-sun { background-position:-98px -164px;}
+.score-type-box i.op-apple { background-position: -98px -191px;}
+.score-type-box i.op-flower { background-position: -98px -133px;}
+.score-type-box i.op-praise { background-position: -97px -102px;}
+.score-type-box i.op-smile { background-position: -99px -34px;}
+.score-type-box i.op-heart { background-position: -97px -68px;}
+.score-type-box i.op-shit { background-position: -98px -222px;}
+.score-type-box i.op-star.active { background-position: -98px -257px;}
+.score-type-box i.op-sun.active { background-position:-96px -421px;}
+.score-type-box i.op-apple.active { background-position: -96px -447px;}
+.score-type-box i.op-flower.active { background-position: -97px -392px;}
+.score-type-box i.op-praise.active { background-position:-96px -360px;}
+.score-type-box i.op-smile.active { background-position:-98px -292px;}
+.score-type-box i.op-heart.active { background-position: -96px -325px;}
+.score-type-box i.op-shit.active { background-position:-96px -476px;}
+.score-type-box span { display: inline-block; height: 26px; margin-left: 50px; line-height: 26px;}
+.matrix .table { width: 100%;}
+.matrix .table tr td { display: block; padding: 0 0 .5rem 0;}
+.matrix .table tr td.matrix-title { position: relative; font-size: 14px; color: #333;}
+.matrix .table tr td.matrix-title:before { content: ''; display: inline-block; width: 0; height: 0; margin-top: .4em; margin-right: 3px; vertical-align: top; border: 4px solid transparent; border-left: 7px solid #505050; border-right-width: 0;}
+.matrix .table tr td .matrix-second-title { display: block; width: 100%; padding: 6px 10px; background: #f4f4f4; border: 1px solid #ddd; border-bottom: 0; border-top-right-radius: 2px; border-top-left-radius: 2px; box-sizing: border-box;}
+.question-conent .map-a { display: inline-block; padding: 0 1rem; font-size: 14px; line-height: 1.6; color: #53a4f4; text-align: center; cursor: pointer; overflow: hidden; background: #fff; border: 1px solid #53a4f4; border-radius: 2px;}
+/*获取地理位置*/
+.geographical-content { width: 100%; border: 1px solid #b0b0b0; box-sizing: border-box;}
+.geographical-content .geographical-result { position: relative; min-height: 38px; padding: .2rem .5rem .2rem 38px; font-size: 14px; line-height: 1.4; color: #666; overflow: hidden; background: #fff; border-bottom: 1px solid #b0b0b0;}
+.geographical-content .geographical-result .mark-ico { position: absolute; top: 8px; left: 12px; display: inline-block; width: 14px; height: 16px; background-position: -73px -300px;}
+.geographical-content .geo_primary-btn, .primary-btn { display: inline-block; padding: 0 .5rem; font-size: 12px; line-height: 1.8; color: #53a4f4; text-align: center; cursor: pointer; overflow: hidden; background: #fff; border: solid 1px #53a4f4; border-radius: 2px;}
+.geographical-content .geo_primary-btn .fa { margin-right: .2rem;}
+.geographical-content .geographical-result .geo_primary-btn { float: right; margin-top: 3px;}
+.geographical-content .geographical-coord { color: #aaa;}
+.geographical-content .geographical { position: relative; height: 320px; background: rgb(252, 249, 242);}
+.geographical-content .geographical-action { padding: 8px 20px; font-size: 12px; overflow: hidden; background: #fff; border-top: 1px solid #b0b0b0;}
+/*图片选择*/
+.questionImgBox { float: left; width: 49%; min-height: 177px; padding: .2rem; margin: 0 2% 2% 0; text-align: center; background: #fff; border: 1px solid #ccc; box-sizing: border-box;}
+.questionImgBox:nth-child(2n){ margin-right: 0;}
+.questionImgBox .qImgCon { position: relative; width: 100%; height: 150px; min-height: 3.6rem; margin-bottom: 5px; overflow: hidden;}
+.questionImgBox .qImgCon img { display: block; width: 100%; height: auto;}
+.questionImgBox .qImgCon .img_handle { position: absolute; bottom: 0; left: 0; z-index: 1; display: none; width: 100%; height: 26px; font-size: 14px; line-height: 26px; text-align: center; background: #000; opacity: .7;}
+.questionImgBox .img_handle span.edit_img { float: left; width: 74px; height: 26px; color: #fff; cursor: pointer; border-right: 1px solid #cccccc;}
+.questionImgBox .img_handle span.edit_del { float: left; width: 75px; height: 26px; color: #fff; cursor: pointer;}
+.questionImgBox .img_handle span:hover { background: #5c5c5c;}
+.questionImgBox .qImgCon:hover .img_handle { display: block;}
+.questionImgBox label { display: block; font-size: 14px; line-height: 1.6; text-align: center; cursor: pointer;}
+.questionImgBox label input { vertical-align: text-top !important;}
+/*分割线*/
+.DividingLine { margin: .3rem auto; border-bottom: 1px dashed #ccc;}
+/*可拖拽上传*/
+.upFile { position: relative; height: 100px; background: #fff; border: 2px dashed #ddd; border-radius: 3px;}
+.upFile .upFile-con { padding: 1rem .5rem; font-size: 13px; color: #999; text-align: center;}
+.upFile input[type="file"] { position: absolute; top: 0; left: 0; opacity: 0; z-index: 1; width: 100%; height: 100%; cursor: pointer;}
+.upFile.small { width: 100%; height: 50px; border: 1px dashed #848484; border-radius: 3px;}
+.upFile.small .upFile-con { padding: 10px; margin: auto; line-height: 30px; color: #333;}
+.upFile.small .upFile-con i.icon-upload { display: inline-block; width: 30px; height: 30px; margin-right: 10px; vertical-align: middle; background-position: -130px -374px;}
+
+/*地址*/
+.region_container select { margin-top: .5rem !important;}
+.address_detail { width: 100%; height: 1.8rem; padding: 0 .5rem; margin-top: .5rem !important; color: #666; vertical-align: middle; border: 1px solid #dbdbdb; border-radius: 1px;}
+
+/*轮播banner*/
+.swiper-slide a { height: 100%;}
+.swiper-slide a img { height: 100%;}
+/*提交按钮*/
+.form-submit { padding: 30px 20px; text-align: center;}
+.form-submit a { display: inline-block; height: 28px; padding: 5px 72px; font-size: 16px; line-height: 28px; color: #fff; cursor: pointer; background: #85c8ff; border: 1px solid #85c8ff; border-radius: 4px;}
+/*表单提交*/
+.form-end { padding: 1.5rem 0; text-align: center;}
+.form-end .end-img { display: block; width: 80px; margin: 0 auto 25px;}
+.form-end .end-title { margin-bottom: 20px; font-size: 20px; font-weight: normal; color: #333; text-align: center;}
+.form-end .end-desc { margin-bottom: 20px; font-size: 14px; color: #999; text-align: center;}
+.form-end .btn { display: inline-block; height: 28px; padding: 5px 52px; font-size: 16px; line-height: 28px; color: #fff; cursor: pointer; background: #85c8ff; border: 1px solid #85c8ff; border-radius: 4px;}
+/* 背景不滚动 */
+.bg-fixed{background-repeat: no-repeat; background-position:center top; background-attachment: fixed;}
+/*视频*/
+.center-main video { max-width: 100%; height: auto;}
+
+/*按钮*/
+.btn { display: inline-block; padding: 8px 16px; font-size: 12px; line-height: 14px; vertical-align:middle; border-radius:3px;}
+.btn.active, .btn:active { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10) inset;}
+/*默认按钮*/
+.btn-default { color: #666; background-color: #f7f7f7; border: 1px solid #ddd;}
+.btn-default:hover { color: #666; background-color: #fff; border: 1px solid #ddd;}
+.btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover { color: #666; background-color: #fff;border-color: #ddd;}
+/*蓝色primary按钮*/
+.btn-primary { color: #fff !important; background: #58b4ff; border-color: #42aaff;}
+.btn-primary:hover { background: #42aaff; border-color: #3ca7ff;}
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover { color: #fff; background-color: #42aaff;border-color: #3ca7ff;}
+.btn-primary.focus, .btn-primary:focus { background-color: #42aaff; border-color: #3ca7ff;}
+/*附件上传progress bar*/
+.progress {height:20px;margin-bottom:20px;overflow:hidden;background-color:#f5f5f5;border-radius:4px;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);box-shadow:inset 0 1px 2px rgba(0,0,0,.1)}
+.progress-bar {float:left;width:0;height:100%;font-size:12px;line-height:20px;color:#fff;text-align:center;background-color:#337ab7;-webkit-box-shadow:inset 0 -1px 0 rgba(0,0,0,.15);box-shadow:inset 0 -1px 0 rgba(0,0,0,.15);-webkit-transition:width .6s ease;-o-transition:width .6s ease;transition:width .6s ease}

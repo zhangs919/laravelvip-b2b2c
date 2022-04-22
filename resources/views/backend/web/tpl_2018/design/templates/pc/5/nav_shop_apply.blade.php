@@ -1,7 +1,5 @@
 <!-- 商家入驻版式 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
-    @endif
 
     <div class="nav-shop-apply">
 
@@ -27,7 +25,7 @@
                 @endforeach
             @else
                 <a href="/shop/apply.html" target="_blank" title="申请商家入驻；已提交申请，可查看当前审核状态。" class="store-join-btn">
-                    <img src="/frontend/images/enter.jpg" />
+                    <img src="/images/enter.jpg" />
                 </a>
 
                 <a href="http://seller.laravelvip.com" target="_blank" class="store-join-help">
@@ -39,6 +37,4 @@
         </div>
     </div>
 
-@if($is_design)
 </div>
-@endif

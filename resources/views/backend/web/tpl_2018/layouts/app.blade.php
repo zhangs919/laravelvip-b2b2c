@@ -105,7 +105,7 @@
     </script>
     @section('header_style')@show
 </head>
-<body class="pace-done {{ $body_style ?? ''}}">
+<body class="pace-done {{ $body_class ?? ''}}" {!! $body_style ?? '' !!}>
 
     {{--css style--}}
     @section('style')@show

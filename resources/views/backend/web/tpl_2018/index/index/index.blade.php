@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('style')
-    <link rel="stylesheet" href="/backend/css/welcome.css">
+    <link rel="stylesheet" href="/css/welcome.css">
 @stop
 
 @section('alert_msg')
@@ -489,7 +489,7 @@
 
         });
     </script>
-    <script src="/backend/js/welcome.js?v=20180418"></script>
+    <script src=/js/welcome.js?v=20180418"></script>
     <!-- ECharts单文件引入 -->
     <script src="/assets/d2eace91/js/echarts/echarts-all.js?v=20180418"></script>
     <script type="text/javascript">

@@ -24,18 +24,18 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="/frontend/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css?v=1.6"/>
 
-    <link rel="stylesheet" href="/frontend/css/index.css?v=1.6"/>
-    <link rel="stylesheet" href="/frontend/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/index.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/template.css?v=20180702"/>
 
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="/frontend/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/frontend/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
@@ -93,9 +93,9 @@
                 </a>
             </div>
             <div class="topBar-navbar">
-                <a class="SZY-WEB-STATIC active" href="javascript:void(0);" data-value="0">
+                <a class="SZY-WEB-STATIC @if(!$webStatic){{ 'active' }}@endif" href="javascript:void(0);" data-value="{{ $webStatic }}">
                     <div class="topBar-button">
-                        <span class="title">关闭静态页面</span>
+                        <span class="title">@if($webStatic){{ '关闭静态页面' }}@else{{ '开启静态页面' }}@endif</span>
                     </div>
                 </a>
             </div>
@@ -149,14 +149,14 @@
         <!-- 顶部导航模块_start -->
         <div class="SZY-TPL-HEADER m-t-5">
             <!--页面css/js-->
-            <link rel="stylesheet" href="/frontend/css/index.css?v=1.6"/>
-            <script src="/frontend/js/index.js?v=1.2"></script>
-            <script src="/frontend/js/tabs.js?v=1.2"></script>
-            <script src="/frontend/js/bubbleup.js?v=1.2"></script>
-            <script src="/frontend/js/jquery.hiSlider.js?v=1.2"></script>
-            <script src="/frontend/js/index_tab.js?v=1.2"></script>
-            <script src="/frontend/js/jump.js?v=1.2"></script>
-            <script src="/frontend/js/nav.js?v=1.2"></script>
+            <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/index.css?v=1.6"/>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index.js?v=1.2"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/tabs.js?v=1.2"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/bubbleup.js?v=1.2"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jquery.hiSlider.js?v=1.2"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index_tab.js?v=1.2"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=1.2"></script>
+            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/nav.js?v=1.2"></script>
 
             <!-- 分类导航设置  _start -->
             <!-- 分类导航设置  _end -->

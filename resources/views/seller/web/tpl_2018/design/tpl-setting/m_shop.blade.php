@@ -39,9 +39,9 @@
             </a>
             <div class="topBar-navbar-r">
                 <div class="topBar-navbar">
-                    <a class="SZY-WEB-STATIC" href="javascript:void(0);" data-value="1">
+                    <a class="SZY-WEB-STATIC @if(!$webStatic){{ 'active' }}@endif" href="javascript:void(0);" data-value="{{ $webStatic }}">
                         <div class="topBar-button">
-                            <span class="title">关闭静态页面</span>
+                            <span class="title">@if($webStatic){{ '关闭静态页面' }}@else{{ '开启静态页面' }}@endif</span>
                         </div>
                     </a>
                 </div>
@@ -357,61 +357,10 @@
                     <div class="SZY-SHOP-HEADER">
                         <a href="javascript:void(0)" class="SZY-SET-HEAD shop-header-selector content-selector" data-url='/shop/config/index.html?group=m_shop_header' data-title='店铺头部设置'></a>
 
-                        <div class="shop-top-box shop-top-con1">
-                            <div class="shop-top-bg">
+                        {{--引入店铺头部--}}
+                        @include('design.tpl-setting.partials._shop_top_box')
 
-                                <img src="{{ get_image_url($shop_info->shop_sign_m) }}">
 
-                            </div>
-                            <header class="header">
-                                <div class="header-bcak-bar">
-                                    <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
-                                </div>
-                                <!-- 如果有自由购功能，给下面标签添加class,'header-middle-freebuy' -->
-                                <div class="header-middle-box header-middle-freebuy SZY-SHOP-HEADER">
-                                    <div class="header-middle-con">
-                                        <form name="searchForm" method="get" action="/shop/1/list">
-                                            <div class="header-search">
-                                                <i class="search-icon"></i>
-                                                <input type="text" name="keyword" value="" class="search-input" placeholder="搜索店铺内商品">
-                                            </div>
-                                        </form>
-                                        <a href="/freebuy/scan/1.html" class="freebuy-scan hide" title="扫码">
-                                        </a>
-                                    </div>
-                                </div>
-                                <!-- 如果有自由购功能，给下面标签添加class,'header-right-freebuy'，然后扫码的a标签显示 -->
-                                <div class="header-right-bar">
-                                    <aside class="top_bar">
-                                        <div class="show-menu" id="show_more">
-                                            <a href="javascript:void(0);"></a>
-                                        </div>
-                                    </aside>
-                                </div>
-                            </header>
-                            <div class="shop-info">
-                                <div class="shop-logo">
-                                    <img src="{{ get_image_url($shop_info->shop_logo, 'shop_logo') }}" alt="{{ $shop_info->shop_name }}">
-                                </div>
-
-                                <div class="shop-collect-btn SZY-SHOP-IS-COLLENT" data-shop_id="{{ $shop_info->shop_id }}">
-                                    <i class="iconfont">&#xe615;</i>
-                                    <span>收藏</span>
-                                </div>
-                                <div class="shop-info-right">
-                                    <div class="shop-name">{{ $shop_info->shop_name }}</div>
-
-                                    <div class="shop-notice">
-                                        <em>公告</em>
-                                        <ul class="SZY-SHOP-ARTICLE">
-                                            <li>
-                                                <a href="javascript:void(0)">{!! $shop_info->detail_introduce !!}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="shop-nav clearfix">
                             <ul class="nav-ul">
                                 <li class="current">
@@ -502,9 +451,11 @@
                         <a>模板助手</a>
                     </li>
 
-                    <li class="mobiTemColumn">
-                        <a>主题</a>
-                    </li>
+                    @if(!empty($tpl_backup_theme))
+                        <li class="mobiTemColumn">
+                            <a>主题</a>
+                        </li>
+                    @endif
 
                 </ul>
                 <div class="design_right_body">
@@ -513,7 +464,6 @@
                         <table id="mobile_helper">
                             <thead class="template_set_top">
                             <tr height="40">
-                                <td class="w30"></td>
                                 <td>模块名称</td>
                                 <td>是否开启</td>
                                 <td>操作</td>
@@ -538,9 +488,34 @@
                             </tfoot>
                         </table>
                     </div>
-                    <div class="template_select design_right_child" style="display: none">
+                    {{--<div class="template_select design_right_child" style="">
 
-                        <li class="SZY-THEME-TPL current" data-id="62" data-img="http://68dsw.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/04/03/15227278320832.png">
+                        <li class="SZY-THEME-TPL current" data-id="113" data-img="http://68dsw.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/04/03/15227278320832.png">
+						<span class="template_select_bg">
+							<img src="http://68dsw.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/04/03/15227278320832.png" class="mCS_img_loaded">
+						</span>
+                            <span class="template_select_name">外卖风格</span>
+                            <div class="mask-div"></div>
+                            <a href="javascript:;" class="template_select_handle"></a>
+                        </li>
+
+                    </div>--}}
+                    <div class="template_select design_right_child" style="display: none;">
+
+                        @if(!empty($tpl_backup_theme))
+                            @foreach($tpl_backup_theme as $theme)
+                                <li class="SZY-THEME-TPL @if(@$theme_id == $theme['back_id']){{ 'current' }}@endif" data-id="{{ $theme['back_id'] }}" data-img="{{ $theme['img'] }}">
+                                <span class="template_select_bg">
+                                    <img src="{{ $theme['img'] }}" class="mCS_img_loaded">
+                                </span>
+                                    <span class="template_select_name">{{ $theme['name'] }}</span>
+                                    <div class="mask-div"></div>
+                                    <a href="javascript:;" class="template_select_handle"></a>
+                                </li>
+                            @endforeach
+                        @endif
+
+                        {{--<li class="SZY-THEME-TPL current" data-id="62" data-img="http://68dsw.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/04/03/15227278320832.png">
 						<span class="template_select_bg">
 							<img src="http://68dsw.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/04/03/15227278320832.png">
 						</span>
@@ -556,7 +531,7 @@
                             <span class="template_select_name">主题风格</span>
                             <div class="mask-div"></div>
                             <a href="javascript:;" class="template_select_handle"></a>
-                        </li>
+                        </li>--}}
 
                     </div>
                 </div>
@@ -576,42 +551,48 @@
         //加载数据
         $(function(){
 
+            @if(@$theme_id == 0)
+                $.loading.start();
+                $.each({!! $jsonData !!}, function(index, value) {
+                    var $el = $(value.file);
+                    var is_valid_class = '';
+                    var is_eye_valid_class = '';
+                    if(value.is_valid>0){
+                        is_valid_class = 'fa fa-check-circle-o';
+                        is_eye_valid_class = 'hide-btn';
+                    }else{
+                        is_valid_class = 'fa fa-times-circle-o';
+                        is_eye_valid_class = 'show-btn';
+                    }
+                    if(value.type == '5')
+                    {
+                        var $handle = $('<div class="operateEdit"></div>');
+                        $handle.append($('<a class="upMove-btn" href="javascript:;"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>'));
+                        $handle.append($('<a class="downMove-btn" href="javascript:;"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>'));
+                        $handle.append($('<a class="hide-btn" href="javascript:;"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + value.format_is_valid + '</div></a>'));
+                        $handle.append($('<a class="deletes-btn" href="javascript:;""><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>'));
+                        $el.append($handle);
+                        $(".SZY-TEMPLATE-NAV-CONTAINER").append($el);
+                    }else{
+                        var $handle = $('<div class="operateEdit"></div>');
+                        $handle.append($('<a class="decor-btn upMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>').click(function () { setSortTpls(value.uid,'up'); }));
+                        $handle.append($('<a class="decor-btn downMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>').click(function () { setSortTpls(value.uid,'down'); }));
+                        $handle.append($('<a class="decor-btn '+is_eye_valid_class+'"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + value.format_is_valid + '</div></a>').click(function () { setIsValidTpls(value.uid); }));
+                        $handle.append($('<a class="decor-btn deletes-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>').click(function () { delTpls(value.uid); }));
+                        $el.append($handle);
+                        $('.SZY-TEMPLATE-MAIN-CONTAINER').append($el);
+                    }
+                });
+                $.loading.stop();
+                getHelper();
+                //图片缓载
+                $.imgloading.loading();
+            @else
+                $('.designSidebar li').eq(1).click();
+                var theme_img = "{{ $theme_img }}";
+                $('.mobile_design_center .special-item').html('<img src="'+theme_img+'" />');
+            @endif
 
-            $.loading.start();
-            $.each({!! $jsonData !!}, function(index, value) {
-                var $el = $(value.file);
-                var is_valid_class = '';
-                var is_eye_valid_class = '';
-                if(value.is_valid>0){
-                    is_valid_class = 'fa fa-check-circle-o';
-                    is_eye_valid_class = 'hide-btn';
-                }else{
-                    is_valid_class = 'fa fa-times-circle-o';
-                    is_eye_valid_class = 'show-btn';
-                }
-                if(value.type == '5')
-                {
-                    var $handle = $('<div class="operateEdit"></div>');
-                    $handle.append($('<a class="upMove-btn" href="javascript:;"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>'));
-                    $handle.append($('<a class="downMove-btn" href="javascript:;"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>'));
-                    $handle.append($('<a class="hide-btn" href="javascript:;"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + value.format_is_valid + '</div></a>'));
-                    $handle.append($('<a class="deletes-btn" href="javascript:;""><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>'));
-                    $el.append($handle);
-                    $(".SZY-TEMPLATE-NAV-CONTAINER").append($el);
-                }else{
-                    var $handle = $('<div class="operateEdit"></div>');
-                    $handle.append($('<a class="decor-btn upMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>').click(function () { setSortTpls(value.uid,'up'); }));
-                    $handle.append($('<a class="decor-btn downMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>').click(function () { setSortTpls(value.uid,'down'); }));
-                    $handle.append($('<a class="decor-btn '+is_eye_valid_class+'"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + value.format_is_valid + '</div></a>').click(function () { setIsValidTpls(value.uid); }));
-                    $handle.append($('<a class="decor-btn deletes-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>').click(function () { delTpls(value.uid); }));
-                    $el.append($handle);
-                    $('.SZY-TEMPLATE-MAIN-CONTAINER').append($el);
-                }
-            });
-            $.loading.stop();
-            getHelper();
-            //图片缓载
-            $.imgloading.loading();
 
         });
 

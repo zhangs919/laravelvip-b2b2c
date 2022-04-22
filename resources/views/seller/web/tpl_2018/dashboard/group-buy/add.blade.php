@@ -14,7 +14,7 @@
         <div class="table-content m-t-30 clearfix group-buy-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->
-                <input type="hidden" id="activitymodel-act_id" class="form-control" name="ActivityModel[act_id]">
+                <input type="hidden" id="activitymodel-act_id" class="form-control" name="ActivityModel[act_id]" value="{{ $model['act_id'] ?? '' }}">
                 <!-- 活动名称 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
@@ -26,7 +26,7 @@
                             <div class="form-control-box">
 
 
-                                <input type="text" id="activitymodel-act_name" class="form-control" name="ActivityModel[act_name]">
+                                <input type="text" id="activitymodel-act_name" class="form-control" name="ActivityModel[act_name]" value="{{ $model['act_name'] ?? '' }}">
 
 
                             </div>
@@ -46,7 +46,7 @@
                             <div class="form-control-box">
 
 
-                                <input type="text" id="activitymodel-act_title" class="form-control" name="ActivityModel[act_title]">
+                                <input type="text" id="activitymodel-act_title" class="form-control" name="ActivityModel[act_title]" value="{{ $model['act_title'] ?? '' }}">
 
 
                             </div>
@@ -62,15 +62,16 @@
                         </label>
                         <div class="col-sm-9">
                             <div class="form-control-box">
-                                <input type="text" id="activitymodel-start_time" class="form-control form_datetime large" name="ActivityModel[start_time]" value="2018-09-22 12:52:25">
+                                <input type="text" id="activitymodel-start_time" class="form-control form_datetime large" name="ActivityModel[start_time]" value="{{ $start_time }}">
                                 <span class="ctime">至</span>
-                                <input type="text" id="activitymodel-end_time" class="form-control form_datetime large" name="ActivityModel[end_time]" value="2018-09-29 12:52:25">
+                                <input type="text" id="activitymodel-end_time" class="form-control form_datetime large" name="ActivityModel[end_time]" value="{{ $end_time }}">
                             </div>
 
                             <div class="help-block help-block-t"></div>
                         </div>
                     </div>
-                </div> 			<!-- 限购数量 -->
+                </div>
+                <!-- 限购数量 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
                         <label for="activitymodel-purchase_num" class="col-sm-3 control-label">
@@ -81,12 +82,12 @@
                             <div class="form-control-box">
 
 
-                                <input type="text" id="activitymodel-purchase_num" class="form-control ipt" name="ActivityModel[purchase_num]">
+                                <input type="text" id="activitymodel-purchase_num" class="form-control ipt" name="ActivityModel[purchase_num]" value="{{ $model['purchase_num'] ?? '' }}">
 
 
                             </div>
 
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">限制会员购买活动中的每件商品的限购数量，为0则不限购</div></div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">限制会员购买活动中的每件商品的限购数量，为0或空时，则不限购</div></div>
                         </div>
                     </div>
                 </div>
@@ -105,7 +106,7 @@
 
 
                                 <div id="act_img_container"></div>
-                                <input type="hidden" id="activitymodel-act_img" class="form-control" name="ActivityModel[act_img]">
+                                <input type="hidden" id="activitymodel-act_img" class="form-control" name="ActivityModel[act_img]" value="{{ $model['act_img'] ?? '' }}">
 
 
                             </div>
@@ -116,14 +117,103 @@
                 </div>
 
 
-
                 <div class="simple-form-field">
                     <div class="form-group m-b-0">
-                        <label class="col-sm-3 control-label"></label>
+                        <label class="col-sm-3 control-label">
+                            <span class="text-danger ng-binding">*</span>
+                            <span class="ng-binding">选择商品：</span>
+                        </label>
                         <div class="col-sm-9">
-                            <div id="widget_goods" class="p-l-15 p-r-15"></div>
+                            <div id="widget_goods" class="p-l-15 p-r-15 w800"></div>
                             <div id="goods_list">
 
+                                @if(!empty($goods_list))
+                                    <table id="table_list" class="table table-hover group-buy-list">
+                                        <thead>
+                                        <tr>
+                                            <th class="w200">商品名称</th>
+                                            <th class="w150">商品分类</th>
+                                            <th class="w100 text-c">
+                                                <span class="text-danger ng-binding">*</span>
+                                                促销价
+                                            </th>
+                                            <th class="w80">商品售价</th>
+                                            <th class="w70">库存</th>
+                                            <th class="w80 text-c">
+                                                <span class="text-danger ng-binding">*</span>
+                                                活动库存
+                                            </th>
+                                            <th class="w100 text-c">
+                                                历史销量
+                                            </th>
+                                            <th class="handle w90">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="goods_info">
+
+                                        @foreach($goods_list as $v)
+                                            <tr data-group-buy-sku-id="{{ $v['sku_id'] }}" data-group-buy-goods-id="{{ $v['goods_id'] }}">
+                                                <td>
+                                                    {{ $v['goods_name'] }}
+                                                    <input type="hidden" name="goods_sku[]" value="{{ $v['sku_id'] }}">
+                                                    <input type="hidden" name="goods_spu[]" value="{{ $v['goods_id'] }}" class="goods-id">
+                                                </td>
+                                                <td>
+                                                    <select id="categorymodel-parent_id" name="cat_id[]" data-rule-required="true" class="chosen-select form-control">
+
+                                                        @if(!empty($cat_list))
+                                                            @foreach($cat_list as $cat_id=>$cat_name)
+                                                                <option value="{{ $cat_id }}" @if($v['cat_id'] == $cat_id){{ 'selected' }}@endif>{!! $cat_name !!}</option>
+                                                            @endforeach
+                                                        @endif
+
+                                                    </select>
+                                                </td>
+                                                <td class="text-c">
+                                                    <input class="form-control w60" type="text" name="activity_price[]" value="{{ $v['act_price'] }}" data-rule-required="true" data-msg-required="促销价不能为空！" data-rule-min="0.01" data-rule-max="9999999">
+                                                </td>
+                                                <td>￥{{ $v['goods_price'] }}</td>
+                                                <td>{{ $v['goods_number'] }}</td>
+                                                <td class="text-c">
+                                                    <input class="form-control w60" type="text" name="activity_stock[]" value="{{ $v['act_stock'] }}" data-rule-required="true" data-msg-required="活动库存不能为空！" data-rule-min="1" data-rule-digits="true" data-rule-max="9999999">
+                                                </td>
+                                                <td class="text-c">
+                                                    <input class="form-control w60" type="text" name="virtual_sales_num[]" value="{{ $v['sale_base'] }}" data-rule-min="0" data-rule-digits="true" data-rule-max="9999999">
+                                                </td>
+                                                <td class="handle">
+                                                    <a href="javascript:void(0);" data-sku-id="{{ $v['sku_id'] }}" data-goods-id="{{ $v['goods_id'] }}" class="del border-none">删除</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        </tbody>
+                                    </table>
+
+                                    <script type="text/javascript">
+                                        $().ready(function() {
+                                            //删除团购商品
+                                            $("body").on("click", ".del", function() {
+                                                var target = $(this).parents("tr");
+                                                var goods_id = $(this).data("goods-id");
+                                                var sku_id = $(this).data("sku-id");
+
+                                                var container = $(this).parents(".group-buy-goods").find("#widget_goods");
+                                                var goodspicker = $.goodspicker(container);
+
+                                                if (goodspicker) {
+                                                    // 获取控件
+                                                    goodspicker.remove(goods_id, sku_id);
+                                                    var selected_number = goodspicker.goods_ids.length;
+                                                    if (selected_number == 0) {
+                                                        $(this).parents("table").remove();
+                                                    }
+                                                }
+                                                $(target).remove();
+                                            });
+
+                                        });
+                                    </script>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -139,7 +229,7 @@
                             <div class="form-control-box">
 
 
-                                <input type="text" id="activitymodel-sort" class="form-control small" name="ActivityModel[sort]" value="255">
+                                <input type="text" id="activitymodel-sort" class="form-control small" name="ActivityModel[sort]" value="{{ $model['sort'] ?? 255 }}">
 
 
                             </div>
@@ -234,7 +324,6 @@
 	});
 </script>
 
-    </script>
     <script id="add_goods" type="text">
         <tr data-group-buy-sku-id="" data-group-buy-goods-id="">
         <td>
@@ -275,8 +364,12 @@
     <!-- AJAX上传 -->
     <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180919"></script> <script src="/assets/d2eace91/js/jquery.widget.js?v=20180919"></script>
     <script id="client_rules" type="text">
-[{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。"}}},{"id": "activitymodel-shop_id", "name": "ActivityModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "activitymodel-ext_info", "name": "ActivityModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_title", "name": "ActivityModel[act_title]", "attribute": "act_title", "rules": {"string":true,"messages":{"string":"活动标题必须是一条字符串。","maxlength":"活动标题只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_img", "name": "ActivityModel[act_img]", "attribute": "act_img", "rules": {"required":true,"messages":{"required":"活动图片不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。","min":"限购数量必须不小于0。","max":"限购数量必须不大于999。"},"min":0,"max":999}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"activitymodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"activitymodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
-</script>
+        @if(!isset($model['act_id']))
+            [{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。"}}},{"id": "activitymodel-shop_id", "name": "ActivityModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "activitymodel-ext_info", "name": "ActivityModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_title", "name": "ActivityModel[act_title]", "attribute": "act_title", "rules": {"string":true,"messages":{"string":"活动标题必须是一条字符串。","maxlength":"活动标题只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_img", "name": "ActivityModel[act_img]", "attribute": "act_img", "rules": {"required":true,"messages":{"required":"活动图片不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。","min":"限购数量必须不小于0。","max":"限购数量必须不大于999。"},"min":0,"max":999}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"activitymodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"activitymodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
+        @else
+            [{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。"}}},{"id": "activitymodel-shop_id", "name": "ActivityModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "activitymodel-ext_info", "name": "ActivityModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_title", "name": "ActivityModel[act_title]", "attribute": "act_title", "rules": {"string":true,"messages":{"string":"活动标题必须是一条字符串。","maxlength":"活动标题只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。","min":"限购数量必须不小于0。","max":"限购数量必须不大于999。"},"min":0,"max":999}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"activitymodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"activitymodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
+        @endif
+    </script>
     <script type='text/javascript'>
         $().ready(function() {
             //悬浮显示上下步骤按钮
@@ -305,7 +398,7 @@
             });
             // 初始化组件，为容器绑定组件
             var goodspicker = $("#widget_goods").goodspicker({
-                url: '/dashboard/activity-goods/picker?act_id=',
+                url: '/dashboard/activity-goods/picker?act_id={{ $model['act_id'] ?? '' }}',
                 // 组件ajax提交的数据，主要设置分页的相关设置
                 data: {
                     page: {
@@ -416,7 +509,7 @@
                         }
                     }, 'json');
                 } else {
-                    $.post('/dashboard/group-buy/edit?id=', $("#ActivityModel").serializeJson(), function(result) {
+                    $.post('/dashboard/group-buy/edit?id={{ $model['act_id'] ?? '' }}', $("#ActivityModel").serializeJson(), function(result) {
                         // 停止加载
                         $.loading.stop();
                         if (result.code == 0) {
@@ -436,9 +529,9 @@
             });
 
             $("#act_img_container").imagegroup({
-                host: 'http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/',
+                host: '{{ get_oss_host() }}',
                 size: 1,
-                values: [''],
+                values: ['{{ $model['act_img'] ?? '' }}'],
                 callback: function(data) {
                     $("#activitymodel-act_img").val(data.path);
                 },

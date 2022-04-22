@@ -49,7 +49,7 @@
                 <td class="text-r">身份证正面：</td>
                 <td class="text-l" colspan="5">
                     <a href="javascript:void(0);" ref="{{ get_image_url($shop_field_value->card_side_a) }}" class="preview m-l-5">
-                        <img src="/seller/images/brand.jpg" />
+                        <img src="/images/brand.jpg" />
                     </a>
                 </td>
             </tr>
@@ -57,7 +57,7 @@
                 <td class="text-r">身份证背面：</td>
                 <td class="text-l" colspan="5">
                     <a href="javascript:void(0);" ref="{{ get_image_url($shop_field_value->card_side_b) }}" class="preview m-l-5">
-                        <img src="/seller/images/brand.jpg" />
+                        <img src="/images/brand.jpg" />
                     </a>
                 </td>
             </tr>
@@ -65,7 +65,7 @@
                 <td class="text-r">手持身份证照片：</td>
                 <td class="text-l" colspan="5">
                     <a href="javascript:void(0);" ref="{{ get_image_url($shop_field_value->hand_card) }}" class="preview m-l-5">
-                        <img src="/seller/images/brand.jpg" />
+                        <img src="/images/brand.jpg" />
                     </a>
                 </td>
             </tr>
@@ -93,7 +93,7 @@
                 <td class="text-r">特殊行业资质：</td>
                 <td class="text-l" colspan="5">
                     <a href="javascript:void(0);" ref="" class="preview m-l-5">
-                        <img src="/seller/images/brand.jpg" />
+                        <img src="/images/brand.jpg" />
                     </a>
                 </td>
             </tr>

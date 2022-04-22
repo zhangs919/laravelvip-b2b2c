@@ -23,16 +23,33 @@ class HistoryController extends UserCenter
     {
         $seo_title = '用户中心';
 
-        $list = $this->getHistoryList();
+
+
+
+        // 获取数据
+        list($list, $total) = $this->getHistoryList();
+        $page_array = frontend_pagination($total, true);
+        $page_json = json_encode($page_array);
 
         if ($request->ajax()) { // ajax 加载列表
             $data = view('user.history.partials._list', compact('list'))->render();
             return result(0, $data);
         }
 
-        $compact = compact('seo_title', 'list');
-
-        return view('user.history.index', $compact);
+        $compact = compact('seo_title', 'list', 'page_json');
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_prefix_data' => [
+                'category' => null,
+                'list' => $list
+            ],
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'user.history.index'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     public function delAll(Request $request)
@@ -55,7 +72,7 @@ class HistoryController extends UserCenter
         if ($ret === false) {
             return result(-1, null, '删除失败');
         }
-        $list = $this->getHistoryList();
+        list($list, $total) = $this->getHistoryList();
         $category_list = $this->getHistoryCategoryList();
 
         $data = view('user.history.partials._list', compact('list'))->render();
@@ -74,8 +91,9 @@ class HistoryController extends UserCenter
             'sortorder' => 'desc',
         ];
         list($list, $total) = $this->goodsHistory->getList($condition);
+        $list = $list->toArray();
 
-        return $list;
+        return [$list,$total];
     }
     private function getHistoryCategoryList()
     {

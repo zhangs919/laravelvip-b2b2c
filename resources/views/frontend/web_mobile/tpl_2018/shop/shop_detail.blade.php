@@ -23,37 +23,37 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="http://lanse31.oss-cn-beijing.aliyuncs.com/images/system/config/website/favicon_0.png" />
     <link rel="shortcut icon" type="image/x-icon" href="http://lanse31.oss-cn-beijing.aliyuncs.com/images/system/config/website/favicon_0.png" />
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20181217"/>
-    <link rel="stylesheet" href="/mobile/css/shop_header.css?v=20181217"/>
-    <link rel="stylesheet" href="/mobile/css/shop_coupon.css?v=20181217"/>
-    <link rel="stylesheet" href="/mobile/css/bonus_message.css?v=20181217"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.min.css?v=20181217"/>
-    <link rel="stylesheet" href="/mobile/css/swiper.3dmin.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/common.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/shop_header.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/shop_coupon.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/bonus_message.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/swiper.min.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/swiper.3dmin.css?v=20181217"/>
     <!---->
 
     <!-- ================== END BASE CSS STYLE ================== -->
     <script src="/assets/d2eace91/js/jquery.js?v=20181227"></script>
-    <script src="/mobile/js/zepto.min.js?v=20181227"></script>
-    <script src="/mobile/js/zepto.waypoints.js?v=20181227"></script>
-    <script src="/mobile/js/swiper.jquery.min.js?v=20181227"></script>
-    <script src="/mobile/js/shop.js?v=20181227"></script>
+    <script src="/js/zepto.min.js?v=20181227"></script>
+    <script src="/js/zepto.waypoints.js?v=20181227"></script>
+    <script src="/js/swiper.jquery.min.js?v=20181227"></script>
+    <script src="/js/shop.js?v=20181227"></script>
     <script src="/assets/d2eace91/js/yii.js?v=20181227"></script>
     <script src="/assets/d2eace91/js/layer/layer.js?v=20181227"></script>
     <script src="/assets/d2eace91/js/jquery.method.js?v=20181227"></script>
     <script src="/assets/d2eace91/js/jquery.modal.js?v=20181227"></script>
-    <script src="/mobile/js/common.js?v=20181227"></script>
+    <script src="/js/common.js?v=20181227"></script>
     <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20181227"></script>
     <!-- 图片缓载js -->
     <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20181227"></script>
     <script src="/assets/d2eace91/js/szy.page.more.js?v=20181227"></script>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
 
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20181217"/>
+    <link rel="stylesheet" href="/css/common.css?v=20181217"/>
 </head>
 <body>
 <!-- 引入头部文件 -->
@@ -61,8 +61,8 @@
 <!-- -->
 <!---->
 <!-- 内容 -->
-<link rel="stylesheet" href="/mobile/css/dianpu.css?v=20181217"/>
-<link rel="stylesheet" href="/mobile/css/dianpu_info.css?v=20181217"/>
+<link rel="stylesheet" href="/css/dianpu.css?v=20181217"/>
+<link rel="stylesheet" href="/css/dianpu_info.css?v=20181217"/>
 <header class="header">
     <div class="header-left">
         <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
@@ -86,15 +86,15 @@
             <div class="shop-info cell">
                 <a class="shop-name">{{ $shop_info['shop']['shop_name'] }}</a>
 
-                <span class="collect-num" id="collect-count">32人关注</span>
+                <span class="collect-num" id="collect-count">{{ $shop_info['shop']['collect_num'] }}人关注</span>
 
             </div>
         </div>
         <div class="collect-btn">
             <i class="iconfont">&#xe615;</i>
-            <span onClick="toggleShop('5',this)">
+            <span onClick="toggleShop('{{ $shop_info['shop']['shop_id'] }}',this)">
 
-				已收藏
+				@if($shop_info['shop']['is_collect'])已收藏@else关注@endif
 
 			</span>
         </div>
@@ -102,15 +102,15 @@
     <div class="store-detail-score">
         <div class="detail-score-centent ui-flex ">
             <a href="javascript:;" class="cell">
-                <span class="score-num">5.00</span>
+                <span class="score-num">{{ $shop_info['shop']['desc_score'] }}</span>
                 <span class="score-text">描述相符</span>
             </a>
             <a href="javascript:;" class="cell">
-                <span class="score-num">5.00</span>
+                <span class="score-num">{{ $shop_info['shop']['service_score'] }}</span>
                 <span class="score-text">服务态度</span>
             </a>
             <a href="javascript:;" class="cell">
-                <span class="score-num">5.00</span>
+                <span class="score-num">{{ $shop_info['shop']['send_score'] }}</span>
                 <span class="score-text">发货速度</span>
             </a>
         </div>
@@ -142,7 +142,7 @@
         <div class="common-field border-b">
             <div class="name">所在地区</div>
             <div class="content">
-                <p class="info">湖北省 黄冈市 红安县 园艺路三1良品运营中心（广吉康购物广场）</p>
+                <p class="info">{{ $region_name }} {{ $shop_info['shop']['address'] }}</p>
             </div>
         </div>
 
@@ -156,7 +156,8 @@
                 {{ $shop_info['shop']['shop_name'] }}
 			</span>
             <div class="qrcode-content-bd">
-                <img src="{{ $shop_info['shop']['wx_barcode'] }}" alt="店铺二维码" />
+                {{--<img src="{{ $shop_info['shop']['wx_barcode'] }}" alt="店铺二维码" />--}}
+                <img src="/shop/qrcode.html?id={{ $shop_info['shop']['shop_id'] }}" alt="店铺二维码" />
                 <span class="qrcode-tips">邀请好友来扫一扫分享店铺给TA</span>
             </div>
         </div>
@@ -170,7 +171,7 @@
 
 
 
-        <a href="/shop/5.html">
+        <a href="/shop/{{ $shop_info['shop']['shop_id'] }}.html">
             <i class="shop-nav-icon"></i>
             <span>首页</span>
         </a>
@@ -191,7 +192,7 @@
         </li>
 
         <li>
-            <a href="/shop/5/info.html">
+            <a href="/shop/{{ $shop_info['shop']['shop_id'] }}/info.html">
 				<span>
 					<i class="shop-index"></i>
 					店铺详情
@@ -201,7 +202,7 @@
 
         <!-- -->
         <li>
-            <a href="/bonus/list/5.html">
+            <a href="/bonus/list/{{ $shop_info['shop']['shop_id'] }}.html">
 				<span>
 					<i class="shop-index"></i>
 					店铺红包
@@ -216,7 +217,7 @@
     var scrollheight = 0;
     var loaded = false;
     var position = 'info';
-    var shop_id = '5';
+    var shop_id = '{{ $shop_info['shop']['shop_id'] }}';
     var cat_id = '';
     var parent_id = '';
     $().ready(function() {
@@ -284,8 +285,8 @@
                 $(window).scrollTop(scrollheight);
             });
         }
-        if(sessionStorage.goods_category_5){
-            $('.SZY-SHOP-CATEGORY-LIST').html(sessionStorage.goods_category_5);
+        if(sessionStorage.goods_category_{{ $shop_info['shop']['shop_id'] }}){
+            $('.SZY-SHOP-CATEGORY-LIST').html(sessionStorage.goods_category_{{ $shop_info['shop']['shop_id'] }});
             $("li[id^='cat_item']").removeClass('current');
             if(cat_id == parent_id){
                 $('#cat_item_'+cat_id).addClass('current');
@@ -385,7 +386,7 @@
 <!-- 隐藏菜单_end -->
 <!---->
 <!-- 购物车js -->
-<script src="/mobile/js/jquery.fly.min.js?v=20181227"></script>
+<script src="/js/jquery.fly.min.js?v=20181227"></script>
 <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20181227"></script>
 
 

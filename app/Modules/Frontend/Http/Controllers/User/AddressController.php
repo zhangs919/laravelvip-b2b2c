@@ -52,30 +52,49 @@ class AddressController extends UserCenter
 
     public function add(Request $request)
     {
-        $data = view('user.address.add', compact(''))->render();
 
-        return result(0, $data);
+        $seo_title = '用户中心';
+        $address_id = $request->get('address_id', 0);
+        $checkout = $request->get('checkout', 0); // 是否来源于下单页面
+        $tpl = 'add';
+
+        if ($address_id) {
+            // 更新地址
+            $address_info = $this->userAddress->getById($address_id);
+            view()->share('address_info', $address_info);
+            $tpl = 'edit';
+        }
+
+        if ($request->ajax()) {
+            $address_id = $request->get('address_id');
+
+            if ($address_id) { // 编辑地址
+                $address_info = $this->userAddress->getById($address_id);
+                // 地区code去掉逗号
+                $region_info = Region::where('region_code', $address_info->region_code)->first();
+                $address_info->parent_code_str = str_replace(',', '', $region_info->parent_code);
+                $data = view('user.address.edit', compact('address_info', 'checkout'))->render();
+            } else { // 新增地址
+                $data = view('user.address.add', compact('checkout'))->render();
+            }
+
+            return result(0, $data);
+        }
+
+        $compact = compact('seo_title', 'checkout');
+        return view('user.address.'.$tpl, $compact);
     }
 
     public function edit(Request $request)
     {
-        $address_id = $request->get('address_id');
-        if (!$address_id) {
-            return result(-1, null, '参数错误');
-        }
-        $address_info = $this->userAddress->getById($address_id);
-        // 地区code去掉逗号
-        $region_info = Region::where('region_code', $address_info->region_code)->first();
-        $address_info->parent_code_str = str_replace(',', '', $region_info->parent_code);
-        $data = view('user.address.edit', compact('address_info'))->render();
-
-        return result(0, $data);
+        return $this->add($request);
     }
 
     public function saveData(Request $request)
     {
         $post = $request->post('UserAddressModel');
         $address_id = $request->post('address_id', 0);
+        $checkout = $request->post('checkout', 0);
 
         if (!empty($address_id)) {
             // 编辑
@@ -94,9 +113,15 @@ class AddressController extends UserCenter
 
         if ($ret === false) {
             // fail
+            if ($checkout) {
+                return redirect('/checkout.html');
+            }
             return result(-1, null, $msg.'失败');
         }
         // success
+        if ($checkout) {
+            return redirect('/checkout.html');
+        }
         return result(0, null, $msg.'成功');
     }
 

@@ -20,7 +20,8 @@
     <meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="/mobile/css/common.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/iconfont/iconfont.css?v=20190215"/>
 
     {{--header_css--}}
     @section('header_css')@show
@@ -29,12 +30,39 @@
     {{--header_js--}}
     @section('header_js')@show
 
+    <script src="/assets/d2eace91/js/jquery.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/yii.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js?v=20190121"></script>
+    <script src="/js/common.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20190121"></script>
+    <script src="/js/user.js?v=20190121"></script>
+    <script src="/js/address.js?v=20190121"></script>
+    <script src="/js/center.js?v=20190121"></script>
+    <!-- 图片缓载js -->
+    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20190121"></script>
+    <script src="/assets/d2eace91/js/szy.page.more.js?v=20190121"></script>
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="/mobile/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="/mobile/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="/css/color-style.css?v=1.2" id="site_style"/>
     @endif
+    <!-- GPS获取坐标 -->
+    <script src="http://webapi.amap.com/maps?v=1.4.6&key={{ sysconf('amap_js_key') }}"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="/assets/d2eace91/js/geolocation/amap.js?v=20190121"></script>
+    <script type="text/javascript">
+        function geolocation() {
+            if (!sessionStorage.geolocation) {
+                setTimeout(function() {
+                    $.geolocation();
+                }, 500);
+            }
+        }
+        geolocation();
+    </script>
 
 </head>
 <body>

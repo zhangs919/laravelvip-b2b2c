@@ -25,10 +25,17 @@ class Shop extends BaseModel
         'simply_introduce', 'shop_keywords', 'shop_description', 'detail_introduce', 'service_tel', 'service_hours', 'shop_sign_m', 'take_rate', 'qrcode_take_rate',
         'collect_allow_number', 'collected_number', 'store_allow_number', 'store_number', 'comment_allow_number', 'comment_number', 'login_status', 'show_credit', 'show_in_street',
         'goods_is_show', 'control_price', 'show_price', 'show_content', 'button_content', 'button_url', 'start_price', 'shop_sn', 'rebate_enable',
-        'rebate_days', 'rebate_setting', 'rebate_begin_time', 'wx_barcode',
+        'rebate_days', 'rebate_setting', 'rebate_begin_time',
+        'is_other_shpping_fee','other_shipping_fee','is_packing_fee','packing_fee',
+        'shipping_time', // json
+        'multi_store_number','multi_store_allow_number',
+
+        'wx_barcode',
 
         // todo 不太确定的字段 暂时用着
-        'collect_num', 'is_own_shop', 'user_name'
+        'collect_num', 'is_own_shop', 'user_name',
+
+        'back_id', // 模板备份id
     ];
 
     protected $primaryKey = 'shop_id';

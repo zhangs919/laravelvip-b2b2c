@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Imports\UsersImport;
 use App\Models\User;
+use App\Models\UserModel;
 use App\Models\UserRank;
 use App\Models\UserReal;
 use App\Tools\IP;
@@ -22,7 +23,7 @@ class UserRepository
 
     public function __construct()
     {
-        $this->model = new User();
+        $this->model = new UserModel();
     }
 
     /**
@@ -211,12 +212,12 @@ class UserRepository
     /**
      * 获取某个会员的等级信息
      *
-     * @param $rank_points
+     * @param $rank_point
      * @param bool $show_progress
      * @param null $user_rank
      * @return array
      */
-    public function getUserRank($rank_points, $show_progress = true, $user_rank = null)
+    public function getUserRank($rank_point, $show_progress = true, $user_rank = null)
     {
         if (empty($user_rank)) {
             $user_rank = UserRank::where('type', 0)->orderBy('rank_id', 'asc')->get();
@@ -230,7 +231,7 @@ class UserRepository
         $rank_arr = [];
         if ($user_rank){
             foreach ($user_rank as $k=>$v){
-                if($rank_points >= $v->min_points && $rank_points < $v->max_points){
+                if($rank_point >= $v->min_points && $rank_point < $v->max_points){
                     $v->level = $k+1; // 等级
                     $rank_arr = $v->toArray();
                 }
@@ -257,8 +258,8 @@ class UserRepository
                 $rank_arr['uprank_exppoints'] = $user_rank[$rank_arr['uprank']]['min_points'];
                 $rank_arr['less_exppoints'] = 0;
                 $rank_arr['exppoints_rate'] = 100;
-                $rank_arr['less_exppoints'] = $rank_arr['uprank_exppoints'] - $rank_points;
-                $rank_arr['exppoints_rate'] = round(($rank_points - $user_rank[$rank_arr['level']+1]['min_points'])/($rank_arr['uprank_exppoints'] - $user_rank[$rank_arr['level']+1]['min_points'])*100,2);
+                $rank_arr['less_exppoints'] = $rank_arr['uprank_exppoints'] - $rank_point;
+                $rank_arr['exppoints_rate'] = round(($rank_point - $user_rank[$rank_arr['level']+1]['min_points'])/($rank_arr['uprank_exppoints'] - $user_rank[$rank_arr['level']+1]['min_points'])*100,2);
             } else {
                 // 新注册会员
                 $rank_arr['downrank'] = 0;//下一级会员等级

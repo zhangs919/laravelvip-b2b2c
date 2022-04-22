@@ -13,7 +13,7 @@
 
                 <div class="item-pic">
                     <a href="{{ route('pc_show_goods', ['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}" target="_blank" style="background: url({{ get_image_url(sysconf('default_lazyload')) }}) no-repeat center;">
-                        <img class="lazy" alt="" src="/frontend/images/common/blank.png" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" />
+                        <img class="lazy" alt="" src="/images/common/blank.png" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" />
                     </a>
                 </div>
 
@@ -74,7 +74,7 @@
                                 @if($v['goods_number'] <= 0)
                                     <a href="javascript:void(0);" data-goods-id="{{ $v['goods_id'] }}" class="add-cart sell-out-btn" title="卖光了"></a>
                                 @else
-                                    <a href="javascript:void(0);" style="background-image: url(/frontend/images/add-cart.jpg)" data-goods-id="{{ $v['goods_id'] }}" data-image-url="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="add-cart disable" title="加入购物车"></a>
+                                    <a href="javascript:void(0);" style="background-image: url(/images/add-cart.jpg)" data-goods-id="{{ $v['goods_id'] }}" data-image-url="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="add-cart disable" title="加入购物车"></a>
                                 @endif
 
 
@@ -141,7 +141,7 @@
 @if($total == 0)
     <!--当没有数据时，显示如下div-->
     <div class="tip-box">
-        <img src="/frontend/images/noresult.png" class="tip-icon">
+        <img src="/images/noresult.png" class="tip-icon">
         <div class="tip-text">抱歉！没有搜索到您想要的结果……</div>
     </div>
 @endif

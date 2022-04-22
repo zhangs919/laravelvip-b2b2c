@@ -1,4 +1,4 @@
-<form id="UserAddressModel" class="form-horizontal" name="UserAddressModel" action="/user/address/edit.html?address_id={{ $address_info->address_id }}" method="post">
+<form id="UserAddressModel" class="form-horizontal" name="UserAddressModel" action="/user/address/edit.html?address_id={{ $address_info->address_id }}&checkout={{ $checkout }}" method="post">
     {{ csrf_field() }}
     <input type="hidden" id="useraddressmodel-zipcode" class="form-control" name="UserAddressModel[zipcode]" placeholder="邮政编码">
     <input type="hidden" id="useraddressmodel-address_lng" class="address_lng" name="UserAddressModel[address_lng]" value="{{ $address_info->address_lng }}">
@@ -146,7 +146,7 @@
     </p>
 </div>
 <script id="client_rules" type="text">
-[{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"收货地址不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"required":true,"messages":{"required":"用户ID不能为空。"}}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"required":true,"messages":{"required":"收货人不能为空。"}}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"手机号码不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户ID必须是整数。"}}},{"id": "useraddressmodel-address_name", "name": "UserAddressModel[address_name]", "attribute": "address_name", "rules": {"string":true,"messages":{"string":"地址别名必须是一条字符串。","maxlength":"地址别名只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"string":true,"messages":{"string":"收货人必须是一条字符串。","maxlength":"收货人只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"邮件地址必须是一条字符串。","maxlength":"邮件地址只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-address_lng", "name": "UserAddressModel[address_lng]", "attribute": "address_lng", "rules": {"string":true,"messages":{"string":"地址经度必须是一条字符串。","maxlength":"地址经度只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-address_lat", "name": "UserAddressModel[address_lat]", "attribute": "address_lat", "rules": {"string":true,"messages":{"string":"地址纬度必须是一条字符串。","maxlength":"地址纬度只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"string":true,"messages":{"string":"手机号码必须是一条字符串。","maxlength":"手机号码只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"固定电话必须是一条字符串。","maxlength":"固定电话只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"string":true,"messages":{"string":"收货地址必须是一条字符串。","maxlength":"收货地址只能包含至多255个字符。"},"maxlength":255}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多50个字符。"},"maxlength":50}},{"id": "useraddressmodel-address_house", "name": "UserAddressModel[address_house]", "attribute": "address_house", "rules": {"string":true,"messages":{"string":"门牌号必须是一条字符串。","maxlength":"门牌号只能包含至多50个字符。"},"maxlength":50}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"string":true,"messages":{"string":"邮编必须是一条字符串。","maxlength":"邮编只能包含至多6个字符。"},"maxlength":6}},{"id": "useraddressmodel-address_label", "name": "UserAddressModel[address_label]", "attribute": "address_label", "rules": {"string":true,"messages":{"string":"标签必须是一条字符串。","maxlength":"标签只能包含至多5个字符。"},"maxlength":5}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^0[0-9]{2,3}-[0-9]{7,8}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"固定电话是无效的。"}}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"邮件地址不是有效的邮箱地址。"}}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"match":{"pattern":/^[0-9]{6}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"邮编是无效的。"}}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"region":{"min":3},"messages":{"region":"收货地址 请选择到区/县"}}},]
+[{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"收货地址不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"required":true,"messages":{"required":"用户ID不能为空。"}}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"required":true,"messages":{"required":"收货人不能为空。"}}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"手机号码不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户ID必须是整数。"}}},{"id": "useraddressmodel-address_name", "name": "UserAddressModel[address_name]", "attribute": "address_name", "rules": {"string":true,"messages":{"string":"地址别名必须是一条字符串。","maxlength":"地址别名只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"邮件地址必须是一条字符串。","maxlength":"邮件地址只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-address_lng", "name": "UserAddressModel[address_lng]", "attribute": "address_lng", "rules": {"string":true,"messages":{"string":"地址经度必须是一条字符串。","maxlength":"地址经度只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-address_lat", "name": "UserAddressModel[address_lat]", "attribute": "address_lat", "rules": {"string":true,"messages":{"string":"地址纬度必须是一条字符串。","maxlength":"地址纬度只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"string":true,"messages":{"string":"收货人必须是一条字符串。","maxlength":"收货人只能包含至多30个字符。"},"maxlength":30}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"string":true,"messages":{"string":"手机号码必须是一条字符串。","maxlength":"手机号码只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"固定电话必须是一条字符串。","maxlength":"固定电话只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"string":true,"messages":{"string":"收货地址必须是一条字符串。","maxlength":"收货地址只能包含至多255个字符。"},"maxlength":255}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多50个字符。"},"maxlength":50}},{"id": "useraddressmodel-address_house", "name": "UserAddressModel[address_house]", "attribute": "address_house", "rules": {"string":true,"messages":{"string":"门牌号必须是一条字符串。","maxlength":"门牌号只能包含至多50个字符。"},"maxlength":50}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"string":true,"messages":{"string":"邮编必须是一条字符串。","maxlength":"邮编只能包含至多6个字符。"},"maxlength":6}},{"id": "useraddressmodel-address_label", "name": "UserAddressModel[address_label]", "attribute": "address_label", "rules": {"string":true,"messages":{"string":"标签必须是一条字符串。","maxlength":"标签只能包含至多5个字符。"},"maxlength":5}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^0[0-9]{2,3}-[0-9]{7,8}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"固定电话是无效的。"}}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"邮件地址不是有效的邮箱地址。"}}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"match":{"pattern":/^[0-9]{6}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"邮编是无效的。"}}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"region":{"min":3},"messages":{"region":"收货地址 请选择到区/县"}}},]
 </script>
 <script type="text/javascript">
     $().ready(function() {
@@ -155,7 +155,7 @@
         var regionselector_adcode = null;
 // 地区选择
         var regionselector = $("#region_code_containter").regionchooser({
-            value: "{{ $address_info->region_code }}",
+            value: "53,01,12",
             select_class: "select",
             change: function(value, names, is_last) {
 
@@ -187,8 +187,8 @@
 
 //
         var position = {
-            lng: "{{ $address_info->address_lng }}",
-            lat: "{{ $address_info->address_lat }}"
+            lng: "102.698985",
+            lat: "25.009892"
         };
 //
 
@@ -199,10 +199,10 @@
 // 自动提示
             input: "useraddressmodel-address_detail",
 // 当前地区编码
-            city: "{{ $address_info->parent_code_str }}",
+            city: "5301",
 // 定位当前位置
             geolocation_callback: function(data, region_code, address) {
-                if ("{{ $address_info->region_id }}" == "") {
+                if ("465" == "") {
 // 重新加载
                     regionselector.value = region_code;
                     regionselector_reload = true;
@@ -231,41 +231,13 @@
                 if (!is_address) {
                     infoWindow.setContent("<font color='#FF7C00'>" + content + "</font>");
                 } else {
-                    var color = $("#btn_save").css("background-color");
-                    infoWindow.setContent("当前位置：<label style='color: #ff4500;'>" + content + "<a href='javascript:void(0);' data-content='" + content + "' class='use-this-location' style='color: " + color + ";'>[使用此位置]</a></label>");
+//
+
+                    infoWindow.setContent("当前位置：<label style='color: #ff4500;'>" + content + "</label>");
+
+//
                 }
             }
-        });
-
-// 解绑
-        $(".use-this-location").off("click");
-        $("body").on("click", ".use-this-location", function() {
-// 加载
-            $.loading.start();
-// 解析地址
-            $.post("/site/address-parse.html", {
-                address: $(this).data("content")
-            }, function(result) {
-                if (result.code == 0) {
-                    var data = result.data;
-                    if (data.address) {
-                        $("#useraddressmodel-address_detail").val(data.address);
-                    }
-                    if (data.postcode) {
-                        $("#useraddressmodel-zipcode").val(data.postcode);
-                    }
-                    if (data.region_code) {
-                        regionselector.value = data.region_code;
-                        regionselector_reload = true;
-                        regionselector.reload(data.region_code);
-                    }
-// 隐藏
-                    $("#map_container").parents(".address-picker").find(".map-footer").hide();
-                }
-            }, "JSON").always(function() {
-                $.loading.stop();
-            });
-            return false;
         });
 
 // 解绑
@@ -295,6 +267,7 @@
 
             $.post(action, data, function(result) {
                 if (result.code == 0) {
+
                     $.msg(result.message);
 
 // 判断添加收货地址回调函数是否可用

@@ -1,9 +1,7 @@
 <!-- 默认缓载图片 -->
 <!-- 手机端选项卡模板 -->
-@if($is_design)
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>
-@endif
-    
+
     <div class="scroll-y-menu swiper-container">
         <ul class="swiper-wrapper">
             <li class="active swiper-slide">
@@ -32,9 +30,9 @@
         ”按钮，确定tab菜单个数和tab楼层
     </div>
 
-@if($is_design)
 </div>
 
+@if($is_design)
 <script type="text/javascript">
     $('#{{ $uid }}').find('.operateEdit').prepend('<a href="javascript:void(0);" class="decor-btn style-btn SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-type="99" data-style_structure_layout="1"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>设置样式</div></a>')
 </script>

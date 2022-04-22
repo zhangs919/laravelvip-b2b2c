@@ -101,7 +101,7 @@
         <!-- 鼠标滚轮 -->
         <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js?v=20180528"></script>
         <script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
-        <script src="/frontend/js/user_address.js?v=20180528"></script>
+        <script src="/js/user_address.js?v=20180528"></script>
         
         <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
         <script type="text/javascript">
