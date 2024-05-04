@@ -1,10 +1,7 @@
 @extends('layouts.base')
 
-@section('header_js')
-    <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180528"></script>
+@section('header_css')
+    <link href="/css/category.css" rel="stylesheet">
 @stop
 
 {{--follow_box 注意此效果只在首页面展示--}}
@@ -12,268 +9,15 @@
 
 @stop
 
-@section('style_js')
-    <!--页面css/js-->
-    <script src="/js/index.js?v=20180528"></script>
-    <script src="/js/tabs.js?v=20180528"></script>
-    <script src="/js/bubbleup.js?v=20180528"></script>
-    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/js/index_tab.js?v=20180528"></script>
-    <script src="/js/jump.js?v=20180528"></script>
-    <script src="/js/nav.js?v=20180528"></script>
-@stop
-
-
 
 @section('content')
 
     <!-- 内容 -->
 
-    <!-- css -->
-    <link rel="stylesheet" href="/css/category.css?v=20180428"/>
     <!-- 筛选条件数量 -->
     <!-- 占位符 -->
     <script type="text/javascript">
-        var begin_hidden = "2";
-
-        function Show_More_Attrgroup() {
-
-            if("2" == 0){
-                $(".attr-group-more").hide();
-            }
-
-            if (begin_hidden == 0) {
-                $("[name='attr-group-dl']").each(function(i){
-                    $(this).show();
-                });
-                $('#attr-group-more-text').html("收起");
-                begin_hidden = "2";
-            }else{
-                var more_text = "";
-                var attr_names = [];
-                $("[name='attr-group-dl']").each(function(i){
-                    if(i >= begin_hidden){
-                        $(this).hide();
-                        attr_names.push($(this).data("attr-name"));
-                    }else{
-                        $(this).show();
-                    }
-                });
-
-                if(attr_names.length > 4){
-                    attr_names = attr_names.slice(0, 4);
-                    more_text = "更多选项（"+attr_names.join("、")+" 等）";
-                }else{
-                    attr_names = attr_names.slice(0, attr_names.length);
-                    more_text = "更多选项（"+attr_names.join("、")+"）";
-                }
-
-                $('#attr-group-more-text').html(more_text);
-                begin_hidden = 0;
-            }
-
-            var kuan1 = $("#attr-list-ul").width();
-            var kuan2 = $("#attr-group-more").width();
-            var kuan = (kuan1 - kuan2) / 2;
-            $('#attr-group-more').css("margin-left", kuan + "px");
-        }
-
-        $().ready(function(){
-            Show_More_Attrgroup();
-        })
-
-        // 是否显示“更多”__初始化
-        function init_more(boxid, moreid, height) {
-            var obj_brand = document.getElementById(boxid);
-            var more_brand = document.getElementById(moreid);
-            if (obj_brand.clientHeight > height) {
-                obj_brand.style.height = height + "px";
-                obj_brand.style.overflow = "hidden";
-                more_brand.innerHTML = '<a href="javascript:void(0);"  onclick="slideDiv(this, \'' + boxid + '\', \'' + height + '\');" class="more" >更多</a>';
-            }
-        }
-        // 收起
-        function slideDiv(thisobj, divID, Height) {
-            var obj = document.getElementById(divID).style;
-            if (obj.height == "") {
-                obj.height = Height + "px";
-                obj.overflow = "hidden";
-                thisobj.innerHTML = "更多";
-                thisobj.className = "more";
-                // 如果是品牌，额外处理
-                if (divID == 'brand-abox') {
-                    // obj.width="456px";
-                    getBrand_By_Zimu(document.getElementById('brand-zimu-all'), '');
-                    document.getElementById('brand-sobox').style.display = "none";
-                    document.getElementById('brand-zimu').style.display = "none";
-                    document.getElementById('brand-abox-father').className = "";
-                }
-            } else {
-                obj.height = "";
-                obj.overflow = "";
-                thisobj.innerHTML = "收起";
-                thisobj.className = "more opened";
-                // 如果是品牌，额外处理
-                if (divID == 'brand-abox') {
-                    // obj.width="456px";
-                    document.getElementById('brand-sobox').style.display = "block";
-                    document.getElementById('brand-zimu').style.display = "block";
-                    // getBrand_By_Zimu(document.getElementById('brand-zimu-all'),'');
-                    document.getElementById('brand-abox-father').className = "brand-more";
-                }
-            }
-        }
-        function getBrand_By_Name(val) {
-            val = val.toLocaleLowerCase();
-            var brand_list = document.getElementById('brand-abox').getElementsByTagName('li');
-            for (var i = 0; i < brand_list.length; i++) {
-                // document.getElementById('brand-abox').style.width="auto";
-                var name_attr_value = brand_list[i].getAttribute("name").toLocaleLowerCase();
-                if (brand_list[i].title.indexOf(val) == 0 || name_attr_value.indexOf(val) == 0 || val == '') {
-                    brand_list[i].style.display = 'block';
-                } else {
-                    brand_list[i].style.display = 'none';
-                }
-            }
-        }
-        // 点击字母切换品牌
-        function getBrand_By_Zimu(obj, zimu) {
-            document.getElementById('brand-sobox-input').value = "可搜索拼音、汉字查找品牌";
-            obj.focus();
-            var brand_zimu = document.getElementById('brand-zimu');
-            var zimu_span_list = brand_zimu.getElementsByTagName('span');
-            for (var i = 0; i < zimu_span_list.length; i++) {
-                zimu_span_list[i].className = '';
-            }
-            var thisspan = obj.parentNode;
-            thisspan.className = 'span';
-            var brand_list = document.getElementById('brand-abox').getElementsByTagName('li');
-            for (var i = 0; i < brand_list.length; i++) {
-                // document.getElementById('brand-abox').style.width="auto";
-                if (brand_list[i].getAttribute('rel') == zimu || zimu == '') {
-                    brand_list[i].style.display = 'block';
-                } else {
-                    brand_list[i].style.display = 'none';
-                }
-            }
-        }
-        var duoxuan_a_valid = new Array();
-        // 点击多选， 显示多选区
-        function showDuoXuan(dx_divid, a_valid_id) {
-            var dx_dl_div = document.getElementById('attr-list-ul').getElementsByTagName('dl');
-            for (var i = 0; i < dx_dl_div.length; i++) {
-                dx_dl_div[i].className = '';
-                //dx_dl_div[0].className = 'selected-attr-dl';
-            }
-            var dxDiv = document.getElementById(dx_divid);
-            dxDiv.className = "duoxuan";
-            duoxuan_a_valid[a_valid_id] = 1;
-
-            // 显示更多
-            if($("#"+dx_divid).find(".more").hasClass("opened") == false){
-                $("#"+dx_divid).find(".more").click();
-            }
-        }
-        function hiddenDuoXuan(dx_divid, a_valid_id) {
-            var dxDiv = document.getElementById(dx_divid);
-            dxDiv.className = "";
-            duoxuan_a_valid[a_valid_id] = 0;
-            if (a_valid_id == 'brand') {
-                var ul_obj_div = document.getElementById('brand-abox');
-                var li_list_div = ul_obj_div.getElementsByTagName('li');
-                if (li_list_div) {
-                    for (var j = 0; j < li_list_div.length; j++) {
-                        li_list_div[j].className = "";
-                    }
-                }
-            } else {
-                var ul_obj_div = document.getElementById('attr-abox-' + a_valid_id);
-            }
-            var input_list = ul_obj_div.getElementsByTagName('input');
-            var span_list = ul_obj_div.getElementsByTagName('span');
-            for (var j = 0; j < input_list.length; j++) {
-                input_list[j].checked = false;
-            }
-            if (span_list.length) {
-                for (var j = 0; j < span_list.length; j++) {
-                    span_list[j].className = "";
-                }
-            }
-            // 隐藏更多
-            if($("#"+dx_divid).find(".more").hasClass("opened") == true){
-                $("#"+dx_divid).find(".more").click();
-            }
-        }
-        function duoxuan_Onclick(a_valid_id, idid, thisobj) {
-            if (duoxuan_a_valid[a_valid_id]) {
-                if (thisobj) {
-                    var fatherObj = thisobj.parentNode;
-                    if (a_valid_id == "brand") {
-                        fatherObj.className = fatherObj.className == "brand-seled" ? "" : "brand-seled";
-                    } else {
-                        fatherObj.className = fatherObj.className == "" ? "selected" : "";
-                    }
-                }
-                document.getElementById('chk-' + a_valid_id + '-' + idid).checked = !document.getElementById('chk-' + a_valid_id + '-' + idid).checked;
-                return false;
-            }
-
-            var url = $(thisobj).data("url");
-
-            $.go(url);
-        }
-
-        function duoxuan_Submit(dxid, indexid, url) {
-
-            var theForm = document.forms['theForm'];
-            var chklist = theForm.elements['checkbox_' + dxid + '[]'];
-            var value = "";
-            var mm = 0;
-
-            for (var k = 0; k < chklist.length; k++) {
-                if (chklist[k].checked) {
-                    value += mm > 0 ? "_" : "";
-                    value += chklist[k].value;
-                    mm++;
-                }
-            }
-
-            if (mm == 0) {
-                return false;
-            }
-
-            if (dxid == 'brand') {
-                url = url.replace("{0}", value);
-            } else {
-                url = url.replace("{0}", value);
-            }
-
-            $.go(url);
-        }
-
-        //自定义价格
-        function setPrice(url) {
-            var min = $('#price_min').val();
-            var max = $('#price_max').val();
-
-            if(min == "" && max == ""){
-                return;
-            }
-
-            if(!isNaN(min) && min != "" && min >= 0){
-                url = url.replace("{0}", min);
-            }else{
-                url = url.replace("{0}", 0);
-            }
-
-            if(!isNaN(max) && max != "" && max >= 0){
-                url = url.replace("{1}", max);
-            }else{
-                url = url.replace("{1}", 0);
-            }
-
-            $.go(url);
-        }
+        //
     </script>
     <!-- 缓载图片 -->
     <div class="blank"></div>
@@ -378,8 +122,7 @@
                     </dd>
                 </dl>
                 <script type="text/javascript">
-                    duoxuan_a_valid['brand'] = 0;
-                    init_more('brand-abox', 'brand-more', '83');
+                    //
                 </script>
                 @endif
 
@@ -510,32 +253,26 @@
                                 @endforeach
 
                             </dl>
-                            <div class="pagin">
-
-                                <!---->
-                                <a class="prev disabled">
-                                    <span class="icon prev-disabled"></span>
-                                </a>
-                                <!---->
-
-                                <span class="text">
-								<font class="color">1</font>
-								/
-
-								1
-
-							</span>
-                                <!-- -->
-                                <a class="next disabled" href="javascript:;">
-                                    <span class="icon next-disabled"></span>
-                                </a>
-
-                            </div>
-                            <div class="total">
-                                共
-                                <span class="color">{{ $total }}</span>
-                                个商品
-                            </div>
+							@if($page_array['page_count'] > 0)
+								<div class="pagin">
+									<a class="prev @if($page_array['cur_page'] == 1) disabled @else prev-page @endif">
+										<span class="icon @if($page_array['cur_page'] == 1) prev-disabled @else prev-btn @endif"></span>
+									</a>
+									<span class="text">
+										<font class="color">{{ $page_array['cur_page'] }}</font>
+										/
+										{{ $page_array['page_count'] }}
+									</span>
+									<a class="next @if($page_array['cur_page'] == $page_array['page_count']) disabled @else next-page @endif" data-go-page="2" href="javascript:;">
+										<span class="icon @if($page_array['cur_page'] == $page_array['page_count']) next-disabled @else next-btn @endif"></span>
+									</a>
+								</div>
+								<div class="total">
+									共
+									<span class="color">{{ $total }}</span>
+									个商品
+								</div>
+							@endif
                         </div>
                         <div class="fore2">
                             <div class="filter-btn">
@@ -615,67 +352,377 @@
             </div>
         </div>
         <script type="text/javascript">
-            $("body").on("click", ".clear_history", function() {
-                $.confirm("是否清空历史足迹？", function(s) {
-                    if (s) {
-                        $.ajax({
-                            type: 'GET',
-                            url: '/user/history/del-all',
-                            dataType: 'json',
-                            success: function(data) {
-                                if (data.code == 0) {
-                                    $("#history_list").html("<div class='tip-box'><img src='/images/noresult.png' class='tip-icon' /><div class='tip-text'>暂无历史足迹</div></div>");
-                                }
-                            }
-                        })
-                    }
-                })
-            })
-
-            function change_like() {
-                var page = $("#user_like_page").val();
-
-                $.ajax({
-                    type: 'GET',
-                    url: '/guess/like',
-                    data: {
-                        page: page,
-                        num: 6,
-                        tpl: 'guess_like_list'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.code == 0) {
-                            $('#user_like').html(data.data);
-                        }
-                    }
-                });
-            }
-
-            // 初始化加载
-            change_like();
+           //
         </script>
 
     </div>
 
-    <script src="/assets/d2eace91/js/jquery.region.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
     <!-- 选中当前分类弹出同级分类JS -->
     <script type="text/javascript">
+        //
+    </script>
+
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 暂时去掉 滚动条定位功能
+<script type="text/javascript">
+//
+</script> -->
+    <!--[if lte IE 9]>
+    <![endif]-->
+    <!-- 飞入购物车js _end -->
+
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/index.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/bubbleup.js"></script>
+    <script src="/js/jquery.hiSlider.js"></script>
+    <script src="/js/index_tab.js"></script>
+    <script src="/js/jump.js"></script>
+    <script src="/js/nav.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/requestAnimationFrame.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/js/category.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        var begin_hidden = "5";
+        function Show_More_Attrgroup() {
+            if("5" == 0){
+                $(".attr-group-more").hide();
+            }
+            if (begin_hidden == 0) {
+                $("[name='attr-group-dl']").each(function(i){
+                    $(this).show();
+                });
+                $('#attr-group-more-text').html("收起");
+                begin_hidden = "5";
+            }else{
+                var more_text = "";
+                var attr_names = [];
+                $("[name='attr-group-dl']").each(function(i){
+                    if(i >= begin_hidden){
+                        $(this).hide();
+                        attr_names.push($(this).data("attr-name"));
+                    }else{
+                        $(this).show();
+                    }
+                });
+                if(attr_names.length > 4){
+                    attr_names = attr_names.slice(0, 4);
+                    more_text = "更多选项（"+attr_names.join("、")+" 等）";
+                }else{
+                    attr_names = attr_names.slice(0, attr_names.length);
+                    more_text = "更多选项（"+attr_names.join("、")+"）";
+                }
+                $('#attr-group-more-text').html(more_text);
+                begin_hidden = 0;
+            }
+            var kuan1 = $("#attr-list-ul").width();
+            var kuan2 = $("#attr-group-more").width();
+            var kuan = (kuan1 - kuan2) / 2;
+            $('#attr-group-more').css("margin-left", kuan + "px");
+            // 更新筛选条件的定位
+            $('#filter').data("scroll_height", $('#filter').offset().top);
+        }
+        $().ready(function(){
+            Show_More_Attrgroup();
+        })
+        // 是否显示“更多”__初始化
+        function init_more(boxid, moreid, height) {
+            var obj_brand = document.getElementById(boxid);
+            var more_brand = document.getElementById(moreid);
+            if (obj_brand.clientHeight > height) {
+                obj_brand.style.height = height + "px";
+                obj_brand.style.overflow = "hidden";
+                more_brand.innerHTML = '<a href="javascript:void(0);"  onclick="slideDiv(this, \'' + boxid + '\', \'' + height + '\');" class="more" >更多</a>';
+            }
+        }
+        // 收起
+        function slideDiv(thisobj, divID, Height) {
+            var obj = document.getElementById(divID).style;
+            if (obj.height == "") {
+                obj.height = Height + "px";
+                obj.overflow = "hidden";
+                thisobj.innerHTML = "更多";
+                thisobj.className = "more";
+                // 如果是品牌，额外处理
+                if (divID == 'brand-abox') {
+                    // obj.width="456px";
+                    getBrand_By_Zimu(document.getElementById('brand-zimu-all'), '');
+                    document.getElementById('brand-sobox').style.display = "none";
+                    document.getElementById('brand-zimu').style.display = "none";
+                    document.getElementById('brand-abox-father').className = "";
+                }
+            } else {
+                obj.height = "";
+                obj.overflow = "";
+                thisobj.innerHTML = "收起";
+                thisobj.className = "more opened";
+                // 如果是品牌，额外处理
+                if (divID == 'brand-abox') {
+                    // obj.width="456px";
+                    document.getElementById('brand-sobox').style.display = "block";
+                    document.getElementById('brand-zimu').style.display = "block";
+                    document.getElementById('brand-sobox-input').focus();
+                    // getBrand_By_Zimu(document.getElementById('brand-zimu-all'),'');
+                    document.getElementById('brand-abox-father').className = "brand-more";
+                }
+            }
+        }
+        function getBrand_By_Name(val) {
+            val = val.toLocaleLowerCase();
+            var brand_list = document.getElementById('brand-abox').getElementsByTagName('li');
+            for (var i = 0; i < brand_list.length; i++) {
+                // document.getElementById('brand-abox').style.width="auto";
+                var name_attr_value = brand_list[i].getAttribute("name").toLocaleLowerCase();
+                if (brand_list[i].title.indexOf(val) == 0 || name_attr_value.indexOf(val) == 0 || val == '') {
+                    brand_list[i].style.display = 'block';
+                } else {
+                    brand_list[i].style.display = 'none';
+                }
+            }
+        }
+        // 点击字母切换品牌
+        function getBrand_By_Zimu(obj, zimu) {
+            //document.getElementById('brand-sobox-input').value = "可搜索拼音、汉字查找品牌";
+            obj.focus();
+            var brand_zimu = document.getElementById('brand-zimu');
+            var zimu_span_list = brand_zimu.getElementsByTagName('span');
+            for (var i = 0; i < zimu_span_list.length; i++) {
+                zimu_span_list[i].className = '';
+            }
+            var thisspan = obj.parentNode;
+            thisspan.className = 'span';
+            var brand_list = document.getElementById('brand-abox').getElementsByTagName('li');
+            for (var i = 0; i < brand_list.length; i++) {
+                // document.getElementById('brand-abox').style.width="auto";
+                if (brand_list[i].getAttribute('rel') == zimu || zimu == '') {
+                    brand_list[i].style.display = 'block';
+                } else {
+                    brand_list[i].style.display = 'none';
+                }
+            }
+        }
+        var duoxuan_a_valid = new Array();
+        // 点击多选， 显示多选区
+        function showDuoXuan(dx_divid, a_valid_id) {
+            var dx_dl_div = document.getElementById('attr-list-ul').getElementsByTagName('dl');
+            for (var i = 0; i < dx_dl_div.length; i++) {
+                dx_dl_div[i].className = '';
+                //dx_dl_div[0].className = 'selected-attr-dl';
+            }
+            var dxDiv = document.getElementById(dx_divid);
+            dxDiv.className = "duoxuan";
+            duoxuan_a_valid[a_valid_id] = 1;
+            // 显示更多
+            if($("#"+dx_divid).find(".more").hasClass("opened") == false){
+                $("#"+dx_divid).find(".more").click();
+            }
+        }
+        function hiddenDuoXuan(dx_divid, a_valid_id) {
+            var dxDiv = document.getElementById(dx_divid);
+            dxDiv.className = "";
+            duoxuan_a_valid[a_valid_id] = 0;
+            if (a_valid_id == 'brand') {
+                var ul_obj_div = document.getElementById('brand-abox');
+                var li_list_div = ul_obj_div.getElementsByTagName('li');
+                if (li_list_div) {
+                    for (var j = 0; j < li_list_div.length; j++) {
+                        li_list_div[j].className = "";
+                    }
+                }
+            } else {
+                var ul_obj_div = document.getElementById('attr-abox-' + a_valid_id);
+            }
+            var input_list = ul_obj_div.getElementsByTagName('input');
+            var span_list = ul_obj_div.getElementsByTagName('span');
+            for (var j = 0; j < input_list.length; j++) {
+                input_list[j].checked = false;
+            }
+            if (span_list.length) {
+                for (var j = 0; j < span_list.length; j++) {
+                    span_list[j].className = "";
+                }
+            }
+            // 隐藏更多
+            if($("#"+dx_divid).find(".more").hasClass("opened") == true){
+                $("#"+dx_divid).find(".more").click();
+            }
+        }
+        function duoxuan_Onclick(a_valid_id, idid, thisobj) {
+            if (duoxuan_a_valid[a_valid_id]) {
+                if (thisobj) {
+                    var fatherObj = thisobj.parentNode;
+                    if (a_valid_id == "brand") {
+                        fatherObj.className = fatherObj.className == "brand-seled" ? "" : "brand-seled";
+                    } else {
+                        fatherObj.className = fatherObj.className == "" ? "selected" : "";
+                    }
+                }
+                document.getElementById('chk-' + a_valid_id + '-' + idid).checked = !document.getElementById('chk-' + a_valid_id + '-' + idid).checked;
+                return false;
+            }
+            var url = $(thisobj).data("url");
+            $.go(url);
+        }
+        function duoxuan_Submit(dxid, indexid, url) {
+            var theForm = document.forms['theForm'];
+            var chklist = theForm.elements['checkbox_' + dxid + '[]'];
+            var value = "";
+            var mm = 0;
+            for (var k = 0; k < chklist.length; k++) {
+                if (chklist[k].checked) {
+                    value += mm > 0 ? "_" : "";
+                    value += chklist[k].value;
+                    mm++;
+                }
+            }
+            if (mm == 0) {
+                return false;
+            }
+            if (dxid == 'brand') {
+                url = url.replace("{0}", value);
+            } else {
+                url = url.replace("{0}", value);
+            }
+            $.go(url);
+        }
+        //自定义价格
+        function setPrice(url) {
+            var min = $('#price_min').val();
+            var max = $('#price_max').val();
+            if(min == "" && max == ""){
+                return;
+            }
+            if(!isNaN(min) && min != "" && min >= 0){
+                url = url.replace("{0}", min);
+            }else{
+                url = url.replace("{0}", 0);
+            }
+            if(!isNaN(max) && max != "" && max >= 0){
+                url = url.replace("{1}", max);
+            }else{
+                url = url.replace("{1}", 0);
+            }
+            $.go(url);
+        }
+        //
+        $().ready(function() {
+            $("#1572273614YNN8xr").find(".search-button").click(function() {
+                var keyword = $("#1572273614YNN8xr").find("[name='keyword']").val();
+                var url = "/list.html?cat_id=874&amp;region=53_01&amp;keyword={0}";
+                url = url.replace(/&amp;/g, "&");
+                if ($.trim(keyword) == '在当前分类下搜索') {
+                    url = url.replace("{0}", "");
+                } else {
+                    url = url.replace("{0}", $.trim(keyword));
+                }
+                $.go(url);
+            });
+            $("#1572273614YNN8xr").find("[name='keyword']").click(function() {
+                if ($(this).val() == '在当前分类下搜索') {
+                    $(this).val("");
+                }
+            });
+        });
+        //
+
+        @if(!empty($filter['brand']['items'] && $filter['brand']['selected'] == 0))
+            duoxuan_a_valid['brand'] = 0;
+            init_more('brand-abox', 'brand-more', '83');
+        @endif
+
+        //
+        $(function(){
+            $('.other-vattr-li').bind('click',function(){
+                var seled_input_num = $(this).parents('ul').find('input[type="checkbox"]:checked').length;
+                if(seled_input_num>0){
+                    $(this).parents('dd').find('.select-button').eq(0).attr('class','select-button select-button-sumbit');
+                }else if(seled_input_num == 0){
+                    $(this).parents('dd').find('.select-button').eq(0).attr('class','select-button disabled');
+                }
+            })
+        })
+        //
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        $("body").on("click", ".clear_history", function() {
+            $.confirm("是否清空历史足迹？", function(s) {
+                if (s) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/user/history/del-all',
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.code == 0) {
+                                $("#history_list").html("<div class='tip-box'><img src='/images/noresult.png' class='tip-icon' /><div class='tip-text'>暂无历史足迹</div></div>");
+                            }
+                        }
+                    })
+                }
+            })
+        })
+        function change_like() {
+            var page = $("#user_like_page").val();
+            $.ajax({
+                type: 'GET',
+                url: '/guess/like',
+                data: {
+                    page: page,
+                    num: 6,
+                    tpl: 'guess_like_list'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code == 0) {
+                        $('#user_like').html(data.data);
+                    }
+                }
+            });
+        }
+        // 初始化加载
+        change_like();
+        //
         $(function() {
             $('.breadcrumb .crumbs-nav').hover(function() {
                 $(this).toggleClass('curr');
             })
         });
-    </script>
-
-    <script type="text/javascript">
+        //
         $().ready(function() {
-
             var page_url = "{{ $filter['page']['url'] }}";
             page_url = page_url.replace(/&amp;/g, '&');
-
             var tablelist = $("#table_list").tablelist({
                 page_mode: 1,
                 go: function(page){
@@ -683,24 +730,30 @@
                     $.go(page_url);
                 }
             });
-
             $(".prev-page").click(function(){
                 tablelist.prePage();
             });
-
             $(".next-page").click(function(){
                 tablelist.nextPage();
             });
-
             $(".add-cart").click(function(event) {
+                var url = $(this).data('url');
+                if(url){
+                    $.go(url);
+                    return false;
+                }
                 var goods_id = $(this).data("goods-id");
                 var image_url = $(this).data("image-url");
                 var buy_enable = $(this).data("buy-enable");
+                var cart_step = $(this).data("cart-step");
+                if(isNaN(cart_step)){
+                    cart_step = 1;
+                }
                 if(buy_enable){
                     $.msg(buy_enable);
                     return false;
                 }
-                $.cart.add(goods_id, 1, {
+                $.cart.add(goods_id, cart_step, {
                     is_sku: false,
                     event: event,
                     image_url: image_url,
@@ -709,7 +762,7 @@
                         $('.attr-list').css({
                             "overflow":"hidden"
                         });
-                        if(attr_list>=200){
+                        if(attr_list >= 200){
                             $('.attr-list').addClass("attr-list-border");
                             $('.attr-list').css({
                                 "overflow-y":"auto"
@@ -739,7 +792,6 @@
                     });
                 }
             });
-
             // 移除对对比商品
             $.compare.removeCallback = function(goods_id, result) {
                 $("[data-compare-goods-id='" + goods_id + "']").removeClass('curr');
@@ -748,10 +800,8 @@
             $.compare.clearCallback = function(goods_id, result) {
                 $("[data-compare-goods-id]").removeClass('curr');
             }
-
             //规格相册
             sildeImg(0);
-
             <!-- 获取当前地址 -->
             //地区组件
             var region_chooser = $(".region-chooser-container").regionchooser({
@@ -763,7 +813,6 @@
                             value = values[values.length - 1].region_code;
                         }
                     }
-
                     var region_code = "{{ $filter['region']['value'] }}";
                     if (is_last && value != region_code ) {
                         value = value + "";
@@ -808,37 +857,75 @@
                     }
                 });
             });
-
             // 跳转页面
             $("[data-go]").click(function(){
                 $.go($(this).data("go"));
             });
         });
+        //
+        window.onbeforeunload = function() {
+            var scrollPos;
+            if (typeof window.pageYOffset != 'undefined') {
+                scrollPos = window.pageYOffset;
+            } else if (typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
+                scrollPos = document.documentElement.scrollTop;
+            } else if (typeof document.body != 'undefined') {
+                scrollPos = document.body.scrollTop;
+            }
+            document.cookie = "SZY_GOODS_LIST_SCROLLTOP=" + scrollPos; //存储滚动条位置到cookies中
+        }
+        if (document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/) != null) {
+            //cookies中不为空，则读取滚动条位置
+            var arr = document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/);
+            document.documentElement.scrollTop = parseInt(arr[1]);
+            document.body.scrollTop = parseInt(arr[1]);
+        }
+        //
+        //解决因为缓存导致获取分类ID不正确问题，需在ready之前执行
+        $(".SZY-DEFAULT-SEARCH").data("cat_id", "{{ $cat_id ?? '' }}");
+        $().ready(function() {
+            $(".SZY-SEARCH-BOX-KEYWORD").val("");
+            $(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "");
+            //
+            $(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {
+                if ($(".search-li.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                        $(keyword_obj).val(keywords);
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function(){
+            // 缓载图片
+            $.imgloading.loading();
+        });
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+        $().ready(function() {
+        })
+        //
     </script>
-    <!-- 暂时去掉 滚动条定位功能
-<script type="text/javascript">
-window.onbeforeunload = function() {
-    var scrollPos;
-    if (typeof window.pageYOffset != 'undefined') {
-        scrollPos = window.pageYOffset;
-    } else if (typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
-        scrollPos = document.documentElement.scrollTop;
-    } else if (typeof document.body != 'undefined') {
-        scrollPos = document.body.scrollTop;
-    }
-    document.cookie = "SZY_GOODS_LIST_SCROLLTOP=" + scrollPos; //存储滚动条位置到cookies中
-}
-if (document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/) != null) {
-    //cookies中不为空，则读取滚动条位置
-    var arr = document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/);
-    document.documentElement.scrollTop = parseInt(arr[1]);
-    document.body.scrollTop = parseInt(arr[1]);
-}
-</script> -->
-    <script src="/js/category.js?v=20180528"></script>
-    <!--[if lte IE 9]>
-    <script src="/js/requestAnimationFrame.js?v=20180528"></script>
-    <![endif]-->
-    <!-- 飞入购物车js _end -->
-
 @stop

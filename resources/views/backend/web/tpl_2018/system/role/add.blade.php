@@ -15,7 +15,7 @@
 @section('content')
 
     <form id="form" class="form-horizontal" action="/system/role/add" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <input type="hidden" id="rolemodel-role_id" class="form-control" name="RoleModel[role_id]" value="{{ $info->role_id ?? '' }}">
 
@@ -110,7 +110,7 @@
                                                     @foreach($child['_child'] as $childChild)
                                                         <li>
                                                             <label>
-                                                                {{--todo 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
+                                                                {{-- 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
                                                                 <input type="checkbox" id="{{ $childChild['node_name'] }}" name="auth_codes[]" data-parent-id="{{ $child['node_name'] }}"
                                                                        value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" @if(in_array($childChild['node_name'], $auth_codes))checked="checked"@endif @if(!$childChild['is_auth'])disabled="disabled"@endif {{--checked="checked" disabled="disabled"--}}>
 

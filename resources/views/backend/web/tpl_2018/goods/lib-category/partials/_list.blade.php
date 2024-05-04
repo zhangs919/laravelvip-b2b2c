@@ -46,39 +46,41 @@
                 <a href="javascript:void(0);" object_id="{{ $v['cat_id'] }}" class="del border-none">删除</a>
             </td>
         </tr>
+
+            @if(!empty($v['_child']))
+                @foreach($v['_child'] as $child)
+                    <tr class="2" data-id="{{ $child['cat_id'] }}" data-parent-id="{{ $child['parent_id'] }}" style="display: none;">
+                        <td>
+
+                            <img src="/assets/d2eace91/images/common/menu_plus.gif" style="margin-left:7.5em;" class="icon-image" width="11" height="11" border="0" onclick="change(this)">
+                            <a href="javascript:void(0);">{{ $child['cat_name'] }}</a>
+                        </td>
+
+
+                        <td class="text-c">
+                            @if($child['is_show'] == 1)
+                                <span data-action="set-is-show?id={{ $child['cat_id'] }}" refresh="1" class="ico-switch open" data-value="[0,1]" data-label="[&quot;\u5426&quot;,&quot;\u662f&quot;]" data-class="[&quot;fa fa-toggle-off&quot;,&quot;fa fa-toggle-on&quot;]"><i class="fa fa-toggle-on"></i>是</span>
+                            @else
+                                <span data-action="set-is-show?id={{ $child['cat_id'] }}" refresh="1" class="ico-switch" data-value="[0,1]" data-label="[&quot;\u5426&quot;,&quot;\u662f&quot;]" data-class="[&quot;fa fa-toggle-off&quot;,&quot;fa fa-toggle-on&quot;]"><i class="fa fa-toggle-off"></i>否</span>
+                            @endif
+                        </td>
+
+                        <td class="text-c">
+                            <font class="f14">
+                                <a href="javascript:void(0);" class="cat_sort editable editable-click" data-cat_id="{{ $child['cat_id'] }}">{{ $child['cat_sort'] }}</a>
+                            </font>
+                        </td>
+                        <td class="handle">
+                            <a href="edit?id={{ $child['cat_id'] }}">编辑</a>
+
+                            <span>|</span>
+                            <a href="javascript:void(0);" object_id="{{ $child['cat_id'] }}" class="del border-none">删除</a>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         @endforeach
-        @if(!empty($v['_child']))
-            @foreach($v['_child'] as $child)
-                <tr class="2" data-id="{{ $child['cat_id'] }}" data-parent-id="{{ $child['parent_id'] }}" style="display: none;">
-            <td>
 
-                <img src="/assets/d2eace91/images/common/menu_plus.gif" style="margin-left:7.5em;" class="icon-image" width="11" height="11" border="0" onclick="change(this)">
-                <a href="javascript:void(0);">{{ $child['cat_name'] }}</a>
-            </td>
-
-
-            <td class="text-c">
-                @if($child['is_show'] == 1)
-                    <span data-action="set-is-show?id={{ $child['cat_id'] }}" refresh="1" class="ico-switch open" data-value="[0,1]" data-label="[&quot;\u5426&quot;,&quot;\u662f&quot;]" data-class="[&quot;fa fa-toggle-off&quot;,&quot;fa fa-toggle-on&quot;]"><i class="fa fa-toggle-on"></i>是</span>
-                @else
-                    <span data-action="set-is-show?id={{ $child['cat_id'] }}" refresh="1" class="ico-switch" data-value="[0,1]" data-label="[&quot;\u5426&quot;,&quot;\u662f&quot;]" data-class="[&quot;fa fa-toggle-off&quot;,&quot;fa fa-toggle-on&quot;]"><i class="fa fa-toggle-off"></i>否</span>
-                @endif
-            </td>
-
-            <td class="text-c">
-                <font class="f14">
-                    <a href="javascript:void(0);" class="cat_sort editable editable-click" data-cat_id="{{ $child['cat_id'] }}">{{ $child['cat_sort'] }}</a>
-                </font>
-            </td>
-            <td class="handle">
-                <a href="edit?id={{ $child['cat_id'] }}">编辑</a>
-
-                <span>|</span>
-                <a href="javascript:void(0);" object_id="{{ $child['cat_id'] }}" class="del border-none">删除</a>
-            </td>
-        </tr>
-            @endforeach
-        @endif
 
         </tbody>
     </table>

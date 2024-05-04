@@ -3,9 +3,12 @@
 namespace App\Modules\Frontend\Http\Controllers;
 
 use App\Modules\Base\Http\Controllers\Frontend;
+use App\Repositories\CollectRepository;
 use App\Repositories\NavBannerRepository;
 use App\Repositories\NavigationRepository;
 use App\Repositories\NavQuickServiceRepository;
+use App\Repositories\ShopCategoryRepository;
+use App\Repositories\ShopRepository;
 use App\Repositories\TemplateCatRepository;
 use App\Repositories\TemplateItemRepository;
 use App\Repositories\TemplateRepository;
@@ -24,15 +27,23 @@ class TopicController extends Frontend
     protected $navigation;
     protected $navQuickService;
     protected $topic;
+    protected $shop;
+    protected $collect;
+    protected $shopCategory;
 
-    public function __construct(TemplateRepository $template,
-                                TemplateSelectorRepository $selector,
-                                TemplateItemRepository $templateItem,
-                                TemplateCatRepository $templateCatRepository,
-                                NavBannerRepository $navBannerRepository,
-                                NavigationRepository $navigationRepository,
-                                NavQuickServiceRepository $navQuickServiceRepository,
-                                TopicRepository $topicRepository)
+    public function __construct(
+        TemplateRepository $template
+        ,TemplateSelectorRepository $selector
+        ,TemplateItemRepository $templateItem
+        ,TemplateCatRepository $templateCatRepository
+        ,NavBannerRepository $navBannerRepository
+        ,NavigationRepository $navigationRepository
+        ,NavQuickServiceRepository $navQuickServiceRepository
+        ,TopicRepository $topicRepository
+        ,ShopRepository $shop
+        ,CollectRepository $collect
+        ,ShopCategoryRepository $shopCategory
+    )
     {
         parent::__construct();
 
@@ -44,59 +55,133 @@ class TopicController extends Frontend
         $this->navigation = $navigationRepository;
         $this->navQuickService = $navQuickServiceRepository;
         $this->topic = $topicRepository;
+        $this->shop = $shop;
+        $this->collect = $collect;
+        $this->shopCategory = $shopCategory;
     }
 
-    public function show(Request $request, $topic_id)
+    public function show(Request $request, $topic_id, $tpl_name = '')
     {
-        $seo_title = '乐融沃B2B2C商城演示站';
-        $page = 'topic';
-
-
-        // 获取首页焦点图
-        $navBannerCondition = [
-            'where' => [
-                ['nav_page', $page],
-                ['is_show', 1],
-            ],
-            'limit' => 5, // 只取5个
-            'sortname' => 'banner_sort',
-            'sortorder' => 'asc'
-        ];
-        list($nav_banner, $total) = $this->navBanner->getList($navBannerCondition);
-
-        $client = 'pc';
-        $template = $this->templateItem->getTplItems($page, 0, $topic_id); // app端模板数据
-        $data = [
-            'title' => '',
-            'is_index' => false,
-            'template' => $template,
-            'page' => 'app_topic',
-            'is_design' => false,
-            'topic' => [], // 专题信息
-            'site_nav' => null,
-
-            'context' => [], // 公共数据 所有接口一样
-
-        ];
-        if ($client == 'app') {
-            return result(0, $data);
+        if (is_app()) {
+            $page = 'app_topic';
+        } elseif (is_mobile() || (request()->getHost() == config('lrw.mobile_domain'))) {
+            $page = 'm_topic';
+        } else {
+            $page = 'topic';
         }
 
-        list($tplHtml, $navContainerHtml) = $this->templateItem->getPageTplHtml($page, 0, $topic_id); // 模板Html数据
-
+        // 获取数据
         // 专题信息
         $topic_info = $this->topic->getById($topic_id);
+        $topic = $topic_info->toArray();
+        $title = $seo_title = $topic['topic_name'];
+        $is_index = false;
+
         // 专题页面背景设置 样式
         $bgStyle = '';
-        if (!empty($topic_info->bg_color) && empty($topic_info->bg_image)) {
-            $bgStyle = 'style="background-color:'.$topic_info->bg_color.'"';
-        } elseif (!empty($topic_info->bg_image)) {
-            $bgStyle = 'style="background:'.$topic_info->bg_color.' url('.get_image_url($topic_info->bg_image).') repeat-y center top"';
+        if (!empty($topic['bg_color']) && empty($topic['bg_image'])) {
+            $bgStyle = 'style="background-color:'.$topic['bg_color'].'"';
+        } elseif (!empty($topic['bg_image'])) {
+            $bgStyle = 'style="background:'.$topic['bg_color'].' url('.get_image_url($topic['bg_image']).') repeat-y center top"';
         }
 
-        $compact = compact('seo_title', 'page', 'topic_id', 'tplHtml', 'navContainerHtml', 'nav_banner', 'topic_info', 'bgStyle');
+        if ($topic['shop_id'] > 0) {
+            // 店铺专题
+            // 店铺信息
+            $shop_id = $topic['shop_id'];
+            $shop_info = $this->shop->shopInfo($shop_id);
+            $shop_info['shop']['qrcode'] = $this->shop->getShopQrCode($shop_id);
+            $region_name = get_region_names_by_region_code($shop_info['shop']['region_code'], ' ');
 
-        return view('topic.show', $compact);
+            // 开店时长
+            $duration_time = calc_shop_duration($shop_info['shop']['open_time'],$shop_info['shop']['end_time']);
+
+            // 是否收藏店铺
+            $is_collect = false;
+            if ($this->collect->checkIsCollected($this->user_id, 1, $shop_id)) {
+                // 已收藏
+                $is_collect = true;
+            }
+
+            $collect_count = $shop_info['shop']['collect_num'];
+
+            // 获取店铺导航
+            $navigation_limit = 13; // 数据数量
+            $shop_navigation = $this->template->getShopNavigationData($shop_id, $navigation_limit);
+
+            // 店铺内分类
+            $where = [];
+            $where[] = ['shop_id', $shop_id];
+            $condition = [
+                'where' => $where,
+                'sortname' => 'cat_sort',
+                'sortorder' => 'asc',
+            ];
+            list($shop_category_list, $total) = $this->shopCategory->getList($condition, '', true);
+
+            // 判断首页静态页面开启状态
+            $webStatic = 1; //(is_mobile() && !is_app()) ? shopconf('m_shop_web_static',false,$shop_id) : shopconf('shop_web_static',false,$shop_id);
+            $show_temp = 'topic.shop_show';
+
+        } else {
+            // 平台专题
+            $shop_id = 0;
+            $shop_info = [];
+            $region_name = null;
+            $duration_time = null;
+            $is_collect = null;
+            $collect_count = null;
+            $shop_navigation = null;
+            $shop_category_list = null;
+
+            // 判断首页静态页面开启状态
+            $webStatic = 1; //(is_mobile() && !is_app()) ? shopconf('m_shop_web_static',false,$shop_id) : shopconf('shop_web_static',false,$shop_id);
+            $show_temp = 'topic.show';
+        }
+        if ($tpl_name) {
+            $show_temp = "topic.{$tpl_name}";
+        }
+        $template = $this->templateItem->getTplItems($page, $shop_id, $topic_id); // app端模板数据
+        list($tplHtml, $navContainerHtml) = $this->templateItem->getPageTplHtml($page, $shop_id, $topic_id); // 模板Html数据
+
+        $compact = compact('seo_title','page', 'topic_id','template', 'tplHtml', 'navContainerHtml',
+            'topic','bgStyle','shop_info','webStatic',
+            'region_name','duration_time','is_collect','collect_count',
+            'shop_navigation','shop_category_list');
+
+//        $this->show_seo('seo_topic',['name'=>$topic['topic_name']]);
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_prefix_data' => [
+                'title'=>$title,
+                'is_index'=>$is_index,
+                'template' => $template,
+                'page' => $page,
+                'is_design' => false,
+                'topic'=>$topic,
+                'site_nav'=>null,
+            ],
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => $show_temp
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+    /**
+     * 装修预览
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function preview(Request $request)
+    {
+        $topic_id = $request->get('topic_id');
+
+        return $this->show($request, $topic_id, 'preview');
     }
 
 }

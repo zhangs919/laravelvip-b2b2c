@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="NavWordsModel" class="form-horizontal" name="NavWordsModel" action="{{ $form_action }}" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="navwordsmodel-id" class="form-control" name="NavWordsModel[id]" value="{{ $info->id ?? ''}}">
             <!-- 推荐词名称 -->

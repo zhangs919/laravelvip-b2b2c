@@ -3,7 +3,6 @@
 
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
 @stop
 
 {{--content--}}
@@ -11,7 +10,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="StoreModel" class="form-horizontal" name="StoreModel" action="/store/default/add" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 网点ID  -->
             <input type="hidden" id="storemodel-store_id" class="form-control" name="StoreModel[store_id]" value="{{ $info->store_id ?? '' }}">
             <!-- 网点名称  -->
@@ -290,14 +289,18 @@
             </div>
 
             <!-- 全国模板 -->
-            <div id="region_type_0" class="simple-form-field" >
+            <div id="region_type_0" class="simple-form-field" @if(@$info->region_type == 1)style="display: none;"@endif>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"></label>
                     <div class="col-sm-8">
                         <div class="form-control-box">
-                            <div class="selector-set region-selected">
-
-                            </div>
+							<div class="selector-set region-selected">
+								@foreach($store_regions as $item)
+									<a class="ss-item region-code"
+									   data-region_code="{{ $item['region_code'] }}" data-region_name="{{ $item['region_name'] }}" href="javascript:void(0);">{{ $item['region_name'] }}<i title="移除">×</i>
+									</a>
+								@endforeach
+							</div>
                             <a class="btn btn-warning btn-sm region-edit">添加全国区域模板</a>
                         </div>
                     </div>
@@ -305,7 +308,7 @@
             </div>
 
             <!-- 同城模板 -->
-            <div id="region_type_1" class="simple-form-field" style="display: none;">
+            <div id="region_type_1" class="simple-form-field" @if(@$info->region_type == 0)style="display: none;"@endif>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"></label>
                     <div class="col-sm-8">
@@ -320,9 +323,38 @@
                                             <a id="btn_add_area" class="btn btn-primary btn-sm pull-right" href="javascript:;" style="display: none;">添加配送区</a>
                                         </div>
                                         <ul>
-                                            <li class="freight-records-none">
-                                                <p class="null">暂无配送区域</p>
-                                            </li>
+											@if(!empty($store_regions))
+												@foreach($store_regions as $k=>$item)
+													<li class="freight-records-item p-b-10" data-id="{{ $k+1 }}" data-color="{{ $item['region_color'] }}">
+														<div class="amap-header edit" style="display: none;">
+															<label class="m-b-5">
+																<span class="block {{ $item['region_color'] }}"></span>
+																<span class="m-l-10">
+																	<input type="hidden" class="region-codes" value="{{ $item['region_code'] }}">
+																	<input type="hidden" class="region-desc" value="{{ $item['region_desc'] }}">
+																	<input type="hidden" class="region-color valid" value="{{ $item['region_color'] }}" aria-invalid="false">
+																	<input type="hidden" class="region-path valid" aria-invalid="false" value="{{ $item['region_path'] }}">
+																	<input type="text" id="region_names" class="form-control form-control-sm w100 region-names" name="region_names" value="{{ $item['region_name'] }}" data-value="{{ $item['region_name'] }}">
+																</span>
+															</label>
+															<a class="c-red pull-right m-t-5 freight-records-item-remove" href="javascript:void(0);" title="点击移除配送区域">删除</a>
+															<!-- 报错信息 -->
+															<div class="over-hidden freight-handle-error"></div>
+														</div>
+														<!-- 查看 -->
+														<div class="amap-header view" style="display: block;">
+															<label>
+																<span class="block {{ $item['region_color'] }}"></span>
+																<span class="m-l-10 region-names">{{ $item['region_name'] }}</span>
+															</label>
+														</div>
+													</li>
+												@endforeach
+											@else
+												<li class="freight-records-none">
+													<p class="null">暂无配送区域</p>
+												</li>
+											@endif
                                         </ul>
                                         <!-- 确定按钮 -->
                                         <a id="btn_ok" class="btn btn-primary btn-sm pull-right m-t-10 m-r-10" href="javascript:;" style="display: none;">确定</a>
@@ -556,22 +588,6 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
-@stop
-
-
-{{--helper_tool--}}
-@section('helper_tool')
-
-@stop
-
-{{--自定义css样式--}}
-@section('style_css')
-
-@stop
-
-{{--footer script page元素同级下面--}}
-@section('footer_script')
     <style type="text/css">
         .modal-footer {
             margin: 0px;
@@ -581,26 +597,14 @@
             width: 700px;
         }
     </style>
-
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
-
-    <!-- 地区选择 -->
-    <script src="/assets/d2eace91/js/jquery.region.js?v=1.2"></script>
     <!-- 验证规则 -->
     <script id="client_rules" type="text">
     @if(!isset($info->store_id))
-        [{"id": "storemodel-shop_id", "name": "StoreModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "storemodel-user_type", "name": "StoreModel[user_type]", "attribute": "user_type", "rules": {"required":true,"messages":{"required":"用户类型不能为空。"}}},{"id": "storemodel-store_lng", "name": "StoreModel[store_lng]", "attribute": "store_lng", "rules": {"required":true,"messages":{"required":"网点经度不能为空。"}}},{"id": "storemodel-store_lat", "name": "StoreModel[store_lat]", "attribute": "store_lat", "rules": {"required":true,"messages":{"required":"网点纬度不能为空。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"required":true,"messages":{"required":"是否允许网点修改销售/配送范围不能为空。"}}},{"id": "storemodel-group_id", "name": "StoreModel[group_id]", "attribute": "group_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点分组必须是整数。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改销售/配送范围必须是整数。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"地区类型必须是整数。"}}},{"id": "storemodel-add_time", "name": "StoreModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Add Time必须是整数。"}}},{"id": "storemodel-is_pickup", "name": "StoreModel[is_pickup]", "attribute": "is_pickup", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否作为自提点必须是整数。"}}},{"id": "storemodel-pickup_id", "name": "StoreModel[pickup_id]", "attribute": "pickup_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Pickup Id必须是整数。"}}},{"id": "storemodel-auto_order_taking", "name": "StoreModel[auto_order_taking]", "attribute": "auto_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否自动接单必须是整数。"}}},{"id": "storemodel-refuse_order_taking", "name": "StoreModel[refuse_order_taking]", "attribute": "refuse_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否支持拒绝接单必须是整数。"}}},{"id": "storemodel-store_status", "name": "StoreModel[store_status]", "attribute": "store_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点状态必须是整数。"}}},{"id": "storemodel-edit_info", "name": "StoreModel[edit_info]", "attribute": "edit_info", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改基本信息必须是整数。"}}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"required":true,"messages":{"required":"网点名称不能为空。"}}},{"id": "storemodel-region_code", "name": "StoreModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":" 网点地址不能为空。"}}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"required":true,"messages":{"required":"网点电话不能为空。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"required":true,"messages":{"required":"地区类型不能为空。"}}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"required":true,"messages":{"required":"店铺分佣比例不能为空。"}}},{"id": "storemodel-clearing_cycle", "name": "StoreModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "storemodel-user_id", "name": "StoreModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点管理员不能为空","min":" 绑定网点管理员必须不小于1。"},"min":1}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"店铺分佣比例必须是一个数字。","decimal":"店铺分佣比例必须是一个不大于2位小数的数字。","min":"店铺分佣比例必须不小于0。","max":"店铺分佣比例必须不大于100。"},"decimal":2,"min":0,"max":100}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"string":true,"messages":{"string":"网点名称必须是一条字符串。","maxlength":"网点名称只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_img", "name": "StoreModel[store_img]", "attribute": "store_img", "rules": {"string":true,"messages":{"string":"网点主图必须是一条字符串。","maxlength":"网点主图只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_remark", "name": "StoreModel[store_remark]", "attribute": "store_remark", "rules": {"string":true,"messages":{"string":"Store Remark必须是一条字符串。","maxlength":"Store Remark只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"网点电话必须是一条字符串。","maxlength":"网点电话只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^((0[0-9]{2,3}-[0-9]{7,8})|(13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|14[0-9]{1}[0-9]{8}))$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入正确的手机或座机号码，座机号码格式：XXXX-XXXXXXX。"}}},]
+            [{"id": "storemodel-shop_id", "name": "StoreModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "storemodel-user_type", "name": "StoreModel[user_type]", "attribute": "user_type", "rules": {"required":true,"messages":{"required":"用户类型不能为空。"}}},{"id": "storemodel-store_lng", "name": "StoreModel[store_lng]", "attribute": "store_lng", "rules": {"required":true,"messages":{"required":"网点经度不能为空。"}}},{"id": "storemodel-store_lat", "name": "StoreModel[store_lat]", "attribute": "store_lat", "rules": {"required":true,"messages":{"required":"网点纬度不能为空。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"required":true,"messages":{"required":"是否允许网点修改销售/配送范围不能为空。"}}},{"id": "storemodel-group_id", "name": "StoreModel[group_id]", "attribute": "group_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点分组必须是整数。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改销售/配送范围必须是整数。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"地区类型必须是整数。"}}},{"id": "storemodel-add_time", "name": "StoreModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Add Time必须是整数。"}}},{"id": "storemodel-is_pickup", "name": "StoreModel[is_pickup]", "attribute": "is_pickup", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否作为自提点必须是整数。"}}},{"id": "storemodel-pickup_id", "name": "StoreModel[pickup_id]", "attribute": "pickup_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Pickup Id必须是整数。"}}},{"id": "storemodel-auto_order_taking", "name": "StoreModel[auto_order_taking]", "attribute": "auto_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否自动接单必须是整数。"}}},{"id": "storemodel-refuse_order_taking", "name": "StoreModel[refuse_order_taking]", "attribute": "refuse_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否支持拒绝接单必须是整数。"}}},{"id": "storemodel-store_status", "name": "StoreModel[store_status]", "attribute": "store_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点状态必须是整数。"}}},{"id": "storemodel-edit_info", "name": "StoreModel[edit_info]", "attribute": "edit_info", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改基本信息必须是整数。"}}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"required":true,"messages":{"required":"网点名称不能为空。"}}},{"id": "storemodel-region_code", "name": "StoreModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":" 网点地址不能为空。"}}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"required":true,"messages":{"required":"网点电话不能为空。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"required":true,"messages":{"required":"地区类型不能为空。"}}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"required":true,"messages":{"required":"店铺分佣比例不能为空。"}}},{"id": "storemodel-clearing_cycle", "name": "StoreModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "storemodel-user_id", "name": "StoreModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点管理员不能为空","min":" 绑定网点管理员必须不小于1。"},"min":1}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"店铺分佣比例必须是一个数字。","decimal":"店铺分佣比例必须是一个不大于2位小数的数字。","min":"店铺分佣比例必须不小于0。","max":"店铺分佣比例必须不大于100。"},"decimal":2,"min":0,"max":100}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"string":true,"messages":{"string":"网点名称必须是一条字符串。","maxlength":"网点名称只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_img", "name": "StoreModel[store_img]", "attribute": "store_img", "rules": {"string":true,"messages":{"string":"网点主图必须是一条字符串。","maxlength":"网点主图只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_remark", "name": "StoreModel[store_remark]", "attribute": "store_remark", "rules": {"string":true,"messages":{"string":"Store Remark必须是一条字符串。","maxlength":"Store Remark只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"网点电话必须是一条字符串。","maxlength":"网点电话只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^((0[0-9]{2,3}-[0-9]{7,8})|(13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|14[0-9]{1}[0-9]{8}))$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入正确的手机或座机号码，座机号码格式：XXXX-XXXXXXX。"}}},]
     @else
-        [{"id": "storemodel-shop_id", "name": "StoreModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "storemodel-user_type", "name": "StoreModel[user_type]", "attribute": "user_type", "rules": {"required":true,"messages":{"required":"用户类型不能为空。"}}},{"id": "storemodel-store_lng", "name": "StoreModel[store_lng]", "attribute": "store_lng", "rules": {"required":true,"messages":{"required":"网点经度不能为空。"}}},{"id": "storemodel-store_lat", "name": "StoreModel[store_lat]", "attribute": "store_lat", "rules": {"required":true,"messages":{"required":"网点纬度不能为空。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"required":true,"messages":{"required":"是否允许网点修改销售/配送范围不能为空。"}}},{"id": "storemodel-group_id", "name": "StoreModel[group_id]", "attribute": "group_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点分组必须是整数。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改销售/配送范围必须是整数。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"地区类型必须是整数。"}}},{"id": "storemodel-add_time", "name": "StoreModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Add Time必须是整数。"}}},{"id": "storemodel-is_pickup", "name": "StoreModel[is_pickup]", "attribute": "is_pickup", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否作为自提点必须是整数。"}}},{"id": "storemodel-pickup_id", "name": "StoreModel[pickup_id]", "attribute": "pickup_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Pickup Id必须是整数。"}}},{"id": "storemodel-auto_order_taking", "name": "StoreModel[auto_order_taking]", "attribute": "auto_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否自动接单必须是整数。"}}},{"id": "storemodel-refuse_order_taking", "name": "StoreModel[refuse_order_taking]", "attribute": "refuse_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否支持拒绝接单必须是整数。"}}},{"id": "storemodel-store_status", "name": "StoreModel[store_status]", "attribute": "store_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点状态必须是整数。"}}},{"id": "storemodel-edit_info", "name": "StoreModel[edit_info]", "attribute": "edit_info", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改基本信息必须是整数。"}}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"required":true,"messages":{"required":"网点名称不能为空。"}}},{"id": "storemodel-region_code", "name": "StoreModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":" 网点地址不能为空。"}}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"required":true,"messages":{"required":"网点电话不能为空。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"required":true,"messages":{"required":"地区类型不能为空。"}}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"required":true,"messages":{"required":"店铺分佣比例不能为空。"}}},{"id": "storemodel-clearing_cycle", "name": "StoreModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "storemodel-store_id", "name": "StoreModel[store_id]", "attribute": "store_id", "rules": {"required":true,"messages":{"required":"Store Id不能为空。"}}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"店铺分佣比例必须是一个数字。","decimal":"店铺分佣比例必须是一个不大于2位小数的数字。","min":"店铺分佣比例必须不小于0。","max":"店铺分佣比例必须不大于100。"},"decimal":2,"min":0,"max":100}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"string":true,"messages":{"string":"网点名称必须是一条字符串。","maxlength":"网点名称只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_img", "name": "StoreModel[store_img]", "attribute": "store_img", "rules": {"string":true,"messages":{"string":"网点主图必须是一条字符串。","maxlength":"网点主图只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_remark", "name": "StoreModel[store_remark]", "attribute": "store_remark", "rules": {"string":true,"messages":{"string":"Store Remark必须是一条字符串。","maxlength":"Store Remark只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"网点电话必须是一条字符串。","maxlength":"网点电话只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^((0[0-9]{2,3}-[0-9]{7,8})|(13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|14[0-9]{1}[0-9]{8}))$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入正确的手机或座机号码，座机号码格式：XXXX-XXXXXXX。"}}},]
+            [{"id": "storemodel-shop_id", "name": "StoreModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "storemodel-user_type", "name": "StoreModel[user_type]", "attribute": "user_type", "rules": {"required":true,"messages":{"required":"用户类型不能为空。"}}},{"id": "storemodel-store_lng", "name": "StoreModel[store_lng]", "attribute": "store_lng", "rules": {"required":true,"messages":{"required":"网点经度不能为空。"}}},{"id": "storemodel-store_lat", "name": "StoreModel[store_lat]", "attribute": "store_lat", "rules": {"required":true,"messages":{"required":"网点纬度不能为空。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"required":true,"messages":{"required":"是否允许网点修改销售/配送范围不能为空。"}}},{"id": "storemodel-group_id", "name": "StoreModel[group_id]", "attribute": "group_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点分组必须是整数。"}}},{"id": "storemodel-region_editable", "name": "StoreModel[region_editable]", "attribute": "region_editable", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改销售/配送范围必须是整数。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"地区类型必须是整数。"}}},{"id": "storemodel-add_time", "name": "StoreModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Add Time必须是整数。"}}},{"id": "storemodel-is_pickup", "name": "StoreModel[is_pickup]", "attribute": "is_pickup", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否作为自提点必须是整数。"}}},{"id": "storemodel-pickup_id", "name": "StoreModel[pickup_id]", "attribute": "pickup_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Pickup Id必须是整数。"}}},{"id": "storemodel-auto_order_taking", "name": "StoreModel[auto_order_taking]", "attribute": "auto_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否自动接单必须是整数。"}}},{"id": "storemodel-refuse_order_taking", "name": "StoreModel[refuse_order_taking]", "attribute": "refuse_order_taking", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点是否支持拒绝接单必须是整数。"}}},{"id": "storemodel-store_status", "name": "StoreModel[store_status]", "attribute": "store_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"网点状态必须是整数。"}}},{"id": "storemodel-edit_info", "name": "StoreModel[edit_info]", "attribute": "edit_info", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许网点修改基本信息必须是整数。"}}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"required":true,"messages":{"required":"网点名称不能为空。"}}},{"id": "storemodel-region_code", "name": "StoreModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":" 网点地址不能为空。"}}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"required":true,"messages":{"required":"网点电话不能为空。"}}},{"id": "storemodel-region_type", "name": "StoreModel[region_type]", "attribute": "region_type", "rules": {"required":true,"messages":{"required":"地区类型不能为空。"}}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"required":true,"messages":{"required":"店铺分佣比例不能为空。"}}},{"id": "storemodel-clearing_cycle", "name": "StoreModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "storemodel-store_id", "name": "StoreModel[store_id]", "attribute": "store_id", "rules": {"required":true,"messages":{"required":"Store Id不能为空。"}}},{"id": "storemodel-take_rate", "name": "StoreModel[take_rate]", "attribute": "take_rate", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"店铺分佣比例必须是一个数字。","decimal":"店铺分佣比例必须是一个不大于2位小数的数字。","min":"店铺分佣比例必须不小于0。","max":"店铺分佣比例必须不大于100。"},"decimal":2,"min":0,"max":100}},{"id": "storemodel-store_name", "name": "StoreModel[store_name]", "attribute": "store_name", "rules": {"string":true,"messages":{"string":"网点名称必须是一条字符串。","maxlength":"网点名称只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-address", "name": "StoreModel[address]", "attribute": "address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_img", "name": "StoreModel[store_img]", "attribute": "store_img", "rules": {"string":true,"messages":{"string":"网点主图必须是一条字符串。","maxlength":"网点主图只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-store_remark", "name": "StoreModel[store_remark]", "attribute": "store_remark", "rules": {"string":true,"messages":{"string":"Store Remark必须是一条字符串。","maxlength":"Store Remark只能包含至多255个字符。"},"maxlength":255}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"网点电话必须是一条字符串。","maxlength":"网点电话只能包含至多20个字符。"},"maxlength":20}},{"id": "storemodel-tel", "name": "StoreModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^((0[0-9]{2,3}-[0-9]{7,8})|(13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|14[0-9]{1}[0-9]{8}))$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入正确的手机或座机号码，座机号码格式：XXXX-XXXXXXX。"}}},]
     @endif
-</script>
+    </script>
 
     <script id="user_type_0_template" type="text">
 <input type="text" id="storemodel-user_account" class="form-control" name="StoreModel[user_account]" placeholder="会员帐号/手机号/邮箱" data-rule-required="true" data-msg="网点管理员不能为空">
@@ -609,13 +613,13 @@
 <select id="storemodel-user_id" name="StoreModel[user_id]" class="form-control chosen-select" data-rule-required='true' data-msg='网点管理员不能为空'>
 	<option vlaue="0">--请选择--</option>
     @if(!empty($user_list))
-        @foreach($user_list as $v)
-            <option value="{{ $v['user_id'] }}">{{ $v['user_name'] }}</option>
+            @foreach($user_list as $v)
+                <option value="{{ $v['user_id'] }}">{{ $v['user_name'] }}</option>
         @endforeach
-    @endif
-</select>
-<a href="/shop/account/add" target="_blank" class="btn btn-warning btn-sm m-l-5">新建管理员</a>
-<a id="btn_reload_user_list" class="btn btn-primary btn-sm m-l-5">重新加载</a>
+        @endif
+        </select>
+        <a href="/shop/account/add" target="_blank" class="btn btn-warning btn-sm m-l-5">新建管理员</a>
+        <a id="btn_reload_user_list" class="btn btn-primary btn-sm m-l-5">重新加载</a>
 </script>
     <!--点击按钮为表格增加行-->
     <script id="freight_edit_template" type="text">
@@ -644,6 +648,31 @@
 	</div>
 </li>
 </script>
+@stop
+
+
+{{--helper_tool--}}
+@section('helper_tool')
+
+@stop
+
+{{--自定义css样式--}}
+@section('style_css')
+
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+@stop
+
+{{--footer script page元素同级下面--}}
+@section('footer_script')
+
+
+
 
     <script type="text/javascript">
         $().ready(function() {
@@ -1229,7 +1258,12 @@
             });
         });
     </script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
     <script type="text/javascript">
         var area_index = 0;
         var zIndex = 11;

@@ -1,12 +1,6 @@
 /**
  * 数据表格插件
- * 
- * ============================================================================ 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。 ============================================================================
- * 
- * @author: niqingyang
- * @version 1.0
- * @date 2015-11-19
- * @link http://www.68ecshop.com
+ *
  */
 
 (function($) {
@@ -200,7 +194,7 @@
 
 	/**
 	 * 根据分页ID获取表格对象
-	 * 
+	 *
 	 * @param page_id
 	 *            不为空则获取指定的控件对象，为空则获取全部的控件数组
 	 * @return 控件或者undefined
@@ -393,7 +387,7 @@
 
 		/**
 		 * 鼠标悬浮在表头时的激活样式
-		 * 
+		 *
 		 * $(this).find("tr:first>th").mouseover(function() { $(this).addClass("active"); var sortname = $(this).attr("data-sortname"); var sortorder = $(this).attr("data-sortorder"); if (sortname != null) { $(this).css({ cursor: "pointer" }); if($(table).hasClass("table-list-sort-new") && sortname == settings.sortname){ $(this).find("span").removeClass("asc").removeClass("desc").addClass(settings.sortorder); }else{ $(this).find("span").removeClass("asc").removeClass("desc").addClass(sortorder); } } else { $(this).css({ cursor: "default" }); } }).mouseout(function() { $(this).removeClass("active"); var sortname = $(this).attr("data-sortname"); if (sortname != null) { if(sortname == settings.sortname){ $(this).find("span").removeClass("asc").removeClass("desc").addClass(settings.sortorder);
 		 * }else{ $(this).find("span").removeClass("desc").removeClass("asc"); } } $(table).removeClass("table-list-sort-new"); });
 		 */
@@ -561,13 +555,23 @@
 			settings.pagekey = page.page_key;
 			settings.page = $.extend(true, settings.page, page);
 
-			if (page.record_count == 0 && settings.emptyrecords != false) {
+			var isNotEmpty = page.record_count > 0 || $(table).find("tbody").find("tr").size() > 0;
+
+			if (isNotEmpty == false && settings.emptyrecords != false) {
 				var colspan = $(table).find("thead").find("th").size();
 				var empty_data_html = '<tr><td class="no-data" colspan="' + colspan + '">' + settings.emptyrecords + '</td></tr>';
 				$(table).find("tbody").html(empty_data_html);
 			}
 			// 更新工具栏的总计路数
-			$("[data-total-record]").html(page.record_count);
+			if(settings.page_id){
+				var page_id = settings.page_id;
+				if(page_id.indexOf("#") == 0){
+					page_id = page_id.substring(1);
+				}
+				$("."+page_id+"-total-record").html(page.record_count);
+			}else{
+				$("[data-total-record]").html(page.record_count);
+			}
 		}
 
 		$(settings.page_id).find("[data-page-size]").change(function() {
@@ -687,7 +691,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @param table
 	 *            表格对象
 	 * @param sortname
@@ -743,7 +747,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @param table
 	 *            表格对象
 	 * @param page_number
@@ -815,7 +819,7 @@
 
 	/**
 	 * 加载数据
-	 * 
+	 *
 	 * @param params
 	 *            ajax提交请求数据的参数
 	 * @param options
@@ -828,7 +832,7 @@
 
 	/**
 	 * 加载数据
-	 * 
+	 *
 	 * @param params
 	 *            ajax提交请求数据的参数
 	 * @param options
@@ -839,7 +843,7 @@
 		if(popstate == undefined){
 			popstate = false;
 		}
-		
+
 		var settings = this;
 
 		settings.params[settings.pagekey] = {
@@ -847,7 +851,7 @@
 			cur_page: settings.page.cur_page,
 			page_size: settings.page.page_size
 		}
-		
+
 		var defaults = {
 			url: settings.getUrl(),
 			method: settings.method,
@@ -877,17 +881,18 @@
 		if (params) {
 			settings.params = $.extend(false, settings.params, params);
 		}
-		
+
 		settings.params[settings.pagekey] = {
 			page_id: settings.params[settings.pagekey].page_id,
 			cur_page: settings.params[settings.pagekey].cur_page,
 			page_size: settings.params[settings.pagekey].page_size
 		}
-		
+
 		var is_frontend = $("meta[name='is_frontend']").attr("content") == "yes";
-		
+		var request_url = options.url;
+
 		if (!popstate && is_frontend == false && location.href.split("?")[0] == options.url.split("?")[0] && window.history && history.pushState && options.method.toLowerCase() == "get"){
-			
+
 			var state = {
 				code: "table_list",
 				page_id: this.page_id,
@@ -895,17 +900,17 @@
 				options: {
 					url: options.url,
 					method: options.method
-				}, 
-				append: append, 
+				},
+				append: append,
 				filter: filter
 			};
-			
+
 			options.url = decodeURIComponent(options.url);
-			
+
 			var search_params = {};
-			
+
 			if(options.url.indexOf("?") != -1){
-				
+
 				var url_params = options.url.split("?")[1];
 				url_params = url_params.split("&");
 				for(var i in url_params){
@@ -918,25 +923,27 @@
 					$.resolveVarName(search_params, item[0], item[1]);
 				}
 			}
-			
-			settings.params = $.extend(true, {}, search_params, settings.params);
-			
+
+			settings.params = $.extend({}, search_params, settings.params);
+
 			state.params = settings.params;
-			
+
 			var url = options.url.split("?")[0];
-			
+
+			request_url = url;
+
 			if($.param(settings.params) != ""){
 				url += "?" + $.param(settings.params);
 			}
-			
+
 			history.pushState(state, document.title, url);
 		}
-		
+
 		// Ajax开始加载
 		is_ajax_loading = true;
 
 		return ajax.call(settings, {
-			url: options.url,
+			url: request_url,
 			type: options.method,
 			data: settings.params,
 			success: function(result) {
@@ -953,7 +960,7 @@
 			is_ajax_loading = false;
 		});
 	}
-	
+
 	if (window.history && history.pushState && $("meta[name='is_web_mobile']").attr("content") != "yes"){
 		window.addEventListener("popstate", function (e) {
 	        var state = history.state;
@@ -965,7 +972,7 @@
 	        }
 	    });
 	}
-	
+
 
 	/**
 	 * 改变开关状态
@@ -1168,7 +1175,7 @@
 				} catch (e) {
 					console.error(e);
 					// 先去掉弹框
-					 $.msg("失败" + XMLHttpRequest.status);
+					// $.msg("失败" + XMLHttpRequest.status);
 				}
 
 			}
@@ -1220,12 +1227,12 @@
 
 	/**
 	 * Ajax回调函数
-	 * 
+	 *
 	 * @param result
 	 *            Ajax后返回的数据
 	 * @param callback
 	 *            Ajax后的回调函数
-	 * 
+	 *
 	 */
 	function ajaxCallback(result, callback) {
 

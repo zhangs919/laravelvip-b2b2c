@@ -1,5 +1,5 @@
 <form id="fileform" class="form-horizontal" action="goods-list" method="post" enctype="multipart/form-data">
-    {{ csrf_field() }}
+    @csrf
     <div class="modal-body">
         <div class="table-content m-t-10 clearfix">
             <div class="simple-form-field">

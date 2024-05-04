@@ -19,13 +19,18 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link type="text/css" rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css">
-    <script src="/assets/d2eace91/js/jquery.js?v=20180418"></script>
-    <script type="text/javascript" src="http://{{ env('FRONTEND_DOMAIN') }}/js/common.js"></script>
+    <link type="text/css" rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/common.css">
+    <!--整站改色 _start-->
+    <!--整站改色 _end-->
+    @if(sysconf('custom_style_enable') == 1)
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css"/>
+    @else
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/color-style.css"/>
+    @endif
 
-    <!-- 加载Layer插件 -->
-    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
-
+    <link href="/assets/d2eace91/iconfont/iconfont.css" rel="stylesheet">
+    <script src="/assets/d2eace91/js/jquery.js"></script>
+    <script src="/assets/d2eace91/js/szy.head.js"></script>
 </head>
 <body>
 {{--post 提交 错误提示信息--}}
@@ -55,8 +60,8 @@
     </div>
     <div class="logo-right">
         <ul class="logo-right-menu">
-            <li class="current"><a class="seller" href="http://{{ env('SELLER_DOMAIN') }}/index.html" target="_blank"><i></i>商家管理中心</a></li>
-            <li ><a class="store" href="http://{{ env('STORE_DOMAIN') }}/index.html" target="_blank"><i></i>网点管理中心</a></li>
+            <li class="current"><a class="seller" href="//{{ config('lrw.seller_domain') }}/index" target="_blank"><i></i>商家管理中心</a></li>
+            <li ><a class="store" href="//{{ config('lrw.store_domain') }}/index" target="_blank"><i></i>网点管理中心</a></li>
         </ul>
     </div>
 </div>
@@ -64,22 +69,8 @@
 <div class="login-content">
     <div class="login-banner" style="background: url('{{ get_image_url(sysconf('login_bg_image')) }}') center;">
         <div class="w990 pos-r">
-
-
-            <link type="text/css" rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/login.css">
-            <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
-            <!--整站改色 _start-->
-            @if(sysconf('custom_style_enable') == 1)
-                <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6"/>
-            @else
-                <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6"/>
-            @endif
-            <!--整站改色 _end-->
-            <script src="/assets/d2eace91/js/layer/layer.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/jquery.method.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/placeholder.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/jquery.supersized.min.js?v=20180418"></script>
-            <div id="1524381447rads9d" class="login-form">
+            <link type="text/css" rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/login.css">
+            <div id="{{ $uuid }}" class="login-form">
                 <div class="login-con pos-r">
 
                     <div class="login-switch">
@@ -90,7 +81,7 @@
 
                         <div class="login-tit">
                             还不是卖家？
-                            <a href="http://{{ env('FRONTEND_DOMAIN') }}/shop/apply.html" class="regist-link color">
+                            <a href="//{{ config('lrw.frontend_domain') }}/shop/apply.html" class="regist-link color">
                                 立即申请
                                 <i>&gt;</i>
                             </a>
@@ -107,7 +98,7 @@
 
                         <div id="con_login_2" class="form">
                             <form id="form2" action="/login" method="POST">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group item-name">
                                     <!-- 错误项标注 给div另添加一个class值'error' star -->
                                     <div class="form-control-box">
@@ -140,7 +131,7 @@
                                         <span>自动登录</span>
                                     </label>
 
-                                    <a class="forget-password fr" href="http://{{ env('FRONTEND_DOMAIN') }}/user/find-password">忘记密码？</a>
+                                    <a class="forget-password fr" href="//{{ config('lrw.frontend_domain') }}/user/find-password.html">忘记密码？</a>
                                 </div>
                                 <div class="login-btn">
                                     <input type="hidden" name="act" value="act_login" />
@@ -160,7 +151,7 @@
 
                         <div id="con_login_1" class="form" style="display: none;">
                             <form id="form1" action="/login" method="POST">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group item-name">
                                     <!-- 错误项标注 给div另添加一个class值'error' star -->
                                     <div class="form-control-box">
@@ -234,7 +225,7 @@
                             </div>
                             <div class="login-links">
                                 <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                                <a href="http://{{ env('FRONTEND_DOMAIN') }}/register.html" class="register" target="_blank">免费注册</a>
+                                <a href="//{{ config('lrw.frontend_domain') }}/register.html" class="register" target="_blank">免费注册</a>
                             </div>
                         </div>
                     </div>
@@ -267,281 +258,325 @@
                 </div>
             </div>
             <!-- cookie -->
-            <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180418"></script>
             <!-- 验证码脚本 -->
-            <script src="/assets/d2eace91/js/jquery.captcha.js?v=20180418"></script>
             <!-- 表单验证 -->
-            <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180418"></script>
             <script id="client_rules" type="text/javascript">
                 [{"id": "loginmodel-username", "name": "LoginModel[username]", "attribute": "username", "rules": {"required":true,"messages":{"required":"请输入用户名"}}},{"id": "loginmodel-password", "name": "LoginModel[password]", "attribute": "password", "rules": {"required":true,"messages":{"required":"请输入密码"}}},{"id": "loginmodel-username", "name": "LoginModel[username]", "attribute": "username", "rules": {"string":true,"messages":{"string":"用户名必须是一条字符串。","maxlength":"用户名长度必需在100以内"},"maxlength":50}},{"id": "loginmodel-password", "name": "LoginModel[password]", "attribute": "password", "rules": {"string":true,"messages":{"string":"密码必须是一条字符串。","maxlength":"密码长度必需在32以内"},"maxlength":32}},{"id": "loginmodel-rememberme", "name": "LoginModel[rememberMe]", "attribute": "rememberMe", "rules": {"boolean":{"trueValue":"1","falseValue":"0"},"messages":{"boolean":"记住用户名密码必须要么为\"1\"，要么为\"0\"。"}}},]
             </script>
             <script id="sms_client_rules" type="text/javascript">
-                [{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"required":true,"messages":{"required":"请输入图片验证码"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"captcha":{"hash":427,"hashKey":"niiCaptcha/site/captcha","caseSensitive":false},"messages":{"captcha":"验证码不正确。"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"请输入手机号码"}}},{"id": "smsloginmodel-smscaptcha", "name": "SmsLoginModel[smsCaptcha]", "attribute": "smsCaptcha", "rules": {"required":true,"messages":{"required":"请输入动态密码"}}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^(13[0-9]{1}[0-9]{8}|15[0-9]{1}[0-9]{8}|18[0-9]{1}[0-9]{8}|17[0-9]{1}[0-9]{8}|14[0-9]{1}[0-9]{8}|199[0-9]{8}|198[0-9]{8}|166[0-9]{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入一个有效的手机号码"}}},{"id": "smsloginmodel-rememberme", "name": "SmsLoginModel[rememberMe]", "attribute": "rememberMe", "rules": {"boolean":{"trueValue":"1","falseValue":"0"},"messages":{"boolean":"记住用户名密码必须要么为\"1\"，要么为\"0\"。"}}},]
+                [{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"required":true,"messages":{"required":"请输入图片验证码"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"captcha":{"hash":457,"hashKey":"niiCaptcha/site/captcha","caseSensitive":false},"messages":{"captcha":"验证码不正确。"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"请输入手机号码"}}},{"id": "smsloginmodel-smscaptcha", "name": "SmsLoginModel[smsCaptcha]", "attribute": "smsCaptcha", "rules": {"required":true,"messages":{"required":"请输入动态密码"}}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166|191|167)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入一个有效的手机号码"}}},{"id": "smsloginmodel-rememberme", "name": "SmsLoginModel[rememberMe]", "attribute": "rememberMe", "rules": {"boolean":{"trueValue":"1","falseValue":"0"},"messages":{"boolean":"记住用户名密码必须要么为\"1\"，要么为\"0\"。"}}},]
             </script>
             <script type="text/javascript">
-                $().ready(function() {
-
-                    $('.forget-pwd').click(function(){
-                        $('.qrcode-target').removeClass('btn-login').addClass('btn-qrcode').attr('title','去手机扫码登录');
-                        $('.login-wrap').show();
-                        $('.login-mobile').hide();
-                    });
-                    $("body").on('click', '.website-login', function() {
-                        var type = $(this).data("id");
-                        $.go("http://{{ env('FRONTEND_DOMAIN') }}"+"/website/login?type="+type);
-                    })
-
-                    var container = $("#1524381447rads9d");
-
-                    /**
-                     * 初始化validator默认值
-                     */
-                        //先获取到默认函数，不能直接覆盖掉
-                    var errorPlacement = $.validator.defaults.errorPlacement;
-                    $.validator.setDefaults({
-                        errorPlacement: function(error, element) {
-                            $(element).parent(".form-control-box").addClass("error");
-                            errorPlacement.call(this, error, element);
-                        },
-                        // 失去焦点验证
-                        onfocusout: function(element) {
-                            $(element).valid();
-                        },
-                        // 成功后移除错误提示
-                        success: function(error) {
-                            var error_id = $(error).attr("id");
-                            var element_id = $(error).attr("for");
-                            // 移除错误样式
-                            $("[id='"+error_id+"']").remove();
-                            $(":input[id='"+element_id+"']").parent(".form-control-box").removeClass("error");
-                        }
-                    });
-
-                    var validator = $(container).find("#form2").validate();
-                    // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
-                    $.validator.addRules($("#client_rules").html());
-
-                    $(container).find("#form2").submit(function() {
-
-                        if(!validator.form()){
-                            return false;
-                        }
-
-                        //
-                        return true;
-                        //
-                    });
-
-                    var validator1 = $(container).find("#form1").validate();
-                    // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
-                    $.validator.addRules($("#sms_client_rules").html());
-
-                    $(container).find("#form1").submit(function() {
-                        if(!validator1.form()){
-                            return false;
-                        }
-
-                        //
-                        return true;
-                        //
-                    });
-
-                    $(container).find("#btn_send_sms_code").click(function(){
-
-                        if($(this).prop("disabled") == true || $(this).data("doing") == true){
-                            return;
-                        }
-
-                        var mobile_valid = $("#mobile").valid();
-
-                        if(mobile_valid == false){
-                            $("#mobile").focus();
-                            return false;
-                        }
-
-                        var captcha_valid = true;
-                        if($("#captcha_sms").is(":visible") && $("#captcha_sms").size() > 0){
-                            captcha_valid = $("#captcha_sms").valid();
-                        }
-
-                        if(captcha_valid == false){
-                            $("#captcha_sms").focus();
-                            return false;
-                        }
-
-                        if(mobile_valid && captcha_valid){
-
-                            var target = this;
-
-                            $(this).data("doing", true);
-
-                            var mobile = $("#mobile").val();
-
-                            $.post('/site/sms-captcha', {
-                                mobile: mobile,
-                                captcha: $("#captcha_sms").val()
-                            }, function(result){
-                                if(result.code == 0){
-                                    // 开始倒计时
-                                    countdown(target, "获取手机验证码");
-                                }else{
-                                    // 失败后点击验证码
-                                    if($("#captcha_sms-image").is(":visible") && $("#captcha_sms-image").size() > 0){
-                                        $("#captcha_sms").val("");
-                                        $("#captcha_sms-image").click();
-                                    }
-                                    // 显示图形验证码
-                                    if($("#captcha_sms-image").is(":visible") == false && result.data.show_captcha == 1){
-                                        $("#captcha_sms").parents(".captcha").show();
-                                    }
-                                    var errors = {};
-                                    errors["SmsLoginModel[" + result.data.field + "]"] = result.message;
-                                    validator1.showErrors(errors);
-                                }
-                                $(target).data("doing", false);
-                            }, "json");
-                        }
-
-                    });
-
-                    var wait = 60;
-                    function countdown(obj, msg) {
-                        obj = $(obj);
-
-                        if (wait <= 0) {
-                            obj.prop("disabled", false);
-                            obj.html(msg);
-                            wait = 60;
-                        } else {
-                            if (msg == undefined || msg == null) {
-                                msg = obj.html();
-                            }
-                            obj.prop("disabled", true);
-                            obj.html(wait + "秒后重新获取");
-                            wait--;
-                            setTimeout(function() {
-                                countdown(obj, msg)
-                            }, 1000)
-                        }
-                    }
-                });
-            </script>
-            <script src="/assets/d2eace91/js/message/message.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/message/messageWS.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/jquery.qrcode.min.js?v=20180418"></script>
-            <script type="text/javascript">
-
-                //二维码、PC登录切换
-                $('.qrcode-target').click(function(){
-                    if($(this).hasClass('btn-qrcode')){
-                        $(this).removeClass('btn-qrcode').addClass('btn-login').attr('title','去电脑登录');
-                        REF_QRCodeLogin(1);
-                        $('.login-wrap').hide();
-                        $('.login-mobile').eq(0).show();
-                        $.cookie('is_qrcode_login', '1');
-                        return;
-                    }
-                    if($(this).hasClass('btn-login')){
-                        $(this).removeClass('btn-login').addClass('btn-qrcode').attr('title','去手机扫码登录');
-                        $('.login-wrap').show();
-                        $('.login-mobile').hide();
-                        $.cookie('is_qrcode_login', '0');
-                    }
-                });
-
-                var record = 0;
                 //
-                function qrcode_login(result) {
-                    if (typeof result == "undefined" || result == null) {
-                        return;
-                    }
-                    if(result.handle == 'scan'){
-                        if($('.qrcode-target').hasClass('btn-qrcode')){
-                            $('.qrcode-target').removeClass('btn-qrcode').addClass('btn-login').attr('title','去电脑登录');
-                            $('.login-wrap').hide();
-                            $('.login-mobile').eq(0).show();
-                            $.cookie('is_qrcode_login', '1');
-                        }
-                        $('.login-mobile').eq(0).hide();
-                        $('.login-mobile').eq(1).show();
-                        record = 1;
-                    }
-                    if(result.handle == 'login'){
-                        $.post('/site/qrcode-login.html',{
-                            key : result.model.key,
-                            user_id : result.model.user_id,
-                            host : result.model.host,
-                            user_name : result.user_name,
-                        },function(result){
-                            if(result.code == 0){
-                                $.login.close();
-                                $.login.success(result.back_url);
-                            }else{
-                                $.msg(result.message);
-                            }
-                        },'JSON');
-                    }
-                    if(result.handle == 'cancel'){
-                        $('.login-mobile').eq(1).hide();
-                        $('.login-mobile').eq(0).show();
-                        $('.login-mobile').eq(0).find('.qrcode-error').hide();
-                        REF_QRCodeLogin(1);
-                        record = 0;
-                    }
-                }
-                // @param view 1-有二维码的页面 2-二维码失效页面
-                function REF_QRCodeLogin(view){
-                    $.get('/site/get-qrcode-login-key',{ },function(result){
-                        $('.SZY-QRCODE-LOGIN').html('');
-                        $('.SZY-QRCODE-LOGIN').qrcode({
-                            width:150,
-                            height:150,
-                            text: 'http://{{ env('FRONTEND_DOMAIN') }}/site/qrcode-login.html?k=' + result.data.key
-                        });
-
-                        var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';
-
-                        if(view == 1 && is_qrcode_login != '0'){
-                            $('.login-mobile').eq(1).hide();
-                            $('.login-mobile').eq(0).show();
-                            $('.login-mobile').eq(0).find('.qrcode-error').hide();
-                        }
-                        if(view == 2){
-                            $('.login-mobile').eq(0).show();
-                            $('.login-mobile').eq(1).hide();
-                            $('.login-mobile').eq(0).find('.qrcode-error').show();
-                            record = 0;
-                        }
-                        //
-                        WS_QRCodeLogin({
-                            user_id : result.data.user_id,
-                            // url: "ws://push.laravelvip.com:7272",
-                            'url': "{{ get_ws_url('7272') }}",
-                            type: "qrcode_login_set"
-                        });
-                        // 3分钟后过期
-                        setTimeout(function(){
-                            if(record == 0){
-                                REF_QRCodeLogin(1);
-                            }else{
-                                REF_QRCodeLogin(2);
-                            }
-                        }, 180000);
-                    },'JSON');
-                }
+            </script>
+            <script type="text/javascript">
+                //
             </script>
         </div>
     </div>
 </div>
 <!-- 底部 -->
 <div class="login-footer">
-
     {{-- include common footer --}}
     @include('layouts.partials.common_footer')
-
-
 </div>
+
+<script src="/assets/d2eace91/js/layer/layer.js"></script>
+<script src="/assets/d2eace91/js/jquery.method.js"></script>
+<script src="/assets/d2eace91/js/placeholder.js"></script>
+<script src="/assets/d2eace91/js/jquery.supersized.min.js"></script>
+<script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+<script src="/assets/d2eace91/js/jquery.captcha.js"></script>
+<script src="/assets/d2eace91/min/js/message.min.js?v=223"></script>
+<script src="/assets/d2eace91/js/jquery.qrcode.min.js"></script>
+<script src="/assets/d2eace91/min/js/validate.min.js"></script>
+<script src="//{{ config('lrw.frontend_domain') }}/js/common.js"></script>
+<script>
+    // 动态、普通登录切换
+    function setTab(name, cursel, n) {
+        for (i = 1; i <= n; i++) {
+            var menu = $("#" + name + i);
+            var con = $("#con_" + name + "_" + i);
+            if (i == cursel) {
+                $(con).show();
+                $(menu).addClass("active");
+            } else {
+                $(con).hide();
+                $(menu).removeClass("active");
+            }
+        }
+    }
+    $().ready(function() {
+        // 清除模板缓存
+        sessionStorageTemplateClear();
+        $(".login-tab").click(function(){
+            var tab_id = $(this).data("tab_id");
+            setTab("login", tab_id, $(".login-tab").size());
+        });
+        $('.forget-pwd').click(function(){
+            $('.qrcode-target').removeClass('btn-login').addClass('btn-qrcode').attr('title','去手机扫码登录');
+            $('.login-wrap').show();
+            $('.login-mobile').hide();
+            $.cookie('is_qrcode_login', '0', { expires: 365 });
+        });
+        $("body").on('click', '.website-login', function() {
+            var type = $(this).data("id");
+            $("#website_login_form").find("[name='type']").val(type);
+            $("#website_login_form").submit();
+        })
+        var container = $("#{{ $uuid }}");
+        /**
+         * 初始化validator默认值
+         */
+            //先获取到默认函数，不能直接覆盖掉
+        var errorPlacement = $.validator.defaults.errorPlacement;
+        $.validator.setDefaults({
+            errorPlacement: function(error, element) {
+                $(element).parent(".form-control-box").addClass("error");
+                errorPlacement.call(this, error, element);
+            },
+            // 失去焦点验证
+            onfocusout: function(element) {
+                $(element).valid();
+            },
+            // 成功后移除错误提示
+            success: function(error) {
+                var error_id = $(error).attr("id");
+                var element_id = $(error).attr("for");
+                // 移除错误样式
+                $("[id='"+error_id+"']").remove();
+                $(":input[id='"+element_id+"']").parent(".form-control-box").removeClass("error");
+            }
+        });
+        var validator = $(container).find("#form2").validate();
+        // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+        $.validator.addRules($("#client_rules").html());
+        $(container).find("#form2").submit(function() {
+            if(!validator.form()){
+                return false;
+            }
+            //
+            return true;
+            //
+        });
+        var validator1 = $(container).find("#form1").validate();
+        // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+        $.validator.addRules($("#sms_client_rules").html());
+        $(container).find("#form1").submit(function() {
+            if(!validator1.form()){
+                return false;
+            }
+            //
+            return true;
+            //
+        });
+        $(container).find("#btn_send_sms_code").click(function(){
+            if($(this).prop("disabled") == true || $(this).data("doing") == true){
+                return;
+            }
+            var mobile_valid = $("#mobile").valid();
+            if(mobile_valid == false){
+                $("#mobile").focus();
+                return false;
+            }
+            var captcha_valid = true;
+            if($("#captcha_sms").is(":visible") && $("#captcha_sms").size() > 0){
+                captcha_valid = $("#captcha_sms").valid();
+            }
+            if(captcha_valid == false){
+                $("#captcha_sms").focus();
+                return false;
+            }
+            if(mobile_valid && captcha_valid){
+                var target = this;
+                $(this).data("doing", true);
+                var mobile = $("#mobile").val();
+                $.post('/site/sms-captcha', {
+                    mobile: mobile,
+                    captcha: $("#captcha_sms").val()
+                }, function(result){
+                    if (typeof result == 'string') {
+                        try {
+                            result=JSON.parse(result);
+                        } catch(e) {
+                        }
+                    }
+                    if(result.code == 0){
+                        // 开始倒计时
+                        countdown(target, "获取手机验证码");
+                    }else{
+                        // 失败后点击验证码
+                        if($("#captcha_sms-image").is(":visible") && $("#captcha_sms-image").size() > 0){
+                            $("#captcha_sms").val("");
+                            $("#captcha_sms-image").click();
+                        }
+                        // 显示图形验证码
+                        if($("#captcha_sms-image").is(":visible") == false && result.data.show_captcha == 1){
+                            $("#captcha_sms").parents(".captcha").show();
+                        }
+                        var errors = {};
+                        errors["SmsLoginModel[" + result.data.field + "]"] = result.message;
+                        validator1.showErrors(errors);
+                    }
+                    $(target).data("doing", false);
+                }, "json");
+            }
+        });
+        //
+        var wait = null;
+        //
+        function countdown(obj, msg) {
+            obj = $(obj);
+            if(wait === null){
+                wait = 60;
+            }
+            if (wait <= 0) {
+                obj.prop("disabled", false);
+                obj.html(msg);
+                wait = 60;
+            } else {
+                if (msg == undefined || msg == null) {
+                    msg = obj.html();
+                }
+                obj.prop("disabled", true);
+                obj.html(wait + "秒后重新获取");
+                wait--;
+                setTimeout(function() {
+                    countdown(obj, msg)
+                }, 1000)
+            }
+        }
+        if(wait !== null){
+            // 开始倒计时
+            countdown($(container).find("#btn_send_sms_code"), "获取手机验证码");
+        }
+    });
+    //
+    //二维码、PC登录切换
+    $('.qrcode-target').click(function(){
+        if($(this).hasClass('btn-qrcode')){
+            $(this).removeClass('btn-qrcode').addClass('btn-login').attr('title','去电脑登录');
+            REF_QRCodeLogin(1);
+            $('.login-wrap').hide();
+            $('.login-mobile').eq(0).removeClass("hide").show();
+            $.cookie('is_qrcode_login', '1',{ expires: 365 });
+            return;
+        }
+        if($(this).hasClass('btn-login')){
+            $(this).removeClass('btn-login').addClass('btn-qrcode').attr('title','去手机扫码登录');
+            $('.login-wrap').show();
+            $('.login-mobile').hide();
+            $.cookie('is_qrcode_login', '0',{ expires: 365 });
+        }
+    });
+    var record = 0;
+    //
+    function qrcode_login(result) {
+        if (typeof result == "undefined" || result == null) {
+            return;
+        }
+        if(result.handle == 'scan'){
+            if($('.qrcode-target').hasClass('btn-qrcode')){
+                $('.qrcode-target').removeClass('btn-qrcode').addClass('btn-login').attr('title','去电脑登录');
+                $('.login-wrap').hide();
+                $('.login-mobile').eq(0).removeClass("hide").show();
+                $.cookie('is_qrcode_login', '1', { expires: 365 });
+            }
+            $('.login-mobile').eq(0).hide();
+            $('.login-mobile').eq(1).show();
+            record = 1;
+        }
+        if(result.handle == 'login'){
+            $.post('/site/qrcode-login.html',{
+                key : result.model.key,
+                user_id : result.model.user_id,
+                host : result.model.host,
+                user_name : result.user_name,
+            },function(result){
+                if(result.code == 0){
+                    $.login.close();
+                    if(result.back_url){
+                        $.login.success(result.back_url);
+                    }else{
+                        $.go();
+                    }
+                }else{
+                    $.alert(result.message);
+                    REF_QRCodeLogin(1);
+                }
+            },'JSON');
+        }
+        if(result.handle == 'cancel'){
+            $('.login-mobile').eq(1).hide();
+            $('.login-mobile').eq(0).show();
+            $('.login-mobile').eq(0).find('.qrcode-error').hide();
+            REF_QRCodeLogin(1);
+            record = 0;
+        }
+    }
+    var ws = null;
+    // @param view 1-有二维码的页面 2-二维码失效页面
+    function REF_QRCodeLogin(view){
+        $.get('/site/get-qrcode-login-key',{ },function(result){
+            if (typeof result == 'string') {
+                try {
+                    result=JSON.parse(result);
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+            $('.SZY-QRCODE-LOGIN').html('');
+            $('.SZY-QRCODE-LOGIN').qrcode({
+                width:150,
+                height:150,
+                text: '//{{ config('lrw.frontend_domain') }}/site/qrcode-login.html?k=' + result.data.key
+            });
+            var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';
+            if(view == 1 && is_qrcode_login != '0'){
+                $('.login-mobile').eq(1).hide();
+                $('.login-mobile').eq(0).show();
+                $('.login-mobile').eq(0).find('.qrcode-error').hide();
+            }
+            if(view == 2){
+                $('.login-mobile').eq(0).show();
+                $('.login-mobile').eq(1).hide();
+                $('.login-mobile').eq(0).find('.qrcode-error').show();
+                record = 0;
+            }
+            // 0 - 正在链接中
+            // 1 - 已经链接并且可以通讯
+            // 2 - 连接正在关闭
+            // 3 - 连接已关闭或者没有链接成功
+            if(ws == null || ws.readyState == 3){
+                ws = WS_AddUser({
+                    user_id : "user_" + result.data.user_id,
+                    url: "{{ get_ws_url('4431') }}",
+                    type: "add_user"
+                });
+            }else if(ws.readyState == 1){
+                ws.send({
+                    user_id : "user_" + result.data.user_id,
+                    url: "{{ get_ws_url('4431') }}",
+                    type: "add_user"
+                });
+            }
+            // 3分钟后过期
+            setTimeout(function(){
+                if(record == 0){
+                    REF_QRCodeLogin(1);
+                }else{
+                    REF_QRCodeLogin(2);
+                }
+            }, 180000);
+        },'JSON');
+    }
+    //
+    $().ready(function() {
+        $('.site_to_yikf').click(function() {
+            $(this).parent('form').submit();
+        })
+    });
+    //
+</script>
 </body>
 </html>

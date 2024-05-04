@@ -38,13 +38,13 @@
         </td>
         <td>
             <div class="ng-binding">
-                <span></span>
+                <span>{{ $v->storeGroup->group_name ?? '' }}</span>
             </div>
         </td>
         <td>
             <div class="ng-binding">
-                <span>西港镇秦皇岛商之翼网络科技有限公司金屋·秦皇半岛2区</span>
-                <span>网点电话：13111111111 </span>
+                <span>{{ $v->address }}</span>
+                <span>网点电话：{{ $v->tel }} </span>
             </div>
         </td>
         <td>测试网店</td>
@@ -55,7 +55,7 @@
             <a class="c-blue" href="/trade/order/list?stid={{ $v->store_id }}">0</a>
         </td>
         <td>
-            @if($v->is_show == 1)
+            @if($v->store_status == 1)
                 <span data-action="set-is-enable?id={{ $v->store_id }}" class="ico-switch open" data-value="[0,1]" data-label='["\u5426","\u662f"]' data-class='["fa fa-toggle-off","fa fa-toggle-on"]'><i class="fa fa-toggle-on"></i>是</span>
             @else
                 <span data-action="set-is-enable?id={{ $v->store_id }}" class="ico-switch" data-value="[0,1]" data-label='["\u5426","\u662f"]' data-class='["fa fa-toggle-off","fa fa-toggle-on"]'><i class="fa fa-toggle-off"></i>否</span>

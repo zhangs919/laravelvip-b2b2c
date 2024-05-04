@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
@@ -16,12 +16,15 @@ class SeoCategoryController extends Backend
 
     protected $tools;
 
-    public function __construct()
+    public function __construct(
+        CategoryRepository $category
+        ,ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->category = new CategoryRepository();
-        $this->tools = new ToolsRepository();
+        $this->category = $category;
+        $this->tools = $tools;
     }
 
 

@@ -16,10 +16,10 @@
 
     <div class="m-t-20">
         <div class="table-content m-t-10 clearfix  pull-left col-sm-8 p-l-0">
-            <form id="SelfShopModel" class="form-horizontal" name="SelfShopModel" action="/shop/self-shop/edit?id={{ $info->shop_id }}&amp;is_supply=0" method="post">
-                {{ csrf_field() }}
+            <form id="SelfShopModel" class="form-horizontal" name="SelfShopModel" action="/shop/self-shop/edit?id={{ $info->shop_id }}&is_supply=0" method="post">
+                @csrf
 
-                <input type="hidden" id="selfshopmodel-is_supply" class="form-control" name="SelfShopModel[is_supply]" value="0">
+                <input type="hidden" id="selfshopmodel-is_supply" class="form-control" name="SelfShopModel[is_supply]" value="{{ $info->is_supply }}">
 
 
                 <!-- 店铺ID -->
@@ -63,48 +63,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- 店铺所属分类 -->
-                <div class="simple-form-field" >
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">
-                            <span class="text-danger ng-binding">*</span>
-                            <span class="ng-binding">店铺所属分类：</span>
-                        </label>
-                        <div class="col-sm-9">
-                            <div class="form-control-box">
-
-                                <div class="form-control-box choosen-select-box">
-                                    <a id="btn_add_other_cat" class="btn btn-primary pull-left m-2">
-                                        <i class="fa fa-plus"></i>
-                                        添加
-                                    </a>
-
-
-                                    @foreach($info->cat_ids as $cat_id)
-                                        <div class="choosen-select-item other-cat">
-                                            <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]" style="display: none;">
-                                                <option value="">-- 请选择 --</option>
-                                                @foreach($cat_list as $cat)
-
-                                                    <option value="{{ $cat['cls_id'] }}" @if($cat['cls_id'] == $cat_id) selected @endif>{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
-
-                                                @endforeach
-
-                                            </select>
-                                            <a class="choosen-select-delete other-cat-delete">×</a>
-                                        </div>
-                                    @endforeach
-
-                                </div>
-                                <input type="hidden" id="selfshopmodel-cat_id" class="form-control" name="SelfShopModel[cat_id]" value="">
-
-
-                            </div>
-
-                            <div class="help-block help-block-t"></div>
-                        </div>
-                    </div>
-                </div>
                 <!-- 结算周期 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
@@ -128,6 +86,48 @@
                             </div>
 
                             <div class="help-block help-block-t"><div class="help-block help-block-t">商家与平台方资金进行结算的周期，线下协商，后台请勿随意修改</div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 店铺所属分类 -->
+                <div class="simple-form-field" >
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">
+                            <span class="text-danger ng-binding">*</span>
+                            <span class="ng-binding">店铺所属分类：</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <div class="form-control-box">
+
+                                <div class="form-control-box choosen-select-box">
+                                    <a id="btn_add_other_cat" class="btn btn-primary pull-left m-2">
+                                        <i class="fa fa-plus"></i>
+                                        添加
+                                    </a>
+
+
+                                    @foreach($shop_bind_class as $bind_class)
+                                        <div class="choosen-select-item other-cat">
+                                            <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]" style="display: none;">
+                                                <option value="">-- 请选择 --</option>
+                                                @foreach($cat_list as $cat)
+
+                                                    <option value="{{ $cat['cls_id'] }}" @if($cat['cls_id'] == $bind_class->cls_id) selected @endif>{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
+
+                                                @endforeach
+
+                                            </select>
+                                            <a class="choosen-select-delete other-cat-delete">×</a>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                                <input type="hidden" id="selfshopmodel-cat_id" class="form-control" name="SelfShopModel[cat_id]" value="">
+
+
+                            </div>
+
+                            <div class="help-block help-block-t"></div>
                         </div>
                     </div>
                 </div>
@@ -380,72 +380,74 @@
             <dl>
                 <dt>店主账号：</dt>
                 <dd>
-                    {{ $info->user_name }}
+                    {{ $info->user->user_name ?? '' }}
 
                 </dd>
             </dl>
             <dl>
                 <dt>认证手机：</dt>
-                <dd></dd>
+                <dd>{{ $info->user->mobile ?? '' }}</dd>
             </dl>
             <dl>
                 <dt>认证邮箱：</dt>
-                <dd></dd>
+                <dd>{{ $info->user->email ?? '' }}</dd>
             </dl>
             <dl>
                 <dt>开店时间：</dt>
-                <dd>{{ $info->created_at }}</dd>
+                <dd>{{ format_time($info->open_time) }}</dd>
             </dl>
             <dl>
                 <dt>会员数量：</dt>
                 <dd>
-                    <font class="c-red m-r-5">0</font>
+                    <font class="c-red m-r-5">{{ $info->member_count ?? 0 }}</font>
                 </dd>
             </dl>
             <dl>
                 <dt>订单数量：</dt>
                 <dd>
-                    <font class="c-red m-r-5">0</font>
+                    <font class="c-red m-r-5">{{ $info->order_info_count ?? 0 }}</font>
                 </dd>
             </dl>
             <dl>
                 <dt>店铺信誉：</dt>
                 <dd>
-					<span>
-						<img src="" class="rank" title="" data-toggle="tooltip" data-placement="auto bottom" height="16" />
-					</span>
-                    <span class="m-l-10">0 分</span>
+
+				<span>
+					<img src="{{ get_image_url($info->credit_img) }}" class="rank" title="" data-toggle="tooltip" data-placement="auto bottom" height="16" data-original-title="{{ $info->credit_name }}">
+				</span>
+
+                    <span class="m-l-10">{{ $info->credit }} 分</span>
                 </dd>
             </dl>
             <dl>
                 <dt>店铺评分：</dt>
                 <dd>
                     <div class="ng-binding">
-						<span>
-							综合：
-							<font class="c-red m-r-5">5.00</font>
-							分
-						</span>
+					<span>
+						综合：
+						<font class="c-red m-r-5">{{ $info->score }}</font>
+						分
+					</span>
                         <span>
-							描述：
-							<font class="c-red m-r-5">5.00</font>
-							分
-						</span>
+						描述：
+						<font class="c-red m-r-5">{{ $info->desc_score }}</font>
+						分
+					</span>
                         <span>
-							服务：
-							<font class="c-red m-r-5">5.00</font>
-							分
-						</span>
+						服务：
+						<font class="c-red m-r-5">{{ $info->service_score }}</font>
+						分
+					</span>
                         <span>
-							发货：
-							<font class="c-red m-r-5">5.00</font>
-							分
-						</span>
+						发货：
+						<font class="c-red m-r-5">{{ $info->send_score }}</font>
+						分
+					</span>
                         <span>
-							物流：
-							<font class="c-red m-r-5">5.00</font>
-							分
-						</span>
+						物流：
+						<font class="c-red m-r-5">{{ $info->logistics_score }}</font>
+						分
+					</span>
                     </div>
                 </dd>
             </dl>
@@ -486,18 +488,17 @@
     <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180027"></script>
     <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180027"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180027"></script>
-
-    <script id="other_cat_template" type='text'>
-<div class="choosen-select-item other-cat">
-	<select id="cat_ids" class="form-control chosen-select" name="cat_ids[]">
-<option value="">-- 请选择 --</option>
-@foreach($cat_list as $cat)
-            <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
+    <script id="other_cat_template" type="text">
+        <div class="choosen-select-item other-cat">
+            <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]">
+                <option value="">-- 请选择 --</option>
+                @foreach($cat_list as $cat)
+                    <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
                 @endforeach
-</select>
-	<a class="choosen-select-delete other-cat-delete">×</a>
-</div>
-</script>
+            </select>
+            <a class="choosen-select-delete other-cat-delete">×</a>
+        </div>
+    </script>
     <!-- 验证规则 -->
     <script id="client_rules" type="text">
 [{"id": "selfshopmodel-shop_sort", "name": "SelfShopModel[shop_sort]", "attribute": "shop_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "selfshopmodel-shop_id", "name": "SelfShopModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "selfshopmodel-clearing_cycle", "name": "SelfShopModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "selfshopmodel-clearing_cycle", "name": "SelfShopModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "selfshopmodel-user_id", "name": "SelfShopModel[user_id]", "attribute": "user_id", "rules": {"required":true,"messages":{"required":"绑定店主帐号不能为空。"}}},{"id": "selfshopmodel-shop_name", "name": "SelfShopModel[shop_name]", "attribute": "shop_name", "rules": {"required":true,"messages":{"required":"店铺名称不能为空。"}}},{"id": "selfshopmodel-cat_id", "name": "SelfShopModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"店铺所属分类不能为空。"}}},{"id": "selfshopmodel-shop_name", "name": "SelfShopModel[shop_name]", "attribute": "shop_name", "rules": {"string":true,"messages":{"string":"店铺名称必须是一条字符串。","maxlength":"店铺名称只能包含至多20个字符。"},"maxlength":20}},{"id": "selfshopmodel-region_code", "name": "SelfShopModel[region_code]", "attribute": "region_code", "rules": {"string":true,"messages":{"string":"Region Code必须是一条字符串。","maxlength":"Region Code只能包含至多60个字符。"},"maxlength":60}},{"id": "selfshopmodel-close_info", "name": "SelfShopModel[close_info]", "attribute": "close_info", "rules": {"string":true,"messages":{"string":"店铺状态修改备注必须是一条字符串。","maxlength":"店铺状态修改备注只能包含至多500个字符。"},"maxlength":500}},{"id": "selfshopmodel-shop_sort", "name": "SelfShopModel[shop_sort]", "attribute": "shop_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "selfshopmodel-shop_name", "name": "SelfShopModel[shop_name]", "attribute": "shop_name", "rules": {"ajax":{"url":"/shop/self-shop/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcU2VsZlNob3BNb2RlbA==","attribute":"shop_name","params":["SelfShopModel[shop_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]

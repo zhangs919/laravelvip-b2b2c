@@ -45,12 +45,15 @@ class CustomFormDataController extends Seller
     protected $customForm;
     protected $customFormData;
 
-    public function __construct()
+    public function __construct(
+        CustomFormRepository $customForm
+        ,CustomFormDataRepository $customFormData
+    )
     {
         parent::__construct();
 
-        $this->customForm = new CustomFormRepository();
-        $this->customFormData = new CustomFormDataRepository();
+        $this->customForm = $customForm;
+        $this->customFormData = $customFormData;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }

@@ -1,11 +1,12 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Shop;
+namespace App\Modules\Backend\Http\Controllers\Shop;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ShopClassRepository;
+use App\Repositories\ShopCreditRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
@@ -25,15 +26,23 @@ class SelfShopController extends Backend
     protected $category;
     protected $user;
     protected $shopClass;
+    protected $shopCredit;
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        ,CategoryRepository $category
+        ,UserRepository $user
+        ,ShopClassRepository $shopClass
+        ,ShopCreditRepository $shopCredit
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
-        $this->category = new CategoryRepository();
-        $this->user = new UserRepository();
-        $this->shopClass = new ShopClassRepository();
+        $this->shop = $shop;
+        $this->category = $category;
+        $this->user = $user;
+        $this->shopClass = $shopClass;
+        $this->shopCredit = $shopCredit;
     }
 
     public function lists(Request $request)
@@ -42,7 +51,7 @@ class SelfShopController extends Backend
         $fixed_title = '自营店铺 - '.$title;
         $is_supply = $request->get('is_supply', 0);
 
-        $this->sublink($this->links, 'list?is_supply=0', 'is_supply', '', 'add,edit');
+        $this->sublink($this->links, 'list?is_supply=0', '', '', 'add,edit');
 
         $action_span = [
             [
@@ -65,7 +74,8 @@ class SelfShopController extends Backend
 
         $params = $request->all();
         $where = [];
-        $where[] = ['is_own_shop', 1]; // 自营店铺
+        $where[] = ['shop_type', 0]; // 自营店铺
+        $where[] = ['shop_audit', 1]; // 审核通过
 
         // 搜索条件
         $search_arr = ['key_word', 'start_from', 'start_to', 'end_from', 'end_to', 'credit_from', 'credit_to'];
@@ -82,10 +92,20 @@ class SelfShopController extends Backend
         // 列表
         $condition = [
             'where' => $where,
+            'relation' => ['orderInfo','member'],
             'sortname' => 'shop_id',
             'sortorder' => 'desc'
         ];
         list($list, $total) = $this->shop->getList($condition);
+        if (!$list->isEmpty()) {
+            foreach ($list as $item) {
+                // 店铺信誉
+                $credit = $this->shopCredit->getCreditInfoByScore($item->credit);
+                $item->credit_name = $credit['credit_name'];
+                $item->credit_img = $credit['credit_img'];
+                $item->score = '5.00'; // 需计算
+            }
+        }
         $pageHtml = pagination($total);
 
         $compact = compact('title', 'list', 'total', 'pageHtml');
@@ -167,9 +187,13 @@ class SelfShopController extends Backend
         $id = $request->get('id');
 
         $info = $this->shop->getById($id);
+        // 店铺信誉
+        $credit = $this->shopCredit->getCreditInfoByScore($info->credit);
+        $info->credit_name = $credit['credit_name'];
+        $info->credit_img = $credit['credit_img'];
+        $info->score = '5.00'; // 需计算
 
         $this->sublink($this->links, 'edit', 'is_supply', '', 'add');
-
 
         $fixed_title = '自营店铺 - '.$title;
 
@@ -198,11 +222,10 @@ class SelfShopController extends Backend
         ];
         list($cat_list, $total) = $this->shopClass->getList($condition, '', false, true);
 
-        $info->cat_ids = explode(',', $info->cat_ids);
+        $shop_bind_class = $info->shopBindClass;
 
-        return view('shop.self-shop.edit', compact('title', 'info', 'cat_list'));
+        return view('shop.self-shop.edit', compact('title', 'info', 'cat_list', 'shop_bind_class'));
     }
-
 
     public function saveData(Request $request)
     {
@@ -221,11 +244,11 @@ class SelfShopController extends Backend
             $msg = '自营店铺编辑';
         }else {
             // 添加
-            $post['is_own_shop'] = 1;
-            $post['shop_type'] = 2;
-            $post['user_name'] = DB::table('user')->where('user_id', $post['user_id'])->value('user_name');
-
-            $ret = $this->shop->addShop($post);
+            $post['shop_type'] = 0; // 自营店铺
+            $post['open_time'] = time(); // 开店时间
+            $post['shop_audit'] = 1; // 审核通过
+            $post['shop_status'] = 1; // 店铺状态 开启
+            $ret = $this->shop->addShop($post, $shopFieldValueModel);
             $msg = '自营店铺添加';
         }
 

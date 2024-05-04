@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -18,11 +18,11 @@ class CopyrightAuthController extends Backend
 
     protected $copyrightAuth;
 
-    public function __construct()
+    public function __construct(CopyrightAuthRepository $copyrightAuth)
     {
         parent::__construct();
 
-        $this->copyrightAuth = new CopyrightAuthRepository();
+        $this->copyrightAuth = $copyrightAuth;
     }
 
 

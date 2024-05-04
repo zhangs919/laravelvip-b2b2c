@@ -33,10 +33,10 @@
                         <span class="section-logo section-logo-sousou"> <i></i></span>
                     </div>
                     <div class="desc col-sm-8">
-                        <h3 class="f20 section-title">翼物流</h3>
+                        <h3 class="f20 section-title">云物流</h3>
                         <p class="m-t-5">轻松整合城市闲散的兼职配送人员与车辆资源为已所用，拥有定位、抢单、议价等功能，进而实现1小时快速送达，解决配送大难题！</p>
                         <a href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&amp;key=xxxxxxxxxxxxx" class="btn btn-primary m-t-20 m-r-20" target="_blank">联系客服</a>
-                        <a href="http://www.sousou56.com/" class="btn btn-default bg-fff m-t-20" target="_blank">了解详情</a>
+                        <a href="http://www.xxx.com/" class="btn btn-default bg-fff m-t-20" target="_blank">了解详情</a>
                     </div>
                 </li>
                 <li class="m-b-15">
@@ -44,10 +44,10 @@
                         <span class="section-logo section-logo-erp"> <i></i></span>
                     </div>
                     <div class="desc col-sm-8">
-                        <h3 class="f20 section-title">翼ERP</h3>
+                        <h3 class="f20 section-title">云ERP</h3>
                         <p class="m-t-5">ERP集采购、销售、仓储、CRM、账款、售后服务等全面管理功能于一身，可与商城完美对接，解决商城管理大难题！</p>
                         <a href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&amp;key=xxxxxxxxxxxxx" class="btn btn-primary m-t-20 m-r-20 " target="_blank">联系客服</a>
-                        <a href="http://www.68erp.com/" class="btn btn-default bg-fff m-t-20" target="_blank">了解详情</a>
+                        <a href="http://www.xxx.com/" class="btn btn-default bg-fff m-t-20" target="_blank">了解详情</a>
                     </div>
                 </li>
                 <li class="m-b-15">
@@ -55,10 +55,10 @@
                         <span class="section-logo section-logo-cashier"> <i></i></span>
                     </div>
                     <div class="desc col-sm-8">
-                        <h3 class="f20 section-title">翼收银</h3>
-                        <p class="m-t-5">翼收银可真正的将线下商务机会与互联网技术结合在一起，让互联网成为线下交易的前台，实现线上线下一体化管理，数据同步！</p>
+                        <h3 class="f20 section-title">云收银</h3>
+                        <p class="m-t-5">云收银可真正的将线下商务机会与互联网技术结合在一起，让互联网成为线下交易的前台，实现线上线下一体化管理，数据同步！</p>
                         <a href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&amp;key=xxxxxxxxxxxxx" class="btn btn-primary m-t-20 m-r-20" target="_blank">联系客服</a>
-                        <a href="http://www.shouyingou.com/" class="btn btn-default bg-fff m-t-20" target="_blank">了解详情</a>
+                        <a href="http://www.xxx.com/" class="btn btn-default bg-fff m-t-20" target="_blank">了解详情</a>
                     </div>
                 </li>
             </ul>

@@ -12,6 +12,6 @@ class TemplateCat extends BaseModel
 
 
     protected $fillable = [
-        'tpl_code', 'selector_type', 'cat_id', 'number', 'width', 'height'
+        'tpl_code', 'selector_type', 'cat_id', 'number', 'width', 'height','explain_msg'
     ];
 }

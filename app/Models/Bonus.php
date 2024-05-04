@@ -38,6 +38,7 @@ class Bonus extends BaseModel
         'min_goods_amount','is_original_price','start_time','end_time',
         'is_enable','is_delete','add_time','sort',
         'receive_number','used_number',
+
         'goods_ids'
     ];
 

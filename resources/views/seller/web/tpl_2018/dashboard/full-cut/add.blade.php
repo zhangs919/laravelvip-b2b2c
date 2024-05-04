@@ -12,7 +12,7 @@
 
 	<div class="table-content m-t-30 clearfix limit-discount-goods">
 		<form id="FullCutModel" class="form-horizontal" name="FullCutModel" action="/dashboard/full-cut/add" method="post" enctype="multipart/form-data">
-			{{ csrf_field() }}
+			@csrf
             <input type="hidden" id="fullcutmodel-act_id" class="form-control" name="FullCutModel[act_id]" value="{{ $model['act_id'] ?? '' }}">
 			<!-- 套餐名称 -->
 			<div class="simple-form-field" >

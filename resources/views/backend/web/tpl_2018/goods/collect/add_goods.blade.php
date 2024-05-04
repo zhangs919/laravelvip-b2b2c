@@ -15,14 +15,19 @@
 @section('content')
 
     <div class="data-import-box">
-        <h5 class="text-c">开始导入<strong>1</strong>条数据</h5>
+        <h5 class="text-c">开始导入<strong>{{ $total }}</strong>条数据</h5>
         <div class="data-list">
             <ul>
-                <li><span class="m-r-5">【ID】577454871963</span><span class="name m-r-5">【GBOY秋冬季港风chic加绒卫衣男连帽衫潮牌情侣加厚ins超火的外套】</span><span class="m-r-5" id="577454871963">等待抓取</span></li>
-
+                @foreach($list as $item)
+                    <li>
+                        <span class="m-r-5">【ID】{{ $item['third_goods_id'] }}</span>
+                        <span class="name m-r-5">{{ $item['goods_name'] }}</span>
+                        <span class="m-r-5" id="{{ $item['third_goods_id'] }}">等待抓取</span>
+                    </li>
+                @endforeach
             </ul>
         </div>
-        <p class="text-c c-green m-b-5">数据导入成功！（用时：<span id="dotime">10</span>秒）</p>
+        <p class="text-c c-green m-b-5">数据导入成功！（用时：<span id="dotime">0</span>秒）</p>
         <p class="text-c c-red hide m-b-5">数据导入失败！（用时：10秒）</p>
         <p class="text-c">进入<a class="btn-link" href="/goods/lib-goods/list">本地商品库</a></p>
 
@@ -54,10 +59,10 @@
 @section('footer_script')
 
     <script>
-        var ids = [577454871963];
-        var cat_id = 617;
-        var type_id = 2;
-        var is_comment = 0;
+        var ids = {!! $ids !!};
+        var cat_id = {{ $post_collect_goods['goods_category'] }};
+        var type_id = {{ $post_collect_goods['goods_type'] }};
+        var is_comment = {{ $post_collect_goods['is_comment'] }};
         var do_time = 0;
         //console.info(goods_ids);
         ajaxAdd();

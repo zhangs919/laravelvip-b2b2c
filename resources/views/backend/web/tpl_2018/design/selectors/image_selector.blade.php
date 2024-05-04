@@ -49,7 +49,7 @@
         </div>
         <ul class="explain-panel">
             <li>
-                <span>为达到页面效果，建议上传{{ $templateCat['number'] }}张 {{ $templateCat['width'] }}*{{ $templateCat['height'] }}</span>
+                <span>为达到页面效果，建议上传{{ $templateCat['number'] ?? 0 }}张 {{ $templateCat['width'] ?? 0 }}*{{ $templateCat['height'] ?? 0 }}</span>
             </li>
 
         </ul>

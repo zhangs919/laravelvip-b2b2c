@@ -17,7 +17,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ShopClassModel" class="form-horizontal" name="ShopClassModel" action="/shop/shop-class/add" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="shopclassmodel-cls_id" class="form-control" name="ShopClassModel[cls_id]" value="{{ $info->cls_id ?? '' }}">
             <!-- 分类名称 -->
@@ -252,7 +252,6 @@
                 $("#ShopClassModel").submit();
             });
             $("#cls_image_container").imagegroup({
-                // host: 'http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/',
                 host: '{{ get_oss_host() }}',
                 size: 1,
                 values: ['{{ $info->cls_image ?? '' }}'],

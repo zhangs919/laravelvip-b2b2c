@@ -59,12 +59,14 @@ class SiteController extends Foundation
      * @param ImageRepository $imageRepository
      * @param TplBackupRepository $tplBackupRepository
      */
-    public function __construct(ToolsRepository $tools,
-                                RegionRepository $regionRepository,
-                                CategoryRepository $categoryRepository,
-                                ImageDirRepository $imageDirRepository,
-                                ImageRepository $imageRepository,
-                                TplBackupRepository $tplBackupRepository)
+    public function __construct(
+        ToolsRepository $tools
+        ,RegionRepository $regionRepository
+        ,CategoryRepository $categoryRepository
+        ,ImageDirRepository $imageDirRepository
+        ,ImageRepository $imageRepository
+        ,TplBackupRepository $tplBackupRepository
+    )
     {
         parent::__construct();
 
@@ -127,7 +129,6 @@ class SiteController extends Foundation
         if (!isset($params['output'])) {
             $tpl = 'partials._image_gallery_list';
         }
-//        $tpl = 'partials._image_gallery_list';
         if ($request->method() == 'POST') {
             // 上传图片
             $dir_id = $request->post('dir_id', 0); // 相册id
@@ -315,56 +316,6 @@ class SiteController extends Foundation
      * @param Request $request
      * @return mixed
      */
-//    public function regionList(Request $request)
-//    {
-//
-//        // 判断传入的值是parent_code 还是 region_code
-//        $parent_code = !is_null($request->get('parent_code')) ? $request->get('parent_code') : 0;
-//        $field = 'parent_code';
-//        $params = $request->all();
-//
-//        $level_names = [
-//            0 => "",
-//            1 => '省',
-//            2 => '市',
-//            3 => '区/县',
-//            4 => '镇',
-//            5 => '街道/村'
-//        ];
-//        $extras = [
-//            'level_names' => $level_names,
-//        ];
-//
-//        $region_names = [];
-//        if (isset($params['region_code'])) {
-//            // 查询region_names
-//            $region_info = $this->regions->getByField('parent_code', $params['region_code']);
-//            if (!empty($region_info)) {
-//                $region_names[$params['region_code']] = $region_info->region_name;
-//                $condition = [
-//                    'where' => [[$field, $parent_code]],
-//                    'limit' => 0
-//                ];
-//                list($region_list, $total) = $this->regions->getList($condition);
-//
-//                $data[0] = $region_list;
-//
-//            }
-//            $extras['region_names'] = $region_names;
-//            $parent_code = $request->get('region_code', 0);
-////            $field = 'region_code';
-//        }
-//        $condition = [
-//            'where' => [[$field, $parent_code]],
-//            'limit' => 0
-//        ];
-//        list($region_list, $total) = $this->regions->getList($condition);
-//
-//
-//
-//        $data[0] = $region_list;
-//        return result(0, $data, '', $extras);
-//    }
     public function regionList(Request $request)
     {
 
@@ -387,28 +338,48 @@ class SiteController extends Foundation
 
         if (isset($params['region_code'])) {
             // 查询region_names
-            $region_names = array_reverse(get_parent_region_list($params['region_code']));
-            $region_names = array_column($region_names, 'region_name', 'region_code');
-            $rr = array_keys($region_names);
-            if (is_int($rr[0])) {
-                array_unshift($rr, 0);
-                if (count($rr) > 3) {
-                    array_pop($rr); // 移除最后一个
+            $region_names = [];
+            if ($params['region_code'] > 0) {
+                $region_names = array_reverse(get_parent_region_list($params['region_code']));
+                $region_names = array_column($region_names, 'region_name', 'region_code');
+                $rr = array_keys($region_names);
+                if (is_int($rr[0])) {
+                    array_unshift($rr, 0);
+                    if (count($rr) > 3) {
+                        array_pop($rr); // 移除最后一个
+                    }
                 }
-            }
-            $data = [];
-            foreach ($rr as $key=>$p_code) {
+                $data = [];
+                foreach ($rr as $key=>$p_code) {
+                    $condition = [
+                        'where' => [[$field, strval($p_code)]],
+                        'limit' => 0,
+                        'field' => [
+                            'center', 'city_code', 'is_enable', 'is_scope', 'level',
+                            'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
+                        ],
+                        'sortname' => 'region_id',
+                        'sortorder' => 'asc'
+                    ];
+                    list($region_list, $total) = $this->regions->getList($condition);
+                    $data[$key] = $region_list;
+                }
+            } else {
                 $condition = [
-                    'where' => [[$field, strval($p_code)]],
+                    'where' => [[$field, 0]],
                     'limit' => 0,
                     'field' => [
                         'center', 'city_code', 'is_enable', 'is_scope', 'level',
                         'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                    ]
+                    ],
+                    'sortname' => 'region_id',
+                    'sortorder' => 'asc'
                 ];
                 list($region_list, $total) = $this->regions->getList($condition);
-                $data[$key] = $region_list;
+                $data[] = $region_list;
             }
+
+
             $extras['region_names'] = $region_names;
 
             return result(0, $data, '', $extras);
@@ -420,7 +391,9 @@ class SiteController extends Foundation
                 'field' => [
                     'center', 'city_code', 'is_enable', 'is_scope', 'level',
                     'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                ]
+                ],
+                'sortname' => 'region_id',
+                'sortorder' => 'asc'
             ];
             list($region_list, $total) = $this->regions->getList($condition);
 

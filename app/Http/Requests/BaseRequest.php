@@ -18,7 +18,7 @@ class BaseRequest extends FormRequest
      *
      * @return array|string
      */
-    protected function validationData()
+    public function validationData()
     {
         if ($this->formModel != '') {
             // If the formModel is customized.

@@ -1,6 +1,6 @@
 <div class="table-content m-t-30 clearfix">
     <form id="PrintSpecModel" class="form-horizontal" name="PrintSpecModel" action="/shop/print-spec/config-printer?id={{ $info->id }}" method="post">
-        {{ csrf_field() }}
+        @csrf
         <!-- 隐藏域 -->
         <input type="hidden" id="printspecmodel-id" class="form-control" name="PrintSpecModel[id]" value="{{ $info->id }}">
         <!-- 打印机 -->

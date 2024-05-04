@@ -3,16 +3,19 @@
 namespace App\Repositories;
 
 use App\Models\Article;
+use Illuminate\Support\Facades\Cache;
 
 class ArticleRepository
 {
     use BaseRepository;
 
     protected $model;
+    protected $articleCat;
 
     public function __construct()
     {
         $this->model = new Article();
+        $this->articleCat = new ArticleCatRepository();
     }
 
 
@@ -23,11 +26,13 @@ class ArticleRepository
      */
     public function getHelpCenterArticle()
     {
-        // 帮助中心文章分类
-        $articleCat = new ArticleCatRepository();
-        $class_list = $articleCat->getHelpCenterClass();
-        $article = new ArticleRepository();
 
+        $cache_id = CACHE_KEY_HELP_CENTER_ARTICLES[0];
+        if ($class_list = cache()->get($cache_id)) {
+            return $class_list;
+        }
+        // 帮助中心文章分类
+        $class_list = $this->articleCat->getHelpCenterClass();
         if (!empty($class_list)) {
             foreach ($class_list as &$item) {
                 $aCondition = [
@@ -37,10 +42,11 @@ class ArticleRepository
                     ],
                     'limit' => 0,
                 ];
-                list($articles, $articleTotal) = $article->getList($aCondition);
+                list($articles, $articleTotal) = $this->model->getList($aCondition);
                 $item['article'] = $articles->toArray();
             }
         }
+        cache()->put($cache_id, $class_list, CACHE_KEY_HELP_CENTER_ARTICLES[1]);
 
         return $class_list;
     }

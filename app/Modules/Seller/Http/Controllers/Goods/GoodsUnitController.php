@@ -1,9 +1,28 @@
 <?php
 
+// +----------------------------------------------------------------------
+// | laravelvip 乐融沃B2B2C商城系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2017-2027 http://www.laravelvip.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Notice: This code is not open source, it is strictly prohibited
+// |         to distribute the copy, otherwise it will pursue its
+// |         legal responsibility.
+// +----------------------------------------------------------------------
+// | 版权所有 2015-2027 云南乐融沃网络科技有限公司，并保留所有权利。
+// | 网站地址: http://www.laravelvip.com
+// +----------------------------------------------------------------------
+// | 这不是一个自由软件！禁止拷贝本软件副本，否则将追究其法律责任！
+// | 如需使用，请移步官网购买正版授权。
+// +----------------------------------------------------------------------
+// | Author: 雲溪荏苒 <290648237@qq.com>
+// | Date:2018-08-29
+// | Description:
+// +----------------------------------------------------------------------
+
 namespace App\Modules\Seller\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Seller;
-use App\Repositories\AttributeRepository;
 use App\Repositories\GoodsUnitRepository;
 use Illuminate\Http\Request;
 
@@ -16,16 +35,17 @@ class GoodsUnitController extends Seller
         ['url' => 'goods/goods-unit/list', 'text' => '商品单位'],
         ['url' => 'goods/layout/list', 'text' => '详情版式'],
         ['url' => 'goods/questions/list', 'text' => '常见问题'],
+        ['url' => 'goods/shop-shipper/list', 'text' => '商品发货方'],
     ];
 
     protected $goodsUnit;
 
 
-    public function __construct()
+    public function __construct(GoodsUnitRepository $goodsUnit)
     {
         parent::__construct();
 
-        $this->goodsUnit = new GoodsUnitRepository();
+        $this->goodsUnit = $goodsUnit;
 
         $this->set_menu_select('goods', 'goods-set');
 
@@ -81,7 +101,6 @@ class GoodsUnitController extends Seller
         list($list, $total) = $this->goodsUnit->getList($condition);
 
         $pageHtml = pagination($total);
-//        dd($list);
         if ($request->ajax()) {
             $render = view('goods.goods-unit.partials._list', compact('list', 'total', 'pageHtml'))->render();
             return result(0, $render);
@@ -160,8 +179,8 @@ class GoodsUnitController extends Seller
      */
     public function delete(Request $request)
     {
-        $id = $request->post('id');
-        $ret = $this->goodsUnit->batchDel($id);
+        $ids = $request->post('ids');
+        $ret = $this->goodsUnit->batchDel(explode(',', $ids));
         if ($ret === false) {
             // Log
             return result(-1, '', '删除失败');
@@ -183,11 +202,11 @@ class GoodsUnitController extends Seller
 
         if ($ret === false) {
             // Log
-//            admin_log('商品属性批量删除失败。ID：'.$ids);
+            shop_log('商品属性批量删除失败。ID：'.$ids);
             return result(-1, '', '删除失败');
         }
         // Log
-//        admin_log('商品属性批量删除成功。ID：'.$ids);
+        shop_log('商品属性批量删除成功。ID：'.$ids);
         return result(0, '', '删除成功');
     }
 }

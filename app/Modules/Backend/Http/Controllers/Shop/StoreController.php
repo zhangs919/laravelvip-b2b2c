@@ -20,7 +20,7 @@
 // | Description:网点控制
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Backend\Http\Controllers\Shop;
+namespace App\Modules\Backend\Http\Controllers\Shop;
 
 
 use App\Models\Shop;
@@ -45,11 +45,11 @@ class StoreController extends Backend
 
     protected $shop;
 
-    public function __construct()
+    public function __construct(ShopRepository $shop)
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
+        $this->shop = $shop;
     }
 
     public function lists(Request $request)

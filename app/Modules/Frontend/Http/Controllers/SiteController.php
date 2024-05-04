@@ -7,11 +7,18 @@ use App\Models\Compare;
 use App\Models\DefaultSearch;
 use App\Models\HotSearch;
 use App\Models\TemplateItem;
+use App\Models\User;
 use App\Modules\Base\Http\Controllers\Frontend;
+use App\Repositories\GoodsRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\TemplateItemRepository;
 use App\Repositories\ToolsRepository;
+use App\Repositories\UserMessageRepository;
+use App\Services\AddressParse;
+use App\Services\AmapService;
+use App\Services\ConnectApi;
 use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -21,14 +28,24 @@ class SiteController extends Frontend
     protected $regions;
     protected $tools;
     protected $templateItem;
+    protected $connectApi;
+    protected $goods;
 
-    public function __construct()
+    public function __construct(
+        RegionRepository $regions
+        ,ToolsRepository $tools
+        ,TemplateItemRepository $templateItem
+        ,ConnectApi $connectApi
+        ,GoodsRepository $goods
+    )
     {
         parent::__construct();
 
-        $this->regions = new RegionRepository();
-        $this->tools = new ToolsRepository();
-        $this->templateItem = new TemplateItemRepository();
+        $this->regions = $regions;
+        $this->tools = $tools;
+        $this->templateItem = $templateItem;
+        $this->connectApi = $connectApi;
+        $this->goods = $goods;
 
     }
 
@@ -38,7 +55,7 @@ class SiteController extends Frontend
 
         // 默认搜索词
         $default_keywords = [];
-        $default_search = DefaultSearch::where('is_show', 1)->orderBy('sort', 'asc')->get();
+        $default_search = (new DefaultSearch())->getCacheData();
         if (!empty($default_search)) {
             foreach ($default_search as $v) {
                 if ($v->search_type == 1 && $cat_id) {
@@ -63,8 +80,8 @@ class SiteController extends Frontend
 
         // 热搜词
         $show_keywords = [];
-        $hot_search = HotSearch::where('is_show', 1)->select(['id','keyword','show_words'])->limit(10)->orderBy('sort', 'asc')->get();
-        if (!empty($hot_search)) {
+        $hot_search = (new HotSearch())->getCacheData();
+        if (!$hot_search->isEmpty()) {
             foreach ($hot_search as $v) {
                 $url = "search.html?keyword=".$v->keyword;
                 $v->url = $url;
@@ -74,34 +91,114 @@ class SiteController extends Frontend
         }
         // 搜索历史
         $search_records = !empty($_COOKIE['search_records']) ? unserialize($_COOKIE['search_records']) : [];
-        $data = [
-            'cart' => [
-                'goods_count' => $this->cart_goods_num
-            ],
-            'message' => [
-                'internal_count' => "0"
-            ],
-            'default_keywords' => $default_keywords,
-            'hot_keywords' => $hot_search,
-            'search_records' => $search_records,
-            'show_keywords' => $show_keywords
-        ];
+
+        $userMessage = new UserMessageRepository();
+        $no_read_count = $userMessage->getMessageCount(1, $this->user_id);
+
+        if (sysconf('site_open')) {
+            // 站点开启
+            $data = [
+                'cart' => [
+                    'goods_count' => $this->cart_goods_num
+                ],
+                'message' => [
+                    'internal_count' => $no_read_count
+                ],
+                'default_keywords' => $default_keywords,
+                'hot_keywords' => $hot_search,
+                'search_records' => $search_records,
+                'show_keywords' => $show_keywords,
+                'site_id' => 2,
+                'region_code' => "11,01",
+                'site_status' => 1, // 0-当前站点无效 弹出站点选择框 1-当前站点正常
+//                'site_change' => [], // 以英文首字母排序
+                'site_change' => '<!--站点 start-->
+<div class="SZY-SUBSITE">
+        <ul class="fl">
+        <li class="dorpdown" id="city-choice">
+            <dt class="sc-icon">
+                <div class="sc-choie">
+                    <i class="iconfont color"></i>
+                    <span class="ui-areamini-text" data-id="2" title="">北京站   </span>
+                </div>
+                <div class="dd-spacer"></div>
+            </dt>
+            <dd class="dorpdown-layer">
+                <div class="ui-areamini-content-wrap" id="ui-content-wrap">
+                    <!--当站点少的活，以dl下展示形式展示，如果展示多的话，以ul下的li展示形式展示-->
+                    <dl>
+                        <dt>站点</dt>
+                        <dd>
+                            <a href="/subsite/index.html?site_id=14">大同站点</a>
+                        </dd>
+                        <dd>
+                            <a href="/subsite/index.html?site_id=21">dhds</a>
+                        </dd>
+                    </dl>
+                </div>
+            </dd>
+        </li>
+    </ul>
+</div>
+<!--站点 end-->', // 以英文首字母排序
+            ];
+        } else {
+            // 站点未开启
+            $data = [
+                'cart' => [
+                    'goods_count' => $this->cart_goods_num
+                ],
+                'message' => [
+                    'internal_count' => $no_read_count
+                ],
+                'default_keywords' => $default_keywords,
+                'hot_keywords' => $hot_search,
+                'search_records' => $search_records,
+                'show_keywords' => $show_keywords
+            ];
+        }
+
+
         // 判断是否登录
         if (auth('user')->check()) {
             $user = $this->user;
+            $user_rank = $this->user_rank_info;
+            $user_rank['rank_img'] = get_image_url($user_rank['rank_img']);
+			if ($user_rank['level'] == -1) {
+				return result(-1, '', '平台未设置默认会员等级');
+			}
             // 如果是登录状态
+            $data['user_name'] = $user->user_name;
+            $data['user_id'] = $user->user_id;
+            $data['headimg'] = get_image_url($user->headimg,'headimg');
+            $data['last_time'] = $user->last_login;
             $data['last_ip'] = $user->last_ip;
             $data['last_region_code'] = '';
-            $data['last_time'] = $user->last_login;
+            $data['user_rank'] = $user_rank; // 用户等级
             $data['last_time_format'] = $user->last_login;
-            $data['user_name'] = $user->user_name;
-
-            // 用户等级
-            $user_rank = [];
-
-
+            $data['yikf_user_suffix'] = 1731;
+            $data['sign_in_entry'] = "0"; // 签到入口是否开启 0-不显示 1-显示签到入口弹框
         }
 
+        $data['session_id'] = $this->session_id;
+        $data['sys_msg_cfg_url'] = get_ws_url('7272'); // 从后台配置读取
+
+        return result(0, $data);
+    }
+
+    /**
+     * 站点
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function subSiteLocation(Request $request)
+    {
+
+        $data = [
+            'city' => '昆明市',
+            'site_id' => 2
+        ];
         return result(0, $data);
     }
 
@@ -111,31 +208,74 @@ class SiteController extends Frontend
         return result(0, $session_id);
     }
 
+    /**
+     * 首页新订单提醒
+     * 模拟新订单提醒数量 调取订单中的数据模拟新订单提醒,如果想使用真实数据可以设置为0
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function getNewOrderList(Request $request)
     {
 
-        $data = [
-            [
-                'headimg' => get_image_url(sysconf('default_user_portrait')),
-                'user_name' => '乐融沃一号门店管理员'
-            ],
-            [
-                'headimg' => get_image_url(sysconf('default_user_portrait')),
-                'user_name' => '乐融沃一号门店管理员'
-            ],
-        ];
-        $count = 20;
+        $new_order_remind_num = sysconf('new_order_remind_num') ?? 0;
+        $count = (int)$new_order_remind_num ?: 20;
+        if ($new_order_remind_num > 0) { // 调取订单中的数据模拟新订单
+            $data = [];
+            for ($i=0; $i < $new_order_remind_num; $i++) {
+                $data[] = [
+                    'headimg' => get_image_url(sysconf('default_user_portrait')),
+                    'user_name' => "乐融沃{$i}号门店管理员"
+                ];
+            }
+        } else { // 使用真实数据
+            $data = User::select('headimg','user_name')->limit($count)->get()->toArray();
+            if (!empty($data)) {
+                foreach ($data as &$v) {
+                    $v['headimg'] = get_image_url($v['headimg'], 'headimg');
+                }
+            }
+        }
 
-        return result(0, $data, '', ['count'=>$count]);
+        return result(0, $data, '', ['count'=>count($data)]);
     }
 
+    /**
+     * 发送短信验证码
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function smsCaptcha(Request $request)
+    {
+        $mobile = $request->get('mobile');
+        $captcha = $request->get('captcha');
+        $log_type = 2; // 登录
 
+        // 发送频繁
+//        return result(-1, ['show_captcha'=>1], '每60秒内只能发送一次短信验证码，请稍候重试', ['errors'=>['mobile' => ['每60秒内只能发送一次短信验证码，请稍候重试']]]);
+        $ret = $this->connectApi->sendCaptcha($mobile, $log_type);
+        if (!$ret['code']) {
+            return result(-1, ['field'=>'mobile','show_captcha'=>0], $ret['message'], ['errors'=>['mobile' => [$ret['message']]]]);
+        }
+        return result(0, null, '发送成功');
+    }
+
+    /**
+     * 生成图形验证码
+     *
+     * @param Request $request
+     * @return false|string
+     */
     public function captcha(Request $request)
     {
 
 //        return json_encode(['hash1' => 438,'hash2' => '438', 'url' => '/site/captcha.html?v='.uniqid()]);
+        $phraseBuilder = new PhraseBuilder(4, '0123456789'); // 只生成4位数字
+
         //生成验证码图片的Builder对象，配置相应属性
-        $builder = new CaptchaBuilder;
+        $builder = new CaptchaBuilder(null, $phraseBuilder); // 只生成4位数字
+
         //可以设置图片宽高及字体
         $builder->build($width = 100, $height = 40, $font = null);
         // 设置干扰线
@@ -144,13 +284,19 @@ class SiteController extends Frontend
         $phrase = $builder->getPhrase();
 
         //把内容存入session
-        Session::flash('laravelvipcaptcha', $phrase);
+        Session::put('captcha', $phrase);
+
         //生成图片
         header("Cache-Control: no-cache, must-revalidate");
         header('Content-Type: image/jpeg');
-//        $builder->output();
-        $data = $builder->inline();
-        return json_encode(['hash1' => 447,'hash2' => '447', 'url' => $data]);
+
+        if ($request->get('refresh')) { // 刷新验证码
+            $data = $builder->inline();
+            return json_encode(['hash1' => 447,'hash2' => '447', 'url' => $data]);
+        }
+
+        // 直接输出验证码
+        $builder->output();
     }
 
 
@@ -160,123 +306,10 @@ class SiteController extends Frontend
      * @param Request $request
      * @return mixed
      */
-//    public function regionList(Request $request)
-//    {
-//
-//        // 判断传入的值是parent_code 还是 region_code
-//        $parent_code = !is_null($request->get('parent_code')) ? $request->get('parent_code') : 0;
-//        $field = 'parent_code';
-//        $params = $request->all();
-//
-//        $level_names = [
-//            0 => "",
-//            1 => '省',
-//            2 => '市',
-//            3 => '区/县',
-//            4 => '镇',
-//            5 => '街道/村'
-//        ];
-//        $extras = [
-//            'level_names' => $level_names,
-//        ];
-//
-//        $region_names = [];
-//        if (isset($params['region_code'])) {
-//            // 查询region_names
-//            $region_info = $this->regions->getByField('parent_code', $params['region_code']);
-//            if (!empty($region_info)) {
-//                $region_names[$params['region_code']] = $region_info->region_name;
-//                $condition = [
-//                    'where' => [[$field, $parent_code]],
-//                    'limit' => 0
-//                ];
-//                list($region_list, $total) = $this->regions->getList($condition);
-//
-//                $data[0] = $region_list;
-//
-//            }
-//            $extras['region_names'] = $region_names;
-//            $parent_code = $request->get('region_code', 0);
-////            $field = 'region_code';
-//        }
-//        $condition = [
-//            'where' => [[$field, $parent_code]],
-//            'limit' => 0
-//        ];
-//        list($region_list, $total) = $this->regions->getList($condition);
-//
-//
-//
-//        $data[0] = $region_list;
-//        return result(0, $data, '', $extras);
-//    }
     public function regionList(Request $request)
     {
 
-        // 判断传入的值是parent_code 还是 region_code
-        $parent_code = !is_null($request->get('parent_code')) ? $request->get('parent_code') : 0;
-        $field = 'parent_code';
-        $params = $request->all();
-
-        $level_names = [
-            0 => "",
-            1 => '省',
-            2 => '市',
-            3 => '区/县',
-            4 => '镇',
-            5 => '街道/村'
-        ];
-        $extras = [
-            'level_names' => $level_names,
-        ];
-
-        if (isset($params['region_code'])) {
-            // 查询region_names
-            $region_names = array_reverse(get_parent_region_list($params['region_code']));
-            $region_names = array_column($region_names, 'region_name', 'region_code');
-            $rr = array_keys($region_names);
-            if (is_int($rr[0])) {
-                array_unshift($rr, 0);
-                if (count($rr) > 3) {
-                    array_pop($rr); // 移除最后一个
-                }
-            }
-            $data = [];
-            foreach ($rr as $key=>$p_code) {
-                $condition = [
-                    'where' => [[$field, strval($p_code)]],
-                    'limit' => 0,
-                    'field' => [
-                        'center', 'city_code', 'is_enable', 'is_scope', 'level',
-                        'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                    ],
-                    'sortname' => 'region_id',
-                    'sortorder' => 'asc'
-                ];
-                list($region_list, $total) = $this->regions->getList($condition);
-                $data[$key] = $region_list;
-            }
-            $extras['region_names'] = $region_names;
-
-            return result(0, $data, '', $extras);
-        } else {
-            $field = 'parent_code';
-            $condition = [
-                'where' => [[$field, $parent_code]],
-                'limit' => 0,
-                'field' => [
-                    'center', 'city_code', 'is_enable', 'is_scope', 'level',
-                    'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                ],
-                'sortname' => 'region_id',
-                'sortorder' => 'asc'
-            ];
-            list($region_list, $total) = $this->regions->getList($condition);
-
-            $data[0] = $region_list;
-            return result(0, $data, '', $extras);
-        }
-
+        return $this->regions->ajaxLoadRegions($request);
     }
 
     /**
@@ -287,16 +320,21 @@ class SiteController extends Frontend
      */
     public function uploadImage(Request $request)
     {
-        if (is_mobile() && !is_app()) {
+        $storePath = 'temp';
+        if ($this->user_id) {
+            $storePath = 'user/'.$this->user_id; // todo 存储路径是动态的
+        }
+
+        // 判断是否base64方式上传
+        $isBase64 = $request->get('is_base64');
+        if ($isBase64 || (is_mobile() && !is_app())) {
             // 手机端访问 针对微信端
             $filename = $request->post('img_base64', ''); // base64上传
             $base64Field = 'img_base64';
-            $storePath = 'user/'.$this->user_id;
             $uploadRes = $this->tools->uploadPic($request, $filename, $storePath, false, $base64Field);
         } else {
             // PC端访问
             $filename = $request->post('filename', 'name');
-            $storePath = 'user/'.$this->user_id; // todo 存储路径是动态的
             $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
         }
         if (isset($uploadRes['error'])) {
@@ -305,8 +343,6 @@ class SiteController extends Frontend
         }
         return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
     }
-
-
 
     /**
      * PC端 异步加载对比商品列表
@@ -379,7 +415,7 @@ class SiteController extends Frontend
      */
     public function tplData(Request $request)
     {
-        $tpl_code = $request->get('tpl_code');
+        /*$tpl_code = $request->get('tpl_code');
         $act_goods_ids = $request->get('act_goods_ids', '');
 
 
@@ -392,13 +428,81 @@ class SiteController extends Frontend
             ]
         ];
 
-        return result(0, $data);
+        return result(0, $data);*/
+
+        $tpl_code = $request->get('tpl_code', '');
+
+        // 滚动商品
+        $goods_ids = $request->get('goods_ids', 0);
+        $output = $request->get('output', 0); // 是否渲染输出html
+        $shop_id = $request->get('shop_id', '');
+        $is_last = $request->get('is_last', '');
+
+        // 附近店铺
+        $lat = $request->get('lat', 0); // 经度
+        $lng = $request->get('lng', 0); // 纬度
+
+
+        // 列表
+        $compact = [];
+        if ($tpl_code == 'm_goods_list') {
+            // 滚动商品
+            $where = [];
+            $where[] = ['goods_status',1]; // 商品状态 已发布
+            $where[] = ['goods_audit',1]; // 审核通过
+            if (!empty($shop_id)) {
+                $where[] = ['shop_id',$shop_id];
+            }
+            $condition = [
+                'where' => $where,
+                'sortname' => 'goods_sort',
+                'sortorder' => 'asc'
+            ];
+
+            if (!empty($goods_ids)) {
+                $condition['in'] = [
+                    'field' => 'goods_id',
+                    'condition' => explode(',', $goods_ids)
+                ];
+            }
+
+            list($m_goods_list, $m_goods_total) = $this->goods->getList($condition);
+            $compact = compact('m_goods_list');
+        }
+//        dd($compact);
+        $render = view('backend::site.'.$tpl_code, $compact)->render();
+        return result(0, $render);
     }
 
+    /**
+     * 收货地址智能解析
+     *
+     * @param Request $request
+     * @return array
+     */
     public function addressParse(Request $request)
     {
-        $address = $request->post('address');
+        $address = $request->post('address'); // 粘帖收件人姓名、电话、地址、邮箱
 
+        $parse_res = AddressParse::smart_parse($address);
+        $data = [
+            'mobile' => $parse_res['mobile'] ?? '',//,
+            'tel' => $parse_res['tel'] ?? '',//,
+            'email' => $parse_res['email'] ?? '',//,
+            'province' => $parse_res['detail']['province'] ?? '',//'河北省',
+            'province_code' => $parse_res['detail']['province_code'] ?? '',//'130000',
+            'city' => $parse_res['detail']['city'] ?? '',//'秦皇岛市',
+            'city_code' => $parse_res['detail']['city_code'] ?? '',//'130300',
+            'district' => $parse_res['detail']['district'] ?? '',//'district',
+            'district_code' => $parse_res['detail']['district_code'] ?? '',//'130306',
+            'address_lng' => $parse_res['address_lng'] ?? '',//'119.217036',
+            'address_lat' => $parse_res['address_lat'] ?? '',//'40.029065',
+            'region_code' => $parse_res['detail']['region_code'] ?? '',//'13,03,06',
+            'postcode' => $parse_res['postcode'] ?? '',//'066300',
+            'person_name' => $parse_res['name'] ?? '',//'张s',
+            'address' => $parse_res['detail']['address'] ?? '',//'河北省秦皇岛',
+        ];
+        return result(0, $data);
     }
 
     /**
@@ -410,10 +514,48 @@ class SiteController extends Frontend
     public function getQrcodeLoginKey(Request $request)
     {
         $data = [
-            'user_id' => 'h7ci760hmcg3um28bmsv4o00us', // 26位
-            'key' => 'F79FA86071C0DD4CBEE63415ED1090DE' // 32位
+            'user_id' => 'h7ci760hmcg3um28bmsv4o00us', // 26位 相当于token 用户标识
+            'key' => 'F79FA86071C0DD4CBEE63415ED1090DE' // 32位 // 每隔一段时间刷新该值
         ];
         return result(0, $data);
+    }
+
+    /**
+     * 二维码登录
+     * 移动端页面（微信端、App客户端）授权登录页面
+     *
+     * @param Request $request
+     */
+    public function qrcodeLogin(Request $request)
+    {
+        $key = $request->get('k');
+
+        // 验证k是否有效
+
+        if ($request->method() == 'POST') {
+            // 执行登录
+            $user_id = $request->post('user_id');
+            $key = $request->post('key');
+            $handle = $request->post('handle'); // login-登录 cancel-取消
+
+            //二维码已失效
+            $qrcodeInvalid = true;
+            if ($qrcodeInvalid) {
+                $APIs = ["onMenuShareTimeline", "scanQRCode"];
+                $wx_share_data = get_wx_share_data($APIs);
+                $errCode = 0;
+                if (!$wx_share_data) {
+                    $errCode = -1;
+                }
+//                dd($wx_share_data);
+                return view('site.qrcode_login_error', compact('wx_share_data', 'errCode'));
+            }
+
+
+        }
+
+
+        return view('site.qrcode_login', compact('key'));
     }
 
     public function alioss(Request $request)
@@ -437,4 +579,206 @@ class SiteController extends Frontend
 
         return response()->json($data);
     }
+
+    public function getExhibition(Request $request)
+    {
+
+        return result(0);
+    }
+
+    /**
+     * App引导页
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function appGuide(Request $request)
+    {
+        $data = [
+            'is_guide_open' => sysconf('is_guide_open'),
+            'app_enter_button' => sysconf('app_enter_button'),
+            'img_list' => explode('|', sysconf('app_guide_pic'))
+        ];
+        return result(0, $data);
+    }
+
+    /**
+     * App全局数据
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function appInfo(Request $request)
+    {
+
+        $goods_nav_list = $this->template->getNavigationData('m_goods', 5, 3); // 底部导航菜单
+
+        $data = [
+            'lrw_version' => str_replace('v','',sysconf('lrw_version')),
+            'is_open' => 0,
+            "app_enable_unforced_updates" => 0,
+            'app_ios_is_open' => sysconf('app_ios_is_open'),
+            'app_ios_use_version' => sysconf('app_ios_use_version'),
+            'app_android_is_open' => sysconf('app_android_is_open'),
+            'app_android_use_version' => sysconf('app_android_use_version'),
+            'close_reason' => sysconf('app_close_reason'),
+            'login_bgimg' => sysconf('app_login_bgimg'),
+            'login_logo' => sysconf('app_login_logo'),
+            'mall_phone' => sysconf('mall_phone'),
+            'mall_qq' => sysconf('mall_qq'),
+            'default_lazyload' => sysconf('default_lazyload_mobile'),
+            'm_user_center_bgimage' => sysconf('m_user_center_bgimage'),
+            'app_category_style' => "1", // sysconf('app_category_style'),
+            'default_shop_image' => sysconf('default_shop_image'),
+            'default_user_portrait' => sysconf('default_user_portrait'),
+            'default_micro_shop_image' => sysconf('default_micro_shop_image'),
+            'app_android_update_content' => sysconf('app_android_update_content'),
+            'app_ios_update_content' => sysconf('app_ios_update_content'),
+            'aliim_icon_show' => sysconf('app_aliim_icon_show'),
+            'aliim_icon' => sysconf('app_aliim_icon'),
+            'user_id' => $this->user_id,
+            'session_id' => $this->session_id,
+            'websocket_url' => get_ws_url('7272'),
+            'host' => "http://".config('lrw.mobile_domain'),
+            'aliim_enable' => sysconf('aliim_enable'),
+            'aliim_headimg' => sysconf('default_user_portrait'),
+            'image_url' => get_oss_host(),
+            'version' => "1.1.0",
+            'update_url' => sysconf('app_android_update_url'),
+            'seller_version' => "1.0.0",
+            'seller_update_url' => "",
+            'use_weixin_login' => sysconf('use_weixin_login'),
+            'wx_login_logo' => sysconf('wx_login_logo'),
+            'SYS_SITE_MODE' => "0",
+            'site_id' => null,
+            'site_name' => null,
+            'region_code' => null,
+            'sys_shop_app_mode' => 0,
+            'sys_store_app_mode' => 0,
+            'is_freebuy_enable' => "0",
+            'is_reachbuy_enable' => "0",
+            'is_scancode_enable' => "0",
+            'price_show_rule' => sysconf('price_show_rule'),
+            'format_price' => sysconf('goods_price_format'),
+            'site_nav_list' => [],
+            'custom_style_enable_app' => "",
+            'app_main_color' => "",
+            'app_second_color' => "",
+            'design_m_goods_shop_is_show' => "1",
+            'design_m_goods_sale_is_show' => "1",
+            'goods_nav_list' => $goods_nav_list,
+            'new_order_remind_open' => sysconf('new_order_remind_open'),
+            'yikf_url' => '', // "https://kf.xxxx.com/index/index/home?business_id=d7522d9e49167210aaad90d2a69af743&groupid=0&shop_id=0&goods_id=0&visiter_id=_1737&visiter_name=&avatar=http://xxxx/images/&domain=http://www.xxxx.com",
+            'evaluate_show' => "1",
+            'uc_capital_account_enable' => "1",
+            'sys_recharge_card_enable' => "1",
+            'sys_store_card_enable' => "1",
+            'appid' => "wxxxxxxxx",
+            'appsecret' => "wxxxxxxxxxxxxx",
+            'integral_custom_name' => "积分",
+
+        ];
+
+        return result(0, $data);
+    }
+
+    public function getYikf(Request $request)
+    {
+        $shop_id = $request->get('shop_id'); //
+        $goods_id = $request->get('goods_id', 0);
+
+        $extra = [
+            'tel' => '13333333333',
+            'type' => 2
+        ];
+        return result(0, null, '', $extra);
+    }
+
+    public function giteeWebHooks(Request $request)
+    {
+        /* 数据校验省略，
+           post过来的是json数据，
+          一般只是验证密码是否与之前后台的一样
+        */
+
+//        file_put_contents('t1.txt', 'abb');
+//        header('Content-type:text/html;charset=utf-8');
+//        $output = shell_exec("cd /data/wwwroot/laravelvip-mall; sudo -u root git pull 2<&1");
+//        echo "<pre>$output</pre>";
+//        file_put_contents('t1.txt', $output, FILE_APPEND);
+
+//        if(function_exists("shell_exec")){
+////            $cute =  "cd /data/wwwroot/laravelvip-mall && git pull https://user:pass@gitee.com/user/project 1>&2";
+//            $cute =  "cd /data/wwwroot/laravelvip-mall && git pull https://gitee.com/xxx/xxx.git 1>&2";
+//            $exe = shell_exec($cute);
+//            return "下拉完成-".date('Y-m-d H:i:s');
+//        }else{
+//            return '系统配置：shell_exec函数不可用';
+//        }
+
+    }
+
+    public function getWeiXinConfig(Request $request)
+    {
+        if (!is_weixin()) {
+            return result(-1, null, '请在微信中打开');
+        }
+
+        $url = $request->get('url');
+
+//        $APIs = ["onMenuShareTimeline", "onMenuShareAppMessage", "scanQRCode"];
+        $APIs = [
+//        	"onMenuShareTimeline", "onMenuShareAppMessage",
+			'updateTimelineShareData', 'updateAppMessageShareData','scanQRCode'];
+        $data = get_wx_share_data($APIs, $url);
+
+        if (!$data) {
+            return result(-1, null, '微信分享配置异常');
+        }
+        // 'errCode'=>0 为校验成功 -1为失败
+
+
+        $data['url'] = $url;
+
+//        return result(0, $data, '',['errCode'=>-1]);
+        return result(0, $data, '',['jsApiList'=>$data['jsApiList'],'errCode'=>0]);
+    }
+
+   /**
+     * 根据经纬度获取地区信息
+    *
+     * @param Request $request
+     * @return array
+     */
+    public function regionGps(Request $request)
+    {
+        $lng = $request->get('lng'); // 经度
+        $lat = $request->get('lat'); // 纬度
+        if (!$lat || !$lng) {
+            return result(-1, null, INVALID_PARAM);
+        }
+        $location = "$lng,$lat";
+        $amapService = new AmapService();
+        $info = $amapService->action_regeocode($location);
+        $city = !empty($info['city']) ? $info['city'] : $info['province'];
+        $formattedAddress = $info['province'].$city.$info['district'].$info['streetNumber']['street'];
+        $region_name = $info['province'].' '.$city.' '.$info['district'];
+        $region_code = (new RegionRepository())->getRegionCodesByNames($region_name);
+        $data = [
+            'citycode' => $info['citycode'],
+            'province' => $info['province'],
+            'city' => $info['city'],
+            'district' => $info['district'],
+            'township' => $info['township'],
+            'street' => $info['streetNumber']['street'],
+            'streetNumber' => $info['streetNumber']['number'],
+            'formattedAddress' => $formattedAddress,
+            'region_code' => $region_code,
+            'region_name' => $region_name,
+            'is_last' => true,
+        ];
+
+        return result(0, $data);
+    }
+
 }

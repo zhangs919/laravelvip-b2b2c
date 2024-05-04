@@ -79,10 +79,10 @@
 
         <div class="content m-t-30">
             <div class="goods-info-two">
-                <form id="LibGoodsModel" class="form-horizontal" name="LibGoodsModel" action="/goods/lib-goods/index?cat_id=343" method="POST" novalidate="novalidate">
-                    {{ csrf_field() }}
+                <form id="LibGoodsModel" class="form-horizontal" name="LibGoodsModel" action="/goods/lib-goods/index?cat_id={{ $cat_id }}" method="POST" novalidate="novalidate">
+                    @csrf
                     <!-- 分类编号 -->
-                    <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="343">
+                    <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="{{ $cat_id }}">
                     <h5 class="m-b-30">商品基本信息</h5>
                     <div class="simple-form-field">
                         <div class="form-group">
@@ -91,8 +91,8 @@
                                 <span class="ng-binding">商品分类：</span>
                             </label>
                             <div class="col-sm-9">
-                                <label class="control-label" data-anchor="商品分类ID">生鲜食品 &gt; 海鲜水产 &gt; 贝</label>
-                                <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="343">
+                                <label class="control-label" data-anchor="商品分类">{!! $cat_names !!}</label>
+                                <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="{{ $cat_id }}">
 
                                 <a id="change_category" href="javascript:void(0);" class="btn btn-warning btn-sm m-l-5">切换商品分类</a>
 
@@ -178,8 +178,9 @@
                                 <div class="form-control-box">
 
                                     <select name="LibGoodsModel[brand_id]" class="form-control chosen-select" style="display: none;">
-                                        <option value="">--请选择品牌--</option>
-                                        <option value="147">三只松鼠</option><option value="148">鲜农乐</option>
+                                        @foreach($brand_list as $v)
+                                            <option value="{{ $v['brand_id'] }}">{{ $v['brand_name'] }}</option>
+                                        @endforeach
                                     </select>
 
                                 </div>
@@ -199,8 +200,77 @@
                             <div class="col-sm-9">
                                 <div class="form-control-box">
 
-                                    <div class="goods-attr w750" data-anchor="商品属性">
+                                    <div class="goods-attr w800" data-anchor="商品属性">
 
+                                        {{--平台系统属性--}}
+                                        @if(!empty($attr_list))
+                                            <div class="goods-attr-tit">
+                                                <span>平台系统属性</span>
+                                            </div>
+
+                                            @foreach($attr_list as $v)
+                                                <div class="simple-form-field" >
+                                                    <div class="form-group">
+                                                        <label for="" class="col-sm-2 control-label">
+
+                                                            @if($v['is_required'] == 1)
+                                                                <span class="text-danger ng-binding">*</span>
+                                                            @endif
+                                                            <span class="ng-binding">{{ $v['attr_name'] }}：</span>
+                                                        </label>
+                                                        <div class="col-sm-9">
+                                                            <div class="form-control-box">
+
+
+
+
+
+                                                                <div class="attr-values" data-attr-id="{{ $v['attr_id'] }}" data-required="{{ $v['is_required'] }}">
+                                                                @if($v['attr_style'] == 2)
+                                                                    {{--文本--}}
+                                                                    <!-- 多选属性 -->
+
+                                                                        <input type="text" id="goods_attrs_{{ $v['attr_id'] }}" class="form-control"
+                                                                               name="goods_attrs[{{ $v['attr_id'] }}]"
+                                                                               data-rule-required="@if($v['is_required'] == 1){{ $v['is_required'] }}@endif" data-msg="@if($v['is_required'] == 1){{ $v['attr_name'] }}不能为空！ @endif">
+                                                                        <!-- 品牌属性 -->
+                                                                    @elseif($v['attr_style'] == 1)
+                                                                        {{--单选--}}
+                                                                        <select id="goods_attrs_{{ $v['attr_id'] }}" class="form-control chosen-select"
+                                                                                name="goods_attrs[{{ $v['attr_id'] }}]"
+                                                                                data-rule-required="@if($v['is_required'] == 1){{ $v['is_required'] }}@endif" data-msg="@if($v['is_required'] == 1){{ $v['attr_name'] }}不能为空！ @endif">
+                                                                            <option value=""></option>
+                                                                            @foreach($attr_values[$v['attr_id']] as $av)
+                                                                                <option value="{{ $av['id'] }}">{{ $av['value'] }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    @elseif($v['attr_style'] == 0)
+                                                                        {{--多选--}}
+                                                                        @foreach($attr_values[$v['attr_id']] as $av)
+                                                                            <label class="control-label cur-p m-r-10">
+
+                                                                                <input type="checkbox" id="goods_attrs_{{ $v['attr_id'] }}_{{ $av['id'] }}"
+                                                                                       name="goods_attrs[{{ $v['attr_id'] }}][]" value="{{ $av['id'] }}"
+                                                                                       data-rule-required="@if($v['is_required'] == 1){{ $v['is_required'] }}@endif" data-msg="@if($v['is_required'] == 1){{ $v['attr_name'] }}不能为空！ @endif">
+
+                                                                                {{ $av['value'] }}
+                                                                            </label>
+                                                                        @endforeach
+                                                                    @endif
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="help-block help-block-t"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+
+
+                                        {{--自定义属性--}}
                                         <div class="goods-attr-tit">
                                             <span>自定义属性</span>
                                         </div>
@@ -220,6 +290,225 @@
                         </div>
                     </div>
                     <!-- 商品规格 -->
+
+                    @if(!empty($spec_list))
+                    <div class="simple-form-field" >
+                        <div class="form-group">
+                            <label for="libgoodsmodel-goods_spec" class="col-sm-3 control-label">
+
+                                <span class="ng-binding">商品规格：</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="form-control-box">
+
+                                    <div class="goods-spec w800" data-anchor="商品规格">
+                                        <div class="simple-form-field spec-title-box">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label w100">商品规格：</label>
+                                                <div class="col-sm-9 p-0 goods-spec-names" style="width: 580px;">
+
+
+                                                {{--商品规格--}}
+                                                @foreach($spec_list as $v)
+                                                    <!--已选中的默认规格，为span添加 selected样式-->
+                                                        <span class="spec-values-item selected">
+                                                    <label class="control-label">
+                                                        <!-- 修改0124 input 添加class="cur-not",后增加 disabled="disabled" 需增判断，做完程序后，此注释请删除-->
+
+                                                        <input type="checkbox" value="{{ $v['attr_id'] }}"  />
+
+                                                        {{ $v['attr_name'] }}
+                                                    </label>
+                                                            <!-- <a class="default-spec" href="javascript:void(0);" title="点击设置为默认规格">默认</a> -->
+                                                </span>
+                                                    @endforeach
+
+                                                </div>
+                                            </div>
+
+                                            <a id="btn_add_shop_spec" href="javascript:void(0);" class="btn btn-warning btn-sm pos-a" style="right: 15px; top: 14px;">
+                                                <i class="fa fa-plus"></i>
+                                                添加规格
+                                            </a>
+
+                                        </div>
+
+                                        <div id="dropzone" class="ui-sortable goods-spec-items">
+
+                                            {{--规格列表--}}
+                                            @foreach($spec_list as $k=>$v)
+                                                <div class="simple-form-field goods-spec-item drop-item" data-spec-id="{{ $v['attr_id'] }}" style="display: none;">
+                                                    <input type="hidden" name="spec_alias[{{ $k }}][attr_id]" value="{{ $v['attr_id'] }}" />
+                                                    <div class="form-group spec-id-{{ $v['attr_id'] }}" data-spec-id="{{ $v['attr_id'] }}" data-spec-name="{{ $v['attr_name'] }}">
+                                                        <!-- 规格名称 -->
+                                                        <label class="col-sm-2 control-label spec-name cur-p l-h-22" data-spec-id="{{ $v['attr_id'] }}">
+
+                                                        @if($v['is_alias'] == 1)
+                                                            <!-- 设置规格别名 start-->
+
+                                                                <input type="text" id="spec_name_{{ $v['attr_id'] }}"
+                                                                       name="spec_alias[{{ $k }}][attr_name]" class="form-control form-control-xs text-r w70 spec-name"
+                                                                       value="{{ $v['attr_name'] }}" data-spec-id="{{ $v['attr_id'] }}" data-rule-required="true" data-msg="规格名称不能为空!" maxlength="10">
+
+                                                                <!-- 设置规格别名 end-->
+                                                            @else
+                                                                <span class="ng-binding">{{ $v['attr_name'] }}</span>
+                                                            @endif
+                                                            ：
+
+                                                        </label>
+                                                        <!-- 规格值列表 -->
+                                                        <div class="col-sm-9 spec-values" data-spec-id="{{ $v['attr_id'] }}">
+
+
+                                                            @foreach($v['attrs'] as $av)
+                                                                <label class="control-label text-l cur-p w100" title="{{ $av['attr_vname'] }}">
+                                                                    <!-- 选中规格 -->
+
+                                                                    <input type="checkbox" value="{{ $av['attr_vid'] }}" data-attr-id="{{ $v['attr_id'] }}" data-vid="{{ $av['attr_vid'] }}"
+                                                                           data-vname="{{ $av['attr_vname'] }}" class="spec-value">
+
+                                                                    {{ $av['attr_vname'] }}
+
+                                                                    &nbsp; &nbsp;
+                                                                    @if($v['is_desc'] == 1)
+                                                                        <span class="color-note-text">备注</span>
+                                                                        <input type="text" value="" class="color-note form-control form-control-xs w60 br-0 spec-desc" maxlength="16">
+                                                                    @endif
+
+                                                                </label>
+                                                            @endforeach
+
+
+
+
+                                                        <!-- 遍历自定义规格 start -->
+
+
+                                                            <!-- 遍历自定义规格 end -->
+
+                                                            @if($v['is_input'] == 1)
+                                                                <label class="control-label cur-p">
+                                                                    <input type="checkbox" value="1" class="spec-value spec-other-value" data-attr-id="{{ $v['attr_id'] }}">
+                                                                    <input type="text" name="other_spec[]" value="" placeholder="其他" maxlength="15" class="form-control form-control-xs w80 spec-other-text" data-rule-uniqueOtherSpecName="true">
+                                                                </label>
+                                                            @endif
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="actions-box">
+                                                <span class="actions-btn goods-spec-item-btn-up" title="点击向上移动此规格">
+                                                    <i class="fa fa-arrow-circle-o-up"></i>
+                                                    上移
+                                                </span>
+                                                        <span class="actions-btn goods-spec-item-btn-down" title="点击向下移动此规格">
+                                                    <i class="fa fa-arrow-circle-o-down"></i>
+                                                    下移
+                                                </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                        </div>
+
+                                        <div id="sku_table_container" class="table-responsive" style="display: none; overflow: visible;">
+                                            <table id="sku_table" class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th class="sku-th-index text-c">序号</th>
+                                                    <th class="sku-market-price-td ">
+                                                        市场价
+                                                        <div class="batch">
+                                                            <a href="javascript:void(0);" class="batch-edit" title="批量设置">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                            <div class="batch-input" style="display: none;">
+                                                                <h6>批量设置市场价：</h6>
+                                                                <a href="javascript:void(0);" class="batch-close">X</a>
+                                                                <input type="text" class="form-control text small pull-none" value="">
+                                                                <input type="button" class="btn btn-primary btn-sm pull-none m-l-5 btn_batch_set" data-field="market_price" value="设置" />
+                                                                <span class="arrow"></span>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th class="sku-goods-price-td ">
+                                                        <span class="text-danger ng-binding">*</span>
+                                                        店铺价
+                                                        <div class="batch">
+                                                            <a href="javascript:void(0);" class="batch-edit" title="批量设置">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                            <div class="batch-input" style="display: none;">
+                                                                <h6>批量设置店铺价：</h6>
+                                                                <a href="javascript:void(0);" class="batch-close">X</a>
+                                                                <input class="form-control text small pull-none" type="text" value="">
+                                                                <input type="button" class="btn btn-primary btn-sm pull-none m-l-5 btn_batch_set" data-field="goods_price" value="设置" />
+                                                                <span class="arrow"></span>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        <span class="text-danger ng-binding">*</span>
+                                                        库存
+                                                        <div class="batch">
+                                                            <a href="javascript:void(0);" class="batch-edit" title="批量设置">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                            <div class="batch-input" style="display: none;">
+                                                                <h6>批量设置库存：</h6>
+                                                                <a href="javascript:void(0);" class="batch-close">X</a>
+                                                                <input class="form-control text small pull-none" type="text" value="">
+                                                                <input type="button" class="btn btn-primary btn-sm pull-none m-l-5 btn_batch_set" data-field="goods_number" value="设置" />
+                                                                <span class="arrow"></span>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        预警值
+                                                        <div class="batch">
+                                                            <a href="javascript:void(0);" class="batch-edit" title="批量设置">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                            <div class="batch-input" style="display: none;">
+                                                                <h6>批量设置预警值：</h6>
+                                                                <a href="javascript:void(0);" class="batch-close">X</a>
+                                                                <input class="form-control text small pull-none" type="text" value="">
+                                                                <input type="button" class="btn btn-primary btn-sm pull-none m-l-5 btn_batch_set" data-field="warn_number" value="设置" />
+                                                                <span class="arrow"></span>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th>商品货号</th>
+                                                    <th>商品条形码</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+
+                                            <a id="btn_sku_more_set" href="javascript:void(0);" class="btn btn-warning btn-sm m-t-10">
+                                                <i class="fa fa-plus"></i>
+                                                更多设置
+                                            </a>
+
+                                        </div>
+
+                                        <!-- 规格数量大于1则发出警告提示 -->
+                                        <p id="sku_table_warning" class="form-control-warning m-t-10">
+                                            <i class="fa fa-exclamation-circle"></i>
+                                            <span>1.设置默认规格后，才可以编辑商品的相册图片。</span>
+                                            <span>2.您需要选择至少一个商品规格，才能组合成完整的规格信息。</span>
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="help-block help-block-t"></div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- 商品价格 -->
                     <div class="simple-form-field">
@@ -371,7 +660,7 @@
                                 <span class="ng-binding">商品描述：</span>
                             </label>
                             <div class="col-sm-9">
-                                <div id="product-details" class="w750 p-0">
+                                <div id="product-details" class="w800 p-0">
                                     <div class="tabmenu">
                                         <ul class="tab">
                                             <li class="active">
@@ -574,9 +863,9 @@
                                     </div>--}}
                                     <select id="libgoodsmodel-lib_cat_id" class="form-control chosen-select" name="LibGoodsModel[lib_cat_id]" style="display: none;">
 
-
-                                        <option value="0">个</option>
-
+                                        @foreach($lib_category_list as $k=>$v)
+                                            <option value="{{ $k }}" @if(0 == $k)selected="selected"@endif @if($v['has_child'])disabled="true"@endif>{!! $v['cat_name'] !!}</option>
+                                        @endforeach
 
                                     </select>
                                 </div>
@@ -1415,7 +1704,7 @@
                             $("#goods_image_tag").attr("src", image_url);
                             // 原图路径
                             $("#libgoodsmodel-goods_image").val(path);
-                            $("#goods_image_tag").parent("a").attr("href", "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719//" + path);
+                            $("#goods_image_tag").parent("a").attr("href", "{{ get_oss_host() }}" + path);
                         }
                     });
                 } else {
@@ -1481,7 +1770,7 @@
 
             // 商品主图
             $("#goods_image_container").imagegroup({
-                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                host: "{{ get_oss_host() }}",
                 values: [""],
                 gallery: true,
                 callback: function(result) {
@@ -1496,7 +1785,7 @@
 
             // 商品主图视频
             $("#goods_video_container").videogroup({
-                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                host: "{{ get_oss_host() }}",
                 values: [""],
                 gallery: true,
                 options: {
@@ -2044,7 +2333,7 @@
                 $.loading.start();
 
                 if ("" == "") {
-                    $.post('/goods/lib-goods/add?cat_id=343', {
+                    $.post('/goods/lib-goods/add?cat_id={{ $cat_id }}', {
                         data: data
                     }, function(result) {
                         // 停止加载
@@ -2063,7 +2352,7 @@
                         }
                     }, 'json');
                 } else {
-                    $.post('/goods/lib-goods/edit.html?id=', {
+                    $.post('/goods/lib-goods/edit?id=', {
                         data: data
                     }, function(result) {
                         // 停止加载
@@ -2075,7 +2364,7 @@
                             }, function() {
                                 // 加载
                                 $.loading.start();
-                                $.go('/goods/lib-goods/edit.html?id=');
+                                $.go('/goods/lib-goods/edit?id=');
                             });
                         } else {
                             $.alert(result.message);
@@ -2145,7 +2434,7 @@
             });
 
             $("#btn_view").click(function() {
-                $.go("http://www.cp6znq.yunmall.68mall.com/goods-.html", "_blank");
+                $.go("/goods-.html", "_blank");
             });
 
             //添加分类按钮

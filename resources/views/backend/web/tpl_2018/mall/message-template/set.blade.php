@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="MessageTemplate" class="form-horizontal" name="MessageTemplate" action="/mall/message-template/set?id={{ $info->id }}&amp;type={{ $type }}" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="messagetemplate-id" class="form-control" name="MessageTemplate[id]" value="{{ $info->id }}">
 
@@ -189,7 +189,11 @@
                                 <select id="messagetemplate-wx_code" name="MessageTemplate[wx_code]" class="chosen-select template">
                                     <option value="">请选择模板消息</option>
 
-                                    <option value="" selected></option>
+                                    @if(!empty($wxTplList))
+                                        @foreach($wxTplList as $tpl)
+                                            <option value="{{ $tpl['template_id'] }}" @if($info->wx_code == $tpl['template_id']){{ 'selected' }}@endif>{{ $tpl['title'] }}</option>
+                                        @endforeach
+                                    @endif
 
                                 </select>
 
@@ -200,7 +204,29 @@
                         </div>
                     </div>
                 </div>
-                <div id='template_content'></div>
+                <div id='template_content'>
+                    @if(!empty($info->wx_code))
+                    <div class="simple-form-field">
+                        <div class="form-group">
+                            <label for="messagetemplate-wx_content" class="col-sm-4 control-label">
+
+                                <span class="ng-binding">微信模板内容：</span>
+                            </label>
+                            <div class="col-sm-8">
+                                <div class="form-control-box">
+
+
+                                    <textarea id="messagetemplate-wx_content" class="form-control" name="MessageTemplate[wx_content]" rows="5">{!! $info->wx_content !!}</textarea>
+
+
+                                </div>
+
+                                <div class="help-block help-block-t"></div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
                 <!-- 微信开关 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
@@ -399,7 +425,7 @@
             KindEditor.ready(function(K) {
 
                 var extraFileUploadParams = [];
-                // extraFileUploadParams['B2B2C_YUNMALL_68MALL_COM_BACKEND_PHPSESSID'] = 'ti003subk41odq8cb3h40nd0go';
+                // extraFileUploadParams['B2B2C_YUNMALL_LARAVELVIP_COM_BACKEND_PHPSESSID'] = 'ti003subk41odq8cb3h40nd0go';
 
                 window.editor = K.create('#email_content', {
                     width: '100%',

@@ -2,7 +2,7 @@
 <div class="pop-choose-spec-mask" style="display: block;"></div>
 <div id="{{ $uuid }}" class="pop-choose-spec-main" style="display: block;">
     <div class="pop-choose-spec-header">
-        <img src="{{ get_image_url($default_sku['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" class='goods-thumb SZY-GOODS-IMAGE' />
+        <img src="{{ get_image_url($sku['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" class='goods-thumb SZY-GOODS-IMAGE' />
         <div class="attribute-header-right">
             <span class="goodprice choose-result-price">
             <em class="SZY-GOODS-PRICE">￥0</em>
@@ -24,16 +24,17 @@
 
             @foreach($spec_list as $k=>$v)
             <dl class="attr">
-                <dt class="dt">{{ $v[0]->attr_name }}：</dt>
+                <dt class="dt">{{ $v['attr_name'] }}：</dt>
                 <dd class="dd">
                     <ul>
 
-                        @foreach($v as $kk=>$vv)
+                        @foreach($v['attr_values'] as $kk=>$vv)
                         <!-- 属性值被选中的状态 _start-->
-                        <li class="@if(in_array($vv->attr_vid, $selected_spec_ids)) selected @endif"
-                            data-spec-id="{{ $vv->attr_vid }}" data-attr-id="{{ $vv->attr_id }}" data-is-default="@if(in_array($vv->attr_vid, $selected_spec_ids)){!! 1 !!}@else{!! 0 !!}@endif">
-                            <a href="javascript:void(0);" title="{{ $vv->attr_vname }}">
-                                <span class="value-label">{{ $vv->attr_vname }}</span>
+                        <li class="@if(in_array($vv['spec_id'], $sku['spec_ids'])) selected @endif"
+                            data-spec-id="{{ $vv['spec_id'] }}" data-attr-id="{{ $v['attr_id'] }}"
+                            data-is-default="{{ $v['is_default'] }}">
+                            <a href="javascript:void(0);" title="{{ $vv['attr_value'] }}">
+                                <span class="value-label">{{ $vv['attr_value'] }}</span>
                             </a>
                             <i></i>
                         </li>
@@ -71,11 +72,14 @@
         </div>
     </div>
 </div>
-<script src="/assets/d2eace91/js/jquery.widget.js?v=20180726"></script>
+
 <script id="SZY_SKU_LIST_{{ $uuid }}" type="text">
-{!! $sku_list !!}
+    {!! $sku_list !!}
 </script>
-<script type="text/javascript">
+<script src="/assets/d2eace91/js/jquery.widget.js?v=20180726"></script>
+
+<script>
+
     $().ready(function() {
         var sku_ids = $.parseJSON($("#SZY_SKU_LIST_{{ $uuid }}").html());
         function getSkuId() {
@@ -105,9 +109,9 @@
         }
 
         function setSkuInfo(sku) {
-            var goods_number = "{{ $default_sku['goods_number'] }}";
-            var goods_price = "{{ $default_sku['goods_price'] }}";
-            var goods_image = "{{ get_image_url($default_sku['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320";
+            var goods_number = sku ? sku.goods_number : 0;
+            var goods_price = sku ? sku.goods_price : 0;
+            var goods_image = "{{ get_image_url($sku['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320";
 
             if (sku == null || sku.goods_number <= 0) {
                 $("#{{ $uuid }}").find(".btn-add-cart").addClass("disabled");
@@ -119,9 +123,9 @@
 
                 $("#{{ $uuid }}").find(".SZY-GOODS-IMAGE").attr("src", sku.sku_image_thumb);
 // 库存判断
-//
+// <!--  -->
                 $("#{{ $uuid }}").find(".SZY-GOODS-NUMBER").html("库存" + goods_number + "件");
-//
+// <!--  -->
             }
 
 // 已选规格
@@ -141,12 +145,19 @@
 
 // 设置步进器
             var amount_obj = $("#{{ $uuid }}").find(".amount-input");
+
+            $(amount_obj).data("amount-step", sku.cart_step);
+            $(amount_obj).data("amount-min", sku.cart_step);
             $(amount_obj).data("amount-max", goods_number);
 
-            if (goods_number > 0 && $(".amount-input").val() == 0) {
-                $(amount_obj).val(1);
-            } else if (goods_number == 0 && $(".amount-input").val() != 0) {
+            if (goods_number > 0 && $(amount_obj).val() == 0) {
+                $(amount_obj).val(sku.cart_step);
+            } else if (goods_number == 0 && $(amount_obj).val() != 0) {
                 $(amount_obj).val(0);
+            } else if ($(amount_obj).val() < sku.cart_step) {
+                $(amount_obj).val(sku.cart_step);
+            } else if ($(amount_obj).val() % sku.cart_step != 0) {
+                $(amount_obj).val(sku.cart_step);
             }
 
             var goods_number_input = parseInt($(amount_obj).val());
@@ -169,16 +180,19 @@
             });
 
             if (!image_url) {
-                image_url = "{{ get_image_url($default_sku['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320";
+                image_url = "{{ get_image_url($sku['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320";
             }
 
             return image_url;
         }
 
+        var sku_obj = getSkuInfo();
+
+
 // 步进器
         $("#{{ $uuid }}").find(".amount-input").amount({
-            value: 1,
-            min: 1,
+            value: sku_obj.cart_step,
+            min: sku_obj.cart_step,
             max_callback: function() {
                 $.msg("最多只能购买" + this.max + "件");
             },
@@ -250,4 +264,6 @@
             $(".pop-choose-spec-main").remove();
         });
     });
+
+    // 
 </script>

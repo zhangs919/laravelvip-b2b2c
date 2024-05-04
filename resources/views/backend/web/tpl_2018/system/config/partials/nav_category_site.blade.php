@@ -1,7 +1,7 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 
 <!-- 验证规则 -->
 <script id="client_rules" type="text">

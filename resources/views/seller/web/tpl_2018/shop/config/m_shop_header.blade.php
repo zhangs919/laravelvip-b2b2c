@@ -1,9 +1,9 @@
-<link rel="stylesheet" href="/css/mobile-style.css?v=20190231"/>
+<link rel="stylesheet" href="/css/mobile-style.css"/>
+
 <div class="shop-header-edit">
     <div class="table-content m-t-10 clearfix">
         <form id="ShopConfigModel" class="form-horizontal" name="ShopConfigModel" action="/shop/config/index" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            <input type="hidden" name="group" value="m_shop_header">
+            @csrf
             <input type="hidden" name="tabs" value="">
             <div class="simple-form-field" >
                 <div class="form-group">
@@ -13,8 +13,7 @@
                     </label>
                     <div class="col-sm-8">
                         <div class="form-control-box">
-                            <input type="hidden" id="shopconfigmodel-shop_header_style" class="form-control"
-                                   name="ShopConfigModel[shop_header_style]" value="{{ $group_info['shop_header_style']->value }}">
+                            <input type="hidden" id="shopconfigmodel-shop_header_style" class="form-control" name="ShopConfigModel[shop_header_style]" value="{{ $group_info['shop_header_style']->value }}">
                             <div class="col-sm-8">
                                 <div class="shop-header-layout">
                                     <div class="SZY-SHOP-HEAD-STYLE shop-layout-con0 @if($group_info['shop_header_style']->value == 0){{ 'shop-layout-current' }}@endif" data-val="0">
@@ -31,7 +30,6 @@
 
 
                         </div>
-
                         <div class="help-block help-block-t"></div>
                     </div>
                 </div>
@@ -45,24 +43,28 @@
                     </div>
                 </div>
             </div>
-        </form>	</div>
+        </form>
+    </div>
 </div>
-<!-- 表单验证 -->
-<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190221"></script>
-<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20190221"></script>
-<script src="/assets/d2eace91/js/validate/messages_zh.js?v=20190221"></script>
-<!-- AJAX上传+图片预览 -->
-<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190221"></script>
-<script src="/assets/d2eace91/js/pic/imgPreview.js?v=20190221"></script>
-<script src="/assets/d2eace91/js/jquery.widget.js?v=20190221"></script>
+
+
+
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "shopconfigmodel-shop_header_style", "name": "ShopConfigModel[shop_header_style]", "attribute": "shop_header_style", "rules": {"string":true,"messages":{"string":"头部样式必须是一条字符串。"}}},{"id": "shopconfigmodel-shop_header_style", "name": "ShopConfigModel[shop_header_style]", "attribute": "shop_header_style", "rules": {"required":true,"messages":{"required":"头部样式不能为空。"}}},]
 </script>
 <script type="text/javascript">
+    //
+</script>
+
+
+<script src="/assets/d2eace91/min/js/validate.min.js"></script>
+<script src="/assets/d2eace91/min/js/upload.min.js"></script>
+
+<script>
     $().ready(function() {
         var validator = $("#ShopConfigModel").validate();
-// 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+        // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
         $.validator.addRules($("#client_rules").html());
         $("#btn_submit").click(function() {
             $(this).addClass('loading');
@@ -73,8 +75,8 @@
             layer.closeAll('page');
             $.loading.start();
             var data = $("#ShopConfigModel").serializeJson();
-            $.post('/shop/config/index.html', data, function(result) {
-                $.get('ref-shop-header.html', {
+            $.post('/shop/config/index', data, function(result) {
+                $.get('ref-shop-header', {
                     code: 'shop_header_style',
                     group: 'm_shop_header'
                 }, function(result) {
@@ -86,9 +88,7 @@
             }, 'json').always(function(){
                 $.loading.stop();
             });
-
         });
-
         $('body').on('click', '.SZY-SHOP-HEAD-STYLE', function() {
             var val = $(this).data('val');
             $(this).addClass('shop-layout-current').siblings().removeClass('shop-layout-current');

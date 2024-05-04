@@ -10,7 +10,7 @@
 @section('content')
 
     <form class="form-horizontal" action="/member/member/user-info?id={{ $info->user_id }}" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-10 clearfix">
             <div class="simple-form-field">
                 <div class="form-group">
@@ -105,7 +105,7 @@
                     </label>
                     <div class="col-sm-8">
                         <div class="form-control-box">
-                            <label class="control-label">{{ $info->user->birthday->format('Y-m-d') }}</label>
+                            <label class="control-label">{{ $info->user->birthday ?? '' }}</label>
                         </div>
                     </div>
                 </div>

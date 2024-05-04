@@ -9,14 +9,14 @@
             <div class="tablelist-append">
 
                 @foreach($list as $v)
-                <li class="goods-item good-info-nosale" id="goods_item_{{ $v['collect_id'] }}">
-                    <lable class="agree-checkbox" data-id="{{ $v['collect_id'] }}"></lable>
+                <li class="goods-item @if($v['goods_status'] != 1){{ 'good-info-nosale' }}@endif" id="goods_item_{{ $v['collect_id'] }}">
+                    <lable class="agree-checkbox" data-id="{{ $v['collect_id'] }}"><i></i></lable>
                     <a href="{{ route('mobile_show_goods',['goods_id'=>$v['goods_id']]) }}" class="goods-link">
                         <div class="good-pic">
                             <img src="{{ get_image_url($v['goods_image'], 'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320">
                         </div>
                         <!-- 如果是下架的商品就给下面的div追加class="good-info-nosale" -->
-                        <dl class="good-info bdr-bottom">
+                        <dl class="good-info bdr-bottom @if($v['goods_status'] != 1){{ 'good-info-nosale' }}@endif">
                             <dt class="good-name">
                                 <!-- 活动色块 -->
                                 {{ $v['goods_name'] }}
@@ -28,15 +28,20 @@
                             </dd>
                         </dl>
                     </a>
-                    <!-- -->
-                    <!-- 如果是下架的商品就走下面的模块 _start -->
-                    <div class="cart-box cart-box-second">
-                        <i class="iconfont no-sale"></i>
-                    </div>
-                    <!-- 如果是下架的商品就走下面的模块 _end -->
-
+                    @if($v['goods_status'] != 1)
+                        <!-- 如果是下架的商品就走下面的模块 _start -->
+                        <div class="cart-box cart-box-second">
+                            <i class="iconfont no-sale"></i>
+                        </div>
+                        <!-- 如果是下架的商品就走下面的模块 _end -->
+                    @else
+                        <div class="cart-box cart-box-second" id="number_{{ $v['goods_id'] }}">
+                            <i class="decrease remove-cart iconfont icon-jian2 hide" data-goods_id="{{ $v['goods_id'] }}"></i>
+                            <input class="num hide" type="text" size="4" maxlength="5" value="0" onfocus="this.blur()">
+                            <i class="increase add-cart iconfont icon-jia1" data-goods_id="{{ $v['goods_id'] }}" data-image_url="{{ get_image_url($v['goods_image'], 'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80"></i>
+                        </div>
+                    @endif
                 </li>
-                <!-- -->
                 @endforeach
 
             </div>
@@ -71,7 +76,7 @@
     <div class="blank-div-footer"></div>
     <div class="colect-goods-footer">
         <!--全选后给goods-check-all增加select样式-->
-        <lable class="goods-check-all"></lable>
+        <lable class="goods-check-all"><i></i></lable>
         <span class="goods-seleted">
 已选择
 <em class="color">0</em>

@@ -17,12 +17,28 @@
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
 // | Date:2018-11-01
-// | Description: 评论采集
+// | Description: 系统商品库采集
 // +----------------------------------------------------------------------
 
 namespace App\Modules\Seller\Http\Controllers\Goods;
 
+use App\Models\Brand;
+use App\Models\Freight;
+use App\Models\Goods;
+use App\Models\LibGoodsSku;
 use App\Modules\Base\Http\Controllers\Seller;
+use App\Repositories\AttributeRepository;
+use App\Repositories\AttrValueRepository;
+use App\Repositories\CategoryRepository;
+use App\Repositories\GoodsLayoutRepository;
+use App\Repositories\LibCategoryRepository;
+use App\Repositories\LibGoodsAttrRepository;
+use App\Repositories\LibGoodsImageRepository;
+use App\Repositories\LibGoodsRepository;
+use App\Repositories\LibGoodsSkuRepository;
+use App\Repositories\LibGoodsSpecRepository;
+use App\Repositories\LibSpecAliasRepository;
+use App\Repositories\ShopCategoryRepository;
 use Illuminate\Http\Request;
 
 class LibGoodsController extends Seller
@@ -36,11 +52,49 @@ class LibGoodsController extends Seller
 
     ];
 
+    protected $libGoods;
+    protected $attribute;
+    protected $attrValue;
+    protected $goodsLayout;
+    protected $libGoodsImage;
+    protected $libGoodsAttr;
+    protected $libGoodsSpec;
+    protected $libGoodsSku;
+    protected $libSpecAlias;
+    protected $libCategory;
+    protected $category;
+    protected $shopCategory;
 
-    public function __construct()
+
+    public function __construct(
+        LibGoodsRepository $libGoods
+        ,AttributeRepository $attribute
+        ,AttrValueRepository $attrValue
+        ,GoodsLayoutRepository $goodsLayout
+        ,LibGoodsImageRepository $libGoodsImage
+        ,LibGoodsAttrRepository $libGoodsAttr
+        ,LibGoodsSpecRepository $libGoodsSpec
+        ,LibGoodsSkuRepository $libGoodsSku
+        ,LibSpecAliasRepository $libSpecAlias
+        ,LibCategoryRepository $libCategory
+        ,CategoryRepository $category
+        ,ShopCategoryRepository $shopCategory
+    )
     {
         parent::__construct();
 
+        $this->libGoods = $libGoods;
+        $this->attribute = $attribute;
+        $this->attrValue = $attrValue;
+        $this->goodsLayout = $goodsLayout;
+        $this->libGoodsImage = $libGoodsImage;
+        $this->libGoodsAttr = $libGoodsAttr;
+        $this->libGoodsSpec = $libGoodsSpec;
+        $this->libGoodsSku = $libGoodsSku;
+        $this->libSpecAlias = $libSpecAlias;
+        $this->libCategory = $libCategory;
+        $this->category = $category;
+        $this->shopCategory = $shopCategory;
 
         $this->set_menu_select('goods', 'goods-cloud-manage');
 
@@ -80,7 +134,7 @@ class LibGoodsController extends Seller
         $this->setLayoutBlock($blocks); // 设置block
 
         $where = [];
-        $where[] = ['shop_id', seller_shop_info()->shop_id];
+//        $where[] = ['shop_id', seller_shop_info()->shop_id];
         // 搜索条件
         $search_arr = [
             'goods_barcode', // 条形码
@@ -92,7 +146,7 @@ class LibGoodsController extends Seller
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
 
-                if ($v == 'keyword') {
+                if ($v == 'goods_barcode') {
                     $where[] = [$v, 'like', "%{$params[$v]}%"];
                 } else {
                     $where[] = [$v, $params[$v]];
@@ -102,18 +156,35 @@ class LibGoodsController extends Seller
         // 列表
         $condition = [
             'where' => $where,
-            'sortname' => 'id',
+            'sortname' => 'goods_id',
             'sortorder' => 'desc',
         ];
-        list($list, $total) = [[1], 1]; //$this->goodsUnit->getList($condition);
+        list($list, $total) = $this->libGoods->getList($condition);
+
+        if (!empty($list)) {
+            foreach ($list as $item) {
+                $isSku = LibGoodsSku::where('goods_id',$item->goods_id)->count() > 1 ? true : false;
+                $item->is_sku = $isSku;
+                $item->goods_remark = unserialize($item->goods_remark);
+                //是否已导入
+                $item->has_imported = false;
+                if (Goods::where('shop_id', seller_shop_info()->shop_id)->where('lib_goods_id', $item->goods_id)->count() > 0) {
+                    $item->has_imported = true;
+                }
+            }
+        }
 
         $pageHtml = pagination($total);
 
+        $brand_list = Brand::where([['is_show',1]])->get();
+        $lib_category_list = $this->libCategory->getFormatCategory();
+        $category_list = $this->category->getFormatCategory();
+        $compact = compact('title', 'list', 'total', 'pageHtml', 'brand_list', 'lib_category_list','category_list');
         if ($request->ajax()) {
-            $render = view('goods.lib-goods.partials._list', compact('list', 'total', 'pageHtml'))->render();
+            $render = view('goods.lib-goods.partials._list', $compact)->render();
             return result(0, $render);
         }
-        return view('goods.lib-goods.list', compact('title', 'list', 'pageHtml'));
+        return view('goods.lib-goods.list', $compact);
     }
 
     /**
@@ -125,15 +196,35 @@ class LibGoodsController extends Seller
      */
     public function import(Request $request)
     {
+        if ($request->method() == 'POST') {
 
-        $render = view('goods.lib-goods.import')->render();
+//            dd($request->);
+        }
+        $ids = $request->get('ids');
+        $shop_freight_fee = !empty(shopconf('freight_fee',false,seller_shop_info()->shop_id)) ? shopconf('freight_fee',false,seller_shop_info()->shop_id) : '0.00'; // 店铺统一运费
+
+        // 运费模板列表
+        $freight_list = Freight::where('shop_id', seller_shop_info()->shop_id)
+            ->orderBy('freight_id', 'desc')
+            ->select(['freight_id','title'])
+            ->get()->toArray();
+
+        $shop_category_list = $this->shopCategory->getShopCategoryList(seller_shop_info()->shop_id);
+
+
+        $compact = compact('ids', 'shop_freight_fee', 'freight_list', 'shop_category_list');
+
+        $render = view('goods.lib-goods.import', $compact)->render();
         return result(0, $render);
     }
 
     public function skuList(Request $request)
     {
+        $goods_id = $request->get('goods_id', 0);
 
-        $render = view('goods.lib-goods.sku_list')->render();
+        $sku_list = $this->libGoods->getSkuList($goods_id);
+        $compact = compact('sku_list', 'goods_id');
+        $render = view('goods.lib-goods.partials._sku_list', $compact)->render();
         return result(0, $render);
     }
 

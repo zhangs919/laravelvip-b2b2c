@@ -1,14 +1,6 @@
 /**
  * AJAX后台、卖家中心公共组件
- * 
- * ============================================================================
- * 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。
- * ============================================================================
- * 
- * @author: niqingyang
- * @version 1.0
- * @date 2015-11-19
- * @link http://www.68ecshop.com
+ *
  */
 
 (function($) {
@@ -177,7 +169,9 @@
 					return true;
 				}
 
-				var def = $.Deferred(), fr = new FileReader(), img = new Image();
+				var def = $.Deferred(),
+					fr = new FileReader(),
+					img = new Image();
 
 				img.onload = function() {
 					if (options.minWidth && this.width < options.minWidth) {
@@ -269,7 +263,8 @@
 					return true;
 				}
 
-				var def = $.Deferred(), video = document.createElement("VIDEO");
+				var def = $.Deferred(),
+					video = document.createElement("VIDEO");
 
 				var windowURL = window.URL || window.webkitURL;
 
@@ -380,13 +375,16 @@
 
 	/**
 	 * 文件上传
-	 * 
+	 *
 	 * @author niqingyang <niqy@qq.com>
 	 */
 	$.fileupload = function(settings) {
 
 		var defaults = {
 			url: '/site/upload-file.html',
+			// 粘帖上传的事件对象
+			pasteEvent: false,
+			// 上传文件的DOM元素
 			file: null,
 			// 允许上传的文件类型
 			accept: "*",
@@ -394,6 +392,8 @@
 			type: "*",
 			// 是否允许上传多个文件
 			multiple: false,
+			// 是否加水印
+			is_watermark: 0,
 			// 验证规则
 			options: null,
 			// 提交的数据
@@ -451,6 +451,62 @@
 			}
 		}
 
+		// 图片粘帖上传
+		if(settings.pasteEvent != false && settings.pasteEvent.clipboardData){
+			var items = settings.pasteEvent.clipboardData.items;
+
+			for (var i = 0; i < items.length; ++i) {
+
+				// 判断文件类型
+				if (items[i].kind == 'file' && items[i].type.match(/^image\//i)) {
+
+					// 创建表单对象，建立name=value的表单数据。
+					var formData = new FormData();
+
+					if(settings.data && typeof settings.data == "object"){
+						for(name in settings.data){
+							formData.append(name, settings.data[name]);
+						}
+					}
+
+					// 得到二进制数据
+					var file = items[i].getAsFile();
+					// name,value
+					formData.append("file", file);
+
+					// 加载
+					if (settings.loading) {
+						$.loading.start();
+					}
+
+					// 上传文件
+					$.ajax({
+						url: settings.url,
+						type: "POST",
+						data: formData,
+						// 告诉jQuery不要去处理发送的数据
+						processData: false,
+						// 告诉jQuery不要去设置Content-Type请求头
+						contentType: false,
+						dataType: "json",
+						success: function(result, status) {
+							if ($.isFunction(settings.callback)) {
+								settings.callback.call(settings, result);
+							}
+						},
+						error: settings.error
+					}).always(function() {
+						if (settings.loading) {
+							// 停止加载
+							$.loading.stop();
+						}
+					});
+				}
+			}
+
+			return;
+		}
+
 		var fileElementId = "ajaxFileUpload_file_" + new Date().getTime();
 
 		if (settings.file == null) {
@@ -466,7 +522,7 @@
 			$("body").append(element);
 			$(element).find("#" + fileElementId).click();
 		} else {
-			if ($(settings.file).attr("id")) {
+			if (!$(settings.file).attr("id")) {
 				$(settings.file).attr("id", fileElementId);
 			} else {
 				fileElementId = $(settings.file).attr("id");
@@ -518,6 +574,8 @@
 						// 加载
 						$.loading.start();
 					}
+					settings.data.is_watermark = settings.is_watermark;
+
 					// 上传文件
 					$.ajaxFileUpload({
 						url: settings.url,
@@ -565,12 +623,15 @@
 
 	/**
 	 * 图片上传
-	 * 
+	 *
 	 * @author niqingyang <niqy@qq.com>
 	 */
 	$.imageupload = function(settings) {
 		var defaults = {
 			url: '/site/upload-image',
+			// 粘帖上传的事件对象
+			pasteEvent: false,
+			// 上传文件的DOM对象
 			file: null,
 			// 允许上传的文件类型
 			accept: "image/jpg,image/jpeg,image/png,image/gif",
@@ -580,6 +641,8 @@
 			multiple: false,
 			// 验证规则
 			options: null,
+			// 是否水印
+			is_watermark: 0,
 			// 提交的数据
 			data: {},
 			// 上传后的回调函数
@@ -601,7 +664,7 @@
 
 	/**
 	 * 视频上传
-	 * 
+	 *
 	 * @author niqingyang <niqy@qq.com>
 	 */
 	$.videoupload = function(settings) {
@@ -645,7 +708,7 @@
 			// 上传后的回调函数
 			// @params result 返回的数据
 			callback: null,
-			width: 400,
+			// width: 400,
 			quality: 1,
 		};
 
@@ -682,8 +745,7 @@
 								$.loading.stop();
 							}
 						},
-						complete: function(XMLHttpRequest, textStatus) {
-						},
+						complete: function(XMLHttpRequest, textStatus) {},
 						error: function(XMLHttpRequest, textStatus, errorThrown) { // 上传失败
 							$.msg(XMLHttpRequest.status);
 							$.msg(XMLHttpRequest.readyState);
@@ -710,12 +772,15 @@
 			url: "/site/upload-image",
 			file: null,
 			loading: true,
+			// 默认不加水印
+			is_watermark: 0,
 			// 提交的数据
 			data: {},
 			// 上传后的回调函数
 			// @params result 返回的数据
+
 			callback: null,
-			width: 400,
+			// width: 400,
 			quality: 1,
 		};
 
@@ -732,7 +797,7 @@
 			if (settings.is_multiple) {
 				multiple = 'multiple';
 			}
-			var element = $("<div style='display: none;'><input type='file' "+ multiple +" id='" + fileElementId + "' name='" + fileElementId + "' accept='image/*'/></div>");
+			var element = $("<div style='display: none;'><input type='file' " + multiple + " id='" + fileElementId + "' name='" + fileElementId + "' accept='image/*'/></div>");
 			$("body").append(element);
 
 			$("#" + fileElementId).change(function() {
@@ -746,6 +811,7 @@
 				}).then(function(rst) {
 					settings.data = {
 						img_base64: rst.base64.split(",")[1],
+						is_watermark: settings.is_watermark,
 					};
 
 					$.ajax({
@@ -762,8 +828,7 @@
 								}
 							}
 						},
-						complete: function(XMLHttpRequest, textStatus) {
-						},
+						complete: function(XMLHttpRequest, textStatus) {},
 						error: function(XMLHttpRequest, textStatus, errorThrown) { // 上传失败
 							$.msg(XMLHttpRequest.status);
 							$.msg(XMLHttpRequest.readyState);
@@ -791,7 +856,7 @@
 
 	/**
 	 * 根据分页ID获取图片选择器对象
-	 * 
+	 *
 	 * @param page_id
 	 *            不为空则获取指定的控件对象，为空则获取全部的控件数组
 	 * @return 控件或者undefined
@@ -909,7 +974,7 @@
 
 	/**
 	 * 根据分页ID获取图片选择器对象
-	 * 
+	 *
 	 * @param page_id
 	 *            不为空则获取指定的控件对象，为空则获取全部的控件数组
 	 * @return 控件或者undefined
@@ -1024,7 +1089,7 @@
 
 	/**
 	 * 根据分页ID获取商品选择器对象
-	 * 
+	 *
 	 * @param page_id
 	 *            不为空则获取指定的控件对象，为空则获取全部的空间数组
 	 * @return 控件或者undefined
@@ -1054,10 +1119,22 @@
 
 	/**
 	 * 商品选择器
-	 * 
+	 *
 	 * @author niqingyang <niqy@qq.com>
 	 */
 	$.fn.goodspicker = function(settings) {
+
+		var checked_html = null;
+		var unchecked_html = null;
+
+		var init_goods_ids = [];
+		var init_sku_ids = [];
+
+		var add_goods_ids = [];
+		var del_goods_ids = [];
+
+		var add_sku_ids = [];
+		var del_sku_ids = [];
 
 		var defaults = {
 			url: '/goods/default/picker',
@@ -1074,6 +1151,8 @@
 			removeAll: null,
 			// 组件AJAX加载完成后的回调函数
 			callback: null,
+			//上传excel之后回调函数
+			uploadExcelCallback:null,
 			// Ajax提交参数
 			data: {
 				// 第一次显示
@@ -1101,14 +1180,34 @@
 				is_supply: 0,
 				// 是否显示仓库
 				show_store: 1,
+				// 多门店是否显示店铺商品
+				show_seller_goods: 0
 
 			},
 			// 被选中的商品、SKU列表<goods_id-sku_id>
 			values: [],
 			sku_ids: [],
 			goods_ids: [],
+			// 获取相对于初始数据新增的商品ID
+			getAddGoodsIds: function() {
+				return Array.from(add_goods_ids);
+			},
+			// 获取相对于初始数据移除的商品ID
+			getRemoveGoodsIds: function() {
+				return Array.from(del_goods_ids);
+			},
+			// 获取相对于初始数据新增的商品ID
+			getAddSkuIds: function() {
+				return Array.from(add_sku_ids);
+			},
+			// 获取相对于初始数据移除的商品ID
+			getRemoveSkuIds: function() {
+				return Array.from(del_sku_ids);
+			},
 			// 刷新被选中的数据
-			refreshSelectedData: function() {
+			refreshSelectedData: function(init) {
+
+				init = !!init;
 
 				var hashSet = [];
 
@@ -1116,7 +1215,7 @@
 
 				var values = [];
 
-				for (key in this.values) {
+				for (var key in this.values) {
 					var sku_id = this.values[key].sku_id + "";
 					var goods_id = this.values[key].goods_id + "";
 					if (this.is_sku == 1) {
@@ -1134,7 +1233,7 @@
 
 				this.values = values;
 
-				for (key in this.values) {
+				for (var key in this.values) {
 					var value = this.values[key];
 					if (value != undefined && hashSet["sku_" + value.sku_id] == undefined) {
 						sku_ids.push(value.sku_id);
@@ -1147,7 +1246,7 @@
 				hashSet = []
 
 				var goods_ids = [];
-				for (key in this.values) {
+				for (var key in this.values) {
 					var value = this.values[key];
 					if (value != undefined && hashSet["goods_" + value.goods_id] == undefined) {
 						goods_ids.push(value.goods_id);
@@ -1173,6 +1272,33 @@
 					$("body").data("goodspickers", {});
 				}
 				$("body").data("goodspickers")[this.data.page.page_id] = this;
+
+				// 记录初始化的数据
+				if(init) {
+					init_goods_ids = new Set(this.goods_ids);
+					init_sku_ids = new Set(this.sku_ids);
+				}else{
+
+					add_goods_ids = new Set(this.goods_ids.filter(function(x){
+						return !init_goods_ids.has(x)
+					}));
+					add_sku_ids = new Set(this.sku_ids.filter(function(x){
+						return !init_sku_ids.has(x)
+					}));
+
+					var goods_ids_set = new Set(this.goods_ids);
+					var sku_ids_set = new Set(this.sku_ids);
+
+					del_goods_ids = new Set(Array.from(init_goods_ids).filter(function(x){
+						return !goods_ids_set.has(x)
+					}));
+					del_sku_ids = new Set(Array.from(init_goods_ids).filter(function(x){
+						return !sku_ids_set.has(x)
+					}));
+
+					console.log("新增", Array.from(add_goods_ids));
+					console.log("删除", Array.from(del_goods_ids));
+				}
 			},
 			// 取消选择指定的SKU商品
 			remove: function(goods_id, sku_id) {
@@ -1216,14 +1342,10 @@
 
 				// 渲染页面
 				this.render(true, goods_id, sku_id);
-
 			},
 			// 渲染页面
 			render: function(selected, goods_id, sku_id) {
-				// var target =
-				// $(this.container).find(".btn-goodspicker[data-sku-id='" +
-				// sku_id + "']").filter(".btn-goodspicker[data-goods-id='" +
-				// goods_id + "']");
+
 				var target = $(this.container).find(".btn-goodspicker[data-goods-id='" + goods_id + "']");
 
 				if (target.size() > 0) {
@@ -1231,9 +1353,15 @@
 					var html = null;
 
 					if (selected == true) {
-						html = $(container).find("#btn_checked_template").html();
+						if(checked_html == null) {
+							checked_html = $(container).find("#btn_checked_template").html();
+						}
+						html = checked_html;
 					} else {
-						html = $(container).find("#btn_unchecked_template").html();
+						if(unchecked_html == null) {
+							unchecked_html = $(container).find("#btn_unchecked_template").html();
+						}
+						html = unchecked_html;
 					}
 
 					var element = $($.parseHTML(html));
@@ -1241,10 +1369,8 @@
 					$(element).attr("data-goods-id", goods_id);
 
 					$(target).replaceWith(element);
-
 				}
 			}
-
 		}
 
 		settings.container = $(this).first();
@@ -1255,7 +1381,7 @@
 		settings.is_sku = is_sku;
 
 		// 刷新数据
-		settings.refreshSelectedData();
+		settings.refreshSelectedData(true);
 
 		// 设置已选择的数据
 		if (settings.sku_ids.length > 0) {
@@ -1277,11 +1403,21 @@
 
 		$.loading.start();
 
+		var data = settings.data;
+
+		if($.isArray(data.goods_ids)) {
+			data.goods_ids = data.goods_ids.join(",");
+		}
+
+		if($.isArray(data.sku_ids)) {
+			data.sku_ids = data.sku_ids.join(",");
+		}
+
 		$.ajax({
 			url: settings.url,
-			type: "GET",
+			type: "POST",
 			async: true,
-			data: settings.data,
+			data: data,
 			dataType: "json",
 			error: function(data) {
 
@@ -1364,7 +1500,14 @@
 
 								var result = settings.click.call(settings, selected, sku);
 
-								if (result != undefined && result == false) {
+								if (!!result && typeof result.then === 'function'){
+									result.always(function(result){
+										if(result.code != 0){
+											// 删除数据
+											settings.remove(goods_id, sku_id);
+										}
+									});
+								} else if (result != undefined && result == false) {
 									// 删除数据
 									settings.remove(goods_id, sku_id);
 								}
@@ -1381,7 +1524,14 @@
 
 						var result = settings.click.call(settings, selected, sku);
 
-						if (result != undefined && result == false) {
+						if (!!result && typeof result.then === 'function'){
+							result.always(function(result){
+								if(result.code != 0){
+									// 删除数据
+									settings.remove(goods_id, sku_id);
+								}
+							});
+						} else if (result != undefined && result == false) {
 							// 删除数据
 							settings.remove(goods_id, sku_id);
 						}
@@ -1395,7 +1545,14 @@
 
 					var result = settings.click.call(settings, selected, sku);
 
-					if (result != undefined && result == false) {
+					if (!!result && typeof result.then === 'function'){
+						result.always(function(result){
+							if(result.code != 0){
+								// 删除数据
+								settings.remove(goods_id, sku_id);
+							}
+						});
+					} else if (result != undefined && result == false) {
 						// 删除数据
 						settings.remove(goods_id, sku_id);
 					}
@@ -1409,9 +1566,299 @@
 		return settings;
 	};
 
+
+	/**
+	 * 获取积分商品选择器对象
+	 */
+	$.integralgoodspicker = function(target) {
+		if (target instanceof jQuery) {
+			if ($(target).hasClass("szy-integralgoodspicker")) {
+				return $(target).data('szy.integralgoodspicker');
+			} else if ($(target).parents(".szy-integralgoodspicker").size() > 0) {
+				return $(target).parents(".szy-integralgoodspicker").data('szy.integralgoodspicker');
+			} else {
+				return $(target).data('szy.integralgoodspicker');
+			}
+		}
+		return null;
+	}
+
+	$.integralgoodspickers = function(page_id) {
+		if ($("body").data("integralgoodspickers") && page_id != undefined) {
+			return $("body").data("integralgoodspickers")[page_id];
+		}
+		return $("body").data("integralgoodspickers");
+	}
+
+
+	/**
+	 * 积分商品选择器
+	 *
+	 * @author niqingyang <niqy@qq.com>
+	 */
+	$.fn.integralgoodspicker = function(settings) {
+
+		var defaults = {
+			url: '/dashboard/integral-mall/picker',
+			// 选择器的容器
+			container: null,
+			// 选择商品和未选择商品的按钮单击事件
+			// @param selected 点击是否选中
+			// @param sku 选中的SKU对象或者SPU对象
+			// @return 返回false代表
+			click: null,
+			// 全部取消
+			removeAll: null,
+			// 组件AJAX加载完成后的回调函数
+			callback: null,
+			// Ajax提交参数
+			data: {
+				// 第一次显示
+				output: true,
+				left: 'col-sm-0',
+				right: 'col-sm-12',
+				page: {
+					// 分页ID
+					page_id: "GoodsPickerPage_" + uuid(),
+					// 默认当前页
+					cur_page: 1,
+					// 每页显示的记录数
+					page_size: 5,
+					// 每页显示的下拉列表
+					page_size_list: [5, 10, 15, 20]
+				},
+				// 默认为出售中的商品
+				goods_status: 1,
+
+			},
+			values: [],
+			goods_ids: [],
+			// 刷新被选中的数据
+			refreshSelectedData: function() {
+
+				var hashSet = [];
+
+				var values = [];
+
+				for (key in this.values) {
+					var goods_id = this.values[key].goods_id + "";
+					if (this.is_sku == 1) {
+						values[goods_id] = {
+							goods_id: goods_id,
+						};
+					} else {
+						values[goods_id] = {
+							goods_id: goods_id,
+						};
+					}
+				}
+
+				this.values = values;
+
+				hashSet = []
+
+				var goods_ids = [];
+				for (key in this.values) {
+					var value = this.values[key];
+					if (value != undefined && hashSet["goods_" + value.goods_id] == undefined) {
+						goods_ids.push(value.goods_id);
+						hashSet["goods_" + value.goods_id] = true;
+					}
+				}
+
+				this.goods_ids = goods_ids;
+
+
+				// 设置被选中的数量
+				$(this.container).find(".selected_number").html(this.goods_ids.length);
+
+
+				$(this.container).addClass("szy-integralgoodspicker");
+				$(this.container).data("szy.integralgoodspicker", this);
+
+				// 刷新
+				if (!$("body").data("integralgoodspickers")) {
+					$("body").data("integralgoodspickers", {});
+				}
+				$("body").data("integralgoodspickers")[this.data.page.page_id] = this;
+			},
+			// 取消选择指定的SKU商品
+			remove: function(goods_id) {
+
+				goods_id = goods_id + "";
+
+				// 删除数据
+
+				delete this.values[goods_id];
+
+
+				// 刷新选择的数据
+				this.refreshSelectedData();
+
+				// 渲染页面
+				this.render(false, goods_id);
+			},
+			add: function(goods_id) {
+
+				goods_id = goods_id + "";
+
+				// 添加数据
+
+				this.values[goods_id] = {
+					goods_id: goods_id,
+				};
+
+
+				// 刷新选择的数据
+				this.refreshSelectedData();
+
+				// 渲染页面
+				this.render(true, goods_id);
+
+			},
+			// 渲染页面
+			render: function(selected, goods_id) {
+
+				var target = $(this.container).find(".btn-goodspicker[data-goods-id='" + goods_id + "']");
+
+				if (target.size() > 0) {
+
+					var html = null;
+
+					if (selected == true) {
+						html = $(container).find("#btn_checked_template").html();
+					} else {
+						html = $(container).find("#btn_unchecked_template").html();
+					}
+
+					var element = $($.parseHTML(html));
+					$(element).attr("data-goods-id", goods_id);
+
+					$(target).replaceWith(element);
+
+				}
+			}
+
+		}
+
+		settings.container = $(this).first();
+		settings = $.extend(true, defaults, settings);
+		settings.data.url = settings.url;
+
+		// 刷新数据
+		settings.refreshSelectedData();
+
+		// 设置已选择的数据
+
+		if (settings.goods_ids.length > 0) {
+			settings.data.goods_ids = settings.goods_ids;
+		}
+
+		var container = $(settings.container);
+
+		$(container).addClass("szy-integralgoodspicker");
+		$(container).data("szy.integralgoodspicker", settings);
+
+		if (!$("body").data("integralgoodspickers")) {
+			$("body").data("integralgoodspickers", {});
+		}
+		$("body").data("integralgoodspickers")[settings.data.page.page_id] = settings;
+
+		$.loading.start();
+
+		$.ajax({
+			url: settings.url,
+			type: "POST",
+			async: true,
+			data: settings.data,
+			dataType: "json",
+			error: function(data) {
+
+				$.loading.stop();
+
+				// Ajax请求结束
+				is_ajax_loading = false;
+
+				if (top.loading) {
+					// 停止显示加载进度条
+					top.loading.stop();
+				}
+
+				alert("失败" + data.status);
+			},
+			success: function(result) {
+
+				$.loading.stop();
+
+				if (result.code == 0) {
+					$(container).html(result.data);
+				} else if (result.message) {
+					if ($.isFunction($.msg)) {
+						$.msg(result.message, {
+							time: 5000
+						});
+					} else {
+						alert(result.message);
+					}
+				}
+
+				// 刷新数据
+				settings.refreshSelectedData();
+
+				if ($.isFunction(settings.callback)) {
+					settings.callback.call(settings);
+				}
+			}
+		});
+
+		// 单击选择、已选择按钮的事件
+		$(container).on("click", ".btn-goodspicker", function() {
+
+			// 获取数据
+			var goods_id = $(this).data("goods-id");
+			var selected = $(this).data("selected") == true ? false : true;
+
+			// 必须放在这里否则有问题
+			var goods = $(this).parents(".integral-goods-item").serializeJson();
+
+			if (selected == true) {
+					// 添加数据
+					settings.add(goods_id);
+
+					if ($.isFunction(settings.click)) {
+						var result = settings.click.call(settings, selected, goods);
+						if (result != undefined && result == false) {
+							// 删除数据
+							settings.remove(goods_id);
+						}
+					}
+
+			} else {
+				// 删除数据
+				settings.remove(goods_id);
+
+				if ($.isFunction(settings.click)) {
+
+					var result = settings.click.call(settings, selected, goods);
+
+					if (result != undefined && result == false) {
+						// 删除数据
+						settings.remove(goods_id);
+					}
+				}
+			}
+		});
+
+		// 刷新数据
+		settings.refreshSelectedData();
+
+		return settings;
+	};
+
+
 	/**
 	 * 数量步进器
-	 * 
+	 *
 	 * @author niqingyang <niqy@qq.com>
 	 */
 	$.fn.amount = function(options) {
@@ -1457,6 +1904,10 @@
 
 					if (!isNaN($(this.target).data("amount-max"))) {
 						settings.max = $(target).data("amount-max");
+					}
+
+					if (!isNaN($(this.target).data("amount-step"))) {
+						settings.step = $(target).data("amount-step");
 					}
 
 					if ($.trim(this.target.val()) == '') {
@@ -1505,6 +1956,11 @@
 			} else {
 				settings.max = 999999999;
 			}
+			if (!isNaN($(target).data("amount-step"))) {
+				settings.step = $(target).data("amount-step");
+			} else {
+				settings.step = 1;
+			}
 
 			if (!isNaN($(target).data("id"))) {
 				settings.id = $(target).data("id");
@@ -1541,8 +1997,11 @@
 				if (!isNaN($(target).data("amount-max"))) {
 					settings.max = $(target).data("amount-max");
 				}
+				if (!isNaN($(target).data("amount-step"))) {
+					settings.step = $(target).data("amount-step");
+				}
 
-				var value = parseInt(target.val()) + settings.step;
+				var value = parseInt(target.val()) + parseInt(settings.step);
 
 				if (isNaN(value)) {
 					return;
@@ -1580,8 +2039,11 @@
 				if (!isNaN($(target).data("amount-max"))) {
 					settings.max = $(target).data("amount-max");
 				}
+				if (!isNaN($(target).data("amount-step"))) {
+					settings.step = $(target).data("amount-step");
+				}
 
-				var value = settings.parseValue(target.val()) - settings.step;
+				var value = settings.parseValue(target.val()) - parseInt(settings.step);
 				if (isNaN(value)) {
 					return;
 				}
@@ -1632,7 +2094,7 @@
 				 * ascii码说明： 8：退格键 46：delete 37-40： 方向键 48-57：小键盘区的数字
 				 * 96-105：主键盘区的数字 110、190：小键盘区和主键盘区的小数点 189、109：小键盘区和主键盘区的负号
 				 * 116:F5
-				 * 
+				 *
 				 * 13：回车 9： Tab 就是那个把焦点移到下一个文本框的东东。
 				 */
 				if ((iKeyCode >= 48) && (iKeyCode <= 57) || (iKeyCode >= 96) && (iKeyCode <= 105) || (iKeyCode >= 37) && (iKeyCode <= 40) || iKeyCode === 8 || iKeyCode == 46 || iKeyCode == 116) {
@@ -1648,7 +2110,8 @@
 				}
 			}).keyup(function() {
 				timeout_id = setTimeout(function() {
-					settings.valid();
+					// 避免覆盖客户输入
+					// settings.valid();
 				}, 700);
 			}).blur(function() {
 
@@ -1658,6 +2121,10 @@
 
 				if (!isNaN($(target).data("amount-max"))) {
 					settings.max = $(target).data("amount-max");
+				}
+
+				if (!isNaN($(target).data("amount-step"))) {
+					settings.step = $(target).data("amount-step");
 				}
 
 				if ($.trim(target.val()) == '') {
@@ -2032,6 +2499,8 @@
 			is_mobile: false,
 			// 手机端增加 multiple 参数，上传图片的时候可以选择相册
 			is_multiple: false,
+			// 图片是否要加水印
+			is_watermark: 0,
 
 			messages: {
 				"delete file": "删除图片",
@@ -2565,6 +3034,10 @@
 					}
 
 					if (settings.gallery == true) {
+
+						// 开始加载
+						$.loading.start();
+
 						$.open({
 							title: "选择图片",
 							width: "700px",
@@ -2580,6 +3053,9 @@
 							},
 							btn: ['确定', '取消'],
 							success: function(obj, index) {
+								// 停止加载
+								$.loading.stop();
+
 								$(obj).find(".image-selector-container").data("options", options);
 							},
 							yes: function(index, obj) {
@@ -2619,6 +3095,7 @@
 							// 手机端图片上传
 							$.localResizeIMG({
 								is_multiple: settings.is_multiple,
+								is_watermark: settings.is_watermark,
 								callback: function(result) {
 									if (result.code == 0) {
 										// 添加项
@@ -2635,6 +3112,7 @@
 								url: settings.url,
 								options: options,
 								data: settings.data,
+								is_watermark: settings.is_watermark,
 								callback: function(result) {
 									if (result.code == 0) {
 										// 添加项
@@ -2788,7 +3266,12 @@
 
 				if (this.video != undefined && this.video != null && $.trim(this.video) != "") {
 					var dir = $("script[src*='/assets/']:first").attr("src");
-					dir = dir.substring(0, dir.indexOf("/js/"));
+
+					if (dir) {
+						dir = dir.substring(0, dir.indexOf("/js/"));
+					} else {
+						dir = "";
+					}
 
 					var url = this.video;
 
@@ -2867,7 +3350,7 @@
 
 					var current_class = i == 0 ? 'current' : '';
 					html += '<li>';
-					html += '<a  data-original="' + image[2] + '" rev="' + image[1] + '" rel="zoom-id: gg-zoom;" title="" class="' + current_class + '">';
+					html += '<a href="' + image[2] + '" data-original="' + image[2] + '" rev="' + image[1] + '" rel="zoom-id: gg-zoom;" title="" class="' + current_class + '">';
 					html += '<img src="' + image[1] + '" alt="" class="" />';
 					html += '</a>';
 					html += '</li>';
@@ -3014,8 +3497,180 @@
 				left: -num01 * 70
 			}, 100);
 		})
+	};
+
+	// 按指定大小分割数组
+	function array_chunk(items, size) {
+
+		if(size == undefined){
+			size = 100;
+		}
+
+	    if(items.length <= 0 || size <= 0){
+	      return items;
+	    }
+
+	    var chunks = [];
+
+	    for(var i = 0; i < items.length; i = i + size){
+	        chunks.push(items.slice(i, i + size));
+	    }
+
+	    return chunks;
 	}
 
+	/**
+	 * 规格选择器
+	 */
+	$.fn.specSelector = function(settings) {
+
+		if (!settings) {
+			return $(this).data("specSelector");
+		}
+
+		var container = $(this);
+
+		var defaults = {
+			api: "specSelector",
+			container: $(this),
+			url: '/site/spec-list.html',
+			data: {
+				format: "ztree"
+			},
+			values: [],
+			items: null,
+			ztree: null,
+			// ztree配置
+			ztree_config: {
+				view: {
+					dblClickExpand: true,
+					selectedMulti: false,
+					nameIsHTML: true
+				},
+				data: {
+					key: {
+						name: "attr_name"
+					},
+					simpleData: {
+						enable: true,
+						idKey: "attr_id",
+						pIdKey: "parent_id",
+						rootPId: "0",
+					}
+				}
+			},
+			// 初始化 ztree
+			initZTree: function(items){
+
+				$.fn.zTree.init($(container).find("#" + this.ztree_id), this.ztree_config, []);
+
+				var ztree = $.fn.zTree.getZTreeObj(this.ztree_id);
+
+				var list = array_chunk(items);
+
+				var queue = [];
+
+				list.forEach(function(items){
+					queue.push(new Promise(function(resolve, reject){
+						ztree.addNodes(null, -1, items);
+						resolve();
+					}));
+				});
+
+				this.ztree = ztree;
+				this.items = items;
+
+				return Promise.all(queue);
+			},
+			// 渲染工具栏按钮
+			renderButtons: function(show){}
+		};
+
+		settings = $.extend(true, defaults, settings);
+
+		settings = $(this).treechosen(settings);
+
+		return settings;
+	};
+
+	/**
+	 * 规格值选择器
+	 */
+	$.fn.specValueSelector = function(settings) {
+
+		if (!settings) {
+			return $(this).data("specValueSelector");
+		}
+
+		var container = $(this);
+
+		var defaults = {
+			api: "specValueSelector",
+			container: $(this),
+			url: '/site/spec-value-list.html',
+			data: {
+				format: "ztree"
+			},
+			values: [],
+			items: null,
+			ztree: null,
+			// ztree配置
+			ztree_config: {
+				view: {
+					dblClickExpand: true,
+					selectedMulti: false,
+					nameIsHTML: true
+				},
+				data: {
+					key: {
+						name: "attr_vname"
+					},
+					simpleData: {
+						enable: true,
+						idKey: "attr_vid",
+						pIdKey: "parent_id",
+						rootPId: "0",
+					}
+				}
+			},
+			// 初始化 ztree
+			// 必须返回一个 Promise 对象
+			initZTree: function(items){
+
+				$.fn.zTree.init($(container).find("#" + this.ztree_id), this.ztree_config, []);
+
+				var ztree = $.fn.zTree.getZTreeObj(this.ztree_id);
+
+				var list = array_chunk(items);
+
+				var queue = [];
+
+				list.forEach(function(items){
+					queue.push(new Promise(function(resolve, reject){
+						ztree.addNodes(null, -1, items);
+						resolve();
+					}));
+				});
+
+				this.ztree = ztree;
+				this.items = items;
+
+				return Promise.all(queue);
+			},
+			// 渲染工具栏按钮
+			renderButtons: function(){}
+		};
+
+		settings = $.extend(true, defaults, settings);
+
+		settings = $(this).treechosen(settings);
+
+		return settings;
+	};
+
+	/**
+	 * 分类选择器
+	 */
 	$.fn.catselector = function(settings) {
 
 		if (!settings) {
@@ -3045,6 +3700,99 @@
 					simpleData: {
 						enable: true,
 						idKey: "cat_id",
+						pIdKey: "parent_id",
+						rootPId: "0",
+					}
+				}
+			},
+		};
+
+		settings = $.extend(true, defaults, settings);
+
+		settings = $(this).treechosen(settings);
+
+		return settings;
+	};
+
+	/**
+	 * 店铺选择器
+	 */
+	$.fn.shopselector = function(settings) {
+
+		if (!settings) {
+			return $(this).data("shopselector");
+		}
+
+		var container = $(this);
+
+		var defaults = {
+			api: "shopselector",
+			container: $(this),
+			url: '/site/shop-list.html',
+			data: {
+				format: "ztree"
+			},
+			values: [],
+			items: null,
+			ztree: null,
+			// ztree配置
+			ztree_config: {
+				view: {
+					dblClickExpand: true,
+					selectedMulti: false,
+					nameIsHTML: true
+				},
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "shop_id",
+						pIdKey: "parent_id",
+						rootPId: "0",
+					}
+				}
+			},
+		};
+
+		settings = $.extend(true, defaults, settings);
+
+		settings = $(this).treechosen(settings);
+
+		return settings;
+
+	};
+
+	/**
+	 * 门店选择器
+	 */
+	$.fn.multistoreselector = function(settings) {
+
+		if (!settings) {
+			return $(this).data("multistoreselector");
+		}
+
+		var container = $(this);
+
+		var defaults = {
+			api: "multistoreselector",
+			container: $(this),
+			url: '/site/multi-store-list.html',
+			data: {
+				format: "ztree"
+			},
+			values: [],
+			items: null,
+			ztree: null,
+			// ztree配置
+			ztree_config: {
+				view: {
+					dblClickExpand: true,
+					selectedMulti: false,
+					nameIsHTML: true
+				},
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "store_id",
 						pIdKey: "parent_id",
 						rootPId: "0",
 					}
@@ -3105,6 +3853,59 @@
 
 	};
 
+	// 搜索选择组件
+	$.fn.dataselector = function(settings) {
+		if (!settings) {
+			return $(this).data("clsselector");
+		}
+
+		var container = $(this);
+
+		var defaults = {
+			api: "dataselector",
+			container: $(this),
+			url: '',
+			data: {
+				format: "ztree"
+			},
+			values: [],
+			items: null,
+			ztree: null,
+			// ztree配置
+			ztree_config: {
+				view: {
+					dblClickExpand: true,
+					selectedMulti: false,
+					nameIsHTML: true
+				},
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "id",
+						pIdKey: "parent_id",
+						name: "name",
+						rootPId: "0",
+					}
+				}
+			},
+			// 渲染工具栏按钮
+			renderButtons: function(){
+				$(this.getButtonContainer()).html("");
+			},
+			//search: function (keyword) {
+			//	console.warn("请实现search函数，keyword=" + keyword);
+			//}
+		};
+
+		settings = $.extend(true, defaults, settings);
+
+		settings = $(this).treechosen(settings);
+
+		return settings;
+	}
+
+	var tree_data_cache = [];
+
 	$.fn.treechosen = function(settings) {
 
 		var container = this;
@@ -3146,6 +3947,11 @@
 			},
 			values: [],
 			items: null,
+			// 搜索提示文本
+			searchText: '输入关键词搜索',
+			// 数据为空时的提示文本
+			emptyText: '暂无任何记录',
+			// 获取值
 			getValues: function() {
 				var values = [];
 				$(this.container).find(".tree-chosen-item").each(function() {
@@ -3173,6 +3979,13 @@
 			change: function() {
 
 			},
+			// 搜索回调函数
+			// @params string keyword 关键词
+			// @params array nodes 搜索结果
+			searchCallback: null,
+			// ztree 实例对象
+			ztree_id: ztree_id,
+			// ztree 实例对象
 			ztree: null,
 			// ztree配置
 			ztree_config: {
@@ -3204,23 +4017,45 @@
 				}
 			},
 			render: function() {
-				var html = '<div class="form-control-box">';
+				var html = '<div class="tree-chosen-box-box">';
 				html += '<div class="tree-chosen-box">';
 				html += '<div class="tree-chosen-input-box form-control">';
 
 				html += '</div>';
 
 				html += '<div class="tree-chosen-panel-box">';
-				html += '<input type="text" class="tree-chosen-input form-control-xs m-r-5" value="" placeholder="输入关键词、简拼、全拼搜索" style="width: 200px;">';
-				html += '<a class="btn btn-primary btn-sm tree-chosen-btn-open m-r-2" title="全部展开/收起"><i class="fa fa-plus-circle" style="margin-right: 0px;"></i></a>';
-				html += '<a class="btn btn-primary btn-sm tree-chosen-btn-clear" title="全部清除所选"><i class="fa fa-trash-o" style="margin-right: 0px;"></i></a>';
-				html += '<div class="ztree-box">';
+				html += '<div class="tree-chosen-panel-tools">';
+
+				html += '<input type="text" class="tree-chosen-input form-control-xs" value="" placeholder="' + this.searchText + '">';
+
+				html += '<span class="tree-chosen-panel-tools-btns">';
+
+				html += '</span>';
+
+				html += '</div>';
+
+				html += '<div class="ztree-box tree-chosen-panel-data">';
 				html += '<ul id="' + ztree_id + '" class="ztree"></ul>';
 				html += '</div>';
 				html += '</div>';
 				html += '</div>';
 
 				$(this.container).html(html);
+
+				// 渲染工具栏按钮
+				if($.isFunction(this.renderButtons)){
+					this.renderButtons();
+				}
+			},
+			// 获取按钮容器
+			getButtonContainer: function() {
+				return $(this.container).find(".tree-chosen-panel-tools-btns");
+			},
+			// 渲染工具栏按钮
+			renderButtons: function(){
+				var html = '<a class="btn btn-primary btn-sm tree-chosen-btn-open m-l-4 m-r-4" title="全部展开/收起"><i class="fa fa-plus-circle" style="margin-right: 0px;"></i></a>';
+				html += '<a class="btn btn-primary btn-sm tree-chosen-btn-clear" title="全部清除所选"><i class="fa fa-trash-o" style="margin-right: 0px;"></i></a>';
+				$(this.getButtonContainer()).append(html);
 			},
 			// 添加
 			add: function(id, name, treeNode) {
@@ -3228,6 +4063,10 @@
 				// 已存在则跳过
 				if ($(this.container).find(".tree-chosen-input-box").find(".tree-chosen-item[data-value='" + id + "']").size() > 0) {
 					return;
+				}
+
+				if(treeNode == undefined){
+					treeNode = this.getNode(id);
 				}
 
 				var size = $(this.container).find(".tree-chosen-input-box").find(".tree-chosen-item").size();
@@ -3250,71 +4089,167 @@
 					}
 
 					if ($.isFunction(this.change)) {
-						this.change.call(this);
+						this.change.call(this, 'add');
 					}
 				}
 			},
 			// 移除
 			remove: function(id) {
 
+				var treeNode = this.getNode(id);
+
 				var target = $(this.container).find(".tree-chosen-input-box").find(".tree-chosen-item[data-value='" + id + "']");
 
 				$(target).remove();
 
 				if ($.isFunction(this.removeCallback)) {
-					this.removeCallback.call(this, id, $(target).data("name"));
+					this.removeCallback.call(this, id, $(target).data("name"), treeNode);
 				}
 
 				if ($.isFunction(this.change)) {
-					this.change.call(this);
+					this.change.call(this, 'remove');
 				}
 			},
-			// 隐藏
-			hide: function() {
-				$(container).find(".tree-chosen-panel-box").hide();
+			clear: function(){
+				var that = this;
+
+				$(container).find(".tree-chosen-item").each(function() {
+					var id = $(this).data("value");
+					var name = $(this).data("name");
+
+					$(this).remove();
+
+					if ($.isFunction(settings.removeCallback)) {
+						that.removeCallback.call(settings, id, name, that.getNode(id));
+					}
+				});
+
+				if ($.isFunction(this.change)) {
+					settings.change.call(this, 'clear');
+				}
 			},
-			load: function() {
+			// 获取 ztree 节点对象
+			getNode: function(id){
+				var treeNodes = this.ztree.getNodesByParam(this.ztree_config.data.simpleData.idKey, id);
+				return treeNodes.length > 0 ? treeNodes[0] : null;
+			},
+			// 添加节点
+			addNode: function(id, name, nodeData, parent){
+				parent = parent ? parent : null;
+
+				nodeData = nodeData ? nodeData : {};
+
+				nodeData[this.ztree_config.data.simpleData.idKey] = id;
+				nodeData[this.ztree_config.data.key.name] = name;
+
+				// http://www.treejs.cn/v3/api.php
+				return this.ztree.addNodes(parent, -1, [nodeData]);
+			},
+			// 设置数据
+			// 必须返回一个 Promise 对象
+			setData: function(data) {
+				return this.initZTree(data);
+			},
+			// 初始化 ztree
+			// 必须返回一个 Promise 对象
+			initZTree: function(data){
+
+				$.fn.zTree.init($(container).find("#" + ztree_id), this.ztree_config, data);
+
+				this.ztree = $.fn.zTree.getZTreeObj(ztree_id);
+
+				this.items = data;
+
+				if(this.items && this.items.length > 0) {
+					$(container).find(".tree-chosen-panel-data").css({
+						"text-align": "center",
+						"padding-top": "0px",
+					});
+				}else{
+					$(container).find(".tree-chosen-panel-data").css({
+						"text-align": "center",
+						"padding-top": "80px",
+					});
+					$(container).find(".tree-chosen-panel-data").find(".ztree").html(this.emptyText);
+				}
+
+				return new Promise(function(resolve){
+					resolve();
+				});
+			},
+
+			// 加载
+			load: function(reload) {
+
+				// 重新加载
+				if(reload) {
+					// 清空缓存
+					tree_data_cache = [];
+				}
 
 				if (this.loading == true) {
 					return false;
+				}
+
+				if(!this.url) {
+					if(!this.items || this.items.length == 0) {
+						return this.setData([]);
+					}
+					return new Promise(function(resolve){
+						resolve();
+					});
 				}
 
 				this.loading = true;
 
 				var settings = this;
 
-				return $.get(this.url, this.data, function(result) {
+				function success(result){
+
+					// 存入缓存
+					tree_data_cache[key] = result;
+
 					if ($.fn.zTree) {
 
-						$.fn.zTree.init($(container).find("#" + ztree_id), settings.ztree_config, result.data);
+						// 初始化 ztree
+						settings.initZTree(result.data).then(function(){
 
-						settings.ztree = $.fn.zTree.getZTreeObj(ztree_id);
-
-						settings.items = result.data;
-
-						for (var i = 0; i < settings.items.length; i++) {
-							var node = settings.items[i];
-							if (node != null) {
-								nodeMap[node[zkeys.id]] = node;
-							}
-						}
-
-						var nodes = settings.ztree.getNodes();
-
-						for (var i = 0; i < nodes.length; i++) {
-							var node = nodes[i];
-							if (node.children && node.children.length > 0) {
-								node.isParent = true;
-							} else {
-								node.isParent = false;
+							for (var i = 0; i < settings.items.length; i++) {
+								var node = settings.items[i];
+								if (node != null) {
+									nodeMap[node[zkeys.id]] = node;
+								}
 							}
 
-							settings.ztree.updateNode(node);
-						}
+							var nodes = settings.ztree.getNodes();
+
+							for (var i = 0; i < nodes.length; i++) {
+								var node = nodes[i];
+
+								var isParent = node.isParent;
+
+								if (node.children && node.children.length > 0) {
+									node.isParent = true;
+								} else {
+									node.isParent = false;
+								}
+
+								// 避免无意义的更新，此处更新最为耗时
+								if(node.isParent != isParent){
+									settings.ztree.updateNode(node);
+								}
+							}
+						});
 					} else {
 						alert("缺少zTree");
 					}
-				}, "JSON").always(function() {
+
+					return new Promise(function(resolve){
+						resolve();
+					});
+				}
+
+				function always(){
 					$.loading.stop();
 
 					if ($.isArray(settings.values)) {
@@ -3332,19 +4267,47 @@
 							}
 						}
 					}
-				});
+				}
+
+				if(JSON && JSON.stringify){
+					var key = this.url + "_" + JSON.stringify(this.data);
+
+					// 获取缓存
+					if(tree_data_cache[key]){
+						success(tree_data_cache[key]);
+						always();
+						return $.Deferred().promise();
+					}
+				}
+
+				return $.get(this.url, this.data, success, "JSON").always(always);
+			},
+			// 隐藏
+			hide: function() {
+				$(container).find(".tree-chosen-panel-box").fadeOut("fast");
 			},
 			// 显示
 			show: function() {
 				if (settings.items == null) {
 					$.loading.start();
 					this.load();
-					$(container).find(".tree-chosen-panel-box").show();
 				} else {
 					$.loading.stop();
-					$(container).find(".tree-chosen-panel-box").show();
 				}
+				$(container).find(".tree-chosen-panel-box").fadeIn("fast");
 				$(container).find(".tree-chosen-panel-box").find(".tree-chosen-input").focus();
+			},
+			// 刷新
+			refresh: function(){
+				var zNodes = this.items;
+
+				for (var i = 0; i < zNodes.length; i++) {
+					zNodes[i].font = {};
+				}
+
+				$.fn.zTree.init($("#" + ztree_id), this.ztree_config, zNodes);
+				this.ztree = $.fn.zTree.getZTreeObj(ztree_id);
+				this.ztree.refresh();
 			},
 			// 搜索
 			search: function(keyword) {
@@ -3359,6 +4322,12 @@
 					$.fn.zTree.init($("#" + ztree_id), this.ztree_config, zNodes);
 					this.ztree = $.fn.zTree.getZTreeObj(ztree_id);
 					this.ztree.refresh();
+
+					// 搜索回调
+					if($.isFunction(this.searchCallback)){
+						this.searchCallback.call(this, $.trim(keyword), []);
+					}
+
 					return;
 				}
 
@@ -3390,10 +4359,66 @@
 				this.ztree = $.fn.zTree.getZTreeObj(ztree_id);
 				this.ztree.refresh();
 				this.ztree.expandAll(true);
+
+				if(nodes.length == 0){
+					var notice = '没有找到匹配项';
+					$(this.container).find(".ztree").append("<li style='height: 100px; align-items: center; justify-content: center;'><div style='display: flex; flex-direction: column-reverse; text-align: center; height: 100%;'>" + notice + "</div></li>")
+				}
+
+				// 搜索回调
+				if($.isFunction(this.searchCallback)){
+					this.searchCallback.call(this, $.trim(keyword), nodes);
+				}
+			},
+			// 是否可排序
+			sortable: false,
+			// 排序后的回调函数
+			sortCallback: null,
+			// 设置排序
+			setSortable: function (sortable){
+
+				var settings = this;
+
+				settings.sortable = sortable;
+
+				if(settings.sortable){
+					settings.sortObj = $(settings.container).find(".tree-chosen-input-box").sortable({
+						items: ".tree-chosen-item",
+						// 排序之前必须拖拽的像素数
+						distance: 5,
+						// axis: "x",
+						opacity: 0.9,
+						// scroll: true,
+						// scrollSensitivity: 63,
+						// 防止从匹配选择器的元素上开始排序
+						// cancel: "a,button",
+						// cursor: "move",
+						// 移动排序元素或助手（helper），这样光标总是出现，以便从相同的位置进行拖拽
+						cursorAt: {
+							left: 5
+						},
+						start: function(event, ui) {
+							$(this).removeClass("active");
+						},
+						revert: 50,
+						// 指定用于测试项目被移动时是否覆盖在另一个项目上的模式。可能的值：intersect、pointer
+						tolerance: "pointer",
+						// 排序完成后
+						update: function(event, ui) {
+							// 回调更新
+							if ($.isFunction(settings.sortCallback)) {
+								settings.sortCallback.call(settings, event, ui);
+							}
+						}
+					}).disableSelection();
+				}else{
+					// 销毁
+					$(settings.container).find(".tree-chosen-input-box").sortable("destroy");
+				}
 			}
 		};
 
-		settings = $.extend(true, defaults, settings);
+		settings = $.extend(true, {}, defaults, settings);
 		settings.container = container;
 
 		// 渲染页面
@@ -3408,11 +4433,22 @@
 		// 单击回调函数
 		settings.ztree_config.callback.onClick = function(event, treeId, treeNode) {
 			settings.add(treeNode[zkeys.id], treeNode[zkeys.name], treeNode);
-		}
+		};
 
-		$(this).find(".tree-chosen-input").keyup(function() {
-			settings.search($(this).val());
+		var tree_chosen_input_el = $(this).find(".tree-chosen-input");
+
+		var searchFunc = $.debounce(function() {
+			settings.search($(tree_chosen_input_el).val());
+		}, 300);
+
+		$(tree_chosen_input_el).keyup(function() {
+			searchFunc();
 		});
+
+		// 是否支持排序
+		if(settings.sortable){
+			settings.setSortable(true);
+		}
 
 		$(container).find(".tree-chosen-box").click(function(event) {
 			if ($(event.target).hasClass("tree-chosen-close")) {
@@ -3421,7 +4457,7 @@
 				return false;
 			}
 			settings.show();
-			return false;
+			// return false;
 		});
 
 		$(container).find(".tree-chosen-panel-box").on("click", function() {
@@ -3442,26 +4478,15 @@
 
 		$(container).find(".tree-chosen-btn-clear").on("click", function() {
 
-			$(container).find(".tree-chosen-item").each(function() {
-				var id = $(this).data("value");
-				var name = $(this).data("name");
-
-				$(this).remove();
-
-				if ($.isFunction(settings.removeCallback)) {
-					settings.removeCallback.call(settings, id, name);
-				}
-			});
-
-			if ($.isFunction(settings.change)) {
-				settings.change.call(settings);
-			}
+			settings.clear();
 
 			return false;
 		});
 
 		$("body").on("click", function(event) {
-			$(container).find(".tree-chosen-panel-box").hide();
+			if($(container).size() > 0 && !$(container).get(0).contains(event.target)){
+				$(container).find(".tree-chosen-panel-box").hide();
+			}
 		});
 
 		$(this).data(settings.api, settings);
@@ -3503,6 +4528,8 @@
 			// 手机端显示标注
 			// @params boolean
 			market_label: options.market_label == undefined ? false : options.market_label,
+			// 搜索词
+			keywords: '',
 			// 经纬度位置或者要搜索的地址信息
 			position: options.position,
 			// 用于自动提示
@@ -3525,23 +4552,38 @@
 			move_callback: options.move_callback,
 			// 是否支持底部按钮栏
 			footer_enable: options.footer_enable == undefined ? true : options.footer_enable,
+			// 底部按钮栏显示隐藏回调事件
+			// @params status
+			footer_callback: options.footer_callback,
 			// 显示底部按钮栏
 			showFooter: function() {
 				if (this.footer_enable) {
 					$(this.container).parents(".address-picker").find(".map-footer").show();
+
+					if ($.isFunction(this.footer_callback)) {
+						this.footer_callback.call(this, true);
+					}
 				} else {
 					$(this.container).parents(".address-picker").find(".map-footer").hide();
+
+					if ($.isFunction(this.footer_callback)) {
+						this.footer_callback.call(this, false);
+					}
 				}
 			},
 			// 隐藏底部按钮栏
 			hideFooter: function() {
 				$(this.container).parents(".address-picker").find(".map-footer").hide();
+
+				if ($.isFunction(this.footer_callback)) {
+					this.footer_callback.call(this, false);
+				}
 			},
 			// 添加覆盖物
 			// @param position 经纬度信息
 			// @param address 显示的地址名称 false-未找到指定位置，请拖动地图标注一个准确位置
-			// @param result 其他时间返回的搜索结果
-			addMarker: function(position, address, result) {
+			// @param result 其他事件返回的搜索结果
+			addMarker: function(position, address, result, callback) {
 
 				if (position == undefined || position == null || position == false) {
 					// 未设置则获取地图中心位置
@@ -3559,8 +4601,8 @@
 				this.marker = new AMap.Marker({
 					map: settings.map,
 					icon: address !== false ? "/images/common/location.png" : "/images/common/nolocation.png",
-					draggable: true,
-					position: position,// marker所在的位置
+					draggable: false,
+					position: position, // marker所在的位置
 					animation: address !== false ? 'AMAP_ANIMATION_DROP' : 'AMAP_ANIMATION_NONE',
 					raiseOnDrag: true,
 					showMarker: true,
@@ -3568,11 +4610,23 @@
 
 				if (settings.open_window) {
 					if ($.trim(address) === "" || address === true) {
-						this.regeocoder(this.marker.getPosition(), function(address, data) {
-							settings.openWindow(address, data);
+						this.regeocoder(this.marker.getPosition(), function(address, result) {
+							settings.openWindow(address, result);
+
+							if ($.isFunction(callback)) {
+								callback.call(settings, address, result);
+							}
 						});
 					} else {
 						this.openWindow(address, result);
+
+						if ($.isFunction(callback)) {
+							callback.call(settings, address, result);
+						}
+					}
+				} else {
+					if ($.isFunction(callback)) {
+						callback.call(settings, address, result);
 					}
 				}
 
@@ -3828,6 +4882,9 @@
 			// 搜索地址
 			search: function(name, city, callback) {
 
+				// 搜索词
+				this.keywords = name;
+
 				if (city) {
 					this.setCity(city);
 				}
@@ -3868,8 +4925,7 @@
 						if (result == "INSUFFICIENT_ABROAD_PRIVILEGES") {
 							console.info("高德地图接口请求：" + status + " - " + result);
 						}
-						var position = settings.map.getCenter();
-						settings.addMarker(position, false, result);
+						settings.addMarker(settings.map.getCenter(), false, result);
 					}
 
 					if ($.isFunction(callback)) {
@@ -3882,10 +4938,14 @@
 				});
 
 				// 隐藏
-				this.hideFooter();
+				settings.hideFooter();
 			},
 			// WAP：按中心点搜索一定范围内的地址
 			searchNearBy: function(name, center, radius, city, callback) {
+
+				// 搜索词
+				this.keywords = name;
+
 				if (city) {
 					this.setCity(city);
 				}
@@ -3919,6 +4979,9 @@
 						$.closeAll();
 					}
 				});
+
+				// 隐藏
+				settings.hideFooter();
 			},
 			// WAP：
 			searchNearByList: function(index, callback) {
@@ -4019,7 +5082,7 @@
 			showCover: false,
 			pageSize: 20,
 			pageIndex: 1,
-		// panel: "panel"
+			// panel: "panel"
 		});
 
 		// 构造地点查询类
@@ -4083,10 +5146,20 @@
 				settings.marker.setIcon("/images/common/location.png");
 				settings.marker.setPosition(settings.map.getCenter());
 			}
+
+			// 回调
+			if ($.isFunction(settings.move_callback)) {
+				settings.move_callback.call(settings, e);
+			}
 		});
 		// 开始平移地图事件
 		settings.map.on("movestart", function(e) {
 			mapmove = true;
+
+			// 回调
+			if ($.isFunction(settings.move_callback)) {
+				settings.move_callback.call(settings, e);
+			}
 		});
 		// 结束平移地图事件
 		settings.map.on("moveend", function(e) {
@@ -4107,6 +5180,11 @@
 			}
 
 			mapmove = false;
+
+			// 回调
+			if ($.isFunction(settings.move_callback)) {
+				settings.move_callback.call(settings, e);
+			}
 
 			return false;
 		});
@@ -4134,9 +5212,10 @@
 			return false;
 		});
 
-		// 
+		//
 		$("body").on("click", ".address-picker .save-map", function() {
 			settings.position = settings.marker.getPosition();
+
 			if ($.isFunction(settings.save_callback)) {
 				settings.save_callback.call(settings);
 			}
@@ -4144,17 +5223,17 @@
 			settings.hideFooter();
 		});
 
-		// 
+		//
 		$("body").on("click", ".address-picker .back-map", function() {
 			if (settings.position) {
-				settings.addMarker(settings.position);
+				settings.addMarker([settings.position.lng, settings.position.lat], true, {}, function(address, result) {
+					if ($.isFunction(settings.back_callback)) {
+						settings.back_callback.call(settings, address, result);
+					}
+				});
 			}
 			// 隐藏
 			settings.hideFooter();
-
-			if ($.isFunction(settings.back_callback)) {
-				settings.back_callback.call(settings);
-			}
 		});
 
 		return settings;
@@ -4164,13 +5243,13 @@
 	 * 图片热点
 	 */
 	$.fn.imagehot = function(settings) {
+
 		var defaults = {
 			url: '/site/image-hot',
 			// 选择器的容器
 			pic_path: null,
 			// 数据
 			value: null,
-			show_guide: 0,
 			// 回调
 			callback: null,
 		}
@@ -4178,13 +5257,12 @@
 
 		$.open({
 			title: '编辑热区',
-			width: '800px',
+			width: '980px',
 			ajax: {
 				url: settings.url,
 				data: {
 					pic_path: settings.pic_path,
 					value: settings.value,
-					show_guide: settings.show_guide
 				}
 			},
 			btn: '确认提交',
@@ -4193,104 +5271,38 @@
 				layero.find('.layui-layer-btn a').attr('class', 'btn-primary');
 			},
 			yes: function(index, container) {
-				var data = {};
-				var show_guide = $(container).find('[name="show_guide"]').is(':checked');
-				if (show_guide) {
-					data.show_guide = 1;
-				} else {
-					data.show_guide = 0;
-				}
-				data.value = [];
-				$.each($(container).find('.map-link'), function(i, v) {
-					var link = $(v).find('[name="link[]"]').val();
-					var rect = $(v).find('[name="rect[]"]').val();
-					data.value.push({
-						link: link,
-						rect: rect
+				var data = [];
+				var error = [];
+				$.each($(container).find('.area_item'), function(i, v) {
+					var areaTitle = '热区'+ $(v).attr('ref');
+					var areaLink = $(v).find('.areaLinkInfo').val();
+					var areaLinkType = $(v).find('.areaLinkType').val();
+					var areaMapInfo = $(v).find('.areaMapInfo').val();
+					if(areaLink == ''){
+						error.push(areaTitle+ '链接不能为空');
+					}
+					if(areaMapInfo == ''){
+						error.push(areaTitle+ '位置不能为空');
+					}
+					data.push({
+						areaTitle: areaTitle,
+						areaLinkType: areaLinkType,
+						areaLink: areaLink,
+						areaMapInfo: areaMapInfo
 					});
 				});
-				if ($.isFunction(settings.callback)) {
-					settings.callback.call(settings, data);
+
+				if(error.length > 0){
+					$.msg(error.join('<br/>'));
+				}else{
+					if ($.isFunction(settings.callback)) {
+						settings.callback.call(settings, data);
+					}
+					layer.close(index);
 				}
-				layer.close(index);
 			}
 		});
 
-	}
-
-	// 装修模板加载
-
-	$.templateloading = function(settings) {
-		var clearTime;
-		var floor_template = $('body').find('.floor-template');
-		var defaults = {
-			url: '/site/ajax-render.html',
-			data: null,
-			// 加载数据
-			load: function(obj) {
-				var uid = $(obj).attr('id');
-				var tpl_file = $(obj).attr('tpl_file');
-				var is_last = $(obj).attr('is_last');
-				if (tpl_file && uid) {
-					$.ajax({
-						type: 'get',
-						url: settings.url,
-						dataType: 'json',
-						data: {
-							uid: uid,
-							tpl_file: tpl_file,
-							is_last: is_last
-						},
-						success: function(result) {
-							if (result.code == 0) {
-								// 缓存数据
-								sessionStorage.setItem('template_' + uid, result.data);
-								$(obj).replaceWith(result.data);
-								$.imgloading.loading();
-							} else {
-								$.msg(result.message);
-							}
-						}
-					});
-				}
-			},
-			// 模板加载
-			loadTemplate: function(arr) {
-				var is_last = false;
-				for (var i = 0, len = arr.length; i < len; i++) {
-					// 判断是否已经缓存
-					if (sessionStorage.getItem('template_' + $(arr[i]).attr('id'))) {
-						$(arr[i]).replaceWith(sessionStorage.getItem('template_' + $(arr[i]).attr('id')));
-						$.imgloading.loading();
-						continue;
-					}
-
-					if ($(arr[i]).offset().top >= ($(window).scrollTop() - 500) && $(arr[i]).offset().top < ($(window).scrollTop() + $(window).height() + 500) && !arr[i].isLoad) {
-						arr[i].isLoad = true;
-						(function(i) {
-							$("body").queue(function() {
-								var result = settings.load(arr[i]);
-
-								setTimeout(function() {
-									$("body").dequeue();
-								}, 300)
-							})
-						})(i);
-					}
-				}
-			},
-		};
-
-		settings = $.extend(true, defaults, settings);
-
-		settings.loadTemplate(floor_template);
-
-		window.onscroll = function() { // 滚动条滚动触发
-			clearTimeout(clearTime);
-			clearTime = setTimeout(function() {
-				settings.loadTemplate(floor_template);
-			}, 500);
-		};
 	}
 
 	// 商品分享组件
@@ -4332,4 +5344,1165 @@
 		}, 'json');
 	}
 
+	// 短视频分享组件
+	$.fn.videoshare = function(settings) {
+
+		var defaults = {
+			url: '/user/short-video/share',
+			// 短视频ID
+			video_id: 0,
+			// 二维码类型
+			qrcode_type: 0,
+			// 回调
+			callback: null,
+			// 渲染模式 参数 js php
+			mode: 'js',
+			// 缓存模式
+			read_cache: 0
+		}
+		// 合并
+		settings = $.extend(true, defaults, settings);
+		$.loading.start();
+		$.get(settings.url, {
+			video_id: settings.video_id,
+			qrcode_type: settings.qrcode_type,
+			mode: settings.mode,
+			read_cache: settings.read_cache
+		}, function(result) {
+			$.loading.stop();
+			if (result.code == 0) {
+				$('body').append(result.data);
+			}
+			if (result.message != '') {
+				$.msg(result.message);
+			}
+			if ($.isFunction(settings.callback)) {
+				settings.callback.call(settings, result);
+			}
+
+		}, 'json');
+	};
+
+	// 自动打印队列
+	var auto_print_queue = [];
+	var auto_print_doing = false;
+
+	function auto_print_execute(token){
+
+		if(auto_print_doing == true && !token){
+			return;
+		}
+
+		if(auto_print_queue.length == 0){
+			auto_print_doing = false;
+			return;
+		}
+
+		auto_print_doing = true;
+
+		var order_id = auto_print_queue.shift();
+
+		console.log("执行打印订单", order_id);
+
+		return $.ajax({
+			type: "GET",
+			url: "/site/auto-print",
+			dataType: "json",
+			data: {
+				order_id: order_id
+			},
+			success: function(result) {
+				if(result.code == 0) {
+					console.log("开始打印", order_id);
+					lodop_print_html(result.print_title, result.data, result.printer, {
+						width: result.print_spec_width,
+						height: result.print_spec_height,
+					});
+					console.log("打印结束", order_id);
+					setTimeout(function(){
+						auto_print_execute(true);
+					}, 3000);
+				}
+			}
+		});
+	}
+
+	// 自动打印
+	$.autoPrint = function(order_id, user_id, options){
+		auto_print_queue.push(order_id);
+		auto_print_execute();
+	};
+
+	// 周期重复选择器
+	$.fn.cyclePicker = function(options) {
+
+		var container = $(this);
+
+		var defaults = {
+			// 分钟的间隔时间，默认间隔 5 分钟
+			minuteStep: 5,
+			// 按天作为条件的最大条件数量
+			daySize: 1,
+			// 按周作为条件的最大条件数量
+			weekSize: 1,
+			// 按月作为条件的最大条件数量
+			monthSize: 5,
+			// 组件的目标对象
+			target: null,
+			// 组件值
+			value: {},
+			// 周名称
+			weekNames: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+			// "禁用"选项文字
+			show_text: '禁用',
+			// change 事件
+			change: function () {
+				console.log(this.getValue())
+			},
+			/**
+			 * 类型回调
+			 * @param value 类型：0-day 1-week 2-month
+			 */
+			typeCallback: function(value) {
+				return true;
+			},
+			/**
+			 * 渲染小时的回调函数
+			 * @param value 小时
+			 * @param type 类型：0-day 1-week 2-month
+			 * @param is_begin 是否为开始时间 true-开始时间 false-结束时间
+			 * @returns {boolean} 是否有效
+			 */
+			hourCallback: function (value, type, is_begin) {
+				return true;
+			},
+			/**
+			 * 渲染分钟的回调函数
+			 * @param value 分钟
+			 * @param type 类型：0-day 1-week 2-month
+			 * @param is_begin 是否为开始时间 true-开始时间 false-结束时间
+			 * @returns {boolean} 是否有效
+			 */
+			minuteCallback: function (value, type, is_begin) {
+				return true;
+			},
+			/**
+			 * 渲染天的回调函数
+			 * @param value 天
+			 * @returns {boolean} 是否有效
+			 */
+			dayCallback: function(value) {
+				return true;
+			},
+			/**
+			 * 渲染周的回调函数
+			 * @param value 周：1-7
+			 * @returns {boolean} 是否有效
+			 */
+			weekCallback: function(value) {
+				return true;
+			},
+			/**
+			 * 渲染函数
+			 */
+			render: function () {
+
+				var widget = this;
+				var uuid = $.uuid();
+
+				var disabled_template = this.renderDisable();
+				var day_template = this.renderDay();
+				var week_template = this.renderWeek();
+				var month_template = this.renderMonth();
+
+				var html = '<div id="'+uuid+'" class="model-box">' +
+					disabled_template + day_template + week_template + month_template +
+					'<div class="errors"></div><div class="clear m-t-5 m-b-5"></div>' +
+					'</div>';
+
+				$(container).html(html);
+
+				this.target = $("#" + uuid);
+
+				// 类型变化
+				$(this.target).find(":radio").change(function(e){
+					// 改变事件
+					widget.change(e, [this]);
+				});
+
+				// 周选中事件
+				$(this.target).on("click", ".day-checked-box li", function(e){
+					$(this).toggleClass("selected");
+					// 改变事件
+					widget.change(e, [this]);
+				});
+
+				$(this.target).on("change", "select", function(e){
+					// 改变事件
+					widget.change(e, [this]);
+				});
+
+				// 按天条件
+				if($(this.target).find(".day_day").size() > 0) {
+					var day_day_tpl = $($(this.target).find(".day_day").get(0).outerHTML);
+
+					day_day_tpl = $(day_day_tpl).append('<a class="c-blue va-middle remove_day">删除</a>').get(0).outerHTML;
+
+					// 添加月选择
+					$(this.target).find(".add-day").click(function(e){
+
+						if($(this).hasClass("disabled") == false) {
+							$(this).before(day_day_tpl);
+							// 改变事件
+							widget.change(e, [this]);
+						}
+
+						if(widget.daySize > 0 && $(widget.target).find(".day_day").size() >= widget.daySize) {
+							$(this).addClass("disabled");
+						}
+					});
+
+					// 删除
+					$(this.target).on("click", ".remove_day", function(e){
+						$(this).parents(".day_day").remove();
+
+						if(widget.daySize > 0 && $(widget.target).find(".day_day").size() < widget.daySize) {
+							$(widget.target).find(".add-day").removeClass("disabled");
+						}
+
+						// 改变事件
+						widget.change(e, [this]);
+					});
+				}
+
+				// 按周条件
+				if($(this.target).find(".week_day").size() > 0) {
+					var week_day_tpl = $($(this.target).find(".week_day").get(0).outerHTML);
+
+					week_day_tpl = $(week_day_tpl).append('<a class="c-blue va-middle remove_week">删除</a>').get(0).outerHTML;
+
+					// 添加月选择
+					$(this.target).find(".add-week").click(function(e){
+
+						if($(this).hasClass("disabled") == false) {
+							$(this).before(week_day_tpl);
+							// 改变事件
+							widget.change(e, [this]);
+						}
+
+						if(widget.weekSize > 0 && $(widget.target).find(".week_day").size() >= widget.weekSize) {
+							$(this).addClass("disabled");
+						}
+					});
+
+					// 删除
+					$(this.target).on("click", ".remove_week", function(e){
+						$(this).parents(".week_day").remove();
+
+						if(widget.weekSize > 0 && $(widget.target).find(".week_day").size() < widget.weekSize) {
+							$(widget.target).find(".add-week").removeClass("disabled");
+						}
+
+						// 改变事件
+						widget.change(e, [this]);
+					});
+				}
+
+				// 按月条件
+				if($(this.target).find(".month_day").size() > 0) {
+					var month_day_tpl = $($(this.target).find(".month_day").get(0).outerHTML);
+
+					month_day_tpl = $(month_day_tpl).append('<a class="c-blue va-middle remove_month">删除</a>').get(0).outerHTML;
+
+					// 添加月选择
+					$(this.target).find(".add-month").click(function(e){
+
+						if($(this).hasClass("disabled") == false) {
+							$(this).before(month_day_tpl);
+							// 改变事件
+							widget.change(e, [this]);
+						}
+
+						if(widget.monthSize > 0 && $(widget.target).find(".month_day").size() >= widget.monthSize) {
+							$(this).addClass("disabled");
+						}
+					});
+
+					// 删除
+					$(this.target).on("click", ".remove_month", function(e){
+						$(this).parents(".month_day").remove();
+
+						if(widget.monthSize > 0 && $(widget.target).find(".month_day").size() < widget.monthSize) {
+							$(widget.target).find(".add-month").removeClass("disabled");
+						}
+
+						// 改变事件
+						widget.change(e, [this]);
+					});
+				}
+
+				// 渲染值
+				this.setValue(this.value, true);
+
+				// 默认第一个被选中
+				if($(this.target).find("[name='timepicker']:checked").size() == 0) {
+					$(this.target).find("[name='timepicker']:first").prop("checked", true);
+				}
+			},
+			// 渲染禁用
+			renderDisable: function() {
+
+				if(!this.typeCallback(-1)) {
+					return '';
+				}
+
+				var html = '<label class="control-label pull-left cur-p">' +
+					'        <input type="radio" class="icheck" name="timepicker" checked="checked" value="-1">' +
+					this.show_text +
+					'    </label><div class="clear m-b-5"></div>';
+
+				return html;
+			},
+			// 渲染按每天条件
+			renderDay: function() {
+
+				if(this.daySize == 0 || !this.typeCallback(0)) {
+					return '';
+				}
+
+				var html = '<label class="control-label pull-left cur-p">' +
+					'        <input type="radio" class="icheck" name="timepicker" value="0">' +
+					'        每天' +
+					'    </label>' +
+					'    <div class="pull-left day-selector" style="margin-top: 3px;">' +
+					'       <div class="m-b-5 day_day">' +
+					'    	<span class="time-select m-r-10">' +
+					'      	<select class="select form-control form-control-sm m-r-5 day_begin_hour">#day_begin_hour_options#</select>' +
+					'      	:' +
+					'      	<select class="select form-control form-control-sm m-l-5 day_begin_minute">#day_begin_minute_options#</select>' +
+					'    	</span>' +
+					'       至' +
+					'       <span class="time-select m-l-10 m-r-10">' +
+					'       <select class="select form-control form-control-sm m-r-5 day_end_hour">#day_end_hour_options#</select>' +
+					'       :' +
+					'       <select class="select form-control form-control-sm m-l-5 day_end_minute">#day_end_minute_options#</select>' +
+					'    	</span>' +
+					'    	</div>' +
+					(this.daySize == 1 ? '' : ('        <p class="day-day-more">' +
+						'            <a class="btn btn-warning btn-sm add-day">' +
+						'                添加按天条件' +
+						'            </a>' +
+						'            <span class="c-999 m-l-20 day-max-size">' +
+						'        		#daySize#' +
+						'      		 </span>' +
+						'      	 </p>')) +
+					'    </div>' +
+					'    <div class="clear m-b-5">' +
+					'    </div>';
+
+				html = html.replaceAll('#day_begin_hour_options#', this.renderHourSelectOptions(0, true));
+				html = html.replaceAll('#day_end_hour_options#', this.renderHourSelectOptions(0, false));
+				html = html.replaceAll('#day_begin_minute_options#', this.renderMinuteSelectOptions(0, true));
+				html = html.replaceAll('#day_end_minute_options#', this.renderMinuteSelectOptions(0, false));
+
+				if(this.daySize > 0) {
+					html = html.replaceAll('#daySize#', '最多可增加' + this.daySize + '个条件');
+				}
+
+				return html;
+			},
+			renderWeek: function() {
+
+				if(this.weekSize == 0 || !this.typeCallback(1)) {
+					return '';
+				}
+
+				var html = '<label class="control-label pull-left cur-p">' +
+					'        <input type="radio" class="icheck" name="timepicker" value="1">' +
+					'        每周' +
+					'    </label>' +
+					'    <div class="pull-left week-selector m-t-5">' +
+					'        <div class="m-b-5 week_day">' +
+					'        <ul class="day-checked-box">#weeks#</ul>' +
+					'        <span class="time-select m-l-10 m-r-10">' +
+					'        <select class="select form-control form-control-sm m-r-5 week_begin_hour">#week_begin_hour_options#</select>' +
+					'        :' +
+					'        <select class="select form-control form-control-sm m-l-5 week_begin_minute">#week_begin_minute_options#</select>' +
+					'    	 </span>' +
+					'        至' +
+					'        <span class="time-select m-l-10 m-r-10">' +
+					'        <select class="select form-control form-control-sm m-r-5 week_end_hour">#week_end_hour_options#</select>' +
+					'        :' +
+					'        <select class="select form-control form-control-sm m-l-5 week_end_minute">#week_end_minute_options#</select>' +
+					'    	 </span>' +
+					'        </div>' +
+					(this.weekSize == 1 ? '' : ('        <p class="week-day-more">' +
+					'            <a class="btn btn-warning btn-sm add-week">' +
+					'                添加按周条件' +
+					'            </a>' +
+					'            <span class="c-999 m-l-20 week-max-size">' +
+					'        		#weekSize#' +
+					'      		 </span>' +
+					'      	 </p>')) +
+					'    </div>' +
+					'    <div class="clear m-b-5">' +
+					'    </div>';
+
+				html = html.replaceAll('#weeks#', this.renderWeekOptions());
+				html = html.replaceAll('#week_begin_hour_options#', this.renderHourSelectOptions(1, true));
+				html = html.replaceAll('#week_end_hour_options#', this.renderHourSelectOptions(1, false));
+				html = html.replaceAll('#week_begin_minute_options#', this.renderMinuteSelectOptions(1, true));
+				html = html.replaceAll('#week_end_minute_options#', this.renderMinuteSelectOptions(1, false));
+
+				if(this.weekSize > 0) {
+					html = html.replaceAll('#weekSize#', '最多可增加' + this.weekSize + '个条件');
+				}
+
+				return html;
+			},
+			// 渲染按月条件
+			renderMonth: function() {
+
+				if(this.monthSize == 0 || !this.typeCallback(2)) {
+					return '';
+				}
+
+				var html = '<label class="control-label pull-left cur-p">' +
+					'        <input type="radio" class="icheck" name="timepicker" value="2">' +
+					'        每月' +
+					'    </label>' +
+					'    <div class="pull-left month-selector" style="margin-top: 3px;">' +
+					'        <div class="m-b-5 month_day">' +
+					'        <span class="time-select m-r-10">' +
+					'            <select class="form-control form-control-sm w100 m-r-10 month-day-select">#day_options#</select>' +
+					'            日' +
+					'            <span class="time-select m-l-10 m-r-10">' +
+					'        	 <select class="select form-control form-control-sm m-r-5 month_begin_hour">#month_begin_hour_options#</select>' +
+					'        	 :' +
+					'        	 <select class="select form-control form-control-sm m-l-5 month_begin_minute">#month_begin_minute_options#</select>' +
+					'        </span>' +
+					'            至' +
+					'        <span class="time-select m-l-10 m-r-10">' +
+					'        	 <select class="select form-control form-control-sm m-r-5 month_end_hour">#month_end_hour_options#</select>' +
+					'        	 :' +
+					'        	 <select class="select form-control form-control-sm m-l-5 month_end_minute">#month_end_minute_options#</select>' +
+					'        </span>' +
+					'        </div>' +
+					(this.monthSize == 1 ? '' : (
+					'        <p class="month-day-more">' +
+					'            <a class="btn btn-warning btn-sm add-month">' +
+					'                添加按月条件' +
+					'            </a>' +
+					'            <span class="c-999 m-l-20 month-max-size">' +
+					'        		#monthSize#' +
+					'      		 </span>' +
+					'      	 </p>' )) +
+					'    </div>' +
+					'    <div class="clear"></div>';
+
+
+				html = html.replaceAll('#month_begin_hour_options#', this.renderHourSelectOptions(1, true));
+				html = html.replaceAll('#month_end_hour_options#', this.renderHourSelectOptions(1, false));
+				html = html.replaceAll('#month_begin_minute_options#', this.renderMinuteSelectOptions(1, true));
+				html = html.replaceAll('#month_end_minute_options#', this.renderMinuteSelectOptions(1, false));
+
+				html = html.replaceAll('#day_options#', this.renderDaySelectOptions());
+
+				if(this.monthSize > 0) {
+					html = html.replaceAll('#monthSize#', '最多可增加' + this.monthSize + '个条件');
+				}
+
+				return html;
+			},
+			// 渲染周
+			renderWeekOptions: function() {
+				var html = '';
+				for(var i = 1; i <= 7; i += 1) {
+					if(this.weekCallback(i)) {
+						html += '<li data-val="' + i + '"><a>' + this.weekNames[i - 1]  + '</a><i></i></li>';
+					}
+				}
+				return html;
+			},
+			// 渲染天选项
+			renderDayOptions: function () {
+				var html = '';
+				for(var i = 1; i <= 31; i += 1) {
+					if(this.dayCallback(i)) {
+						html += '<li data-val="' + i + '"><a>' + i  + '</a><i></i></li>';
+					}
+				}
+				return html;
+			},
+			// 渲染天选项
+			renderDaySelectOptions: function () {
+				var html = '';
+				html += '<option value="">--请选择--</option>';
+				for(var i = 1; i <= 31; i += 1) {
+					if(this.dayCallback(i)) {
+						html += '<option value="' + i + '">' + i  + '</option>';
+					}
+				}
+				return html;
+			},
+			// 渲染小时选项
+			renderHourSelectOptions: function (type, is_begin) {
+				var html = '';
+				for(var i = 0; i <= 23; i++) {
+					if(this.hourCallback(i, type, is_begin)) {
+						var value = i < 10 ? '0' + i : i;
+						html += '<option value="' + value + '">' + value  + '</option>';
+					}
+				}
+				return html;
+			},
+			// 渲染分钟选项
+			renderMinuteSelectOptions: function (type, is_begin) {
+				var html = '';
+				for(var i = 0; i < 59; i += this.minuteStep) {
+					if(this.minuteCallback(i, type, is_begin)) {
+						var value = i < 10 ? '0' + i : i;
+						html += '<option value="' + value + '">' + value  + '</option>';
+					}
+				}
+				if(this.hourCallback(59, type, is_begin)) {
+					html += '<option value="59">59</option>';
+				}
+				return html;
+			},
+			// 设置值
+			setValue: function(data, all) {
+
+				all = !!all;
+
+				data = $.extend({
+					// 类型：-1-禁用 0-day 1-week 2-month
+					type: 0,
+					// 每天条件
+					days: [
+						{
+							begin: ['00', '00'],
+							end: ['00', '00']
+						}
+					],
+					// 每周条件
+					weeks: [
+						{
+							weeks: [],
+							begin: ['00', '00'],
+							end: ['00', '00']
+						}
+					],
+					// 每月条件
+					months: [
+						{
+							days: [],
+							begin: ['00', '00'],
+							end: ['00', '00']
+						}
+					]
+				}, data);
+
+				var widget = this;
+
+				if(data.type == 0 || all) {
+					if(data.type == 0) {
+						$(this.target).find(":radio[value=0]").prop("checked", true);
+					}
+					$(data.days).each(function(index, item){
+						if(index > 0) {
+							$(widget.target).find(".add-day").click();
+						}
+						var target = $(widget.target).find(".day_day:last");
+						$(target).find(".day_begin_hour").val(item.begin[0]);
+						$(target).find(".day_begin_minute").val(item.begin[1]);
+						$(target).find(".day_end_hour").val(item.end[0]);
+						$(target).find(".day_end_minute").val(item.end[1]);
+					});
+				}
+
+				if(data.type == 1 || all) {
+					if(data.type == 1) {
+						$(this.target).find(":radio[value=1]").prop("checked", true);
+					}
+					$(data.weeks).each(function(index, item){
+						if(index > 0) {
+							$(widget.target).find(".add-week").click();
+						}
+						var target = $(widget.target).find(".week_day:last");
+
+						if($.isArray(item.weeks)) {
+							$(item.weeks).each(function(_, week){
+								$(target).find(".day-checked-box li[data-val='"+week+"']").addClass("selected");
+							});
+						}
+						$(target).find(".week_begin_hour").val(item.begin[0]);
+						$(target).find(".week_begin_minute").val(item.begin[1]);
+						$(target).find(".week_end_hour").val(item.end[0]);
+						$(target).find(".week_end_minute").val(item.end[1]);
+					});
+				}
+
+				if(data.type == 2 || all) {
+					if(data.type == 2) {
+						$(this.target).find(":radio[value=2]").prop("checked", true);
+					}
+					$(data.months).each(function(index, item){
+						if(index > 0) {
+							$(widget.target).find(".add-month").click();
+						}
+						var target = $(widget.target).find(".month_day:last");
+						if($.isArray(item.days)) {
+							$(item.days).each(function(_, day){
+								$(target).find(".month-day-select").val(day);
+							});
+						}
+						$(target).find(".month_begin_hour").val(item.begin[0]);
+						$(target).find(".month_begin_minute").val(item.begin[1]);
+						$(target).find(".month_end_hour").val(item.end[0]);
+						$(target).find(".month_end_minute").val(item.end[1]);
+					});
+				}
+			},
+			/**
+			 * 获取当前组件的值
+			 * @param checked 是否进行数据验证，如果验证为 false 则获取数据为空
+			 * @param all 是否获取所有类型的数据，默认为 false
+			 * @returns {{}}
+			 */
+			getValue: function(checked, all){
+
+				if(checked == undefined) {
+					checked = true;
+				}
+
+				checked = !!checked;
+
+				all = !!all;
+
+				if(checked) {
+					if(this.validate(all) == false) {
+						return {};
+					}
+				}
+
+				var widget = this;
+
+				var type = $(this.target).find(":radio:checked").val();
+
+				var data = {
+					type: type
+				};
+
+				var items = [];
+
+				if(type == 0 || all){
+
+					$(this.target).find(".day_day").each(function(){
+						if($(this).find(".day-day-select").val() != "") {
+							items.push({
+								begin: [$(this).find(".day_begin_hour").val(), $(this).find(".day_begin_minute").val()],
+								end: [$(this).find(".day_end_hour").val(), $(this).find(".day_end_minute").val()],
+							});
+						}
+					});
+
+					data = $.extend(data, {
+						days: items,
+					});
+				}
+
+				if(type == 1 || all){
+					items = [];
+					$(this.target).find(".week_day").each(function(){
+						if($(this).find(".week-day-select").val() != "") {
+							var weeks = [];
+
+							$(this).find(".day-checked-box li.selected").each(function(){
+								weeks.push($(this).data("val"));
+							});
+
+							if(weeks.length > 0) {
+								items.push({
+									weeks: weeks,
+									begin: [$(this).find(".week_begin_hour").val(), $(this).find(".week_begin_minute").val()],
+									end: [$(this).find(".week_end_hour").val(), $(this).find(".week_end_minute").val()],
+								});
+							}
+						}
+					});
+					data = $.extend(data, {
+						weeks: items,
+					});
+				}
+
+				// 按月
+				if(type == 2 || all){
+					items = [];
+					$(this.target).find(".month_day").each(function(){
+						if($(this).find(".month-day-select").val() != "") {
+							items.push({
+								days: [$(this).find(".month-day-select").val()],
+								begin: [$(this).find(".month_begin_hour").val(), $(this).find(".month_begin_minute").val()],
+								end: [$(this).find(".month_end_hour").val(), $(this).find(".month_end_minute").val()],
+							});
+						}
+					});
+					// 按日期升序
+					items = items.sort(function(a, b){
+						return parseInt(a.days[0]) < parseInt(b.days[0]) ? -1 : 1;
+					});
+					data = $.extend(data, {
+						months: items
+					});
+				}
+
+				return data;
+			},
+			// 添加错误信息
+			addError: function(message) {
+				var html = '<span class="form-control-error m-r-5 m-t-5" style="min-height: 0; background-color: #fff0f0; border: 1px solid #E84C3D; padding: 2px 4px;"><i class="fa fa-warning"></i>' + message + '</span>';
+				$(this.target).find(".errors").append(html);
+			},
+			// 清理错误信息
+			clearErrors: function() {
+				$(this.target).find(".errors").html("");
+			},
+			// 验证时间
+			validate: function(all) {
+
+				all = !!all;
+
+				var widget = this;
+				var errors = [];
+				var data = this.getValue(false, all);
+
+				// 检查日
+				if (data.type == 0 || all) {
+					var result = this.checkTimes(data.days);
+
+					if(result != true) {
+						if(result.type == 0) {
+							errors.push('每天中的开始时间必须小于结束时间');
+						}else if (result.type == 1) {
+							errors.push('每天中设置的时间存在重叠');
+						}
+					}
+				}
+
+				var times_map = {};
+
+				// 检查周
+				if (data.type == 1 || all) {
+
+					data.weeks.forEach(function(item){
+						item.weeks.forEach(function(week){
+							if(!times_map[week]) {
+								times_map[week] = [];
+							}
+							times_map[week].push(item);
+						});
+					});
+
+					var error_weeks = [];
+					var overlap_weeks = [];
+
+					Object.keys(times_map).forEach(function (week) {
+						var result = widget.checkTimes(times_map[week]);
+						if(result.type == 0) {
+							error_weeks.push(widget.weekNames[week-1]);
+						}else if (result.type == 1) {
+							overlap_weeks.push(widget.weekNames[week-1]);
+						}
+					});
+
+					if(error_weeks.length > 0) {
+						errors.push(error_weeks.join("、") + '的开始时间必须小于结束时间');
+					}
+
+					if(overlap_weeks.length == 1) {
+						errors.push(overlap_weeks[0] + '设置的时间存在重叠');
+					} else if (overlap_weeks.length > 1) {
+						errors.push(overlap_weeks.join("、") + '设置的时间均存在重叠');
+					}
+				}
+
+				// 检查月
+				if (data.type == 2 || all) {
+
+					times_map = {};
+
+					data.months.forEach(function(item){
+						item.days.forEach(function(day){
+							if(!times_map[day]) {
+								times_map[day] = [];
+							}
+							times_map[day].push(item);
+						});
+					});
+
+					var error_days = [];
+					var overlap_days = [];
+
+					Object.keys(times_map).forEach(function (day) {
+						var result = widget.checkTimes(times_map[day]);
+						if(result != true) {
+							if(result.type == 0) {
+								error_days.push(day);
+							}else if (result.type == 1) {
+								overlap_days.push(day);
+							}
+						}
+					});
+
+					if(error_days.length > 0) {
+						errors.push('每月' + error_days.join("、") + '日的开始时间必须小于结束时间');
+					}
+
+					if(overlap_days.length == 1) {
+						errors.push('每月' + overlap_days[0] + '日设置的时间存在重叠');
+					} else if (overlap_days.length > 1) {
+						errors.push('每月' + overlap_days.join("、") + '日设置的时间均存在重叠');
+					}
+				}
+
+				// 清空错误信息
+				widget.clearErrors();
+
+				errors.forEach(function(error){
+					widget.addError(error);
+				});
+
+				return errors.length == 0;
+			},
+			// 检查时间是否存在交叉
+			// times [{begin: [0, 1], end: [0, 1]}, ...]
+			checkTimes: function (times) {
+
+				// 错误类型 - type
+				// 0-开始时间大于结束时间的错误
+				// 1-时间存在重叠
+
+				times = times.map(function(item){
+					return {
+						begin: item.begin,
+						end: item.end,
+						begin_value: parseInt(item.begin[0] + '' + item.begin[1]),
+						end_value: parseInt(item.end[0] + '' + item.end[1])
+					}
+				});
+
+				for(var i = 0; i < times.length; i++) {
+					var item = times[i];
+
+					if(item.begin_value >= item.end_value) {
+						return {
+							type: 0,
+							begin: item.begin,
+							end: item.end,
+						}
+					}
+				}
+
+				times = times.sort(function(a, b) {
+					return a.begin_value < b.begin_value ? -1 : 1;
+				});
+
+				var begins = times.map(function(item) {
+					return {
+						times: item.begin,
+						label: item.begin[0] + ":" + item.begin[1],
+						value: item.begin_value
+					}
+				});
+
+				var ends = times.map(function(item) {
+					return {
+						times: item.end,
+						label: item.end[0] + ":" + item.end[1],
+						value: item.end_value
+					}
+				});
+
+				for(i = 0; i < ends.length - 1; i++) {
+					if(ends[i].value > begins[i+1].value) {
+						return {
+							type: 1,
+							begin: begins[i+1].label,
+							end: ends[i].label
+						};
+					}
+				}
+
+				return true;
+			}
+		};
+
+		var settings = $.extend({}, defaults, options);
+
+		settings.render();
+
+		settings.validate();
+
+		return settings;
+	};
+
+	$.fn.timeRangePicker = function(options) {
+
+		var container = $(this);
+
+		var uuid = uuid();
+
+		var defaults = {
+			size: 0,
+			minuteStep: 5,
+			render: function () {
+				var html = '<table id="' + uuid + '" class="table table-bordered shop-time-table">';
+				html += '<thead>' +
+					'<tr>' +
+					'<th class="w150 text-c">开始时间</th>' +
+					'<th class="w150 text-c">结束时间</th>' +
+					'<th class="handle w50 text-c p-r-5">操作</th>' +
+					'</tr>' +
+					'</thead><tbody></tbody></table>';
+
+				var table = $(html);
+				var tbody = $(table).find("tbody");
+
+				$(container).html(table);
+			},
+			renderHourSelectOptions: function () {
+				var html = '';
+
+				for(var i = 0; i <= 23; i++) {
+					html += '<option>' + (i < 10 ? '00' : i)  + '</option>';
+				}
+
+				return html;
+			},
+			renderMinuteSelectOptions: function () {
+				var html = '';
+
+				for(var i = 0; i <= 59; i += minuteStep) {
+					html += '<option>' + (i < 10 ? '00' : i)  + '</option>';
+				}
+
+				return html;
+			},
+			add: function (start_hour, start_minute, end_hour, end_minute) {
+				var html = '<tr><td class="time-panel" colspan="3"><div class="time-subtime">';
+
+				html += '<div class="time-select"><select name="opening_hour[begin_hour][]" class="select form-control m-r-5">';
+				html += this.renderHourSelectOptions();
+				html += '</select> : ';
+				html += '<select name="opening_hour[begin_minute][]" class="select form-control m-l-5">';
+				html += this.renderMinuteSelectOptions();
+				html += '</select></div>';
+
+				html += '<div class="time-select">';
+				html += '<select name="opening_hour[begin_hour][]" class="select form-control m-r-5">';
+				html += this.renderHourSelectOptions();
+				html += '</select> : ';
+				html += '<select name="opening_hour[begin_minute][]" class="select form-control m-l-5">';
+				html += this.renderMinuteSelectOptions();
+				html += '</select></div>';
+
+				html += '</div>';
+
+				html += '<div class="handle"><a class="c-blue del-opentime" href="javascript:void(0);">删除</a></div>';
+
+				html += '</div></td></tr>';
+
+				$(container).find("tbody").append(html);
+			}
+		};
+
+		var settings = $.extend({}, defaults, options);
+
+		settings.render();
+	}
+
+	// 移动端弹层组件
+	$.popup = function(settings) {
+
+		var popupId = "popup_" + uuid();
+		var maskId = "popup_mask_" + popupId;
+		var btnId = "popup_btn_" + popupId;
+		var scrollheight = $(document).scrollTop();
+
+		var defaults = {
+			// 标题
+			title: '',
+			// 是否显示关闭按钮
+			showCloseBtn: true,
+			// 内容
+			content: '',
+			// 底部按钮文本内容
+			btnLabel: '确定',
+			// 底部按钮点击事件
+			btnClick: null,
+			// 设置内容的高度
+			height: null,
+			// 当前组件的容器
+			container: null,
+			// 展示标题
+			showTitle: function() {
+				$("#" + popupId).find(".pop-header").find("h2").show();
+			},
+			// 隐藏标题
+			hideTitle: function() {
+				$("#" + popupId).find(".pop-header").find("h2").hide();
+			},
+			// 设置标题
+			setTitle: function(title) {
+				this.title = title;
+				$("#" + popupId).find(".pop-header").find("h2").html(title);
+			},
+			// 设置内容
+			setContent: function(content) {
+				this.content = content;
+				$("#" + popupId).find(".pop-main-con").html(content);
+			},
+			// 设置内容的高度
+			setHeight: function(height) {
+				this.height = height;
+				$("#" + popupId).find(".pop-main-con").css("height", height);
+			},
+			// 渲染函数
+			render: function() {
+				var html = '<div id="' + maskId + '" class="mask1-div"></div>'
+				html += '<div id="' + popupId + '" class="rule-pop pop-desc spec-menu-hide" style="min-height: auto;">';
+				html += '<div class="pop-main">';
+				// 头部
+				html += '<div class="pop-header">';
+
+				if(this.title) {
+					html += '<h2>' + this.title + '</h2>';
+				}
+
+				if(this.showCloseBtn) {
+					html += '<a class="choose-attribute-close" href="javascript:void(0)"></a>';
+				}
+
+				html += '</div>';
+
+				// 内容
+				html += '<div class="pop-main-con" ' + (this.height ? 'style="height: ' + this.height + ';"' : '') + '>';
+				if(this.content) {
+					html += this.content;
+				}
+				html += '</div>';
+
+				// 底部
+				html += '<div class="choose-foot">';
+				html += this.renderBtns();
+				html += '</div>';
+
+				html += '</div>';
+				html += '</div>';
+
+				$("body").append(html);
+			},
+			// 渲染按钮
+			renderBtns: function() {
+				return '<a id="' + btnId + '" href="javascript:void(0);" class="bg-color pop-footer-btn">' + this.btnLabel + '</a>';
+			},
+			// 关闭按钮回调事件
+			closeCallback: function() {
+
+			},
+			// 显示
+			show: function() {
+				$("#" + popupId).removeClass('spec-menu-hide').addClass('spec-menu-show');
+				$("#" + popupId).show();
+				$("#" + maskId).show();
+				scrollheight = $(document).scrollTop();
+				$("body").css("top", "-" + scrollheight + "px");
+				$("body").addClass("visibly");
+				setTimeout(function() {
+					$("#" + popupId).find('.choose-attribute-close').addClass('show');
+				}, 300);
+			},
+			// 隐藏
+			hide: function() {
+				$("#" + maskId).hide();
+				$("body").css("top", "auto");
+				$("body").removeClass("visibly");
+				$(window).scrollTop(scrollheight);
+				$("#" + popupId).removeClass('spec-menu-show').addClass('spec-menu-hide');
+				$("#" + popupId).hide();
+				$("#" + popupId).find('.choose-attribute-close').removeClass('show');
+
+				if($.isFunction(settings.closeCallback)) {
+					settings.closeCallback();
+				}
+			},
+			// 销毁
+			destory: function () {
+				$("#" + maskId).remove();
+				$("#" + popupId).remove();
+			},
+			getId: function () {
+				return popupId;
+			},
+			getMaskId: function () {
+				return maskId;
+			},
+			// 获取容器对象
+			getContainer: function() {
+				return $("#" + popupId);
+			},
+			ajax: null,
+		};
+
+		settings = $.extend(defaults, settings);
+		// 渲染
+		settings.render();
+		// 赋值容器对象
+		settings.container = $("#" + popupId);
+
+		function close() {
+			settings.hide();
+		}
+
+		// 关闭按钮点击
+		$("#" + popupId).find(".choose-attribute-close").click(close);
+
+		// 关闭按钮点击
+		$("#" + maskId).click(close);
+
+		// 默认按钮点击事件
+		$("#" + btnId).click(function() {
+			if($.isFunction(settings.btnClick)) {
+				settings.btnClick();
+			}else{
+				close();
+			}
+		});
+
+		if(settings.ajax) {
+			$.loading.start();
+
+			var success = settings.ajax.success;
+
+			if($.isFunction(success)) {
+				success = function(result){
+					if(result.code == 0) {
+						settings.setContent(result.data);
+						settings.show();
+					}else if(result.message){
+						$.msg(result.message, {
+							time: 3000
+						});
+					}
+				};
+			}
+
+			$.get(settings.ajax.url, settings.ajax.data, success, "JSON").always(function(){
+				$.loading.stop();
+			});
+		}
+
+		return settings;
+	}
 })(jQuery);

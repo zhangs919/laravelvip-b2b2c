@@ -24,7 +24,7 @@
         @foreach($list as $v)
         <tr id="cat_{{ $v['cat_id'] }}" data-tt-id="{{ $v['cat_id'] }}" data-tt-parent-id="{{ $v['parent_id'] }}" class="1 @if(!empty($v['_child']))branch @else leaf @endif" data-id="{{ $v['cat_id'] }}" data-parent-id="{{ $v['parent_id'] }}">
             <td>
-                <a href="{{ route('pc_goods_list', ['cat_id' => $v['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $v['cat_name'] }}】"> {{ $v['cat_name'] }} </a>
+                <a href="{{ route('pc_goods_list', ['filter_str' => $v['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $v['cat_name'] }}】"> {{ $v['cat_name'] }} </a>
             </td>
             <td class="handle text-l">
                 <font class="f14">
@@ -88,7 +88,7 @@
             @foreach($v['_child'] as $child)
                 <tr id="cat_{{ $child['cat_id'] }}" data-tt-id="{{ $child['cat_id'] }}" data-tt-parent-id="{{ $child['parent_id'] }}" class="2 @if(!empty($child['_child']))branch @else leaf @endif" data-id="{{ $child['cat_id'] }}" data-parent-id="{{ $child['parent_id'] }}" style="display: none;">
                     <td>
-                        <a href="{{ route('pc_goods_list', ['cat_id' => $child['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $child['cat_name'] }}】"> {{ $child['cat_name'] }} </a>
+                        <a href="{{ route('pc_goods_list', ['filter_str' => $child['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $child['cat_name'] }}】"> {{ $child['cat_name'] }} </a>
                     </td>
                     <td class="handle text-l">
                         <font class="f14">
@@ -156,7 +156,7 @@
                                         <a href="#" title="展开">&nbsp;</a>
                                     @endif
                                 </span>--}}
-                                <a href="{{ route('pc_goods_list', ['cat_id' => $child2['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $child2['cat_name'] }}】"> {{ $child2['cat_name'] }} </a>
+                                <a href="{{ route('pc_goods_list', ['filter_str' => $child2['cat_id']]) }}" target="_blank" title="点击进入商城前台查看分类【{{ $child2['cat_name'] }}】"> {{ $child2['cat_name'] }} </a>
                             </td>
                             <td class="handle text-l">
                                 <font class="f14">

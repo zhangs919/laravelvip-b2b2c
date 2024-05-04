@@ -11,7 +11,7 @@
 @section('content')
 
     <form id="form1" class="form-horizontal" action="/shop/freight/calculate" method="POST">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-10 clearfix">
             <div class="form-goods-gift">
                 <div class="goods-summary">
@@ -119,7 +119,12 @@
     <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180710"></script>
     <!-- 鼠标滚轮 -->
     <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js?v=20180710"></script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
     <script type="text/javascript">
         $().ready(function() {
             //悬浮显示上下步骤按钮

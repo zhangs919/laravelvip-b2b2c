@@ -35,7 +35,7 @@
             var value = $(target).val() ;
             var options = $(this).data("options") ? $(this).data("options") : [];
             $(this).imagegroup({
-                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                host: "{{ get_oss_host() }}",
                 size: size,
                 mode: mode,
                 labels: labels,
@@ -75,7 +75,7 @@
             var options = $(this).data("options") ? $(this).data("options") : [];
 
             $(this).videogroup({
-                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                host: "{{ get_oss_host() }}",
                 size: size,
                 mode: mode,
                 labels: labels,

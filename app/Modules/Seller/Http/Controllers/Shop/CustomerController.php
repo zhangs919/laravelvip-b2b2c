@@ -20,7 +20,7 @@
 // | Description: 客服
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 use App\Models\CustomerType;
 use App\Modules\Base\Http\Controllers\Seller;
@@ -46,12 +46,15 @@ class CustomerController extends Seller
     protected $customer;
     protected $shop;
 
-    public function __construct()
+    public function __construct(
+        CustomerRepository $customer
+        ,ShopRepository $shop
+    )
     {
         parent::__construct();
 
-        $this->customer = new CustomerRepository();
-        $this->shop = new ShopRepository();
+        $this->customer = $customer;
+        $this->shop = $shop;
 
         $this->set_menu_select('account', 'shop-customer-list');
     }
@@ -287,16 +290,16 @@ class CustomerController extends Seller
             $ret = $this->shop->update(seller_shop_info()->shop_id, $post);
             if ($ret === false) {
                 // fail
-                flash('error', '操作失败');
+                flash('error', OPERATE_FAIL);
                 return redirect('/shop/customer/customer-set');
             }
             // success
-            flash('success', '操作成功');
+            flash('success', OPERATE_SUCCESS);
             return redirect('/shop/customer/customer-set');
         }
 
         // 获取数据
-        $model = $this->shop->getShopInfo(seller_shop_info()->shop_id)->toArray();
+        $model = $this->shop->getShopInfo(seller_shop_info()->shop_id);
 
         $compact = compact('title', 'model');
 
@@ -314,8 +317,6 @@ class CustomerController extends Seller
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-
-//        return view('shop.customer.customer_set', compact('title'));
     }
 
 }

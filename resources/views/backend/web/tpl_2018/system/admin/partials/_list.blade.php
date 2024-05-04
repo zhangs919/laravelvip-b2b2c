@@ -20,7 +20,7 @@
             <td class="text-c">{{ $v->user_id }}</td>
             <td>{{ $v->user_name }}</td>
             <td>{{ $v->real_name }}</td>
-            <td>{{ $v->adminRole->role_name }}</td>
+            <td>{{ $v->adminRole->role_name ?? '' }}</td>
             <td>{{ $v->last_time }}</td>
             <td class="text-c">{{ $v->last_ip }}</td>
             <td>{{ $v->visit_count }}</td>

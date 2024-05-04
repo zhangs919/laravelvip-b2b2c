@@ -37,7 +37,8 @@ $(function() {
 
 		if (iTop >= 430) {
 			oNav.css({
-				"position": "fixed"
+				"position": "fixed",
+				"top":"90px"
 			});
 			// 鼠标滑动式改变
 			aDiv.each(function() {

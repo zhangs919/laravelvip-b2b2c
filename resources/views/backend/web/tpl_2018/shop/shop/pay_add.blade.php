@@ -24,7 +24,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ShopPaymentModel" class="form-horizontal" name="ShopPaymentModel" action="/shop/shop/pay-add?{{ $extra }}" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 付款ID -->
             <input type="hidden" id="shoppaymentmodel-pay_id" class="form-control" name="ShopPaymentModel[pay_id]" value="{{ $info->pay_id ?? '' }}">
             <!-- 店铺ID -->
@@ -94,9 +94,13 @@
                     <div class="col-sm-8">
                         <div class="form-control-box">
 
-
-                            <input type="text" id="shoppaymentmodel-begin_time" class="form-control form_datetime large pull-none" name="ShopPaymentModel[begin_time]" value="{{ $info->begin_time ?? $shop_info->end_time }}" readonly="readonly">
-
+                            @if(isset($info->pay_id))
+                                <input type="text" id="shoppaymentmodel-begin_time" class="form-control form_datetime large pull-none" name="ShopPaymentModel[begin_time]"
+                                       value="@if(!empty($info->begin_time)){{ $info->begin_time }}@elseif(!empty($shop_info->end_time)){{format_time($shop_info->end_time) }}@else{{ format_time(time()) }}@endif" readonly="readonly">
+                            @else
+                                <input type="text" id="shoppaymentmodel-begin_time" class="form-control form_datetime large pull-none" name="ShopPaymentModel[begin_time]"
+                                       value="@if(!empty($shop_info->end_time)){{ format_time($shop_info->end_time+1) }}@else{{ format_time(time()) }}@endif" readonly="readonly">
+                            @endif
 
                         </div>
 
@@ -115,7 +119,11 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shoppaymentmodel-end_time" class="form-control form_datetime large pull-none" name="ShopPaymentModel[end_time]" value="{{ $info->end_time ?? '' }}" readonly="readonly">
+                            @if(isset($info->pay_id))
+                                <input type="text" id="shoppaymentmodel-end_time" class="form-control form_datetime large pull-none" name="ShopPaymentModel[end_time]" value="{{ $info->end_time ?? '' }}" readonly="readonly">
+                            @else
+                                <input type="text" id="shoppaymentmodel-end_time" class="form-control form_datetime large pull-none" name="ShopPaymentModel[end_time]" readonly="readonly">
+                            @endif
 
 
                         </div>
@@ -183,8 +191,8 @@
 
                             <input type="hidden" name="ShopPaymentModel[pay_status]" value="">
                             <div id="shoppaymentmodel-pay_status" class="" name="ShopPaymentModel[pay_status]">
-                                <label class="control-label cur-p m-r-10"><input type="radio" name="ShopPaymentModel[pay_status]" value="0"> 未付款</label>
-                                <label class="control-label cur-p m-r-10"><input type="radio" name="ShopPaymentModel[pay_status]" value="1" checked> 已付款</label></div>
+                                <label class="control-label cur-p m-r-10"><input type="radio" name="ShopPaymentModel[pay_status]" value="0" @if(@$info->pay_status == 0){{ 'checked' }}@endif> 未付款</label>
+                                <label class="control-label cur-p m-r-10"><input type="radio" name="ShopPaymentModel[pay_status]" value="1" @if(@$info->pay_status == 1){{ 'checked' }}@endif> 已付款</label></div>
 
 
                         </div>

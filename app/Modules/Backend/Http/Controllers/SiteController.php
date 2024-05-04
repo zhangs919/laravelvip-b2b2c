@@ -2,11 +2,15 @@
 
 namespace App\Modules\Backend\Http\Controllers;
 
+use App\Models\Goods;
+use App\Models\Shipping;
+use App\Models\ShopContract;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\ImageDirRepository;
 use App\Repositories\ImageRepository;
+use App\Repositories\LinkTypeRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\ToolsRepository;
@@ -14,8 +18,13 @@ use App\Repositories\TplBackupRepository;
 use App\Repositories\UploadVideoRepository;
 use App\Repositories\VideoDirRepository;
 use App\Repositories\VideoRepository;
+use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Laravelvip\Kdniao\Kdniao;
 
 class SiteController extends Backend
 {
@@ -42,16 +51,25 @@ class SiteController extends Backend
 
     protected $video;
 
+    protected $linkType; // 链接类型
 
-    public function __construct(ToolsRepository $tools,
-                                UploadVideoRepository $uploadVideoRepository,
-                                RegionRepository $regionRepository,
-                                CategoryRepository $categoryRepository,
-                                ImageDirRepository $imageDirRepository,
-                                ImageRepository $imageRepository,
-                                TplBackupRepository $tplBackupRepository,
-                                VideoDirRepository $videoDirRepository,
-                                VideoRepository $videoRepository)
+
+    public function __construct(
+        ToolsRepository $tools
+        ,UploadVideoRepository $uploadVideoRepository
+        ,RegionRepository $regionRepository
+        ,CategoryRepository $categoryRepository
+        ,ImageDirRepository $imageDirRepository
+        ,ImageRepository $imageRepository
+        ,TplBackupRepository $tplBackupRepository
+        ,GoodsRepository $goods
+        ,ShopRepository $shop
+        ,VideoDirRepository $videoDirRepository
+        ,VideoRepository $videoRepository
+        ,LinkTypeRepository $linkType
+
+
+    )
     {
         parent::__construct();
 
@@ -62,10 +80,12 @@ class SiteController extends Backend
         $this->imageDir = $imageDirRepository;
         $this->image = $imageRepository;
         $this->tplBackup = $tplBackupRepository;
-        $this->goods = new GoodsRepository();
-        $this->shop = new ShopRepository();
+        $this->goods = $goods;
+        $this->shop = $shop;
         $this->videoDir = $videoDirRepository;
         $this->video = $videoRepository;
+        $this->linkType = $linkType;
+
     }
 
 
@@ -135,7 +155,7 @@ class SiteController extends Backend
         }
 
         $params = $request->get('page');
-        $page_id = $params['page_id'];
+        $page_id = $params['page_id'] ?? '';
         $render = view('site.'.$tpl, compact('page_id', 'size', 'image_dir_list', 'image_list', 'pageHtml', 'uuid', 'dir_id'))->render();
         return result(0, $render);
     }
@@ -213,7 +233,7 @@ class SiteController extends Backend
         }
 
         $params = $request->get('page');
-        $page_id = $params['page_id'];
+        $page_id = $params['page_id'] ?? '';
         $render = view('site.'.$tpl, compact('page_id', 'size', 'video_dir_list', 'video_list', 'pageHtml', 'uuid', 'dir_id'))->render();
         return result(0, $render);
     }
@@ -376,6 +396,44 @@ class SiteController extends Backend
     }
 
     /**
+     * 生成图形验证码
+     *
+     * @param Request $request
+     * @return false|string
+     */
+    public function captcha(Request $request)
+    {
+
+//        return json_encode(['hash1' => 438,'hash2' => '438', 'url' => '/site/captcha.html?v='.uniqid()]);
+        $phraseBuilder = new PhraseBuilder(4, '0123456789'); // 只生成4位数字
+
+        //生成验证码图片的Builder对象，配置相应属性
+        $builder = new CaptchaBuilder(null, $phraseBuilder); // 只生成4位数字
+
+        //可以设置图片宽高及字体
+        $builder->build($width = 100, $height = 40, $font = null);
+        // 设置干扰线
+        $builder->setMaxBehindLines(0);
+        //获取验证码的内容
+        $phrase = $builder->getPhrase();
+
+        //把内容存入session
+        Session::flash('captcha', $phrase);
+
+        //生成图片
+        header("Cache-Control: no-cache, must-revalidate");
+        header('Content-Type: image/jpeg');
+
+        if ($request->get('refresh')) { // 刷新验证码
+            $data = $builder->inline();
+            return json_encode(['hash1' => 447,'hash2' => '447', 'url' => $data]);
+        }
+
+        // 直接输出验证码
+        $builder->output();
+    }
+
+    /**
      * 异步加载地区
      *
      * @param Request $request
@@ -384,66 +442,7 @@ class SiteController extends Backend
     public function regionList(Request $request)
     {
 
-        // 判断传入的值是parent_code 还是 region_code
-        $parent_code = !is_null($request->get('parent_code')) ? $request->get('parent_code') : 0;
-        $field = 'parent_code';
-        $params = $request->all();
-
-        $level_names = [
-            0 => "",
-            1 => '省',
-            2 => '市',
-            3 => '区/县',
-            4 => '镇',
-            5 => '街道/村'
-        ];
-        $extras = [
-            'level_names' => $level_names,
-        ];
-
-        if (isset($params['region_code'])) {
-            // 查询region_names
-            $region_names = array_reverse(get_parent_region_list($params['region_code']));
-            $region_names = array_column($region_names, 'region_name', 'region_code');
-            $rr = array_keys($region_names);
-            if (is_int($rr[0])) {
-                array_unshift($rr, 0);
-                if (count($rr) > 3) {
-                    array_pop($rr); // 移除最后一个
-                }
-            }
-            $data = [];
-            foreach ($rr as $key=>$p_code) {
-                $condition = [
-                    'where' => [[$field, strval($p_code)]],
-                    'limit' => 0,
-                    'field' => [
-                        'center', 'city_code', 'is_enable', 'is_scope', 'level',
-                        'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                    ]
-                ];
-                list($region_list, $total) = $this->regions->getList($condition);
-                $data[$key] = $region_list;
-            }
-            $extras['region_names'] = $region_names;
-
-            return result(0, $data, '', $extras);
-        } else {
-            $field = 'parent_code';
-            $condition = [
-                'where' => [[$field, $parent_code]],
-                'limit' => 0,
-                'field' => [
-                    'center', 'city_code', 'is_enable', 'is_scope', 'level',
-                    'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                ]
-            ];
-            list($region_list, $total) = $this->regions->getList($condition);
-
-            $data[0] = $region_list;
-            return result(0, $data, '', $extras);
-        }
-
+        return $this->regions->ajaxLoadRegions($request);
     }
 
     public function catList(Request $request)
@@ -458,8 +457,8 @@ class SiteController extends Backend
         $condition = [
             'where' => $where,
             'limit' => 0, // 不分页
-            'sortname' => 'created_at',
-            'sortorder' => 'desc'
+            'sortname' => 'cat_sort',
+            'sortorder' => 'asc'
         ];
         list($list, $total) = $this->category->getList($condition);
         if (empty($list)){
@@ -474,7 +473,7 @@ class SiteController extends Backend
                 'name' => $value->cat_name,
                 'parent_id' => $value->parent_id,
                 'isParent' => $value->is_parent ? true : false,
-                'cat_level' => $value->cat_level,
+                'cat_level' => $value->cat_level + 1,
                 'keywords' => $value->keywords
             ];
 //            $value['name'] = $value['cat_name'];
@@ -498,6 +497,10 @@ class SiteController extends Backend
 //                }
 //            }
         }
+
+//        if ($format == 'ztree' && $deep == 3) {
+//            $cat_list = array_chunk($cat_list, 100);
+//        }
 
         return result(0, $cat_list);
     }
@@ -646,7 +649,7 @@ class SiteController extends Backend
             list($m_near_shop, $total) = $this->shop->getList($condition);
             $compact = compact('m_near_shop');
         }
-
+//dd($m_goods_list);
         $render = view('backend::site.'.$tpl_code, $compact)->render();
         return result(0, $render);
     }
@@ -654,8 +657,27 @@ class SiteController extends Backend
 
     public function updateMessage(Request $request)
     {
-        $messageCount = 10; // 消息数量
-        $messageList = [1]; // 消息列表
+        $goods_apply_count = Goods::where('goods_audit', 0)->count(); // 商品审核
+        $customer_apply_count = ShopContract::where('status', 0)->count(); // 消费保障申请
+
+        $messageCount = $goods_apply_count + $customer_apply_count; // 消息数量
+        $messageList = []; // 消息列表
+        if ($goods_apply_count > 0) {
+            $messageList['goods_apply'] = [
+                'icon'=>"fa-shopping-cart",
+                'count'=>$goods_apply_count,
+                'title'=>'商品审核',
+                'content'=>"{$goods_apply_count}个商品需要审核",
+            ];
+        }
+        if ($customer_apply_count > 0) {
+            $messageList['customer_apply'] = [
+                'icon'=>"fa-credit-card",
+                'count'=>$customer_apply_count,
+                'title'=>'消费保障申请',
+                'content'=>"{$customer_apply_count}个店铺保障服务申请需要审核",
+            ];
+        }
 
         $render = view('backend::site.update_message', compact('messageCount', 'messageList'))->render();
         return result(0, $render);
@@ -707,8 +729,91 @@ class SiteController extends Backend
      */
     public function progress(Request $request)
     {
-        $key = $request->get('key', ''); // build-lib-goods-import
+        // build-lib-goods-import  导入店铺商品
+        //   build-goods-region-by-freight 重建商品数据关联关系
+        $key = $request->get('key', '');
 
-        return result(0);
+
+        $index = rand(1,99); // 已执行完成的数量
+        $count = 99; // 总的需要执行的数量
+        $progress = (round($index/$count, 4)*100)."%"; // 当前进度百分比
+        $data = [
+            'index' => $index,
+            'count' => $count,
+            'progress' => $progress
+        ];
+        return result(0, $data);
+    }
+
+    /**
+     * 清理缓存
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function clearCache(Request $request)
+    {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('clear-compiled');
+
+        return result(0, null, '清理缓存成功！');
+    }
+
+    /**
+     * 快递鸟 测试物流查询
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function trackQuery(Request $request)
+    {
+        $title = "物流追踪查询";
+        $shipping_list = Shipping::where([['is_open', 1]])
+            ->select(['shipping_id','shipping_code','shipping_name'])
+            ->get();
+
+        if ($request->method() == 'POST') {
+            $tracking_code = $request->post('logistic_code');
+            $shipping_code = $request->post('shipping_code');
+            $kdniao = new Kdniao();
+            $res = $kdniao->track($tracking_code, $shipping_code);
+            $data = [
+                'list' => [
+                    [
+                        'time' => '2019-06-06 18:58:39',
+                        'msg' => '亲，您的快件投递至丰巢，有疑问请联系'
+                    ],[
+                        'time' => '2019-06-06 18:58:39',
+                        'msg' => '已签收，签收人凭取货码签收。 [数据来源于丰巢智能柜]',
+                    ]
+                ]
+            ];
+
+            return result(0, $data);
+        }
+
+        return view('site.track_query', compact('title','shipping_list'));
+
+    }
+
+    public function imageHotLink(Request $request)
+    {
+        $uuid = make_uuid();
+        $link_type = $request->get('link_type');
+        $link = $request->get('link');
+        $style = $request->get('style');
+
+        if (is_array($link_type)) {
+            $link_type = 0;
+        }
+
+        $link_data = $this->linkType->getLinkTypeData($link_type);
+
+        $render = view('site.image_hot_link', compact('uuid','link_type','link','style','link_data'))->render();
+
+        return result(0,$render);
     }
 }

@@ -1,9 +1,13 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
-{{--css style page元素同级上面--}}
-@section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
 @stop
 
 {{--content--}}
@@ -35,7 +39,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -81,11 +85,33 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
-
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        // 
+        $().ready(function() {
             var tablelist = $("#table_list").tablelist({
                 params: $("#searchForm").serializeJson()
             });
@@ -96,7 +122,6 @@
                 });
                 return false;
             });
-
             $("body").on("click", "#btn-add", function() {
                 $.open({
                     title: "添加商品单位",
@@ -126,7 +151,6 @@
                     }
                 });
             });
-
             $("body").on("click", ".btn-edit", function() {
                 var id = $(this).data("id");
                 $.open({
@@ -146,48 +170,50 @@
                         var data = $(container).serializeJson();
                         $.loading.start();
                         $.post('/goods/goods-unit/edit?id=' + id, data, function(result) {
-                            $.loading.stop();
                             if (result.code == 0) {
-                                tablelist.load();
-                                $.msg(result.message);
                                 $.closeDialog(index);
+                                $.msg(result.message, function(){
+                                    tablelist.load();
+                                });
                             } else {
                                 $.msg(result.message, {
                                     time: 5000
                                 })
                             }
-                        }, "json");
+                        }, "json").always(function(){
+                            $.loading.stop();
+                        });
                     }
                 });
             });
-
             // 删除
             $("body").on('click', '.del', function() {
                 var ids = $(this).data("id");
-
                 if (!ids) {
                     ids = tablelist.checkedValues();
                     ids = ids.join(",");
                 }
-
                 if (!ids || ids.length == 0) {
                     $.msg("请选择要删除的记录！");
                     return;
                 }
-
                 $.confirm("您确定要删除选择的记录吗？", function() {
-                    $.post("/goods/goods-unit/batch-delete", {
+                    $.loading.start();
+                    $.post("/goods/goods-unit/delete", {
                         ids: ids
                     }, function(result) {
                         if (result.code == 0) {
-                            tablelist.load();
-                            $.msg(result.message);
+                            $.msg(result.message, function(){
+                                tablelist.load();
+                            });
                         } else {
                             $.msg(result.message, {
                                 time: 5000
                             });
                         }
-                    }, "json");
+                    }, "json").always(function(){
+                        $.loading.stop();
+                    });
                 });
             });
         });

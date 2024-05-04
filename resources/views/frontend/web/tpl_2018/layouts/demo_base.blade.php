@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('header_js')
+@section('header_css')
 
 @stop
 
@@ -9,15 +9,36 @@
 
 @stop
 
-@section('style_js')
-    <!--页面css/js-->
-
-@stop
-
-
-
 @section('content')
 
 
 
 @stop
+
+
+{{--底部js--}}
+@section('footer_js')
+
+@stop
+
+
+<script>
+
+    $().ready(function() {
+        WS_AddPoint({
+            user_id: '{{ $user_info['user_id'] ?? 0 }}',
+            url: "{{ get_ws_url('4431') }}",
+            type: "add_point_set"
+        });
+    }, 'JSON');
+    function addPoint(ob) {
+        if (ob != null && ob != 'undefined') {
+            if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                $.intergal({
+                    point: ob.point,
+                    name: '积分'
+                });
+            }
+        }
+    }
+</script>

@@ -28,7 +28,7 @@ class ShopPayment extends BaseModel
     protected $table = 'shop_payment';
 
     protected $fillable = [
-        'shop_id', 'insure_fee', 'is_renew', 'duration','system_fee','begin_time','end_time','pay_code','pay_time','pay_status', 'remark', 'unit'
+        'shop_id','apply_time','pay_time','pay_code','pay_name','begin_time','end_time','duration','unit','system_fee','insure_fee','is_frozen','pay_status','is_renew','remark',
     ];
 
     protected $primaryKey = 'pay_id';

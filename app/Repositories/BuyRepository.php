@@ -3,13 +3,18 @@
 namespace App\Repositories;
 
 
-use App\Jobs\OrderUpdate;
-use App\Models\Contract;
-use App\Models\SelfPickup;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Queue;
+//use App\Jobs\OrderUpdate;
+//use App\Models\Contract;
+//use App\Models\SelfPickup;
+//use Carbon\Carbon;
+//use Illuminate\Support\Facades\DB;
 
+/**
+ * 该类已废弃 使用CheckoutRepository
+ *
+ * Class BuyRepository
+ * @package App\Repositories
+ */
 class BuyRepository
 {
     use BaseRepository;
@@ -41,6 +46,7 @@ class BuyRepository
     protected $buy1; // 购买下单逻辑辅助类
     protected $orderInfo;
     protected $orderGoods;
+    protected $bonus;
 
     public function __construct()
     {
@@ -54,6 +60,9 @@ class BuyRepository
         $this->buy1 = new Buy1Repository();
         $this->orderInfo = new OrderInfoRepository();
         $this->orderGoods = new OrderGoodsRepository();
+        $this->bonus = new BonusRepository();
+
+
     }
 
     /**
@@ -61,7 +70,7 @@ class BuyRepository
      * @param array $cart_id 购买商品信息数组
      * @return array
      */
-    private function _parseItems($cart_id)
+    /*private function _parseItems($cart_id)
     {
         $buy_items = [];
         if (is_array($cart_id)) {
@@ -79,95 +88,98 @@ class BuyRepository
         }
 
         return $buy_items;
-    }
+    }*/
 
     /**
      * 购买第一步
      * 确定订单信息
+     * 旧的购买逻辑 已废弃
      *
      * @param array $userBuy 用户购买信息数组
      * @param int $userId 当前登录用户id
      * @return array
      */
-    public function buyStep1($userBuy, $userId)
-    {
-        if (empty($userBuy)) {
-            // 无购买信息 跳转到购物车页面
-            return arr_result(-1, null, '您没有提交任何需要结算的商品');
-        }
-
-        // 购买商品信息 (商品id/购物车id)|sku_id|购买数量 如果是购物车购买 是多个数组
-        $cart_id = !empty($userBuy['cart_id']) ? $userBuy['cart_id'] : null;
-        $buy_items = $this->_parseItems($cart_id);
-        if (empty($buy_items)) {
-            return arr_result(-1, null, '您没有提交任何需要结算的商品');
-        }
-
-        if (count($buy_items) > 50) {
-            return arr_result(-1, null, '一次最多只可购买50种商品');
-        }
-
-
-        $integral_enable = isset($userBuy['integral_enable']) ? $userBuy['integral_enable'] : false;
-        $balance_enable = isset($userBuy['balance_enable']) ? $userBuy['balance_enable'] : false;
-        $pay_code = isset($userBuy['pay_code']) ? $userBuy['pay_code'] : '';
-        $selected_address = isset($userBuy['selected_address']) ? $userBuy['selected_address'] : 0; // 选中的收货地址id
-        $send_time_id = isset($userBuy['send_time_id']) ? $userBuy['send_time_id'] : 0;
-        $send_time = isset($userBuy['send_time']) ? $userBuy['send_time'] : '';
-
-//        dd($buy_items);
-
-        // 用户收货地址
-        $address_list = $this->userAddress->getUserAddressList($userId, 'buy', $selected_address);
-//        dd($address_list);
-        // 送货时间
-        $checked = $send_time_id; // 选中项 默认0
-        $send_time_list = $this->getSendTime($checked);
-        // 送货时间描述
-        $send_time_desc = sysconf('send_time_desc');
-        // 最佳送货时间
-        $best_time = $send_time;
-        // 是否显示送货时间
-        $send_time_show = !empty($send_time_list) ? true : false;
-        // 购物车信息
-        $cart_info = $this->getCartInfo($userId, $userBuy, $buy_items);
-        // 是否显示配送方式
-        $shipping_list_show = true;
-
-        // 是否显示发票信息
-        $invoice_show = !empty($cart_info['invoice_info']) ? true : false;
-        $invoice_info = $cart_info['invoice_info'];
-
-        $invoice_desc = '不开发票';
-        // 支付方式列表 多个店铺 数组取交集
-        $pay_list = $this->payment->getPaymentList($pay_code);
-
-        $data = [
-            'address_list' => $address_list,
-            'address_list_show' => !empty($address_list) ? true : false,
-            'send_time_list' => $send_time_list,
-            'send_time_desc' => $send_time_desc,
-            'best_time' => $best_time,
-            'send_time_show' => $send_time_show,
-            'cart_info' => $cart_info,
-            'shipping_list_show' => $shipping_list_show,
-            'invoice_show' => $invoice_show,
-            'invoice_info' => $invoice_info,
-            'invoice_desc' => $invoice_desc,
-            'pay_list' => $pay_list,
-            'buy_type' => $userBuy['buy_type'],
-            'is_exchange' => false,
-            'is_gift' => false,
-            'shop_id' => 0,
-            'rc_model' => null,
-            'show_url' => null,
-            'balance_enable' => '1',
-            'balance_first' => '0',
-            'topay_enable' => true
-        ];
-
-        return arr_result(0, $data);
-    }
+//    public function buyStep1($userBuy, $userId)
+//    {
+//        $this->_user_info = session('user');
+//
+//        if (empty($userBuy)) {
+//            // 无购买信息 跳转到购物车页面
+//            return arr_result(-1, null, '您没有提交任何需要结算的商品');
+//        }
+//
+//        // 购买商品信息 (商品id/购物车id)|sku_id|购买数量 如果是购物车购买 是多个数组
+//        $cart_id = !empty($userBuy['cart_id']) ? $userBuy['cart_id'] : null;
+//        $buy_items = $this->_parseItems($cart_id);
+//        if (empty($buy_items)) {
+//            return arr_result(-1, null, '您没有提交任何需要结算的商品');
+//        }
+//
+//        if (count($buy_items) > 50) {
+//            return arr_result(-1, null, '一次最多只可购买50种商品');
+//        }
+//
+//
+//        $integral_enable = isset($userBuy['integral_enable']) ? $userBuy['integral_enable'] : false;
+//        $balance_enable = isset($userBuy['balance_enable']) ? $userBuy['balance_enable'] : false;
+//        $pay_code = isset($userBuy['pay_code']) ? $userBuy['pay_code'] : '';
+//        $selected_address = isset($userBuy['selected_address']) ? $userBuy['selected_address'] : 0; // 选中的收货地址id
+//        $send_time_id = isset($userBuy['send_time_id']) ? $userBuy['send_time_id'] : 0;
+//        $send_time = isset($userBuy['send_time']) ? $userBuy['send_time'] : '';
+//
+////        dd($buy_items);
+//
+//        // 用户收货地址
+//        $address_list = $this->userAddress->getUserAddressList($userId, 'buy', $selected_address);
+////        dd($address_list);
+//        // 送货时间
+//        $checked = $send_time_id; // 选中项 默认0
+//        $send_time_list = $this->getSendTime($checked);
+//        // 送货时间描述
+//        $send_time_desc = sysconf('send_time_desc');
+//        // 最佳送货时间
+//        $best_time = $send_time;
+//        // 是否显示送货时间
+//        $send_time_show = !empty($send_time_list) ? true : false;
+//        // 购物车信息
+//        $cart_info = $this->getCartInfo($userId, $userBuy, $buy_items);
+//        // 是否显示配送方式
+//        $shipping_list_show = true;
+//
+//        // 是否显示发票信息
+//        $invoice_show = true; // 根据店铺商品是否允许开发票判断 !empty($cart_info['invoice_info']) ? true : false;
+//        $invoice_info = $cart_info['invoice_info'];
+//
+//        $invoice_desc = '不开发票';
+//        // 支付方式列表 多个店铺 数组取交集
+//        $pay_list = $this->payment->getPaymentList($pay_code);
+//
+//        $data = [
+//            'address_list' => $address_list,
+//            'address_list_show' => !empty($address_list) ? true : false,
+//            'send_time_list' => $send_time_list,
+//            'send_time_desc' => $send_time_desc,
+//            'best_time' => $best_time,
+//            'send_time_show' => $send_time_show,
+//            'cart_info' => $cart_info,
+//            'shipping_list_show' => $shipping_list_show,
+//            'invoice_show' => $invoice_show,
+//            'invoice_info' => $invoice_info,
+//            'invoice_desc' => $invoice_desc,
+//            'pay_list' => $pay_list,
+//            'buy_type' => $userBuy['buy_type'],
+//            'is_exchange' => false,
+//            'is_gift' => false,
+//            'shop_id' => 0,
+//            'rc_model' => null,
+//            'show_url' => null,
+//            'balance_enable' => '1',
+//            'balance_first' => '0',
+//            'topay_enable' => true
+//        ];
+//
+//        return arr_result(0, $data);
+//    }
 
     /**
      * 获取最佳送货时间文字描述
@@ -175,20 +187,20 @@ class BuyRepository
      * @param int $sendTimeId 送货时间Id
      * @return mixed|null
      */
-    public function getBestTime($sendTimeId)
-    {
-        $sendTime = explode(',', sysconf('send_time')); // 送货时间
-        foreach ($sendTime as $k => $v) {
-            if ($k == $sendTimeId) {
-                return str_replace(
-                    [1, 2, 3, 4, 5],
-                    ['立即配送', '工作日/周末/假日均可', '仅周末送货', '仅工作日送货', '指定送货时间'],
-                    $v
-                );
-            }
-        }
-        return null;
-    }
+//    public function getBestTime($sendTimeId)
+//    {
+//        $sendTime = explode(',', sysconf('send_time')); // 送货时间
+//        foreach ($sendTime as $k => $v) {
+//            if ($k == $sendTimeId) {
+//                return str_replace(
+//                    [1, 2, 3, 4, 5],
+//                    ['立即配送', '工作日/周末/假日均可', '仅周末送货', '仅工作日送货', '指定送货时间'],
+//                    $v
+//                );
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * 获取送货时间
@@ -197,95 +209,96 @@ class BuyRepository
      * @param int $checked
      * @return array
      */
-    public function getSendTime($checked = 0)
-    {
-        $sendTime = explode(',', sysconf('send_time')); // 送货时间
-        $shippingTime = json_decode(sysconf('shipping_time'), true); // 指定送货时间
-        $list = [];
-        if (!empty($sendTime)) {
-            foreach ($sendTime as $k => $v) {
-                $item = [
-                    'value' => str_replace(
-                        [1, 2, 3, 4, 5],
-                        ['立即配送', '工作日/周末/假日均可', '仅周末送货', '仅工作日送货', '指定送货时间'],
-                        $v
-                    ),
-                    'checked' => $k == $checked ? 'checked' : '',
-                    'set_time' => false,
-                ];
-                if (!empty($shippingTime) && $v == 5) { /*指定送货时间*/
-                    $item['set_time'] = true;
-                    $bestTime = [];
-                    $timePeriod = [];
-                    foreach ($shippingTime['begin_hour'] as $hourKey => $hour) {
-                        $timePeriod[] = $shippingTime['begin_hour'][$hourKey] . ':' . $shippingTime['begin_minute'][$hourKey] .
-                            '--' . $shippingTime['end_hour'][$hourKey] . ':' . $shippingTime['end_minute'][$hourKey];
-                    }
-                    foreach (range(0, 6) as $weekDay) {
-                        if (in_array($weekDay, $shippingTime['week'])) {
-                            $date = Carbon::now()->addDays($weekDay);
-                            $dateFormat = $date->format('m-d');
-                            $week = $date->dayOfWeek;
-                            $weekFormat = str_replace(
-                                range(0, 6),
-                                ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
-                                $week
-                            );
-                            // 当前日期
-                            $currentDate = Carbon::now()->addDays(0);
-                            $currentWeek = $currentDate->dayOfWeek;
-                            if ($week == $currentWeek) {
-                                $weekFormat = '今天';
-                            }
-
-                            $timeArray = [];
-                            foreach ($timePeriod as $timeValue) {
-                                $trueTimeBegin = strtotime($date->format('Y') . '-' . $dateFormat . ' ' . explode('--', $timeValue)[0]);
-                                $trueTimeEnd = strtotime($date->format('Y') . '-' . $dateFormat . ' ' . explode('--', $timeValue)[1]);
-                                $use = 0;
-                                // 消费者下单时间+1个小时小于配送时间段的开始时间
-                                // 或消费者下单时间+1个小时小于配送时间段的结束时间，
-                                // 那么此时间段消费者是可以选择的
-                                if ((time() < $trueTimeBegin + 3600) || (time() < $trueTimeEnd + 3600)) {
-                                    $use = 1;
-                                }
-                                $timeArray[] = [
-                                    'use' => $use,
-                                    'text' => $timeValue
-                                ];
-                            }
-                            $bestTime[] = [
-                                'name' => $dateFormat,
-                                'week' => $weekFormat,
-                                'time' => $timeArray
-                            ];
-                        }
-                    }
-                    $item['best_time'] = $bestTime;
-                }
-                $list[] = $item;
-            }
-        }
-
-        return $list;
-    }
+//    public function getSendTime($checked = 0)
+//    {
+//        $sendTime = explode(',', sysconf('send_time')); // 送货时间
+//        $shippingTime = json_decode(sysconf('shipping_time'), true); // 指定送货时间
+//        $list = [];
+//        if (!empty($sendTime)) {
+//            foreach ($sendTime as $k => $v) {
+//                $item = [
+//                    'value' => str_replace(
+//                        [1, 2, 3, 4, 5],
+//                        ['立即配送', '工作日/周末/假日均可', '仅周末送货', '仅工作日送货', '指定送货时间'],
+//                        $v
+//                    ),
+//                    'checked' => $k == $checked ? 'checked' : '',
+//                    'set_time' => false,
+//                ];
+//                if (!empty($shippingTime) && $v == 5) { /*指定送货时间*/
+//                    $item['set_time'] = true;
+//                    $bestTime = [];
+//                    $timePeriod = [];
+//                    foreach ($shippingTime['begin_hour'] as $hourKey => $hour) {
+//                        $timePeriod[] = $shippingTime['begin_hour'][$hourKey] . ':' . $shippingTime['begin_minute'][$hourKey] .
+//                            '--' . $shippingTime['end_hour'][$hourKey] . ':' . $shippingTime['end_minute'][$hourKey];
+//                    }
+//                    foreach (range(0, 6) as $weekDay) {
+//                        if (in_array($weekDay, $shippingTime['week'])) {
+//                            $date = Carbon::now()->addDays($weekDay);
+//                            $dateFormat = $date->format('m-d');
+//                            $week = $date->dayOfWeek;
+//                            $weekFormat = str_replace(
+//                                range(0, 6),
+//                                ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+//                                $week
+//                            );
+//                            // 当前日期
+//                            $currentDate = Carbon::now()->addDays(0);
+//                            $currentWeek = $currentDate->dayOfWeek;
+//                            if ($week == $currentWeek) {
+//                                $weekFormat = '今天';
+//                            }
+//
+//                            $timeArray = [];
+//                            foreach ($timePeriod as $timeValue) {
+//                                $trueTimeBegin = strtotime($date->format('Y') . '-' . $dateFormat . ' ' . explode('--', $timeValue)[0]);
+//                                $trueTimeEnd = strtotime($date->format('Y') . '-' . $dateFormat . ' ' . explode('--', $timeValue)[1]);
+//                                $use = 0;
+//                                // 消费者下单时间+1个小时小于配送时间段的开始时间
+//                                // 或消费者下单时间+1个小时小于配送时间段的结束时间，
+//                                // 那么此时间段消费者是可以选择的
+//                                if ((time() < $trueTimeBegin + 3600) || (time() < $trueTimeEnd + 3600)) {
+//                                    $use = 1;
+//                                }
+//                                $timeArray[] = [
+//                                    'use' => $use,
+//                                    'text' => $timeValue
+//                                ];
+//                            }
+//                            $bestTime[] = [
+//                                'name' => $dateFormat,
+//                                'week' => $weekFormat,
+//                                'time' => $timeArray
+//                            ];
+//                        }
+//                    }
+//                    $item['best_time'] = $bestTime;
+//                }
+//                $list[] = $item;
+//            }
+//        }
+//
+//        return $list;
+//    }
 
     /**
      * @param int $checked
      */
-    public function getInvoiceInfo($checked = 0)
-    {
-
-    }
+//    public function getInvoiceInfo($checked = 0)
+//    {
+//
+//    }
 
     /**
      * 获取直接购买店铺及商品数据
+     * 已废弃
      *
      * @param $user_id
      * @param $user_buy
      * @return mixed
      */
-    public function getQuickBuyShopGoods($user_id, $user_buy, $buy_items)
+    /*public function getQuickBuyShopGoods($user_id, $user_buy, $buy_items)
     {
         $buy_item = array_first($buy_items);
 
@@ -307,7 +320,7 @@ class BuyRepository
         $shop_info->pickup_list = $pickup_list;
 
         // 计算店铺商品运费
-        $shipping_fee = 0.00; // todo 需要计算
+        $shipping_fee = 0.00; //  需要计算
 
         // 配送方式
         $shipping_list = $this->getShippingList($shipping_fee);
@@ -354,7 +367,7 @@ class BuyRepository
             'add_time' => time(),
             'add_time_format' => format_time(time(), 'Y-m-d H:i:s'),
             'shop_info' => $shop_info->toArray(), // 转换成数组
-            'bonus_list' => null, // todo
+            'bonus_list' => null, //
             'goods_list' => [
                 [
                     'user_id' => $user_id,
@@ -431,21 +444,24 @@ class BuyRepository
         ];
 
         return $data;
-    }
+    }*/
 
     /**
      * 获取购物车商品列表
-     * todo
+     *
      * @return array
      */
-    public function getCartShopGoods($user_id)
-    {
+//    public function getCartShopGoods($user_id)
+//    {
+//
+//        return [];
+//    }
 
-        return [];
-    }
-
-
-    public function getCartInfo($user_id, $user_buy, $buy_items)
+    /**
+     * 旧的逻辑 已废弃
+     *
+     */
+    /*public function getCartInfo($user_id, $user_buy, $buy_items)
     {
         $buy_type = $user_buy['buy_type']; // 购买类型 0-加入购物车购买 1-立即购买 2-去结算 3-兑换 4-自由购 5-到店购 6-礼品提货
 
@@ -460,16 +476,22 @@ class BuyRepository
                 '37' => 22.3
             ];
         } else { // 购物车购买
-            $goods_number = 0; // 购买数量 todo
+            $goods_number = 0; // 购买数量
             $select_goods_number = 0;
             $select_goods_amount = 0;
             $shop_list = $this->getCartShopGoods($user_id);
             $select_shop_amount = [];
         }
 
+        // 平台红包、店铺红包
+        $bonus_list = $this->bonus->getCheckoutUserBonus();
+
         // 发票信息
         $invoice_type = '0';
-        $invoice_info = [];
+        $invoice_info = $this->buy1->getInvoiceInfo($invoice_type);
+
+        // 用户可用资金=可提现余额+不可提现余额
+        $balance = $this->_user_info['user_money'] + $this->_user_info['user_money_limit'];
 
         $data = [
             'select_goods_number' => $select_goods_number,
@@ -488,6 +510,7 @@ class BuyRepository
             'submit_enable' => 1,
             'shop_list' => $shop_list,
             'invalid_list' => null,
+            'bonus_list' => $bonus_list,
             'order' => [
                 'pay_code' => null,
                 'order_amount' => 63,
@@ -536,17 +559,21 @@ class BuyRepository
                 'pay_point' => '14|0',
                 'pay_point_amount' => 0.14,
                 'pay_point_amount_format' => '￥0.14',
-                'balance' => '2000',
-                'balance_format' => '￥2000',
-                'balance_password_enable' => 0
+                'balance' => $balance,
+                'balance_format' => '￥'.$balance,
+                'balance_password_enable' => !empty($this->_user_info['surplus_password']) ? 1 : 0
             ],
             'key' => 'c693f1a07c11be160f05ee55afcc351e' // 32位
         ];
 
         $data['select_goods_number'] = 2;
 
+        // unset 空的值
+        if (empty($data['bonus_list'])) {
+            unset($data['bonus_list']);
+        }
         return $data;
-    }
+    }*/
 
     /**
      * 购买下单页面 获取配送方式列表
@@ -555,7 +582,7 @@ class BuyRepository
      * @param $shipping_fee
      * @return array
      */
-    public function getShippingList($shipping_fee)
+    /*public function getShippingList($shipping_fee)
     {
         $data = [
             [
@@ -583,84 +610,26 @@ class BuyRepository
         ];
 
         return $data;
-    }
+    }*/
 
-
-    /**
-     * 生成订单编号
-     *
-     * 注意：后期需要重写订单编号生成方法，需要考虑到分布式服务器订单编号的不重复问题。
-     * 方案：可以新建一个全局数据库，只建一个order表，表只有一个order_id自增字段，
-     *      在生成订单编号时，通过api读取该数据库的order表order_id字段，进行自增，
-     *      从而避免了频繁的更新操作。
-     *
-     * 长度 = 8位 + 2位 + 4位 + 6位 = 20位 如: 20190309 10 0059 974040
-     * 年月日     (00-10) 分秒   随机6位数
-     * 20190309    10     0059   974040
-     *
-     * szy
-     * 20190309 10 0059 974040 parent_order_sn
-     * 20190309 10 0059 136180 order_sn  2019-03-09 18:10:49
-     * 20190309 10 0059 658800 order_sn  2019-03-09 18:10:50
-     *
-     * 20180727 00 5513 258860 parent_order_sn
-     * 20180727 00 5513 656460 order_sn
-     * 20180727 00 5514 503860 order_sn
-     * 20180727 00 5514 676250 order_sn
-     *
-     *
-     * 20190301063561604
-     *
-     * 大商创
-     * 20170824 05 3559 112260 order_sn  2017-08-24 13:35:59
-     *
-     * @return string
-     */
-    public function makeOrderSn()
-    {
-        return format_time(time(), 'Ymd')
-            . sprintf('%02d', mt_rand(0, 10)) // 0-10取两位 不足两位前面加0补两位
-            . format_time(time(), 'is')
-            . mt_rand(100000, 999999);
-
-        /*$time = explode(' ', microtime());
-        $time = $time[1] . $time[0] * 1000;
-        $time = explode('.', $time);
-        $time = isset($time[1]) ? $time[1] : 0;
-        $time = date('YmdHis') + $time;
-        mt_srand((double) microtime() * 1000000);
-        return $time . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);*/
-    }
-
-    /**
-     * 生成发货单编号(年月日 + 0 + [00-10] + 发货单生成时间取分钟 + 随机5位数)
-     * 长度 = 8位 + 2位 + 2位 + 5位 = 17位 如: 20190222030144951
-     * 年月日     (0-9)   分   随机5位数
-     * 20190221    03     33   64227
-     * @return string
-     */
-    public function makeDeliverySn()
-    {
-        return format_time(time(), 'Ymd')
-            . sprintf('%02d', mt_rand(0, 10)) // 0-10取两位 不足两位前面加0补两位
-            . format_time(time(), 'i')
-            . mt_rand(10000, 99999);
-    }
 
     /****************** 以下是生成订单逻辑代码 ********************/
 
     /**
      * 提交订单
+     * 此方法废弃 使用 CheckoutRepository
      *
      * @param array $userBuy
      * @param $user
      * @param array $postscript 买家留言数组[以店铺id为下标]
      * @return array
      */
-    public function submitOrder($userBuy, $user, $postscript)
+    /*public function submitOrder($userBuy, $postscript)
     {
+        $this->_user_info = session('user');
+
+        $user = $this->_user_info;
         $user_id = $user['user_id'];
-        $this->_user_info = $user;
         $this->_post_data = $userBuy;
 
 
@@ -705,7 +674,7 @@ class BuyRepository
                     'sku_name' => '新鲜猪肝 生猪干 1斤（多退少补）'
                 ]
             ];
-            if (empty($limit_goods)) { // todo
+            if (empty($limit_goods)) { //
                 return arr_result(109, $limit_goods, '部分商品暂不支持配送，请修改收货地址或移除部分商品');
             }
 
@@ -746,7 +715,7 @@ class BuyRepository
                 $sku_id = $buy_item['sku_id'];
                 $quantity = $buy_item['number'];
 
-                // 商品信息[得到最新商品属性及促销信息] todo 等促销功能做的差不多了再调整该方法，增加各种促销活动信息返回
+                // 商品信息[得到最新商品属性及促销信息]  等促销功能做的差不多了再调整该方法，增加各种促销活动信息返回
                 $goods_info = $this->goods->getOnSaleGoodsInfo($goods_id, $sku_id, $quantity);
                 if (empty($goods_info)) {
                     throw new \Exception('商品已下架或不存在');
@@ -768,11 +737,11 @@ class BuyRepository
             // 商品金额计算（分别对每个商品/优惠套装小计、每个店铺小计）
             list($shop_cart_list, $shop_goods_total) = $this->buy1->calcCartList($shop_cart_list);
 
-            // todo 判断预定不想睡任何优惠
+            //  判断预定不想睡任何优惠
 
             // 取得店铺优惠 - 满即送（赠品列表，店铺满送规则列表）
 
-            // todo 重新计算店铺扣除各种优惠活动后商品实际支付金额
+            //  重新计算店铺扣除各种优惠活动后商品实际支付金额
             $shop_activity = [];
             $activity_type = '';
             $shop_final_goods_total = $this->buy1->reCalcGoodsTotal($shop_goods_total, $shop_activity, $activity_type);
@@ -790,15 +759,15 @@ class BuyRepository
             // 计算店铺最终订单实际支付金额（加上运费）
             $shop_final_order_total = $this->buy1->reCalcGoodsTotal($shop_final_goods_total, $shop_freight_total, 'freight');
 
-            // todo 计算每个店铺(所有店铺级优惠活动，代金券，满减)总共优惠多少
+            //  计算每个店铺(所有店铺级优惠活动，代金券，满减)总共优惠多少
 //            $shop_promotion_total = $this->buy1->getShopPromotionTotal($shop_goods_total, $shop_freight_total, $shop_final_order_total);
 
-            //todo 得到有效平台红包
+            // 得到有效平台红包
 
-            // todo 计算每个订单应用了多少平台红包
+            //  计算每个订单应用了多少平台红包
 
             //重新计算优惠金额,将店铺红包减去运费的余额追加到店铺总优惠里
-            $shop_bonus_total = []; // todo
+            $shop_bonus_total = []; //
 //            $shop_promotion_total = $this->buy1->reCalcShopPromotionTotal($shop_promotion_total, $shop_freight_total, $shop_bonus_total);
 
             // 判断如果有部分商品无货，返回提示
@@ -846,20 +815,20 @@ class BuyRepository
                     'order_sn' => $this->makeOrderSn(),
                     'parent_sn' => $parent_sn, // 父订单编号
                     'user_id' => $user_id,
-                    'order_status' => 0, // todo 如果是余额支付，并且余额大于待支付订单总金额，则将状态设置为交易成功
+                    'order_status' => 0, //  如果是余额支付，并且余额大于待支付订单总金额，则将状态设置为交易成功
                     'shop_id' => $shop_id,
-                    'site_id' => 0, // 站点id todo 站点功能做好了再完善
-                    'store_id' => 0, // 网点id todo 网点后台做好了再完善
-                    'pickup_id' => 0, // 自提点id todo 前面需要获取post过来的店铺自提点信息
+                    'site_id' => 0, // 站点id  站点功能做好了再完善
+                    'store_id' => 0, // 网点id  网点后台做好了再完善
+                    'pickup_id' => 0, // 自提点id  前面需要获取post过来的店铺自提点信息
                     'shipping_status' => 0,
-                    'pay_status' => 0, // 支付状态 todo 如果是余额支付，并且余额大于待支付订单总金额，则将状态设置为已支付
+                    'pay_status' => 0, // 支付状态  如果是余额支付，并且余额大于待支付订单总金额，则将状态设置为已支付
                     'consignee' => $input_address_info['consignee'],
                     'region_code' => $input_address_info['region_code'],
                     'region_name' => get_region_names_by_region_code($input_address_info['region_code']),
                     'address' => $input_address_info['address_detail'],
                     'address_lng' => $input_address_info['address_lng'],
                     'address_lat' => $input_address_info['address_lat'],
-                    'receiving_mode' => 0, // 收货方式 默认0 0-普通快递 2-上门自提 todo 前面需要获取post过来的店铺自提点信息
+                    'receiving_mode' => 0, // 收货方式 默认0 0-普通快递 2-上门自提  前面需要获取post过来的店铺自提点信息
                     'tel' => !empty($input_address_info['tel']) ? $input_address_info['tel'] : $input_address_info['mobile'],
                     'email' => $input_address_info['email'],
                     'postscript' => isset($postscript[$shop_id]) ? $postscript[$shop_id] : null, // 买家留言
@@ -870,8 +839,8 @@ class BuyRepository
                     'pay_sn' => 0, // 支付单号 暂时不清楚什么时候生成
                     'is_cod' => $pay_code == 'cod' ? 1 : 0, // 是否为货到付款
                     'order_amount' => $shop_final_order_total[$shop_id],
-                    'order_points' => 0, // 订单兑换积分 todo 积分商城做好了再完善
-                    'money_paid' => 0.00, // 订单支付金额 todo 如果是余额支付，则有值
+                    'order_points' => 0, // 订单兑换积分  积分商城做好了再完善
+                    'money_paid' => 0.00, // 订单支付金额  如果是余额支付，则有值
                     'goods_amount' => $shop_final_goods_total[$shop_id], // 商品总金额 已减去运费
                     'inv_fee' => 0.00, // 发票总费用
                     'shipping_fee' => $shop_freight_total[$shop_id],
@@ -900,17 +869,17 @@ class BuyRepository
                     'confirm_time' => 0, // 确认收货截止时间
                     'delay_days' => 0, // 延迟收货天数
                     'order_type' => 0, // 交易类型 0-普通商品 1-拍卖 2-预售 3-团购 5-积分兑换 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动 99-电子秤商品
-                    'buyer_type' => 0, // todo 买家类型 0-个人 1-店铺
+                    'buyer_type' => 0, //  买家类型 0-个人 1-店铺
                     'is_distrib' => 0, // 是否为分销商品
                     'distrib_status' => 0, // 分销订单状态
-                    'is_show' => '1,2,3,4', // todo 暂时不清楚是什么意思
+                    'is_show' => '1,2,3,4', //  暂时不清楚是什么意思
                     'order_data' => null, // 订单活动数据 序列化存储
                     'cash_user_id' => 0, //
                     'sub_order_id' => $sub_order_id, // 子订单id
                     'buy_type' => $buy_type, // 购买类型
                     'reachbuy_code' => '0', // 自由购下单码号码
                     'growth_value' => '0', // 会员等级成长值
-                    'pickup_name' => null, // 自提点名称 todo 前面需要获取post过来的店铺自提点信息
+                    'pickup_name' => null, // 自提点名称  前面需要获取post过来的店铺自提点信息
                     'shop_name' => $goods_list[0]['shop_name'], //
                     'shop_type' => $goods_list[0]['shop_type'], // 店铺类型
                     'customer_tool' => $goods_list[0]['customer_tool'], // 客服工具
@@ -935,7 +904,7 @@ class BuyRepository
                         ->select(['contract_id','contract_name','contract_image','contract_desc'])
                         ->get()->toArray();
 
-                    // todo 商品活动扩展信息
+                    //  商品活动扩展信息
                     // "{\"full_cut_amount\":0,\"gift\":0,\"point\":0,\"bonus\":0}"
                     $ext_info = [
                         'full_cut_amount' => 0,
@@ -943,7 +912,7 @@ class BuyRepository
                         'point' => 0,
                         'bonus' => 0
                     ]; //
-                    // todo 判断是否是组合购买
+                    //  判断是否是组合购买
                     $is_goods_mix = false; // 根据活动类型获取
                     if (!$is_goods_mix) {
                         // 不是搭配套餐
@@ -1010,7 +979,7 @@ class BuyRepository
             // 5. 余额支付
 
             // 6. 订单后续其它处理
-            // todo 通过使用 laravel 的queue队列进行变更库存和销量等数据
+            //  通过使用 laravel 的queue队列进行变更库存和销量等数据
             OrderUpdate::dispatch($goods_buy_quantity);
 
 //            $queueResult = Queue::push('createOrderUpdateStorage', $goods_buy_quantity);
@@ -1025,11 +994,14 @@ class BuyRepository
 
             // 删除购物车中的商品
 
+            // 删除 user_buy 缓存
+//            session('user_buy_'.$user_id, null);
+
             // 保存订单自提点信息
 
             // 发送提醒类信息
             if (!empty($notice_list)) {
-                // todo
+                //
             }
 
             // 到此整个流程完成 end
@@ -1047,6 +1019,6 @@ class BuyRepository
         }
 
 
-    }
+    }*/
 
 }

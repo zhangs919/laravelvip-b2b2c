@@ -8,16 +8,16 @@ class ArticleIndex
 {
     public static function getAliasName()
     {
-        return 'articles';
+        return 'article';
     }
 
     public static function getProperties()
     {
         return [
-            'cat_id'    => ['type' => 'integer'],
-            'title'     => ['type' => 'text', 'analyzer' => 'ik_smart', 'search_analyzer' => 'ik_smart_synonym'],
-            'summary'   => ['type' => 'text', 'analyzer' => 'ik_smart'],
-            'content'   => ['type' => 'text', 'analyzer' => 'ik_smart']
+            'cat_id'    => ['type' => 'long'],
+            'title'     => ['type' => 'text', 'analyzer' => 'default', 'search_analyzer' => 'ik_smart_synonym'],
+            'summary'   => ['type' => 'text', 'analyzer' => 'default'],
+            'content'   => ['type' => 'text', 'analyzer' => 'default']
         ];
     }
 

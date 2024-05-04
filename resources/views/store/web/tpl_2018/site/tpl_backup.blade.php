@@ -3,7 +3,7 @@
 
     <div class="table-content m-t-10 clearfix">
         <form id="TplBackup" class="form-horizontal" name="TplBackup" action="/site/tpl-backup" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" name="action" value="backup">
             <input type="hidden" id="tplbackup-page" class="form-control" name="TplBackup[page]" value="">

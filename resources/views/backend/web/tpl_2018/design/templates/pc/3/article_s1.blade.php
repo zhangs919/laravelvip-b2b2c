@@ -87,5 +87,5 @@
 </div>
 
 <script type="text/javascript">
-    $.imgloading.loading();
+    // $.imgloading.loading();
 </script>

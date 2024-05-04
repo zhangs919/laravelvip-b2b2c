@@ -1,15 +1,22 @@
-body{ background:#f3f5f7;}
-.message-list { background-color: #FFF;}
+body{ background:#f8f8f8;}
+.message-list { background-color: #FFF; position: relative; overflow-x: hidden;}
 .message-list li {position: relative; z-index: 1; height: 3rem; border-bottom: solid 0.05rem #f8f8f8;}
 .message-list li:last-child{ border-bottom: solid 0.05rem #eee;}
 .message-list li .message-pic{ position: absolute; z-index: 1; top: 0.4rem; bottom: 0.4rem; left:0.5rem; display: block; width: 2.2rem; height: 2.2rem;border-radius: 100%;}
 .message-list li .message-pic img { width: 100%; height: 100%; border-radius: 100%;}
 .message-list li .message-tip{ position:absolute; z-index: 1; top: 0.4rem; bottom: 0.4rem; left:2.4rem; height:0.3rem; width:0.3rem; background:#f23030; border-radius:50%;}
-.message-list li dl{ display: block; padding: 0.4rem 0; margin: 0 0.5rem 0 3.2rem;}
-.message-list li dt { display: block; height: 1.2rem; font-size: 0.7rem; line-height: 1.2rem; color: #222;}
+.message-list li dl{ display: block; padding: 0.4rem 0; margin: 0 0.5rem 0 3.2rem;transition: all .3s;}
+.message-list li dt { display: block; height: 1.2rem; font-size: 0.7rem; line-height: 1.2rem; color: #353535;}
 .message-list li dt .messgae-name{width: 150px;overflow: hidden;height: 1.2rem;line-height: 1.2rem;white-space: nowrap;text-overflow: ellipsis;display: inline-block;}
 .message-list li dt .messgae-time{ float:right; line-height:1.2rem; font-size:0.6rem; color:#999;}
 .message-list li dd {display: block; height: 1rem; font-size: 0.6rem; line-height: 1rem; color: #999; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.message-swiper{position: relative; -webkit-transition: -webkit-transform .5s ease-in-out;transition: -webkit-transform .5s ease-in-out;transition: transform .5s ease-in-out; transition: transform .5s ease-in-out,-webkit-transform .5s ease-in-out; transition: all .3s;}
+.message-swiper.swipeleft{transform: translate3d(-3rem,0,0);}
+.message-swiper-read.swipeleft{transform: translate3d(-7rem,0,0);}
+.message-list li .message-handle{position: absolute; width:3rem;right:-3rem;top: 0;bottom: 0;font-size: 14px; color: #fff;display: -webkit-box; display: -webkit-flex;display: flex;-webkit-box-align: center;-webkit-align-items: center; align-items: center;-webkit-box-pack: center;-webkit-justify-content: center;justify-content: center; border-radius: .2rem;}
+.message-list li .message-swiper-read .message-handle{ width: 7rem; right: -7rem; }
+.message-list li .message-handle a.message-read-btn{ background:#ff9501; font-size:.75rem;color: #fff; display: block;height: 100%;line-height: 3rem; text-align: center; width:4rem;}
+.message-list li .message-handle a.message-del-btn{font-size:.75rem; color: #fff;display: block;height: 100%;line-height: 3rem; text-align: center; width:3rem;}
 
 
 /*弹出层*/
@@ -19,6 +26,20 @@ body{ background:#f3f5f7;}
 .message-info-title font {display: inline-block;width:20%;height:0.05rem;background: #fff;position: relative;top:0.6rem;vertical-align: top;}
 .message-info-title span{ display:inline-block;line-height:1.25rem;padding:0px 8px;font-size: 0.65rem;z-index: 10;font-weight: normal; border:1px solid #fff; border-radius:20px;max-width: 50%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
 .message-info{ width:94%; margin:10px auto 0;color:#fff; line-height:20px; font-size:14px;word-break:break-all;}
+.message-info a{ color: #fff; }
 .message-info-close{ position:absolute; bottom:40px; width:100%; margin:auto;}
-.message-info-close a.close-btn{ display:block; margin:auto;height:40px; width:40px; border-radius:50%; border:1px solid #fff;}
-.message-info-close a.close-btn i{ display:block; height:40px; line-height:40px; text-align:center; background:url(../images/message_close.png) no-repeat center center; background-size:17px;}
+.message-info-close a.close-btn{ display:block; margin:auto;height:40px; width:40px; border-radius:50%;}
+.message-info-close a.close-btn i{ display:block; height:40px; line-height:40px; text-align:center; background:url(../images/message_close.png) no-repeat center center; background-size:30px;}
+
+/*批量删除*/
+.message-list li .agree-checkbox { display: none; width: 20px; position: absolute; top: 1.1rem; left: 0.5rem; cursor: pointer; z-index: 2; }
+.message-list.message-list-edit li .agree-checkbox{ display: inline; }
+.message-list li .agree-checkbox i,.message-footer .check-all i {margin-top: 0 !important;}
+.message-list li .agree-checkbox.checked i,.message-footer .check-all.checked i  { background-position: -27px 0px; }
+.message-list-box.edit .message-swiper { margin-left: 34px; }
+.message-footer {position: fixed; bottom: 2.2rem; left: 0; right: 0; font-size: .65rem; background: #fff; z-index: 10; padding: .5rem; }
+.message-footer .check-all { display: flex; align-items: center; margin-top: .1rem; float: left; width: 20px; cursor: pointer; z-index: 2; margin-right: .3rem; }
+.message-footer .message-seleted { float: left; }
+.message-footer .handle-btn { float: right; }
+.message-footer .handle-btn .btn { margin: 0 .1rem; padding: .2rem .8rem; border: 1px solid #ffb254; color: #ffb254; border-radius: 25px; }
+.message-footer .handle-btn a.delete { border: 1px solid #f56456; color: #f56456; }

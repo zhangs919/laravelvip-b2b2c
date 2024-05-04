@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['domain' => env('MOBILE_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.mobile_domain')], function ($router) {
 
 
     // Integralmall Route

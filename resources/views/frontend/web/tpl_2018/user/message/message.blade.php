@@ -33,20 +33,90 @@
         <a class="scroll-to-top"><i class="fa fa-chevron-up"></i></a>
 
 
-        <script type="text/javascript">
-            var tablelist = null;
-            $().ready(function() {
-                tablelist = $("#table_list").tablelist({
-                    callback: function() {
-                        $.loading.stop();
-
-                        if ($(".con-right").height() != $(".con-left").height()) {
-                            $(".con-left").height($(".con-right").height());
-                        }
-                    }
-                });
-            });
-        </script>
     </div>
 
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d2eace91/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        var tablelist = null;
+        $().ready(function() {
+            tablelist = $("#table_list").tablelist({
+                callback: function() {
+                    $.loading.stop();
+                    if ($(".con-right").height() != $(".con-left").height()) {
+                        $(".con-left").height($(".con-right").height());
+                    }
+                }
+            });
+        });
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function() {
+        })
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+    </script>
 @stop

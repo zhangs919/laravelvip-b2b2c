@@ -1,16 +1,16 @@
-@if(count($cart_list) > 0)
+@if(!empty($cart_goods_list))
 <div class="dropdown-title">
     <h4 class="fl">购物清单</h4>
 </div>
 <div class="dropdown-goods-list">
     <ul>
 
-        @foreach($cart_list as $v)
+        @foreach($cart_goods_list as $v)
         <!-- 如果商品已失效，给下面的div追加class "invalid" -->
         <li class=" ">
             <div class="p-img">
                 <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}" target="_blank">
-                    <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
+                    <img src="{{ $v['goods_image'] }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
                          width="50" height="50" alt="">
                 </a>
             </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="p-detail">
                 <span class="p-price">
-                <strong class="second-color">￥{{ $v['goods_price'] }}</strong>
+                <strong class="second-color">{{ $v['goods_price_format'] }}</strong>
                 ×{{ $v['goods_number'] }}
                 </span>
                 <br>
@@ -43,7 +43,7 @@
         共
         <b class="second-color">{{ $cart_price_info['goods_number'] }}</b>
         件商品 共计
-        <strong class="second-color">￥{{ $cart_price_info['total_fee'] }}</strong>
+        <strong class="second-color">￥{{ $cart_price_info['select_goods_amount'] }}</strong>
     </div>
     <a href="/cart.html" title="去购物车" class="bg-color">去购物车</a>
 </div>

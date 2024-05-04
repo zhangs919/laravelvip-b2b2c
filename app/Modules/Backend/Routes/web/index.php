@@ -1,12 +1,11 @@
 <?php
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
     // Index Route
     Route::get('index/index/index', 'Index\IndexController@index')->name('welcome'); // index
     Route::get('index/index/show-message', 'Index\IndexController@showMessage'); // showMessage
     Route::get('index/index/update', 'Index\IndexController@update'); // update
-    Route::get('index/index/one-key-upgrade', 'Index\IndexController@OneKeyUpgrade'); // OneKeyUpgrade 一键升级
 
     Route::get('index/index/get-data', 'Index\IndexController@getData'); // getData
     Route::get('index/index/guide-show', 'Index\IndexController@guideShow')->name('guide'); // 新手向导

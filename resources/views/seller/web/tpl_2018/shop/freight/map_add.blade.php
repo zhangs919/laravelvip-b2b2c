@@ -15,7 +15,7 @@
 
 
             <form id="form1" class="form-horizontal" name="Freight" action="/shop/freight/map-add" method="post" left="col-sm-3" right="col-sm-9">
-                {{ csrf_field() }}
+                @csrf
                 <!-- 模板ID -->
                 <input type="hidden" id="freight-freight_id" class="form-control" name="Freight[freight_id]">
                 <!-- 模板类型 -->
@@ -1182,7 +1182,12 @@
             }
         });
     </script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
     <script type="text/javascript">
         var area_index = 0;
         var zIndex = 11;
@@ -1413,9 +1418,9 @@
 
             var map = null;
             // 经度
-            var shop_lng = "{{ $shop_info->shop_lng ?? '' }}";
+            var shop_lng = "{{ $shop->shop_lng ?? '' }}";
             //纬度
-            var shop_lat = "{{ $shop_info->shop_lat ?? '' }}";
+            var shop_lat = "{{ $shop->shop_lat ?? '' }}";
             var mark_title = "店铺所在位置";
 
             //加载地图，调用浏览器定位服务

@@ -23,7 +23,7 @@
 @section('content')
 
     <div class="search-term m-b-10">
-        <form id="searchForm" action="/finance/sales-analyse/index.html" method="GET">
+        <form id="searchForm" action="/finance/sales-analyse/index" method="GET">
             <div class="simple-form-field ">
                 <div class="form-group">
                     <label class="control-label">

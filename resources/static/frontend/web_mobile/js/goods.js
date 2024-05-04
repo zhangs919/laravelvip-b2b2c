@@ -26,7 +26,7 @@ var scrollheight = 0;
 /* 弹出层 */
 
 function select_coupon() {
-	$('#select_coupon').show().removeClass('spec-menu-hide').addClass('spec-menu-show');
+	$('#select_coupon').removeClass('spec-menu-hide').addClass('spec-menu-show');
 	var total = 0,
 		h = $(window).height(),
 		top = $('.discount-coupon h2').innerHeight() || 0,
@@ -37,10 +37,8 @@ function select_coupon() {
 	$("body").css("top", "-" + scrollheight + "px");
 	$("body").addClass("visibly");
 	setTimeout(function() {
-		setTimeout(function() {
-			$('.discount-coupon .choose-attribute-close').addClass('show');
-		}, 300);
-	}, 150)
+		$('.discount-coupon .choose-attribute-close').addClass('show');
+	}, 300);
 }
 
 function close_choose_coupon() {
@@ -49,7 +47,15 @@ function close_choose_coupon() {
 	$("body").removeClass("visibly");
 	$(window).scrollTop(scrollheight);
 	$('.discount-coupon .choose-attribute-close').removeClass('show');
-	$('#select_coupon').hide().addClass('spec-menu-hide').removeClass('spec-menu-show');
+	$('#select_coupon').addClass('spec-menu-hide').removeClass('spec-menu-show');
+}
+
+function close_bargain_rule() {
+	$(".mask-div").hide();
+	$("body").css("top", "auto");
+	$("body").removeClass("visibly");
+	$(window).scrollTop(scrollheight);
+	$('.popup-bargainrule').hide();
 }
 
 function service_layer_show() {
@@ -95,10 +101,8 @@ function select_spec(event) {
 	$("body").css("top", "-" + scrollheight + "px");
 	$("body").addClass("visibly");
 	setTimeout(function() {
-		setTimeout(function() {
-			$('.choose-attribute-close').addClass('show');
-		}, 300);
-	}, 150)
+		$('.choose-attribute-close').addClass('show');
+	}, 300);
 
 }
 
@@ -117,24 +121,15 @@ function select_proms() {
 	// $(this).width($(this).parent('.pro-item').width() -
 	// $(this).siblings('.pro-type').outerWidth() - 10);
 	// })
-	$("#proms_coupon").animate({
-		height: '70%'
-	}, [10000]);
-	var total = 0,
-		h = $(window).height(),
-		top = $('.prom-coupon h2').innerHeight() || 0,
-		con = $('.coupon-list');
-	total = 0.7 * h;
-	con.height(total - top + 'px');
+	$('#proms_coupon').removeClass('spec-menu-hide').addClass('spec-menu-show');
+	$('#proms_coupon').show();
 	$(".mask-div").show();
 	scrollheight = $(document).scrollTop();
 	$("body").css("top", "-" + scrollheight + "px");
 	$("body").addClass("visibly");
 	setTimeout(function() {
-		setTimeout(function() {
-			$('.prom-coupon .choose-attribute-close').addClass('show');
-		}, 300);
-	}, 150)
+		$('.prom-coupon .choose-attribute-close').addClass('show');
+	}, 300);
 }
 
 function close_choose_proms() {
@@ -142,9 +137,8 @@ function close_choose_proms() {
 	$("body").css("top", "auto");
 	$("body").removeClass("visibly");
 	$(window).scrollTop(scrollheight);
-	$('#proms_coupon').animate({
-		height: '0'
-	}, [10000]);
+	$('#proms_coupon').removeClass('spec-menu-show').addClass('spec-menu-hide');
+	$('#proms_coupon').hide();
 	$('.choose-attribute-close').removeClass('show');
 }
 
@@ -220,6 +214,8 @@ function close_coupon() {
 	close_code_coupon();
 	colse_bdshare_popup();
 	close_service_layer();
+	colse_share_select();
+	close_bargain_rule();
 }
 // 销量和收藏数切换
 $('.sale-collect-nav li').click(function() {
@@ -239,5 +235,35 @@ $(function() {
 			updateOnImagesReady: true,
 			pagination: $('.pagination', this)
 		});
+		var number = $(this).find(".swiper-wrapper .swiper-slide").size();
+		if (number == 1) {
+			//一张图片则隐藏锚节点 
+			$(this).children(".swiper-pagination-bullets").css("display", "none");
+		}
 	});
 });
+	/* 选择用户中心地址 */
+	$("body").on('click', '.address-select', function() {
+		$('.mask-div').show();
+		$('.user-address-select').addClass('address-select-show');
+		scrollheight = $(document).scrollTop();
+		$("body").css("top", "-" + scrollheight + "px");
+		$("body").addClass("visibly");
+		setTimeout(function() {
+			$('.address-select-close').addClass('show');
+		}, 500);
+	});
+	$("body").on('click', '.user-address-ul li', function() {
+		$(this).addClass('current color').siblings().removeClass('current color');
+	});
+	function colse_address_select(){
+		$(".mask-div").hide();
+		$("body").css("top", "auto");
+		$("body").removeClass("visibly");
+		$(window).scrollTop(scrollheight);
+		$('.user-address-select').removeClass('address-select-show');
+		$('.address-select-close').removeClass('show');	
+	}
+	$("body").on('click', '.address-select-close', function() {
+		colse_address_select();
+	});

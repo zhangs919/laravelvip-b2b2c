@@ -13,11 +13,9 @@ class IP
 
     /**
      * IP constructor.
-     * @param Request $request
      */
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
     }
 
     /**
@@ -27,9 +25,9 @@ class IP
      */
     public function get()
     {
-        $ip = $this->request->getClientIp();
+        $ip = \request()->getClientIp();
 
-        if($ip == '::1') {
+        if($ip == '::1' || empty($ip)) {
             $ip = '127.0.0.1';
         }
 

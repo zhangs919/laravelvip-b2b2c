@@ -108,6 +108,15 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    /**
+     * 用户自定义配置
+     * 自定义 mix base url
+     * Mix 编译资产被部署到独立于应用程序的 CDN 上
+     * 如：https://cdn.example.com/js/app.js?id=1964becbdd96414518cd
+     */
+    'mix_url' => env('MIX_ASSET_URL', null),
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -156,24 +165,15 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         /*
          * Modules Service Providers...
          */
-        Caffeinated\Modules\ModulesServiceProvider::class,
-
-        /*
-         * Html Service Providers...
-         */
-        Collective\Html\HtmlServiceProvider::class,
-
-        /*
-         * Alioss Service Providers...
-         */
-        Jacobcyl\AliOSS\AliOssServiceProvider::class,
+        App\Providers\ModuleServiceProvider::class,
 
         /*
          * 生成二维码
@@ -188,6 +188,7 @@ return [
 	     * 中文转拼音
 	     */
 //        Overtrue\LaravelPinyin\ServiceProvider::class,
+
 
     ],
 
@@ -218,14 +219,12 @@ return [
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
-        'Form' => Collective\Html\FormFacade::class, // laravelcollective/html
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
-        'Html' => Collective\Html\HtmlFacade::class, // laravelcollective/html
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
-        'Module' => Caffeinated\Modules\Facades\Module::class, // modules
+//        'Module' => Caffeinated\Modules\Facades\Module::class, // modules
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
@@ -246,5 +245,21 @@ return [
 
 //        'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class, // 中文转拼音
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | License key
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    /*
+    |--------------------------------------------------------------------------
+    | App Client
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'app_client' => env('APP_CLIENT', true),
 
 ];

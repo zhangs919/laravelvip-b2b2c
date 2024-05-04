@@ -45,12 +45,15 @@ class CustomFormDataController extends Backend
     protected $customForm;
     protected $customFormData;
 
-    public function __construct()
+    public function __construct(
+        CustomFormRepository $customForm
+        ,CustomFormDataRepository $customFormData
+    )
     {
         parent::__construct();
 
-        $this->customForm = new CustomFormRepository();
-        $this->customFormData = new CustomFormDataRepository();
+        $this->customForm = $customForm;
+        $this->customFormData = $customFormData;
     }
 
     /**

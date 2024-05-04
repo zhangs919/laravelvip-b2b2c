@@ -1,10 +1,7 @@
 @extends('layouts.base')
 
-@section('header_js')
-    <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180528"></script>
+@section('header_css')
+    <link href="/css/category.css" rel="stylesheet">
 @stop
 
 {{--follow_box 注意此效果只在首页面展示--}}
@@ -12,24 +9,11 @@
 
 @stop
 
-@section('style_js')
-    <!--页面css/js-->
-    <script src="/js/index.js?v=20180528"></script>
-    <script src="/js/tabs.js?v=20180528"></script>
-    <script src="/js/bubbleup.js?v=20180528"></script>
-    <script src="/js/jquery.hiSlider.js?v=20180528"></script>
-    <script src="/js/index_tab.js?v=20180528"></script>
-    <script src="/js/jump.js?v=20180528"></script>
-    <script src="/js/nav.js?v=20180528"></script>
-@stop
-
-
 
 @section('content')
 
     <!-- 内容 -->
 
-    <link rel="stylesheet" href="/css/category.css?v=20180428"/>
     <!---------------------以上为公共内容顶部及头部导航---------------------------->
     <div class="w1210">
         <!--当前位置，面包屑-->
@@ -115,30 +99,26 @@
                                 </dd>
 
                             </dl>
-                            <div class="pagin">
-                                <a class="prev prev-page" data-go-page="0">
-                                    <!---->
-                                    <span class="icon prev-disabled"></span>
-                                    <!---->
-                                </a>
-                                <span class="text">
-								<font class="color">1</font>
-								/
-
-								1
-
-							</span>
-                                <a class="next next-page" data-go-page="2" href="javascript:;">
-                                    <!-- -->
-                                    <span class="icon next-disabled"></span>
-
-                                </a>
-                            </div>
-                            <div class="total">
-                                共
-                                <span class="color">{{ $goods_total }}</span>
-                                个商品
-                            </div>
+							@if($page_array['page_count'] > 0)
+								<div class="pagin">
+									<a class="prev @if($page_array['cur_page'] == 1) disabled @else prev-page @endif">
+										<span class="icon @if($page_array['cur_page'] == 1) prev-disabled @else prev-btn @endif"></span>
+									</a>
+									<span class="text">
+										<font class="color">{{ $page_array['cur_page'] }}</font>
+										/
+										{{ $page_array['page_count'] }}
+									</span>
+									<a class="next @if($page_array['cur_page'] == $page_array['page_count']) disabled @else next-page @endif" data-go-page="2" href="javascript:;">
+										<span class="icon @if($page_array['cur_page'] == $page_array['page_count']) next-disabled @else next-btn @endif"></span>
+									</a>
+								</div>
+								<div class="total">
+									共
+									<span class="color">{{ $total }}</span>
+									个商品
+								</div>
+							@endif
                         </div>
                         <div class="fore2">
                             <div class="filter-btn">
@@ -178,11 +158,11 @@
                             <div class="filter-mod">
                                 <!--选中样式为a标签添加curr样式-->
 
-                                <a href="search.html?keyword={{ $keyword }}" title="大图模式" class="filter-type filter-type-grid @if($display_model == 0) curr @endif">
+                                <a href="search.html?keyword={{ $keyword }}" title="大图模式" class="filter-type filter-type-grid @if($params['style'] == 'grid') curr @endif">
                                     <i class="iconfont icon-grid"></i>
                                 </a>
 
-                                <a href="search.html?style=list&amp;keyword={{ $keyword }}" title="列表模式" class="filter-type filter-type-list @if($display_model == 1) curr @endif">
+                                <a href="search.html?style=list&amp;keyword={{ $keyword }}" title="列表模式" class="filter-type filter-type-list @if($params['style'] == 'list') curr @endif">
                                     <i class="iconfont icon-list"></i>
                                 </a>
 
@@ -193,16 +173,7 @@
                 <!--主体商品内容展示-->
 
                 <form name="compareForm" action="compare.php" method="post" onsubmit="" id="table_list">
-
-
-
-
                     @include('frontend.web.tpl_2018.goods.partials.goods_list')
-
-
-
-
-
                 </form>
 
                 <!--对比栏-->
@@ -243,66 +214,115 @@
             </div>
         </div>
         <script type="text/javascript">
-            $("body").on("click", ".clear_history", function() {
-                $.confirm("是否清空历史足迹？", function(s) {
-                    if (s) {
-                        $.ajax({
-                            type: 'GET',
-                            url: '/user/history/del-all',
-                            dataType: 'json',
-                            success: function(data) {
-                                if (data.code == 0) {
-                                    $("#history_list").html("<div class='tip-box'><img src='/frontend/mages/noresult.png' class='tip-icon' /><div class='tip-text'>暂无历史足迹</div></div>");
-                                }
-                            }
-                        })
-                    }
-                })
-            })
-
-            function change_like() {
-                var page = $("#user_like_page").val();
-
-                $.ajax({
-                    type: 'GET',
-                    url: '/guess/like',
-                    data: {
-                        page: page,
-                        num: 6,
-                        tpl: 'guess_like_list'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.code == 0) {
-                            $('#user_like').html(data.data);
-                        }
-                    }
-                });
-            }
-
-            // 初始化加载
-            change_like();
+            //
         </script>
 
     </div>
-
-    <script src="/assets/d2eace91/js/jquery.region.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
     <!-- 选中当前分类弹出同级分类JS -->
     <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+       //
+    </script>
+    <!-- 暂时去掉 滚动条定位功能
+<script type="text/javascript">
+//
+</script> -->
+    <!--[if lte IE 9]>
+    <![endif]-->
+    <!-- 飞入购物车js _end -->
+
+@stop
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/index.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/bubbleup.js"></script>
+    <script src="/js/jquery.hiSlider.js"></script>
+    <script src="/js/index_tab.js"></script>
+    <script src="/js/jump.js"></script>
+    <script src="/js/nav.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/requestAnimationFrame.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/js/category.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        $("body").on("click", ".clear_history", function() {
+            $.confirm("是否清空历史足迹？", function(s) {
+                if (s) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/user/history/del-all',
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.code == 0) {
+                                $("#history_list").html("<div class='tip-box'><img src='/images/noresult.png' class='tip-icon' /><div class='tip-text'>暂无历史足迹</div></div>");
+                            }
+                        }
+                    })
+                }
+            })
+        })
+        function change_like() {
+            var page = $("#user_like_page").val();
+            $.ajax({
+                type: 'GET',
+                url: '/guess/like',
+                data: {
+                    page: page,
+                    num: 6,
+                    tpl: 'guess_like_list'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code == 0) {
+                        $('#user_like').html(data.data);
+                    }
+                }
+            });
+        }
+        // 初始化加载
+        change_like();
+        //
         $(function() {
             $('.breadcrumb .crumbs-nav').hover(function() {
                 $(this).toggleClass('curr');
             })
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
-
-            var page_url = "search.html?go={0}&amp;keyword=1";
+            var page_url = "search.html?go={0}&amp;keyword=a";
             page_url = page_url.replace(/&amp;/g, '&');
-
             var tablelist = $("#table_list").tablelist({
                 page_mode: 1,
                 go: function(page){
@@ -310,15 +330,12 @@
                     $.go(page_url);
                 }
             });
-
             $(".prev-page").click(function(){
                 tablelist.prePage();
             });
-
             $(".next-page").click(function(){
                 tablelist.nextPage();
             });
-
             $(".add-cart").click(function(event) {
                 var goods_id = $(this).data("goods-id");
                 var image_url = $(this).data("image-url");
@@ -336,7 +353,7 @@
                         $('.attr-list').css({
                             "overflow":"hidden"
                         });
-                        if(attr_list>=200){
+                        if(attr_list >= 200){
                             $('.attr-list').addClass("attr-list-border");
                             $('.attr-list').css({
                                 "overflow-y":"auto"
@@ -365,7 +382,6 @@
                     });
                 }
             });
-
             // 移除对对比商品
             $.compare.removeCallback = function(goods_id, result) {
                 $("[data-compare-goods-id='" + goods_id + "']").removeClass('curr');
@@ -374,12 +390,11 @@
             $.compare.clearCallback = function(goods_id, result) {
                 $("[data-compare-goods-id]").removeClass('curr');
             }
-
             //规格相册
             sildeImg(0);
             //地区组件
             var region_chooser = $(".region-chooser-container").regionchooser({
-                value: "13,03,02",
+                value: "53,01",
                 change: function(value, names, is_last) {
                     if (value == '') {
                         var values = this.values();
@@ -387,18 +402,17 @@
                             value = values[values.length - 1].region_code;
                         }
                     }
-                    var region_code = "13,03,02";
+                    var region_code = "53,01";
                     if (is_last && value != region_code ) {
                         value = value.replace(/,/g, "_");
-                        var url = "search.html?region={0}&amp;keyword=1";
+                        var url = "search.html?region={0}&amp;keyword=a";
                         url = url.replace(/&amp;/g, '&');
                         url = url.replace("{0}", value);
                         $.go(url);
                     }
                 }
             });
-
-            var goods_ids = '128-122-115-91-36-116-95-15-35-34-94-17-126-18-118-124';
+            var goods_ids = '41008-41009-40958-41085-41084-48359-48401-48353-48362-48357-41066-48126-48396-41086-41067-47999-48398-40811-48262-48260';
             $.collect.getGoodsList(goods_ids, null, function(result){
                 var goods_list = result.data;
                 $(".goods-collect").each(function(){
@@ -431,33 +445,73 @@
                     }
                 });
             });
-
         });
+        //
+        window.onbeforeunload = function() {
+            var scrollPos;
+            if (typeof window.pageYOffset != 'undefined') {
+                scrollPos = window.pageYOffset;
+            } else if (typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
+                scrollPos = document.documentElement.scrollTop;
+            } else if (typeof document.body != 'undefined') {
+                scrollPos = document.body.scrollTop;
+            }
+            document.cookie = "SZY_GOODS_LIST_SCROLLTOP=" + scrollPos; //存储滚动条位置到cookies中
+        }
+        if (document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/) != null) {
+            //cookies中不为空，则读取滚动条位置
+            var arr = document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/);
+            document.documentElement.scrollTop = parseInt(arr[1]);
+            document.body.scrollTop = parseInt(arr[1]);
+        }
+        //
+        //解决因为缓存导致获取分类ID不正确问题，需在ready之前执行
+        $(".SZY-DEFAULT-SEARCH").data("cat_id", "");
+        $().ready(function() {
+            $(".SZY-SEARCH-BOX-KEYWORD").val("{{ request('keyword', '') }}");
+            $(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "{{ request('search_type', 0) }}");
+            //
+            $(".SZY-SEARCH-BOX-KEYWORD").attr("placeholder", "请输入要搜索的关键词");
+            //
+            $(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {
+                if ($(".search-li.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                        $(keyword_obj).val(keywords);
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function(){
+            // 缓载图片
+            $.imgloading.loading();
+        });
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+        $().ready(function() {
+        })
+        //
     </script>
-    <!-- 暂时去掉 滚动条定位功能
-<script type="text/javascript">
-window.onbeforeunload = function() {
-    var scrollPos;
-    if (typeof window.pageYOffset != 'undefined') {
-        scrollPos = window.pageYOffset;
-    } else if (typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
-        scrollPos = document.documentElement.scrollTop;
-    } else if (typeof document.body != 'undefined') {
-        scrollPos = document.body.scrollTop;
-    }
-    document.cookie = "SZY_GOODS_LIST_SCROLLTOP=" + scrollPos; //存储滚动条位置到cookies中
-}
-if (document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/) != null) {
-    //cookies中不为空，则读取滚动条位置
-    var arr = document.cookie.match(/SZY_GOODS_LIST_SCROLLTOP=([^;]+)(;|$)/);
-    document.documentElement.scrollTop = parseInt(arr[1]);
-    document.body.scrollTop = parseInt(arr[1]);
-}
-</script> -->
-    <script src="/js/category.js?v=20180528"></script>
-    <!--[if lte IE 9]>
-    <script src="/js/requestAnimationFrame.js?v=20180528"></script>
-    <![endif]-->
-    <!-- 飞入购物车js _end -->
-
 @stop

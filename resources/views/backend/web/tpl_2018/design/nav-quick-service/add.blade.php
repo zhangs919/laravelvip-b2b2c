@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="NavQuickServiceModel" class="form-horizontal" name="NavQuickServiceModel" action="" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <!-- 隐藏域 -->
             <input type="hidden" id="navquickservicemodel-id" class="form-control" name="NavQuickServiceModel[id]" value="{{ $info->id ?? ''}}">
 
@@ -208,7 +208,6 @@
 
             });
             $("#imagegroup_container").imagegroup({
-//                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#navquickservicemodel-qs_icon').val().split("|"),

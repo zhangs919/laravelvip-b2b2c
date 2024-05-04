@@ -8,7 +8,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group=distrib" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <h5 class="m-b-30 m-t-0">基本信息</h5>
             <input type="hidden" name="group" value="distrib">
             <input type="hidden" name="tabs" value="">
@@ -22,13 +22,19 @@
                     <div class="col-sm-8">
                         <div class="form-control-box">
 
-
                             <label class="control-label control-label-switch">
                                 <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                    <input type="hidden" name="SystemConfigModel[is_distrib]" value="0"><label><div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-id-systemconfigmodel-is_distrib bootstrap-switch-animate" style="width: 54px;"><div class="bootstrap-switch-container" style="width: 78px; margin-left: -26px;"><span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 26px;">是</span><span class="bootstrap-switch-label" style="width: 26px;">&nbsp;</span><span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: 26px;">否</span><input type="checkbox" id="systemconfigmodel-is_distrib" class="form-control b-n" name="SystemConfigModel[is_distrib]" value="1" data-on-text="是" data-off-text="否"></div></div> </label>
+                                    <input type="hidden" name="SystemConfigModel[is_distrib]" value="0">
+                                    <label>
+                                        <input type="checkbox"
+                                               id="systemconfigmodel-is_distrib"
+                                               class="form-control b-n"
+                                               name="SystemConfigModel[is_distrib]"
+                                               value="1" @if($group_info['is_distrib']->value == 1)checked="" @endif
+                                               data-on-text="是" data-off-text="否">
+                                    </label>
                                 </div>
                             </label>
-
 
                         </div>
 
@@ -49,7 +55,15 @@
 
                             <label class="control-label control-label-switch">
                                 <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                    <input type="hidden" name="SystemConfigModel[is_distributor_audit]" value="0"><label><div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-id-systemconfigmodel-is_distributor_audit bootstrap-switch-animate" style="width: 54px;"><div class="bootstrap-switch-container" style="width: 78px; margin-left: -26px;"><span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 26px;">是</span><span class="bootstrap-switch-label" style="width: 26px;">&nbsp;</span><span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: 26px;">否</span><input type="checkbox" id="systemconfigmodel-is_distributor_audit" class="form-control b-n" name="SystemConfigModel[is_distributor_audit]" value="1" data-on-text="是" data-off-text="否"></div></div> </label>
+                                    <input type="hidden" name="SystemConfigModel[is_distributor_audit]" value="0">
+                                    <label>
+                                        <input type="checkbox"
+                                               id="systemconfigmodel-is_distributor_audit"
+                                               class="form-control b-n"
+                                               name="SystemConfigModel[is_distributor_audit]"
+                                               value="1" @if($group_info['is_distributor_audit']->value == 1)checked="" @endif
+                                               data-on-text="是" data-off-text="否">
+                                    </label>
                                 </div>
                             </label>
 
@@ -72,20 +86,26 @@
 
 
 
-                            <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distributor_condition]" value="0" checked=""> 关闭</label>
+                            <label class="control-label cur-p">
+                                <input type="radio" class=""
+                                       name="SystemConfigModel[distributor_condition]" value="0" @if($group_info['distributor_condition']->value == 0)checked="" @endif> 关闭</label>
 
                             <label class="m-r-10">
-                                <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distributor_condition]" value="1"> 订单金额累计达到</label>
+                                <label class="control-label cur-p">
+                                    <input type="radio" class=""
+                                           name="SystemConfigModel[distributor_condition]" value="1" @if($group_info['distributor_condition']->value == 1)checked="" @endif> 订单金额累计达到</label>
 
-                                <input class="form-control ipt m-r-10" name="SystemConfigModel[distrib_order_money]" type="text" value="">
+                                <input class="form-control ipt m-r-10" name="SystemConfigModel[distrib_order_money]" type="text" value="{{ $group_info['distrib_order_money']->value }}">
 
                                 元
                             </label>
 
                             <label class="m-r-10">
-                                <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distributor_condition]" value="2"> 成交订单笔数累计达到</label>
+                                <label class="control-label cur-p">
+                                    <input type="radio" class=""
+                                           name="SystemConfigModel[distributor_condition]" value="2" @if($group_info['distributor_condition']->value == 2)checked="" @endif> 成交订单笔数累计达到</label>
 
-                                <input class="form-control ipt m-r-10" name="SystemConfigModel[distrib_order_count]" type="text" value="">
+                                <input class="form-control ipt m-r-10" name="SystemConfigModel[distrib_order_count]" type="text" value="{{ $group_info['distrib_order_count']->value }}">
 
                                 笔
                             </label>
@@ -111,7 +131,15 @@
 
                             <label class="control-label control-label-switch">
                                 <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                    <input type="hidden" name="SystemConfigModel[is_invite_code]" value="0"><label><div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-id-systemconfigmodel-is_invite_code bootstrap-switch-animate" style="width: 54px;"><div class="bootstrap-switch-container" style="width: 78px; margin-left: -26px;"><span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 26px;">是</span><span class="bootstrap-switch-label" style="width: 26px;">&nbsp;</span><span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: 26px;">否</span><input type="checkbox" id="systemconfigmodel-is_invite_code" class="form-control b-n" name="SystemConfigModel[is_invite_code]" value="1" data-on-text="是" data-off-text="否"></div></div> </label>
+                                    <input type="hidden" name="SystemConfigModel[is_invite_code]" value="0">
+                                    <label>
+                                        <input type="checkbox"
+                                               id="systemconfigmodel-is_invite_code"
+                                               class="form-control b-n"
+                                               name="SystemConfigModel[is_invite_code]"
+                                               value="1" @if($group_info['is_invite_code']->value == 1)checked="" @endif
+                                               data-on-text="是" data-off-text="否">
+                                    </label>
                                 </div>
                             </label>
 
@@ -133,7 +161,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="systemconfigmodel-distrib_reserve_money" class="form-control ipt pull-none m-r-5" name="SystemConfigModel[distrib_reserve_money]">
+                            <input type="text" id="systemconfigmodel-distrib_reserve_money" class="form-control ipt pull-none m-r-5" name="SystemConfigModel[distrib_reserve_money]" value="{{ $group_info['distrib_reserve_money']->value }}">
 
 
                         </div>
@@ -153,9 +181,9 @@
                         <div class="form-control-box">
 
 
-                            <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distrib_rebate_type]" value="0" checked=""> 自动返利</label>
+                            <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distrib_rebate_type]" value="0" @if($group_info['distrib_rebate_type']->value == 0)checked="" @endif> 自动返利</label>
 
-                            <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distrib_rebate_type]" value="1"> 手动返利</label>
+                            <label class="control-label cur-p"><input type="radio" class="" name="SystemConfigModel[distrib_rebate_type]" value="1" @if($group_info['distrib_rebate_type']->value == 1)checked="" @endif> 手动返利</label>
 
 
                         </div>
@@ -176,7 +204,10 @@
                         <div class="form-control-box">
 
 
-                            <input type="hidden" name="SystemConfigModel[distrib_order_from]" value=""><div id="systemconfigmodel-distrib_order_from" class="" name="SystemConfigModel[distrib_order_from]"><label class="control-label cur-p m-r-10"><input type="checkbox" name="SystemConfigModel[distrib_order_from][]" value="order_from_6"> 收银台订单</label></div>
+                            <input type="hidden" name="SystemConfigModel[distrib_order_from]" value="">
+                            <div id="systemconfigmodel-distrib_order_from" class="" name="SystemConfigModel[distrib_order_from]">
+                                <label class="control-label cur-p m-r-10"><input type="checkbox" name="SystemConfigModel[distrib_order_from][]" value="order_from_6" @if(in_array('order_from_6', $group_info['distrib_order_from']->value)) checked="" @endif> 收银台订单</label>
+                            </div>
 
 
                         </div>
@@ -199,7 +230,15 @@
 
                             <label class="control-label control-label-switch">
                                 <div class="switch bootstrap-switch bootstrap-switch-mini sm-nav-switch">
-                                    <input type="hidden" name="SystemConfigModel[is_distrib_goods_audit]" value="0"><label><div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-id-systemconfigmodel-is_distrib_goods_audit bootstrap-switch-animate" style="width: 54px;"><div class="bootstrap-switch-container" style="width: 78px; margin-left: -26px;"><span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 26px;">是</span><span class="bootstrap-switch-label" style="width: 26px;">&nbsp;</span><span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: 26px;">否</span><input type="checkbox" id="systemconfigmodel-is_distrib_goods_audit" class="form-control b-n" name="SystemConfigModel[is_distrib_goods_audit]" value="1" data-on-text="是" data-off-text="否"></div></div> </label>
+                                    <input type="hidden" name="SystemConfigModel[is_distrib_goods_audit]" value="0">
+                                    <label>
+                                        <input type="checkbox"
+                                               id="systemconfigmodel-is_distrib_goods_audit"
+                                               class="form-control b-n"
+                                               name="SystemConfigModel[is_distrib_goods_audit]"
+                                               value="1" @if($group_info['is_distrib_goods_audit']->value == 1)checked="" @endif
+                                               data-on-text="是" data-off-text="否">
+                                    </label>
                                 </div>
                             </label>
 
@@ -222,7 +261,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="systemconfigmodel-distrib_text" class="form-control" name="SystemConfigModel[distrib_text]">
+                            <input type="text" id="systemconfigmodel-distrib_text" class="form-control" name="SystemConfigModel[distrib_text]" value="{{ $group_info['distrib_text']->value }}">
 
 
                         </div>
@@ -242,7 +281,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="systemconfigmodel-distributor_text" class="form-control" name="SystemConfigModel[distributor_text]">
+                            <input type="text" id="systemconfigmodel-distributor_text" class="form-control" name="SystemConfigModel[distributor_text]" value="{{ $group_info['distributor_text']->value }}">
 
 
                         </div>
@@ -262,7 +301,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="systemconfigmodel-share_hint" class="form-control" name="SystemConfigModel[share_hint]">
+                            <input type="text" id="systemconfigmodel-share_hint" class="form-control" name="SystemConfigModel[share_hint]" value="{{ $group_info['share_hint']->value }}">
 
 
                         </div>
@@ -289,18 +328,36 @@
                     </label>
                     <div class="col-sm-8">
                         <div id="set_rank">
-                            <div class="form-control-box disp-block pull-none m-b-10 rank-level">
-                                <label class="control-label">
-                                    <a class="btn-link c-blue m-r-5">
-                                        <i class="fa fa-plus-circle"></i>
-                                    </a>
-                                    <span class="level">1</span>
-                                    级
-                                </label>
-                                <label class="control-label m-l-40">现金返利百分比：</label>
-                                <input class="form-control ipt m-l-10 m-r-10 rank-value" placeholder="" name="SystemConfigModel[distrib_rank_value][rank][]" type="text" value="">
-                                %
-                            </div>
+                            @if(!empty($group_info['distrib_rank_value']->value))
+                                @foreach($group_info['distrib_rank_value']->value['rank'] as $key=>$value)
+                                    <div class="form-control-box disp-block pull-none m-b-10 rank-level">
+                                        <label class="control-label">
+                                            <a class="btn-link c-blue m-r-5">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </a>
+                                            <span class="level">{{ $key+1 }}</span>
+                                            级
+                                        </label>
+                                        <label class="control-label m-l-40">现金返利百分比：</label>
+                                        <input class="form-control ipt m-l-10 m-r-10 rank-value" placeholder="" name="SystemConfigModel[distrib_rank_value][rank][]" type="text" value="{{ $value }}">
+                                        %
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="form-control-box disp-block pull-none m-b-10 rank-level">
+                                    <label class="control-label">
+                                        <a class="btn-link c-blue m-r-5">
+                                            <i class="fa fa-plus-circle"></i>
+                                        </a>
+                                        <span class="level">1</span>
+                                        级
+                                    </label>
+                                    <label class="control-label m-l-40">现金返利百分比：</label>
+                                    <input class="form-control ipt m-l-10 m-r-10 rank-value" placeholder="" name="SystemConfigModel[distrib_rank_value][rank][]" type="text" value="">
+                                    %
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>

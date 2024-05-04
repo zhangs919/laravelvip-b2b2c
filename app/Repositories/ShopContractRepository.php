@@ -48,7 +48,7 @@ class ShopContractRepository
      */
     public function getShopContract($shop_id)
     {
-        $shopContract = ShopContract::where([['shop_id',1],['status',2],['is_enable',1]])->get()->toArray();
+        $shopContract = ShopContract::where([['shop_id',$shop_id],['status',2],['is_enable',1]])->get()->toArray();
         $list = [];
         if (!empty($shopContract)) {
             foreach ($shopContract as $v) {

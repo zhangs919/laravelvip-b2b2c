@@ -27,7 +27,7 @@
                     </div>
                     <!---->
                     <a href="{{ route('mobile_show_goods', ['goods_id'=>$v['goods_id']]) }}" style="background: url({{ get_image_url(sysconf('default_lazyload_mobile')) }})">
-                        <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url($v['goods_image'], 'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" data-original-webp="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036311036909.jpg?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320/format,webp" alt="顺意生 新鲜蔬菜 新鲜小油菜 精品蔬菜油菜500g 保鲜配送">
+                        <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url($v['goods_image'], 'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" data-original-webp="{{ get_image_url($v['goods_image'], 'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320/format,webp" alt="{{ $v['goods_name'] }}">
                     </a>
 
                 </div>

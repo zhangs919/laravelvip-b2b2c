@@ -6,6 +6,7 @@
 .logo-info a.logo { float: left;}
 .logo-info span.findpw { border-left: 1px #eee solid; width: auto; height: 44px; line-height: 44px; font-size: 28px; margin: 18px 0px 0px 15px; float: left; padding: 0px 15px; color: #333;}
 
+
 /*注册切换*/
 .reg-type{ height: 40px; line-height: 40px; padding: 5px 0px 0px; margin: 15px 0px 0px; position: relative; z-index: 2;}
 .reg-type .login-info { position: absolute; top: 5px; right: 15px;}
@@ -27,7 +28,7 @@
 .form-horizontal{ margin-top: 20px; margin-left: 0px; padding-top: 0px;}
 .form-horizontal .form-group label.input-left{ width: 100px; line-height: 38px; }
 .form-horizontal .form-group .form-control-box{ line-height: 38px;}
-.form-horizontal .form-group input[type="text"], .form-horizontal .form-group input[type="password"]{ line-height: 28px; height: 28px;}
+.form-horizontal .form-group input[type="text"], .form-horizontal .form-group input[type="password"]{ line-height: 28px; height: 28px; box-sizing: content-box;}
 .form-horizontal .form-group input[type="text"].input-small{ width: 100px; }
 .form-group .form-control-box .pwd-toggle{ background: url(../images/user-icon.png) no-repeat; width: 15px; height: 15px; vertical-align: middle; margin-right: 4px; display: inline-block; position: absolute; top: 16px; right: 10px; cursor: pointer;}
 .form-group .form-control-box .pwd-toggle.fa-eye-slash { background-position: -24px -30px;}
@@ -102,7 +103,11 @@
 /*账号绑定*/
 .wellcome-tip { height: 28px; line-height: 28px; margin-bottom: 30px; margin-left: 120px; font-size: 14px;}
 .wellcome-tip img { margin-right: 10px; border-radius: 30px; vertical-align: middle;}
+.reg-wrap .safety{ width: 382px; margin-bottom: 15px; overflow: hidden; height: 18px; line-height: 18px; }
+.reg-wrap .safety .forget-password{ margin-top: 3px; }
+
 /*底部*/
+.links-box{width: 990px;} 
 .footer-info{ background: #fff; color: #666; padding: 0px;}
 .footer-info .info-text { width: 990px; }
 .footer-info .info-text .nav-bottom a { color: #666; }

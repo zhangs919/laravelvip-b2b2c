@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Models\CatAttribute;
 use App\Models\Category;
@@ -26,7 +26,7 @@ class AttributeController extends Backend
         ['url' => 'goods/attribute/edit-spec', 'text' => '编辑'],
 
     ];
-    
+
 
     protected $attribute;
 
@@ -35,15 +35,17 @@ class AttributeController extends Backend
     protected $attrValue;
 
 
-    public function __construct(AttributeRepository $attributeRepository,
-                                GoodsTypeRepository $goodsTypeRepository,
-                                AttrValueRepository $attrValueRepository)
+    public function __construct(
+        AttributeRepository $attribute,
+        GoodsTypeRepository $goodsType,
+        AttrValueRepository $attrValue
+    )
     {
         parent::__construct();
 
-        $this->attribute = $attributeRepository;
-        $this->goodsType = $goodsTypeRepository;
-        $this->attrValue = $attrValueRepository;
+        $this->attribute = $attribute;
+        $this->goodsType = $goodsType;
+        $this->attrValue = $attrValue;
 
         $goodsTypeAll = $this->goodsType->all();
         view()->share('goods_type_all', $goodsTypeAll);
@@ -65,7 +67,7 @@ class AttributeController extends Backend
                 'text' => '返回商品类型列表'
             ],
             [
-                'url' => 'add-base?type_id='.$type_id,
+                'url' => 'add-base?type_id=' . $type_id,
                 'icon' => 'fa-plus',
                 'text' => '添加属性'
             ],
@@ -105,8 +107,7 @@ class AttributeController extends Backend
         list($list, $total) = $this->attribute->getList($condition);
 
         if (!empty($list)) {
-            foreach ($list as &$item)
-            {
+            foreach ($list as &$item) {
                 $attr_value = DB::table('attr_value')->where('attr_id', $item->attr_id)->orderBy('attr_vsort', 'asc')->pluck('attr_vname');
                 $item->attr_values = implode(',', $attr_value->toArray());
                 $item->type_name = $this->goodsType->getById($item->type_id)['type_name'];
@@ -139,7 +140,7 @@ class AttributeController extends Backend
                 'text' => '返回商品类型列表'
             ],
             [
-                'url' => 'add-spec?type_id='.$type_id,
+                'url' => 'add-spec?type_id=' . $type_id,
                 'icon' => 'fa-plus',
                 'text' => '添加规格'
             ],
@@ -180,8 +181,7 @@ class AttributeController extends Backend
         list($list, $total) = $this->attribute->getList($condition);
 
         if (!empty($list)) {
-            foreach ($list as &$item)
-            {
+            foreach ($list as &$item) {
                 $attr_value = DB::table('attr_value')->where('attr_id', $item->attr_id)->orderBy('attr_vsort', 'asc')->pluck('attr_vname');
                 $item->attr_values = implode(',', $attr_value->toArray());
                 $item->type_name = $this->goodsType->getById($item->type_id)['type_name'];
@@ -202,7 +202,7 @@ class AttributeController extends Backend
     public function addBase(Request $request)
     {
         $title = '添加属性';
-        $fixed_title = '商品类型 - '.$title;
+        $fixed_title = '商品类型 - ' . $title;
 
         $type_id = $request->get('type_id');
 
@@ -213,7 +213,7 @@ class AttributeController extends Backend
                 'text' => '返回商品类型列表'
             ],
             [
-                'url' => '/goods/attribute/base-list?type_id='.$type_id,
+                'url' => '/goods/attribute/base-list?type_id=' . $type_id,
                 'icon' => 'fa-reply',
                 'text' => '返回属性列表'
             ],
@@ -236,14 +236,14 @@ class AttributeController extends Backend
         $id = $request->get('id', 0);
         $type_id = $request->get('type_id', 0);
 
-        $this->sublink($this->attr_links, 'edit-base', '', '?type_id='.$type_id);
+        $this->sublink($this->attr_links, 'edit-base', '', '?type_id=' . $type_id);
 
         $title = '编辑';
-        $fixed_title = '商品类型 - '.$title;
+        $fixed_title = '商品类型 - ' . $title;
 
         $action_span = [
             [
-                'url' => 'base-list?type_id='.$type_id,
+                'url' => 'base-list?type_id=' . $type_id,
                 'icon' => 'fa-reply',
                 'text' => '返回商品类型列表'
             ]
@@ -280,7 +280,7 @@ class AttributeController extends Backend
 
         if ($attributeModel['attr_style'] != 2) {
             // 多选 单选
-            array_multisort(array_column($attr_values,'attr_vsort'),SORT_ASC,$attr_values);
+            array_multisort(array_column($attr_values, 'attr_vsort'), SORT_ASC, $attr_values);
         }
 
         $saveData = $attributeModel;
@@ -290,7 +290,7 @@ class AttributeController extends Backend
             // 编辑
             $ret = $this->attribute->updateAttr($saveData, $attr_values);
             $msg = '商品属性编辑';
-        }else {
+        } else {
             // 添加
             $ret = $this->attribute->storeAttr($saveData, $attr_values);
             $msg = '商品属性添加';
@@ -298,18 +298,18 @@ class AttributeController extends Backend
 
         if ($attributeModel['is_spec']) {
             // 如果是规格
-            $url = 'spec-list?type_id='.$type_id;
+            $url = 'spec-list?type_id=' . $type_id;
         } else {
-            $url = 'base-list?type_id='.$type_id;
+            $url = 'base-list?type_id=' . $type_id;
         }
 
 
         if ($ret === false) {
             // fail
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
         // success
-        return result(0, $url, '操作成功');
+        return result(0, $url, OPERATE_SUCCESS);
     }
 
 
@@ -322,7 +322,7 @@ class AttributeController extends Backend
     public function addSpec(Request $request)
     {
         $title = '添加规格';
-        $fixed_title = '商品类型 - '.$title;
+        $fixed_title = '商品类型 - ' . $title;
 
         $type_id = $request->get('type_id');
 
@@ -333,7 +333,7 @@ class AttributeController extends Backend
                 'text' => '返回商品类型列表'
             ],
             [
-                'url' => '/goods/attribute/spec-list?type_id='.$type_id,
+                'url' => '/goods/attribute/spec-list?type_id=' . $type_id,
                 'icon' => 'fa-reply',
                 'text' => '返回规格列表'
             ],
@@ -356,14 +356,14 @@ class AttributeController extends Backend
         $id = $request->get('id', 0);
         $type_id = $request->get('type_id', 0);
 
-        $this->sublink($this->spec_links, 'edit-spec', '', '?type_id='.$type_id);
+        $this->sublink($this->spec_links, 'edit-spec', '', '?type_id=' . $type_id);
 
         $title = '编辑';
-        $fixed_title = '商品类型 - '.$title;
+        $fixed_title = '商品类型 - ' . $title;
 
         $action_span = [
             [
-                'url' => 'spec-list?type_id='.$type_id,
+                'url' => 'spec-list?type_id=' . $type_id,
                 'icon' => 'fa-reply',
                 'text' => '返回规格列表'
             ]
@@ -434,15 +434,13 @@ class AttributeController extends Backend
         }
         if ($ret === false) {
             // Log
-            admin_log($log_msg.'删除失败。ID：'.$ids);
+            admin_log($log_msg . '删除失败。ID：' . $ids);
             return result(-1, '', '删除失败');
         }
         // Log
-        admin_log($log_msg.'删除成功。ID：'.$ids);
+        admin_log($log_msg . '删除成功。ID：' . $ids);
         return result(0, '', '删除成功');
     }
-
-
 
 
 }

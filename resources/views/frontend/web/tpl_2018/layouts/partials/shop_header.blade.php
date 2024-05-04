@@ -63,7 +63,8 @@
                     <p class="collect-tip" style="display: none;">收藏</p>
                     <!-- 店铺二维码 _start -->
                     <p class="shop-qr-code">
-                        <img src="/shop/qrcode.html?id={{ $shop_info['shop']['shop_id'] }}" alt="店铺二维码" />
+                        {{--<img src="/shop/qrcode.html?id={{ $shop_info['shop']['shop_id'] }}" alt="店铺二维码" />--}}
+                        <img src="{{ $shop_info['shop']['qrcode'] ?? '' }}" alt="店铺二维码" />
                     </p>
                     <!-- 店铺二维码 end -->
                 </div>
@@ -164,7 +165,7 @@
                 <div class="search-info">
                     <div class="search-box">
                         <div class="search-box-con">
-                            <input class="search-box-input" name="keyword" id="keyword" tabindex="9" autocomplete="off" value="" onFocus="if( this.value=='请输入关键词'){ this.value=''; }else{ this.value=this.value; }" onBlur="if(this.value=='')this.value='请输入关键词'" type="text">
+                            <input class="search-box-input" name="keyword" id="keyword" tabindex="9" autocomplete="off" placeholder="请输入关键词" value="{{ $keyword ?? '' }}" onFocus="if( this.value=='请输入关键词'){ this.value=''; }else{ this.value=this.value; }" onBlur="if(this.value=='')this.value='请输入关键词'" type="text">
                         </div>
                     </div>
                     <input type="button" onclick="search_all()" value="搜全站" class="button bg-color">
@@ -185,3 +186,128 @@
         </div>
     </div>
 </div>
+
+<!-- 右侧客服 _start-->
+@if(empty($is_design))
+<div class="customer-service-box">
+    <div class="box-content">
+        <div class="box-small">
+
+
+            <div class="customer-service">
+				<span class="ww-light">
+
+					<!-- 旺旺不在线 i 标签的 class="ww-offline" -->
+
+
+
+
+
+
+                    <!-- s等于1时带文字，等于2时不带文字 -->
+                    <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&groupid=0&charset=utf-8">
+                        <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
+                        <span></span>
+                    </a>
+
+
+
+
+
+
+
+				</span>
+                <span class="text">客服</span>
+            </div>
+
+        </div>
+        <div class="box-large">
+            <ul>
+                <li class="service-item">
+                    <a href="" rel="nofollow" class="color">{{ $shop_info['shop']['shop_name'] }}</a>
+                    <span class="ww-light">
+						<!-- 旺旺不在线 i 标签的 class="ww-offline" -->
+
+
+
+
+
+
+                        <!-- s等于1时带文字，等于2时不带文字 -->
+                        <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&groupid=0&charset=utf-8">
+                            <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
+                            <span></span>
+                        </a>
+
+
+
+
+
+                        <!-- -->
+					</span>
+                </li>
+
+                <li class="service-item">
+                    <h4>在线客服</h4>
+                    <ul class="service-info">
+
+                        <li class="group clearfix">
+                            <span>售前客服</span>
+                            <div class="customer-info">
+
+
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=xxxxxx&site=qq&menu=yes" class="ww-inline service-btn-qq">
+                                    <img border="0" onload="load_qq_customer_image(this, 'http://')" src="http://wpa.qq.com/pa?p=2:xxxxxx:51" alt="QQ" title="点击这里给我发消息" style="height: 20px;"/>
+                                </a>
+                                </br>
+
+
+                            </div>
+                        </li>
+
+                        <li class="group clearfix">
+                            <span>售后客服</span>
+                            <div class="customer-info">
+
+
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=xxxxxx&site=qq&menu=yes" class="ww-inline service-btn-qq">
+                                    <img border="0" onload="load_qq_customer_image(this, 'http://')" src="http://wpa.qq.com/pa?p=2:xxxxxx:51" alt="QQ" title="点击这里给我发消息" style="height: 20px;"/>
+                                </a>
+                                </br>
+
+
+                            </div>
+                        </li>
+
+                        <!---->
+                    </ul>
+                </li>
+
+
+                <li class="service-item">
+                    <h4>工作时间</h4>
+                    <ul class="service-info">
+                        <li>
+                            <span>{!! $shop_info['shop']['service_hours'] !!}</span>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+            </ul>
+        </div>
+    </div>
+</div>
+@endif
+<!-- 右侧客服_end -->
+
+<div class="layout">
+
+    {{--店铺菜单--}}
+    @include('frontend.web.tpl_2018.layouts.partials.shop_menu')
+
+</div>
+<script type="text/javascript">
+    //
+</script>

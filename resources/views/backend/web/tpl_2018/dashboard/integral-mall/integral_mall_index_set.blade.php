@@ -16,7 +16,7 @@
 @section('content')
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group=integral_mall_index_set" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="integral_mall_index_set">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -31,12 +31,13 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-integral_slide_img1_control" class="input-file-show">
                                 <span class="show">
-                                    <a id="systemconfigmodel-integral_slide_img1_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-integral_slide_img1">
+                                    <a id="systemconfigmodel-integral_slide_img1_image" class="preview"
+                                       ref="@if(!empty($group_info['integral_slide_img1']->value)){{ get_image_url($group_info['integral_slide_img1']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-integral_slide_img1">
                                         <i class="fa fa-picture-o"></i>
                                     </a>
                                 </span>
                                 <span class="type-file-box">
-                                    <input type="text" id="systemconfigmodel-integral_slide_img1_text" name="SystemConfigModel[integral_slide_img1]_text" class="type-file-text" value="{{ $config_info['integral_slide_img1']->value }}">
+                                    <input type="text" id="systemconfigmodel-integral_slide_img1_text" name="SystemConfigModel[integral_slide_img1]_text" class="type-file-text">
                                     <input type="button" id="systemconfigmodel-integral_slide_img1_button" name="SystemConfigModel[integral_slide_img1]_button" value="选择上传..." class="type-file-button">
                                     <input type="file" id="systemconfigmodel-integral_slide_img1" name="SystemConfigModel[integral_slide_img1]" class="type-file-file" size="30" onchange="document.getElementById('systemconfigmodel-integral_slide_img1_text').value=this.value" />
                                 </span>
@@ -45,7 +46,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-integral_slide_link1" class="form-control" name="SystemConfigModel[integral_slide_link1]" value="{{ $config_info['integral_slide_link1']->value }}">
+                            <input type="text" id="systemconfigmodel-integral_slide_link1" class="form-control" name="SystemConfigModel[integral_slide_link1]" value="{{ $group_info['integral_slide_link1']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='integral_slide_img1|integral_slide_link1' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。</div>
@@ -61,7 +62,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-integral_slide_img2_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-integral_slide_img2_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-integral_slide_img2">
+<a id="systemconfigmodel-integral_slide_img2_image" class="preview"
+   ref="@if(!empty($group_info['integral_slide_img2']->value)){{ get_image_url($group_info['integral_slide_img2']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-integral_slide_img2">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -74,7 +76,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-integral_slide_link2" class="form-control" name="SystemConfigModel[integral_slide_link2]">
+                            <input type="text" id="systemconfigmodel-integral_slide_link2" class="form-control" name="SystemConfigModel[integral_slide_link2]" value="{{ $group_info['integral_slide_link2']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='integral_slide_img2|integral_slide_link2' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。</div>
@@ -90,7 +92,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-integral_slide_img3_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-integral_slide_img3_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-integral_slide_img3">
+<a id="systemconfigmodel-integral_slide_img3_image" class="preview"
+   ref="@if(!empty($group_info['integral_slide_img3']->value)){{ get_image_url($group_info['integral_slide_img3']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-integral_slide_img3">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -103,7 +106,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-integral_slide_link3" class="form-control" name="SystemConfigModel[integral_slide_link3]">
+                            <input type="text" id="systemconfigmodel-integral_slide_link3" class="form-control" name="SystemConfigModel[integral_slide_link3]" value="{{ $group_info['integral_slide_link3']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='integral_slide_img3|integral_slide_link3' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。</div>
@@ -119,7 +122,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-integral_slide_img4_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-integral_slide_img4_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-integral_slide_img4">
+<a id="systemconfigmodel-integral_slide_img4_image" class="preview"
+   ref="@if(!empty($group_info['integral_slide_img4']->value)){{ get_image_url($group_info['integral_slide_img4']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-integral_slide_img4">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -132,7 +136,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-integral_slide_link4" class="form-control" name="SystemConfigModel[integral_slide_link4]">
+                            <input type="text" id="systemconfigmodel-integral_slide_link4" class="form-control" name="SystemConfigModel[integral_slide_link4]" value="{{ $group_info['integral_slide_link4']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='integral_slide_img4|integral_slide_link4' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用910*350像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址。</div>
@@ -151,7 +155,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-m_integral_slide_img1_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-m_integral_slide_img1_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-m_integral_slide_img1">
+<a id="systemconfigmodel-m_integral_slide_img1_image" class="preview"
+   ref="@if(!empty($group_info['m_integral_slide_img1']->value)){{ get_image_url($group_info['m_integral_slide_img1']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-m_integral_slide_img1">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -165,7 +170,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-m_integral_slide_link1" class="form-control" name="SystemConfigModel[m_integral_slide_link1]">
+                            <input type="text" id="systemconfigmodel-m_integral_slide_link1" class="form-control" name="SystemConfigModel[m_integral_slide_link1]" value="{{ $group_info['m_integral_slide_link1']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='m_integral_slide_img1|m_integral_slide_link1' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址</div>
@@ -181,7 +186,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-m_integral_slide_img2_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-m_integral_slide_img2_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-m_integral_slide_img2">
+<a id="systemconfigmodel-m_integral_slide_img2_image" class="preview"
+   ref="@if(!empty($group_info['m_integral_slide_img2']->value)){{ get_image_url($group_info['m_integral_slide_img2']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-m_integral_slide_img2">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -194,7 +200,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-m_integral_slide_link2" class="form-control" name="SystemConfigModel[m_integral_slide_link2]">
+                            <input type="text" id="systemconfigmodel-m_integral_slide_link2" class="form-control" name="SystemConfigModel[m_integral_slide_link2]" value="{{ $group_info['m_integral_slide_link2']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='m_integral_slide_img2|m_integral_slide_link2' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址</div>
@@ -210,7 +216,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-m_integral_slide_img3_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-m_integral_slide_img3_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-m_integral_slide_img3">
+<a id="systemconfigmodel-m_integral_slide_img3_image" class="preview"
+   ref="@if(!empty($group_info['m_integral_slide_img3']->value)){{ get_image_url($group_info['m_integral_slide_img3']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-m_integral_slide_img3">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -223,7 +230,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-m_integral_slide_link3" class="form-control" name="SystemConfigModel[m_integral_slide_link3]">
+                            <input type="text" id="systemconfigmodel-m_integral_slide_link3" class="form-control" name="SystemConfigModel[m_integral_slide_link3]" value="{{ $group_info['m_integral_slide_link3']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='m_integral_slide_img3|m_integral_slide_link3' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址</div>
@@ -239,7 +246,8 @@
                         <div class="form-control-box">
                             <div id="systemconfigmodel-m_integral_slide_img4_control" class="input-file-show">
 <span class="show">
-<a id="systemconfigmodel-m_integral_slide_img4_image" class="preview" ref="?k={{ time() }}" data-file="systemconfigmodel-m_integral_slide_img4">
+<a id="systemconfigmodel-m_integral_slide_img4_image" class="preview"
+   ref="@if(!empty($group_info['m_integral_slide_img4']->value)){{ get_image_url($group_info['m_integral_slide_img4']->value) }}@else{{ '/assets/d2eace91/images/default/goods.gif' }}@endif" data-file="systemconfigmodel-m_integral_slide_img4">
 <i class="fa fa-picture-o"></i>
 </a>
 </span>
@@ -252,7 +260,7 @@
                             <label class="m-l-10 m-r-5 control-label">
                                 <i class="fa fa fa-link"></i>
                             </label>
-                            <input type="text" id="systemconfigmodel-m_integral_slide_link4" class="form-control" name="SystemConfigModel[m_integral_slide_link4]">
+                            <input type="text" id="systemconfigmodel-m_integral_slide_link4" class="form-control" name="SystemConfigModel[m_integral_slide_link4]" value="{{ $group_info['m_integral_slide_link4']->value }}">
                             <a class="btn btn-primary btn-best m-l-10 clear" data-code='m_integral_slide_img4|m_integral_slide_link4' href="javascript:;">清空数据</a>
                         </div>
                         <div class="help-block help-block-t">请使用1000*400像素的jpg、gif、png格式图片作为幻灯片banner上传， 如需跳转请在后方添加以http://开头的链接地址</div>
@@ -261,8 +269,7 @@
             </div>
             <!-- mobile端图片end -->
             <div class="bottom-btn p-b-30">
-                {{--                <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">--}}
-                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
+                <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">
                 <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary btn-lg" />
             </div>
 

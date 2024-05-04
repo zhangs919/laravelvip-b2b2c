@@ -11,9 +11,9 @@ class AdminRoleRepository
 
     protected $model;
 
-    public function __construct(AdminRole $admin)
+    public function __construct()
     {
-        $this->model = $admin;
+        $this->model = new AdminRole();
     }
 
 }

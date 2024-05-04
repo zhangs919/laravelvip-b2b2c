@@ -1,6 +1,6 @@
 <div class="table-content m-t-30 clearfix">
     <form id="SheetConfigModel" class="form-horizontal" name="SheetConfigModel" action="/mall/shipping/sheet-config?shipping_code={{ $shipping_code }}" method="post">
-        {{ csrf_field() }}
+        @csrf
         <!-- 隐藏域 -->
         <input type="hidden" id="sheetconfigmodel-shipping_code" class="form-control" name="SheetConfigModel[shipping_code]" value="{{ $shipping_code }}">
         <!-- 商户号 -->

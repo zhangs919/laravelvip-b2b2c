@@ -20,7 +20,7 @@
 // | Description:
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Store;
+namespace App\Modules\Seller\Http\Controllers\Store;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\StoreGroupRepository;

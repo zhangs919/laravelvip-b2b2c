@@ -6,7 +6,7 @@
     </div>
     <div class="table-content m-t-30 clearfix">
         <form id="UploadModel" class="form-horizontal" action="/goods/lib-goods/add-excel-goods" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <div class="simple-form-field">
                 <div class="form-group">
                     <label for="text4" class="col-sm-4 control-label">

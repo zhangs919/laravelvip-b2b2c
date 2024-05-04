@@ -3,7 +3,12 @@
 
 {{--css style page元素同级上面--}}
 @section('style')
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
     <style type="text/css">
         #panel {
@@ -16,14 +21,13 @@
             width: 280px;
         }
     </style>
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ShopModel" class="form-horizontal" name="ShopModel" action="/shop/shop-set/edit" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30  clearfix">
             <h5 class="m-b-30 m-t-0">店铺基本信息</h5>
 
@@ -687,7 +691,293 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 在线文本编辑器 -->
+    <!-- 创建KindEditor的脚本 必须设置editor_id属性，editor_id为文本域的ID属性 -->
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 地区选择 -->
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "shopmodel-shop_id", "name": "ShopModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"required":true,"messages":{"required":"店铺名称不能为空。"}}},{"id": "shopmodel-region_code", "name": "ShopModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"联系地址不能为空。"}}},{"id": "shopmodel-address", "name": "ShopModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "shopmodel-shop_image", "name": "ShopModel[shop_image]", "attribute": "shop_image", "rules": {"required":true,"messages":{"required":"店铺头像不能为空。"}}},{"id": "shopmodel-shop_logo", "name": "ShopModel[shop_logo]", "attribute": "shop_logo", "rules": {"required":true,"messages":{"required":"店铺LOGO不能为空。"}}},{"id": "shopmodel-shop_poster", "name": "ShopModel[shop_poster]", "attribute": "shop_poster", "rules": {"required":true,"messages":{"required":"店铺海报不能为空。"}}},{"id": "shopmodel-start_price", "name": "ShopModel[start_price]", "attribute": "start_price", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"起送金额必须是一个数字。","min":"起送金额必须不小于0。","max":"起送金额必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-other_shipping_fee", "name": "ShopModel[other_shipping_fee]", "attribute": "other_shipping_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"额外增加配送费必须是一个数字。","min":"额外增加配送费必须不小于0。","max":"额外增加配送费必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-packing_fee", "name": "ShopModel[packing_fee]", "attribute": "packing_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"包装费必须是一个数字。","min":"包装费必须不小于0。","max":"包装费必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"string":true,"messages":{"string":"店铺名称必须是一条字符串。","maxlength":"店铺名称只能包含至多20个字符。"},"maxlength":20}},{"id": "shopmodel-shop_description", "name": "ShopModel[shop_description]", "attribute": "shop_description", "rules": {"string":true,"messages":{"string":"店铺简介必须是一条字符串。","maxlength":"店铺简介只能包含至多100个字符。"},"maxlength":100}},{"id": "shopmodel-shop_keywords", "name": "ShopModel[shop_keywords]", "attribute": "shop_keywords", "rules": {"string":true,"messages":{"string":"店铺关键词必须是一条字符串。","maxlength":"店铺关键词只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-detail_introduce", "name": "ShopModel[detail_introduce]", "attribute": "detail_introduce", "rules": {"string":true,"messages":{"string":"店铺公告必须是一条字符串。","maxlength":"店铺公告只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-close_tips", "name": "ShopModel[close_tips]", "attribute": "close_tips", "rules": {"string":true,"messages":{"string":"非营业时间下单提示必须是一条字符串。","maxlength":"非营业时间下单提示只能包含至多255个字符。"},"maxlength":255}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"ajax":{"url":"/shop/shop-set/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcU2hvcE1vZGVs","attribute":"shop_name","params":["ShopModel[shop_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <!--点击按钮为表格增加行-->
+    <script id="opentime_template" type="text">
+<div class="time-subtime">
+    <div class="time-select">
+        <select name="opening_hour[begin_hour][]" class="select form-control m-r-5">
+            <!--   -->
+            <option value="0">00</option>
+            <!--   -->
+            <option value="1">01</option>
+            <!--   -->
+            <option value="2">02</option>
+            <!--   -->
+            <option value="3">03</option>
+            <!--   -->
+            <option value="4">04</option>
+            <!--   -->
+            <option value="5">05</option>
+            <!--   -->
+            <option value="6">06</option>
+            <!--   -->
+            <option value="7">07</option>
+            <!--   -->
+            <option value="8">08</option>
+            <!--   -->
+            <option value="9">09</option>
+            <!--   -->
+            <option value="10">10</option>
+            <!--   -->
+            <option value="11">11</option>
+            <!--   -->
+            <option value="12">12</option>
+            <!--   -->
+            <option value="13">13</option>
+            <!--   -->
+            <option value="14">14</option>
+            <!--   -->
+            <option value="15">15</option>
+            <!--   -->
+            <option value="16">16</option>
+            <!--   -->
+            <option value="17">17</option>
+            <!--   -->
+            <option value="18">18</option>
+            <!--   -->
+            <option value="19">19</option>
+            <!--   -->
+            <option value="20">20</option>
+            <!--   -->
+            <option value="21">21</option>
+            <!--   -->
+            <option value="22">22</option>
+            <!--   -->
+            <option value="23">23</option>
+        </select>
+        :
+        <select name="opening_hour[begin_minute][]" class="select form-control m-l-5">
+            <!--   -->
+            <option value="0">00</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="5">05</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="10">10</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="15">15</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="20">20</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="25">25</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="30">30</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="35">35</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="40">40</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="45">45</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="50">50</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="55">55</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="59">59</option>
+        </select>
+    </div>
+    <div class="time-select">
+        <select name="opening_hour[end_hour][]" class="select form-control m-r-5">
+            <!--   -->
+            <option value="0">00</option>
+            <!--   -->
+            <option value="1">01</option>
+            <!--   -->
+            <option value="2">02</option>
+            <!--   -->
+            <option value="3">03</option>
+            <!--   -->
+            <option value="4">04</option>
+            <!--   -->
+            <option value="5">05</option>
+            <!--   -->
+            <option value="6">06</option>
+            <!--   -->
+            <option value="7">07</option>
+            <!--   -->
+            <option value="8">08</option>
+            <!--   -->
+            <option value="9">09</option>
+            <!--   -->
+            <option value="10">10</option>
+            <!--   -->
+            <option value="11">11</option>
+            <!--   -->
+            <option value="12">12</option>
+            <!--   -->
+            <option value="13">13</option>
+            <!--   -->
+            <option value="14">14</option>
+            <!--   -->
+            <option value="15">15</option>
+            <!--   -->
+            <option value="16">16</option>
+            <!--   -->
+            <option value="17">17</option>
+            <!--   -->
+            <option value="18">18</option>
+            <!--   -->
+            <option value="19">19</option>
+            <!--   -->
+            <option value="20">20</option>
+            <!--   -->
+            <option value="21">21</option>
+            <!--   -->
+            <option value="22">22</option>
+            <!--   -->
+            <option value="23">23</option>
+        </select>
+        :
+        <select name="opening_hour[end_minute][]" class="select form-control m-l-5">
+            <!--   -->
+            <option value="0">00</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="5">05</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="10">10</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="15">15</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="20">20</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="25">25</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="30">30</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="35">35</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="40">40</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="45">45</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="50">50</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="55">55</option>
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <!--   -->
+            <option value="59">59</option>
+        </select>
+    </div>
+    <div class="handle">
+        <a id="del_opentime" class="c-blue" href="javascript:void(0);">删除</a>
+    </div>
+</div>
+</script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
 @stop
 
 
@@ -701,30 +991,29 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js"></script>
+    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180702"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180702"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180702"></script>
-    <!-- 在线文本编辑器 -->
-    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js?v=20180702"></script>
-    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js?v=20180702"></script>
-    <!-- 创建KindEditor的脚本 必须设置editor_id属性，editor_id为文本域的ID属性 -->
-
-    <script type="text/javascript">
+    <script>
         KindEditor.ready(function(K) {
-
             var extraFileUploadParams = [];
-            extraFileUploadParams['B2B2C_YUNMALL_68MALL_COM_USER_PHPSESSID'] = 'efoa8elmam95sa17e24vp0ov33';
-
+            extraFileUploadParams['LARAVELVIP_COM_USER_PHPSESSID'] = '61k0221e3guntchm3raq2jfm1j';
             window.editor = K.create('#detail_introduce', {
                 width: '100%',
+                minWidth: '650',
                 height: '450px',
-                items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', '|', 'selectall', 'clearhtml', 'quickformat', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'table', 'hr', 'emoticons', 'link', 'unlink', '|', 'about'],
+                items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', '|', 'quickformat', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'table', 'hr', 'emoticons', 'link', 'unlink', '|', 'about'],
                 themesPath: "/assets/d2eace91/js/editor/themes/",
                 cssPath: "/assets/d2eace91/js/editor/themes/default/default.css",
-                uploadJson: "/site/upload-image",
+                uploadJson: "/site/upload-image.html",
                 extraFileUploadParams: extraFileUploadParams,
                 allowImageUpload: true,
                 allowFlashUpload: false,
@@ -747,20 +1036,9 @@
                 }
             });
         });
-    </script>
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180702"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180702"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180702"></script>
-
-    <!-- 地区选择 -->
-    <script src="/assets/d2eace91/js/jquery.region.js?v=20180702"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[{"id": "shopmodel-shop_id", "name": "ShopModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"Shop Id不能为空。"}}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"required":true,"messages":{"required":"店铺名称不能为空。"}}},{"id": "shopmodel-region_code", "name": "ShopModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"联系地址不能为空。"}}},{"id": "shopmodel-address", "name": "ShopModel[address]", "attribute": "address", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "shopmodel-shop_image", "name": "ShopModel[shop_image]", "attribute": "shop_image", "rules": {"required":true,"messages":{"required":"店铺头像不能为空。"}}},{"id": "shopmodel-shop_logo", "name": "ShopModel[shop_logo]", "attribute": "shop_logo", "rules": {"required":true,"messages":{"required":"店铺LOGO不能为空。"}}},{"id": "shopmodel-shop_poster", "name": "ShopModel[shop_poster]", "attribute": "shop_poster", "rules": {"required":true,"messages":{"required":"店铺海报不能为空。"}}},{"id": "shopmodel-start_price", "name": "ShopModel[start_price]", "attribute": "start_price", "rules": {"match":{"pattern":/^[0-9]+(.[0-9]{1,2})?$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入整数或小数点后2位的数字"}}},{"id": "shopmodel-other_shipping_fee", "name": "ShopModel[other_shipping_fee]", "attribute": "other_shipping_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"额外增加配送费必须是一个数字。","min":"额外增加配送费必须不小于0。","max":"额外增加配送费必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-packing_fee", "name": "ShopModel[packing_fee]", "attribute": "packing_fee", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"包装费必须是一个数字。","min":"包装费必须不小于0。","max":"包装费必须不大于9999999。"},"min":0,"max":9999999}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"string":true,"messages":{"string":"店铺名称必须是一条字符串。","maxlength":"店铺名称只能包含至多20个字符。"},"maxlength":20}},{"id": "shopmodel-shop_description", "name": "ShopModel[shop_description]", "attribute": "shop_description", "rules": {"string":true,"messages":{"string":"店铺简介必须是一条字符串。","maxlength":"店铺简介只能包含至多100个字符。"},"maxlength":100}},{"id": "shopmodel-shop_keywords", "name": "ShopModel[shop_keywords]", "attribute": "shop_keywords", "rules": {"string":true,"messages":{"string":"店铺关键词必须是一条字符串。","maxlength":"店铺关键词只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-detail_introduce", "name": "ShopModel[detail_introduce]", "attribute": "detail_introduce", "rules": {"string":true,"messages":{"string":"店铺公告必须是一条字符串。","maxlength":"店铺公告只能包含至多50个字符。"},"maxlength":50}},{"id": "shopmodel-close_tips", "name": "ShopModel[close_tips]", "attribute": "close_tips", "rules": {"string":true,"messages":{"string":"非营业时间下单提示必须是一条字符串。","maxlength":"非营业时间下单提示只能包含至多255个字符。"},"maxlength":255}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"ajax":{"url":"/shop/shop-set/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcU2VsZlNob3BNb2RlbA==","attribute":"shop_name","params":["ShopModel[shop_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
-</script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
+            $("[data-toggle='popover']").popover();
             //悬浮显示上下步骤按钮
             window.onscroll = function() {
                 $(window).scroll(function() {
@@ -773,7 +1051,6 @@
                         $(".bottom-btn").addClass("bottom-btn-fixed");
                     }
                 });
-
             };
             var validator = $("#ShopModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -783,23 +1060,18 @@
                 if (!validator.form()) {
                     var html = "";
                     error_list = validator.errorList;
-
                     for (var i = 0; i < validator.errorList.length; i++) {
                         var element = validator.errorList[i].element;
                         var message = validator.errorList[i].message;
-
                         html += "<div><a href='javascript:void(0);' data-id='" + i + "'>" + message + "</a></div>";
                     }
-
                     $.alert("<div id='error_list'>" + html + "</div>");
                     return;
                 }
                 //加载提示
                 $.loading.start();
-
                 $("#ShopModel").submit();
             });
-
             // 新建营业时间
             $("#add_opentime").click(function() {
                 if ($(".time-subtime").length < 4) {
@@ -817,7 +1089,6 @@
                 //});
                 checkLength();
             });
-
             // 营业时间不能超过三条
             function checkLength() {
                 if ($(".time-subtime").length >= 4) {
@@ -828,8 +1099,7 @@
             }
             checkLength();
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             $("#region_container").regionselector({
                 value: '{{ $model['region_code'] }}',
@@ -848,429 +1118,12 @@
                 }
             });
         });
-    </script>
-    <!--点击按钮为表格增加行-->
-    <script id="opentime_template" type="text">
-<div class="time-subtime">
-	<div class="time-select">
-		<select name="opening_hour[begin_hour][]" class="select form-control m-r-5">
-			<!--   -->
-			<option value="0">00</option>
-			<!--   -->
-			<option value="1">01</option>
-			<!--   -->
-			<option value="2">02</option>
-			<!--   -->
-			<option value="3">03</option>
-			<!--   -->
-			<option value="4">04</option>
-			<!--   -->
-			<option value="5">05</option>
-			<!--   -->
-			<option value="6">06</option>
-			<!--   -->
-			<option value="7">07</option>
-			<!--   -->
-			<option value="8">08</option>
-			<!--   -->
-			<option value="9">09</option>
-			<!--   -->
-			<option value="10">10</option>
-			<!--   -->
-			<option value="11">11</option>
-			<!--   -->
-			<option value="12">12</option>
-			<!--   -->
-			<option value="13">13</option>
-			<!--   -->
-			<option value="14">14</option>
-			<!--   -->
-			<option value="15">15</option>
-			<!--   -->
-			<option value="16">16</option>
-			<!--   -->
-			<option value="17">17</option>
-			<!--   -->
-			<option value="18">18</option>
-			<!--   -->
-			<option value="19">19</option>
-			<!--   -->
-			<option value="20">20</option>
-			<!--   -->
-			<option value="21">21</option>
-			<!--   -->
-			<option value="22">22</option>
-			<!--   -->
-			<option value="23">23</option>
-
-		</select>
-		:
-		<select name="opening_hour[begin_minute][]" class="select form-control m-l-5">
-			<!--   -->
-
-			<option value="0">00</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="5">05</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="10">10</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="15">15</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="20">20</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="25">25</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="30">30</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="35">35</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="40">40</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="45">45</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="50">50</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="55">55</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="59">59</option>
-
-
-		</select>
-	</div>
-	<div class="time-select">
-		<select name="opening_hour[end_hour][]" class="select form-control m-r-5">
-			<!--   -->
-			<option value="0">00</option>
-			<!--   -->
-			<option value="1">01</option>
-			<!--   -->
-			<option value="2">02</option>
-			<!--   -->
-			<option value="3">03</option>
-			<!--   -->
-			<option value="4">04</option>
-			<!--   -->
-			<option value="5">05</option>
-			<!--   -->
-			<option value="6">06</option>
-			<!--   -->
-			<option value="7">07</option>
-			<!--   -->
-			<option value="8">08</option>
-			<!--   -->
-			<option value="9">09</option>
-			<!--   -->
-			<option value="10">10</option>
-			<!--   -->
-			<option value="11">11</option>
-			<!--   -->
-			<option value="12">12</option>
-			<!--   -->
-			<option value="13">13</option>
-			<!--   -->
-			<option value="14">14</option>
-			<!--   -->
-			<option value="15">15</option>
-			<!--   -->
-			<option value="16">16</option>
-			<!--   -->
-			<option value="17">17</option>
-			<!--   -->
-			<option value="18">18</option>
-			<!--   -->
-			<option value="19">19</option>
-			<!--   -->
-			<option value="20">20</option>
-			<!--   -->
-			<option value="21">21</option>
-			<!--   -->
-			<option value="22">22</option>
-			<!--   -->
-			<option value="23">23</option>
-
-		</select>
-		:
-		<select name="opening_hour[end_minute][]" class="select form-control m-l-5">
-			<!--   -->
-
-			<option value="0">00</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="5">05</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="10">10</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="15">15</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="20">20</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="25">25</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="30">30</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="35">35</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="40">40</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="45">45</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="50">50</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="55">55</option>
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<!--   -->
-
-			<option value="59">59</option>
-
-
-		</select>
-	</div>
-	<div class="handle">
-		<a id="del_opentime" class="c-blue" href="javascript:void(0);">删除</a>
-	</div>
-</div>
-</script>
-    <script type="text/javascript">
+        //
         $(".szy-imagegroup").each(function() {
             var id = $(this).data("id");
             var size = $(this).data("size");
-
             var target = $("#" + id);
             var value = $(target).val();
-
             $(this).imagegroup({
                 host: "{{ get_oss_host() }}",
                 size: size,
@@ -1295,8 +1148,8 @@
                 }
             });
         });
-    </script>
-    <script type="text/javascript">
+        //
+        var map;
         $().ready(function() {
             var x = $("#shop_lng").val();
             var y = $("#shop_lat").val();
@@ -1304,14 +1157,14 @@
                 x = 0;
                 y = 0;
                 var lnglatXY = new AMap.LngLat(x, y);
-                var map = new AMap.Map("container", {
+                map = new AMap.Map("container", {
                     resizeEnable: true,
                     doubleClickZoom: false,
                     zoom: 13
                 });
             } else {
                 var lnglatXY = new AMap.LngLat(x, y);
-                var map = new AMap.Map("container", {
+                map = new AMap.Map("container", {
                     resizeEnable: true,
                     doubleClickZoom: false,
                     zoom: 15,
@@ -1337,9 +1190,7 @@
                     });
                     var array = $("#region_name").val().split(",");
                     var keyword = array.join("");
-
-                    var keyword = keyword + $("#selfshopmodel-address").val();
-
+                    var keyword = keyword + $("#shopmodel-address").val();
                     // 关键字查询
                     placeSearch.search(keyword);
                 });
@@ -1354,7 +1205,6 @@
                 $("#shop_lng").val(x);
                 $("#shop_lat").val(y);
             });
-
             // 逆地理编码
             function regeocoder() {
                 // 加载地理编码插件
@@ -1363,13 +1213,11 @@
                         radius: 1000, // 以已知坐标为中心点，radius为半径，返回范围内兴趣点和道路信息
                         extensions: "base" //返回地址描述以及附近兴趣点和道路信息，默认"base"
                     });
-
                     // 返回地理编码结果
                     AMap.event.addListener(geocoder, "complete", geocoder_callBack);
                     // 逆地理编码
                     geocoder.getAddress(lnglatXY);
                 });
-
                 var zoom = map.getZoom();
                 var center = map.getCenter();
                 map.clearMap();
@@ -1383,7 +1231,6 @@
                 marker.setMap(map); // 在地图上添加点
                 map.setFitView();
                 map.setZoomAndCenter(zoom, center);
-
                 // 移动坐标点位置
                 marker.on('mouseup', function(e) {
                     var x = e.lnglat.getLng();
@@ -1395,13 +1242,10 @@
                     $("#shop_lat").val(y);
                 });
             }
-
             function geocoder_callBack(data) {
                 if ($("#load").val() == 1) {
                     $("#load").val(0);
-
-                    openInfo($("#selfshopmodel-address").val());
-
+                    openInfo($("#shopmodel-address").val());
                 } else {
                     var address = data.regeocode.formattedAddress;
                     var array = $("#region_name").val().split(","); // 返回地址描述
@@ -1410,13 +1254,10 @@
                     }
                     address = address.replace('省', '');
                     address = address.replace('市', '');
-
-                    $("#selfshopmodel-address").val(address);
-
+                    $("#shopmodel-address").val(address);
                     openInfo(address);
                 }
             }
-
             // 在指定位置打开信息窗体
             function openInfo(address) {
                 if (address == "") {
@@ -1431,7 +1272,6 @@
                 });
                 infoWindow.open(map, marker.getPosition());
             }
-
             // 回车搜索
             $(".address").keypress(function(e) {
                 if (event.keyCode == 13) {

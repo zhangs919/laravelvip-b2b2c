@@ -4,7 +4,11 @@ namespace App\Repositories;
 
 
 use App\Models\Image;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ToolsRepository
@@ -106,6 +110,13 @@ class ToolsRepository
         // 默认文件系统驱动
         $defaultDriver = config('filesystems.default');
 
+        // 是否添加水印
+        $is_watermark = $request->post('is_watermark', 0);
+        if ($is_watermark) {
+            // 添加水印
+            
+        }
+
         if ($defaultDriver == 'oss') {
             // oss上传
             $host = 'http://'.sysconf('oss_domain').$fullpath;
@@ -119,7 +130,7 @@ class ToolsRepository
             $result = $file->move(public_path($fullpath.ltrim($dirname, '/')), $newName.'.'.$ext);
         }
 
-        if(! $result){
+        if(!$result){
             return ['error' => '图片上传失败'];
         }
 
@@ -131,7 +142,7 @@ class ToolsRepository
             $height = $imageSize[1];
         }
 
-        $imageRep = new ImageRepository(new Image());
+        $imageRep = new ImageRepository();
         // 替换上传
         $id = $request->post('id', 0);
         if ($isReplace) {
@@ -179,13 +190,13 @@ class ToolsRepository
             'extension' => $ext, // "png"
             'file_name' => $newName, // 15229209224694
             'height' => $height,
-            'host' => $host, //'http://68yun.oss-cn-beijing.aliyuncs.com/images/11880/',
+            'host' => $host, //'http://xx.oss-cn-beijing.aliyuncs.com/images/11880/',
             'img_id' => $ret->img_id, // 图片id
             'name' => $name,
             'path' => $path, // /backend/gallery/2018/04/05/15229209224694.png
             'size' => $filesize, // 42768
             'sort' => 255,
-            'url' =>  $url, // http://68yun.oss-cn-beijing.aliyuncs.com/images/11880/backend/gallery/2018/04/05/15229209224694.png
+            'url' =>  $url, // http://xxx.oss-cn-beijing.aliyuncs.com/images/11880/backend/gallery/2018/04/05/xxxx.png
             'width' => $width
         ];
         return $data;
@@ -197,6 +208,91 @@ class ToolsRepository
         $result = $this->uploadOnePic($request, $filename, $storePath, $isReplace, $base64Field);
         return $result;
 
+    }
+
+    /**
+     * 上传 Ueditor 远程图片
+     *
+     * @param $url
+     * @param string $storePath 'backend/1'
+     * @return array|Application|ResponseFactory|\Illuminate\Foundation\Application|Response
+     */
+    public function uploadUeditorRemoteImage($url, $storePath = 'site/1/ueditor')
+    {
+        $ext = 'jpg';
+        $newName = time().rand(1000, 9999);
+        $dirname = '/'.$storePath.'/'.date('Y/m/d').'/';
+        $path = $dirname.$newName.'.'.$ext;
+        $fullpath = '/' . sysconf('alioss_root_path') . '/';
+        $host = 'http://' . sysconf('oss_domain') . $fullpath;
+        $result = Storage::put($fullpath . ltrim($path, '/'), file_get_contents($url));
+        if (!$result) {
+            return arr_result(-1, null, '上传失败');
+        }
+        $resultUrl = $host . ltrim($path, '/');
+
+        return arr_result(0, $resultUrl, '上传成功');
+    }
+
+    /**
+     * 上传 远程图片
+     *
+     * @param $url
+     * @param string $storePath 'backend/1'
+     * @return array|Application|ResponseFactory|\Illuminate\Foundation\Application|Response
+     */
+    public function uploadRemoteImage($url, $storePath = 'backend/collect')
+    {
+        if (empty($url)) {
+            return arr_result(-1, null, '上传失败');
+        }
+        $ext = 'jpg';
+        $newName = time().rand(1000, 9999);
+        $dirname = '/'.$storePath.'/'.date('Y/m/d').'/';
+        $path = $dirname.$newName.'.'.$ext;
+        $fullpath = '/' . sysconf('alioss_root_path') . '/';
+        $host = 'http://' . sysconf('oss_domain') . $fullpath;
+        $result = Storage::put($fullpath . ltrim($path, '/'), file_get_contents($url));
+
+        if (!$result) {
+            return arr_result(-1, null, '上传失败');
+        }
+        $resultUrl = $host . ltrim($path, '/');
+        $res = [
+            'path' => $path,
+            'url' => $resultUrl
+        ];
+
+        return arr_result(0, $res, '上传成功');
+    }
+
+    /**
+     * 上传 远程视频
+     *
+     * @param $url
+     * @param string $storePath 'backend/1'
+     * @return array|Application|ResponseFactory|\Illuminate\Foundation\Application|Response
+     */
+    public function uploadRemoteVideo($url, $storePath = 'backend/collect')
+    {
+        $ext = 'mp4';
+        $newName = time().rand(1000, 9999);
+        $dirname = '/'.$storePath.'/'.date('Y/m/d').'/';
+        $path = $dirname.$newName.'.'.$ext;
+        $fullpath = '/' . sysconf('alioss_root_path') . '/';
+        $host = 'http://' . sysconf('oss_domain') . $fullpath;
+        $result = Storage::put($fullpath . ltrim($path, '/'), file_get_contents($url));
+
+        if (!$result) {
+            return arr_result(-1, null, '上传失败');
+        }
+        $resultUrl = $host . ltrim($path, '/');
+        $res = [
+            'path' => $path,
+            'url' => $resultUrl
+        ];
+
+        return arr_result(0, $res, '上传成功');
     }
 
     /**

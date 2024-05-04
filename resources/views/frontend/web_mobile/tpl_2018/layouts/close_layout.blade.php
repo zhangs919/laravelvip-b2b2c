@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="/css/common.css?v=2018112301"/>
     <link rel="stylesheet" href="/css/upgrade.css?v=2018112301"/>
 
+    {{--国家默哀日期--}}
+    {!! $national_memorial_day_html ?? '' !!}
 </head>
 <body style="background: #fff;">
 

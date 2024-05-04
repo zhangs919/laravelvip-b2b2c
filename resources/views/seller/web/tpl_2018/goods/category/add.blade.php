@@ -1,9 +1,13 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
-{{--css style page元素同级上面--}}
-@section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
 @stop
 
 {{--content--}}
@@ -11,7 +15,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="form1" class="form-horizontal" name="ShopCategory" action="/goods/category/add" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="shopcategory-cat_id" class="form-control" name="ShopCategory[cat_id]" value="{{ $info->cat_id ?? '' }}">
             <!-- 分类名称 -->
@@ -150,7 +154,13 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "shopcategory-cat_name", "name": "ShopCategory[cat_name]", "attribute": "cat_name", "rules": {"required":true,"messages":{"required":"分类名称不能为空。"}}},{"id": "shopcategory-cat_sort", "name": "ShopCategory[cat_sort]", "attribute": "cat_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "shopcategory-parent_id", "name": "ShopCategory[parent_id]", "attribute": "parent_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"上级分类必须是整数。"}}},{"id": "shopcategory-is_show", "name": "ShopCategory[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否显示必须是整数。"}}},{"id": "shopcategory-cat_sort", "name": "ShopCategory[cat_sort]", "attribute": "cat_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "shopcategory-cat_name", "name": "ShopCategory[cat_name]", "attribute": "cat_name", "rules": {"string":true,"messages":{"string":"分类名称必须是一条字符串。","maxlength":"分类名称只能包含至多30个字符。","match":"分类名称中含有非法字符"},"maxlength":30,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "shopcategory-keywords", "name": "ShopCategory[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"Keywords必须是一条字符串。","maxlength":"Keywords只能包含至多255个字符。","match":"Keywords中含有非法字符"},"maxlength":255,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "shopcategory-cat_desc", "name": "ShopCategory[cat_desc]", "attribute": "cat_desc", "rules": {"string":true,"messages":{"string":"Cat Desc必须是一条字符串。","maxlength":"Cat Desc只能包含至多255个字符。","match":"Cat Desc中含有非法字符"},"maxlength":255,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "shopcategory-cat_sort", "name": "ShopCategory[cat_sort]", "attribute": "cat_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "shopcategory-cat_image", "name": "ShopCategory[cat_image]", "attribute": "cat_image", "rules": {"string":true,"messages":{"string":"分类图标必须是一条字符串。"}}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -164,17 +174,15 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180710"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-        [{"id": "shopcategory-cat_name", "name": "ShopCategory[cat_name]", "attribute": "cat_name", "rules": {"required":true,"messages":{"required":"分类名称不能为空。"}}},{"id": "shopcategory-cat_sort", "name": "ShopCategory[cat_sort]", "attribute": "cat_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "shopcategory-parent_id", "name": "ShopCategory[parent_id]", "attribute": "parent_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"上级分类必须是整数。"}}},{"id": "shopcategory-is_show", "name": "ShopCategory[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否显示必须是整数。"}}},{"id": "shopcategory-cat_sort", "name": "ShopCategory[cat_sort]", "attribute": "cat_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "shopcategory-cat_name", "name": "ShopCategory[cat_name]", "attribute": "cat_name", "rules": {"string":true,"messages":{"string":"分类名称必须是一条字符串。","maxlength":"分类名称只能包含至多30个字符。"},"maxlength":30}},{"id": "shopcategory-keywords", "name": "ShopCategory[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"Keywords必须是一条字符串。","maxlength":"Keywords只能包含至多255个字符。"},"maxlength":255}},{"id": "shopcategory-cat_desc", "name": "ShopCategory[cat_desc]", "attribute": "cat_desc", "rules": {"string":true,"messages":{"string":"Cat Desc必须是一条字符串。","maxlength":"Cat Desc只能包含至多255个字符。"},"maxlength":255}},{"id": "shopcategory-cat_sort", "name": "ShopCategory[cat_sort]", "attribute": "cat_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},]
-    </script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             var validator = $("#form1").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -185,13 +193,13 @@
                 }
                 //加载提示
                 $.loading.start();
-
                 var url = $("#form1").attr("action");
                 var data = $("#form1").serializeJson();
                 $.post(url, data, function(result) {
                     if (result.code == 0) {
-                        $.msg(result.message);
-                        $.go('list');
+                        $.msg(result.message, function() {
+                            $.go('list');
+                        });
                     } else {
                         $.msg(result.message, {
                             time: 5000
@@ -200,7 +208,18 @@
                 }, "json").always(function() {
                     $.loading.stop();
                 });
-
+            });
+            $("#cat_image_container").imagegroup({
+                host: '{{ get_oss_host() }}',
+                size: 1,
+                gallery: true,
+                values: [''],
+                callback: function(data) {
+                    $("#shopcategory-cat_image").val(data.path);
+                },
+                remove: function(value, values) {
+                    $("#shopcategory-cat_image").val('');
+                }
             });
         });
     </script>

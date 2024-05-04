@@ -11,7 +11,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form method="post" action="" id="form" class="form-horizontal" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <div class="simple-form-field">
                 <div class="form-group">
                     <label for="text4" class="col-sm-4 control-label">

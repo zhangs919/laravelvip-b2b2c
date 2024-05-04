@@ -39,7 +39,8 @@
                         <div class="hot-message">
 
                             @foreach($v as $vv)
-                            <a href="http://www.b2b2c.yunmall.laravelvip.com/article/list?aid=57,56,55,58" title="{{ $vv['title'] }}">{{ $vv['title'] }}</a>
+{{--                            <a href="/article/list?aid=57,56,55,58" title="{{ $vv['title'] }}">{{ $vv['title'] }}</a>--}}
+                            <a href="/news/{{ $vv['article_id'] }}.html" title="{{ $vv['title'] }}">{{ $vv['title'] }}</a>
                             @endforeach
 
                         </div>
@@ -68,24 +69,24 @@
 </div>
 
 <script type="text/javascript">
-    function comments_scroll() {
-        var liLen = $('.hot ul li').length;
-        var num3 = 0;
-        $('.hot ul').append($('.hot ul').html());
-        function autoplay() {
-            if (num3 > liLen) {
-                num3 = 1;
-                $('.hot ul').css('top', 0);
-            }
-            $('.hot ul').stop().animate({
-                'top': -60 * num3
-            }, 500);
-            num3++;
-        }
-        var mytime = setInterval(autoplay, 5000)
-    }
-    comments_scroll();
+    // function comments_scroll() {
+    //     var liLen = $('.hot ul li').length;
+    //     var num3 = 0;
+    //     $('.hot ul').append($('.hot ul').html());
+    //     function autoplay() {
+    //         if (num3 > liLen) {
+    //             num3 = 1;
+    //             $('.hot ul').css('top', 0);
+    //         }
+    //         $('.hot ul').stop().animate({
+    //             'top': -60 * num3
+    //         }, 500);
+    //         num3++;
+    //     }
+    //     var mytime = setInterval(autoplay, 5000)
+    // }
+    // comments_scroll();
 </script>
 <script type="text/javascript">
-    $.imgloading.loading();
+    // $.imgloading.loading();
 </script>

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Backend
 {
-//    private $title;
 
     private $links = [
         ['url' => 'mall/payment/list', 'text' => '列表'],
@@ -21,12 +20,15 @@ class PaymentController extends Backend
     protected $payment;
     protected $tools;
 
-    public function __construct()
+    public function __construct(
+        PaymentRepository $payment
+        ,ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->payment = new PaymentRepository();
-        $this->tools = new ToolsRepository();
+        $this->payment = $payment;
+        $this->tools = $tools;
     }
 
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 
 use App\Models\AdminNode;
-use App\Models\AdminRole;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\AdminRoleRepository;
 use App\Services\Tree;
@@ -21,7 +20,10 @@ class RoleController extends Backend
 
     protected $admin_role;
 
-    public function __construct(Tree $tree, AdminRoleRepository $adminRole)
+    public function __construct(
+        Tree $tree
+        , AdminRoleRepository $adminRole
+    )
     {
         parent::__construct();
 
@@ -90,7 +92,6 @@ class RoleController extends Backend
             $info = $this->admin_role->getById($id);
             view()->share('info', $info);
             //解析已有权限
-//            $auth_codes = unserialize(backend_decrypt($info->auth_codes, MD5_KEY.md5($info->role_name)));
             $auth_codes = unserialize(backend_decrypt($info->auth_codes, MD5_KEY));
 
             if (!$auth_codes) {
@@ -130,20 +131,15 @@ class RoleController extends Backend
     public function saveData(Request $request)
     {
         $post = $request->post('RoleModel');
-
         $permission = $request->post('auth_codes');
-
 
         if (!empty($post['role_id'])) {
             // 编辑
-            $auth_info = $this->admin_role->getById($post['role_id']);
-//            $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY.md5($auth_info->role_name));
-            $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY);
+            $post['auth_codes'] = backend_encrypt(serialize($permission), MD5_KEY);
             $ret = $this->admin_role->update($post['role_id'], $post);
             $msg = '角色编辑';
         }else {
             // 添加
-//            $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY.md5($post['role_name']));
             $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY);
             $ret = $this->admin_role->store($post);
             $msg = '角色添加';
@@ -154,6 +150,8 @@ class RoleController extends Backend
             return result(-1, null, $msg.'失败');
         }
         // success
+        admin_log($msg.'成功 。ID：'.$ret->role_id);
+
         return result(0, null, $msg.'成功');
     }
 

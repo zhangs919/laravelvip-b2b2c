@@ -19,7 +19,7 @@
     <tr>
         <td>
             <div class="userPicBox pull-left m-r-10">
-                <img src="{{ $v->shop_image ?? get_image_url(sysconf('default_shop_image')) }}" class="user-avatar" />
+                <img src="{{ get_image_url($v->shop_image, 'shop_image') }}" class="user-avatar" />
             </div>
             <div class="ng-binding user-message goods-message w180">
                 <span class="name" title="{{ $v->shop_name }}"> 店铺名称：{{ $v->shop_name }}</span>
@@ -45,14 +45,14 @@
         </td>
         <td class="text-c">
             <div class="ng-binding">
-                <span class="text-c">{{ $v->user_name }}</span>
+                <span class="text-c">{{ $v->user->user_name }}</span>
 
             </div>
         </td>
         <td class="text-c">
             <div class="ng-binding">
 							<span class="text-c">
-								<img  src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/shop-credit/2018/06/30/15303638487628.gif"  class="rank" title="一星" data-toggle="tooltip" data-placement="auto bottom" height="16" />
+								<img  src="{{ get_image_url($v->credit_img) }}"  class="rank" title="{{ $v->credit_name }}" data-toggle="tooltip" data-placement="auto bottom" height="16" />
 							</span>
                 <span class="text-c">{{ $v->credit }} 分</span>
             </div>
@@ -71,35 +71,35 @@
                             <div class="dt">
                                 <span>描述：</span>
                             </div>
-                            <div class="dd text-l">5.00分</div>
+                            <div class="dd text-l">{{ $v->desc_score }}分</div>
                         </li>
                         <li>
                             <div class="dt">
                                 <span>服务：</span>
                             </div>
-                            <div class="dd text-l">5.00分</div>
+                            <div class="dd text-l">{{ $v->service_score }}分</div>
                         </li>
                         <li>
                             <div class="dt">
                                 <span>发货：</span>
                             </div>
-                            <div class="dd text-l">5.00分</div>
+                            <div class="dd text-l">{{ $v->send_score }}分</div>
                         </li>
                         <li>
                             <div class="dt">
                                 <span>物流：</span>
                             </div>
-                            <div class="dd text-l">5.00分</div>
+                            <div class="dd text-l">{{ $v->logistics_score }}分</div>
                         </li>
                     </ul>
                 </div>
             </div>
         </td>
-        <td>{{ format_time(strtotime($v->begin_time), 'Y-m-d') }}</td>
+        <td>{{ format_time(strtotime($v->open_time), 'Y-m-d') }}</td>
         <td>
             <div class="ng-binding">
-                <span>会员数量：1</span>
-                <span>订单数量：0</span>
+                <span>会员数量：{{ $v->member_count }}</span>
+                <span>订单数量：{{ $v->order_info_count }}</span>
             </div>
         </td>
         <td class="text-c">
@@ -136,17 +136,11 @@
             </div>
         </td>
         <td class="handle">
-
             <a href="{{ route('pc_shop_home', ['shop_id'=>$v->shop_id]) }}" target="_blank">查看店铺</a>
-
-
             <span>|</span>
             <a href="edit?id={{ $v->shop_id }}&is_supply=0">编辑</a>
             <span>|</span>
             <a href="javascript:void(0);" data-shop-id="{{ $v->shop_id }}" data-shop-name="{{ $v->shop_name }}" class="del border-none">删除</a>
-
-
-
         </td>
     </tr>
     @endforeach

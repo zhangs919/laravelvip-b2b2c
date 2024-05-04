@@ -15,13 +15,17 @@ class ProfileController extends UserCenter
     protected $userReal;
     protected $tools;
 
-    public function __construct()
+    public function __construct(
+        UserRepository $userRep
+        ,UserRealRepository $userReal
+        ,ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->userRep = new UserRepository();
-        $this->userReal = new UserRealRepository();
-        $this->tools = new ToolsRepository();
+        $this->userRep = $userRep;
+        $this->userReal = $userReal;
+        $this->tools = $tools;
     }
 
     public function profile(Request $request)
@@ -49,10 +53,15 @@ class ProfileController extends UserCenter
         $title = $request->post('title');
         $update[$item] = $value;
         $ret = $this->userRep->update($this->user_id, $update);
+        $data = [
+            'aa' => $item == 'sex' ? $value : $this->user->sex,
+            'nickname' => $item == 'nickname' ? $value : $this->user->nickname,
+            'sex' => $item == 'sex' ? str_replace([0,1,2], ['保密','男','女'], $value) : str_replace([0,1,2], ['保密','男','女'], $this->user->sex)
+        ];
         if ($ret === false) {
             result(-1, null, '设置'.$title.'失败');
         }
-        return result(0, null, '设置'.$title.'成功');
+        return result(0, $data, '设置'.$title.'成功');
     }
 
     /**
@@ -65,7 +74,7 @@ class ProfileController extends UserCenter
     {
         $address_code = $request->post('address_code'); // 地址编号
         $userUpdate = $request->post('UserModel');
-        $userUpdate['address_code'] = $address_code;
+        $userUpdate['address_now'] = $address_code;
         $userUpdate['birthday'] = format_time($userUpdate['birthday'], 'Y-m-d');
         $ret = $this->userRep->update($this->user_id, $userUpdate);
         if ($ret === false) {
@@ -114,7 +123,7 @@ class ProfileController extends UserCenter
     public function clientValidate(Request $request)
     {
         $result = $this->userRep->clientValidate($request, 'UserModel', $this->user_id);
-        if (!$result['code']) {
+        if (isset($result['code']) && !$result['code']) {
             return result(-1, '', $result['message']);
         }
         return result(0);

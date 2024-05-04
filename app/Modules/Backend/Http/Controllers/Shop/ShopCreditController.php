@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Shop;
+namespace App\Modules\Backend\Http\Controllers\Shop;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -21,12 +21,15 @@ class ShopCreditController extends Backend
 
     protected $tools;
 
-    public function __construct()
+    public function __construct(
+        ShopCreditRepository $shopCredit
+        ,ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->shopCredit = new ShopCreditRepository();
-        $this->tools = new ToolsRepository();
+        $this->shopCredit = $shopCredit;
+        $this->tools = $tools;
 
     }
 

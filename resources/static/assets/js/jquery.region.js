@@ -1,12 +1,6 @@
 /**
  * 地区公共组件
- * 
- * ============================================================================ 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。 ============================================================================
- * 
- * @author: niqingyang
- * @version 1.0
- * @date 2016-4-12
- * @link http://www.68ecshop.com
+ *
  */
 (function($) {
 
@@ -188,7 +182,11 @@
 				}
 
 				// 移除
-				$(container).find("." + settings.widget_class + "-init").remove();
+				if(target == null){
+					$(container).empty();
+				}else{
+					$(container).find("." + settings.widget_class + "-init").remove();
+				}
 
 				if (target != null && $.isFunction(settings.before_change)) {
 					settings.before_change.call(settings, target);

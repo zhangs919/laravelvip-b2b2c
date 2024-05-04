@@ -10,7 +10,6 @@ class ListController extends Store
 
     private $links = [
         ['url' => 'goods/list/list', 'text' => '网点商品列表'],
-//        ['url' => 'goods/list/list2', 'text' => '网点商品列表'],
     ];
 
     protected $goods;

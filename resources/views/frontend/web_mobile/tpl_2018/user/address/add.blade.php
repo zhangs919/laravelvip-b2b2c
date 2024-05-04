@@ -2,31 +2,28 @@
 
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/css/user.css?v=20180702"/>
-@stop
-
-{{--header_js--}}
-@section('header_js')
 
 @stop
 
 
 
 @section('content')
-
     <!-- 地区选择器 -->
-    <script src="/assets/d2eace91/js/jquery.region.mobile.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <header>
+    <header class="header-top-nav">
         <div class="header">
             <div class="header-left">
-                <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
+                <a class="sb-back" href="{{ $back_url ?? 'javascript:history.back(-1)' }}" title="返回">
+                    <i class="iconfont">&#xe606;</i>
+                </a>
             </div>
             <div class="header-middle">收货地址管理</div>
             <div class="header-right">
+                <!-- 控制展示更多按钮 -->
                 <aside class="show-menu-btn">
                     <div class="show-menu" id="show_more">
-                        <a href="javascript:;"></a>
+                        <a href="javascript:void(0);">
+                            <i class="iconfont">&#xe6cd;</i>
+                        </a>
                     </div>
                 </aside>
             </div>
@@ -34,7 +31,7 @@
     </header>
     <div class="addressmone1">
         <form id="UserAddressModel" class="form-horizontal" name="UserAddressModel" action="/user/address/add.html?back_url={{ $_SERVER['HTTP_REFERER'] ?? '' }}" method="post">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="address_lng" class="address_lng" name="UserAddressModel[address_lng]">
 
@@ -85,13 +82,12 @@
                     <div class="form-group form-group-spe" >
                         <dl>
                             <dt>
-                                <span>收货地址：</span>
+                                <span>收货城市：</span>
                             </dt>
                             <dd>
                                 <div class="form-control-box">
-
-                                    <a href="javascript:void(0)" class="address-btn"></a>
-                                    <div class="region-chooser-container region-chooser region-box"></div>
+                                    <i class="iconfont icon-dizhi2"></i>
+                                    <div class="region-chooser-container region-chooser region-box">正在获取当前地区</div>
 
                                     <input type="hidden" id="region_code" name="UserAddressModel[region_code]">
                                     <span id="region_code_containter" class="select"></span>
@@ -108,11 +104,10 @@
                     <div class="form-group form-group-spe" >
                         <dl>
                             <dt>
-                                <span>详细地址：</span>
+                                <span>获取定位：</span>
                             </dt>
                             <dd>
                                 <div class="form-control-box">
-
 
                                     <div class="address-detail SZY-POSITION">
 
@@ -124,7 +119,6 @@
                                     <!-- <a href="javascript:void(0);" class="btn-finish hide">完成</a> -->
 
                                 </div>
-
                             </dd>
                         </dl>
                     </div>
@@ -135,11 +129,10 @@
                     <div class="form-group form-group-spe" >
                         <dl>
                             <dt>
-                                <span>门牌号：</span>
+                                <span>详细地址：</span>
                             </dt>
                             <dd>
                                 <div class="form-control-box">
-
 
                                     <input type="text" id="useraddressmodel-address_house" class="address_house" name="UserAddressModel[address_house]" placeholder="例：5号楼301室">
 
@@ -184,8 +177,7 @@
                 <a class="btn save-btn-only" href="javascript:void(0);" id="btn_validate">确定</a>
             </div>
 
-        </form>
-    </div>
+        </form></div>
     <section class="mask-div" style="display: none;"></section>
     <!--地图定位弹出层 显示增加show-->
     <div class="map-popup-layer">
@@ -215,18 +207,59 @@
         </div>
     </div>
     <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 表单验证 -->
+    <!-- GPS获取坐标 -->
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.6&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+    <!-- jweixin -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script id="client_rules" type="text">
+[{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"收货城市不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"required":true,"messages":{"required":"用户ID不能为空。"}}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"required":true,"messages":{"required":"收货人不能为空。"}}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"手机号码不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户ID必须是整数。"}}},{"id": "useraddressmodel-real", "name": "UserAddressModel[real]", "attribute": "real", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否实名认证必须是整数。"}}},{"id": "useraddressmodel-address_name", "name": "UserAddressModel[address_name]", "attribute": "address_name", "rules": {"string":true,"messages":{"string":"地址别名必须是一条字符串。","maxlength":"地址别名只能包含至多60个字符。","match":"地址别名中含有非法字符"},"maxlength":60,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"邮件地址必须是一条字符串。","maxlength":"邮件地址只能包含至多60个字符。","match":"邮件地址中含有非法字符"},"maxlength":60,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-address_lng", "name": "UserAddressModel[address_lng]", "attribute": "address_lng", "rules": {"string":true,"messages":{"string":"地址经度必须是一条字符串。","maxlength":"地址经度只能包含至多60个字符。","match":"地址经度中含有非法字符"},"maxlength":60,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-address_lat", "name": "UserAddressModel[address_lat]", "attribute": "address_lat", "rules": {"string":true,"messages":{"string":"地址纬度必须是一条字符串。","maxlength":"地址纬度只能包含至多60个字符。","match":"地址纬度中含有非法字符"},"maxlength":60,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"string":true,"messages":{"string":"收货人必须是一条字符串。","maxlength":"收货人只能包含至多30个字符。","match":"收货人中含有非法字符"},"maxlength":30,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"string":true,"messages":{"string":"手机号码必须是一条字符串。","maxlength":"手机号码只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"固定电话必须是一条字符串。","maxlength":"固定电话只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"string":true,"messages":{"string":"收货城市必须是一条字符串。","maxlength":"收货城市只能包含至多255个字符。"},"maxlength":255}},{"id": "useraddressmodel-card_id", "name": "UserAddressModel[card_id]", "attribute": "card_id", "rules": {"string":true,"messages":{"string":"身份证号必须是一条字符串。","maxlength":"身份证号只能包含至多255个字符。"},"maxlength":255}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多50个字符。","match":"详细地址中含有非法字符"},"maxlength":50,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-address_house", "name": "UserAddressModel[address_house]", "attribute": "address_house", "rules": {"string":true,"messages":{"string":"门牌号必须是一条字符串。","maxlength":"门牌号只能包含至多50个字符。","match":"门牌号中含有非法字符"},"maxlength":50,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"string":true,"messages":{"string":"邮编必须是一条字符串。","maxlength":"邮编只能包含至多6个字符。","match":"邮编中含有非法字符"},"maxlength":6,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-address_label", "name": "UserAddressModel[address_label]", "attribute": "address_label", "rules": {"string":true,"messages":{"string":"标签必须是一条字符串。","maxlength":"标签只能包含至多5个字符。","match":"标签中含有非法字符"},"maxlength":5,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166|191|167)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^0[0-9]{2,3}-[0-9]{7,8}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"固定电话是无效的。"}}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"邮件地址不是有效的邮箱地址。"}}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"match":{"pattern":/^[0-9]{6}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"邮编是无效的。"}}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"region":{"min":3},"messages":{"region":"收货城市 请选择到区/县"}}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
+
+    <!-- 积分消息 -->
+    <!-- 消息提醒 -->
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 第三方流量统计 -->
+    <div style="display: none;"></div>
+    <!-- 底部 _end-->
+    <div style="height: 54px; line-height: 54px" class="handle-spacing"></div>
+    <script src="/assets/d2eace91/min/js/core.min.js"></script>
+    <script src="/js/app.frontend.mobile.min.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/address.js"></script>
+    <script src="/js/center.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.mobile.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.mobile.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/assets/d2eace91/js/geolocation/amap.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
         var mapHeight=($('.map-list').offset().top-45)/2-48;
         var mapWidth=$('.map-list').offset().left/2+50;
-        console.info(mapHeight);
-        console.info(mapWidth);
         $('.address-fixed-layer').css({
             "top":mapHeight,
             "left":mapWidth,
         });
-    </script>
-
-
-    <script type="text/javascript">
+        //
         //地址添加成功提示
         function TipsShow() {
             $(".tip_layer").removeClass('hide').addClass('show');
@@ -237,98 +270,155 @@
         function TipsHide() {
             $(".tip_layer").removeClass('show').addClass('hide');
         }
-    </script>
-
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180813"></script>
-    <!-- GPS获取坐标 -->
-
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.6&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
-    <script src="/assets/d2eace91/js/geolocation/amap.js?v=20180813"></script>
-    <script id="client_rules" type="text">
-[{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"required":true,"messages":{"required":"收货地址不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"required":true,"messages":{"required":"用户ID不能为空。"}}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"required":true,"messages":{"required":"收货人不能为空。"}}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"required":true,"messages":{"required":"详细地址不能为空。"}}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"手机号码不能为空。"}}},{"id": "useraddressmodel-user_id", "name": "UserAddressModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户ID必须是整数。"}}},{"id": "useraddressmodel-address_name", "name": "UserAddressModel[address_name]", "attribute": "address_name", "rules": {"string":true,"messages":{"string":"地址别名必须是一条字符串。","maxlength":"地址别名只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-consignee", "name": "UserAddressModel[consignee]", "attribute": "consignee", "rules": {"string":true,"messages":{"string":"收货人必须是一条字符串。","maxlength":"收货人只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"邮件地址必须是一条字符串。","maxlength":"邮件地址只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-address_lng", "name": "UserAddressModel[address_lng]", "attribute": "address_lng", "rules": {"string":true,"messages":{"string":"地址经度必须是一条字符串。","maxlength":"地址经度只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-address_lat", "name": "UserAddressModel[address_lat]", "attribute": "address_lat", "rules": {"string":true,"messages":{"string":"地址纬度必须是一条字符串。","maxlength":"地址纬度只能包含至多60个字符。"},"maxlength":60}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"string":true,"messages":{"string":"手机号码必须是一条字符串。","maxlength":"手机号码只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"string":true,"messages":{"string":"固定电话必须是一条字符串。","maxlength":"固定电话只能包含至多20个字符。"},"maxlength":20}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"string":true,"messages":{"string":"收货地址必须是一条字符串。","maxlength":"收货地址只能包含至多255个字符。"},"maxlength":255}},{"id": "useraddressmodel-address_detail", "name": "UserAddressModel[address_detail]", "attribute": "address_detail", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多50个字符。"},"maxlength":50}},{"id": "useraddressmodel-address_house", "name": "UserAddressModel[address_house]", "attribute": "address_house", "rules": {"string":true,"messages":{"string":"门牌号必须是一条字符串。","maxlength":"门牌号只能包含至多50个字符。"},"maxlength":50}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"string":true,"messages":{"string":"邮编必须是一条字符串。","maxlength":"邮编只能包含至多6个字符。"},"maxlength":6}},{"id": "useraddressmodel-address_label", "name": "UserAddressModel[address_label]", "attribute": "address_label", "rules": {"string":true,"messages":{"string":"标签必须是一条字符串。","maxlength":"标签只能包含至多5个字符。"},"maxlength":5}},{"id": "useraddressmodel-mobile", "name": "UserAddressModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "useraddressmodel-tel", "name": "UserAddressModel[tel]", "attribute": "tel", "rules": {"match":{"pattern":/^0[0-9]{2,3}-[0-9]{7,8}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"固定电话是无效的。"}}},{"id": "useraddressmodel-email", "name": "UserAddressModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"邮件地址不是有效的邮箱地址。"}}},{"id": "useraddressmodel-zipcode", "name": "UserAddressModel[zipcode]", "attribute": "zipcode", "rules": {"match":{"pattern":/^[0-9]{6}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"邮编是无效的。"}}},{"id": "useraddressmodel-region_code", "name": "UserAddressModel[region_code]", "attribute": "region_code", "rules": {"region":{"min":5},"messages":{"region":"收货地址 请选择到街道/村"}}},]
-</script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             var address_selected = false;
             var validator = $("#UserAddressModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
             $.validator.addRules($("#client_rules").html());
-
             $("#close_adr_btn").click(function() {
-                window.location.href = "/user/address.html";
+                $.go("/user/address.html");
             });
-
             var adcode = 0;
-
             var region_code_item = '';
-
-            //
             var position = null;
+            var city_code = '';
+            var address_region_code  = '0';
+            var addresspicker = null;
+            var regionselector = null;
             //
-
-            // 地址选择器
-            var addresspicker = $("#map_container").addresspicker({
-                // 当前位置
-                position: position,
-                search_loading: false,
-                open_window: false,
-                market_label: true,
-                // 自动提示
-                input: "map_search",
-                // 当前地区编码
-                city: "",
-
-                // 定位当前位置
-                geolocation_callback: function(data, region_code, address) {
-
-                    if ("" == "") {
-                        // 重新加载
-                        $('#address_lng').val(data.position.lng);
-                        $('#address_lat').val(data.position.lat);
-                        // 重新加载
-                        if (regionselector && region_code_item != region_code) {
-                            regionselector.is_loading = true;
-                            regionselector.value = region_code;
-                            regionselector.is_reload = true;
-                            regionselector.reload();
-                            region_code_item = region_code;
-                        }
-                    }
-                },
-                // 选择自动提示的信息搜索后
-                input_callback: function(e) {
-                    if (e.poi.location) {
-                        this.searchNearBy([e.poi.location.lng, e.poi.location.lat], 1000);
-                        $('.address_lng').val(e.poi.location.lng);
-                        $('.address_lat').val(e.poi.location.lat);
-                        $('.address-detail').html(e.poi.name);
-                        $('#address_detail').val(e.poi.name);
-                        addresspicker.getRegionCode(e.poi.location, function(region_code, region_name) {
-                            // 重新加载
-                            if (regionselector) {
-                                regionselector.value = region_code;
-                                regionselector.is_reload = true;
-                                regionselector.reload();
+            //获取坐标
+            $.geolocation({
+                callback: function(data) {
+                    if(data == [] || data == '' || data == null){
+                        $('.SZY-POSITION').hide();
+                        $('#address_detail').attr('type','text');
+                        regionselector = $(".region-chooser-container").regionchooser({
+                            value: '0',
+                            sale_cope: 0,
+                            list_show: true,
+                            change: function(value, names, is_last) {
+                                if (this.is_reload) {
+                                    this.is_reload = false;
+                                }
+                                if (names == '' || !names) {
+                                    $.msg('所选地区不在地区列表中，请联系系统管理员', {
+                                        time: 5000
+                                    });
+                                } else {
+                                    $("#region_code").val(value);
+                                    $('#address_lng').val(0);
+                                    $('#address_lat').val(0);
+                                    $("#region_code").data("is_last", is_last);
+                                    $("#region_code").valid();
+                                    if(value == 0){
+                                        $("#region_code").val('');
+                                    }
+                                }
+                                if (value != '0') {
+                                    adcode = value.split(",", 3).join("");
+                                }
+                                // 设置文字
+                                this.setLabel($.trim(names.join(" ")));
                             }
                         });
-                        $('.map-popup-layer').removeClass('show');
-                        $('.suggestion-wrap').addClass('hide');
-                        address_selected = true;
-                    }else{
-                        $.msg('地址坐标错误!');
-                        $('.map-popup-layer').addClass('show');
-                        $('.suggestion-wrap').addClass('hide');
+                        return;
                     }
-                },
+                    position = {
+                        lng: data.lng,
+                        lat: data.lat
+                    };
+                    if(data.region_code != '' && data.region_code != 'undefined' && data.region_code != undefined){
+                        city_code = data.region_code.split(',').slice(0,2).join('');
+                        address_region_code = data.region_code;
+                    }
+                    addresspicker = $("#map_container").addresspicker({
+                        // 当前位置
+                        position: position,
+                        search_loading: false,
+                        open_window: false,
+                        market_label: true,
+                        // 自动提示
+                        input: "map_search",
+                        // 当前地区编码
+                        city: city_code,
+                        // 定位当前位置
+                        geolocation_callback: function(data, region_code, address) {
+                            if ("" == "") {
+                                // 重新加载
+                                $('#address_lng').val(data.position.lng);
+                                $('#address_lat').val(data.position.lat);
+                                // 重新加载
+                                if (regionselector && region_code_item != region_code) {
+                                    regionselector.is_loading = true;
+                                    regionselector.value = region_code;
+                                    regionselector.is_reload = true;
+                                    regionselector.reload();
+                                    region_code_item = region_code;
+                                }
+                            }
+                        },
+                        // 选择自动提示的信息搜索后
+                        input_callback: function(e) {
+                            if (e.poi.location) {
+                                this.searchNearBy([e.poi.location.lng, e.poi.location.lat], 1000);
+                                $('.address_lng').val(e.poi.location.lng);
+                                $('.address_lat').val(e.poi.location.lat);
+                                $('.address-detail').html(e.poi.name);
+                                $('#address_detail').val(e.poi.name);
+                                addresspicker.getRegionCode(e.poi.location, function(region_code, region_name) {
+                                    // 重新加载
+                                    if (regionselector) {
+                                        regionselector.value = region_code;
+                                        regionselector.is_reload = true;
+                                        regionselector.reload();
+                                    }
+                                });
+                                $('.map-popup-layer').removeClass('show');
+                                $('.suggestion-wrap').addClass('hide');
+                                address_selected = true;
+                            }else{
+                                $.msg('地址坐标错误!');
+                                $('.map-popup-layer').addClass('show');
+                                $('.suggestion-wrap').addClass('hide');
+                            }
+                        },
+                    });
+                    regionselector = $(".region-chooser-container").regionchooser({
+                        value: address_region_code,
+                        sale_cope: 0,
+                        list_show: true,
+                        change: function(value, names, is_last) {
+                            if (this.is_reload) {
+                                this.is_reload = false;
+                            }
+                            if (names == '' || !names) {
+                                $.msg('所选地区不在地区列表中，请联系系统管理员', {
+                                    time: 5000
+                                });
+                            } else {
+                                $("#region_code").val(value);
+                                $("#region_code").data("is_last", is_last);
+                                $("#region_code").valid();
+                            }
+                            if (value != '0') {
+                                adcode = value.split(",", 3).join("");
+                            }
+                            // 设置文字
+                            this.setLabel($.trim(names.join(" ")));
+                        },
+                        show_callback: function() {
+                        },
+                        hide_callback: function() {
+                        }
+                    });
+                }
             });
-
+            //
             $(".confirm-btn").off("click");
             $('body').on('click','.confirm-btn',function(){
-                $('.address_lng').val(addresspicker.position.lng);
-                $('.address_lat').val(addresspicker.position.lat);
+                $('#address_lng').val(addresspicker.position.lng);
+                $('#address_lat').val(addresspicker.position.lat);
                 $('.address-detail').html(addresspicker.label_name);
                 $('#address_detail').val(addresspicker.label_name);
                 addresspicker.searchNearBy($('#address_detail').val(),addresspicker.marker.getPosition(), 1000);
@@ -343,81 +433,44 @@
                 });
                 $('.map-popup-layer').removeClass('show');
                 address_selected = true;
-
-            });
-
-
-            var address_region_code  = '0';
-
-            var regionselector = $(".region-chooser-container").regionchooser({
-                value: address_region_code,
-                sale_cope: 0,
-                list_show: true,
-                change: function(value, names, is_last) {
-                    if (this.is_reload) {
-                        this.is_reload = false;
-                    }
-
-                    if (names == '' || !names) {
-                        $.msg('所选地区不在地区列表中，请联系系统管理员', {
-                            time: 5000
-                        });
-                    } else {
-                        $("#region_code").val(value);
-                        $("#region_code").data("is_last", is_last);
-                        $("#region_code").valid();
-                    }
-                    if (value != '0') {
-                        adcode = value.split(",", 3).join("");
-                    }
-                    // 设置文字
-                    this.setLabel($.trim(names.join(" ")));
-                },
-                show_callback: function() {
-
-                },
-                hide_callback: function() {
-
-                }
             });
             $("#map_search").focus(function() {
                 //$('.width-mid').addClass('init-status');
                 $('.suggestion-wrap').removeClass('hide');
             });
-
             var waiting = false;
-
             $("#btn_validate").click(function() {
                 if (!validator.form()) {
                     return false;
                 }
-                if (address_selected == false) {
+                if (address_selected == false && addresspicker) {
                     map = addresspicker.map;
-                    $(".address_lng").val(map.getCenter().lng);
-                    $(".address_lat").val(map.getCenter().lat);
+                    $("#address_lng").val(map.getCenter().lng);
+                    $("#address_lat").val(map.getCenter().lat);
                 }
                 var data = $("#UserAddressModel").serializeJson();
                 var action = $("#UserAddressModel").attr('action');
                 $.loading.start();
                 $.post(action, data, function(result) {
                     if (result.code == 0) {
-                        $.msg(result.message);
-                        window.location.href = "/user/address.html";
+                        $.msg(result.message,{
+                            icon_type: 1
+                        },function(){
+                            $.go('{{ $back_url ?? '/user/address.html' }}');
+                        });
                     } else {
                         $.msg(result.message);
                     }
                     $.loading.stop();
                 }, "json");
             });
-
             // 选择地区
             $('body').on('click', '.address-list li', function() {
-                $('.address_lng').val($(this).data('lng'));
-                $('.address_lat').val($(this).data('lat'));
+                $('#address_lng').val($(this).data('lng'));
+                $('#address_lat').val($(this).data('lat'));
                 $('.address-detail').html($(this).data('name'));
                 $('#address_detail').val($(this).data('name'));
                 addresspicker.addMarker([$(this).data('lng'), $(this).data('lat')]);
-
                 addresspicker.getRegionCode([$(this).data('lng'), $(this).data('lat')], function(region_code, region_name) {
                     // 重新加载
                     if (regionselector && region_code_item != region_code) {
@@ -429,20 +482,19 @@
                 });
                 $('.map-popup-layer').removeClass('show');
                 address_selected = true;
-
             });
-
             // 显示地图控件
             $('.SZY-POSITION').click(function() {
+                if(addresspicker == null){
+                    return;
+                }
                 $('.SZY-MOBILE-ADDRESS-LIST').html('<div class="more-loader-spinner"><div class="is-loading"><div class="loader-img"><div></div></div><a class="get-more">数据加载中...</a></div></div>');
                 $('.map-popup-layer').addClass('show');
                 if(adcode == 0){
                     adcode = address_region_code.split(",", 3).join("");
                 }
                 addresspicker.searchNearBy($('#address_detail').val(),addresspicker.marker.getPosition(), 1000, adcode);
-
             });
-
             $('.cancel-btn').click(function() {
                 $('#address_search').val('');
                 $('.map-popup-layer').addClass('show');
@@ -454,7 +506,6 @@
                 $('.map-popup-layer').removeClass('show');
                 $('.suggestion-wrap').addClass('hide');
             }
-
             //input验证
             $("input").watch();
             $('.address-label span').click(function(){
@@ -473,11 +524,8 @@
                         $(this).find('input').focus();
                     }
                 }
-
                 $(this).addClass('current').siblings().removeClass('current');
-
             });
-
             $('#useraddressmodel-address_label').blur(function(){
                 if($(this).val() != ''){
                     $(this).parent().find('font').html($(this).val());
@@ -486,7 +534,6 @@
                 }
                 $(this).attr('type','hidden');
             });
-
             $('.address-fixed-layer').click(function(){
                 if($('body').find('.SZY-MOBILE-ADDRESS-LIST li[class="current"]').length > 0){
                     $('body').find('.SZY-MOBILE-ADDRESS-LIST li[class="current"]').click();
@@ -495,50 +542,26 @@
                 }
             });
         });
-    </script>
+        //
+        $().ready(function () {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('7272') }}",
+                type: "add_point_set"
+            });
+        });
 
-
-    <script type="text/javascript">
-        $().ready(function() {
-
-            /*弹出消息*/
-            @if(!empty(session('layerMsg')))
-            var status = '{{ session()->get('layerMsg.status') }}';
-            var msg = '{{ session()->get('layerMsg.msg') }}';
-            switch (status) {
-                case 'success':
-                    $.msg(msg);
-                    break;
-                case 'error':
-                    $.msg(msg, function () {
-                        // 关闭后的操作
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
                     });
-                    break;
-                case 'info':
-                    $.msg(msg)
-                    break;
-                case 'warning':
-                    $.msg(msg, function () {
-                        // 关闭后的操作
-                    });
-                    break;
+                }
             }
-            // $.msg('设置成功');
-            @endif
-        })
+        }
+        //
     </script>
-    <script src="/js/jquery.fly.min.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
-    <!-- 第三方流量统计 -->
-    <div style="display: none;"></div>
-    <!-- 底部 _end-->
 @stop

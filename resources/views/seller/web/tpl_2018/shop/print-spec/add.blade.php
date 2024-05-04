@@ -10,10 +10,10 @@
 @section('content')
 
     <form id="PrintSpecModel" class="form-horizontal" name="PrintSpecModel" action="/shop/print-spec/add" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 编号  -->
-            <input type="hidden" id="printspecmodel-id" class="form-control" name="PrintSpecModel[id]" value="{{ $info->id }}">
+            <input type="hidden" id="printspecmodel-id" class="form-control" name="PrintSpecModel[id]" value="{{ $info->id ?? '' }}">
             <!-- 打印规格 -->
             <div class="simple-form-field" >
                 <div class="form-group">
@@ -119,7 +119,10 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "printspecmodel-print_spec", "name": "PrintSpecModel[print_spec]", "attribute": "print_spec", "rules": {"required":true,"messages":{"required":"打印规格不能为空。"}}},{"id": "printspecmodel-shop_id", "name": "PrintSpecModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "printspecmodel-printer", "name": "PrintSpecModel[printer]", "attribute": "printer", "rules": {"required":true,"messages":{"required":"打印机名称不能为空。"}}},{"id": "printspecmodel-is_default", "name": "PrintSpecModel[is_default]", "attribute": "is_default", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否默认必须是整数。"}}},{"id": "printspecmodel-shop_id", "name": "PrintSpecModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "printspecmodel-print_spec", "name": "PrintSpecModel[print_spec]", "attribute": "print_spec", "rules": {"string":true,"messages":{"string":"打印规格必须是一条字符串。","maxlength":"打印规格只能包含至多20个字符。"},"maxlength":20}},{"id": "printspecmodel-printer", "name": "PrintSpecModel[printer]", "attribute": "printer", "rules": {"string":true,"messages":{"string":"打印机名称必须是一条字符串。","maxlength":"打印机名称只能包含至多255个字符。"},"maxlength":255}},]
+</script>
 @stop
 
 
@@ -133,16 +136,17 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/validate/jquery.metadata.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=202003261806"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180919"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[{"id": "printspecmodel-print_spec", "name": "PrintSpecModel[print_spec]", "attribute": "print_spec", "rules": {"required":true,"messages":{"required":"打印规格不能为空。"}}},{"id": "printspecmodel-shop_id", "name": "PrintSpecModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "printspecmodel-printer", "name": "PrintSpecModel[printer]", "attribute": "printer", "rules": {"required":true,"messages":{"required":"打印机名称不能为空。"}}},{"id": "printspecmodel-is_default", "name": "PrintSpecModel[is_default]", "attribute": "is_default", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否默认必须是整数。"}}},{"id": "printspecmodel-shop_id", "name": "PrintSpecModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "printspecmodel-print_spec", "name": "PrintSpecModel[print_spec]", "attribute": "print_spec", "rules": {"string":true,"messages":{"string":"打印规格必须是一条字符串。","maxlength":"打印规格只能包含至多20个字符。"},"maxlength":20}},{"id": "printspecmodel-printer", "name": "PrintSpecModel[printer]", "attribute": "printer", "rules": {"string":true,"messages":{"string":"打印机名称必须是一条字符串。","maxlength":"打印机名称只能包含至多255个字符。"},"maxlength":255}},]
-</script>
+
     <script type="text/javascript">
         $().ready(function() {
             var validator = $("#PrintSpecModel").validate();

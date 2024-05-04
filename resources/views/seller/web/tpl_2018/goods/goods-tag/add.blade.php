@@ -1,10 +1,12 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
-{{--css style page元素同级上面--}}
-@section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=4.0"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=4.0"/>
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
 @stop
 
 {{--content--}}
@@ -13,7 +15,7 @@
     <div class="table-content m-t-30 clearfix pos-r">
 
         <form id="form1" class="form-horizontal" name="GoodsTag" action="/goods/goods-tag/add" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <input type="hidden" id="goodstag-tag_id" class="form-control" name="GoodsTag[tag_id]" value="{{ $info->tag_id ?? '' }}">
             <!-- 标签名称-->
             <div class="simple-form-field" >
@@ -528,7 +530,16 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "goodstag-tag_name", "name": "GoodsTag[tag_name]", "attribute": "tag_name", "rules": {"required":true,"messages":{"required":"标签名称不能为空。"}}},{"id": "goodstag-tag_image", "name": "GoodsTag[tag_image]", "attribute": "tag_image", "rules": {"required":true,"messages":{"required":"Tag Image不能为空。"}}},{"id": "goodstag-sort", "name": "GoodsTag[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "goodstag-add_time", "name": "GoodsTag[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"添加时间必须是整数。"}}},{"id": "goodstag-tag_name", "name": "GoodsTag[tag_name]", "attribute": "tag_name", "rules": {"string":true,"messages":{"string":"标签名称必须是一条字符串。","maxlength":"标签名称只能包含至多50个字符。"},"maxlength":50}},{"id": "goodstag-tag_position", "name": "GoodsTag[tag_position]", "attribute": "tag_position", "rules": {"string":true,"messages":{"string":"标签显示位置必须是一条字符串。","maxlength":"标签显示位置只能包含至多1个字符。"},"maxlength":1}},]
+</script>
+    <script type="text/javascript">
+        // 
+    </script>
+    <script type="text/javascript">
+        // 
+    </script>
 @stop
 
 
@@ -542,32 +553,16 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+    <script src="/assets/d2eace91/js/html2canvas.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20190110"></script>
-    <!-- 在线文本编辑器 -->
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/jquery-ui.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/html2canvas.min.js?v=20190110"></script>
-    <script src="/assets/d2eace91/bootstrap/evol-colorpicker/js/evol.colorpicker.js?v=20190110"></script>
-
-
-    <script type="text/javascript">
-        $().ready(function() {
-            $(".colorpicker").colorpicker();
-        });
-    </script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[{"id": "goodstag-tag_name", "name": "GoodsTag[tag_name]", "attribute": "tag_name", "rules": {"required":true,"messages":{"required":"标签名称不能为空。"}}},{"id": "goodstag-tag_image", "name": "GoodsTag[tag_image]", "attribute": "tag_image", "rules": {"required":true,"messages":{"required":"Tag Image不能为空。"}}},{"id": "goodstag-sort", "name": "GoodsTag[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "goodstag-add_time", "name": "GoodsTag[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"添加时间必须是整数。"}}},{"id": "goodstag-tag_name", "name": "GoodsTag[tag_name]", "attribute": "tag_name", "rules": {"string":true,"messages":{"string":"标签名称必须是一条字符串。","maxlength":"标签名称只能包含至多50个字符。"},"maxlength":50}},{"id": "goodstag-tag_position", "name": "GoodsTag[tag_position]", "attribute": "tag_position", "rules": {"string":true,"messages":{"string":"标签显示位置必须是一条字符串。","maxlength":"标签显示位置只能包含至多1个字符。"},"maxlength":1}},]
-</script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             //悬浮显示上下步骤按钮
             window.onscroll = function() {
@@ -581,9 +576,7 @@
                         $(".bottom-btn").addClass("bottom-btn-fixed");
                     }
                 });
-
             };
-
             //选择形状
             $('.tag-item').click(function() {
                 $('.tag-item').each(function(index, domEle) {
@@ -592,7 +585,6 @@
                 $(this).addClass("selected");
                 preview();
             });
-
             var validator = $("#form1").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
             $.validator.addRules($("#client_rules").html());
@@ -602,7 +594,6 @@
                 }
                 //加载提示
                 $.loading.start();
-
                 var url = $("#form1").attr("action");
                 var data = $("#form1").serializeJson();
                 $.post(url, data, function(result) {
@@ -618,7 +609,6 @@
                         });
                     }
                 }, "json");
-
             });
         });
         //预览
@@ -636,7 +626,6 @@
                         $("#image_show").attr('src', $(this).find('img')[0].src);
                         $("#imgpath").val('/images/superscript/jb' + key + '-' + k + '.png');
                         $("#tag_shape").val(key + '-' + k);
-
                     }
                 });
             }
@@ -646,14 +635,12 @@
                 $("#show_seat").addClass("location" + position);
             }
         }
-    </script>
-    <script type="text/javascript">
+        // 
         $().ready(function() {
             var img = '';
-            if ("{{ $info->self_img ?? 0 }}" == 1) {
-                img = "{{ $info->self_img ? $info->tag_image : '/assets/d2eace91' }}";
+            if ("" == 1) {
+                img = "/assets/d2eace91";
             }
-
             $(".imagegroup_container").each(function() {
                 var imagegorup = $(this).imagegroup({
                     host: "{{ get_oss_host() }}",
@@ -672,7 +659,6 @@
                     }
                 });
             });
-
         });
     </script>
 @stop

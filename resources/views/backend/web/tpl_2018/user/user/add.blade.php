@@ -26,7 +26,7 @@
 @section('content')
 
     <form id="UserModel" class="form-horizontal" name="UserModel" action="/user/user/add?type=0" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
 
             <div class="simple-form-field">

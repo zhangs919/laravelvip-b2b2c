@@ -20,9 +20,10 @@
 // | Description:赠品
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
 use App\Models\Goods;
+use App\Models\GoodsSku;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ActivityCategoryRepository;
 use App\Repositories\ActivityRepository;
@@ -52,15 +53,21 @@ class GiftController extends Seller
     protected $category;
     protected $brand;
 
-    public function __construct()
+    public function __construct(
+        ActivityRepository $activity
+        ,ActivityCategoryRepository $activityCategory
+        ,GoodsRepository $goods
+        ,CategoryRepository $category
+        ,BrandRepository $brand
+    )
     {
         parent::__construct();
 
-        $this->activity = new ActivityRepository();
-        $this->activityCategory = new ActivityCategoryRepository();
-        $this->goods = new GoodsRepository();
-        $this->category = new CategoryRepository();
-        $this->brand = new BrandRepository();
+        $this->activity = $activity;
+        $this->activityCategory = $activityCategory;
+        $this->goods = $goods;
+        $this->category = $category;
+        $this->brand = $brand;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -160,6 +167,7 @@ class GiftController extends Seller
         ];
         $start_time = date('Y-m-d H:i:s', time());
         $end_time = date("Y-m-d H:i:s",strtotime("+7 day"));
+        $goods_list = [];
 
         if ($id) {
             // 更新操作
@@ -325,6 +333,82 @@ class GiftController extends Seller
     }
 
     /**
+     * 商品选择器
+     *
+     * @param Request $request
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function picker(Request $request)
+    {
+        $page_id = make_uuid();
+        $pagination_id = $request->post('page')['page_id'];
+        $output = $request->post('output');
+        $left = $request->post('left');
+        $right = $request->post('right');
+        $goods_status = $request->post('goods_status', 1); // 商品状态
+        $is_sku = $request->post('is_sku', 0); //
+        $is_supply = $request->post('is_supply', null); //
+        $show_store = $request->post('show_store', 0); //
+        $is_enable = $request->post('is_enable', 1); //
+        $goods_audit = $request->post('goods_audit', 1); //
+        $goods_ids = $request->post('goods_ids', []);
+        $sku_ids = $request->post('sku_ids', []);
+
+        // 商品列表
+        $where[] = ['shop_id', seller_shop_info()->shop_id];
+        $where[] = ['goods_status', $goods_status];
+//        $where[] = ['is_sku', $is_sku];
+//        $where[] = ['show_store', $show_store];
+//        $where[] = ['is_enable', $is_enable];
+        $where[] = ['goods_audit', $goods_audit];
+
+        $whereIn = [];
+
+        $tpl = 'picker';
+
+
+
+        $condition = [
+            'where' => $where,
+            'in' => $whereIn,
+            'sortname' => 'goods_id',
+            'sortorder' => 'desc'
+        ];
+        list($list, $total) = $this->goods->getList($condition);
+        $pageHtml = short_pagination($total, 5);
+
+        // 查询商品分类列表（树形）
+        $where = [];
+        $where[] = ['is_show',1];
+        $condition = [
+            'where' => $where,
+            'limit' => 0, // 不分页
+            'sortname' => 'created_at',
+            'sortorder' => 'asc',
+        ];
+        list($category_list, $category_total) = $this->category->getList($condition, '', false, true);
+
+        // 查询品牌
+        $where = [];
+        $where[] = ['is_show',1];
+        $condition = [
+            'where' => $where,
+            'sortname' => 'brand_id',
+            'sortorder' => 'desc',
+            'field' => ['brand_id', 'brand_name']
+        ];
+        list($brand_list, $brand_total) = $this->brand->getList($condition);
+
+        $compact = compact(
+            'page_id', 'pagination_id', 'list', 'pageHtml',
+            'sku_ids', 'goods_ids', 'category_list',
+            'brand_list');
+        $render = view('dashboard.limit-discount.'.$tpl, $compact)->render();
+        return result(0, $render);
+    }
+
+    /**
      * 选中商品时 异步加载商品信息
      *
      * @param Request $request
@@ -334,7 +418,27 @@ class GiftController extends Seller
     public function goodsInfo(Request $request)
     {
         $goods_id = $request->post('goods_id');
-        $goods_info = Goods::where('goods_id',$goods_id)->first();
+        $price_mode = $request->post('price_mode'); // 价格模式 0-统一套餐价 1-自定义规格价
+
+//        $goods_info = Goods::where('goods_id',$goods_id)->first();
+        $goods_info = Goods::where('goods_id', $goods_id)
+            ->select(['goods_id','goods_price','goods_number','goods_name'])->first();
+        $goods_sku_list = GoodsSku::where([['goods_id', $goods_id],['checked',1]])
+            ->select(['sku_id','goods_number','goods_price'])->get()->toArray();
+        $goods_price = [];
+        $price_arr = array_column($goods_sku_list, 'goods_price');
+        $min_price = min($price_arr);
+        $max_price = max($price_arr);
+        if ($min_price == $max_price) {
+            $goods_price = $min_price;
+        } else {
+            $goods_price = "￥{$min_price}-￥{$max_price}";
+        }
+
+        $sku_ids = implode(',', array_column($goods_sku_list, 'sku_id'));
+
+
+
         if (empty($goods_info)) {
             return result(-1, null, '商品ID无效');
         }
@@ -343,7 +447,7 @@ class GiftController extends Seller
         }
 
         // 查询活动分类列表（树形）
-        /*$where = [];
+        $where = [];
         $where[] = ['is_show',1];
         $condition = [
             'where' => $where,
@@ -351,17 +455,11 @@ class GiftController extends Seller
             'sortname' => 'created_at',
             'sortorder' => 'desc',
         ];
-        list($category_data, $category_total) = $this->activityCategory->getList($condition, '', false, true);
+        list($category_list, $category_total) = $this->activityCategory->getList($condition, '', false, true);
 
-        $category_list = [];
-        if (!empty($category_data)) {
-            foreach ($category_data as $v) {
-                $category_list[$v['id']] = $v['title_show'];
-            }
-        }*/
-
-        $render = view('dashboard.gift.goods_info', compact('goods_info', 'category_list'))->render();
+        $render = view('dashboard.gift.goods_info', compact('goods_info', 'category_list', 'price_mode', 'goods_price', 'sku_ids'))->render();
         return result(0, $render, '');
     }
+
 
 }

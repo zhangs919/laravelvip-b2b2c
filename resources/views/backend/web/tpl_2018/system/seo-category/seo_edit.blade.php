@@ -1,6 +1,6 @@
 <div id="{{ $uuid }}">
     <form id="{{ $uuid }}" class="form-horizontal" action="/system/seo-category/seo-edit?cat_id={{ $cat_id }}" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-10 clearfix">
             <div class="simple-form-field">
                 <div class="form-group">

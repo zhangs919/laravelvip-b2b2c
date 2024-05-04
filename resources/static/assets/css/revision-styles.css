@@ -16,7 +16,7 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .application-list h3 { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; }
 .application-list ul { margin-left: -8px; margin-right: -8px; }
 .application-item { float: left; margin-bottom: 20px; text-align: left; }
-.application-item.col-md-3.col-sm-4 { padding-left: 8px; padding-right: 8px; }
+.application-item.col-md-3.col-sm-4 { text-align: left; padding-left: 8px; padding-right: 8px; }
 .application-item a { display: block; padding: 10px; position: relative; background: #f8f8f8; }
 .application-item a:hover { background: #f2f2f2; cursor: pointer; }
 .application-logo { float: left; width: 40px; height: 40px; border-radius: 4px; }
@@ -45,6 +45,7 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .application-logo i.fx { background-position: -205px -41px; }
 .application-logo i.ms { background-position: -410px 0px; }
 .application-logo i.qd { background-position: -451px 0px; }
+.application-logo i.smjf { background-position: -533px -246px; }
 .application-logo i.zszk { background-position:-492px 0px}
 .application-logo i.qhb { background-position: -533px -41px }
 .application-logo i.czk { background-position: -369px -0px; }
@@ -82,8 +83,10 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .application-logo i.qyhhw{background-position: -287px -123px} 
 .application-logo i.dls{background-position: -328px -123px} 
 .application-logo i.ys{background-position: -82px -205px} 
+.application-logo i.dsp { background-position: -246px -205px; }
 .application-logo i.wnbd{background-position: -123px -82px} 
 .application-logo i.xnsp{background-position:-205px -82px}
+.application-logo i.shuiyin{background-position:-164px -410px}
 .application-logo i.qydls{background-position: -82px -205px}  
 .application-logo i.rlsb{background-position: -82px -205px}
 .application-logo i.dbykj{background-position: -492px -205px}
@@ -96,6 +99,24 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .application-logo i.esc{background-position: 0px -369px} 
 .application-logo i.eswp{background-position: -82px -369px}  
 .application-logo i.fwzs{background-position: -41px -369px} 
+.application-logo i.hfcz{background-position: 0px -410px} 
+.application-logo i.multi_store{background-position:-492px -123px}
+.application-logo i.sqt{background-position:-451px -164px}
+.application-logo i.qyk{background-position:-492px -246px}
+.application-logo i.kjds{background-position:-410px -164px}
+.application-logo i.dxkc{background-position:-451px -205px}
+.application-logo i.xxkc{background-position:-410px -205px}
+.application-logo i.yhq{background-position:-82px 0px}
+.application-logo i.sjs{background-position:-82px -410px}
+.application-logo i.cgqd{background-position:-123px -410px}
+.application-logo i.sjhsk{background-position: 0px -410px}
+.application-logo i.ghqw{background-position: -246px -164px}
+.application-logo i.dejbj{background-position: -451px -246px}
+.application-logo i.sjhsk{background-position: -246px -410px}
+.application-logo i.tssx{background-position: -205px -410px}
+.application-logo i.xxdd{ background-position: -164px -287px }
+.application-logo i.sph{ background-position: -410px -246px }
+.application-logo i.xcx{ background-position: -410px -287px }
 
 
 /*应用版*/
@@ -109,6 +130,7 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .app-info-content h2.title { font-size: 16px; margin-bottom: 5px; color: #333; height: 24px; line-height: 24px; }
 .app-info-content .app-info { border: 1px solid #e5e5e5; padding: 25px; }
 .app-info-content .tutorial-image { margin-bottom: 15px; }
+.app-info-content .tutorial-image img{ max-width: 100%;} 
 .app-info-content .app-desc { margin-bottom: 30px; }
 .app-info-content .app-desc h2, .app-info-content .app-image h2 { font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #333; }
 .app-info-content .app-desc .desc-content { color: #666; font-size: 12px; margin-bottom: 15px; line-height: 20px; }
@@ -207,7 +229,7 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .scan-box .scan-icon{ position:absolute; top:5px; left:5px; padding-right:6px; height:60px; display:inline-block; float:left; border-right:1px solid #eee;}
 .scan-box .scan-icon i{ width:60px; height:60px; display:block; background:url(../images/common/combine_img.png) no-repeat -120px -26px; }
 .scan-box .scan-input-box{ float:left; display:inline-block; width: 100%;}
-.scan-box .scan-input-box input{ text-align:left; font-size:24px; border:none; box-shadow:none !important; padding:5px 65px 5px 90px; height:60px; width: 100%;}
+.scan-box .scan-input-box input{ text-align:left; font-size:24px; border:none !important; box-shadow:none !important; padding:5px 65px 5px 90px; height:60px; width: 100%;}
 .scan-box .scan-input-box input:hover{ border:none; }
 .scan-box .scan-delete{ width:30px; height:30px; font-size:24px;line-height: 26px; text-align: center; display:block; background:#eee; color:#fff; border-radius:99%; position:absolute; top:20px; right:80px; cursor:pointer;}
 .scan-box .scan-delete:hover{ background:#d9d9d9;}
@@ -218,12 +240,13 @@ h5.model-title{ background-color: #FAFAFA; height:auto; padding:10px 20px; margi
 .bill-panel i.state,.bill-panel i.state.unable{ width:160px; height:120px; display:block; position:absolute; top:-120px; right:160px;  background:url(../images/common/state.png) no-repeat -495px -30px;}
 .bill-panel i.state.not{ background-position:-495px -180px}
 .bill-panel i.state.finish{ background-position:-495px -330px}
-a.screen-btn{  position: absolute; top: 11px; right: 20px; z-index: 999;}
+a.screen-btn{  position: absolute; top: 15px; right:160px; z-index: 999;}
 .scan-box.backend .scan-icon i{ background-position:-183px -26px}
 .scan-box.backend a.scan-search-btn{ background:#58B4FF}
 
 /*自由购轮播图*/
 .banner-panel { max-width: 1000px; height: 400px; margin:25px auto; position: relative; overflow:hidden; margin-bottom: 15px; }
+.banner-panel img{ max-width: 100%; max-height: 100%;}
 .banner-panel .num { overflow:hidden; height: 25px; position: absolute; bottom:12px; right: 15px; zoom:1; z-index:3 }
 .banner-panel .num ul{overflow: hidden;margin: 0;}
 .banner-panel .num li { width: 18px; height: 18px; text-indent: -9999px;list-style:none;text-align: center; font-weight: 400; font-family: "微软雅黑", Arial; color: #FFFFFF; background:#999; background: rgba(0,0,0,0.5); margin-right: 6px; border-radius:50%; cursor:pointer; float: left; }

@@ -22,22 +22,33 @@ class CategoryRepository
         $this->tree = new Tree();
     }
 
+    /**
+     *
+     * todo 该方法存在严重的性能问题 需要优化
+     *
+     * @param array $condition
+     * @param string $column
+     * @param bool $toTree
+     * @param bool $toFormatTree
+     * @param string $empty
+     * @return array
+     */
     public function getList($condition = [], $column = '', $toTree = false, $toFormatTree = false, $empty = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
     {
         $data = $this->model->getList($condition, $column);
 
-        if (!empty($data[0])) {
-            foreach ($data[0] as $v) {
-                $v->cat_name_pinyin_short = pinyin_abbr($v->cat_name); // 拼音首字母简写
-                $v->cat_name_pinyin = pinyin_permalink($v->cat_name, ''); // 拼音全拼
-            }
-        }
+//        if (!empty($data[0])) {
+//            foreach ($data[0] as $v) {
+//                // todo 将下面的两个字段存储到数据库中
+//                $v->cat_name_pinyin_short = pinyin_abbr($v->cat_name); // 拼音首字母简写
+//                $v->cat_name_pinyin = pinyin_permalink($v->cat_name, ''); // 拼音全拼
+//            }
+//        }
 
         if (!empty($data[0]) && $toTree) {
             // 是否转换为树形结构
             $list = [];
             foreach ($data[0] as $key=>$value) {
-                $value->goods_count = DB::table('goods')->where('cat_id', $value->cat_id)->count();
                 $list[$key] = $value->toArray();
             }
             $data[0] = $this->tree->list_to_tree($list, 'cat_id', 'parent_id');
@@ -47,7 +58,6 @@ class CategoryRepository
             // 是否转换为树形结构
             $list = [];
             foreach ($data[0] as $key=>$value) {
-                $value->goods_count = DB::table('goods')->where('cat_id', $value->cat_id)->count();
                 $list[$key] = $value->toArray();
             }
             $data[0] = $this->tree->toFormatTree($list, 'cat_name', 'cat_id', 'parent_id', 0, $empty);
@@ -58,7 +68,6 @@ class CategoryRepository
 
     public function storeCatAttr($attr_values)
     {
-//        dd($attr_values);
         DB::beginTransaction();
         try {
 
@@ -100,7 +109,6 @@ class CategoryRepository
 
     public function storeCatSpec($attr_values)
     {
-//        dd($attr_values);
         DB::beginTransaction();
         try {
 
@@ -172,7 +180,7 @@ class CategoryRepository
 
     /**
      * 获取格式化的分类名称列表
-     *
+     * todo 该方法存在严重的性能问题 需要优化
      * @return array
      */
     public function getFormatCategory()
@@ -183,27 +191,56 @@ class CategoryRepository
             ],
             'limit' => 0, // 不分页
             'sortname' => 'created_at',
-            'sortorder' => 'desc'
+            'sortorder' => 'asc'
         ];
         list($list, $total) = $this->getList($condition, '', false, true);
 
-        $cat_list = [
-            0=>''
+        $cat_list[0] = [
+            'has_child' => false,
+            'cat_id' => 0,
+            'cat_name' => '-- 请选择 --'
         ];
+
         $cat_name = '';
         if (!empty($list)) {
             foreach ($list as $item) {
+                $hasChild = false;
                 if ($item['level'] == 1) {
                     $cat_name = $item['_child'] ? '<span>◢</span>&nbsp;'.$item['cat_name'] : $item['cat_name'];
+                    $hasChild = $item['_child'] ? true : false;
                 } elseif ($item['level'] == 2) {
                     $cat_name = $item['_child'] ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>◢</span>&nbsp;'.$item['cat_name'] : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$item['cat_name'];
+                    $hasChild = $item['_child'] ? true : false;
                 } elseif ($item['level'] == 3) {
                     $cat_name = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$item['cat_name'];
+                    $hasChild = false;
                 }
-                $cat_list[] = $cat_name;
+//                $cat_list[] = $cat_name;
+                $cat_list[$item['cat_id']] = [
+                    'has_child' => $hasChild,
+                    'cat_id' => $item['cat_id'],
+                    'cat_name' => $cat_name
+                ];
             }
         }
 
         return $cat_list;
+    }
+
+
+    public function getCachedCategory()
+    {
+        $cache_id = CACHE_KEY_CATEGORY[0];
+        if ($list = cache()->get($cache_id)) {
+            return $list;
+        }
+        $list = Category::where('is_show',1)
+            ->select(['cat_id','cat_name','parent_id', 'cat_level'])
+            ->orderBy('cat_sort', 'asc')
+            ->get()
+            ->toArray();
+        cache()->put($cache_id, $list, CACHE_KEY_CATEGORY[1]);
+
+        return $list;
     }
 }

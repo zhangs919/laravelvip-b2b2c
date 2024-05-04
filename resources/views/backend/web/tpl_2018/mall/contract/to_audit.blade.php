@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-10 clearfix">
         <form id="searchForm" class="form-horizontal" action="to-audit" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <div class="simple-form-field">
                 <div class="form-group">
                     <label for="text4" class="col-sm-4 control-label">

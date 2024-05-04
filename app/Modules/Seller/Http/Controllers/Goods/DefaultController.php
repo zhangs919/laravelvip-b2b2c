@@ -17,16 +17,17 @@
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
 // | Date:2018-07-26
+// | Description:
 // +----------------------------------------------------------------------
 
 namespace App\Modules\Seller\Http\Controllers\Goods;
 
+use App\Models\GoodsSku;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\BrandRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
 use Illuminate\Http\Request;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DefaultController extends Seller
 {
@@ -35,13 +36,17 @@ class DefaultController extends Seller
     protected $category;
     protected $brand;
 
-    public function __construct()
+    public function __construct(
+        GoodsRepository $goods
+        ,CategoryRepository $category
+        ,BrandRepository $brand
+    )
     {
         parent::__construct();
 
-        $this->goods = new GoodsRepository();
-        $this->category = new CategoryRepository();
-        $this->brand = new BrandRepository();
+        $this->goods = $goods;
+        $this->category = $category;
+        $this->brand = $brand;
     }
 
     /**
@@ -64,8 +69,10 @@ class DefaultController extends Seller
         $show_store = $request->get('show_store', 0); //
         $is_enable = $request->get('is_enable', 1); //
         $goods_audit = $request->get('goods_audit', 1); //
-        $goods_ids = $request->get('goods_ids', []);
-        $sku_ids = $request->get('sku_ids', []);
+        $goods_ids = $request->get('goods_ids');
+        $goods_ids = $goods_ids ? explode(',', $goods_ids) : [];
+        $sku_ids = $request->get('sku_ids');
+        $sku_ids = $sku_ids ? explode(',', $sku_ids) : [];
 
         // 商品列表
         $where[] = ['shop_id', seller_shop_info()->shop_id];
@@ -78,10 +85,10 @@ class DefaultController extends Seller
         $whereIn = [];
 
         $tpl = 'picker';
-        if ($request->method() == 'POST') {
+        if (/*$request->method() == 'POST' &&*/ !$output) {
             $tpl = 'partials._picker_goods_list';
             $show_selected = $request->post('show_selected');
-            $goods_ids = $request->post('goods_ids');
+            $goods_ids = $request->post('goods_ids', '');
             $goods_ids = explode(',', $goods_ids);
 
             if (!empty($goods_ids) && $show_selected) {
@@ -94,7 +101,6 @@ class DefaultController extends Seller
 
         }
 
-
         $condition = [
             'where' => $where,
             'in' => $whereIn,
@@ -103,6 +109,24 @@ class DefaultController extends Seller
         ];
         list($list, $total) = $this->goods->getList($condition);
         $pageHtml = short_pagination($total, 5);
+        if (!$list->isEmpty()) {
+            foreach ($list as $item) {
+                // 默认sku
+                $default_sku = GoodsSku::where('sku_id',$item->sku_id)->first()->toArray();
+                $item->sku_image = get_image_url($default_sku['sku_image']);
+                $selected_spec_names = $default_sku['spec_names'];
+                $spec_attr_value = [];
+                $sku_name = $item->goods_name;
+                $item->sku_name = $sku_name;
+                if (!empty($selected_spec_names)) {
+                    foreach (explode(' ', $selected_spec_names) as $spec) {
+                        $spec_attr_value[] = explode(':', $spec)[1];
+                    }
+                    $spec_attr_value = implode(' ', $spec_attr_value);
+                    $item->sku_name .=' '.$spec_attr_value;
+                }
+            }
+        }
 
         // 查询商品分类列表（树形）
         $where = [];

@@ -29,7 +29,7 @@
             </thead>
             <tbody>
             <tr>
-                <td class="text-c" rowspan="3" style="border-right: 1px solid #e9e9e9;">
+                <td class="text-c" rowspan="{{ count($user_rank_data['user_ranks']) + 1 }}" style="border-right: 1px solid #e9e9e9;">
                     <!--会员等级概括统计图-->
                     <div class="module-content m-t-10">
                         <div id="canvas" style="width: 100%; height: 300px;"></div>
@@ -37,21 +37,15 @@
                 </td>
             </tr>
 
-            <tr>
-                <td class="text-c">铜牌会员</td>
-                <td class="text-c">4</td>
-
-                <td class="text-c">7.02%</td>
-
-            </tr>
-
-            <tr>
-                <td class="text-c">注册会员</td>
-                <td class="text-c">53</td>
-
-                <td class="text-c">92.98%</td>
-
-            </tr>
+            @if(!empty($user_rank_data['user_ranks']))
+                @foreach($user_rank_data['user_ranks'] as $item)
+                    <tr>
+                        <td class="text-c">{{ $item['rank_name'] }}</td>
+                        <td class="text-c">{{ $item['user_num'] }}</td>
+                        <td class="text-c">{{ $item['percent'] }}%</td>
+                    </tr>
+                @endforeach
+            @endif
 
             </tbody>
         </table>
@@ -102,7 +96,7 @@
                 legend: {
                     orient: 'vertical',
                     x: 'left',
-                    data: ["\u6ce8\u518c\u4f1a\u5458","\u94dc\u724c\u4f1a\u5458","\u94f6\u724c\u4f1a\u5458","\u91d1\u724c\u4f1a\u5458","\u94bb\u77f3\u4f1a\u5458"]
+                    data: {!! json_encode($user_rank_data['text']) !!}
                 },
                 calculable: true,
                 series: [{
@@ -110,7 +104,7 @@
                     type: 'pie',
                     radius: '55%',
                     center: ['50%', '60%'],
-                    data: [{"name":"\u94dc\u724c\u4f1a\u5458","value":"4"},{"name":"\u6ce8\u518c\u4f1a\u5458","value":"53"}]
+                    data: {!! json_encode($user_rank_data['list']) !!}
                 }]
             };
 

@@ -36,7 +36,7 @@ $().ready(function() {
 	}
 	try {
 		// 温馨提示收缩展开效果
-		$('body').on('click','.explain-checkZoom',function() {
+		$('body').on('click', '.explain-checkZoom', function() {
 			if ($(this).parents('.explanation').hasClass('up')) {
 				$(this).parents('.explanation').removeClass('up').addClass('down');
 				$(this).parents(".explanation").find(".explain-panel").slideToggle(200);
@@ -205,9 +205,11 @@ function searchMore() {
 		if ($('.search-term .toggle').hasClass('hide')) {
 			$('#searchMore').text('收起筛选条件');
 			$(".search-term .toggle").removeClass('hide');
+			$(".search-term").addClass('show-toggle');
 		} else {
 			$('.search-term .toggle').addClass('hide');
 			$('#searchMore').text('更多筛选条件');
+			$(".search-term").removeClass('show-toggle');
 		}
 	});
 }
@@ -265,6 +267,7 @@ ajax = {}
  *            options {type:"POST", async:false, dataType:"json",
  *            error:function(data){ top.Dialog.alert("失败"+data.status); }};
  */
+/**
 ajax.post = function(options) {
 	var settings = {
 		type: "POST",
@@ -290,6 +293,7 @@ ajax.get = function(options) {
 	settings = $.extend(settings, options);
 	$.ajax(settings);
 }
+**/
 
 /**
  * 地区列表三级联动
@@ -298,7 +302,7 @@ ajax.get = function(options) {
  * @param child_id
  * @param parent_code
  */
-
+/**
 function AjaxRegion(url, child_id, parent_code) {
 	// 定义对象
 	var obj = $("#" + child_id);
@@ -338,9 +342,20 @@ function regionLevel(level) {
 	var text_array = new Array('国家', '省', '市', '区/县', '乡镇/街道');
 	return text_array[level];
 }
-
-//验证整数
-function validateInteger(obj) {
-	var number = obj.value;
-	obj.value = obj.value.replace(/[^\d\.]/g,'');
+**/
+// 验证整数
+function validateInteger(obj, min, max) {
+	if (min == undefined) {
+		min = 0;
+	}
+	if (max == undefined) {
+		max = 255;
+	}
+	obj.value = obj.value.replace(/\D|^0/g, '');
+	if (obj.value > max) {
+		obj.value = max;
+	}
+	if (obj.value < min) {
+		obj.value = min;
+	}
 }

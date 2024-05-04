@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Modules\Backend\Http\Controllers\Design;
+namespace App\Modules\Backend\Http\Controllers\Design;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\BrandRepository;
@@ -24,18 +24,17 @@ class NavBrandController extends Backend
     protected $brand;
 
     public function __construct(
-        NavCategoryRepository $navCategoryRepository,
-        NavBrandRepository $navBrandRepository,
-        BrandRepository $brandRepository)
+        NavCategoryRepository $navCategory
+        ,NavBrandRepository $navBrand
+        ,BrandRepository $brand
+    )
     {
 
         parent::__construct();
 
-//        setcookie('theme_style', "true"); // todo 设置theme_style 改变整体样式
-
-        $this->navCategory = $navCategoryRepository;
-        $this->navBrand = $navBrandRepository;
-        $this->brand = $brandRepository;
+        $this->navCategory = $navCategory;
+        $this->navBrand = $navBrand;
+        $this->brand = $brand;
     }
 
     public function lists(Request $request)

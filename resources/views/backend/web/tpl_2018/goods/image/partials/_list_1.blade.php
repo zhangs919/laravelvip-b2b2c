@@ -27,7 +27,7 @@
         <td>
             <div class="userPicBox pull-left m-r-10">
                 <a href="javascript:void(0);" class="preview" ref="{{ get_image_url($v->path) }}">
-                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" data-original="{{ get_image_url($v->path) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" class="user-avatar IMG-{{ $v->img_id }} lazy"></img>
+                    <img src="{{ get_image_url(sysconf('default_goods_image')) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" data-original="{{ get_image_url($v->path) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" class="user-avatar IMG-{{ $v->img_id }} lazy"></img>
                 </a>
             </div>
             <div class="ng-binding user-message ">

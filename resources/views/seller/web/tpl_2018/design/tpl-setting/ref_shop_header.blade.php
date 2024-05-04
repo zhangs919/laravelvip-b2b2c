@@ -1,7 +1,7 @@
 <a href="javascript:void(0)" class="SZY-SET-HEAD shop-header-selector content-selector" title="编辑" data-url='/shop/config/index.html?group=m_shop_header' data-title='店铺头部设置'></a>
 
 {{--引入店铺头部--}}
-@include('design.tpl-setting.partials._shop_top_box')
+@include('frontend.web_mobile.tpl_2018.shop.partials._shop_top_box')
 
 <div class="shop-nav clearfix">
     <ul class="nav-ul">

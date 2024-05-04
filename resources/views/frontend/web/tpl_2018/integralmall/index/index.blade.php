@@ -1,21 +1,21 @@
 @extends('layouts.base')
 
+@section('header_css')
+    <link href="/css/exchange.css" rel="stylesheet">
+@stop
+
 {{--follow_box 注意此效果只在首页面展示--}}
 @section('follow_box')
 
 @stop
 
-@section('style_js')
-    <!--页面css/js-->
 
-@stop
 
 
 
 @section('content')
 
     <!-- 内容 -->
-    <link rel="stylesheet" href="/css/exchange.css?v=20180428"/>
     <!-- 积分商城内容部分 _start -->
     <div class="w1210">
 
@@ -58,20 +58,20 @@
                 <div class="user-info-box">
                     <div class="user-header fl">
 					<span class="header-img">
-						<img src="{{ get_image_url(sysconf('default_user_portrait')) }}" />
+						<img src="{{ get_image_url($default_user_portrait) }}" />
 					</span>
                     </div>
                     <div class="user-info fl">
-                        <p>{{ auth('user')->user()->user_name }}</p>
+                        <p>{{ $user['user_name'] }}</p>
                         <p>
                             <span class="type">会员等级：</span>
-                            <img src="{{ get_image_url($user_rank_info['rank_img']) }}" />
-                            <span>注册会员</span>
+                            <img src="{{ get_image_url($user_rank['rank_img']) }}" />
+                            <span>{{ $user_rank['rank_name'] }}</span>
                         </p>
                         <a href="/user/growth-value.html">
                             <p>
                                 <span class="type">当前成长值：</span>
-                                {{ $user_info->rank_point ?? 0 }}
+                                {{ $user['rank_point'] ?? 0 }}
                             </p>
                         </a>
                     </div>
@@ -82,7 +82,7 @@
                         <a href="/user/integral.html" target="_blank">
                             <span>我的积分</span>
                             <strong>
-                                <em class="SZY-PAY-POINT">{{ $user_info->pay_point ?? 0 }}</em>
+                                <em class="SZY-PAY-POINT">{{ $user['pay_point'] ?? 0 }}</em>
                                 分
                             </strong>
                         </a>
@@ -92,7 +92,7 @@
                         <a href="/user/integral/order-list.html" target="_blank">
                             <span>已兑换商品</span>
                             <strong>
-                                <em>0</em>
+                                <em>{{ $exchanged_count }}</em>
                                 个
                             </strong>
                         </a>
@@ -105,7 +105,13 @@
             <div class="banner-img">
                 <!-- banner轮播 _star -->
                 <ul id="fullScreenSlides" class="full-screen-slides">
-
+                    @if(!empty($banner))
+                        @foreach($banner as $k=>$v)
+                            <li style="background: url({{ get_image_url($v['img']) }}) center no-repeat; @if($k == 0){{ 'display: list-item;' }}@else{{ 'display: none;' }}@endif">
+                                <a href="{{ $v['link'] }}" target="_blank" title="">&nbsp;</a>
+                            </li>
+                        @endforeach
+                    @endif
                 </ul>
 
                 <!-- banner轮播 _end -->
@@ -129,91 +135,56 @@
             <div class="hot-bonus-list">
                 <div class="hot-bonus-con">
 
+                    @foreach($bonus_list as $v)
                     <div class="item ">
                         <div class="item-left">
                             <p class="price">
                                 <em>￥</em>
-                                <strong class="num">50.00</strong>
+                                <strong class="num">{{ $v['bonus_amount'] }}</strong>
                             </p>
                             <p class="row">
                                 使用条件：
 
-                                满399.00元可用
+                                满{{ $v['min_goods_amount'] }}元可用
 
                             </p>
-                            <p class="row issuer">发行方：阿迪达斯旗舰店</p>
+                            <p class="row issuer">发行方：{{ $v['shop_name'] }}</p>
                             <p class="row">
                                 限品类：
 
-
+                                @if($v['use_range'] == 0)
                                 全店通用
+                                @elseif($v['use_range'] == 1)
+                                指定商品
+                                @endif
 
 
                             </p>
-                            <p class="row">发放数量：1000</p>
-                            <p class="row">使用有效期：2018-04-17 ~ 2018-12-31</p>
+                            <p class="row">发放数量：{{ $v['bonus_number'] }}</p>
+                            <p class="row">使用有效期：{{ $v['start_time_format'] }} ~ {{ $v['end_time_format'] }}</p>
                         </div>
                         <div class="item-right">
                             <b class="semi-circle"></b>
                             <div class="item-right-con">
                                 <p class="exchange">
-                                    <strong>500</strong>
+                                    <strong>{{ $v['bonus_data']['exchange_points'] ?? 0 }}</strong>
                                     <em>积分</em>
                                 </p>
                                 <p>红包兑换有效期</p>
                                 <p class="time">不限</p>
 
-                                <a href="javascript:void(0);" class="receive bonus-exchange" data-id="8" data-shop-id="15" data-shop-name="阿迪达斯旗舰店" data-points="500">
+                                <a href="javascript:void(0);" class="receive bonus-exchange" data-id="{{ $v['bonus_id'] }}"
+                                   data-shop-id="{{ $v['shop_id'] }}" data-shop-name="{{ $v['shop_name'] }}" data-points="{{ $v['bonus_data']['exchange_points'] ?? 0 }}">
                                     <span class="txt">立即兑换</span>
                                 </a>
 
-                                <p id="send_number">1人兑换</p>
+                                <p id="send_number">{{ $v['receive_number'] }}人兑换</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="item ">
-                        <div class="item-left">
-                            <p class="price">
-                                <em>￥</em>
-                                <strong class="num">10.00</strong>
-                            </p>
-                            <p class="row">
-                                使用条件：
-
-                                红包使用条件不限
-
-                            </p>
-                            <p class="row issuer">发行方：尚客联盟采购平台</p>
-                            <p class="row">
-                                限品类：
+                    @endforeach
 
 
-                                全店通用
-
-
-                            </p>
-                            <p class="row">发放数量：10</p>
-                            <p class="row">使用有效期：2017-06-29 ~ 2018-11-28</p>
-                        </div>
-                        <div class="item-right">
-                            <b class="semi-circle"></b>
-                            <div class="item-right-con">
-                                <p class="exchange">
-                                    <strong>100</strong>
-                                    <em>积分</em>
-                                </p>
-                                <p>红包兑换有效期</p>
-                                <p class="time">不限</p>
-
-                                <a href="javascript:void(0);" class="receive bonus-exchange" data-id="2" data-shop-id="1" data-shop-name="尚客联盟采购平台" data-points="100">
-                                    <span class="txt">立即兑换</span>
-                                </a>
-
-                                <p id="send_number">0人兑换</p>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
             </div>
@@ -296,36 +267,36 @@
                             <!--售罄-->
 
                             <div class="item-pic">
-                                <a href="{{ route('show_integral_goods', ['goods_id'=>$v->goods_id]) }}" title="{{ $v->goods_name }}" style="background: url() no-repeat center center" target="_blank">
-                                    <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url($v->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" alt="{{ $v->goods_name }}" />
+                                <a href="{{ route('show_integral_goods', ['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}" style="background: url() no-repeat center center" target="_blank">
+                                    <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" alt="{{ $v['goods_name'] }}" />
                                 </a>
                             </div>
                             <div class="item-info">
                                 <p class="item-exchange">
 								<span class="sale-exchange fl">
-									{{ $v->goods_integral }}
+									{{ $v['goods_integral'] }}
 									<em>积分</em>
 								</span>
-                                    <em class="sale-count fr">{{ $v->exchange_number }} 人兑换</em>
+                                    <em class="sale-count fr">{{ $v['exchange_number'] }} 人兑换</em>
                                 </p>
                                 <p class="item-name">
-                                    <a href="{{ route('show_integral_goods', ['goods_id'=>$v->goods_id]) }}" target="_blank" title="">{{ $v->goods_name }}</a>
+                                    <a href="{{ route('show_integral_goods', ['goods_id'=>$v['goods_id']]) }}" target="_blank" title="">{{ $v['goods_name'] }}</a>
                                 </p>
                                 <p class="item-time">
-                                    @if($v->is_limit == 0)
+                                    @if($v['is_limit'] == 0)
                                         无时间条件限制
                                     @elseif($v->is_limit == 1)
-                                        有效期: {{ $v->start_time }} 至 {{ $v->end_time }}
+                                        有效期: {{ $v['start_time'] }} 至 {{ $v['end_time'] }}
                                     @endif
                                 </p>
                                 <div class="item-con-info">
 
                                     <div class="item-shop fl">
-                                        <a href="{{ route('pc_shop_home', ['shop_id'=>$v->shop_id]) }}" target="_blank" title="">{{ $v->shop->shop_name ?? '' }}</a>
+                                        <a href="{{ route('pc_shop_home', ['shop_id'=>$v['shop_id']]) }}" target="_blank" title="">{{ $v['shop_name'] }}</a>
                                     </div>
 
                                     {{--todo 需要根据当前登录用户 及该商品需要积分与用户拥有积分对比判断是否可以兑换--}}
-                                    <a href="javascript:void(0)" data-goods_id="{{ $v->goods_id }}" data-goods_number="{{ $v->goods_number }}" data-diff="-1" class="goods-exchange on-exchange fr disabled">立即兑换</a>
+                                    <a href="javascript:void(0)" data-goods_id="{{ $v['goods_id'] }}" data-goods_number="{{ $v['goods_number'] }}" data-diff="{{ $v['diff'] }}" class="goods-exchange on-exchange fr disabled">立即兑换</a>
                                     {{--<a href="javascript:void(0)" data-goods_id="11" data-goods_number="92" data-diff="-1" class="goods-exchange on-exchange fr disabled">立即兑换</a>--}}
                                     {{--<a href="javascript:void(0)" data-goods_id="11" data-goods_number="92" data-diff="9230" class="goods-exchange on-exchange fr ">立即兑换</a>--}}
                                 </div>
@@ -345,25 +316,65 @@
         <!-- 积分商品列表 _end -->
     </div>
     <!-- 积分商城内容部分 _end -->
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
-    <script src="/js/group_buy.js?v=20180528"></script>
     <script type="text/javascript">
-        $().ready(function() {
+        //
+    </script>
 
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/index.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/bubbleup.js"></script>
+    <script src="/js/jquery.hiSlider.js"></script>
+    <script src="/js/index_tab.js"></script>
+    <script src="/js/jump.js"></script>
+    <script src="/js/nav.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/requestAnimationFrame.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/js/group_buy.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        $().ready(function() {
             var tablelist = $("#table_list").tablelist({
                 callback: function() {
                     $.imgloading.loading();
                 }
             });
-
-            $(".prev-page").click(function() {
+            $('body').on('click','.prev-page',function(){
                 tablelist.prePage();
             });
-
-            $(".next-page").click(function() {
+            $('body').on('click','.next-page',function(){
                 tablelist.nextPage();
             });
-
             $("body").on("click", ".bonus-exchange", function() {
                 var id = $(this).data("id");
                 var shop_id = $(this).data("shop-id");
@@ -375,7 +386,6 @@
                 } else {
                     confirm_text = "兑换此红包，将需要扣除您<span class='color'>" + points + "</span>积分，您确定是否兑换？";
                 }
-
                 $.confirm(confirm_text, function() {
                     $.ajax({
                         type: "POST",
@@ -387,7 +397,7 @@
                         },
                         success: function(result) {
                             if (result.code == 0) {
-                                $("#send_number").html(result.send_number + "人兑换");
+                                $("#send_number").html("已兑换" + result.send_number + "次");
                                 $(".SZY-PAY-POINT").html(result.pay_point);
                             }
                             $.msg(result.message);
@@ -395,10 +405,8 @@
                     })
                 });
             });
-
             // 立即兑换
             $("body").on("click", ".goods-exchange", function() {
-
                 if ($(this).hasClass("disabled")) {
                     if ($(this).data('diff') < 0) {
                         $.msg('积分不足');
@@ -424,18 +432,80 @@
                 }, "json").always(function() {
                     $.loading.stop()
                 });
-
             });
-
             //ajax校验
             $.get('/integralmall/index/validate', function(result) {
-
                 if (result.code == 0) {
                     $('.SZY-PAY-POINT').html(result.data);
                 }
             }, 'json');
-
+            $('body').on('click', '.use-range-info', function() {
+                var bonus_id = $(this).data('bonus_id');
+                var title = $(this).data('title');
+                $.loading.start();
+                $.open({
+                    type: 1,
+                    area: ['702px', '400px'],
+                    title: title,
+                    btn: ['关闭'],
+                    btnAlign: 'c',
+                    ajax: {
+                        url: '/integralmall/index/view-bonus-use-range',
+                        data: {
+                            bonus_id: bonus_id
+                        }
+                    }
+                }).always(function() {
+                    $.loading.stop();
+                });
+            });
         });
+        //
+        //解决因为缓存导致获取分类ID不正确问题，需在ready之前执行
+        $(".SZY-DEFAULT-SEARCH").data("cat_id", "");
+        $().ready(function() {
+            $(".SZY-SEARCH-BOX-KEYWORD").val("");
+            $(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "");
+            //
+            $(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {
+                if ($(".search-li.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                        $(keyword_obj).val(keywords);
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function(){
+            // 缓载图片
+            $.imgloading.loading();
+        });
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+        $().ready(function() {
+        })
+        //
     </script>
-
 @stop

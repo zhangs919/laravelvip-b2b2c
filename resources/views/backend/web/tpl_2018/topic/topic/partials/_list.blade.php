@@ -28,11 +28,14 @@
             <td>{{ $v->updated_at }}</td>
             <td class="handle">
                 <a href="{{ route('pc_show_topic', ['topic_id' => $v->topic_id]) }}" target="_blank">查看</a>
+
+                @if($v->shop_id == 0){{--店铺专题不允许平台装修、编辑--}}
                 <span>|</span>
                 <a href="design?id={{ $v->topic_id }}" target="_blank">装修</a>
                 <span>|</span>
                 <a href="edit?id={{ $v->topic_id }}">编辑</a>
                 <span>|</span>
+                @endif
                 <a href="javascript:void(0);" data-id="{{ $v->topic_id }}" class="del border-none">删除</a>
             </td>
         </tr>

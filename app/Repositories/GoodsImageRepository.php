@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Models\GoodsImage;
+use App\Models\GoodsSku;
 use App\Models\GoodsSpec;
 use Illuminate\Support\Facades\DB;
 
@@ -29,27 +30,53 @@ class GoodsImageRepository
                 // 删除原来的图片
                 $this->model->where([['goods_id',$goods_id], ['spec_id', 0]])->delete();
                 $imageInsert = $postGoodsImage['default'];
-                foreach ($imageInsert as $item) {
+                foreach ($imageInsert as &$item) {
                     $item['goods_id'] = $goods_id;
-                    $goodsImageModel = new GoodsImage();
-                    $goodsImageModel->fill($item);
-                    $goodsImageModel->save();
                 }
+                $this->model->addAll($imageInsert);
+
+                // 更新商品SKU表图片
+                GoodsSku::where('goods_id', $goods_id)
+                    ->where('spec_ids', '=', null)
+                    ->where('checked', 1)
+                    ->update([
+                        'sku_image' => current($imageInsert)['path'],
+                        'sku_images' => implode('|', array_column($imageInsert,'path'))
+                    ]);
             } else {
                 // 商品有规格
                 foreach ($postGoodsImage as $spec_id=>$item) {
                     // 删除原来的图片
                     $this->model->where([['goods_id',$goods_id], ['spec_id', $spec_id]])->delete();
-                    $imageInsert = $item;
-                    foreach ($imageInsert as $v) {
-                        $v['goods_id'] = $goods_id;
-                        $v['spec_id'] = $spec_id;
-                        $goodsImageModel = new GoodsImage();
-                        $goodsImageModel->fill($v);
-                        $goodsImageModel->save();
+                    $imageInsert = [];
+                    foreach ($item as $k=>$v) {
+                        $imageInsert[] = [
+                            'path' => $v['path'],
+                            'goods_id' => $goods_id,
+                            'spec_id' => $spec_id,
+                            'is_default' => $k == 0 ? 1 : 0,
+                            'sort' => $k+1
+                        ];
                     }
+                    $this->model->addAll($imageInsert);
+
+//                    dd(GoodsSku::where('goods_id', $goods_id)
+//                        ->where('spec_ids', 'like', "%|{$spec_id}")
+//                        ->orWhere('spec_ids', 'like', "{$spec_id}|%")
+////                        ->whereRaw("FIND_IN_SET({$spec_id},spec_ids)")
+//                        ->where('checked', 1)->count());
+                    // 更新商品SKU表图片
+                    GoodsSku::where('goods_id', $goods_id)
+                        ->where('spec_ids', 'like', "%|{$spec_id}")
+                        ->orWhere('spec_ids', 'like', "{$spec_id}|%")
+                        ->orWhere('spec_ids', '=', $spec_id)
+//                        ->whereRaw("FIND_IN_SET({$spec_id},spec_ids)")
+                        ->where('checked', 1)
+                        ->update([
+                            'sku_image' => current($item)['path'],
+                            'sku_images' => implode('|', array_column($item,'path'))
+                    ]);
                 }
-//                dd($postGoodsImage);
             }
 
             DB::commit();

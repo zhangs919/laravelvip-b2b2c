@@ -21,7 +21,7 @@
     KindEditor.ready(function(K) {
 
         var extraFileUploadParams = [];
-        extraFileUploadParams['CP6ZNQ_YUNMALL_68MALL_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
+        extraFileUploadParams['CP6ZNQ_YUNMALL_LARAVELVIP_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
 
         window.editor = K.create('#systemconfigmodel-user_protocol', {
             width: '100%',
@@ -58,7 +58,7 @@
     KindEditor.ready(function(K) {
 
         var extraFileUploadParams = [];
-        extraFileUploadParams['CP6ZNQ_YUNMALL_68MALL_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
+        extraFileUploadParams['CP6ZNQ_YUNMALL_LARAVELVIP_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
 
         window.editor = K.create('#systemconfigmodel-seller_protocol', {
             width: '100%',
@@ -154,7 +154,7 @@
             var value = $(target).val() ;
             var options = $(this).data("options") ? $(this).data("options") : [];
             $(this).imagegroup({
-                host: '{{ get_oss_host() }}',//"http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                host: '{{ get_oss_host() }}',
                 size: size,
                 mode: mode,
                 labels: labels,
@@ -194,7 +194,7 @@
             var options = $(this).data("options") ? $(this).data("options") : [];
 
             $(this).videogroup({
-                host: '{{ get_oss_host() }}',//"http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                host: '{{ get_oss_host() }}',
                 size: size,
                 mode: mode,
                 labels: labels,

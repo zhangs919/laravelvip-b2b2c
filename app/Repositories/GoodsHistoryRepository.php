@@ -25,9 +25,11 @@ class GoodsHistoryRepository
 
             foreach ($data[0] as $key=>$value) {
                 $goods_info = Goods::where('goods_id',$value->goods_id)->select(['goods_price','goods_name','goods_image'])->first();
-                $value->goods_price = $goods_info['goods_price'];
-                $value->goods_name = $goods_info['goods_name'];
-                $value->goods_image = $goods_info['goods_image'];
+                if (!empty($goods_info)) {
+					$value->goods_price = $goods_info['goods_price'];
+					$value->goods_name = $goods_info['goods_name'];
+					$value->goods_image = $goods_info['goods_image'];
+				}
             }
         }
         return $data;

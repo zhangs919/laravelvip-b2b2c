@@ -68,8 +68,8 @@ i.fa { font-size: 14px; vertical-align: middle; margin-right: 4px; }/*字体图�
 .module-menu ul li a { font-size: 16px; line-height: 20px; color: #666; display:inline-block; padding:14px 8px; margin-top: -19px; margin-left: 1px; margin-right: 2px;  border-bottom:1px solid #E4E4E4; width:100%; text-shadow:none; font-size:14px;}
 @media (min-width:480px){.module-menu ul li a{ padding:14px 20px; color: #666;font-size:14px; border-bottom:1px solid #E4E4E4;width:100%; text-shadow:none;}}
 @media (min-width:768px){.module-menu ul li a{ padding:14px 16px; color:#fff;font-size:16px; border-bottom:none; width:auto;/*text-shadow: 1px 1px 1px rgba(0,0,0,0.25);*/}}
-@media (min-width:992px){.module-menu ul li a{padding: 14px 25px;color:#fff; font-size:16px; border-bottom:none; width:auto;/*text-shadow: 1px 1px 1px rgba(0,0,0,0.25);*/}}
-@media (min-width:1200px){.module-menu ul li a{padding: 14px 25px; color:#fff; border-bottom:none; width:auto;/*text-shadow: 1px 1px 1px rgba(0,0,0,0.25);*/font-size:16px;}}
+@media (min-width:992px){.module-menu ul li a{padding: 14px 22px;color:#fff; font-size:16px; border-bottom:none; width:auto;/*text-shadow: 1px 1px 1px rgba(0,0,0,0.25);*/}}
+@media (min-width:1200px){.module-menu ul li a{padding: 14px 22px; color:#fff; border-bottom:none; width:auto;/*text-shadow: 1px 1px 1px rgba(0,0,0,0.25);*/font-size:16px;}}
 .module-menu ul li a.site{ padding:14px 18px;}
 .module-menu ul li.active a {/*background: rgba(0,0,0,0.15) !important;*/ }
 .module-menu ul li a:hover {filter:progid:DXImageTransform.Microsoft.gradient(enabled='true', startColorstr='#26FFFFFF', endColorstr='#26FFFFFF'); background: rgba(255,255,255,0.15); opacity: 1; }

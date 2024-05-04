@@ -17,7 +17,7 @@
     <div class="m-t-20">
         <div class="table-content m-t-10 clearfix ">
             <form id="SelfShopModel" class="form-horizontal" name="SelfShopModel" action="/shop/self-shop/add?is_supply=0" method="post">
-                {{ csrf_field() }}
+                @csrf
 
                 <input type="hidden" id="selfshopmodel-is_supply" class="form-control" name="SelfShopModel[is_supply]" value="0">
 
@@ -34,44 +34,6 @@
 
 
                                 <input type="text" id="selfshopmodel-shop_name" class="form-control" name="SelfShopModel[shop_name]">
-
-
-                            </div>
-
-                            <div class="help-block help-block-t"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 店铺所属分类 -->
-                <div class="simple-form-field" >
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">
-                            <span class="text-danger ng-binding">*</span>
-                            <span class="ng-binding">店铺所属分类：</span>
-                        </label>
-                        <div class="col-sm-9">
-                            <div class="form-control-box">
-
-                                <div class="form-control-box choosen-select-box">
-                                    <a id="btn_add_other_cat" class="btn btn-primary pull-left m-2">
-                                        <i class="fa fa-plus"></i>
-                                        添加
-                                    </a>
-
-                                    <div class="choosen-select-item other-cat">
-                                        <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]">
-                                            <option value="">-- 请选择 --</option>
-                                            @foreach($cat_list as $cat)
-
-                                                <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
-
-                                            @endforeach
-                                        </select>
-                                        <a class="choosen-select-delete other-cat-delete">×</a>
-                                    </div>
-
-                                </div>
-                                <input type="hidden" id="selfshopmodel-cat_id" class="form-control" name="SelfShopModel[cat_id]" value="">
 
 
                             </div>
@@ -103,6 +65,44 @@
                             </div>
 
                             <div class="help-block help-block-t"><div class="help-block help-block-t">商家与平台方资金进行结算的周期，线下协商，后台请勿随意修改</div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 店铺所属分类 -->
+                <div class="simple-form-field" >
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">
+                            <span class="text-danger ng-binding">*</span>
+                            <span class="ng-binding">店铺所属分类：</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <div class="form-control-box">
+
+                                <div class="form-control-box choosen-select-box">
+                                    <a id="btn_add_other_cat" class="btn btn-primary pull-left m-2">
+                                        <i class="fa fa-plus"></i>
+                                        添加
+                                    </a>
+
+                                    <div class="choosen-select-item other-cat">
+                                        <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]">
+                                            <option value="">-- 请选择 --</option>
+                                            @foreach($cat_list as $cat)
+
+                                                <option value="{{ $cat['cls_id'] }}">{!! $cat['level_show'] !!}{{ $cat['cls_name'] }}</option>
+
+                                            @endforeach
+                                        </select>
+                                        <a class="choosen-select-delete other-cat-delete">×</a>
+                                    </div>
+
+                                </div>
+                                <input type="hidden" id="selfshopmodel-cat_id" class="form-control" name="SelfShopModel[cat_id]" value="">
+
+
+                            </div>
+
+                            <div class="help-block help-block-t"></div>
                         </div>
                     </div>
                 </div>

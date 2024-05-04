@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Finance;
+namespace App\Modules\Backend\Http\Controllers\Finance;
 
 
 use App\Modules\Base\Http\Controllers\Backend;

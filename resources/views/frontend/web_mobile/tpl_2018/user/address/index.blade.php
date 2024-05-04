@@ -1,15 +1,9 @@
 @extends('layouts.user_layout')
 
+
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/css/user.css?v=20180702"/>
 @stop
-
-{{--header_js--}}
-@section('header_js')
-
-@stop
-
 
 
 @section('content')
@@ -18,13 +12,18 @@
         <header>
             <div class="header">
                 <div class="header-left">
-                    <a class="sb-back" href="/user.html" title="返回"></a>
+                    <a class="sb-back" href="/user.html" title="返回">
+                        <i class="iconfont">&#xe606;</i>
+                    </a>
                 </div>
                 <div class="header-middle">收货地址管理</div>
                 <div class="header-right">
+                    <!-- 控制展示更多按钮 -->
                     <aside class="show-menu-btn">
                         <div id="show_more" class="show-menu">
-                            <a href="javascript:;"></a>
+                            <a href="javascript:;">
+                                <i class="iconfont">&#xe6cd;</i>
+                            </a>
                         </div>
                     </aside>
                 </div>
@@ -93,61 +92,81 @@
             <div class="list-footer">
                 <a href="javascript:add()">添加新地址</a>
             </div>
-
-
         </div>
     </div>
     <div id='edit-address-div'></div>
     <!-- more.js -->
     <script type="text/javascript">
+        //
+    </script>
+    <!-- GPS获取坐标 -->
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script type="text/javascript">
+        //
+    </script>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
+
+    <!-- 积分消息 -->
+    <!-- 消息提醒 -->
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 第三方流量统计 -->
+    <div style="display: none;"></div>
+    <!-- 底部 _end-->
+    <div style="height: 54px; line-height: 54px" class="handle-spacing"></div>
+    <script src="/assets/d2eace91/min/js/core.min.js"></script>
+    <script src="/js/app.frontend.mobile.min.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/address.js"></script>
+    <script src="/js/center.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.mobile.js"></script>
+    <script src="/assets/d2eace91/js/geolocation/amap.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
         var tablelist = null;
         $().ready(function() {
             tablelist = $("#table_list").tablelist();
         });
-    </script>
-    <script type="text/javascript">
-        $().ready(function() {
-
-            /*弹出消息*/
-            @if(!empty(session('layerMsg')))
-            var status = '{{ session()->get('layerMsg.status') }}';
-            var msg = '{{ session()->get('layerMsg.msg') }}';
-            switch (status) {
-                case 'success':
-                    $.msg(msg);
-                    break;
-                case 'error':
-                    $.msg(msg, function () {
-                        // 关闭后的操作
-                    });
-                    break;
-                case 'info':
-                    $.msg(msg)
-                    break;
-                case 'warning':
-                    $.msg(msg, function () {
-                        // 关闭后的操作
-                    });
-                    break;
+        //
+        function geolocation() {
+            if (!sessionStorage.geolocation) {
+                setTimeout(function() {
+                    $.geolocation();
+                }, 500);
             }
-            // $.msg('设置成功');
-            @endif
-        })
+        }
+        $().ready(function(){
+            geolocation();
+        });
+        //
+        $().ready(function () {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('7272') }}",
+                type: "add_point_set"
+            });
+        });
+
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
     </script>
-    <script src="/js/jquery.fly.min.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
-
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
-
-    <!-- 第三方流量统计 -->
-    <div style="display: none;"></div>
-    <!-- 底部 _end-->
 
 @stop

@@ -1,18 +1,19 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Shop;
+namespace App\Modules\Backend\Http\Controllers\Shop;
 
 
+use App\Models\ShopApply;
 use App\Models\ShopFieldValue;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
+use App\Repositories\ShopApplyRepository;
 use App\Repositories\ShopClassRepository;
+use App\Repositories\ShopCreditRepository;
 use App\Repositories\ShopPaymentRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShopController extends Backend
 {
@@ -35,6 +36,7 @@ class ShopController extends Backend
         ['url' => 'shop/shop/shop-auth-info', 'text' => '认证信息（企业）'],
         ['url' => 'shop/shop/pay-list', 'text' => '付款信息'],
         ['url' => 'shop/shop/pay-add', 'text' => '添加'],
+        ['url' => 'shop/shop/pay-edit', 'text' => '编辑'],
     ];
 
     protected $shop;
@@ -42,16 +44,28 @@ class ShopController extends Backend
     protected $user;
     protected $shopClass;
     protected $shopPayment;
+    protected $shopCredit;
+    protected $shopApply;
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        ,CategoryRepository $category
+        ,UserRepository $user
+        ,ShopClassRepository $shopClass
+        ,ShopPaymentRepository $shopPayment
+        ,ShopCreditRepository $shopCredit
+        ,ShopApplyRepository $shopApply
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
-        $this->category = new CategoryRepository();
-        $this->user = new UserRepository();
-        $this->shopClass = new ShopClassRepository();
-        $this->shopPayment = new ShopPaymentRepository();
+        $this->shop = $shop;
+        $this->category = $category;
+        $this->user = $user;
+        $this->shopClass = $shopClass;
+        $this->shopPayment = $shopPayment;
+        $this->shopCredit = $shopCredit;
+        $this->shopApply = $shopApply;
 
     }
 
@@ -107,7 +121,7 @@ class ShopController extends Backend
         $fixed_title = '入驻店铺 - '.$title;
         $is_supply = $request->get('is_supply', 0);
 
-        $this->sublink($this->links, 'list?is_supply=0', 'is_supply');
+        $this->sublink($this->links, 'list?is_supply=0');
 
         $action_span = [
             [
@@ -132,6 +146,9 @@ class ShopController extends Backend
 
         $params = $request->all();
         $where = [];
+        $where[] = ['shop_type', '>', 0]; // 个人店铺/企业店铺
+        $where[] = ['shop_audit', 1]; // 审核通过
+
         // 搜索条件
         $search_arr = ['key_word', 'shop_type', 'shop_status', 'start_from', 'start_to', 'end_from', 'end_to', 'credit_from', 'credit_to'];
         foreach ($search_arr as $v) {
@@ -147,10 +164,20 @@ class ShopController extends Backend
         // 列表
         $condition = [
             'where' => $where,
+            'relation' => ['orderInfo','member'],
             'sortname' => 'shop_id',
             'sortorder' => 'desc'
         ];
         list($list, $total) = $this->shop->getList($condition);
+        if (!$list->isEmpty()) {
+            foreach ($list as $item) {
+                // 店铺信誉
+                $credit = $this->shopCredit->getCreditInfoByScore($item->credit);
+                $item->credit_name = $credit['credit_name'];
+                $item->credit_img = $credit['credit_img'];
+                $item->score = format_price(round(($item->desc_score+$item->service_score+$item->send_score) / 3, 2)); // 需计算 取平均数
+            }
+        }
         $pageHtml = pagination($total);
 
         $compact = compact('title', 'list', 'total', 'pageHtml');
@@ -174,7 +201,7 @@ class ShopController extends Backend
         $fixed_title = '入驻店铺 - '.$title;
         $is_supply = $request->get('is_supply', 0);
 
-        $this->sublink($this->links, 'apply-list?is_supply=0', 'is_supply');
+        $this->sublink($this->links, 'apply-list?is_supply=0');
 
         $action_span = [];
 
@@ -192,6 +219,8 @@ class ShopController extends Backend
 
         $params = $request->all();
         $where = [];
+        $where[] = ['audit_status', '!=', 1];
+
         // 搜索条件
         $search_arr = ['key_word', 'shop_type', 'shop_status'];
         foreach ($search_arr as $v) {
@@ -206,11 +235,25 @@ class ShopController extends Backend
         }
         // 列表
         $condition = [
+            'with' => ['shopClass','shop'],
             'where' => $where,
             'sortname' => 'shop_id',
             'sortorder' => 'desc'
         ];
-        list($list, $total) = $this->shop->getList($condition);
+        list($list, $total) = $this->shopApply->getList($condition);
+        if (!$list->isEmpty()) {
+            foreach ($list as $item) {
+
+                $item->shop_type = $item->shop->shop_type;
+                $item->user_name = $item->user->user_name ?? '';
+                $item->cls_name = $item->shopClass->cls_name ?? '';
+
+                $duration_arr = explode('-', $item->duration);
+                $item->duration_format = isset($duration_arr[2]) ? $duration_arr[0].' '.format_unit($duration_arr[1]) : '';
+
+            }
+        }
+
         $pageHtml = pagination($total);
 
         $compact = compact('title', 'list', 'total', 'pageHtml');
@@ -223,7 +266,7 @@ class ShopController extends Backend
 
     /**
      * 待续费店铺
-     *
+     * todo
      * @param Request $request
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Throwable
@@ -234,7 +277,7 @@ class ShopController extends Backend
         $fixed_title = '入驻店铺 - '.$title;
         $is_supply = $request->get('is_supply', 0);
 
-        $this->sublink($this->links, 'renew-list?is_supply=0', 'is_supply');
+        $this->sublink($this->links, 'renew-list?is_supply=0');
 
         $action_span = [];
 
@@ -283,7 +326,7 @@ class ShopController extends Backend
 
     /**
      * 续签申请店铺
-     *
+     * todo
      * @param Request $request
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Throwable
@@ -294,7 +337,7 @@ class ShopController extends Backend
         $fixed_title = '入驻店铺 - '.$title;
         $is_supply = $request->get('is_supply', 0);
 
-        $this->sublink($this->links, 'renew-apply-list?is_supply=0', 'is_supply');
+        $this->sublink($this->links, 'renew-apply-list?is_supply=0');
 
         $action_span = [];
 
@@ -343,7 +386,7 @@ class ShopController extends Backend
 
     /**
      * 预上线店铺
-     *
+     * todo
      * @param Request $request
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Throwable
@@ -354,7 +397,7 @@ class ShopController extends Backend
         $fixed_title = '入驻店铺 - '.$title;
         $is_supply = $request->get('is_supply', 0);
 
-        $this->sublink($this->links, 'pre-line-list?is_supply=0', 'is_supply');
+        $this->sublink($this->links, 'pre-line-list?is_supply=0');
 
         $action_span = [];
 
@@ -419,11 +462,13 @@ class ShopController extends Backend
         $where = [];
         $where[] = ['is_real', 1];
         $where[] = ['is_seller', 0];
-        // 根据关键词搜索 todo 根据 会员账号/手机号码/邮箱模糊搜索
+        // 根据关键词搜索 根据 会员账号/手机号码/邮箱模糊搜索
+        $multiLike = '';
         if ($keyword != '') {
-            $where[] = ['user_name', 'like', "%{$keyword}%"];
+            $multiLike = "(concat(IFNULL(user_name,''),IFNULL(mobile,''),IFNULL(email,'')) like '%".$keyword."%')";
         }
         $condition = [
+            'multi_like' => $multiLike,
             'where' => $where,
             'sortname' => 'user_id',
             'sortorder' => 'desc',
@@ -469,8 +514,6 @@ class ShopController extends Backend
             'sortorder' => 'desc'
         ];
         list($cat_list, $total) = $this->shopClass->getList($condition, '', false, true);
-
-
         $use_fee_value = unserialize(sysconf('use_fee_value'));
 
         return view('shop.shop.add', compact('title', 'cat_list', 'use_fee_value'));
@@ -482,9 +525,14 @@ class ShopController extends Backend
         $id = $request->get('id');
 
         $info = $this->shop->getById($id);
+        // 店铺信誉
+        $credit = $this->shopCredit->getCreditInfoByScore($info->credit);
+        $info->credit_name = $credit['credit_name'];
+        $info->credit_img = $credit['credit_img'];
+        $info->score = '5.00'; // 需计算
 
         $extras = '?id='.$id.'&shop_type='.$info->shop_type.'&is_supply='.$info->is_supply;
-        $this->sublink($this->edit_links, 'edit', '', $extras, 'pay-add');
+        $this->sublink($this->edit_links, 'edit', '', $extras, 'pay-add,pay-edit');
 
         $fixed_title = '入驻店铺 - '.$title;
 
@@ -516,9 +564,7 @@ class ShopController extends Backend
         ];
         list($cat_list, $total) = $this->shopClass->getList($condition, '', false, true);
 
-//        $info->cat_ids = explode(',', $info->cat_ids);
         $shop_bind_class = $info->shopBindClass;
-//        dd($shop_bind_class);
 
         return view('shop.shop.edit', compact('title', 'info', 'cat_list', 'shop_bind_class'));
     }
@@ -537,7 +583,7 @@ class ShopController extends Backend
 
         $this->edit_links[0]['url'] = 'shop/shop/edit?id='.$id.'&shop_type='.$info->shop_type.'&is_supply='.$info->is_supply;
         $this->edit_links[2]['url'] = 'shop/shop/pay-list?id='.$id.'&shop_type='.$info->shop_type.'&is_supply='.$info->is_supply;
-        $this->sublink($this->edit_links, 'shop-auth-info', '', '', 'pay-add');
+        $this->sublink($this->edit_links, 'shop-auth-info', '', '', 'pay-add,pay-edit');
 
 
         $fixed_title = '入驻店铺 - '.$title;
@@ -574,11 +620,11 @@ class ShopController extends Backend
             $ret = ShopFieldValue::where('shop_id', $id)->update($post);
             if ($ret === false) {
                 // fail
-                flash('error', '操作失败');
+                flash('error', OPERATE_FAIL);
                 return redirect($request->fullUrl());
             }
             // success
-            flash('success', '操作成功');
+            flash('success', OPERATE_SUCCESS);
             return redirect($request->fullUrl());
         }
 
@@ -601,7 +647,7 @@ class ShopController extends Backend
             $msg = '入驻店铺编辑';
         }else {
             // 添加
-            $post['user_name'] = DB::table('user')->where('user_id', $post['user_id'])->value('user_name');
+            $post['shop_audit'] = 1; // 默认审核通过
             $ret = $this->shop->addShop($post);
             $msg = '入驻店铺添加';
         }
@@ -713,6 +759,111 @@ class ShopController extends Backend
     }
 
     /**
+     * 编辑开店申请
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function applyEdit(Request $request)
+    {
+        $id = $request->get('id');
+        $shop_type = $request->get('shop_type'); // 1-个人店铺 2-企业店铺
+        $audit = $request->get('audit',0); // 审核状态 0-待审核 1-审核通过 2-拒绝通过
+        $is_supply = $request->get('is_supply',0); // 是否供应商
+
+        $info = ShopApply::where('shop_id', $id)->first();
+        if (empty($info)) {
+            abort(404, INVALID_PARAM);
+        }
+
+        $title = '编辑开店申请';
+        $fixed_title = '入驻店铺 - '.$title;
+
+        $action_span = [];
+        $explain_panel = [];
+        $blocks = [
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span,
+            'explain_panel' => $explain_panel
+        ];
+        $this->setLayoutBlock($blocks); // 设置block
+
+        if ($request->method() == 'POST') {
+            // 保存数据
+            $shopApplyModel = $request->post('ShopApplyModel');
+
+            // 拒绝通过 执行操作 修改审核状态并给会员发送审核拒绝通过提醒消息
+            $ret = $this->shopApply->audit($shopApplyModel['shop_id'], $shopApplyModel['audit_status'], $shopApplyModel['fail_info']);
+            if (!$ret) {
+                admin_log('审核开店申请失败！');
+                flash('error', OPERATE_FAIL);
+                return back();
+            }
+
+            admin_log('审核开店申请成功！');
+            flash('success', OPERATE_SUCCESS);
+            return redirect('/shop/shop/list?is_supply=0');
+        }
+
+        return view('shop.shop.apply_edit', compact('title', 'info','id','shop_type','audit','is_supply'));
+    }
+
+    /**
+     * 审核开店申请
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function audit(Request $request)
+    {
+        $id = $request->get('id');
+        $audit = $request->get('audit');
+        $fail_info = $request->get('fail_info');
+        $is_supply = $request->get('is_supply');
+
+        if ($audit == 1) {
+            // 审核通过 执行操作 修改审核状态并给会员发送审核通过提醒消息
+            $ret = $this->shopApply->audit($id, $audit, $fail_info);
+            if (!$ret) {
+                admin_log('审核开店申请失败！');
+                flash('error', OPERATE_FAIL);
+                return back();
+            }
+
+            admin_log('审核开店申请成功！');
+            flash('success', OPERATE_SUCCESS);
+            return back();
+        }
+
+        // 拒绝通过
+
+        return view('shop.shop.audit');
+    }
+
+    /**
+     * 批量审核通过开店申请
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function batchPass(Request $request)
+    {
+        $is_supply = $request->get('is_supply',0);
+
+        $ids = $request->post('ids'); // array
+
+        // 批量审核通过 执行操作 修改审核状态并给会员发送审核通过提醒消息
+        $ret = $this->shopApply->batchPass($ids);
+        if (!$ret) {
+            admin_log('批量审核通过开店申请失败！');
+            return result(-1,null, OPERATE_FAIL);
+        }
+
+        admin_log('批量审核通过开店申请成功！');
+        return result(0,null,OPERATE_SUCCESS);
+    }
+
+    /**
      * 付款信息列表
      *
      * @param Request $request
@@ -729,7 +880,7 @@ class ShopController extends Backend
         $info = $this->shop->getById($id);
 
         $extra = 'id='.$id.'&shop_type='.$info->shop_type.'&is_supply='.$info->is_supply;
-        $this->sublink($this->edit_links, 'pay-list', '', '?'.$extra, 'pay-add');
+        $this->sublink($this->edit_links, 'pay-list', '', '?'.$extra, 'pay-add,pay-edit');
 
         $action_span = [
             [
@@ -791,7 +942,7 @@ class ShopController extends Backend
         $use_fee_value = unserialize(sysconf('use_fee_value'));
 
         $extra = 'id='.$shop_id.'&shop_type='.$shop_info->shop_type.'&is_supply='.$shop_info->is_supply;
-        $this->sublink($this->edit_links, 'pay-add', '', '?'.$extra, 'edit,shop-auth-info');
+        $this->sublink($this->edit_links, 'pay-add', '', '?'.$extra, 'edit,pay-edit,shop-auth-info');
 
         // 检查店铺是否存在未付款信息
         if ($this->shopPayment->isExistUnpaid($shop_id) && !$pay_id) {
@@ -803,8 +954,9 @@ class ShopController extends Backend
             // 更新操作
             $info = $this->shopPayment->getById($pay_id);
             view()->share('info', $info);
+
             $title = '编辑付款信息';
-            $this->sublink($this->links, 'edit', '', '?'.$extra, 'add,shop-auth-info');
+            $this->sublink($this->edit_links, 'pay-edit', '', '?'.$extra, 'add,pay-add,shop-auth-info');
         }
 
         $fixed_title = '入驻店铺 - '.$title;
@@ -840,6 +992,11 @@ class ShopController extends Backend
     public function savePayData(Request $request)
     {
         $post = $request->post('ShopPaymentModel');
+
+        $duration_arr = explode('-', $post['duration']);
+        $post['duration'] = $duration_arr[0];
+        $post['unit'] = str_replace(['year','month','day'],[0,1,2], $duration_arr[1]);
+        $post['system_fee'] = isset($duration_arr[2]) ? $duration_arr[2] : '0.00';
 
         if (!empty($post['pay_id'])) {
             // 编辑
@@ -890,12 +1047,6 @@ class ShopController extends Backend
             admin_log('店铺删除失败。ID：'.$shop_id);
             return result($ret['code'], $ret['data'], $ret['message']);
         }
-
-//        if ($ret === false) {
-//            // Log
-//            admin_log('店铺删除失败。ID：'.$shop_id);
-//            return result(-1, '', '删除失败');
-//        }
 
         // Log
         admin_log('店铺删除成功。ID：'.$shop_id);

@@ -34,7 +34,7 @@ class GoodsActivity extends BaseModel
     protected $table = 'goods_activity';
 
     protected $fillable = [
-        'act_id','sku_id','goods_id','cat_id','sale_base','act_price','act_stock','ext_info','click_count'
+        'act_id','shop_id','act_type','sku_id','goods_id','cat_id','sale_base','act_price','act_stock','ext_info','click_count','sort'
     ];
 
     protected $primaryKey = 'id';
@@ -58,5 +58,15 @@ class GoodsActivity extends BaseModel
     public function getExtInfoAttribute()
     {
         return json_decode($this->attributes['ext_info'],true);
+    }
+
+    public function goods()
+    {
+        return $this->belongsTo(Goods::class,'goods_id','goods_id');
+    }
+
+    public function goodsSku()
+    {
+        return $this->hasMany(GoodsSku::class, 'goods_id', 'goods_id');
     }
 }

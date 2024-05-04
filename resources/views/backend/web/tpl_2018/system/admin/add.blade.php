@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30">
         <form id="form" class="form-horizontal" action="/system/admin/add" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
 
             <!--   -->
             <input type="hidden" id="adminmodel-user_id" class="form-control" name="AdminModel[user_id]" value="{{ $info->user_id ?? '' }}">

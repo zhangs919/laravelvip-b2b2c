@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
 
 
     // Dashboard Route 营销中心
@@ -15,6 +15,8 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
 
         // 红包
         Route::group(['prefix' => 'bonus'], function () {
+            Route::get('config', 'Dashboard\BonusController@config'); // config
+
             Route::get('list', 'Dashboard\BonusController@lists'); // lists
             Route::get('add', 'Dashboard\BonusController@add'); // add
             Route::post('add', 'Dashboard\BonusController@saveData'); // saveData
@@ -34,6 +36,10 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
         // 用户红包
         Route::group(['prefix' => 'user-bonus'], function () {
             Route::get('list', 'Dashboard\UserBonusController@lists'); // lists
+            Route::get('add', 'Dashboard\UserBonusController@add');
+            Route::post('add', 'Dashboard\UserBonusController@addSave');
+            Route::get('search-user', 'Dashboard\UserBonusController@searchUser'); // ajax 搜索会员
+
 
         });
 
@@ -47,7 +53,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('view', 'Dashboard\GroupBuyController@view'); // view
             Route::post('delete', 'Dashboard\GroupBuyController@delete'); // delete
             Route::post('batch-delete', 'Dashboard\GroupBuyController@batchDelete'); // batchDelete
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
+            Route::post('picker', 'Dashboard\GroupBuyController@picker'); // add
             Route::post('goods-info', 'Dashboard\GroupBuyController@goodsInfo');
             Route::post('upload-act_img', 'Dashboard\GroupBuyController@uploadActImg'); // 上传活动图片
 
@@ -56,23 +62,10 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
 
         // 活动商品选择器
         Route::group(['prefix' => 'activity-goods'], function () {
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); //
+            Route::any('picker', 'Dashboard\ActivityGoodsController@picker'); //
         });
 
-        // 赠品活动 ok
-        Route::group(['prefix' => 'gift'], function () {
-            Route::get('list', 'Dashboard\GiftController@lists'); // lists
-            Route::get('add', 'Dashboard\GiftController@add'); // add
-            Route::get('edit', 'Dashboard\GiftController@edit'); // edit
-            Route::post('add', 'Dashboard\GiftController@saveData'); // saveData
-            Route::post('edit', 'Dashboard\GiftController@saveData'); // saveData
-            Route::post('delete', 'Dashboard\GiftController@delete'); // delete
-            Route::post('batch-delete', 'Dashboard\GiftController@batchDelete'); // batchDelete
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
-            Route::post('goods-info', 'Dashboard\GiftController@goodsInfo');
 
-
-        });
 
         // 搭配套餐
         Route::group(['prefix' => 'goods-mix'], function () {
@@ -82,7 +75,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::post('add', 'Dashboard\GoodsMixController@saveData'); // saveData
             Route::post('delete', 'Dashboard\GoodsMixController@delete'); // delete
             Route::post('batch-delete', 'Dashboard\GoodsMixController@batchDelete'); // batchDelete
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
+            Route::any('picker', 'Dashboard\GoodsMixController@picker'); // add
             Route::get('sku-info', 'Dashboard\GoodsMixController@skuInfo'); // skuInfo
             Route::post('goods-info', 'Dashboard\GoodsMixController@goodsInfo');
 
@@ -97,10 +90,26 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::post('add', 'Dashboard\LimitDiscountController@saveData'); // saveData
             Route::post('delete', 'Dashboard\LimitDiscountController@delete'); // delete
             Route::post('batch-delete', 'Dashboard\LimitDiscountController@batchDelete'); // batchDelete
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
+            Route::any('picker', 'Dashboard\LimitDiscountController@picker'); // add
 //            Route::get('sku-info', 'Dashboard\LimitDiscountController@skuInfo'); // skuInfo
             Route::post('goods-info', 'Dashboard\LimitDiscountController@goodsInfo');
+            Route::post('batch-goods-info', 'Dashboard\LimitDiscountController@batchGoodsInfo');
             Route::post('edit-act-info', 'Dashboard\LimitDiscountController@editActInfo'); // editActInfo
+
+
+        });
+
+        // 赠品活动 ok
+        Route::group(['prefix' => 'gift'], function () {
+            Route::get('list', 'Dashboard\GiftController@lists'); // lists
+            Route::get('add', 'Dashboard\GiftController@add'); // add
+            Route::get('edit', 'Dashboard\GiftController@edit'); // edit
+            Route::post('add', 'Dashboard\GiftController@saveData'); // saveData
+            Route::post('edit', 'Dashboard\GiftController@saveData'); // saveData
+            Route::post('delete', 'Dashboard\GiftController@delete'); // delete
+            Route::post('batch-delete', 'Dashboard\GiftController@batchDelete'); // batchDelete
+            Route::any('picker', 'Dashboard\GiftController@picker'); //
+            Route::post('goods-info', 'Dashboard\GiftController@goodsInfo');
 
 
         });
@@ -115,7 +124,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('reload-list.html', 'Dashboard\FullCutController@reloadList'); // reloadList
             Route::post('delete', 'Dashboard\FullCutController@delete'); // delete
             Route::post('batch-delete', 'Dashboard\FullCutController@batchDelete'); // batchDelete
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
+            Route::any('picker', 'Dashboard\FullCutController@picker'); // add
 
 
         });
@@ -134,6 +143,20 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
 
         });
 
+        // 预售
+        Route::group(['prefix' => 'pre-sale'], function () {
+            Route::get('list', 'Dashboard\PreSaleController@lists'); // lists
+            Route::get('add', 'Dashboard\PreSaleController@add'); // add
+            Route::get('edit', 'Dashboard\PreSaleController@edit'); // edit
+            Route::post('add', 'Dashboard\PreSaleController@saveData'); // saveData
+            Route::post('edit', 'Dashboard\PreSaleController@saveData'); // saveData
+            Route::post('delete', 'Dashboard\PreSaleController@delete'); // delete
+            Route::post('batch-delete', 'Dashboard\PreSaleController@batchDelete'); // batchDelete
+            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
+            Route::get('sku-list', 'Dashboard\PreSaleController@skuList'); // skuList
+
+
+        });
 
 
         // 积分商城
@@ -158,6 +181,29 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('integral-bonus-list', 'Dashboard\IntegralMallController@integralBonusList'); // 积分兑换红包
 
             Route::get('integral-mall-set', 'Dashboard\IntegralMallController@integralMallSet'); // 积分商城设置
+
+        });
+
+        // 直播活动
+        Route::group(['prefix' => 'live'], function () {
+            Route::get('list', 'Dashboard\LiveController@lists'); // lists
+            Route::get('add', 'Dashboard\LiveController@add'); // add
+            Route::get('edit', 'Dashboard\LiveController@edit'); // edit
+            Route::post('add', 'Dashboard\LiveController@saveData'); // saveData
+            Route::post('edit', 'Dashboard\LiveController@saveData'); // saveData
+            Route::get('live-auth', 'Dashboard\LiveController@liveAuth'); //
+            Route::any('get-push-stream', 'Dashboard\LiveController@getPushStream'); //
+            Route::post('change-status', 'Dashboard\LiveController@changeStatus'); // delete
+            Route::post('delete', 'Dashboard\LiveController@delete'); // delete
+            Route::post('batch-delete', 'Dashboard\LiveController@batchDelete'); // batchDelete
+            Route::post('picker', 'Dashboard\LiveController@picker'); // add
+            Route::post('goods-info', 'Dashboard\LiveController@goodsInfo');
+            Route::post('edit-live-info', 'Dashboard\LiveController@editLiveInfo');
+            Route::post('upload-act_img', 'Dashboard\LiveController@uploadActImg'); // 上传活动图片
+            Route::get('qrcode', 'Dashboard\LiveController@qrcode'); // qrcode
+            Route::get('download-qrcode', 'Dashboard\LiveController@downloadQrCode'); // 下载直播二维码
+            Route::post('change-status', 'Dashboard\LiveController@changeStatus'); //
+
 
         });
 
@@ -192,6 +238,60 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('list', 'Dashboard\CustomFormDataController@lists'); // lists
             Route::get('view', 'Dashboard\CustomFormDataController@view'); // 统计视图
             Route::get('detail', 'Dashboard\CustomFormDataController@detail'); // 查看明细
+        });
+
+        // 推广
+        Route::group(['prefix' => 'promote'], function () {
+            Route::get('view', 'Dashboard\PromoteController@view'); //
+            Route::get('view-big', 'Dashboard\PromoteController@viewBig'); //
+            Route::get('qrcode', 'Dashboard\PromoteController@qrcode'); // qrcode
+            Route::get('miniprogram', 'Dashboard\PromoteController@miniProgram'); // miniprogram
+            Route::get('download-qcode', 'Dashboard\PromoteController@downloadQcode');
+
+        });
+
+        // 线下门店
+        Route::group(['prefix' => 'multi-store'], function () {
+            Route::get('index', 'Dashboard\MultiStoreController@index'); //
+            Route::get('add', 'Dashboard\MultiStoreController@add'); // add
+            Route::get('edit', 'Dashboard\MultiStoreController@edit'); // add
+            Route::post('add', 'Dashboard\MultiStoreController@saveData'); // saveData
+            Route::post('delete', 'Dashboard\MultiStoreController@delete'); // delete
+            Route::post('batch-delete', 'Dashboard\MultiStoreController@batchDelete'); // batchDelete
+            Route::get('group-list', 'Dashboard\MultiStoreController@groupList'); // ajax加载门店分组列表
+            Route::get('user-list', 'Dashboard\MultiStoreController@userList'); // ajax加载管理员列表
+            Route::get('region-picker', 'Dashboard\MultiStoreController@regionPicker'); // ajax加载地区列表
+            Route::get('set-is-enable', 'Dashboard\MultiStoreController@setIsEnable'); //
+            Route::post('master', 'Dashboard\MultiStoreController@master'); //
+            Route::any('set-activity.html', 'Dashboard\MultiStoreController@setActivity'); //
+            Route::get('site', 'Dashboard\MultiStoreController@site'); // 
+            Route::get('goods-list', 'Dashboard\MultiStoreController@goodsList'); //
+            Route::get('goods-manage', 'Dashboard\MultiStoreController@goodsList')->name('goods-manage'); //
+            Route::get('set-is-sell', 'Dashboard\MultiStoreController@setIsSell'); //
+            Route::get('set-is-self-mention', 'Dashboard\MultiStoreController@setIsSelfMention'); //
+            Route::post('batch-is-sell', 'Dashboard\MultiStoreController@batchIsSell'); //
+            Route::post('batch-is-self-mention', 'Dashboard\MultiStoreController@batchIsSelfMention'); //
+            Route::post('edit-multi-goods', 'Dashboard\MultiStoreController@editMultiGoods'); //
+            Route::any('edit-goods', 'Dashboard\MultiStoreController@editGoods'); //
+            Route::post('goods-delete', 'Dashboard\MultiStoreController@goodsDelete');
+            Route::any('store-related-goods', 'Dashboard\MultiStoreController@storeRelatedGoods'); //
+            Route::post('picker', 'Dashboard\MultiStoreController@picker'); //
+
+        });
+
+        // 门店分组
+        Route::group(['prefix' => 'multi-store-group'], function () {
+            Route::get('list', 'Dashboard\MultiStoreGroupController@lists'); // lists
+            Route::get('add', 'Dashboard\MultiStoreGroupController@add'); // add
+            Route::get('edit', 'Dashboard\MultiStoreGroupController@edit'); // add
+            Route::post('add', 'Dashboard\MultiStoreGroupController@saveData'); // saveData
+            Route::post('edit', 'Dashboard\MultiStoreGroupController@saveData'); // saveData
+            Route::get('client-validate', 'Dashboard\MultiStoreGroupController@clientValidate'); // clientValidate
+            Route::post('edit-group-info', 'Dashboard\MultiStoreGroupController@editGroupInfo'); // editGroupInfo
+            Route::post('delete', 'Dashboard\MultiStoreGroupController@delete'); // delete
+            Route::get('store-related-goods.html', 'Dashboard\MultiStoreGroupController@storeRelatedGoods'); //
+            Route::get('set-activity.html', 'Dashboard\MultiStoreGroupController@setActivity'); //
+
         });
     });
 

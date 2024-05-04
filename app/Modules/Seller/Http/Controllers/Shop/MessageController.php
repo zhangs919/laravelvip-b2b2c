@@ -25,14 +25,19 @@ class MessageController extends Seller
     protected $article; // 文章
     protected $messageTemplate; // 消息模板
 
-    public function __construct()
+    public function __construct(
+        MessageRepository $message
+        ,UserMessageRepository $userMessage
+        ,ArticleRepository $article
+        ,MessageTemplateRepository $messageTemplate
+    )
     {
         parent::__construct();
 
-        $this->message = new MessageRepository();
-        $this->userMessage = new UserMessageRepository();
-        $this->article = new ArticleRepository();
-        $this->messageTemplate = new MessageTemplateRepository();
+        $this->message = $message;
+        $this->userMessage = $userMessage;
+        $this->article = $article;
+        $this->messageTemplate = $messageTemplate;
 
         $this->set_menu_select('account', 'shop-message');
     }
@@ -81,12 +86,14 @@ class MessageController extends Seller
         $where[] = ['type', 2]; // 店铺消息
         $condition = [
             'join' => [
-                'join_table' => 'message',
-                'join_first' => 'user_message.msg_id',
-                'join_operator' => '=',
-                'join_second' => 'message.msg_id',
-                'join_type' => 'left',
-                'join_where' => false,
+                [
+                    'join_table' => 'message',
+                    'join_first' => 'user_message.msg_id',
+                    'join_operator' => '=',
+                    'join_second' => 'message.msg_id',
+                    'join_type' => 'left',
+                    'join_where' => false,
+                ]
             ],
             'where' => $where,
 //            'sortname' => 'rec_id',

@@ -1,10 +1,19 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=1.2"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=1.2"/>
+
 @stop
 
 {{--content--}}
@@ -44,7 +53,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -90,9 +99,32 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        // 
         var tablelist;
         $().ready(function() {
             tablelist = $("#table_list").tablelist({
@@ -100,13 +132,17 @@
                 params: $("#searchForm").serializeJson()
             });
             // 搜索
-            $("#searchForm").submit(function() {
-                // 序列化表单为JSON对象
-                var data = $(this).serializeJson();
-                // Ajax加载数据
+//         $("#searchForm").submit(function() {
+//             // 序列化表单为JSON对象
+//             var data = $(this).serializeJson();
+//             // Ajax加载数据
+//             tablelist.load(data);
+//             // 阻止表单提交
+//             return false;
+//         });
+            $("#btn_submit").click(function() {
+                var data = $("#searchForm").serializeJson();
                 tablelist.load(data);
-                // 阻止表单提交
-                return false;
             });
             // 删除记录
             $("body").on('click', '.del', function() {
@@ -119,23 +155,21 @@
                     }
                 });
             });
-            // 批量删除
-            $("body").on("click", "#batch-delete", function() {
-                var ids = tablelist.checkedValues();
-
-                if (ids.length == 0) {
+            //批量删除
+            $("body").on('click', '#btn_delete', function() {
+                var data = tablelist.checkedValues();
+                if (data.length == 0) {
                     $.msg("您没有选择任何待处理的数据！");
                     return;
                 }
                 tablelist.remove({
-                    confirm: '您确定批量删除客服吗？',
-                    url: 'batch-delete',
+                    confirm: '您确定删除这些记录吗？',
+                    url: 'deletepl',
                     data: {
-                        ids: ids
+                        data: data
                     }
                 });
             });
-
             $(".customer_sort").editable({
                 type: "text",
                 url: 'edit-customer-info',
@@ -167,7 +201,6 @@
                     }
                 }
             });
-
         });
     </script>
 @stop

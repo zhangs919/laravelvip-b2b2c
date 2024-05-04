@@ -8,7 +8,6 @@ use App\Repositories\CopyrightAuthRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class PassportController extends Controller
@@ -20,11 +19,15 @@ class PassportController extends Controller
 //    protected $username;
 
     protected $copyrightAuth;
+    protected $shop;
+    protected $user;
 
-    public function __construct()
+    public function __construct(CopyrightAuthRepository $copyrightAuth, ShopRepository $shop,UserRepository $user)
     {
 
-        $this->copyrightAuth = new CopyrightAuthRepository();
+        $this->copyrightAuth = $copyrightAuth;
+        $this->shop = $shop;
+        $this->user = $user;
 
         $this->middleware('guest:store')->except('logout');
     }
@@ -53,11 +56,8 @@ class PassportController extends Controller
     {
         // 登录成功 记录shop_id session
         $user_info = auth('store')->user();
-        $shopRep = new ShopRepository();
-        $shop_info = $shopRep->getByField('user_id', $user_info->user_id);
-//        dd($shop_info->toArray());
-        session()->put('shop_info', $shop_info);
-//        session('shop_info', $shop_info->toArray()); // 将店铺信息存入session
+        $shop_info = $this->shop->getByField('user_id', $user_info->user_id);
+        session()->put('shop_info', $shop_info); // 将店铺信息存入session
 
         // 记录日志
         shop_log('网点管理员【'.store_info()->user_name.'】登录网点中心。');
@@ -69,6 +69,7 @@ class PassportController extends Controller
      * 重写登陆验证方法
      *
      * @param Request $request
+     * @throws \Illuminate\Validation\ValidationException
      */
     protected function validateLogin(Request $request)
     {
@@ -90,13 +91,11 @@ class PassportController extends Controller
     protected function attemptLogin(Request $request)
     {
         // 登录前验证 是否是商家账号
-        $userRep = new UserRepository();
-
 
         $loginData = [];
-        if (Input::get('SmsLoginModel.mobile')) { // 动态密码登录
+        if ($request->input('SmsLoginModel.mobile')) { // 动态密码登录
             $loginData = []; // todo
-        } elseif($username = Input::get('LoginModel.username')) { // 普通登录
+        } elseif($username = $request->input('LoginModel.username')) { // 普通登录
             if (check_is_mobile($username)) { // 手机号登录
                 $username_field = 'mobile';
             } elseif (check_is_email($username)) { // 邮箱登录
@@ -106,12 +105,12 @@ class PassportController extends Controller
             }
 
             $condition[] = [$username_field, $username];
-            $isSeller = $userRep->checkIsStore($condition);
+            $isSeller = $this->user->checkIsStore($condition);
             if (!$isSeller) {
                 // 如果不是网点管理员 则返回错误
                 return false;
             }
-            $loginData = [$username_field => Input::get('LoginModel.username'), 'password' => Input::get('LoginModel.password')];
+            $loginData = [$username_field => $request->input('LoginModel.username'), 'password' => $request->input('LoginModel.password')];
         }
 
         return $this->guard()->attempt(

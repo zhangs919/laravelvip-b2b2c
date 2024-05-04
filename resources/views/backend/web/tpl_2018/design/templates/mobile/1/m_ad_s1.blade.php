@@ -9,9 +9,9 @@
 
 
 
-    <div class="img-groups-box @if(count(@$data['3-1']) > 0) img-groups{{ count(@$data['3-1']) }}-box @endif" @if(!empty(@$data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
+    <div class="img-groups-box @if(count($data['3-1'] ?? []) > 0) img-groups{{ count($data['3-1'] ?? []) }}-box @endif" @if(!empty($data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
 
-        <ul @if(empty(@$data['99-1'][0]['border'])) class="border-0" @endif>
+        <ul @if(empty($data['99-1'][0]['border'])) class="border-0" @endif>
             @if($tpl_name != '' && $is_design)
                 <a title="编辑" href="javascript:void(0)" class="pic-selector content-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="3" data-number="5">
                     <i class="fa fa-edit"></i>
@@ -49,5 +49,5 @@
 
 
 <script type="text/javascript">
-    $.imgloading.loading();
+    // $.imgloading.loading();
 </script>

@@ -25,6 +25,7 @@ namespace App\Repositories;
 
 
 use App\Models\Compare;
+use Illuminate\Support\Facades\DB;
 
 class CompareRepository
 {
@@ -51,5 +52,65 @@ class CompareRepository
             // 未加入对比
             return false;
         }
+    }
+
+    /**
+     * 加入对比/移除对比
+     *
+     * @param $userId
+     * @param int $goodsId
+     * @return false|int
+     */
+    public function toggle($userId, $goodsId = 0)
+    {
+        DB::beginTransaction();
+        try {
+            if ($this->checkIsCompared($userId, $goodsId)) {
+                // 移除对比
+                $this->remove($userId, $goodsId);
+                $result = 0;
+            } else {
+                // 加入对比
+                $insert['user_id'] = $userId;
+                $insert['goods_id'] = $goodsId;
+                $this->store($insert);
+                $result = 1;
+            }
+            // 返回
+
+            DB::commit();
+            return $result;
+        }catch (\Exception $e){
+            DB::rollback();//事务回滚
+//            echo $e->getMessage();
+//            echo $e->getCode();
+            return false;
+        }
+    }
+
+    /**
+     * 移除对比
+     *
+     * @param $userId
+     * @param $goodsId
+     * @return mixed
+     */
+    public function remove($userId, $goodsId)
+    {
+        $where[] = ['user_id', $userId];
+        $where[] = ['goods_id', $goodsId];
+        return $this->model->where($where)->delete();
+    }
+
+    /**
+     * 清空对比
+     *
+     * @param $userId
+     * @return mixed
+     */
+    public function clear($userId)
+    {
+        $where[] = ['user_id', $userId];
+        return $this->model->where($where)->delete();
     }
 }

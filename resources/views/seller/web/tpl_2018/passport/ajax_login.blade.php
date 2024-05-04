@@ -1,10 +1,10 @@
-<link type="text/css" rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/login.css">
+<link type="text/css" rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/login.css">
 <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 <!--整站改色 _start-->
 @if(sysconf('custom_style_enable') == 1)
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=1.6"/>
 @else
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6"/>
 @endif
 <!--整站改色 _end-->
 <script src="/assets/d2eace91/js/layer/layer.js?v=20180418"></script>
@@ -22,7 +22,7 @@
 
             <div class="login-tit">
                 还不是卖家？
-                <a href="http://www.b2b2c.yunmall.68mall.com/shop/apply.html" class="regist-link color">
+                <a href="http://www.test.com/shop/apply.html" class="regist-link color">
                     立即申请
                     <i>></i>
                 </a>
@@ -72,7 +72,7 @@
                             <span>自动登录</span>
                         </label>
 
-                        <a class="forget-password fr" href="http://www.b2b2c.yunmall.68mall.com/user/find-password.html">忘记密码？</a>
+                        <a class="forget-password fr" href="http://{{ env('FRONTEND_DOMAIN') }}/user/find-password.html">忘记密码？</a>
                     </div>
                     <div class="login-btn">
                         <input type="hidden" name="act" value="act_login" />
@@ -138,7 +138,6 @@
                     <div class="item-coagent">
 
                     </div>
-                    {{--<input type="hidden" name="back_url" value="http://seller.b2b2c.yunmall.68mall.com/index.html" />--}}
                     <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                     <input type="hidden" name="ajax_layout" value="1" />
@@ -172,7 +171,7 @@
                 </div>
                 <div class="login-links">
                     <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                    <a href="http://www.b2b2c.yunmall.68mall.com/register.html" class="register" target="_blank">免费注册</a>
+                    <a href="http://www.test.com/register.html" class="register" target="_blank">免费注册</a>
                 </div>
             </div>
         </div>
@@ -196,7 +195,7 @@
                 </div>
                 <div class="login-links">
                     <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                    <a href="http://www.b2b2c.yunmall.68mall.com/register.html" class="register" target="_blank">免费注册</a>
+                    <a href="http://www.test.com/register.html" class="register" target="_blank">免费注册</a>
                 </div>
             </div>
         </div>
@@ -228,7 +227,7 @@
         });
         $("body").on('click', '.website-login', function() {
             var type = $(this).data("id");
-            $.go("http://www.b2b2c.yunmall.68mall.com"+"/website/login?type="+type);
+            $.go("http://www.test.com"+"/website/login?type="+type);
         })
 
         var container = $("#{{ $uuid }}");
@@ -267,7 +266,7 @@
                 return false;
             }
 
-// 
+//
             var data = $(this).serializeJson();
             var url = $(this).attr("action");
             $.post(url, data, function(result){
@@ -286,7 +285,7 @@
                 }
             }, "json")
             return false;
-// 
+//
         });
 
         var validator1 = $(container).find("#form1").validate();
@@ -298,7 +297,7 @@
                 return false;
             }
 
-// 
+//
             var data = $(this).serializeJson();
             var url = $(this).attr("action");
             $.post(url, data, function(result){
@@ -313,7 +312,7 @@
                 }
             }, "json")
             return false;
-// 
+//
         });
 
         $(container).find("#btn_send_sms_code").click(function(){
@@ -420,7 +419,7 @@
     });
 
     var record = 0;
-    // 
+    //
     function qrcode_login(result) {
         if (typeof result == "undefined" || result == null) {
             return;
@@ -466,7 +465,7 @@
             $('.SZY-QRCODE-LOGIN').qrcode({
                 width:150,
                 height:150,
-                text: 'http://www.b2b2c.yunmall.68mall.com/site/qrcode-login.html?k=' + result.data.key
+                text: 'http://www.test.com/site/qrcode-login.html?k=' + result.data.key
             });
 
             var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';
@@ -482,7 +481,7 @@
                 $('.login-mobile').eq(0).find('.qrcode-error').show();
                 record = 0;
             }
-// 
+//
             WS_QRCodeLogin({
                 user_id : result.data.user_id,
                 // url: "ws://push.laravelvip.com:7272",
@@ -499,4 +498,4 @@
             }, 180000);
         },'JSON');
     }
-</script> 
+</script>

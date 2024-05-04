@@ -105,7 +105,7 @@
 
                         <li ><a href="/help/shop/list/13.html"  data-cat_id="13">商品管理</a></li>
 
-                        <li ><a href="/help/shop/list/14.html"  data-cat_id="14">订单管理</a></li>
+                        <li ><a href="/help/shop/list/14_hots_selector.html"  data-cat_id="14">订单管理</a></li>
 
                         <li ><a href="/help/shop/list/15.html"  data-cat_id="15">会员管理</a></li>
 

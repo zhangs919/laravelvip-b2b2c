@@ -2,9 +2,9 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -30,12 +30,12 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $exception
+     * @param  \Throwable  $exception
      * @return void
+     *
+     * @throws \Exception
      */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         parent::report($exception);
     }
@@ -44,22 +44,48 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param  \Throwable  $exception
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Throwable
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
-        /* 错误页面 */
-        if ($exception instanceof HttpException) {
-            $code = $exception->getStatusCode();
-
-            if (view()->exists('errors.' . $code)) {
-                $message  = $exception->getMessage();
-                return response()->view('errors.' . $code, ['message'=>$message, 'exception'=>$exception], $code);
+        /* 自定义错误页面 */
+        if ($exception instanceof HttpException
+            || $exception instanceof \ErrorException // 服务器内部错误
+        ) {
+            if ($exception instanceof \ErrorException) {
+                // 服务器内部错误
+                $statusCode = 500;
+            } else {
+                $statusCode = $exception->getStatusCode();
+            }
+            $message  = $exception->getMessage();
+            // 针对app端接口返回json对象
+            // 注：请求头必须加上 Accept:application/json
+            if ($request->wantsJson()) {
+                return result($statusCode, null, $message);
+            }
+            if (view()->exists('errors.' . $statusCode)
+//                && !\request()->routeIs('system_install')
+                && request()->path() != 'install/seeder'
+            ) {
+                return response()->view('errors.' . $statusCode, ['message'=>$message, 'exception'=>$exception], $statusCode);
             }
         }
-//        dd($exception->getMessage());
+
         return parent::render($request, $exception);
+    }
+
+    public function isValid($value)
+    {
+        try {
+
+        } catch (\Exception $e){
+            report($e);
+            return false;
+        }
     }
 
 }

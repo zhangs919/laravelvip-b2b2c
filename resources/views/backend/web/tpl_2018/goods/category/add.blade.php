@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="CategoryModel" class="form-horizontal" name="CategoryModel" action="" method="POST" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="categorymodel-cat_id" class="form-control" name="CategoryModel[cat_id]" value="{{ $info->cat_id ?? ''}}">
             <!-- 分类名称 -->
@@ -505,7 +505,6 @@
             });
 
             $("#cat_image_container").imagegroup({
-                // host: 'http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/',
                 host: '{{ get_oss_host() }}',
                 size: 1,
                 values: ['{{ $info->cat_image ?? ""}}'],

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Template;
+use Illuminate\Support\Facades\Cache;
 
 
 class TemplateRepository extends Template
@@ -65,6 +66,10 @@ class TemplateRepository extends Template
     public function getNavigationData($nav_page = 'site', $limit = 13, $nav_position = 2)
     {
         // 获取商城导航
+        $cache_id = CACHE_KEY_NAVIGATION[0].'_'.$nav_page.'_'.$nav_position; // 缓存id
+        if ($navigation = cache()->get($cache_id)) {
+            return $navigation;
+        }
         $navigationCondition = [
             'where' => [
                 ['nav_page', $nav_page],
@@ -76,6 +81,8 @@ class TemplateRepository extends Template
             'sortorder' => 'asc'
         ];
         list($navigation, $total) = $this->navigation->getList($navigationCondition);
+        $navigation = $navigation->toArray();
+        cache()->put($cache_id, $navigation, CACHE_KEY_NAVIGATION[1]);
 
         return $navigation;
     }
@@ -89,6 +96,11 @@ class TemplateRepository extends Template
      */
     public function getNavCategoryData($nav_page = 'site', $limit = 13)
     {
+        $cache_id = CACHE_KEY_NAV_CATEGORY[0].'_'.$nav_page;
+        if ($nav_category = cache()->get($cache_id)) {
+            return $nav_category;
+        }
+
         // 分类导航
         $navCategoryCondition = [
             'where' => [
@@ -151,10 +163,9 @@ class TemplateRepository extends Template
             list($nav_brand, $total) = $this->navBrand->getList($navBrandCondition);
 
             if (count($nav_brand) > 0) {
-                foreach ($nav_brand as &$nb) {
-                    $brand = Brand::where('brand_id', $nb->brand_id)->first();
-                    $nb->brand_name = $brand->brand_name;
-                    $nb->brand_logo = get_image_url($brand->brand_logo);
+                foreach ($nav_brand as $nb) {
+                    $nb->brand_name = $nb->brand->brand_name;
+                    $nb->brand_logo = $nb->brand->brand_logo ? get_image_url($nb->brand->brand_logo) : get_image_url();
                 }
             }
 
@@ -179,16 +190,16 @@ class TemplateRepository extends Template
 //            $relateRightCatIds[] = $relateCatIds;
 //            $relateRightCatIds = array_collapse($relateCatIds);
             $relateCatRight = Category::where('is_show', 1)->whereIn('parent_id', $relateCatIds)->select(['cat_id','cat_name'])->limit(12)->get();
-            if (!empty($relateCatRight)) {
-                foreach ($relateCatRight as $v) {
-                    $child = Category::where('is_show', 1)->where('parent_id', $v->cat_id)->select(['cat_id','cat_name'])->limit(24)->get();
-                    $v->child = $child;
-                }
-            }
+//            if (!empty($relateCatRight)) {
+//                foreach ($relateCatRight as $v) {
+//                    $child = Category::where('is_show', 1)->where('parent_id', $v->cat_id)->select(['cat_id','cat_name'])->limit(24)->get();
+//                    $v->child = $child;
+//                }
+//            }
             $item->nav_relate_cat_right = $relateCatRight;
         }
 
-
+        cache()->put($cache_id, $nav_category, CACHE_KEY_NAV_CATEGORY[1]);
 
         return $nav_category;
     }

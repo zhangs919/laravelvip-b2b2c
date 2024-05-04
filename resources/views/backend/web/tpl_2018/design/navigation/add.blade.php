@@ -15,7 +15,7 @@
 @section('content')
 
 	<form id="NavigationModel" class="form-horizontal" name="NavigationModel" action="{{ $form_action }}" method="post" novalidate="novalidate">
-		{{ csrf_field() }}
+		@csrf
         <!-- 隐藏域 -->
         <input type="hidden" id="navigationmodel-id" class="form-control" name="NavigationModel[id]" value="{{ $info->id ?? ''}}">
         <div class="table-content m-t-30 clearfix">
@@ -34,8 +34,8 @@
 
                                 <select id="navigationmodel-nav_class" class="form-control chosen-select"
                                         name="NavigationModel[nav_class]">
-                                    <option value="">自定义链接</option>
-                                    <option value="index-icon">仿淘宝“首页”菜单特效</option>
+                                    <option value="" @if(@$info->nav_class == '')selected="selected"@endif>自定义链接</option>
+                                    <option value="index-icon" @if(@$info->nav_class == 'index-icon')selected="selected"@endif>仿淘宝“首页”菜单特效</option>
                                 </select>
 
 
@@ -204,7 +204,7 @@
 
             <!-- 导航布局 -->
             {{--@if(!isset($info->id)) hide @else @if($info->nav_position != 2) hide @endif @endif--}}
-			<div class="nav_layout  @if(isset($info->id) && !in_array($nav_page, ['m_site', 'm_news'])) @else hide @endif" id="nav_icon_container">
+			<div class="nav_layout  @if(isset($info->id) && in_array($nav_page, ['m_site', 'm_news', 'm_goods'])) @else hide @endif" id="nav_icon_container">
 				<!-- 导航图标 -->
 				<div class="simple-form-field">
 					<div class="form-group">
@@ -239,7 +239,7 @@
 			</div>
 
 
-            @if($nav_page == 'm_site')
+            @if($nav_page == 'm_site' || $nav_page == 'm_goods')
                 <!-- 选中图标 -->
                 <div id="nav_icon_active_container">
                     <div class="simple-form-field" >

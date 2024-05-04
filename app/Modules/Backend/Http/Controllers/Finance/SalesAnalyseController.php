@@ -1,10 +1,12 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Finance;
+namespace App\Modules\Backend\Http\Controllers\Finance;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SalesAnalyseController extends Backend
 {
@@ -93,32 +95,93 @@ class SalesAnalyseController extends Backend
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        $compact = compact('title');
+        $params = $request->all();
+        $curPage = !empty($params['page']['cur_page']) ? $params['page']['cur_page'] : 1;
+        $pageSize = !empty($params['page']['page_size']) ? $params['page']['page_size'] : 10;
+        $where = [];
+        // 搜索条件
+        $search_arr = [];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+                if ($v == 'key_word') { // todo
+//                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                } /*elseif ($v == 'add_time_begin' || $v == 'add_time_end') {
+
+                }*/
+                else {
+                    $where[] = [$v, $params[$v]];
+                }
+            }
+        }
+        $model = DB::table('shop as s')->selectRaw('s.shop_id,s.shop_name,
+            COUNT(DISTINCT o.order_id) as order_count,
+            SUM(IF(o.pay_status=2,1,0)) as order_count_valid,
+            SUM(IF(o.order_status=2,1,0) or IF(o.order_status=3,1,0)) as close_count,
+            IFNULL(SUM(o.money_paid + o.surplus), 0.00) as order_amount,
+            IFNULL(SUM(IF(o.pay_status=2,(o.money_paid + o.surplus),0)), 0.00) as order_amount_valid,
+            COUNT(DISTINCT bo.order_id) as back_count,
+            IFNULL(SUM(bo.refund_money),0.00) as back_amount')
+            ->leftJoin('order_info as o', 'o.shop_id','=','s.shop_id')
+            ->leftJoin('back_order as bo', 'bo.order_id','=','o.order_id')->groupBy('s.shop_id');
+        // 排序
+        $sortname = $request->get('sortname', 'shop_id');
+        $sortname = 's.'.$sortname;
+        $sortorder = $request->get('sortorder', 'asc');
+
+        $total = DB::table('shop as s')->count();
+        $list = $model->forPage($curPage, $pageSize)->orderBy($sortname, $sortorder)->get();
+        $pageHtml = pagination($total);
+
+        $compact = compact('list', 'total', 'pageHtml');
+        if ($request->ajax()) {
+            $render = view('finance.sales-analyse.partials._order', $compact)->render();
+            return result(0, $render);
+        }
+
         return view('finance.sales-analyse.order', $compact);
     }
 
     public function getData(Request $request)
     {
+        // 有效销售额
+        list($y_data_amt, $x_data) = get_statistic_order_amount_hour(Carbon::today()->format('Y-m-d'));
+        list($y_data_cnt, $x_data) = get_statistic_order_count_hour(Carbon::today()->format('Y-m-d'));
         $extra = [
-            'sum_amt' => "0.00",
-            'sum_cnt' => 0,
-            'x_data' => range(0,23,1), // x轴一天24小时
+            'sum_amt' => format_price(array_sum($y_data_amt)),
+            'sum_cnt' => array_sum($y_data_cnt),
+            'x_data' => $x_data, // x轴一天24小时
             'x_name' => "时间点",
-            'y_data_amt' => range(0, 24, 1), // 店铺数量数据 今日
-            'y_data_cnt' => range(0, 24) // 店铺数量数据 昨日
+            'y_data_amt' => $y_data_amt, // 订单销售额数据
+            'y_data_cnt' => $y_data_cnt // 订单销售量数据
         ];
         return result(0, null, '', $extra);
     }
 
     public function getOrderData(Request $request)
     {
+        $back_amount = DB::table('back_order')
+            ->selectRaw('SUM(refund_money) as total_fee')
+            ->where('back_type', 1)
+            ->value('total_fee');
+        $order_amount = DB::table('order_info')
+            ->selectRaw('SUM(money_paid + surplus) as total_fee')->value('total_fee');
+        $order_amount_valid = DB::table('order_info')
+            ->where('pay_status', PS_PAYED)
+            ->selectRaw('SUM(money_paid + surplus) as total_fee')->value('total_fee');
+        $order_count = DB::table('order_info')
+            ->distinct('order_id')->count();
+        $order_count_valid = DB::table('order_info')
+            ->where('pay_status', PS_PAYED)
+            ->distinct('order_id')->count();
+        $users_count = DB::table('user')->count();
+
         $data = [
-            'back_amount' => "1.00",
-            'cancel_amount' => 35,
-            'order_amount' => "12323.43",
-            'order_amount_valid' => "234.42",
-            'order_count' => 53,
-            'users_count' => 32
+            'back_amount' => $back_amount,
+            'order_amount' => $order_amount,
+            'order_amount_valid' => $order_amount_valid,
+            'order_count' => $order_count,
+            'order_count_valid' => $order_count_valid,
+            'users_count' => $users_count
         ];
         return json_encode($data);
     }

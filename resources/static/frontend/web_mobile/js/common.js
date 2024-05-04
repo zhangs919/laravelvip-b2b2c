@@ -1,5 +1,4 @@
 // 页面过渡效果
-
 $.pageLoading = function(settings) {
 
 	var defaults = {
@@ -13,14 +12,14 @@ $.pageLoading = function(settings) {
 			html += '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
 			html += '</span></div></div>';
 			$('html').append(html);
-			
+
 			// 防止未被清除
 			setTimeout(function() {
 				if ($('.SZY-PAGE-LOADING').length > 0) {
 					$('.SZY-PAGE-LOADING').remove();
 				}
 			}, 5000);
-			
+
 		},
 	}
 
@@ -56,9 +55,51 @@ $.pageLoading = function(settings) {
 	}
 }
 
-$.pageLoading({
-	fase: 200
-});
+
+// $.pageLoading({
+// fase: 200
+// });
+
+// mobile端监听input输入框方法
+$.fn.watch = function(callback) {
+	return this.each(function() {
+		// 缓存以前的值
+		$.data(this, 'originVal', $(this).val());
+
+		if ($(this).attr('type') == 'hidden') {
+			return;
+		}
+		if ($(this).val() != "" && $(this).parent('.form-control-box').find('.num-clear').size() == 0 && $(this).attr("readonly") != 'readonly') {
+			if ($(this).attr('type') == 'password') {
+				$(this).parent('.form-control-box').append('<span class="password-type show-password"></span>');
+			}
+			$(this).parent('.form-control-box').append('<span class="num-clear"><i class="iconfont">&#xe67c;</i></span>');
+		}
+		// event
+		$(this).on('input', function() {
+			var originVal = $(this, 'originVal');
+			var currentVal = $(this).val();
+
+			if (originVal !== currentVal) {
+				$.data(this, 'originVal', $(this).val());
+				if (currentVal != '' && $(this).parent('.form-control-box').find('.num-clear').size() == 0 && $(this).attr("readonly") != 'readonly') {
+					if ($(this).attr('type') == 'password') {
+						$(this).parent('.form-control-box').append('<span class="password-type show-password"></span>');
+					}
+					$(this).parent('.form-control-box').append('<span class="num-clear"><i class="iconfont">&#xe67c;</i></span>');
+				}
+
+				if (currentVal == '' && $(this).parent('.form-control-box').find('.num-clear').size() > 0) {
+					$(this).parent('.form-control-box').find('.show-password').remove();
+					$(this).parent('.form-control-box').find('.num-clear').remove();
+				}
+				if ($.isFunction(callback)) {
+					callback($(this));
+				}
+			}
+		});
+	});
+};
 
 
 $().ready(function() {
@@ -69,15 +110,15 @@ $().ready(function() {
 		start: function(msg) {
 
 			var html = '<div class="handle-loading SZY-LAYER-LOADING">';
-				html += '<div class="loading-spinner">';
-				html += '<span class="spinner-items">';
-				html += '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
-				html += '</span></div>';
+			html += '<div class="loading-spinner">';
+			html += '<span class="spinner-items">';
+			html += '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
+			html += '</span></div>';
 
-				if(msg != '' && msg != 'undefined' && msg != undefined && msg != null){
-					html += '<p class="loading-des">'+msg+'</p>';
-				}
-				html += '</div>'
+			if (msg != '' && msg != 'undefined' && msg != undefined && msg != null) {
+				html += '<p class="loading-des">' + msg + '</p>';
+			}
+			html += '</div>'
 
 			$('html').append(html);
 
@@ -89,11 +130,63 @@ $().ready(function() {
 	};
 
 
-	$.go = function(url) {
+	// 重写按钮位置互换
+	$.confirm = function(content, options, yes, cancel) {
+		if (layer) {
+			var type = $.isFunction(options);
+			if (type) {
+				cancel = yes;
+				yes = options;
+				options = {};
+			}
+
+			// 手机端不需要icon
+			delete options['icon'];
+
+			options = $.extend({
+				// 隐藏滚动条
+				scrollbar: true
+			}, options);
+
+			options.success = function(layer) {
+				if (layer.find('.layui-layer-btn a').eq(1)) {
+					layer.find('.layui-layer-btn a').eq(1).insertBefore(layer.find('.layui-layer-btn a').eq(0));
+				}
+			}
+
+			return layer.confirm(content, options, function(index) {
+
+				if (($.isFunction(cancel) && cancel.call(layer, index) != false) || cancel == undefined) {
+					layer.close(index);
+				}
+			}, function(index) {
+				if ($.isFunction(yes) && yes.call(layer, index) != false) {
+					layer.close(index);
+				}
+			});
+
+		} else {
+			return confirm("缺少组件：" + content);
+		}
+	};
+
+	$.go = function(url, target, show_loading) {
+
+		var szy_tag = $("meta[name='szy_tag']").attr("content");
 
 		if (url == undefined) {
 			url = window.location.href;
 		}
+
+		if (szy_tag && url && url.indexOf("/" + szy_tag) == -1 && url.indexOf("/") == 0) {
+			url = "/" + szy_tag + url;
+		}
+
+		if (show_loading !== false) {
+			// 开启缓载效果
+			$.loading.start();
+		}
+
 		window.location.href = url;
 	};
 
@@ -127,6 +220,11 @@ $().ready(function() {
 			icon_html = '<i class="iconfont icon-success"></i>';
 		}
 
+		if (content == "") {
+			console.log("空的内容", window.location.href, options);
+			return;
+		}
+
 		var html = '<div style="display:none" class="toast SZY-LAYER-MSG">' + icon_html + '<div class="toast-content">' + content + '</div></div>'
 
 		$('html').append(html);
@@ -156,46 +254,28 @@ $().ready(function() {
 		}
 	};
 
-	// 重写按钮位置互换
-	$.confirm = function(content, options, yes, cancel) {
-		if (layer) {
-			var type = $.isFunction(options);
-			if (type) {
-				cancel = yes;
-				yes = options;
-				options = {};
-			}
-
-			options = $.extend({
-				// 隐藏滚动条
-				scrollbar : true
-			}, options);
-
-			options.success = function(layer){
-				if(layer.find('.layui-layer-btn a').eq(1)){
-					layer.find('.layui-layer-btn a').eq(1).insertBefore(layer.find('.layui-layer-btn a').eq(0));
-				}
-			}
-
-			return layer.confirm(content, options, function(index) {
-
-				if (($.isFunction(cancel) && cancel.call(layer, index) != false) || cancel == undefined) {
-					layer.close(index);
-				}
-			}, function(index) {
-				if ($.isFunction(yes) && yes.call(layer, index) != false) {
-					layer.close(index);
-				}
-			});
-
-		} else {
-			return confirm("缺少组件：" + content);
-		}
-	};
-
 });
 
 $().ready(function() {
+	// 热区模板
+	$.mapresize = function(settings) {
+		var body_width = document.body.clientWidth;
+		$.each($('.map-resize'), function(i, map) {
+			var name = $(map).attr('name');
+			var image = $("img[usemap='#" + name + "']");
+			$.each($(map).find('area'), function(ii, area) {
+				var coords = $(area).attr('coords');
+				var percent = body_width / 401;
+				var coords_arr = coords.split(",");
+				for (var i = 0; i < coords_arr.length; i++) {
+					coords_arr[i] = Math.round(coords_arr[i] * percent);
+				}
+				$(area).attr("coords", coords_arr.join(","));
+			});
+			$(map).removeClass('map-resize');
+		});
+	}
+	$.mapresize();
 	var menu = $('#menu');
 	var $nav = $('.show-menu-info');
 	$(window).on("scroll", function() {
@@ -244,46 +324,6 @@ $().ready(function() {
 		});
 	}
 
-	// mobile端监听input输入框方法
-	$.fn.watch = function(callback) {
-		return this.each(function() {
-			// 缓存以前的值
-			$.data(this, 'originVal', $(this).val());
-
-			if ($(this).attr('type') == 'hidden') {
-				return;
-			}
-			if ($(this).val() != "" && $(this).parent('.form-control-box').find('.num-clear').size() == 0 && $(this).attr("readonly") != 'readonly') {
-				if ($(this).attr('type') == 'password') {
-					$(this).parent('.form-control-box').append('<span class="password-type show-password"></span>');
-				}
-				$(this).parent('.form-control-box').append('<span class="num-clear"><i class="iconfont">&#xe621;</i></span>');
-			}
-			// event
-			$(this).on('input', function() {
-				var originVal = $(this, 'originVal');
-				var currentVal = $(this).val();
-
-				if (originVal !== currentVal) {
-					$.data(this, 'originVal', $(this).val());
-					if (currentVal != '' && $(this).parent('.form-control-box').find('.num-clear').size() == 0 && $(this).attr("readonly") != 'readonly') {
-						if ($(this).attr('type') == 'password') {
-							$(this).parent('.form-control-box').append('<span class="password-type show-password"></span>');
-						}
-						$(this).parent('.form-control-box').append('<span class="num-clear"><i class="iconfont">&#xe621;</i></span>');
-					}
-
-					if (currentVal == '' && $(this).parent('.form-control-box').find('.num-clear').size() > 0) {
-						$(this).parent('.form-control-box').find('.show-password').remove();
-						$(this).parent('.form-control-box').find('.num-clear').remove();
-					}
-					if ($.isFunction(callback)) {
-						callback($(this));
-					}
-				}
-			});
-		});
-	};
 	$('body').on('click', '.num-clear', function() {
 		$(this).parent('.form-control-box').find('input').val('').focus();
 		$(this).prev('.show-password').remove();
@@ -299,7 +339,19 @@ $().ready(function() {
 			$(this).addClass('on');
 		}
 	});
-
+	var windowTop = 0;
+	$(window).scroll(function() {
+		var scrolls = $(this).scrollTop();
+		if (scrolls >= windowTop) {
+			$('.customer-service').addClass('hide');
+			$('.back-to-top').addClass('hide')
+			windowTop = scrolls;
+		} else {
+			$('.customer-service').removeClass('hide');
+			$('.back-to-top').removeClass('hide');
+			windowTop = scrolls;
+		}
+	})
 	// 在线客服
 	$('body').on('click', '.service-online', function() {
 		var goods_id = $(this).data("goods_id");
@@ -313,19 +365,6 @@ $().ready(function() {
 		});
 	});
 
-	var nowtime = Date.parse(new Date());
-	$.each($('body').find(".settime"), function() {
-		var time = $(this).data('end_time') * 1000 - nowtime;
-		$(this).countdown({
-			time: time,
-			leadingZero: true,
-			htmlTemplate: "<span>%{d}天%{h}时%{m}分%{s}秒</span>",
-			onComplete: function(event) {
-				$(this).html("活动已结束！");
-			}
-		});
-	});
-
 	if ($('.nav-list-container')) {
 		$.each($('.nav-list-container'), function(i, val) {
 			if ($(this).find('ul').length <= 1) {
@@ -333,68 +372,80 @@ $().ready(function() {
 			}
 		});
 	}
+	$(window).on('scroll', function() {
+		if ($(document).scrollTop() > 500) {
+			$(".index-icon").addClass('tab-gotop-icon');
+		} else {
+			$(".index-icon").removeClass('tab-gotop-icon');
+		}
+	});
+	$('body').on('click', '.tab-gotop-icon', function() {
+		$('body,html').animate({
+			scrollTop: 0
+		}, 600);
+		return false;
+	});
+	// 增加积分动画
+	$.intergal = function(settings) {
+		var defaults = {
+			callback: null,
+			point: 0,
+			name: '积分',
+			// 组件渲染
+			render: function(settings) {
+				var html = '<div class="falling-integral-box">';
+				html += '<img class="falling-integral-img rotatesimg" src="/images/common/falling-integral-img.png">';
+				html += '<div class="bottom-text-prompt">+<span class="integral-num">' + settings.point + '</span>' + settings.name + '</div>';
+				html += '</div>';
+				$('html').append(html);
+
+				setTimeout(function() {
+					$('html').find('.falling-integral-box').remove();
+				}, 2000);
+			},
+		}
+		settings = $.extend(true, defaults, settings);
+
+		$("body").queue(function() {
+			settings.render(settings);
+
+			setTimeout(function() {
+				$("body").dequeue();
+			}, 2000);
+
+		});
+
+		if ($.isFunction(settings.callback)) {
+			settings.callback.call(settings);
+		}
+	}
+
 });
 (function() {
-
-	　　
 	if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
-
-		　　
 		handleFontSize();
-
-		　　
-	} else {　　
+	} else {
 		if (document.addEventListener) {
-
-			　　　　
 			document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
-
-			　　
 		} else if (document.attachEvent) {
-
-			　　　　
 			document.attachEvent("WeixinJSBridgeReady", handleFontSize);
-
-			　　　　
 			document.attachEvent("onWeixinJSBridgeReady", handleFontSize);
-
-			　　
 		}
-
 	}
 
 	function handleFontSize() {
-
-		　　 // 设置网页字体为默认大小
-		　　
+		// 设置网页字体为默认大小
 		WeixinJSBridge.invoke('setFontSizeCallback', {
-
-			　　
 			'fontSize': 0
-
-			　　
 		});
 
-
-		　　 // 重写设置网页字体大小的事件
-		　　
+		// 重写设置网页字体大小的事件
 		WeixinJSBridge.on('menu:setfont', function() {
-
-			　　　　
 			WeixinJSBridge.invoke('setFontSizeCallback', {
-
-				　　　　　　
 				'fontSize': 0
-
-				　　　　
 			});
-
-			　　
 		});
-
-		　　
 	}
-
 })();
 
 function isWeiXin() {
@@ -427,8 +478,14 @@ if (IsPC()) {
 				if ($(window).scrollTop() <= 50) {
 					$(".header-top-nav").show();
 					$(".tabmenu-new").removeClass('fixed-menu');
+					if ($('.fixed-menu-seat').length > 0) {
+						$('.fixed-menu-seat').remove();
+					}
 				} else {
 					$(".header-top-nav").hide();
+					if ($('.fixed-menu-seat').length == 0) {
+						$(".tabmenu-new").before("<div class='fixed-menu-seat' style='height:95px'></div>");
+					}
 					$(".tabmenu-new").addClass('fixed-menu');
 				}
 			}
@@ -467,7 +524,6 @@ function minNavTo(link) {
 						url: '/pages/navigator/navigator?appid=' + link[1] + '&path=' + link[2],
 
 						complete: function() {
-							min_nav_click = false;
 							$.loading.stop();
 						}
 
@@ -481,11 +537,45 @@ function minNavTo(link) {
 		$.go(link[3]);
 	}
 }
+// 从嵌套首页跳转到小程序里
+function webNavToMiniprogram(link, open_miniprogram)
+{
+	if(open_miniprogram == undefined){
+		open_miniprogram = '';
+	}
 
-function sessionStorageTemplateClear (){
-	if(sessionStorage){
-		$.each(sessionStorage,function(i,v){
-			if(i.indexOf('template_') == 0){
+	if (isWeiXin()) {
+		wx.ready(function() {
+			if (window.__wxjs_environment === 'miniprogram') {
+				if (min_nav_click == false) {
+					min_nav_click = true;
+					wx.miniProgram.navigateTo({
+						url: link,
+						complete: function() {
+							setTimeout(function(){ min_nav_click = false; }, 3000);
+						}
+					});
+				}
+			} else {
+				if(open_miniprogram){
+					$("#" + open_miniprogram).prop('path', link);
+					var btn = document.getElementById(open_miniprogram);
+					btn.addEventListener('launch', function (e) {
+						console.log('success');
+					});
+				} else {
+					$.msg('请在小程序中打开~');
+				}
+			}
+		});
+	} else {
+		$.msg('请在小程序中打开~');
+	}
+}
+function sessionStorageTemplateClear() {
+	if (sessionStorage) {
+		$.each(sessionStorage, function(i, v) {
+			if (i.indexOf('template_') == 0) {
 				sessionStorage.removeItem(i);
 			}
 		});
@@ -513,3 +603,121 @@ function equipment_type(m) {
 		return '1';
 	}
 }
+
+function isWeiXinAndIos() {
+	var ua = '' + window.navigator.userAgent.toLowerCase()
+	var isWeixin = /MicroMessenger/i.test(ua)
+	var isIos = /\(i[^;]+;( U;)? CPU.+Mac OS X/i.test(ua)
+	return isWeixin && isIos
+}
+
+var myFunction = null;
+var isWXAndIos = isWeiXinAndIos();
+if (isWXAndIos) {
+	document.body.addEventListener('focusin', function() {
+		clearTimeout(myFunction);
+	})
+	document.body.addEventListener('focusout', function() {
+		clearTimeout(myFunction)
+		myFunction = setTimeout(function() {
+			window.scrollTo({
+				top: 0, left: 0, behavior: 'smooth'
+			})
+		}, 200)
+	})
+}
+
+/**
+ * QQ在线图标变更
+ */
+function load_qq_customer_image(target, schema) {
+	var src = $(target).attr("src");
+	if (schema == "https://" && src.indexOf("http://") == 0) {
+		src = src.replace(/http:\/\//, 'https://');
+		$(target).attr("src", src);
+	}
+}
+
+// 弹出运费模板地图
+function show_goods_freight_map(options) {
+
+	if(!options){
+		options = {};
+	}
+
+	$.loading.start();
+
+	return $.get('/site/freight-map', {
+		goods_id: options.goods_id,
+		address_id: options.address_id,
+		position: options.position
+	}, function(result) {
+		if (result.code == 0) {
+			var element = $(result.data);
+
+			$("body").append(element);
+
+			$(element).animate({
+				height: $(window).height()
+			}, 300);
+		} else {
+			$.msg(result.message, {
+				time: 3000
+			});
+		}
+	}, "JSON").always(function(){
+		$.loading.stop();
+	});
+}
+
+// 商品不支持配送地址地图弹层
+$(function() {
+	$("body").on('click', '.no-goods-tip', function() {
+		var code = $(this).data('code');
+		var message = $(this).data('message');
+		var shop_id = $(this).data('shop-id');
+		var goods_id = $(this).data('goods_id');
+		var position = $(this).data('position');
+		var address_id = $(this).data('address_id');
+		var freight_type = $(this).data('freight_type');
+
+		// 错误提示
+		if (code == "limit_sale" && freight_type == "1") {
+			show_goods_freight_map({
+				goods_id: goods_id,
+				address_id: address_id,
+				position: position
+			});
+		} else {
+			$.msg(message, {
+				time: 3000
+			});
+		}
+	});
+
+	// 首页客服按钮
+	var windowTop = 20;
+	$(window).scroll(function() {
+		var scrolls = $(this).scrollTop();
+		if(scrolls >= windowTop){
+			$('.yikf-form').css({
+				'transform': 'translate3d(100px,0,0)'
+			});
+			windowTop=scrolls;
+		}else if(scrolls <= windowTop && scrolls > 20){
+			$('.yikf-form').css('transform', 'translate3d(0,0,0)');
+			windowTop = scrolls;
+		}else if(scrolls <= 20){
+			$('.yikf-form').css('transform', 'translate3d(0,0,0)');
+		}
+	})
+
+	//返回上一页，如果没有可返回的页面，返回首页
+	$("body").on('click','.goback',function(){
+		document.referrer === '' ?
+			window.location.href = '/index.html' :
+			window.history.back(-1);
+
+	})
+
+})

@@ -17,11 +17,11 @@ class TopicController extends Backend
 
     protected $topic;
 
-    public function __construct()
+    public function __construct(TopicRepository $topic)
     {
         parent::__construct();
 
-        $this->topic = new TopicRepository();
+        $this->topic = $topic;
     }
 
     public function bgSetting(Request $request/*$page, $topic_id*/)
@@ -197,7 +197,7 @@ class TopicController extends Backend
     {
         $ids = $request->post('id');
 
-        if (count($ids) > 1) {
+        if (is_array($ids) && count($ids) > 1) {
             $ret = $this->topic->batchDel($ids);
         } else {
             $ret = $this->topic->del($ids);

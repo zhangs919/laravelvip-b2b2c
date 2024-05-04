@@ -1,11 +1,22 @@
 {{--模板继承--}}
-@extends('layouts.seller_layout')
+@extends('layouts.'.$base_layout)
+
+{{--header 内 css文件--}}
+@section('header_css')
+    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=1.2"/>
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
 
 {{--css style page元素同级上面--}}
 @section('style')
-    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=1.2"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=1.2"/>
+
 @stop
+
+
 
 {{--content--}}
 @section('content')
@@ -35,7 +46,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true>5</span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -66,7 +77,7 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
 @stop
 
 
@@ -80,9 +91,14 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=1.2"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             var tablelist = $("#table_list").tablelist();
 
@@ -124,9 +140,6 @@
                 });
             });
         });
-    </script>
-
-    <script type="text/javascript">
         $().ready(function() {
             $(".nav_sort").editable({
                 type: "text",
@@ -161,6 +174,7 @@
             });
         });
     </script>
+
 @stop
 
 {{--outside body script--}}

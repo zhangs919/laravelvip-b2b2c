@@ -1,4 +1,5 @@
 {{--首页显示--}}
+<!-- 判断url链接 -->
 <div class="category-box @if(!request()->routeIs('pc_home')){{ 'category-box-border' }}@endif">
     <div class="w1210">
         <div class="home-category @if(request()->routeIs('pc_home')){{ 'bg-color' }}@endif fl">
@@ -30,13 +31,13 @@
             <ul>
 
                 @foreach($navigation as $v)
-                    <li class="@if($v->nav_layout == 1) fl @else fr @endif">
-                        <a class="nav " href="{{ $v->nav_link ?? 'javascript:void(0)'}}"  title="{{ $v->nav_name }}">{{ $v->nav_name }}</a>
+                    <li class="@if($v['nav_layout'] == 1) fl @else fr @endif">
+                        <a class="nav " href="{{ $v['nav_link'] ?? 'javascript:void(0)'}}" @if($v['new_open'])target="_blank" @endif title="{{ $v['nav_name'] }}">{{ $v['nav_name'] }}</a>
                         <!-- 导航小标签 _start -->
 
-                        @if(!empty($v->nav_icon))
+                        @if(!empty($v['nav_icon']))
                             <span class="nav-icon">
-                                <img src="{{ get_image_url($v->nav_icon) }}" />
+                                <img src="{{ get_image_url($v['nav_icon']) }}" />
                             </span>
                         @endif
 

@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30">
         <form id="HotSearchModel" class="form-horizontal" name="HotSearchModel" action="/mall/hot-search/add" method="post">
-            {{ csrf_field() }}
+            @csrf
             <input type="hidden" id="hotsearchmodel-id" class="form-control" name="HotSearchModel[id]" value="{{ $info->id ?? ''}}">
 
             <!-- 搜索词是否显示 -->

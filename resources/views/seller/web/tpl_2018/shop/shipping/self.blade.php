@@ -1,16 +1,26 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ShopConfigModel" class="form-horizontal" name="ShopConfigModel" action="/shop/config/index" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="shipping">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">

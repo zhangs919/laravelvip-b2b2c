@@ -22,7 +22,12 @@
 
 namespace App\Services;
 
-
+/**
+ * todo 该类未使用 考虑移除
+ *
+ * Class OSS
+ * @package App\Services
+ */
 class OSS
 {
 
@@ -47,6 +52,8 @@ class OSS
         if ($this->networkType == 'VPC' && !$isInternal) {
             throw new Exception("VPC 网络下不提供外网上传、下载等功能");
         }
+        $this->AccessKeyId = sysconf('alioss_access_key_id'); //env('ALI_ACCESS_KEY_ID');
+        $this->AccessKeySecret = sysconf('alioss_access_key_secret'); //env('ALI_ACCESS_KEY_SECRET');
         $this->ossClient = AliyunOSS::boot(
             $this->city,
             $this->networkType,

@@ -1,16 +1,25 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ShopConfigModel" class="form-horizontal" name="ShopConfigModel" action="/shop/config/index" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="freight">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -125,6 +134,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </form>
 
 @stop
@@ -148,6 +158,12 @@
 {{--自定义css样式--}}
 @section('style_css')
 
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
 @stop
 
 {{--footer script page元素同级下面--}}

@@ -45,24 +45,39 @@ function get_goods_category_tree($parent_id = 0)
 {
     $tree = $arr = $result = [];
     $query = \App\Models\Category::where('is_show', 1)
-                ->select(['cat_id','cat_name','parent_id','cat_image','cat_letter','cat_level','take_rate','show_mode','show_virtual',
-                    'keywords','discription','is_show','is_parent','cat_sort','ext_info','cat_link','image_link','code']);
+        ->select(['cat_id','cat_name','parent_id','cat_image','cat_name_pinyin','cat_name_pinyin_short','cat_level','take_rate','show_mode','show_virtual',
+            'keywords','discription','is_show','is_parent','cat_sort','ext_info','cat_link','image_link','code']);
     if ($parent_id) { // 获取1级分类下的2 3级分类
         $cat_ids = get_cat_grandson($parent_id);
         unset($cat_ids[0]);
         $query->whereIn('cat_id', $cat_ids);
     }
 
-    $cat_list = $query->orderBy('cat_sort','asc')->get();
+    $cat_list = $query->withCount('goods')->orderBy('cat_sort','asc')->get();
     if (!$cat_list->isEmpty()) {
 
         foreach ($cat_list as $val) {
             $val = $val->toArray();
+
+            $where = [];
+            $where[] = ['goods_status',1]; // 商品状态 已上架
+            $where[] = ['goods_audit',1]; // 审核通过
+//            $current_level_goods_count = \App\Models\Goods::where($where)
+//                ->where('cat_id', $val['cat_id'])
+//                ->select(['goods_id'])
+//                ->count();
+            $cat_goods_count = \App\Models\Goods::where($where)
+                ->whereIn('cat_id', get_cat_grandson($val['cat_id']))
+                ->select(['goods_id'])
+                ->count();
+//            $val['goods_count'] = $current_level_goods_count; // 本级分类下的商品数量
+            $val['cat_goods_count'] = $cat_goods_count; // 本级分类及所有子分类下的商品数量
+
             if ($val['cat_level'] == 2) {
                 $arr[$val['parent_id']][] = $val;
             }
             if ($val['cat_level'] == 3) {
-                $crr[$val['parent_id']][] = $val;
+                $arr[$val['parent_id']][] = $val;
             }
             if ($val['cat_level'] == 1) {
                 $tree[] = $val;
@@ -71,7 +86,7 @@ function get_goods_category_tree($parent_id = 0)
 
         foreach ($arr as $k=>$v) {
             foreach ($v as $kk=>$vv) {
-                $arr[$k][$kk]['items'] = !empty($crr[$vv['cat_id']]) ? $crr[$vv['cat_id']] : [];
+                $arr[$k][$kk]['items'] = !empty($arr[$vv['cat_id']]) ? $arr[$vv['cat_id']] : [];
             }
         }
 
@@ -95,18 +110,24 @@ function get_goods_category_tree($parent_id = 0)
 function navigate_goods($id, $type = 0)
 {
     $cat_id = $id;
-    if ($type == 1) {
+    if ($type == 1) { // 商品详情
         $cat_id = \App\Models\Goods::where('goods_id', $id)->value('cat_id');
     }
-    $catList = \App\Models\Category::where('is_show', 1)->select(['cat_id','cat_name','parent_id'])->get();
+//    $catList = \App\Models\Category::where('is_show', 1)->select(['cat_id','cat_name','parent_id'])->get();
+    $allCate = (new \App\Repositories\CategoryRepository())->getCachedCategory();
+    $catList = get_cat_parent($allCate, $cat_id);
+    $catList = array_sort_recursive($catList); // 颠倒顺序
+
     $newCatList = [];
+    $arr = [];
     foreach ($catList as $item) {
-        $item = $item->toArray();
+//        $item = $item->toArray();
 
         $hasChild = \App\Models\Category::where([['is_show',1],['parent_id',$item['parent_id']],['cat_id', '!=', $item['cat_id']]])->select(['cat_id'])->get();
         $hasChild = count($hasChild) > 0 ? 1 : 0;
         $item['has_child'] = $hasChild;
         $newCatList[$item['cat_id']] = $item;
+        $arr[] = $item;
     }
 
     if ($type == 1) {
@@ -118,7 +139,7 @@ function navigate_goods($id, $type = 0)
             'has_child' => 0,
             'type' => $type
         ];
-    } else {
+    } /*else {
         $arr[] = [
             'cat_id' => $newCatList[$cat_id]['cat_id'],
             'cat_name' => $newCatList[$cat_id]['cat_name'],
@@ -126,23 +147,23 @@ function navigate_goods($id, $type = 0)
             'has_child' => $newCatList[$cat_id]['has_child'],
             'type' => 0
         ];
-    }
+    }*/
 
-    while (true) {
-        $cat_id = $newCatList[$cat_id]['parent_id'];
-        if ($cat_id > 0) {
-            $arr[] = [
-                'cat_id' => $newCatList[$cat_id]['cat_id'],
-                'cat_name' => $newCatList[$cat_id]['cat_name'],
-                'parent_id' => $newCatList[$cat_id]['parent_id'],
-                'has_child' => $newCatList[$cat_id]['has_child'],
-                'type' => 0
-            ];
-        } else {
-            break;
-        }
-    }
-    $arr = array_values(array_reverse($arr, true));
+//    while (true) {
+//        $cat_id = $newCatList[$cat_id]['parent_id'];
+//        if ($cat_id > 0) {
+//            $arr[] = [
+//                'cat_id' => $newCatList[$cat_id]['cat_id'],
+//                'cat_name' => $newCatList[$cat_id]['cat_name'],
+//                'parent_id' => $newCatList[$cat_id]['parent_id'],
+//                'has_child' => $newCatList[$cat_id]['has_child'],
+//                'type' => 0
+//            ];
+//        } else {
+//            break;
+//        }
+//    }
+//    $arr = array_values(array_reverse($arr, true));
 
     return $arr;
 }
@@ -156,6 +177,21 @@ function get_mobile_navigation()
 {
     $template = new \App\Repositories\TemplateRepository();
     $navigation = $template->getNavigationData('m_site', 5, 3); // 底部导航菜单
+
+    if (empty($navigation)) {
+        return null;
+    }
+    foreach ($navigation as $item) {
+        if ($item['nav_class'] == 'index-icon') {
+            // 仿淘宝首页
+            $item['nav_icon'] = get_image_url($item['nav_icon']);
+            $item['nav_icon_active'] = get_image_url($item['nav_icon_active']);
+        } else {
+            // 普通
+            $item['nav_icon'] = "/images/tab_home_normal.png";
+            $item['nav_icon_active'] = "/images/tab_home_normal.png";
+        }
+    }
     return $navigation;
 }
 
@@ -166,17 +202,44 @@ function get_mobile_navigation()
  */
 function is_mobile()
 {
-    if (isset($_SERVER['HTTP_VIA']) && stristr($_SERVER['HTTP_VIA'], "wap")) {
-        return true;
-    } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos(strtoupper($_SERVER['HTTP_ACCEPT']), "VND.WAP.WML")) {
-        return true;
-    } elseif (isset($_SERVER['HTTP_X_WAP_PROFILE']) || isset($_SERVER['HTTP_PROFILE'])) {
-        return true;
-    } elseif (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(blackberry|configuration\/cldc|hp |hp-|htc |htc_|htc-|iemobile|kindle|midp|mmp|motorola|mobile|nokia|opera mini|opera |Googlebot-Mobile|YahooSeeker\/M1A1-R2D2|android|iphone|ipod|mobi|palm|palmos|pocket|portalmmm|ppc;|smartphone|sonyericsson|sqh|spv|symbian|treo|up.browser|up.link|vodafone|windows ce|xda |xda_)/i', $_SERVER['HTTP_USER_AGENT'])) {
-        return true;
-    } else {
-        return false;
-    }
+	if (request()->is('mobile/*')) { // 根据自定义的 URL 模式来判断是否为手机端访问
+		return true;
+	} elseif (strpos(request()->header('User-Agent'), 'Mobi') !== false) { // 基于 User Agent 头部字符串来判断是否为手机端访问
+		return true;
+	} else {
+		return false;
+	}
+//    if (isset($_SERVER['HTTP_VIA']) && stristr($_SERVER['HTTP_VIA'], "wap")) {
+//        return true;
+//    } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos(strtoupper($_SERVER['HTTP_ACCEPT']), "VND.WAP.WML")) {
+//        return true;
+//    } elseif (isset($_SERVER['HTTP_X_WAP_PROFILE']) || isset($_SERVER['HTTP_PROFILE'])) {
+//        return true;
+//    } elseif (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/(blackberry|configuration\/cldc|hp |hp-|htc |htc_|htc-|iemobile|kindle|midp|mmp|motorola|mobile|nokia|opera mini|opera |Googlebot-Mobile|YahooSeeker\/M1A1-R2D2|android|iphone|ipod|mobi|palm|palmos|pocket|portalmmm|ppc;|smartphone|sonyericsson|sqh|spv|symbian|treo|up.browser|up.link|vodafone|windows ce|xda |xda_)/i', $_SERVER['HTTP_USER_AGENT'])) {
+//        return true;
+//    } elseif (isset($_SERVER['USER_AGENT']) && preg_match('/(blackberry|configuration\/cldc|hp |hp-|htc |htc_|htc-|iemobile|kindle|midp|mmp|motorola|mobile|nokia|opera mini|opera |Googlebot-Mobile|YahooSeeker\/M1A1-R2D2|android|iphone|ipod|mobi|palm|palmos|pocket|portalmmm|ppc;|smartphone|sonyericsson|sqh|spv|symbian|treo|up.browser|up.link|vodafone|windows ce|xda |xda_)/i', $_SERVER['USER_AGENT'])) {
+//		return true;
+//	} else {
+//        return false;
+//    }
+}
+
+/**
+ * 检测是否使用电脑端访问
+ *
+ * @return bool
+ */
+function is_pc_domain() {
+	return request()->getHost() == config('lrw.frontend_domain');
+}
+
+/**
+ * 检测是否使用手机h5访问
+ *
+ * @return bool
+ */
+function is_mobile_domain() {
+	return request()->getHost() == config('lrw.mobile_domain');
 }
 
 /**
@@ -187,11 +250,14 @@ function is_mobile()
  */
 function is_app($clientType = '')
 {
+    $user_agent = request()->header('user-agent');
+    $user_access_agent = request()->header('user-access-agent');
     if ($clientType == 'android') {
         // Android
         if (
-            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/android'))
-            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/android'))
+            (!empty($user_agent) && ($user_agent == 'lrwapp/android'))
+            || (isset($user_access_agent) && ($user_access_agent == 'lrwapp/android')
+            )
         ) {
             return true;
         } else {
@@ -200,8 +266,9 @@ function is_app($clientType = '')
     } elseif ($clientType == 'ios') {
         // Ios
         if (
-            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/ios'))
-            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/ios'))
+            (!empty($user_agent) && ($user_agent == 'lrwapp/ios'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/ios')
+            )
         ) {
             return true;
         } else {
@@ -210,8 +277,9 @@ function is_app($clientType = '')
     } elseif ($clientType == 'weapp') {
         // weapp 微信小程序
         if (
-            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/weapp'))
-            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/weapp'))
+            (!empty($user_agent) && ($user_agent == 'lrwapp/weapp'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/weapp')
+            )
         ) {
             return true;
         } else {
@@ -220,12 +288,12 @@ function is_app($clientType = '')
     } else {
         // Android、Ios、weapp
         if (
-            (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/android'))
-            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/android'))
-            || (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/ios'))
-            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/ios'))
-            || (isset($_SERVER['HTTP_USER_AGENT']) && ($_SERVER['HTTP_USER_AGENT'] == 'lrwapp/weapp'))
-            || (isset($_SERVER['HTTP_USER_ACCESS_AGENT']) && ($_SERVER['HTTP_USER_ACCESS_AGENT'] == 'lrwapp/weapp'))
+            (!empty($user_agent) && ($user_agent == 'lrwapp/android'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/android'))
+            || (!empty($user_agent) && ($user_agent == 'lrwapp/ios'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/ios'))
+            || (!empty($user_agent) && ($user_agent == 'lrwapp/weapp'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/weapp'))
         ) {
             return true;
         } else {
@@ -304,9 +372,6 @@ function build_goods_uri($params, $extra = [])
     if (isset($go) && !empty($go)) {
         $uri .= '&go='.$go;
     }
-    if (isset($sort) && !empty($sort)) {
-        $uri .= '&sort='.$sort;
-    }
     if (isset($price_min) && !empty($price_min)) {
         $uri .= '&price_min='.$price_min;
     }
@@ -348,6 +413,105 @@ function build_goods_uri($params, $extra = [])
 }
 
 /**
+ * 店铺商品搜索筛选 uri拼接
+ *
+ * @param array $params 所有参数
+ * @param array $extra 选中参数
+ * @return string
+ */
+function build_shop_goods_uri($params, $extra = [])
+{
+	extract(array_merge($params, $extra));
+
+	if (isset($uri_type) && $uri_type == 1) {
+		// 链接类型：/shop-list-7-0-0-0-0-0-2-3-0-0.html
+
+		$cat_id = $cat_id ?? 0;
+		$go = $go ?? 1;
+		$is_free = $is_free ?? 0;
+		$is_stock = $is_stock ?? 0;
+		$order = $order ?? 'DESC';
+		$sort = $sort ?? 0;
+		if ($sort == 0) { // 综合排序 asc
+			$order = 'ASC';
+		}
+		$order_f = str_replace(['ASC', 'DESC'], [4, 3], $order);
+		$sort_f = $sort;
+		$uri = "/shop-list-{$shop_id}-{$cat_id}-{$go}-{$is_free}-0-{$is_stock}-{$sort_f}-{$order_f}-0-0.html";
+	}  else {
+		// 默认链接类型：/shop/1/list.html?s=1&is_free=1&sort=5&order=DESC
+		$uri = "/shop/{$shop_id}/list.html";
+		if ($params['source'] == 1) {
+			$uri = 'search.html';
+		}
+		if (isset($keyword) && !empty($keyword)) {
+			$uri .= '?keyword='.$keyword;
+		} else {
+			$uri .= '?s=1';
+		}
+		if (isset($go) && !empty($go)) {
+			$uri .= '&go='.$go;
+		}
+		if (isset($cat_id) && !empty($cat_id)) {
+			$uri .= '&cat_id='.$cat_id;
+		}
+		if (isset($is_stock) && !empty($is_stock)) {
+			$uri .= '&is_stock='.$is_stock;
+		}
+		if (isset($is_free) && !empty($is_free)) {
+			$uri .= '&is_free='.$is_free;
+		}
+		if (isset($is_cash) && !empty($is_cash)) {
+			$uri .= '&is_cash='.$is_cash;
+		}
+		if (isset($sort) && !empty($sort)) {
+			$uri .= '&sort='.$sort;
+		}
+		if (isset($order) && !empty($order)) {
+			$uri .= '&order='.$order;
+		}
+		if (isset($region) && !empty($region)) {
+			$uri .= '&region='.$region;
+		}
+		if (isset($style) && !empty($style)) {
+			$uri .= '&style='.$style;
+		}
+	}
+
+
+	return $uri;
+}
+
+/**
+ * 红包列表筛选 uri拼接
+ *
+ * @param array $params 所有参数
+ * @param array $extra 选中参数
+ * @return string
+ */
+function build_bonus_uri($params, $extra = [])
+{
+    extract(array_merge($params, $extra));
+    $uri = '/bonus-list.html';
+    if (isset($keyword) && !empty($keyword)) {
+        $uri .= '?keyword='.$keyword;
+    } else {
+        $uri .= '?s=1';
+    }
+    if (isset($go) && !empty($go)) {
+        $uri .= '&go='.$go;
+    }
+    if (isset($sort) && !empty($sort)) {
+        $uri .= '&sort='.$sort;
+    }
+    if (isset($order) && !empty($order)) {
+        $uri .= '&order='.$order;
+    }
+
+    return $uri;
+}
+
+/**
  * 计算商品价格区间
  *
  * @param int $price_min
@@ -362,6 +526,15 @@ function price_range($price_min = 0, $price_max = 0, $price_str = '')
     }
     if (empty($price_max)) {
         $price_max = 0;
+    }
+    if (empty($price_str)) {
+        return [
+            [
+                'start' => $price_min,
+                'end'=> $price_max,
+                'start_end' => $price_min.'&nbsp;-&nbsp;'.$price_max
+            ]
+        ];
     }
 
     //算法:计算商品价格的七个区间
@@ -406,7 +579,7 @@ function price_range($price_min = 0, $price_max = 0, $price_str = '')
    return $_priceNumber;
 }
 
-function get_goods_sort_array($value = '')
+function get_goods_sort_array($value = '-1')
 {
     $list = [
         [
@@ -453,7 +626,7 @@ function get_goods_sort_array($value = '')
         ],
     ];
 
-    if ($value != '') {
+    if ($value != '-1') {
         foreach ($list as $v) {
             if ($v['value'] == $value) {
                 return $v['sort'];
@@ -464,6 +637,93 @@ function get_goods_sort_array($value = '')
     return $list;
 }
 
+function get_shop_goods_sort_array($value = '-1')
+{
+//	$value = $params['sort'] ?? 0; // 排序字段 综合/销量/新品/评论/价格/人气
+//	$order = $params['order'] ?? 0; // 排序方式 ASC DESC
+	$list = [
+		[
+			'name' => '综合',
+			'value' => 0,
+			'sort' => 'goods_sort',
+			'order' => 'ASC',
+		],
+		[
+			'name' => '销量',
+			'value' => 1,
+			'sort' => 'sale_num',
+			'order' => 'DESC',
+		],
+		[
+			'name' => '新品',
+			'value' => 2,
+			'sort' => 'last_time',
+			'order' => 'DESC',
+		],
+		[
+			'name' => '评论',
+			'value' => 3,
+			'sort' => 'comment_num',
+			'order' => 'DESC',
+		],
+		[
+			'name' => '价格',
+			'value' => 4,
+			'sort' => 'goods_price',
+			'order' => 'DESC',
+		],
+		[
+			'name' => '人气',
+			'value' => 5,
+			'sort' => 'collect_num',
+			'order' => 'DESC',
+		],
+	];
+
+	if ($value != '-1') {
+		foreach ($list as $v) {
+			if ($v['value'] == $value) {
+				return $v['sort'];
+			}
+		}
+	}
+
+	return $list;
+}
+
+function get_bonus_sort_array($value = '-1')
+{
+    $list = [
+        [
+            'name' => '综合',
+            'param' => 'sort',
+            'value' => 0,
+            'sort' => 'sort',
+            'order' => 0,
+            'url' => '/bonus-list.html?order=ASC',
+            'selected' => 0
+        ],
+        [
+            'name' => '金额',
+            'param' => 'sort',
+            'value' => 1,
+            'sort' => 'bonus_amount',
+            'order' => 'DESC',
+            'url' => '/bonus-list.html?sort=1&amp;order=DESC',
+            'selected' => 0
+        ],
+    ];
+
+    if ($value != '-1') {
+        foreach ($list as $v) {
+            if ($v['value'] == $value) {
+                return $v['sort'];
+            }
+        }
+    }
+
+    return $list;
+}
 
 /*
 *function：计算两个日期相隔多少年，多少月，多少天
@@ -522,4 +782,30 @@ function calc_shop_duration($open_time, $end_time)
 
     $str = implode(' ', $arr);
     return $str;
+}
+
+/**
+ * 获取第三方登录驱动
+ *
+ * @param $type
+ * @return string|string[]|null
+ */
+function third_login_driver($type) {
+    if (!in_array($type, ['pc_weixin','mobile_weixin', 'qq','weibo','github'])) {
+        return null;
+    }
+    return str_replace(['pc_weixin','mobile_weixin', 'qq','weibo','github'],['wechat','wechat','qq','weibo','github'], $type);
+}
+
+/**
+ * 获取第三方登录驱动
+ *
+ * @param $type
+ * @return string|string[]|null
+ */
+function third_login_key($type) {
+    if (!in_array($type, ['pc_weixin','mobile_weixin', 'qq','weibo','github'])) {
+        return null;
+    }
+    return str_replace(['pc_weixin','mobile_weixin', 'qq','weibo','github'],['weixin','weixin','qq','weibo','github'], $type);
 }

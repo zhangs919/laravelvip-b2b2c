@@ -32,7 +32,7 @@
                         @if(!empty($v['comment_images']))
                             <ul class="goods-comment-picture" id="gallery">
 
-                                @foreach($v['comment-images'] as $image)
+                                @foreach($v['comment_images'] as $image)
                                     <li>
                                         <a href="{{ get_image_url($image) }}">
                                             <img src="{{ get_image_url($image) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220">

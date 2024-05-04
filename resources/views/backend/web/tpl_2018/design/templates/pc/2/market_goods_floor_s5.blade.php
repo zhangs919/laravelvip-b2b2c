@@ -6,14 +6,9 @@
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
 
-
-
-
-
-
-
-    <div class="w1210 floor-list">
-        <div class="floor" floor="5" color="{{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '#8ed515' }}">
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif" data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
+        <div class="floor" floor="5" color="{{ !empty($data['4-1'][0]['bgcolor']) ? $data['4-1'][0]['bgcolor'] : '#8ed515' }}">
             <div class="floor-layout">
                 <div class="floor-con floor-con4">
                     <div class="floor-title">
@@ -41,7 +36,7 @@
 
                             @if(!empty($data['6-2']))
                                 @foreach($data['6-2'] as $v)
-                                    <a class="hot-word" href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                    <a class="hot-word" href="{{ $v['link'] }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                                 @endforeach
                             @else
                                 @for($i=1; $i <= 5; $i++)
@@ -96,7 +91,7 @@
 
                                         @if(!empty($data['6-1']))
                                             @foreach($data['6-1'] as $v)
-                                                <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" target="_blank" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                                <a href="{{ $v['link'] }}" target="_blank" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                                             @endforeach
                                         @else
                                             @for($i=1; $i <= 10; $i++)
@@ -213,56 +208,56 @@
 </div>
 
 <script type="text/javascript">
-    $(function() {
-        var sWidth = $("#focus_3").width(); //获取焦点图的宽度（显示面积）
-        var len = $("#focus_3 ul li").length; //获取焦点图个数
-        var index = 0;
-        var picTimer;
-//以下代码添加数字按钮和按钮后的半透明条，还有上一页、下一页两个按钮
-        var btn = "<div class='focus-btn'>";
-
-        for (var i = 0; i < len; i++) {
-            btn += "<span></span>";
-        }
-        btn += "</div>";
-        $("#focus_3").append(btn);
-        $("#focus_3 .btnBg").css("opacity", 0.5);
-
-//为小按钮添加鼠标滑入事件，以显示相应的内容
-        $("#focus_3 .focus-btn span").css("opacity", 0.3).mouseover(function() {
-            index = $("#focus_3 .focus-btn span").index(this);
-            showPics(index);
-        }).eq(0).trigger("mouseover");
-
-//本例为左右滚动，即所有li元素都是在同一排向左浮动，所以这里需要计算出外围ul元素的宽度
-        $("#focus_3 ul").css("width", sWidth * (len));
-
-//鼠标滑上焦点图时停止自动播放，滑出时开始自动播放
-        $("#focus_3").hover(function() {
-            clearInterval(picTimer);
-        }, function() {
-            picTimer = setInterval(function() {
-                showPics(index);
-                index++;
-                if (index == len) {
-                    index = 0;
-                }
-            }, 3000); //此4000代表自动播放的间隔，单位：毫秒
-        }).trigger("mouseleave");
-
-//显示图片函数，根据接收的index值显示相应的内容
-        function showPics(index) { //普通切换
-            var nowLeft = -index * sWidth; //根据index值计算ul元素的left值
-            $("#focus_3 ul").stop(true, false).animate({
-                "left": nowLeft
-            }, 300);
-            $("#focus_3 .focus-btn span").stop(true, false).animate({
-                "opacity": "0.3"
-            }, 300).eq(index).stop(true, false).animate({
-                "opacity": "0.7"
-            }, 300); //为当前的按钮切换到选中的效果
-        }
-    });
+//     $(function() {
+//         var sWidth = $("#focus_3").width(); //获取焦点图的宽度（显示面积）
+//         var len = $("#focus_3 ul li").length; //获取焦点图个数
+//         var index = 0;
+//         var picTimer;
+// //以下代码添加数字按钮和按钮后的半透明条，还有上一页、下一页两个按钮
+//         var btn = "<div class='focus-btn'>";
+//
+//         for (var i = 0; i < len; i++) {
+//             btn += "<span></span>";
+//         }
+//         btn += "</div>";
+//         $("#focus_3").append(btn);
+//         $("#focus_3 .btnBg").css("opacity", 0.5);
+//
+// //为小按钮添加鼠标滑入事件，以显示相应的内容
+//         $("#focus_3 .focus-btn span").css("opacity", 0.3).mouseover(function() {
+//             index = $("#focus_3 .focus-btn span").index(this);
+//             showPics(index);
+//         }).eq(0).trigger("mouseover");
+//
+// //本例为左右滚动，即所有li元素都是在同一排向左浮动，所以这里需要计算出外围ul元素的宽度
+//         $("#focus_3 ul").css("width", sWidth * (len));
+//
+// //鼠标滑上焦点图时停止自动播放，滑出时开始自动播放
+//         $("#focus_3").hover(function() {
+//             clearInterval(picTimer);
+//         }, function() {
+//             picTimer = setInterval(function() {
+//                 showPics(index);
+//                 index++;
+//                 if (index == len) {
+//                     index = 0;
+//                 }
+//             }, 3000); //此4000代表自动播放的间隔，单位：毫秒
+//         }).trigger("mouseleave");
+//
+// //显示图片函数，根据接收的index值显示相应的内容
+//         function showPics(index) { //普通切换
+//             var nowLeft = -index * sWidth; //根据index值计算ul元素的left值
+//             $("#focus_3 ul").stop(true, false).animate({
+//                 "left": nowLeft
+//             }, 300);
+//             $("#focus_3 .focus-btn span").stop(true, false).animate({
+//                 "opacity": "0.3"
+//             }, 300).eq(index).stop(true, false).animate({
+//                 "opacity": "0.7"
+//             }, 300); //为当前的按钮切换到选中的效果
+//         }
+//     });
 </script>
 
 

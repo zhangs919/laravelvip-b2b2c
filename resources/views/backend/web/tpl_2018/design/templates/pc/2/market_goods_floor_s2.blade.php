@@ -4,7 +4,8 @@
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
 
     <!-- 楼层 _star -->
-    <div class="w1210 floor-list">
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif" data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
         <!-- 1楼 _start-->
         <div class="floor market-floor">
             <div class="floor-layout">
@@ -52,14 +53,17 @@
                                                 <i style="background: #FA4862;"></i>
                                                 {{ $v['name'] }}
                                             </a>
-                                        @endforeach
+											@if(!empty($v['link']))
+											<a href="{{ $v['link'] }}" class="see-more" target="_blank">查看更多 ></a>
+											@endif
+										@endforeach
                                     @else
                                         <a href="javascript:void(0)" class="floor-title">
                                             <i style="background: #FA4862;"></i>
                                             添加标题
                                         </a>
-                                        <a href="javascript:void(0)" class="see-more" target="_blank">查看更多 ></a>
-                                    @endif
+										<a href="javascript:void(0)" class="see-more" target="_blank">查看更多 ></a>
+									@endif
 
 
 
@@ -76,13 +80,16 @@
                                     @endif
 
                                     @if(!empty($data['6-1']))
-                                        @for($i=0; $i < ceil(count($data['6-1'])/3); $i++)
+                                        @php
+                                            $goods_cat_datas = array_chunk($data['6-1'], 3);
+                                        @endphp
+                                        @foreach($goods_cat_datas as $goods_cat_data)
                                             <li>
-                                            @foreach(array_slice($data['6-1'], $i*3, 3) as $v)
-                                                <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                            @foreach($goods_cat_data as $v)
+                                                <a href="{{ $v['link'] }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                                             @endforeach
                                             </li>
-                                        @endfor
+                                        @endforeach
                                     @else
                                         @for($i=1; $i <= 8; $i++)
                                             <li>
@@ -173,6 +180,9 @@
                                                 <i style="background: #FA4862;"></i>
                                                 {{ $v['name'] }}
                                             </a>
+											@if(!empty($v['link']))
+												<a href="{{ $v['link'] }}" class="see-more" target="_blank">查看更多 ></a>
+											@endif
                                         @endforeach
                                     @else
                                         <a href="javascript:void(0)" class="floor-title">
@@ -199,13 +209,16 @@
                                     @endif
 
                                     @if(!empty($data['6-2']))
-                                        @for($i=0; $i < ceil(count($data['6-2'])/3); $i++)
+                                        @php
+                                            $goods_cat_datas = array_chunk($data['6-2'], 3);
+                                        @endphp
+                                        @foreach($goods_cat_datas as $goods_cat_data)
                                             <li>
-                                                @foreach(array_slice($data['6-2'], $i*3, 3) as $v)
-                                                    <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                                @foreach($goods_cat_data as $v)
+                                                    <a href="{{ $v['link'] }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                                                 @endforeach
                                             </li>
-                                        @endfor
+                                        @endforeach
                                     @else
                                         @for($i=1; $i <= 8; $i++)
                                             <li>

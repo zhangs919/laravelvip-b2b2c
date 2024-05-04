@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="Model" class="form-horizontal" name="Model" action="/system/seo/sitemap" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
 
             <div class="simple-form-field">
                 <div class="form-group">

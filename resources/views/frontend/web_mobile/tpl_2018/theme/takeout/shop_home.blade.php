@@ -59,14 +59,8 @@
 
 </head>
 <body>
-<div class="show-menu-info" id="menu">
-    <ul>
-        <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-        <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-        <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-        <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-    </ul>
-</div>
+{{--引入右上角菜单--}}
+@include('layouts.partials.right_top_menu')
 
 <link rel="stylesheet" href="/css/dianpu_take_out.css?v=20190327"/>
 <link rel="stylesheet" href="/css/iconfont/iconfont.css?v=20190327"/>
@@ -200,7 +194,7 @@
     </div>
 </div>
 <!-- 分享 -->
-<script src="http://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
 <script type="text/javascript">
     $().ready(function() {
 
@@ -225,8 +219,8 @@
         }
 
         $.ajax({
-            type: "GET",
-            url: "/index/information/get-weixinconfig.html",
+            type: "POST",
+            url: "/site/get-weixinconfig.html",
             dataType: "json",
             data: {
                 url: url
@@ -239,7 +233,8 @@
                         timestamp: result.data.timestamp,
                         nonceStr: result.data.nonceStr,
                         signature: result.data.signature,
-                        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+						jsApiList: result.data.jsApiList,
+                        // jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
                     });
 
                     history.replaceState(null, document.title, url);
@@ -358,7 +353,7 @@
         @if($cart_price_info['goods_number'] == 0)
             <div class="goods-total-price  empty-cart-num SZY-GOODS-AMOUNT">购物车为空</div>
         @else
-            <div class="goods-total-price price-color SZY-GOODS-AMOUNT">￥{{ $cart_price_info['total_fee'] }}</div>
+            <div class="goods-total-price price-color SZY-GOODS-AMOUNT">￥{{ $cart_price_info['select_goods_amount'] }}</div>
         @endif
 
     </div>
@@ -692,7 +687,7 @@
                 showloading: false
             }, function() {
                 $.imgloading.loading();
-                History.replaceState(null, '鲜农乐食品专营店-商之翼1', '/theme/takeout/' + shop_id + '.html?cat_id=' + cat_id);
+                History.replaceState(null, '{{ $seo_title ?? '乐融沃B2B2C商城演示站' }}', '/theme/takeout/' + shop_id + '.html?cat_id=' + cat_id);
             });
         });
 
@@ -715,7 +710,7 @@
             }, function() {
                 $("#list-wrap").scrollTop(0);
                 $.imgloading.loading();
-                History.replaceState(null, '鲜农乐食品专营店-商之翼1', '/theme/takeout/' + shop_id + '.html?cat_id=' + cat_id);
+                History.replaceState(null, '{{ $seo_title ?? '乐融沃B2B2C商城演示站' }}', '/theme/takeout/' + shop_id + '.html?cat_id=' + cat_id);
             });
         });
 

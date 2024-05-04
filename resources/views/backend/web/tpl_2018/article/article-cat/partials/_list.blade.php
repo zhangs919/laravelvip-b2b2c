@@ -68,7 +68,7 @@
                     <a href="/article/article/list?cat_id={{ $child['cat_id'] }}">{{ $child['cat_name'] }}</a>
                 </td>
                 <td class="text-c">
-                    <a href="javascript:void(0);" ref="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/default_article_cat_image_0.jpg" class="preview">
+                    <a href="javascript:void(0);" ref="@if(!empty($child['cat_image'])) {{ get_image_url($child['cat_image']) }} @else {{ get_image_url(sysconf('default_article_cat_image')) }} @endif" class="preview">
                         <i class="fa fa-picture-o"></i>
                     </a>
                 </td>

@@ -46,4 +46,44 @@ class GoodsComment extends BaseModel
     ];
 
     protected $primaryKey = 'comment_id';
+
+    /**
+     * 关联商家表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class,'shop_id','shop_id');
+    }
+
+    /**
+     * 关联会员表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','user_id');
+    }
+
+    /**
+     * 关联订单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderInfo()
+    {
+        return $this->belongsTo(OrderInfo::class,'order_id','order_id');
+    }
+
+    /**
+     * 关联订单商品表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderGoods()
+    {
+        return $this->belongsTo(OrderGoods::class,'record_id','record_id');
+    }
 }

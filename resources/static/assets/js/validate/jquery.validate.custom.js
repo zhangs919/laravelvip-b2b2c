@@ -1,12 +1,7 @@
 /**
- * 
- * 68Shop 表单验证插件
- * 
- * ============================================================================ 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。 网站地址: http://www.68ecshop.com ============================================================================
- * 
- * @author : niqingyang
- * @version 1.0
- * @link http://www.68ecshop.com
+ *
+ * 表单验证插件
+ *
  */
 (function($) {
 	if ($.validator == undefined) {
@@ -124,9 +119,9 @@
 		// 失去焦点验证
 		onfocusout: function(element) {
 			if (!this.checkable(element) && (element.name in this.submitted || !this.optional(element))) {
-				
+
 				this.element(element);
-				
+
 				// 触发其他元素验证
 				var trigger = $(element).data("rule-trigger");
 
@@ -156,7 +151,7 @@
 			} else if (element.parentNode.name in this.submitted) {
 				this.element(element.parentNode);
 			}
-			
+
 			// 触发其他元素验证
 			var trigger = $(element).data("rule-trigger");
 
@@ -185,7 +180,7 @@
 
 	/**
 	 * 显示错误信息
-	 * 
+	 *
 	 * @param element
 	 *            表单元素对象
 	 * @param message
@@ -199,7 +194,7 @@
 
 	/**
 	 * 移除显示的错误信息
-	 * 
+	 *
 	 * @param element
 	 *            表单元素对象
 	 */
@@ -246,51 +241,51 @@
 
 	/**
 	 * 条件验证器，可根据条件验证多个规则
-	 * 
+	 *
 	 * @param array
 	 *            options [{min: {}, ...},{},{}]
 	 */
 	$.validator.addMethod("when", function(value, element, options) {
-		
+
 		if($.isArray(options) == false){
 			console.error("validator “when” options must be a Array");
 			return false;
 		}
-		
+
 		var context = this;
-		
+
 		var valid = true, validator = this, errorList = [];
-		
+
 		for(var i = 0; i < options.length; i++){
-			
+
 			if(!options[i].when){
 				continue;
 			}
-			
+
 			var when = options[i].when;
-			
+
 			if($.isFunction(when) == false){
 				// 动态创建函数
 				eval("when = " + when);
 			}
-			
+
 			if($.isFunction(when) == false){
 				console.error("validator “when” options.when must be a function");
 				return false;
 			}
-			
+
 			var rules = {};
 			var messages = options[i].messages;
-			
+
 			for(var method in options[i]){
 				if(method != "messages" && method != "when"){
 					rules[method] = options[i][method];
 				}
 			}
-			
+
 			if(when.call(this, value, element)){
 				valid = this.element(element, rules, messages) && valid;
-				
+
 				if(!valid){
 					// 动态修改“when”的 message
 					if(!this.settings.messages[element.name]){
@@ -304,10 +299,10 @@
 				}
 			}
 		}
-		
+
 		return valid;
 	});
-	
+
 	/**
 	 * Default默认值设置
 	 */
@@ -443,15 +438,15 @@
 		};
 
 		data[element.name] = value;
-		
+
 		for (var i in params) {
-			
+
 			if($.isPlainObject(params[i])){
-				
+
 				for(var name in params[i]){
-					
+
 					var item = params[i][name];
-					
+
 					if($.isPlainObject(item)){
 						// 选择器对象
 						if(item.selector && $(item.selector).val() !== undefined){
@@ -462,29 +457,29 @@
 							console.error("------------------------");
 						}
 					}else if($.isFunction(item)){
-						
+
 						// 自定义函数
 						var elementVlaue = item.call(this, value, element, options);
-						
+
 						if(elementVlaue != undefined){
 							data[name] = elementVlaue;
 						}
-						
+
 					}else{
 						// 直接值
 						data[name] = item;
 					}
 				}
-				
+
 			}else{
-				
+
 				var elementName = params[i];
 				var elementVlaue = $("[name='" + elementName + "']").val();
 				data[elementName] = elementVlaue == undefined ? "" : elementVlaue;
-				
+
 			}
 		}
-		
+
 		$.ajax({
 			url: url,
 			mode: "abort",
@@ -590,40 +585,40 @@
 				options.pattern = options.pattern.substring(0, options.pattern.length - 1);
 			}
 		}
-		
+
 		if(this.optional(element) || value.match(options.pattern)){
-			
+
 			$(element).one("blur", function(){
 				var val = $.trim($(this).val());
 				if(val != "" && !isNaN(val)){
 					$(this).val(parseFloat(val));
 				}
 			});
-			
+
 			return true;
 		}
-		
+
 		return false;
 	});
-	
+
 	/**
 	 * 小数位数
 	 */
 	$.validator.addMethod("decimal", function(value, element, options) {
 		// 获取值
 		value = getValue.call(this, value, element, options);
-		
+
 		options = parseInt(options);
-		
+
 		if(isNaN(options)){
 			console.error("验证规则“decimal”的参数“"+options+"”不是一个有效的整数！");
 		}
-		
+
 		var decimal = value.substring(value.lastIndexOf(".") + 1);
-		
+
 		return this.optional(element) || isNaN(options) || value.indexOf(".") < 1 || decimal.length <= options;
 	});
-	
+
 	/**
 	 * 数字：整数
 	 */
@@ -631,19 +626,19 @@
 		// return this.optional(element) || value.match(/^\s*[+-]?\d+\s*$/);
 		// 获取值
 		value = getValue.call(this, value, element, options);
-		
+
 		if(this.optional(element) || /^\s*[+-]?\d+\s*$/.test(value)){
-			
+
 			$(element).one("blur", function(){
 				var val = $.trim($(this).val());
 				if(val != "" && !isNaN(val)){
 					$(this).val(parseFloat(val));
 				}
 			});
-			
+
 			return true;
 		}
-		
+
 		return false;
 	});
 
@@ -1201,7 +1196,7 @@
 
 		return "pending";
 	});
-	
+
 	/**
 	 * video，对应YII的video
 	 */
@@ -1239,21 +1234,21 @@
 			var url = windowURL.createObjectURL(file);
 
 			video.src = url;
-			
+
 			$(video).on("loadedmetadata", function() {
-				
+
 				if (options.maxDuration && this.duration > options.maxDuration) {
 					var message = options.overDuration.replace(/\{file\}/g, file.name);
 					def.resolve(false, message);
 					return;
 				}
-				
+
 				if (options.minDuration && this.duration > options.minDuration) {
 					var message = options.underDuration.replace(/\{file\}/g, file.name);
 					def.resolve(false, message);
 					return;
 				}
-				
+
 				if (options.minWidth && this.videoWidth < options.minWidth) {
 					var message = options.underWidth.replace(/\{file\}/g, file.name);
 					def.resolve(false, message);
@@ -1277,7 +1272,7 @@
 					def.resolve(false, message);
 					return;
 				}
-				
+
 				if(options.ratio){
 					if ($.isArray(options.ratio) == false) {
 						options.ratio = [options.ratio];
@@ -1301,7 +1296,7 @@
 						}
 						return min;
 					}
-					
+
 					// 计算显示比例
 					var divisor = maxDivisor(this.videoWidth, this.videoHeight);
 					var ratio = (this.videoWidth / divisor) + ":" + (this.videoHeight / divisor);
@@ -1313,7 +1308,7 @@
 						return;
 					}
 				}
-				
+
 				// 成功
 				def.resolve(true);
 			});
@@ -1464,12 +1459,12 @@
 
 	/**
 	 * 添加验证器
-	 * 
+	 *
 	 * @param rules
 	 *            验证规则的集合
 	 * @param attribute
 	 *            目前只支持“name”和“id”两种，可以根据“name”或者“id”对表单元素进行绑定验证规则，默认为根据“name”进行绑定验证规则
-	 * 
+	 *
 	 */
 	$.validator.addRules = function(rules, options) {
 
@@ -1525,7 +1520,7 @@
 					$(element).data("rule-trigger", $(rule.trigger.selector));
 					continue;
 				}
-				
+
 				if(rule.when){// 带条件判断的验证
 					var data = $(element).data("rule-when") || [];
 					data.push(rule);
@@ -1541,12 +1536,12 @@
 
 	/**
 	 * 添加验证器
-	 * 
+	 *
 	 * @param rules
 	 *            验证规则的集合
 	 * @param attribute
 	 *            目前只支持“name”和“id”两种，可以根据“name”或者“id”对表单元素进行绑定验证规则，默认为根据“name”进行绑定验证规则
-	 * 
+	 *
 	 */
 	$.fn.addRule = function(rule) {
 		if (typeof rule == 'string') {
@@ -1569,7 +1564,7 @@
 		for (var i = 0; i < rules.length; i++) {
 			$(this).each(function() {
 				var rule = rules[i];
-				
+
 				// 自动生成trigger验证器
 				if (rule.compare && rule.compare.compareAttribute) {
 					$("#" + rule.compare.compareAttribute).data("rule-trigger", $(this));
@@ -1577,7 +1572,7 @@
 					$(this).data("rule-trigger", $(rule.trigger.selector));
 					return;
 				}
-				
+
 				if(rule.when){// 带条件判断的验证
 					var data = $(this).data("rule-when") || [];
 					data.push(rule);

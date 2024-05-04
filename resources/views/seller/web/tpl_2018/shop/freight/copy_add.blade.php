@@ -15,7 +15,7 @@
 
 
             <form id="form1" class="form-horizontal" name="Freight" action="/shop/freight/add?id=17" method="post" left="col-sm-3" right="col-sm-9">
-                {{ csrf_field() }}
+                @csrf
                 <!-- 模板ID -->
                 <input type="hidden" id="freight-freight_id" class="form-control" name="Freight[freight_id]" value="17">
                 <!-- 模板名称  -->

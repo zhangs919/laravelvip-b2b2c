@@ -1,9 +1,19 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 @stop
 
 {{--content--}}
@@ -12,7 +22,7 @@
     <div class="table-content m-t-30 clearfix">
 
         <form id="Attribute" class="form-horizontal" name="Attribute" action="/goods/spec/add" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="attribute-attr_id" class="form-control" name="Attribute[attr_id]" value="{{ $info->attr_id ?? '' }}">
 
@@ -193,7 +203,14 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- JSON2 -->
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "attribute-attr_name", "name": "Attribute[attr_name]", "attribute": "attr_name", "rules": {"required":true,"messages":{"required":"规格名称不能为空。"}}},{"id": "attribute-attr_style", "name": "Attribute[attr_style]", "attribute": "attr_style", "rules": {"required":true,"messages":{"required":"规格样式不能为空。"}}},{"id": "attribute-type_id", "name": "Attribute[type_id]", "attribute": "type_id", "rules": {"required":true,"messages":{"required":"商品类型ID不能为空。"}}},{"id": "attribute-shop_id", "name": "Attribute[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "attribute-attr_sort", "name": "Attribute[attr_sort]", "attribute": "attr_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "attribute-type_id", "name": "Attribute[type_id]", "attribute": "type_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品类型ID必须是整数。"}}},{"id": "attribute-shop_id", "name": "Attribute[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "attribute-par_attr_id", "name": "Attribute[par_attr_id]", "attribute": "par_attr_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"上级规格ID必须是整数。"}}},{"id": "attribute-attr_vid", "name": "Attribute[attr_vid]", "attribute": "attr_vid", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"规格值ID必须是整数。"}}},{"id": "attribute-is_spec", "name": "Attribute[is_spec]", "attribute": "is_spec", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否为规格属性必须是整数。"}}},{"id": "attribute-attr_style", "name": "Attribute[attr_style]", "attribute": "attr_style", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"规格样式必须是整数。"}}},{"id": "attribute-is_index", "name": "Attribute[is_index]", "attribute": "is_index", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否检索必须是整数。"}}},{"id": "attribute-is_linked", "name": "Attribute[is_linked]", "attribute": "is_linked", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否关联相同规格商品必须是整数。"}}},{"id": "attribute-is_show", "name": "Attribute[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"显示必须是整数。"}}},{"id": "attribute-attr_name", "name": "Attribute[attr_name]", "attribute": "attr_name", "rules": {"string":true,"messages":{"string":"规格名称必须是一条字符串。","maxlength":"规格名称只能包含至多10个字符。","match":"规格名称中含有非法字符"},"maxlength":10,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "attribute-attr_remark", "name": "Attribute[attr_remark]", "attribute": "attr_remark", "rules": {"string":true,"messages":{"string":"规格描述必须是一条字符串。","maxlength":"规格描述只能包含至多255个字符。","match":"规格描述中含有非法字符"},"maxlength":255,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "attribute-attr_sort", "name": "Attribute[attr_sort]", "attribute": "attr_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},]
+</script>
+    <script type="text/javascript">
+        // 
+    </script>
 @stop
 
 
@@ -207,21 +224,15 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/js/jquery.json-2.4.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- JSON2 -->
-    <script src="/assets/d2eace91/js/jquery.json-2.4.js?v=20180710"></script>
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180710"></script>
-    <!-- 双向选择器:css -->
-    <link rel="stylesheet" href="/assets/d2eace91/css/selector/jquery.multiselect2side.css?v=20180702"/>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-    [{"id": "attribute-attr_name", "name": "Attribute[attr_name]", "attribute": "attr_name", "rules": {"required":true,"messages":{"required":"规格名称不能为空。"}}},{"id": "attribute-attr_style", "name": "Attribute[attr_style]", "attribute": "attr_style", "rules": {"required":true,"messages":{"required":"规格样式不能为空。"}}},{"id": "attribute-type_id", "name": "Attribute[type_id]", "attribute": "type_id", "rules": {"required":true,"messages":{"required":"商品类型ID不能为空。"}}},{"id": "attribute-shop_id", "name": "Attribute[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "attribute-attr_sort", "name": "Attribute[attr_sort]", "attribute": "attr_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "attribute-type_id", "name": "Attribute[type_id]", "attribute": "type_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"商品类型ID必须是整数。"}}},{"id": "attribute-shop_id", "name": "Attribute[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "attribute-par_attr_id", "name": "Attribute[par_attr_id]", "attribute": "par_attr_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"上级规格ID必须是整数。"}}},{"id": "attribute-attr_vid", "name": "Attribute[attr_vid]", "attribute": "attr_vid", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"规格值ID必须是整数。"}}},{"id": "attribute-is_spec", "name": "Attribute[is_spec]", "attribute": "is_spec", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否为规格属性必须是整数。"}}},{"id": "attribute-attr_style", "name": "Attribute[attr_style]", "attribute": "attr_style", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"规格样式必须是整数。"}}},{"id": "attribute-is_index", "name": "Attribute[is_index]", "attribute": "is_index", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否检索必须是整数。"}}},{"id": "attribute-is_linked", "name": "Attribute[is_linked]", "attribute": "is_linked", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否关联相同规格商品必须是整数。"}}},{"id": "attribute-is_show", "name": "Attribute[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"显示必须是整数。"}}},{"id": "attribute-attr_name", "name": "Attribute[attr_name]", "attribute": "attr_name", "rules": {"string":true,"messages":{"string":"规格名称必须是一条字符串。","maxlength":"规格名称只能包含至多10个字符。"},"maxlength":10}},{"id": "attribute-attr_remark", "name": "Attribute[attr_remark]", "attribute": "attr_remark", "rules": {"string":true,"messages":{"string":"规格描述必须是一条字符串。","maxlength":"规格描述只能包含至多255个字符。"},"maxlength":255}},{"id": "attribute-attr_sort", "name": "Attribute[attr_sort]", "attribute": "attr_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},]
-    </script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             $("[data-toggle='popover']").popover();
             var validator = $("#Attribute").validate();
@@ -231,20 +242,15 @@
                 if (!validator.form()) {
                     return;
                 }
-
                 var url = $("#Attribute").attr("action");
                 var data = $("#Attribute").remove(".attr-values-area").serializeJson();
-
                 data = {
                     _csrf: data._csrf,
                     Attribute: data.Attribute,
                     attr_values: data.attr_values
                 };
-
                 var attr_values = [];
-
                 var message = null;
-
                 $(".attr-values-area:visible").each(function() {
                     if ($(this).attr("id") == "values_select") {
                         $(this).find(".attr-value,.new-attr-value").each(function() {
@@ -253,7 +259,6 @@
                                 message = "规格值排序输入错误！";
                                 return false;
                             }
-
                             var object = $(this).serializeJson();
                             if ($.trim(object.attr_vname) != '') {
                                 attr_values.push(object);
@@ -261,33 +266,28 @@
                         });
                     }
                 });
-
                 if (message != null) {
                     $.msg(message);
                     return;
                 }
-
                 if (attr_values.length == 0) {
                     $.msg("规格值不能为空！");
                     return;
                 }
-
                 data.attr_values = attr_values;
-
                 data = JSON.stringify(data);
-
                 //加载提示
                 $.loading.start();
-
                 $.post(url, {
                     data: data
                 }, function(result) {
                     if (result.code == 0) {
-                        $.msg(result.message);
-                        if (result.data) {
-                            $.loading.start();
-                            $.go(result.data);
-                        }
+                        $.msg(result.message, function(){
+                            if (result.data) {
+                                $.loading.start();
+                                $.go(result.data);
+                            }
+                        });
                     } else {
                         $.msg(result.message, {
                             time: 5000
@@ -297,14 +297,11 @@
                     $.loading.stop();
                 });
             });
-
             // 模板
             var attr_value_tpl = $(".attr-values").find("li:last").clone();
-
             if ($(".new-attr-value").size() == 1) {
                 $(".new-attr-value").find(".del-attr-value").prop("disabled", true);
             }
-
             // 继续添加规格值的点击事件
             $("#add_attribute_value").click(function() {
                 $(".attr-values").append($(attr_value_tpl).clone());
@@ -312,7 +309,6 @@
                     $(".new-attr-value").find(".del-attr-value").prop("disabled", false);
                 }
             });
-
             // 删除规格
             $('body').on("click", ".del-attr-value", function() {
                 $(this).parents(".new-attr-value").remove();
@@ -320,7 +316,6 @@
                     $(".new-attr-value").find(".del-attr-value").prop("disabled", true);
                 }
             })
-
             // 删除提示
             $(".delete_label").mouseover(function() {
                 var element = this;
@@ -330,7 +325,6 @@
             }).mouseout(function() {
                 $.closeAll("tips");
             });
-
         });
     </script>
 @stop

@@ -24,7 +24,10 @@ namespace App\Repositories;
 
 
 use App\Models\Bonus;
+use App\Models\Member;
+use App\Models\Shop;
 use App\Models\UserBonus;
+use Illuminate\Support\Facades\DB;
 
 class UserBonusRepository
 {
@@ -57,15 +60,23 @@ class UserBonusRepository
         if (!empty($list)) {
             foreach ($list as $key=>&$item) {
 
+                $item['bonus_data'] = unserialize($item['bonus_data']);
+
                 array_merge(unserialize($item['bonus_datas']), $item);
+
+                $item['shop_name'] = Shop::where('shop_id', $item['shop_id'])->value('shop_name');
+
                 $item['bonus_type_format'] = format_bonus_type($item['bonus_type']);
                 $item['bonus_price_format'] = $item['bonus_price'];
                 $item['used_time_format'] = format_time($item['used_time'], 'Y-m-d H:i:s');
                 $item['receive_time_format'] = format_time($item['receive_time'], 'Y-m-d H:i:s');
-                $item['start_time_format'] = format_time($item['start_time'], 'Y-m-d');
-                $item['end_time_format'] = format_time($item['end_time'], 'Y-m-d');
+                $item['start_time_format'] = format_time($item['start_time'], 'Y-m-d H:i:s');
+                $item['end_time_format'] = format_time($item['end_time'], 'Y-m-d H:i:s');
                 $item['search_url'] = '/shop/.'.$item['shop_id'].'html';
-                $item['bonus_desc'] = '使用条件：店内通用 满￥'.$item['bonus_price'].'可用 '.str_replace([0,1], ['可与其他优惠、活动一起使用','仅限原价购买时使用'], $item['is_original_price']);
+                $item['bonus_desc'] = '使用条件：店内通用 满￥'.$item['bonus_price'].'元可用 '
+                    .str_replace([0,1], ['可与其他优惠、活动一起使用','限原价购买使用'], $item['is_original_price'])
+                    .'</br>起始时间：'.$item['start_time_format']
+                    .'</br>截至时间：'.$item['end_time_format'];
             }
         }
 
@@ -73,12 +84,24 @@ class UserBonusRepository
     }
 
     /**
+     * 获取用户红包数量
+     *
+     * @param $where
+     * @return mixed
+     */
+    public function getBonusCount($where)
+    {
+        return $this->model->where($where)->count();
+    }
+
+
+    /**
      * 领取红包
      *
      * @param $bonus_id
      * @param $user_id
      * @param $user_name
-     * @return bool
+     * @return User|false
      */
     public function receiveBonus($bonus_id, $user_id, $user_name)
     {
@@ -129,10 +152,63 @@ class UserBonusRepository
             'is_original_price' => $bonus_info['is_original_price'],
             'order_id' => null,
         ];
-//        dd($insert);
         $ret = $this->store($insert);
 
         return $ret;
+    }
+
+    /**
+     * 派发红包
+     *
+     * @param $key
+     * @param $shop_id
+     * @param $params
+     * @return bool
+     * @throws \Exception
+     */
+    public function sendUserBonus($key, $shop_id, $params)
+    {
+        $bonus_id = $params['bonus_id'];
+        if ($key == 'seller-send-user-bonus-by-rank') {
+            // 按指定会员等级发放红包
+            $model = Member::where([['shop_id', $shop_id], ['rank_id', $params['shop_rank_id']]]);
+
+            $is_repeat = $params['is_repeat']; // 排除已领取此红包的会员 0-不排除 1-排除
+            if ($is_repeat) {
+                $received_user_ids = UserBonus::where([['bonus_id', $bonus_id], ['shop_id', $shop_id]])
+                    ->pluck('user_id')->toArray();
+                $model->whereNotIn('user_id', $received_user_ids);
+            }
+
+            $user_ids = $model
+                ->pluck('username', 'user_id')->toArray();
+
+        } elseif ($key == 'seller-send-user-bonus-by-user') {
+            // 按指定会员发放红包
+            $user_ids = explode(',', $params['user_ids']);
+        }
+
+        DB::beginTransaction();
+        try{
+            if (empty($user_ids)) {
+                throw new \Exception('暂无满足条件的用户');
+            }
+            // 开始发放
+            foreach ($user_ids as $user_id => $username) {
+                $ret = self::receiveBonus($bonus_id, $user_id, $username);
+                if (!$ret) {
+                    throw new \Exception('红包发放失败');
+                }
+            }
+
+            // 发送消息提醒
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();//事务回滚
+            return $e->getMessage();
+        }
     }
 
     /**

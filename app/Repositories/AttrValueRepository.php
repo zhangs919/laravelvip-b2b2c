@@ -12,9 +12,9 @@ class AttrValueRepository
     protected $model;
 
 
-    public function __construct(AttrValue $attribute)
+    public function __construct()
     {
-        $this->model = $attribute;
+        $this->model = new AttrValue();
     }
 
 

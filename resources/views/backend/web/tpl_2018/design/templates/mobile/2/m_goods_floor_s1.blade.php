@@ -12,7 +12,7 @@
                     编辑
                 </a>
             @endif
-            <ul class="m-t-0" style='background-color: {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '' }}; '>
+            <ul class="m-t-0" style='background-color: {{ $data['99-1'][0]['bgcolor'] ?? '' }}; '>
 
                 @if(!empty($data['2-1']))
                     @foreach($data['2-1'] as $k=>$v)
@@ -23,12 +23,12 @@
                                     <!---->
                                 </div>
                                 <div class="goods-pic">
-                                    <a href="{{ route('mobile_show_goods',['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}" style="display: block;">
+                                    <a href="/goods-{{ $v['goods_id'] }}.html" title="{{ $v['goods_name'] }}" style="display: block;">
                                         <img class="" src="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" alt="{{ $v['goods_name'] }}" data-original-webp="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320/format,webp/quality,q_75" style="display: block;">
                                     </a>
                                 </div>
                                 <div class="goods-name">
-                                    <a href="{{ route('mobile_show_goods',['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}">{{ $v['goods_name'] }}</a>
+                                    <a href="/goods-{{ $v['goods_id'] }}.html" title="{{ $v['goods_name'] }}">{{ $v['goods_name'] }}</a>
                                 </div>
                                 <div class="price">
                                     <span class="price-color">￥{{ $v['goods_price'] }}</span>

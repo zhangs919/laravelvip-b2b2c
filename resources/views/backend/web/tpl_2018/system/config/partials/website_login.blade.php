@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-open_qq_login", "name": "SystemConfigModel[open_qq_login]", "attribute": "open_qq_login", "rules": {"string":true,"messages":{"string":"是否开启QQ登录必须是一条字符串。"}}},{"id": "systemconfigmodel-open_qq_login", "name": "SystemConfigModel[open_qq_login]", "attribute": "open_qq_login", "rules": {"required":true,"messages":{"required":"是否开启QQ登录不能为空。"}}},{"id": "systemconfigmodel-open_weibo_login", "name": "SystemConfigModel[open_weibo_login]", "attribute": "open_weibo_login", "rules": {"string":true,"messages":{"string":"是否开启微博登录必须是一条字符串。"}}},{"id": "systemconfigmodel-open_weibo_login", "name": "SystemConfigModel[open_weibo_login]", "attribute": "open_weibo_login", "rules": {"required":true,"messages":{"required":"是否开启微博登录不能为空。"}}},{"id": "systemconfigmodel-open_weixin_login", "name": "SystemConfigModel[open_weixin_login]", "attribute": "open_weixin_login", "rules": {"string":true,"messages":{"string":"是否开启微信登录必须是一条字符串。"}}},{"id": "systemconfigmodel-open_weixin_login", "name": "SystemConfigModel[open_weixin_login]", "attribute": "open_weixin_login", "rules": {"required":true,"messages":{"required":"是否开启微信登录不能为空。"}}},{"id": "systemconfigmodel-website_login_code", "name": "SystemConfigModel[website_login_code]", "attribute": "website_login_code", "rules": {"string":true,"messages":{"string":"第三方登录验证代码必须是一条字符串。"}}},]

@@ -1,4 +1,4 @@
-@extends('layouts.design_layout_v3')
+@extends('layouts.design_layout')
 
 @section('header_js')
 
@@ -25,7 +25,7 @@
     <script src="/assets/d2eace91/js/design/index_tab.js?v=20180418"></script>
     <script src="/assets/d2eace91/js/design/jquery-hdscroll.js?v=20180418"></script>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/public.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/goods.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/goods.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
 
     <div class="page">
@@ -72,7 +72,7 @@
                             <div class="store-top">
                                 <a href="/shop/5.html">
                                     <div class="store-logo">
-                                        <img src="http://images.68mall.com/system/config/default_image/default_shop_logo_0.gif">
+                                        <img src="{{ get_image_url(sysconf('default_shop_logo')) }}">
                                     </div>
                                     <div class="store-item">
                                         <div class="store-name">店铺名称</div>
@@ -131,22 +131,14 @@
                             编辑
                         </a>
 
-
-
-
-
-
-
-
-
-                        <a href="javascript:void(0);" class="nav-button">
-                            <em class="goods-index-nav" style="background: url(http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2018/04/06/15229944431542.png) no-repeat center center;
-    background-size: 24px;"></em>
-                            <span>美女</span>
-                        </a>
-
-
-
+                        @foreach($navigation as $v)
+                            <a href="javascript:void(0);" class="nav-button">
+                                @if(!empty($v['nav_icon']))
+                                    <em class="goods-index-nav" style="background: url({{ get_image_url($v['nav_icon']) }}) no-repeat center center;background-size: 24px;"></em>
+                                @endif
+                                <span>{{ $v['nav_name'] }}</span>
+                            </a>
+                        @endforeach
 
                         <dl class="ub-f1">
                             <dd class="flow">

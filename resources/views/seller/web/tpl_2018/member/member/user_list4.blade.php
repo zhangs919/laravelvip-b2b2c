@@ -140,7 +140,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -263,13 +263,26 @@
     <script type='text/javascript'>
         $().ready(function() {
             // 备注
+            // $("body").on("click", ".edit-desc", function() {
+            //     var id = $(this).data("id");
+            //     $.modal({
+            //         title: '备注',
+            //         width: 600,
+            //         ajax: {
+            //             url: '/member/member/edit-desc',
+            //             data: {
+            //                 id: id
+            //             }
+            //         },
+            //     });
+            // });
             $("body").on("click", ".edit-desc", function() {
                 var id = $(this).data("id");
                 var tablelist = $("#table_list").tablelist();
                 $.open({
                     title: "备注",
                     ajax: {
-                        url: '/member/member/edit-desc.html',
+                        url: '/member/member/edit-desc',
                         data: {
                             id: id
                         }
@@ -285,7 +298,7 @@
                             return;
                         }
                         $.loading.start();
-                        $.post('/member/member/edit-desc.html', data, function(result) {
+                        $.post('/member/member/edit-desc', data, function(result) {
                             $.loading.stop();
                             if (result.code == 0) {
                                 $.msg(result.message);
@@ -305,7 +318,7 @@
                 var tablelist = $("#table_list").tablelist();
 
                 $.loading.start();
-                $.post('/member/member/add-to-erp.html', {
+                $.post('/member/member/add-to-erp', {
                     id: id
                 }, function(result) {
                     if (result.code == 0) {

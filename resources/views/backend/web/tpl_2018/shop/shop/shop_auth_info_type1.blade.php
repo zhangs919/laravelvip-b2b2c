@@ -22,7 +22,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ShopFieldValueModel" class="form-horizontal" name="ShopFieldValueModel" action="/shop/shop/shop-auth-info?id={{ $info->shop_id }}&amp;shop_type={{ $info->shop_type }}&amp;is_supply={{ $info->is_supply }}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
 
 
             <div class="simple-form-field">
@@ -121,7 +121,12 @@
 
 
                             <div class="form-control-box w400">
-                                <div id="hand_card_imagegroup_container" class="szy-imagegroup" data-id="shopfieldvaluemodel-hand_card" data-size="1"><ul class="image-group"><li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_0.jpg" data-url="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_0.jpg"><img src="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_0.jpg?k=1518672427496" data-value="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_0.jpg" data-url="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_0.jpg"></a></li><li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li></ul></div>
+                                <div id="hand_card_imagegroup_container" class="szy-imagegroup" data-id="shopfieldvaluemodel-hand_card" data-size="1">
+									<ul class="image-group">
+										<li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="{{ idcard_demo_image(0) }}" data-url="{{ idcard_demo_image(0) }}"><img src="{{ idcard_demo_image(0) }}?k=1518672427496" data-value="{{ idcard_demo_image(0) }}" data-url="{{ idcard_demo_image(0) }}"></a></li>
+										<li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li>
+									</ul>
+								</div>
 
                                 <div class="example-image">
                                     <span>参考示例：</span>
@@ -161,7 +166,17 @@
 
 
                             <div class="form-control-box w400">
-                                <div id="card_side_a_imagegroup_container" class="szy-imagegroup" data-id="shopfieldvaluemodel-card_side_a" data-size="1"><ul class="image-group"><li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_1.jpg" data-url="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_1.jpg"><img src="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_1.jpg?k=1518672427497" data-value="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_1.jpg" data-url="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_1.jpg"></a></li><li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li></ul></div>
+                                <div id="card_side_a_imagegroup_container" class="szy-imagegroup" data-id="shopfieldvaluemodel-card_side_a" data-size="1">
+                                    <ul class="image-group">
+                                        <li data-label-index="0" title="点击预览图片">
+                                            <span title="删除图片" class="image-group-remove">删除图片</span>
+                                            <a href="javascript:void(0);" data-value="{{ idcard_demo_image(0) }}" data-url="{{ idcard_demo_image(0) }}">
+                                                <img src="{{ idcard_demo_image(0) }}" data-value="{{ idcard_demo_image(0) }}" data-url="{{ idcard_demo_image(0) }}">
+                                            </a>
+                                        </li>
+                                        <li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li>
+                                    </ul>
+                                </div>
 
                                 <div class="example-image">
                                     <span>参考示例：</span>
@@ -201,7 +216,17 @@
 
 
                             <div class="form-control-box w400">
-                                <div id="card_side_b_imagegroup_container" class="szy-imagegroup" data-id="shopfieldvaluemodel-card_side_b" data-size="1"><ul class="image-group"><li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_2.jpg" data-url="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_2.jpg"><img src="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_2.jpg?k=1518672427499" data-value="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_2.jpg" data-url="http://images.68mall.comhttp://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_2.jpg"></a></li><li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li></ul></div>
+                                <div id="card_side_b_imagegroup_container" class="szy-imagegroup" data-id="shopfieldvaluemodel-card_side_b" data-size="1">
+                                    <ul class="image-group">
+                                        <li data-label-index="0" title="点击预览图片">
+                                            <span title="删除图片" class="image-group-remove">删除图片</span>
+                                            <a href="javascript:void(0);" data-value="{{ idcard_demo_image(1) }}" data-url="{{ idcard_demo_image(1) }}">
+                                                <img src="{{ idcard_demo_image(1) }}?k=1518672427499" data-value="{{ idcard_demo_image(1) }}" data-url="{{ idcard_demo_image(1) }}">
+                                            </a>
+                                        </li>
+                                        <li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li>
+                                    </ul>
+                                </div>
 
                                 <div class="example-image">
                                     <span>参考示例：</span>

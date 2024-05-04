@@ -1,6 +1,6 @@
 <div id="{{ $uuid }}" class="modal-body p-b-20">
     <form id="ActivityGoods" class="form-horizontal" name="ActivityGoods" action="/dashboard/goods-mix/sku-info?goods_id=1&sku_ids=1&sku_price=&price_mode=1" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="goods-info order-item">
             <div class="edit-goods item">
                 <div class="pic-info pull-left">

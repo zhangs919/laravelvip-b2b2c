@@ -1,16 +1,26 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="GoodsMixModel" class="form-horizontal" name="GoodsMixModel" action="/dashboard/goods-mix/add" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix goods-mix-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->

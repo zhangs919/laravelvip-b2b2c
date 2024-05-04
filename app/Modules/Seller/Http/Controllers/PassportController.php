@@ -8,9 +8,7 @@ use App\Repositories\CopyrightAuthRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\URL;
 
 class PassportController extends Controller
 {
@@ -20,18 +18,22 @@ class PassportController extends Controller
 //    protected $redirectTo = '/main';
 //    protected $username;
     protected $copyrightAuth;
+    protected $user;
+    protected $shop;
 
-    public function __construct()
+    public function __construct(CopyrightAuthRepository $copyrightAuth,UserRepository $user,ShopRepository $shop)
     {
-        $this->copyrightAuth = new CopyrightAuthRepository();
+        $this->copyrightAuth = $copyrightAuth;
+        $this->user = $user;
+        $this->shop = $shop;
 
         $this->middleware('guest:seller')->except('logout');
     }
 
     public function showLoginForm(Request $request)
     {
+        $uuid = make_uuid();
         if ($request->ajax()) {
-            $uuid = make_uuid();
             $render = view('passport.ajax_login', compact('uuid'))->render();
             return result(0, $render);
         }
@@ -46,21 +48,17 @@ class PassportController extends Controller
         ];
         list($copyright_auth, $copyright_auth_total) = $this->copyrightAuth->getList($copyCondition);
 
-        return view('passport.login', compact('copyright_auth'));
+        return view('passport.login', compact('copyright_auth','uuid'));
     }
 
     protected function redirectPath()
     {
         // 登录成功 记录shop_id session
         $user_info = auth('seller')->user();
-        $shopRep = new ShopRepository();
-//        $shop_info = $shopRep->getByField('user_id', $user_info->user_id);
 
         $shop_id = $user_info->shop_id;
-        $shop_info = $shopRep->getById($shop_id);
-//        dd($shop_info->toArray());
+        $shop_info = $this->shop->getById($shop_id);
         session()->put('shop_info', $shop_info);
-//        session('shop_info', $shop_info->toArray()); // 将店铺信息存入session
 
         // 记录日志
         shop_log('卖家管理员【'.seller_info()->user_name.'】登录卖家中心。');
@@ -93,13 +91,11 @@ class PassportController extends Controller
     protected function attemptLogin(Request $request)
     {
         // 登录前验证 是否是商家账号
-        $userRep = new UserRepository();
-
 
         $loginData = [];
-        if (Input::get('SmsLoginModel.mobile')) { // 动态密码登录
+        if ($request->input('SmsLoginModel.mobile')) { // 动态密码登录
             $loginData = []; // todo
-        } elseif($username = Input::get('LoginModel.username')) { // 普通登录
+        } elseif($username = $request->input('LoginModel.username')) { // 普通登录
             if (check_is_mobile($username)) { // 手机号登录
                 $username_field = 'mobile';
             } elseif (check_is_email($username)) { // 邮箱登录
@@ -109,12 +105,12 @@ class PassportController extends Controller
             }
 
             $condition[] = [$username_field, $username];
-            $isSeller = $userRep->checkIsSeller($condition);
+            $isSeller = $this->user->checkIsSeller($condition);
             if (!$isSeller) {
                 // 如果不是卖家 则返回错误
                 return false;
             }
-            $loginData = [$username_field => Input::get('LoginModel.username'), 'password' => Input::get('LoginModel.password')];
+            $loginData = [$username_field => $request->input('LoginModel.username'), 'password' => $request->input('LoginModel.password')];
         }
 
         return $this->guard()->attempt(

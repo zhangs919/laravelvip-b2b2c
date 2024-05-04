@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Dashboard;
+namespace App\Modules\Backend\Http\Controllers\Dashboard;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -12,11 +12,11 @@ class ShopAuthController extends Backend
 
     protected $shop;
 
-    public function __construct()
+    public function __construct(ShopRepository $shop)
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
+        $this->shop = $shop;
     }
 
 

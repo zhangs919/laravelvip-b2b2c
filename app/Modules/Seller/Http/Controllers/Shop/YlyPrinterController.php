@@ -20,7 +20,7 @@
 // | Description: 易联云打印机
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\YlyPrinterRepository;
@@ -43,11 +43,11 @@ class YlyPrinterController extends Seller
 
     protected $ylyPrinter;
 
-    public function __construct()
+    public function __construct(YlyPrinterRepository $ylyPrinter)
     {
         parent::__construct();
 
-        $this->ylyPrinter = new YlyPrinterRepository();
+        $this->ylyPrinter = $ylyPrinter;
 
         $this->set_menu_select('shop', 'shop-print-spec');
     }

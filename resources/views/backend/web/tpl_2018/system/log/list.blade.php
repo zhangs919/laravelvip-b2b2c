@@ -29,13 +29,13 @@
                         <span>操作人：</span>
                     </label>
                     <div class="form-control-wrap">
-                        <div class="chosen-container chosen-container-single" title="" id="user_id_chosen"><a class="chosen-single" tabindex="-1"><span>全部</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off"></div><ul class="chosen-results"></ul></div></div><select class="form-control chosen-select" id="user_id" name="user_id" style="display: none;">
+                        <select class="form-control chosen-select" id="admin_id" name="admin_id" style="display: none;">
 
                             <option value="-1">全部</option>
 
-                            <option value="1">18669035369</option>
-
-                            <option value="2">test</option>
+                            @foreach($admin_list as $v)
+                            <option value="{{ $v['user_id'] }}">{{ $v['user_name'] }}</option>
+                            @endforeach
 
                         </select>
                     </div>
@@ -76,7 +76,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record="true">{{ $total }}</span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -165,7 +165,7 @@
             $("#searchForm").submit(function() {
                 tablelist.load({
                     // 操作人
-                    'user_id': $("#user_id").val(),
+                    'admin_id': $("#admin_id").val(),
                     // 操作内容
                     'content': $("#content").val(),
                     // 开始日期

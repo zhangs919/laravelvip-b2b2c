@@ -23,19 +23,19 @@
 
 
 
-
-
-        <li>
-            <a onclick="message_click('goods_apply')">
-                <div class="message-icon pull-left m-r-10">
-                    <i class="fa fa-shopping-cart"></i>
-                </div>
-                <div class="pull-left">
-                    <span class="tit">商品审核</span>
-                    <span>5个商品需要审核</span>
-                </div>
-            </a>
-        </li>
+        @foreach($messageList as $key=>$item)
+            <li>
+                <a onclick="message_click('{{ $key }}')">
+                    <div class="message-icon pull-left m-r-10">
+                        <i class="fa {{ $item['icon'] }}"></i>
+                    </div>
+                    <div class="pull-left">
+                        <span class="tit">{{ $item['title'] }}</span>
+                        <span>{{ $item['content'] }}</span>
+                    </div>
+                </a>
+            </li>
+        @endforeach
 
 
 

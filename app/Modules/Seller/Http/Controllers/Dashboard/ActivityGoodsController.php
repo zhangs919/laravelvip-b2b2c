@@ -20,7 +20,7 @@
 // | Description:
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ActivityRepository;
@@ -45,14 +45,19 @@ class ActivityGoodsController extends Seller
     protected $category;
     protected $brand;
 
-    public function __construct()
+    public function __construct(
+        ActivityRepository $activity
+        ,GoodsRepository $goods
+        ,CategoryRepository $category
+        ,BrandRepository $brand
+    )
     {
         parent::__construct();
 
-        $this->activity = new ActivityRepository();
-        $this->goods = new GoodsRepository();
-        $this->category = new CategoryRepository();
-        $this->brand = new BrandRepository();
+        $this->activity = $activity;
+        $this->goods = $goods;
+        $this->category = $category;
+        $this->brand = $brand;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -95,7 +100,7 @@ class ActivityGoodsController extends Seller
         if ($request->method() == 'POST') {
             $tpl = 'partials._picker_goods_list';
             $show_selected = $request->post('show_selected');
-            $goods_ids = $request->post('goods_ids');
+            $goods_ids = $request->post('goods_ids', '');
             $goods_ids = explode(',', $goods_ids);
 
             if (!empty($goods_ids) && $show_selected) {

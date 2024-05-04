@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
 
     // Shop block
     Route::group(['prefix' => 'shop'], function () {
@@ -43,6 +43,8 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('index.html/{group?}', 'Shop\ConfigController@index'); // index get请求
             Route::post('index/{group?}', 'Shop\ConfigController@updateConfig'); // index post请求 保存设置信息
             Route::post('index.html/{group?}', 'Shop\ConfigController@updateConfig'); // index post请求 保存设置信息
+            Route::post('clear', 'Shop\ConfigController@clear'); // 配置值清空数据
+
             Route::any('auto-delivery', 'Shop\ConfigController@autoDelivery'); // 交易设置 - 自动发货设置
 
         });
@@ -78,6 +80,9 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('shop-info', 'Shop\ShopInfoController@shopInfo'); // shopInfo
             Route::get('renew-list', 'Shop\ShopInfoController@renewList'); // renewList
             Route::get('renew-add', 'Shop\ShopInfoController@renewAdd'); // renewAdd
+            Route::post('renew-add', 'Shop\ShopInfoController@renewSaveData'); //
+            Route::post('delete', 'Shop\ShopInfoController@delete'); // delete
+
         });
 
         // 保障服务
@@ -134,6 +139,8 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::post('delete', 'Shop\PrintSpecController@delete'); // delete
             Route::get('config-printer', 'Shop\PrintSpecController@configPrinter'); // 配置打印机
             Route::post('config-printer', 'Shop\PrintSpecController@configPrinterSave'); // 配置打印机保存数据
+            Route::any('set', 'Shop\PrintSpecController@set'); //
+            Route::get('select-spec', 'Shop\PrintSpecController@selectSpec'); //
 
         });
 
@@ -172,7 +179,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::post('add', 'Shop\ShopAddressController@saveData'); // saveData
             Route::get('edit', 'Shop\ShopAddressController@edit'); // add
             Route::post('edit', 'Shop\ShopAddressController@saveData'); // saveData
-            Route::get('set-is-default', 'Shop\ShopAddressController@setIsDefault'); // 设置默认地址 todo 不确定有没设置功能
+            Route::get('is-default', 'Shop\ShopAddressController@isDefault'); // 设置默认地址
             Route::post('delete', 'Shop\ShopAddressController@delete'); // delete
             Route::post('batch-delete', 'Shop\ShopAddressController@batchDelete'); // 批量删除
         });
@@ -218,6 +225,44 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('index.html', 'Shop\WeixinConfigController@index'); // index
             Route::get('clear', 'Shop\WeixinConfigController@clear'); // clear
 
+        });
+
+        /**
+         * 微信自定义菜单
+         */
+        Route::group(['prefix' => 'weixin-menu'], function () {
+            Route::get('list', 'Shop\WeixinMenuController@lists'); // lists
+            Route::get('add', 'Shop\WeixinMenuController@add'); // add
+            Route::get('edit', 'Shop\WeixinMenuController@edit'); // edit
+            Route::post('add', 'Shop\WeixinMenuController@saveData'); // saveData
+            Route::get('change-type', 'Shop\WeixinMenuController@changeType'); //
+            Route::post('change-sort', 'Shop\WeixinMenuController@changeSort'); // editInfo
+            Route::post('sync-to-weixin', 'Shop\WeixinMenuController@syncToWeixin'); // 同步到微信
+            Route::post('delete', 'Shop\WeixinMenuController@delete'); // delete
+        });
+
+        /**
+         * 微信关键词回复
+         */
+        Route::group(['prefix' => 'weixin-keyword'], function () {
+            Route::get('list', 'Shop\WeixinKeywordController@lists'); // lists
+            Route::get('add', 'Shop\WeixinKeywordController@add'); // add
+            Route::get('edit', 'Shop\WeixinKeywordController@edit'); // edit
+            Route::post('add', 'Shop\WeixinKeywordController@saveData'); // saveData
+            Route::get('change-type', 'Shop\WeixinKeywordController@changeType'); //
+            Route::post('delete', 'Shop\WeixinKeywordController@delete'); // delete
+        });
+
+        /**
+         * 小程序码
+         */
+        Route::group(['prefix' => 'programs-qrcode'], function () {
+            Route::get('list', 'Shop\ProgramsQrcodeController@lists'); // lists
+            Route::get('add', 'Shop\ProgramsQrcodeController@add'); // add
+            Route::get('edit', 'Shop\ProgramsQrcodeController@edit'); // edit
+            Route::post('add', 'Shop\ProgramsQrcodeController@saveData'); // saveData
+            Route::get('download-file', 'Shop\ProgramsQrcodeController@downloadFile'); //
+            Route::post('delete', 'Shop\ProgramsQrcodeController@delete'); // delete
         });
     });
 

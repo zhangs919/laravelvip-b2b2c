@@ -36,23 +36,49 @@
 </head>
 <body>
 {{--post 提交 错误提示信息--}}
-{{--{{ dd($errors) }}--}}
-@if(is_object($errors) && count($errors->all()) > 0)
+{{--@if(is_object($errors) && count($errors->all()) > 0)--}}
+{{--    <script>--}}
+{{--        var msg = '@foreach ($errors->all() as $error)<p>{{ $error }}</p>@endforeach';--}}
+{{--        layer.msg(msg);--}}
+{{--    </script>--}}
+{{--@elseif(is_array($errors) && !empty($errors))--}}
+{{--    <script>--}}
+{{--        var msg = '@foreach ($errors as $error)<p>{{ $error }}</p>@endforeach';--}}
+{{--        layer.msg(msg);--}}
+{{--    </script>--}}
+{{--@elseif(is_string($errors))--}}
+{{--    <script>--}}
+{{--        var msg = '<p>{{ $errors }}</p>';--}}
+{{--        layer.msg(msg);--}}
+{{--    </script>--}}
+{{--@endif--}}
+
+@if(!empty(session('layerMsg')))
     <script>
-        var msg = '@foreach ($errors->all() as $error)<p>{{ $error }}</p>@endforeach';
-        layer.msg(msg);
-    </script>
-@elseif(is_array($errors) && !empty($errors))
-    <script>
-        var msg = '@foreach ($errors as $error)<p>{{ $error }}</p>@endforeach';
-        layer.msg(msg);
-    </script>
-@elseif(is_string($errors))
-    <script>
-        var msg = '<p>{{ $errors }}</p>';
-        layer.msg(msg);
+        var status = '{{ session()->get('layerMsg.status') }}';
+        var msg = '{{ session()->get('layerMsg.msg') }}';
+
+        switch (status) {
+            case 'success':
+                layer.msg(msg);
+                break;
+            case 'error':
+                layer.msg(msg, function () {
+                    // 关闭后的操作
+                });
+                break;
+            case 'info':
+                layer.msg(msg)
+                break;
+            case 'warning':
+                layer.msg(msg, function () {
+                    // 关闭后的操作
+                });
+                break;
+        }
     </script>
 @endif
+
 
 <!-- 红包消息 -->
 
@@ -103,7 +129,8 @@
 
                         <!-- 手机注册 start -->
                         <form id="MobileRegisterModel" class="form-horizontal" name="MobileRegisterModel" action="/register.html" method="post">
-                            {{ csrf_field() }}
+{{--                        @method('delete')--}}
+                            @csrf
                             <!-- 手机号 -->
                             <div class="form-group form-group-spe" >
                                 <label for="mobileregistermodel-mobile" class="input-left">

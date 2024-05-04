@@ -20,10 +20,16 @@ $(function() {
 				if (data.code == 0) {
 					$('.add_selected').removeClass('addl-red').addClass('addl-hui');
 					obj.addClass('addl-red').removeClass('addl-hui');
+					$.msg(data.message, {
+						icon_type: 1
+					}, function() {
+						window.location.reload();
+					});
+				} else {
+					$.msg(data.message, {
+						time: 3000
+					});
 				}
-				$.msg(data.message, 2000, function() {
-					window.location.reload();
-				});
 			}
 		});
 	});
@@ -40,10 +46,17 @@ $(function() {
 				if (result.code == 0) {
 					box.remove();
 					if (result.data == 0) {
-						window.location.reload();
+						$.msg(result.message, {
+							icon_type: 1
+						}, function() {
+							window.location.reload();
+						});
 					}
+				} else {
+					$.msg(result.message, {
+						time: 3000
+					});
 				}
-				$.msg(result.message);
 			}, "json");
 		});
 		return false;

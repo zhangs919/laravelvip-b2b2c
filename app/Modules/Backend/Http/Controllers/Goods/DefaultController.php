@@ -1,7 +1,9 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
+use App\Models\Brand;
+use App\Models\GoodsSku;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\BrandRepository;
 use App\Repositories\CategoryRepository;
@@ -9,7 +11,6 @@ use App\Repositories\GoodsRepository;
 use App\Repositories\ShopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DefaultController extends Backend
 {
@@ -25,16 +26,19 @@ class DefaultController extends Backend
     protected $category;
     protected $brand;
 
-    public function __construct()
+    public function __construct(
+        GoodsRepository $goods
+        ,ShopRepository $shop
+        ,CategoryRepository $category
+        ,BrandRepository $brand
+    )
     {
         parent::__construct();
 
-        $this->goods = new GoodsRepository();
-        $this->shop = new ShopRepository();
-        $this->category = new CategoryRepository();
-        $this->brand = new BrandRepository();
-
-
+        $this->goods = $goods;
+        $this->shop = $shop;
+        $this->category = $category;
+        $this->brand = $brand;
     }
 
     public function lists(Request $request, $type = 'list')
@@ -90,6 +94,7 @@ class DefaultController extends Backend
 
         // 列表
         $condition = [
+            'with' => ['shop'],
             'where' => $where,
             'sortname' => 'goods_id',
             'sortorder' => 'desc'
@@ -104,7 +109,9 @@ class DefaultController extends Backend
         }
 
         $pageHtml = pagination($total);
-        $compact = compact('title', 'list', 'total', 'pageHtml', 'type');
+        $brand_list = Brand::where([['is_show',1]])->get();
+
+        $compact = compact('title', 'list', 'total', 'pageHtml', 'type', 'brand_list');
         if ($request->ajax()) {
             $render = view('goods.default.partials._list', $compact)->render();
             return result(0, $render);
@@ -185,8 +192,10 @@ class DefaultController extends Backend
         $show_store = $request->get('show_store', 0); //
         $is_enable = $request->get('is_enable', 1); //
         $goods_audit = $request->get('goods_audit', 1); //
-        $goods_ids = $request->get('goods_ids', []);
-        $sku_ids = $request->get('sku_ids', []);
+        $goods_ids = $request->get('goods_ids');
+        $goods_ids = $goods_ids ? explode(',', $goods_ids) : [];
+        $sku_ids = $request->get('sku_ids');
+        $sku_ids = $sku_ids ? explode(',', $sku_ids) : [];
 
         // 商品列表
         $where[] = ['goods_status', $goods_status];
@@ -198,10 +207,10 @@ class DefaultController extends Backend
         $whereIn = [];
 
         $tpl = 'picker';
-        if ($request->method() == 'POST') {
+        if (/*$request->method() == 'POST' &&*/ !$output) {
             $tpl = 'partials._picker_goods_list';
             $show_selected = $request->post('show_selected');
-            $goods_ids = $request->post('goods_ids');
+            $goods_ids = $request->post('goods_ids', '');
             $goods_ids = explode(',', $goods_ids);
 
             if (!empty($goods_ids) && $show_selected) {
@@ -223,6 +232,24 @@ class DefaultController extends Backend
         ];
         list($list, $total) = $this->goods->getList($condition);
         $pageHtml = short_pagination($total, 5);
+        if (!$list->isEmpty()) {
+            foreach ($list as $item) {
+                // 默认sku
+                $default_sku = GoodsSku::where('sku_id',$item->sku_id)->first()->toArray();
+                $item->sku_image = get_image_url($default_sku['sku_image']);
+                $selected_spec_names = $default_sku['spec_names'];
+                $spec_attr_value = [];
+                $sku_name = $item->goods_name;
+                $item->sku_name = $sku_name;
+                if (!empty($selected_spec_names)) {
+                    foreach (explode(' ', $selected_spec_names) as $spec) {
+                        $spec_attr_value[] = explode(':', $spec)[1];
+                    }
+                    $spec_attr_value = implode(' ', $spec_attr_value);
+                    $item->sku_name .=' '.$spec_attr_value;
+                }
+            }
+        }
 
         // 查询店铺列表
         $where = [];
@@ -263,6 +290,17 @@ class DefaultController extends Backend
             'brand_list');
         $render = view('goods.default.'.$tpl, $compact)->render();
         return result(0, $render);
+    }
+
+    /**
+     * 重建商品数据关联关系
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function buildGoodsRegion(Request $request)
+    {
+        return result(1,'','正在进行中...');
     }
 
 }

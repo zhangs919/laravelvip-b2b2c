@@ -2,7 +2,6 @@
 
 namespace App\Modules\Backend\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Base\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 

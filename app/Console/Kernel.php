@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Stringable;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +26,56 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+//         $schedule->command('inspire')
+//                  ->everyMinute()->sendOutputTo('t.txt',true);
+
+        // 方式一：调度闭包调用
+//        $schedule->call(function () {
+//            // DB 操作或者其他
+//            DB::table('user')->get();
+//        })->daily();
+
+        // 方式二：调度Artisan命令
+//        $schedule->command('install:clear --force')->daily();
+
+        // 方式三：调度队列任务
+//        $schedule->job(new Heartbeat)->everyFiveMinutes();
+
+        // 方式四：调度Shell命令
+//        $schedule->exec('node /home/forge/script.js')->daily();
+
+        // 更新失效红包状态 间隔：5分钟
+        $schedule->command('user_bonus:invalid')->everyFiveMinutes();
+
+        // 系统自动取消订单 间隔：1分钟
+        $schedule->command('order:cancel')->everyMinute();
+
+        // 自动备份数据库 间隔：每天 00:10
+        $schedule->command('data:backup')->dailyAt("00:10");
+
+        // 使用方式三：调度队列任务
+//        $schedule->job(new ProcessUserBonus())
+//            ->everyMinute()
+//            ->before(function () {
+//                // 任务即将开始
+//                file_put_contents('job.txt', 'before', FILE_APPEND);
+//
+//            })
+//            ->after(function (){
+//                // 任务完成
+//            })
+//            ->onSuccess(function (Stringable $output){
+//                // 任务成功
+//                file_put_contents('job.txt', $output, FILE_APPEND);
+//
+//            })
+//            ->onFailure(function (Stringable $output){
+//                // 任务失败
+//                file_put_contents('job.txt', $output, FILE_APPEND);
+//
+//            });
+
+
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 
+$domain = config('lrw.frontend_domain');
 
-Route::group(['domain' => env('FRONTEND_DOMAIN')], function ($router) {
+Route::group(['domain' => $domain], function ($router) {
 
 
     // Integralmall Route

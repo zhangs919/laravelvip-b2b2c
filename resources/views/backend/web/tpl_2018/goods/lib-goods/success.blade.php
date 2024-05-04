@@ -61,7 +61,7 @@
                             </a>
                         </p>
                         <p class="page-jump">
-                            <a class="c-blue m-r-20" href="/goods/lib-goods/edit?id=6">重新编辑刚发布的商品&gt;&gt;</a>
+                            <a class="c-blue m-r-20" href="/goods/lib-goods/edit?id={{ $goods_id }}">重新编辑刚发布的商品&gt;&gt;</a>
                             <a class="c-blue" href="/goods/lib-goods/list">进入商品库&gt;&gt;</a>
                         </p>
                     </div>

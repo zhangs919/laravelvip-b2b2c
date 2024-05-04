@@ -56,14 +56,16 @@
                 @endif
 
                 @for($i=0; $i <= 24; $i++)
-                    @if(@$data['9-1'][$i] != null)
+                    @if(!empty($data['9-1'][$i]))
                         <li>
-                            <img alt="{{ $data['9-1'][$i]['shop_name'] }}" src="{{ $data['9-1'][$i]['shop_logo'] }}">
-                            <div class="black-cover" style="display: none;"></div>
-                            <div class="cover-content" style="display: none;">
-                                <em>{{ $data['9-1'][$i]['shop_name'] }}</em>
-                                <a href="{{ route('pc_shop_home', ['shop_id'=>$data['9-1'][$i]['shop_id']]) }}" class="enter" target="">点击进入</a>
-                            </div>
+                            <a class="store-item item-row-0 item-col-0 " href="{{ route('pc_shop_home',['shop_id'=>$data['9-1'][$i]['shop_id']]) }}" target="_blank">
+                                <img class="store-logo" alt="{{ $data['9-1'][$i]['shop_name'] }}" src="{{ $data['9-1'][$i]['shop_logo'] }}">
+                                <div class="black-cover" style="display: none;"></div>
+                                <div class="cover-content" style="display: none;">
+                                    <em>{{ $data['9-1'][$i]['shop_name'] }}</em>
+                                    <a href="{{ route('pc_shop_home', ['shop_id'=>$data['9-1'][$i]['shop_id']]) }}" class="enter" target="">点击进入</a>
+                                </div>
+                            </a>
                         </li>
                     @else
                         <li>
@@ -87,24 +89,24 @@
 
 
 <script type="text/javascript">
-    //店铺街logo鼠标经过效果
-    $("#{{ $uid }}").find(".store-wall2-list li").hover(function() {
-        $(this).find('.black-cover').css('display', 'block');
-        $(this).find('.cover-content').css('display', 'block');
-    }, function() {
-        $(this).find('.black-cover').css('display', 'none');
-        $(this).find('.cover-content').css('display', 'none');
-    });
+    {{--//店铺街logo鼠标经过效果--}}
+    {{--$("#{{ $uid }}").find(".store-wall2-list li").hover(function() {--}}
+        {{--$(this).find('.black-cover').css('display', 'block');--}}
+        {{--$(this).find('.cover-content').css('display', 'block');--}}
+    {{--}, function() {--}}
+        {{--$(this).find('.black-cover').css('display', 'none');--}}
+        {{--$(this).find('.cover-content').css('display', 'none');--}}
+    {{--});--}}
 </script>
 
 <script type="text/javascript">
-    $(function() {
-        //图片缓载
-        $('#{{ $uid }}').find("img").lazyload({
-            skip_invisible: false,
-            effect: 'fadeIn',
-            failure_limit: 20,
-            threshold: 200
-        });
-    });
+    {{--$(function() {--}}
+        {{--//图片缓载--}}
+        {{--$('#{{ $uid }}').find("img").lazyload({--}}
+            {{--skip_invisible: false,--}}
+            {{--effect: 'fadeIn',--}}
+            {{--failure_limit: 20,--}}
+            {{--threshold: 200--}}
+        {{--});--}}
+    {{--});--}}
 </script>

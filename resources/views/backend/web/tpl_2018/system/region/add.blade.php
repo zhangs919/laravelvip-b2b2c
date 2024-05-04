@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-10 clearfix">
         <form id="{{ $uuid }}" class="form-horizontal" name="Region" action="/system/region/add?parent_code={{ $parent_code }}" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="region-region_id" class="form-control" name="region_id" value="{{ $info->region_id ?? ''}}">
             <!-- 区域名称 -->
@@ -277,7 +277,12 @@
     <script src="/assets/d2eace91/js/jquery.region.js?v=20180726"></script>
     <script src="/assets/d2eace91/js/jquery.widget.js?v=20180726"></script>
     <!-- 高德地图 -->
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
     @if(!isset($info->region_id))
         <!-- 验证规则 -->
         <script id="client_rules_{{ $uuid }}" type="text">
@@ -754,7 +759,7 @@
             });
         </script>
     @endif
-    
+
 @stop
 
 {{--自定义css样式 page元素内--}}

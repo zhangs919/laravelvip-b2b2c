@@ -15,11 +15,9 @@
 @section('content')
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group=open_shop" method="post" enctype="multipart/form-data" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="open_shop">
         <input type="hidden" name="tabs" value="">
-{{--        <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">--}}
-        <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
         <div class="table-content m-t-30">
             <div class="simple-form-field">
                 <div class="form-group">
@@ -230,7 +228,9 @@
             </div>
             <!-- 确认提交 -->
             <div class="bottom-btn p-b-30">
-                <button id="btn_submit" class="btn btn-primary btn-lg">确认提交</button>
+                <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">
+                {{--<input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">--}}
+                <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary btn-lg">
             </div>
         </div>
     </form>

@@ -1,8 +1,8 @@
 <div class="modal-body">
-    <form id="form" class="form-horizontal" name="BatchEditModel" action="/goods/lib-goods/import.html?ids=138&single=1" method="post">
-        <input type="hidden" name="_csrf" value="xcq39dw98-vexZm7J7k-yUrOi7XUUP5thmh6-KjBDRSkkNbMt2-ck5-o0vAViEygI5imzOwZjSy3BDWK-YBBRg==">
+    <form id="form" class="form-horizontal" name="BatchEditModel" action="/goods/lib-goods/import.html?ids={{ $ids }}&single=1" method="post">
+        @csrf
         <div class="table-content clearfix">
-            <input type="hidden" name="ids" value=138>
+            <input type="hidden" name="ids" value="{{ $ids }}">
             <!-- 商品价格 -->
             <div class="simple-form-field" >
                 <div class="form-group">
@@ -55,9 +55,10 @@
 
 
                             <select id="batcheditmodel-freight_id" class="form-control m-r-5 freight-list w150" name="BatchEditModel[freight_id]">
-                                <option value="0" selected>店铺统一运费（￥0）</option>
-                                <option value="82">aaa</option>
-                                <option value="83">ssss</option>
+                                <option value="0">店铺统一运费（￥{{ $shop_freight_fee }}）</option>
+                                @foreach($freight_list as $v)
+                                    <option value="{{ $v['freight_id'] }}">{{ $v['title'] }}</option>
+                                @endforeach
                             </select>
                             <div class="btn-group m-r-2">
                                 <button type="button" data-toggle="dropdown" aria-expanded="true" class="btn btn-warning btn-sm dropdown-toggle">
@@ -93,19 +94,16 @@
 
                             <div class="control-label div-scroll" style="min-width: 250px; height: 180px;">
 
-                                <label>
+                                @foreach($shop_category_list as $k=>$v)
+                                    <label>
 
-                                    <input type="checkbox" name="BatchEditModel[shop_cat_ids][]" value="690">
+                                        <input type="checkbox" name="CollectModel[shop_cat_ids][]"
+                                               value="{{ $v['cat_id'] }}"
+                                               @if($v['cat_level'] == 2)class="cat-two"@endif>
 
-                                    生鲜
-                                </label>
-
-                                <label>
-
-                                    <input type="checkbox" name="BatchEditModel[shop_cat_ids][]" value="691" class="cat-two">
-
-                                    水果
-                                </label>
+                                        {{ $v['cat_name'] }}
+                                    </label>
+                                @endforeach
 
                             </div>
                             <div class="help-block help-block-t">如果选择店铺商品分类，则按照选择的进行设置，如果没有选择店铺商品分类，则系统商品库所属的系统商品库商品分类名称自动与店铺商品 分类匹配，只要名称相同，店铺商品分类就被选中</div>
@@ -139,7 +137,7 @@
 // 刷新运费模板
         $(".refresh-freight-list").click(function() {
             $.loading.start();
-            $.get('/goods/publish/freights.html', {}, function(result) {
+            $.get('/goods/publish/freights', {}, function(result) {
                 $.loading.stop();
                 if (result.code == 0) {
                     var html = "<option value='0'>店铺统一运费（" + result.shop_freight_fee_format + "）</option>";

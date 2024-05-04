@@ -13,7 +13,7 @@
 
         @if(!empty($data['1-1']))
             @foreach($data['1-1'] as $v)
-                <a href="{{ route('mobile_show_news', ['article_id'=>$v['article_id']]) }}" class="article-link">
+                <a href="/news/{{ $v['article_id'] }}.html" class="article-link">
 
                     <div class="article-detail">
                         <strong class="tit">{{ $v['title'] }}</strong>

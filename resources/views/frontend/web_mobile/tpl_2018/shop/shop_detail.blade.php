@@ -17,12 +17,13 @@
     <meta name="wap-font-scale" content="no" />
     <meta name="Keywords" content="" />
     <meta name="Description" content="" />
+    {!! $lrw_tag ?? '' !!}
     <!-- #is_wabp_start -->
     <meta name="is_webp" content="no" />
     <!-- #is_wabp_end -->
     <!-- 网站头像 -->
-    <link rel="icon" type="image/x-icon" href="http://lanse31.oss-cn-beijing.aliyuncs.com/images/system/config/website/favicon_0.png" />
-    <link rel="shortcut icon" type="image/x-icon" href="http://lanse31.oss-cn-beijing.aliyuncs.com/images/system/config/website/favicon_0.png" />
+    <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="stylesheet" href="/css/common.css?v=20181217"/>
     <link rel="stylesheet" href="/css/shop_header.css?v=20181217"/>
     <link rel="stylesheet" href="/css/shop_coupon.css?v=20181217"/>
@@ -54,6 +55,9 @@
     @endif
 
     <link rel="stylesheet" href="/css/common.css?v=20181217"/>
+
+    {{--国家默哀日期--}}
+    {!! $national_memorial_day_html ?? '' !!}
 </head>
 <body>
 <!-- 引入头部文件 -->
@@ -63,17 +67,25 @@
 <!-- 内容 -->
 <link rel="stylesheet" href="/css/dianpu.css?v=20181217"/>
 <link rel="stylesheet" href="/css/dianpu_info.css?v=20181217"/>
-<header class="header">
-    <div class="header-left">
-        <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
-    </div>
-    <div class="header-middle">店铺详情</div>
-    <div class="header-right">
-        <aside class="show-menu-btn">
-            <div id="show_more" class="show-menu">
-                <a href="javascript:void(0);"></a>
-            </div>
-        </aside>
+<header class="header-top-nav">
+    <div class="header">
+        <div class="header-left">
+            <a class="sb-back" href="javascript:history.back(-1);" title="返回" szy_tag_compiled="1">
+                <i class="iconfont"></i>
+            </a>
+        </div>
+        <div class="header-middle">店铺详情</div>
+        <div class="header-right">
+
+            <aside class="show-menu-btn">
+                <div class="show-menu" id="show_more">
+                    <a href="javascript:void(0);" szy_tag_compiled="1">
+                        <i class="iconfont"></i>
+                    </a>
+                </div>
+            </aside>
+
+        </div>
     </div>
 </header>
 
@@ -94,7 +106,7 @@
             <i class="iconfont">&#xe615;</i>
             <span onClick="toggleShop('{{ $shop_info['shop']['shop_id'] }}',this)">
 
-				@if($shop_info['shop']['is_collect'])已收藏@else关注@endif
+				@if($shop_info['shop']['is_collect'])已关注@else关注@endif
 
 			</span>
         </div>
@@ -138,6 +150,12 @@
         </a>
     </div>
     <div class="shop-detail-item">
+        <a class="shop-item-list" href="javascript:void(0)" szy_tag_compiled="1">
+            <div class="item-list-left ui-flex ">
+                <span class="list-title">开店时长</span>
+                <span class="cell list-desc">5个月 16天</span>
+            </div>
+        </a>
 
         <div class="common-field border-b">
             <div class="name">所在地区</div>
@@ -146,6 +164,19 @@
             </div>
         </div>
 
+        <div class="shop-item-list">
+            <div class="item-list-left ui-flex ">
+                <span class="list-title">工商执照</span>
+                <span class="cell list-desc">
+
+
+					<a id="" href="/shop/index/license.html?id={{ $shop_info['shop']['shop_id'] }}" szy_tag_compiled="1">
+						<img src="/images/national_emblem_light2.png" width="20" height="20" border="0" alt="特殊行业资质">
+					</a>
+
+				</span>
+            </div>
+        </div>
     </div>
 </div>
 <div class="shop-qrcode-section hide">
@@ -171,7 +202,7 @@
 
 
 
-        <a href="/shop/{{ $shop_info['shop']['shop_id'] }}.html">
+        <a href="{{ shop_prefix_url($shop_info['shop']['shop_id']) }}">
             <i class="shop-nav-icon"></i>
             <span>首页</span>
         </a>
@@ -179,7 +210,7 @@
     </div>
     <ul>
         <!---->
-        <li class="goods-category disabled">
+        {{--<li class="goods-category disabled">
             <a href="javascript:void(0)">
 				<span>
 					<i class="shop-index"></i>
@@ -189,10 +220,17 @@
 					商品分类
 				</span>
             </a>
-        </li>
-
+        </li>--}}
         <li>
-            <a href="/shop/{{ $shop_info['shop']['shop_id'] }}/info.html">
+            <a href="{{ shop_prefix_url($shop_info['shop']['shop_id'],'mobile_shop_goods_list') }}">
+                <span>
+                    <i class="shop-index"></i>
+                    全部商品
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ shop_prefix_url($shop_info['shop']['shop_id'],'mobile_shop_info') }}">
 				<span>
 					<i class="shop-index"></i>
 					店铺详情
@@ -201,15 +239,23 @@
         </li>
 
         <!-- -->
-        <li>
+        {{--<li>
             <a href="/bonus/list/{{ $shop_info['shop']['shop_id'] }}.html">
 				<span>
 					<i class="shop-index"></i>
 					店铺红包
 				</span>
             </a>
+        </li>--}}
+        <li>
+            <!-- 微商城客服调用qq -->
+            <a href="javascript:void(0)" onClick="$.msg('卖家没有设置联系电话')">
+                <span>
+                    <i class="shop-index"></i>
+                    联系客服
+                </span>
+            </a>
         </li>
-
     </ul>
 </div>
 <div class="classify-content SZY-SHOP-CATEGORY-LIST hide"></div>
@@ -362,10 +408,10 @@
         $.collect.toggleShop(shop_id, function(callback) {
             if (callback.code == 0) {
                 $('#collect-count').html(callback.collect_count + "人关注");
-                if ($.trim($(obj).html()) == "收藏") {
-                    $(obj).html("已收藏");
+                if ($.trim($(obj).html()) == "关注") {
+                    $(obj).html("已关注");
                 } else {
-                    $(obj).html("收藏");
+                    $(obj).html("关注");
                 }
             }
         }, true);
@@ -375,14 +421,8 @@
 <!-- -->
 
 <!-- 隐藏菜单_start -->
-<div class="show-menu-info" id="menu">
-    <ul>
-        <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-        <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-        <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-        <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-    </ul>
-</div>
+{{--引入右上角菜单--}}
+@include('layouts.partials.right_top_menu')
 <!-- 隐藏菜单_end -->
 <!---->
 <!-- 购物车js -->

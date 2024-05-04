@@ -8,9 +8,7 @@ use App\Models\User;
 use App\Models\UserModel;
 use App\Models\UserRank;
 use App\Models\UserReal;
-use App\Tools\IP;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use App\Services\IP;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -19,11 +17,13 @@ class UserRepository
     use BaseRepository;
 
     protected $model;
+    protected $ipService;
 
 
     public function __construct()
     {
         $this->model = new UserModel();
+        $this->ipService = new IP();
     }
 
     /**
@@ -79,13 +79,13 @@ class UserRepository
                 $userData['user_name'] = $username;
                 $userData['nickname'] = $userData['user_name'];
             }
+            $userData['mobile_validated'] = 1;// 已验证手机
             $userData['password'] = bcrypt($userData['password']);
             $userData['status'] = 1;
             $userData['shopping_status'] = 1;
             $userData['comment_status'] = 1;
             $userData['reg_time'] = date('Y-m-d H:i:s', time());
-            $ipService = new IP(\request());
-            $userData['reg_ip'] = $ipService->get();// 注册ip
+            $userData['reg_ip'] = $this->ipService->get();// 注册ip
             $userData['reg_from'] = $regFrom; // 注册来源
             $userRet = $this->store($userData);
 
@@ -121,9 +121,14 @@ class UserRepository
     {
         if (empty($userData['password'])) { // 留空 则不修改密码
             unset($userData['password']);
+        } else {
+            $userData['password'] = bcrypt($userData['password']);
         }
 
-        $userData['password'] = bcrypt($userData['password']);
+        if (isset($userData['surplus_password'])) { // 留空 则不修改余额支付密码
+            $userData['surplus_password'] = !empty($userData['surplus_password']) ? bcrypt($userData['surplus_password']) : null;
+        }
+
         $ret = $this->update($userId, $userData);
         return $ret;
     }
@@ -190,11 +195,11 @@ class UserRepository
 
     /**
      * 取会员安全级别
-     * 
-     * @param array $user_info 
+     *
+     * @param object $user_info
      * @return int
      */
-    public function getUserSecurityLevel($user_info = [])
+    public function getUserSecurityLevel($user_info = null)
     {
         $tmp_level = 0;
         if (!empty($user_info->email_validated)) { // 已验证邮箱
@@ -223,20 +228,19 @@ class UserRepository
             $user_rank = UserRank::where('type', 0)->orderBy('rank_id', 'asc')->get();
         }
 
-        if (empty($user_rank)){//如果会员等级设置为空
+        if ($user_rank->isEmpty()){//如果会员等级设置为空
             $rank_arr['level'] = -1;
             $rank_arr['rank_name'] = '暂无等级';
             return $rank_arr;
         }
         $rank_arr = [];
-        if ($user_rank){
-            foreach ($user_rank as $k=>$v){
-                if($rank_point >= $v->min_points && $rank_point < $v->max_points){
-                    $v->level = $k+1; // 等级
-                    $rank_arr = $v->toArray();
-                }
-            }
-        }
+		foreach ($user_rank as $k=>$v){
+			if($rank_point >= $v->min_points && $rank_point < $v->max_points){
+				$v->level = $k+1; // 等级
+//                    $v->rank_img = get_image_url($v->rank_img);
+				$rank_arr = $v->toArray();
+			}
+		}
 
         // 计算等级提升进度
         if ($show_progress) {

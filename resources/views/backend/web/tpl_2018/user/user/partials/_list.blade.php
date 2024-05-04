@@ -75,7 +75,7 @@
                         </li>
                         <li class="form-group" style="width: 100%;">
                             <span class="control-label">现居住地址：</span>
-                            <span class="form-control-wrap">{{ get_region_names_by_region_code($v->address_code) }} {{ $v->detail_address }}</span>
+                            <span class="form-control-wrap">{{ get_region_names_by_region_code($v->address_now) }} {{ $v->detail_address }}</span>
                         </li>
 
                         <li class="form-group">

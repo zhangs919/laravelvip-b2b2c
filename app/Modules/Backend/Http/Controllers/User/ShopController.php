@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\User;
+namespace App\Modules\Backend\Http\Controllers\User;
 
 
 use App\Models\UserShopRank;
@@ -19,11 +19,11 @@ class ShopController extends Backend
 
     protected $userShopRank;
 
-    public function __construct()
+    public function __construct(UserShopRankRepository $userShopRank)
     {
         parent::__construct();
 
-        $this->userShopRank = new UserShopRankRepository();
+        $this->userShopRank = $userShopRank;
 
     }
 

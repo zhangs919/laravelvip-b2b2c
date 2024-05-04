@@ -1,39 +1,34 @@
 @extends('layouts.news_layout')
 
 @section('content')
-
-
     <header>
         <div class="header">
             <div class="header-left">
-                <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
+                <a class="sb-back" href="javascript:history.back(-1)" title="返回">
+                    <i class="iconfont">&#xe606;</i>
+                </a>
             </div>
             <div class="header-middle">{{ $article['title'] }}</div>
             <div class="header-right">
+                <!-- 控制展示更多按钮 -->
                 <aside class="show-menu-btn">
                     <div class="show-menu" id="show_more">
-                        <a href="javascript:void(0);"></a>
+                        <a href="javascript:void(0);">
+                            <i class="iconfont">&#xe6cd;</i>
+                        </a>
                     </div>
                 </aside>
             </div>
         </div>
     </header>
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
     <div class="breadcrumb clearfix">
         <a href="/news.html" class="index">资讯首页</a>
         <span class="crumbs-arrow">&gt;</span>
-        <a class="last" href="/news/list.html">资讯列表</a>
+        <a class="last" href="/news/list/{{ $cat['cat_id'] }}.html">{{ $cat['cat_name'] }}</a>
         <span class="crumbs-arrow">&gt;</span>
-        <a class="last" href="/news/list/40.html">食材选配</a>
-        <span class="crumbs-arrow">&gt;</span>
-        <a class="last" href="/news/185.html">{{ $article['title'] }}</a>
+        <a class="last" href="/news/{{ $article['article_id'] }}.html">{{ $article['title'] }}</a>
     </div>
     <div class="article-info">
         <div class="article-detail">
@@ -49,41 +44,73 @@
         @endif
     </div>
     <!-- 分享 -->
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript">
-        $().ready(function() {
-            var url = location.href.split('#')[0];
-
+        (function(){
+            var url = location.href;
+            if ("" != "" && url.indexOf("user_id=") == -1 && window.history && history.pushState) {
+                if (url.indexOf("?") == -1) {
+                    url += "?user_id=";
+                } else {
+                    url += "&user_id=";
+                }
+            } else {
+                url = location.href.split('#')[0];
+            }
             var share_url = "";
-
             if (share_url == '') {
                 share_url = url;
             }
-
-            $.ajax({
-                type: "GET",
-                url: "/index/information/get-weixinconfig.html",
-                dataType: "json",
-                data: {
-                    url: url
-                },
-                success: function(result) {
-                    if (result.code == 0) {
-                        wx.config({
-                            debug: false,
-                            appId: result.data.appId,
-                            timestamp: result.data.timestamp,
-                            nonceStr: result.data.nonceStr,
-                            signature: result.data.signature,
-                            jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
-                        });
-
-                    }
+            if (window.__wxjs_environment !== 'miniprogram') {
+                window.history.replaceState(null, document.title, url);
+            }
+        })();
+    </script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script type="text/javascript">
+        $().ready(function() {
+            // $("body").append('<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"><\/script>');
+            var url = location.href;
+            if ("" != "" && url.indexOf("user_id=") == -1 && window.history && history.pushState) {
+                if (url.indexOf("?") == -1) {
+                    url += "?user_id=";
+                } else {
+                    url += "&user_id=";
                 }
-            });
-
+            } else {
+                url = location.href.split('#')[0];
+            }
+            var share_url = "";
+            if (share_url == '') {
+                share_url = url;
+            }
+            //
+            if (isWeiXin()) {
+                $.ajax({
+                    url: "/site/get-weixinconfig.html",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        url: url
+                    },
+                    success: function(result) {
+                        if (result.code == 0) {
+                            wx.config({
+                                debug: false,
+                                appId: result.data.appId,
+                                timestamp: result.data.timestamp,
+                                nonceStr: result.data.nonceStr,
+                                signature: result.data.signature,
+								jsApiList: result.data.jsApiList,
+                                // jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'wx-open-launch-weapp'],
+                                // openTagList: ['wx-open-launch-weapp']
+                            });
+                        }
+                    }
+                });
+            }
+            //
             // 微信JSSDK开发
-            wx.ready(function() {
+            wx && wx.ready(function() {
                 // 分享给朋友
                 wx.onMenuShareAppMessage({
                     title: '{{ $seo_title }}', // 标题
@@ -105,12 +132,44 @@
                         alert(JSON.stringify(res));
                     }
                 });
+                // window.history.replaceState(null, document.title, url);
             });
         });
     </script>
-
+    <script type="text/javascript">
+        $().ready(function() {
+            setTimeout(function() {
+                if (window.__wxjs_environment === 'miniprogram') {
+                    var share_info = {
+                        title: '{{ $seo_title }}',
+                        imgUrl: '{{ get_image_url($seo_image) }}'
+                    };
+                    wx.miniProgram.postMessage({
+                        data: share_info
+                    });
+                }
+            }, 3000);
+        });
+    </script>
     <a href="javascript:void(0);" class="back-to-top gotop hide"><img src="/images/topup.png"></a>
     <script type="text/javascript">
+        //
+    </script>
+    <!--底部菜单 start-->
+    {{--引入底部菜单--}}
+    @include('frontend.web_mobile.modules.library.site_footer_menu')
+
+    <!-- 第三方流量统计 -->
+    <div style="display: none;"></div>
+    <!-- 底部 _end-->
+    <script src="/assets/d2eace91/min/js/core.min.js"></script>
+    <script src="/assets/d2eace91/js/swiper/swiper.jquery.min.js"></script>
+    <script src="/js/app.frontend.mobile.min.js"></script>
+    <script src="/js/iscroll-probe.min.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/news.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.mobile.js"></script>
+    <script>
         $().ready(function(){
             //首先将#back-to-top隐藏
             //$("#back-to-top").addClass('hide');
@@ -140,160 +199,20 @@
                 });
             });
         });
-    </script>
-    <!--底部菜单 start-->
-    <script src="/js/custom_js.js?v=20180919"></script> <link rel="stylesheet" href="/css/custom_css.css?v=2.0"/>
-    <div style="height: 48px; line-height: 48px; clear: both;"></div>
-    <div class="footer-nav">
-
-
-
-
-
-
-
-
-
-        <ul>
-
-
-            <li class="">
-
-
-
-
-
-
-                <!---->
-                <a href="/index.html">
-                    <i class=""  style="background-image: url(http://lanse31.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/05/01/15251835008896.png);background-size: contain;background-repeat: no-repeat;">
-
-                    </i>
-                    <span>首页</span>
-                </a>
-                <!---->
-            </li>
-
-
-
-            <li class="">
-
-
-
-
-
-
-                <!---->
-                <a href="/category.html">
-                    <i class=""  style="background-image: url(http://lanse31.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/05/01/15251835205197.jpg);background-size: contain;background-repeat: no-repeat;">
-
-                    </i>
-                    <span>分类</span>
-                </a>
-                <!---->
-            </li>
-
-
-
-            <li class="">
-
-
-
-
-
-
-                <!---->
-                <a href="http://m.31dup.com/topic/12.html">
-                    <i class=""  style="background-image: url(http://lanse31.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/05/01/15251835858852.png);background-size: contain;background-repeat: no-repeat;">
-
-                    </i>
-                    <span>电商扶贫</span>
-                </a>
-                <!---->
-            </li>
-
-
-
-            <li class="">
-
-
-
-
-
-
-                <!---->
-                <a href="/cart.html">
-                    <i class="cartbox"  style="background-image: url(http://lanse31.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/05/01/15251835442950.jpg);background-size: contain;background-repeat: no-repeat;">
-
-                        <em class="cart-num SZY-CART-COUNT">0</em>
-
-                    </i>
-                    <span>购物车</span>
-                </a>
-                <!---->
-            </li>
-
-
-
-            <li class="">
-
-
-
-
-
-
-                <!---->
-                <a href="/user.html">
-                    <i class=""  style="background-image: url(http://lanse31.oss-cn-beijing.aliyuncs.com/images/backend/gallery/2018/05/01/15251835661642.jpg);background-size: contain;background-repeat: no-repeat;">
-
-                    </i>
-                    <span>我的</span>
-                </a>
-                <!---->
-            </li>
-
-
-        </ul>
-
-    </div>
-
-
-    <script type="text/javascript">
+        //
         $().ready(function() {
-            //图片缓载
+            // 缓载图片
             $.imgloading.loading();
-
-            $('body').find(".add-cart").click(function(event) {
-                var goods_id = $(this).data("goods_id");
-                var image_url = $(this).data("image_url");
-                $.cart.add(goods_id, 1, {
-                    is_sku: false,
-                    event: event,
-                    image_url: image_url,
-                    callback: function(){
-                        var attr_list = $('.attr-list').height();
-                        $('.attr-list').css({
-                            "overflow":"hidden"
-                        });
-                        if(attr_list >= 200){
-                            $('.attr-list').addClass("attr-list-border");
-                            $('.attr-list').css({
-                                "overflow-y":"auto"
-                            });
-                        }
-                    }
-                });
-                return false;
-            });
-
         });
+        //图片预加载
+        document.onreadystatechange = function() {
+            if (document.readyState == "complete") {
+                $.imgloading.setting({
+                    threshold: 1000
+                });
+            }
+        }
+        //
     </script>
-    <!-- 第三方流量统计 -->
-    <div style="display: none;">
-        {{--第三方统计代码--}}
-        {!! sysconf('stats_code_wap') !!}
-    </div>
-    <!-- 底部 _end-->
-
 
 @stop

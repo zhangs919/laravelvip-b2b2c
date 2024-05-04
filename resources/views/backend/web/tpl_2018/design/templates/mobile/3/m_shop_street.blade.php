@@ -57,10 +57,10 @@
 </div>
 
 <script type="text/javascript">
-    var mySwiper = new Swiper('.shop-container', {
-//loop : true,
-        slidesPerView: 'auto',
-// loopedSlides :8,
-        touchRatio: 1,
-    })
+//     var mySwiper = new Swiper('.shop-container', {
+// //loop : true,
+//         slidesPerView: 'auto',
+// // loopedSlides :8,
+//         touchRatio: 1,
+//     })
 </script>

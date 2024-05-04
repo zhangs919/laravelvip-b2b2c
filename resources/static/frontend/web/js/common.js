@@ -1,4 +1,14 @@
 $().ready(function() {
+	var timer;
+	$(function() {
+		timer = setTimeout(function() {
+			$(".falling-integral-box").removeClass('fadeInDown').addClass('fadeOutDown');
+			$(".pop-choose-spec-mask").fadeOut(200);
+		}, 5000);
+	})
+	function stop() {
+		clearTimeout(timer);
+	}
 	var top_width = $(".header-box ul").width();
 	if (top_width < 410) {
 		$(".header-box ul").addClass("flip");
@@ -6,16 +16,17 @@ $().ready(function() {
 
 	try {
 		// 头部导航下拉菜单
-		//$('.menu-item .menu').hover(function() {
-		//			$(this).find('.menu-bd').toggle();
-		//		})
+		// $('.menu-item .menu').hover(function() {
+		// $(this).find('.menu-bd').toggle();
+		// })
 
 		$('.menu-item .menu').hover(function() {
 			$(this).find('.menu-bd').show();
 		}, function() {
 			$(this).find('.menu-bd').hide();
 		});
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	try {
 		// 头部搜索 店铺、宝贝选择切换
@@ -34,7 +45,8 @@ $().ready(function() {
 				"overflow": "hidden"
 			});
 		});
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	try {
 		// 全部分类鼠标经过展开收缩效果
@@ -43,20 +55,23 @@ $().ready(function() {
 		}), (function() {
 			$('.expand-menu').css("display", "none");
 		}));
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	try {
 		// 当前位置下拉弹框
 		$('.breadcrumb .crumbs-nav').hover(function() {
 			$(this).toggleClass('curr');
 		});
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	try {
 		// 左侧分类弹框
 		$('.list').each(function() {
 			var all_width = [];
-			// var dl_width = push(parseInt($(this).find('.subitems dl').text().length));
+			// var dl_width = push(parseInt($(this).find('.subitems
+			// dl').text().length));
 			var num = $(this).find('.subitems dl').length;
 			for (var i = 0; i < num; i++) {
 				all_width.push(parseInt($(this).find('.subitems dl').eq(i).find('dt').find('em').text().length));
@@ -76,7 +91,8 @@ $().ready(function() {
 		}, function() {
 			$(this).find('.categorys').hide();
 		});
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	try {
 		// 右侧边栏
@@ -147,7 +163,8 @@ $().ready(function() {
 				$('animate-in').addClass('animate-out').css('z-index', 1);
 			}
 		});
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	// Ajax快速登录
 	$(".ajax-login").click(function() {
@@ -191,7 +208,55 @@ $().ready(function() {
 		});
 	});
 
+	// 增加积分动画
+
+	$.intergal = function(settings) {
+		var defaults = {
+			callback: null,
+			point: 0,
+			name: '积分',
+			// 组件渲染
+			render: function(settings) {
+				var html = '<div class="falling-integral-box">';
+				html += '<img class="falling-integral-img rotatesimg" src="/images/common/falling-integral-img.png">';
+				html += '<div class="bottom-text-prompt">+<span class="integral-num">' + settings.point + '</span>' + settings.name + '</div>';
+				html += '</div>';
+				$('html').append(html);
+
+				setTimeout(function() {
+					$('html').find('.falling-integral-box').remove();
+				}, 2000);
+			},
+		}
+		settings = $.extend(true, defaults, settings);
+
+		// 渲染
+		$("body").queue(function() {
+			settings.render(settings);
+
+			setTimeout(function() {
+				$("body").dequeue();
+			}, 2000);
+
+		});
+
+		if ($.isFunction(settings.callback)) {
+			settings.callback.call(settings);
+		}
+	}
+
 });
+
+
+function sessionStorageTemplateClear() {
+	if (sessionStorage) {
+		$.each(sessionStorage, function(i, v) {
+			if (i.indexOf('template_') == 0) {
+				sessionStorage.removeItem(i);
+			}
+		});
+	}
+}
 
 function serviceOnLine(shop_id) {
 	$.openim({
@@ -211,5 +276,16 @@ function setTab(name, cursel, n) {
 			$(con).hide();
 			$(menu).removeClass("active");
 		}
+	}
+}
+
+/**
+ * QQ在线图标变更
+ */
+function load_qq_customer_image(target, schema) {
+	var src = $(target).attr("src");
+	if (schema == "https://" && src.indexOf("http://") == 0) {
+		src = src.replace(/http:\/\//, 'https://');
+		$(target).attr("src", src);
 	}
 }

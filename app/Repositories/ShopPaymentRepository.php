@@ -51,28 +51,31 @@ class ShopPaymentRepository
         DB::beginTransaction();
         try {
             // 判断付款状态
-            if ($post['pay_status'] == 1) {
+            if (isset($post['pay_status']) && $post['pay_status'] == 1) {
                 // 已付款 更新店铺到期信息
                 $shopUpdate = [
-                    'begin_time' => $post['begin_time'],
-                    'end_time' => $post['end_time'],
+                    'end_time' => strtotime($post['end_time']),
                     'duration' => $post['duration'],
                     'system_fee' => $post['system_fee'],
                     'insure_fee' => $post['insure_fee'],
+                    'shop_status' => 1, // 店铺状态 开启
                 ];
+                if (ShopPayment::where([['shop_id',$post['shop_id']],['pay_status',1]])->count() <= 0) {
+                    $shopUpdate['open_time'] = strtotime($post['begin_time']);
+                }
                 Shop::where('shop_id', $post['shop_id'])->update($shopUpdate);
             }
             // 插入/更新店铺付款信息表
             if ($isUpdate) {
                 // 编辑
-                $this->update($post['pay_id'], $post);
+                $ret = $this->update($post['pay_id'], $post);
             }else {
                 // 添加
-                $this->store($post);
+                $ret = $this->store($post);
             }
 
             DB::commit();
-            return true;
+            return arr_result(0,['pay_id'=>$ret->pay_id]);
         } catch (\Exception $e) {
             DB::rollback();//事务回滚
             echo $e->getMessage();

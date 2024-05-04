@@ -15,13 +15,17 @@ class Category extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'cat_name', 'parent_id', 'cat_level', 'cat_image', 'cat_letter', 'ext_info', 'cat_desc',
+        'cat_name', 'parent_id', 'cat_level', 'cat_image', 'cat_name_pinyin_short','cat_name_pinyin', 'ext_info', 'cat_desc',
         'take_rate', 'sync_take_rate', 'show_mode', 'is_parent', 'is_show',
         'show_virtual', 'sync_show_virtual', 'link_type', 'cat_link', 'image_link', 'cat_sort', 'brand_ids',
         'title', 'keywords', 'discription','code'
     ];
 
     protected $primaryKey = 'cat_id';
+
+    protected $appends = [
+        'cat_image_preview',
+    ];
 
 
     /**
@@ -31,5 +35,24 @@ class Category extends BaseModel
     public function brand()
     {
         return $this->belongsToMany(Brand::class, 'brand_category', 'cat_id', 'brand_id');
+    }
+
+    /**
+     * 一对多 关联商品
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goods()
+    {
+        return $this->hasMany(Goods::class, 'cat_id');
+    }
+
+    public function child()
+    {
+        return $this->hasMany(Category::class, 'cat_id', 'parent_id');
+    }
+
+    public function getCatImagePreviewAttribute()
+    {
+        return !empty($this->attributes['cat_image']) ? get_image_url($this->attributes['cat_image']) : '';
     }
 }

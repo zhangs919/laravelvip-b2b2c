@@ -22,7 +22,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -73,7 +73,7 @@
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/edit.js?v=20180726"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/edit.js?v=20180726"></script>
     <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180726"></script>
 
     <script type="text/javascript">

@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-followmsg", "name": "SystemConfigModel[followmsg]", "attribute": "followmsg", "rules": {"string":true,"messages":{"string":"关注回复内容必须是一条字符串。"}}},{"id": "systemconfigmodel-bind_before_msg", "name": "SystemConfigModel[bind_before_msg]", "attribute": "bind_before_msg", "rules": {"string":true,"messages":{"string":"绑定前回复内容必须是一条字符串。"}}},{"id": "systemconfigmodel-bind_after_msg", "name": "SystemConfigModel[bind_after_msg]", "attribute": "bind_after_msg", "rules": {"string":true,"messages":{"string":"绑定后回复内容必须是一条字符串。"}}},{"id": "systemconfigmodel-is_auto_reply", "name": "SystemConfigModel[is_auto_reply]", "attribute": "is_auto_reply", "rules": {"string":true,"messages":{"string":"是否开启自动回复必须是一条字符串。"}}},{"id": "systemconfigmodel-auto_reply_msg", "name": "SystemConfigModel[auto_reply_msg]", "attribute": "auto_reply_msg", "rules": {"string":true,"messages":{"string":"自动回复内容必须是一条字符串。"}}},]

@@ -7,16 +7,16 @@
                     <!-- 选择的当前的状态 给a标签追加class值为"sel-select" _start -->
                     <li id="goods_list" class="sel-item">
                         <!-- <a class="sel-link sel-select" href="/user/collect">全部宝贝<em></em></a>-->
-                        <a class="sel-link sel-select">
+                        <a class="sel-link @if($tab == 'goods_list'){{ 'sel-select' }}@endif">
                             全部宝贝
                             <em>{{ $goods_collect_count }} </em>
                         </a>
                     </li>
                     <!-- 选择的当前的状态 给a标签追加class值为"sel-select" _end -->
                     <li id="invalid_list" class="sel-item">
-                        <a class="sel-link">
+                        <a class="sel-link @if($tab == 'invalid_list'){{ 'sel-select' }}@endif">
                             失效
-                            <em>2</em>
+                            <em>0</em>
                         </a>
                     </li>
                     <li id="shop_same" class="sel-item" style="display: none">

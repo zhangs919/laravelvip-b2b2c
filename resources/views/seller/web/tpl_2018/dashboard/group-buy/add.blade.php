@@ -1,16 +1,27 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ActivityModel" class="form-horizontal" name="ActivityModel" action="/dashboard/group-buy/add" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix group-buy-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->
@@ -190,28 +201,7 @@
                                     </table>
 
                                     <script type="text/javascript">
-                                        $().ready(function() {
-                                            //删除团购商品
-                                            $("body").on("click", ".del", function() {
-                                                var target = $(this).parents("tr");
-                                                var goods_id = $(this).data("goods-id");
-                                                var sku_id = $(this).data("sku-id");
-
-                                                var container = $(this).parents(".group-buy-goods").find("#widget_goods");
-                                                var goodspicker = $.goodspicker(container);
-
-                                                if (goodspicker) {
-                                                    // 获取控件
-                                                    goodspicker.remove(goods_id, sku_id);
-                                                    var selected_number = goodspicker.goods_ids.length;
-                                                    if (selected_number == 0) {
-                                                        $(this).parents("table").remove();
-                                                    }
-                                                }
-                                                $(target).remove();
-                                            });
-
-                                        });
+                                        //
                                     </script>
                                 @endif
                             </div>
@@ -256,22 +246,6 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
-@stop
-
-
-{{--helper_tool--}}
-@section('helper_tool')
-
-@stop
-
-{{--自定义css样式--}}
-@section('style_css')
-
-@stop
-
-{{--footer script page元素同级下面--}}
-@section('footer_script')
     <script id="goods" type="text">
 
 <table id="table_list" class="table table-hover group-buy-list">
@@ -352,17 +326,6 @@
         </td>
         </tr>
     </script>
-
-    <!-- 时间插件引入 start -->
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.css?v=2.0"/> <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20180919"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20180919"></script>
-    <!-- 时间插件引入 end -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180919"></script>
-    <!-- 商品选择器 -->
-    <!-- AJAX上传 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180919"></script> <script src="/assets/d2eace91/js/jquery.widget.js?v=20180919"></script>
     <script id="client_rules" type="text">
         @if(!isset($model['act_id']))
             [{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。"}}},{"id": "activitymodel-shop_id", "name": "ActivityModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "activitymodel-ext_info", "name": "ActivityModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_title", "name": "ActivityModel[act_title]", "attribute": "act_title", "rules": {"string":true,"messages":{"string":"活动标题必须是一条字符串。","maxlength":"活动标题只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_img", "name": "ActivityModel[act_img]", "attribute": "act_img", "rules": {"required":true,"messages":{"required":"活动图片不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。","min":"限购数量必须不小于0。","max":"限购数量必须不大于999。"},"min":0,"max":999}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"activitymodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"activitymodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
@@ -370,7 +333,55 @@
             [{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"required":true,"messages":{"required":"活动有效期不能为空。"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"required":true,"messages":{"required":"活动结束时间不能为空。"}}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。"}}},{"id": "activitymodel-shop_id", "name": "ActivityModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺ID必须是整数。"}}},{"id": "activitymodel-ext_info", "name": "ActivityModel[ext_info]", "attribute": "ext_info", "rules": {"string":true,"messages":{"string":"扩展字段必须是一条字符串。"}}},{"id": "activitymodel-act_name", "name": "ActivityModel[act_name]", "attribute": "act_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-act_title", "name": "ActivityModel[act_title]", "attribute": "act_title", "rules": {"string":true,"messages":{"string":"活动标题必须是一条字符串。","maxlength":"活动标题只能包含至多20个字符。"},"maxlength":20}},{"id": "activitymodel-sort", "name": "ActivityModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "activitymodel-purchase_num", "name": "ActivityModel[purchase_num]", "attribute": "purchase_num", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"限购数量必须是整数。","min":"限购数量必须不小于0。","max":"限购数量必须不大于999。"},"min":0,"max":999}},{"id": "activitymodel-start_time", "name": "ActivityModel[start_time]", "attribute": "start_time", "rules": {"compare":{"operator":"<","type":"date","compareAttribute":"activitymodel-end_time","skipOnEmpty":1},"messages":{"compare":"开始时间不能大于结束时间"}}},{"id": "activitymodel-end_time", "name": "ActivityModel[end_time]", "attribute": "end_time", "rules": {"compare":{"operator":">=","type":"date","compareAttribute":"activitymodel-start_time","skipOnEmpty":1},"messages":{"compare":"结束时间不能小于开始时间"}}},]
         @endif
     </script>
-    <script type='text/javascript'>
+@stop
+
+
+{{--helper_tool--}}
+@section('helper_tool')
+
+@stop
+
+{{--自定义css样式--}}
+@section('style_css')
+
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/validate/jquery.metadata.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=202003261806"></script>
+@stop
+
+{{--footer script page元素同级下面--}}
+@section('footer_script')
+
+    <script>
+        $().ready(function() {
+            //删除团购商品
+            $("body").on("click", ".del", function() {
+                var target = $(this).parents("tr");
+                var goods_id = $(this).data("goods-id");
+                var sku_id = $(this).data("sku-id");
+                var container = $(this).parents(".group-buy-goods").find("#widget_goods");
+                var goodspicker = $.goodspicker(container);
+                if (goodspicker) {
+                    // 获取控件
+                    goodspicker.remove(goods_id, sku_id);
+                    var selected_number = goodspicker.goods_ids.length;
+                    if (selected_number == 0) {
+                        $(this).parents("table").remove();
+                    }
+                }
+                $(target).remove();
+            });
+        });
+        // 
         $().ready(function() {
             //悬浮显示上下步骤按钮
             window.onscroll = function() {
@@ -384,9 +395,7 @@
                         $(".bottom-btn").addClass("bottom-btn-fixed");
                     }
                 });
-
             };
-
             var values = [];
             $("body").find(".group-buy-list").find("#goods_info").find("tr").each(function() {
                 var goods_id = $(this).find(".goods-id").val();
@@ -396,25 +405,25 @@
                     sku_id: sku_id,
                 };
             });
-            // 初始化组件，为容器绑定组件
+            // 初始化组件，为容器绑定组件  
             var goodspicker = $("#widget_goods").goodspicker({
-                url: '/dashboard/activity-goods/picker?act_id={{ $model['act_id'] ?? '' }}',
-                // 组件ajax提交的数据，主要设置分页的相关设置
+                url: '/dashboard/group-buy/picker?act_id={{ $model['act_id'] ?? '' }}',
+                // 组件ajax提交的数据，主要设置分页的相关设置  
                 data: {
                     page: {
-                        // 分页唯一标识
+                        // 分页唯一标识  
                         // page_id: page_id
                     },
                     is_sku: 0
-                    // 不能将自己作为赠品
-                    //except_sku_ids: sku_id
+                    // 不能将自己作为赠品  
+                    //except_sku_ids: sku_id  
                 },
-                // 已加载的数据
+                // 已加载的数据  
                 values: values,
-                // 选择商品和未选择商品的按钮单击事件
-                // @param selected 点击是否选中
-                // @param sku 选中的SKU对象
-                // @return 返回false代表
+                // 选择商品和未选择商品的按钮单击事件  
+                // @param selected 点击是否选中  
+                // @param sku 选中的SKU对象  
+                // @return 返回false代表  
                 click: function(selected, sku) {
                     var goods_count = this.goods_ids.length;
                     var html = $("#goods").html();
@@ -434,6 +443,7 @@
                                         $('#goods_info').html('');
                                     }
                                     $('#goods_info').prepend(result.data);
+                                    $('.chosen-select').chosen();
                                     $.loading.stop();
                                 } else {
                                     goodspicker.remove(sku.goods_id, sku.sku_id);
@@ -448,9 +458,7 @@
                         }
                     }
                 },
-
             });
-
             if ($.validator) {
                 $.validator.prototype.elements = function() {
                     var validator = this, rulesCache = {};
@@ -463,9 +471,7 @@
                     });
                 }
             }
-
             var validator = $("#ActivityModel").validate();
-
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
             $.validator.addRules($("#client_rules").html());
             $("#btn_submit").click(function() {
@@ -474,20 +480,14 @@
                 } */
                 if (!validator.form()) {
                     var html = "";
-
                     error_list = validator.errorList;
-
                     for (var i = 0; i < validator.errorList.length; i++) {
                         var element = validator.errorList[i].element;
                         var message = validator.errorList[i].message;
-
                         var element = $(error_list[i].element);
-
                         $(element).focus();
                         $(window).scrollTop($(element).offset().top - $(window).height() + 120);
-
                     }
-
                     return false;
                 }
                 $.loading.start();
@@ -527,11 +527,10 @@
                     }, 'json');
                 }
             });
-
             $("#act_img_container").imagegroup({
                 host: '{{ get_oss_host() }}',
                 size: 1,
-                values: ['{{ $model['act_img'] ?? '' }}'],
+                values: [''],
                 callback: function(data) {
                     $("#activitymodel-act_img").val(data.path);
                 },
@@ -539,7 +538,6 @@
                     $("#activitymodel-act_img").val('');
                 }
             });
-
             $('.form_datetime').datetimepicker({
                 language: 'zh-CN',
                 weekStart: 1,
@@ -553,9 +551,7 @@
             }).on('changeDate', function(ev) {
                 $(this).trigger("blur");
             });
-
         })
-
         function validationNumber(e, num) {
             var regu = /^[0-9]+\.?[0-9]*$/;
             if (e.value != "") {

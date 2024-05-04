@@ -15,8 +15,8 @@
 @section('content')
 
     <div class="table-content m-t-30 clearfix  pull-left col-sm-8 p-l-0">
-        <form id="ShopModel" class="form-horizontal" name="ShopModel" action="/shop/shop/edit?id={{ $info->shop_id }}&amp;shop_type={{ $info->shop_type }}&amp;is_supply={{ $info->is_supply }}" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+        <form id="ShopModel" class="form-horizontal" name="ShopModel" action="/shop/shop/edit?id={{ $info->shop_id }}&shop_type={{ $info->shop_type }}&is_supply={{ $info->is_supply }}" method="post" novalidate="novalidate">
+            @csrf
 
             <input type="hidden" id="shopmodel-is_supply" class="form-control" name="ShopModel[is_supply]" value="{{ $info->is_supply }}">
 
@@ -436,11 +436,11 @@
         <dl>
             <dt>店主帐号：</dt>
             <dd>
-                {{ $info->user_name }}
+                {{ $info->user->user_name ?? '' }}
 
                 <span class="tool m-l-10">
 
-					<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2697138383&amp;site=qq&amp;menu=yes">
+					<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=123456s&amp;site=qq&amp;menu=yes">
 						<img border="0" src="http://wpa.qq.com/pa?p=2:2697138383:51" alt="点击这里给我发消息" title="点击这里给我发消息">
 					</a>
 
@@ -450,11 +450,11 @@
         </dl>
         <dl>
             <dt>认证手机：</dt>
-            <dd></dd>
+            <dd>{{ $info->user->mobile ?? '' }}</dd>
         </dl>
         <dl>
             <dt>认证邮箱：</dt>
-            <dd></dd>
+            <dd>{{ $info->user->email ?? '' }}</dd>
         </dl>
         <dl>
             <dt>申请时间：</dt>
@@ -463,11 +463,11 @@
 
         <dl>
             <dt>开店时间：</dt>
-            <dd>{{ $info->begin_time }}</dd>
+            <dd>{{ format_time($info->open_time) }}</dd>
         </dl>
         <dl>
             <dt>到期时间：</dt>
-            <dd>{{ $info->end_time }}</dd>
+            <dd>{{ format_time($info->end_time) }}</dd>
         </dl>
         <dl>
             <dt>平台保证金：</dt>
@@ -490,19 +490,19 @@
         <dl>
             <dt>会员数量：</dt>
             <dd>
-                <font class="c-red m-r-5">0</font>
+                <font class="c-red m-r-5">{{ $info->member_count ?? 0 }}</font>
             </dd>
         </dl>
         <dl>
             <dt>订单数量：</dt>
             <dd>
-                <font class="c-red m-r-5">1</font>
+                <font class="c-red m-r-5">{{ $info->order_info_count ?? 0 }}</font>
             </dd>
         </dl>
         <dl>
             <dt>店铺余额：</dt>
             <dd>
-                <font class="c-red m-r-5">1000.00</font>
+                <font class="c-red m-r-5">{{ $info->user->user_money + $info->user->user_money_limit }}</font>
                 元
             </dd>
         </dl>
@@ -511,10 +511,10 @@
             <dd>
 
 				<span>
-					<img src="http://images.68mall.com/system/credit/2016/06/07/14653016253926.gif" class="rank" title="" data-toggle="tooltip" data-placement="auto bottom" height="16" data-original-title="一星">
+					<img src="{{ get_image_url($info->credit_img) }}" class="rank" title="" data-toggle="tooltip" data-placement="auto bottom" height="16" data-original-title="{{ $info->credit_name }}">
 				</span>
 
-                <span class="m-l-10">0 分</span>
+                <span class="m-l-10">{{ $info->credit }} 分</span>
             </dd>
         </dl>
         <dl>
@@ -523,27 +523,27 @@
                 <div class="ng-binding">
 					<span>
 						综合：
-						<font class="c-red m-r-5">5.00</font>
+						<font class="c-red m-r-5">{{ $info->score }}</font>
 						分
 					</span>
                     <span>
 						描述：
-						<font class="c-red m-r-5">5.00</font>
+						<font class="c-red m-r-5">{{ $info->desc_score }}</font>
 						分
 					</span>
                     <span>
 						服务：
-						<font class="c-red m-r-5">5.00</font>
+						<font class="c-red m-r-5">{{ $info->service_score }}</font>
 						分
 					</span>
                     <span>
 						发货：
-						<font class="c-red m-r-5">5.00</font>
+						<font class="c-red m-r-5">{{ $info->send_score }}</font>
 						分
 					</span>
                     <span>
 						物流：
-						<font class="c-red m-r-5">5.00</font>
+						<font class="c-red m-r-5">{{ $info->logistics_score }}</font>
 						分
 					</span>
                 </div>
@@ -581,16 +581,16 @@
     <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
     <script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
     <script id="other_cat_template" type="text">
-    <div class="choosen-select-item other-cat">
-        <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]">
-            <option value="">-- 请选择 --</option>
-            @foreach($cat_list as $cat)
-                <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
-            @endforeach
-        </select>
-        <a class="choosen-select-delete other-cat-delete">×</a>
-    </div>
-</script>
+        <div class="choosen-select-item other-cat">
+            <select id="cat_ids" class="form-control chosen-select" name="cat_ids[]">
+                <option value="">-- 请选择 --</option>
+                @foreach($cat_list as $cat)
+                    <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
+                @endforeach
+            </select>
+            <a class="choosen-select-delete other-cat-delete">×</a>
+        </div>
+    </script>
     <!-- 验证规则 -->
     <script id="client_rules" type="text">
     [{"id": "shopmodel-shop_id", "name": "ShopModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "shopmodel-goods_status", "name": "ShopModel[goods_status]", "attribute": "goods_status", "rules": {"required":true,"messages":{"required":"店铺商品是否需要审核不能为空。"}}},{"id": "shopmodel-shop_sort", "name": "ShopModel[shop_sort]", "attribute": "shop_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "shopmodel-user_id", "name": "ShopModel[user_id]", "attribute": "user_id", "rules": {"required":true,"messages":{"required":"绑定店主帐号不能为空。"}}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"required":true,"messages":{"required":"店铺名称不能为空。"}}},{"id": "shopmodel-shop_type", "name": "ShopModel[shop_type]", "attribute": "shop_type", "rules": {"required":true,"messages":{"required":"店铺类型不能为空。"}}},{"id": "shopmodel-cat_id", "name": "ShopModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"店铺所属分类不能为空。"}}},{"id": "shopmodel-clearing_cycle", "name": "ShopModel[clearing_cycle]", "attribute": "clearing_cycle", "rules": {"required":true,"messages":{"required":"结算周期不能为空。"}}},{"id": "shopmodel-qrcode_take_rate", "name": "ShopModel[qrcode_take_rate]", "attribute": "qrcode_take_rate", "rules": {"required":true,"messages":{"required":"神码佣金比例不能为空。"}}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"string":true,"messages":{"string":"店铺名称必须是一条字符串。","maxlength":"店铺名称只能包含至多20个字符。"},"maxlength":20}},{"id": "shopmodel-region_code", "name": "ShopModel[region_code]", "attribute": "region_code", "rules": {"string":true,"messages":{"string":"Region Code必须是一条字符串。","maxlength":"Region Code只能包含至多60个字符。"},"maxlength":60}},{"id": "shopmodel-close_info", "name": "ShopModel[close_info]", "attribute": "close_info", "rules": {"string":true,"messages":{"string":"店铺状态修改备注必须是一条字符串。","maxlength":"店铺状态修改备注只能包含至多500个字符。"},"maxlength":500}},{"id": "shopmodel-fail_info", "name": "ShopModel[fail_info]", "attribute": "fail_info", "rules": {"string":true,"messages":{"string":"审核失败原因必须是一条字符串。","maxlength":"审核失败原因只能包含至多500个字符。"},"maxlength":500}},{"id": "shopmodel-shop_sort", "name": "ShopModel[shop_sort]", "attribute": "shop_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "shopmodel-shop_name", "name": "ShopModel[shop_name]", "attribute": "shop_name", "rules": {"ajax":{"url":"/shop/shop/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcU2hvcE1vZGVs","attribute":"shop_name","params":["ShopModel[shop_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "shopmodel-take_rate", "name": "ShopModel[take_rate]", "attribute": "take_rate", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"佣金比例必须是一个数字。","min":"佣金比例必须不小于0。","max":"佣金比例必须不大于100。"},"min":0,"max":100}},{"id": "shopmodel-qrcode_take_rate", "name": "ShopModel[qrcode_take_rate]", "attribute": "qrcode_take_rate", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"神码佣金比例必须是一个数字。","min":"神码佣金比例必须不小于0。","max":"神码佣金比例必须不大于100。"},"min":0,"max":100}},]

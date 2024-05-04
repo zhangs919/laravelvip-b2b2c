@@ -43,7 +43,7 @@
         <script src="/js/swiper.jquery.min.js?v=20180919"></script>
         <div class="goods-header">
             <div class="goods-header-left">
-                <a href="javascript:history.back(-1)"></a>
+                <a href="javascript:history.back(-1)" class=" iconfont icon-fanhui1"></a>
             </div>
             <ul class="goods-header-nav ub ">
                 <li class="cur ub-f1 ">商品</li>
@@ -54,30 +54,24 @@
                     <em class="SZY-CART-COUNT bg-color">0</em>
                 </a>
                 <aside class="show-menu-btn">
-                    <div class="show-menu" id="show_more">
-                        <a href="javascript:void(0)"></a>
-                    </div>
+                    <div class="show-menu iconfont icon-gengduo3" id="show_more"></div>
                 </aside>
             </div>
         </div>
-        <div class="show-menu-info" id="menu">
-            <ul>
-                <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-                <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-                <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-                <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-            </ul>
-        </div>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
         <!--商品-->
         <div class="goods-content user-goods-ka">
             <div class="swiper-container swiper-container-horizontal" id="goods_pic">
                 <div class="swiper-wrapper">
 
-                    <div class="swiper-slide">
-                        <a href="javascript:void(0)">
-                            <img width="100%" src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/15/gallery/2018/04/17/15239490849627.jpg?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450">
-                        </a>
-                    </div>
+                    @foreach($goods['goods_images'] as $v)
+                        <div class="swiper-slide">
+                            <a href="javascript:void(0)">
+                                <img width="100%" src="{{ $v[1] }}">
+                            </a>
+                        </div>
+                    @endforeach
 
                 </div>
                 <div class="swiper-pagination"></div>
@@ -86,12 +80,12 @@
             <div class="goods-info bdr-bottom">
                 <div class="goods-price">
                     <div class="now-prices">
-                        <em class="SZY-GOODS-PRICE price-color m-l-0">30积分</em>
+                        <em class="SZY-GOODS-PRICE price-color m-l-0">{{ $goods['goods_integral'] }}积分</em>
                     </div>
-                    <p class="sold">兑换销量：1件</p>
+                    <p class="sold">兑换销量：{{ $goods['exchange_number'] }}件</p>
                 </div>
                 <div class="goods-info-top">
-                    <h3 class="SZY-GOODS-NAME">积分兑换测试商品</h3>
+                    <h3 class="SZY-GOODS-NAME">{{ $goods['goods_name'] }}</h3>
 
                 </div>
             </div>
@@ -99,7 +93,11 @@
                 <dt>兑换时间</dt>
                 <dd>
 
-                    无时间条件限制
+                    @if($goods['is_limit'] == 0)
+                        无时间条件限制
+                    @elseif($goods['is_limit'] == 1)
+                        有效期: {{ $goods['start_time'] }} 至 {{ $goods['end_time'] }}
+                    @endif
 
                 </dd>
             </div>
@@ -122,13 +120,14 @@
         <!-- 店铺信息 _star-->
         <div class="store-info">
             <div class="store-top">
-                <a href="/shop/15.html">
+                <a href="/shop/{{ $goods['shop_id'] }}.html">
                     <div class="store-logo">
-                        <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/15/images/2018/04/17/15239361283771.jpg">
+                        <img src="{{ get_image_url($shop_info['shop']['shop_logo'], 'shop_logo') }}">
                     </div>
                     <div class="store-item">
                         <div class="store-name">
-                            阿迪达斯旗舰店
+                            <span>
+                                {{ $shop_info['shop']['shop_name'] }}
                             </span>
 
                         </div>
@@ -138,29 +137,29 @@
             </div>
             <ul class="score-detail">
                 <li>
-                    <a href="/shop/15/list.html">
+                    <a href="/shop/{{ $goods['shop_id'] }}/list.html">
                         <span class="num">4</span>
                         <span class="text">全部宝贝</span>
                     </a>
                 </li>
 
                 <li>
-                    <span class="num SZY-COLLECT-COUNT">2</span>
+                    <span class="num SZY-COLLECT-COUNT">{{ $goods['collect_num'] }}</span>
                     <span class="text">关注人数</span>
                 </li>
 
                 <li>
                     <p>
                         <em>描述相符</em>
-                        <i class="color">5.00</i>
+                        <i class="color">{{ $shop_info['shop']['desc_score'] }}</i>
                     </p>
                     <p>
                         <em>服务态度</em>
-                        <i class="color">5.00</i>
+                        <i class="color">{{ $shop_info['shop']['service_score'] }}</i>
                     </p>
                     <p>
                         <em>发货速度</em>
-                        <i class="color">5.00</i>
+                        <i class="color">{{ $shop_info['shop']['send_score'] }}</i>
                     </p>
                 </li>
             </ul>
@@ -169,14 +168,21 @@
                 <div class="store-btn-item">
                     <a href="javascript:void(0);" class="collect-shop">
 
-                        <i class="store-btn-icon collect-shop-icon">&nbsp;</i>
-                        <span class="store-btn-text">收藏本店</span>
+                        @if($goods['shop_collect'])
+                            {{--已收藏--}}
+                            <i class="store-btn-icon collected-shop-icon">&nbsp;</i>
+                            <span class="store-btn-text">取消收藏</span>
+                        @else
+                            {{--未收藏--}}
+                            <i class="store-btn-icon collect-shop-icon">&nbsp;</i>
+                            <span class="store-btn-text">收藏本店</span>
+                        @endif
 
                     </a>
                 </div>
                 <!-- 进入店铺 -->
                 <div class="store-btn-item">
-                    <a href="/shop/15.html">
+                    <a href="/shop/{{ $goods['shop_id'] }}.html">
                         <i class="store-btn-icon goto-shop-icon">&nbsp;</i>
                         <span class="store-btn-text">进入店铺</span>
                     </a>
@@ -187,7 +193,7 @@
             // 添加收藏
             $('body').on('click', '.collect-shop', function(event) {
                 var target = $(this);
-                var shop_id = "15";
+                var shop_id = "{{ $goods['shop_id'] }}";
                 $.loading.start();
                 $.collect.toggleShop(shop_id, function(result) {
                     $.loading.stop();
@@ -206,7 +212,11 @@
             <div class="product_images product_desc goods-details-tab" id="product_desc">
                 <div class="detail-content goods-detail-content product_tab_chr">
 
-                    <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/15/gallery/2018/04/17/15239490849627.jpg" alt="" />
+                    @if(!empty($goods['mobile_desc']))
+                        {!! $goods['mobile_desc'] !!}
+                    @else
+                        {!! $goods['pc_desc'] !!}
+                    @endif
 
                 </div>
                 <div class="tip-space-box">
@@ -227,30 +237,16 @@
                             <a href="javascript:void(0);" class="sb-back" title="返回"></a>
                         </div>
                         <div class="search-form">
-                            <input class="search-input logistics-search-input" placeholder="请输入自提点名称/所在地" type="text" name="logistics-search" data-shop_id='15' onkeydown='logistics(event);' />
+                            <input class="search-input logistics-search-input" placeholder="请输入自提点名称/所在地" type="text" name="logistics-search" data-shop_id='{{ $goods['shop_id'] }}' onkeydown='logistics(event);' />
                             <span class="search-icon"></span>
                         </div>
-                        <span class="search-btn js-search-btn" data-shop_id='15'>搜索</span>
+                        <span class="search-btn js-search-btn" data-shop_id='{{ $goods['shop_id'] }}'>搜索</span>
                     </div>
                     <ul class="logistics-store-list">
 
 
-                        <!-- -->
-                        <li class="logistics-item clearfix">
-                            <h3>自提点名称：11</h3>
-                            <div class="logistics-inner">
-                                <div class="logistics-img">
-                                    <img src="http://images.68mall.com/system/config/default_image/default-pickup.jpg">
-                                </div>
-                                <a class="logistics-info" href="/index/information/amap?dest=100.441895,38.948181&title=11">
-                                    <p class="logistics-address">西街街道祁连中路河西学院</p>
-
-                                </a>
-
-                                <a class="logistics-phone" href="tel:13993692344"></a>
-
-                            </div>
-                        </li>
+                        {{--引入自提点--}}
+                        @include('goods.partials._self_pickup_list')
 
 
                     </ul>
@@ -375,58 +371,52 @@
         <div style="height: 50px;"></div>
         <div class="goods-footer-nav exchange-goods-footer">
 
-            <a href="/shop/15.html" class="nav-button">
+            <a href="/" class="nav-button">
                 <em class="goods-index-nav"></em>
                 <span>首页</span>
             </a>
 
-            <!-- 是否配置了云旺客服 -->
-
-            <!-- 微商城客服调用qq -->
-
-
-
-
-
-
-
-
-
-            <a href="http://wpa.qq.com/msgrd?v=3&uin=121212&site=qq&menu=yes" class="nav-button">
-                <em class="goods-qq-nav"></em>
+            <!-- 	 -->
+            <a href="javascript:void(0);" class="nav-button service-btn service-online">
+                <em class="goods-message-nav"></em>
                 <span>客服</span>
             </a>
 
+            <div class="btn-group">
+                <dl class="ub">
 
 
+                    <dd class="btn">
+                        <a href="javascript:void(0)" class="button bg-color" onclick="$.msg('该商品已下架！');">立即兑换</a>
+                    </dd>
 
-            <dl>
 
-                <dd class="btn">
-                    <a href="/login.html" class="button bg-color">立即登录</a>
-                </dd>
-
-            </dl>
+                </dl>
+            </div>
         </div>
         <div class="choose-attribute-mask"></div>
         <div class="choose-attribute-main" id="choose_attr">
             <div class="choose-attribute-header">
-                <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/15/gallery/2018/04/17/15239490849627.jpg?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450" />
+                <img src="{{ get_image_url($goods['goods_image'],'goods_image') }}?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450" />
                 <div class="attribute-header-right">
-                    <span class="goodprice price-color choose-result-price"> 30积分 </span>
+                    <span class="goodprice price-color choose-result-price"> {{ $goods['goods_integral'] }}积分 </span>
                     <span>
 				<i>
 
-					库存：99件 &nbsp;
+					库存：{{ $goods['goods_number'] }}件 &nbsp;
 
 				</i>
 			</span>
                     <span>
-				兑换时间：
+				        兑换时间：
 
-				无时间条件限制
+                        @if($goods['is_limit'] == 0)
+                            无时间条件限制
+                        @elseif($goods['is_limit'] == 1)
+                            有效期: {{ $goods['start_time'] }} 至 {{ $goods['end_time'] }}
+                        @endif
 
-			</span>
+			        </span>
                 </div>
                 <a class="choose-attribute-close" href="javascript:close_choose_spec();" title="关闭"></a>
             </div>
@@ -439,7 +429,7 @@
                         <div class="item1">
                             <div class="goods-num amount amount-btn cart-box">
                                 <span class="decrease amount-minus"><i class="iconfont">&#xe661;</i></span>
-                                <input type="text" class="amount-input num" value="1" data-amount-min="1" data-amount-max="99" maxlength="8" title="请输入购买量" onFocus="this.blur()">
+                                <input type="text" class="amount-input num" value="1" data-amount-min="1" data-amount-max="{{ $goods['goods_number'] }}" maxlength="8" title="请输入购买量" onFocus="this.blur()">
                                 <span class="increase amount-plus"><i class="iconfont">&#xe662;</i></span>
                             </div>
                         </div>
@@ -447,7 +437,7 @@
                 </div>
             </div>
             <div class="choose-foot">
-                <a href="javascript:void(0)" class="bg-color SZY-BUY-BUTTON exchange-goods disabled" data-message="积分不足" data-goods_number="99">确定</a>
+                <a href="javascript:void(0)" class="bg-color SZY-BUY-BUTTON exchange-goods disabled" data-message="{{ $can_exchange_msg }}" data-goods_number="{{ $goods['goods_number'] }}">确定</a>
             </div>
         </div>
 
@@ -523,30 +513,33 @@
                     share_url = url;
                 }
 
-                $.ajax({
-                    type: "GET",
-                    url: "/index/information/get-weixinconfig.html",
-                    dataType: "json",
-                    data: {
-                        url: url
-                    },
-                    success: function(result) {
-                        if (result.code == 0) {
-                            wx.config({
-                                debug: false,
-                                appId: result.data.appId,
-                                timestamp: result.data.timestamp,
-                                nonceStr: result.data.nonceStr,
-                                signature: result.data.signature,
-                                jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
-                            });
-
+                if (isWeiXin()) {
+                    $.ajax({
+                        url: "/site/get-weixinconfig.html",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            url: url
+                        },
+                        success: function(result) {
+                            if (result.code == 0) {
+                                wx.config({
+                                    debug: false,
+                                    appId: result.data.appId,
+                                    timestamp: result.data.timestamp,
+                                    nonceStr: result.data.nonceStr,
+                                    signature: result.data.signature,
+									jsApiList: result.data.jsApiList,
+                                    // jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'wx-open-launch-weapp'],
+                                    // openTagList: ['wx-open-launch-weapp']
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 // 微信JSSDK开发
-                wx.ready(function() {
+                wx && wx.ready(function() {
                     // 分享给朋友
                     wx.onMenuShareAppMessage({
                         title: '', // 标题
@@ -607,14 +600,8 @@
         </script>
 
     </div>
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
     <!-- 第三方流量统计 -->
     <div style="display: none;"></div>
     <!-- 底部 _end-->

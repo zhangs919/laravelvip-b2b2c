@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -12,11 +12,11 @@ class ClearDataController extends Backend
 
     protected $clearData;
 
-    public function __construct()
+    public function __construct(ClearDataRepository $clearData)
     {
         parent::__construct();
 
-        $this->clearData = new ClearDataRepository();
+        $this->clearData = $clearData;
 
     }
 

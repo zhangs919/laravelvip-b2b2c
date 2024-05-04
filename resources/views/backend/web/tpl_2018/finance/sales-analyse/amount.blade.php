@@ -3,15 +3,13 @@
 
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css"/>
     <!-- 日历控件-->
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=20180702"/>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=201807241613"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=201807241613"></script>
-    <script src="/assets/d2eace91/js/datetime/dateformat.js?v=201807241613"></script>
-    {{--<script src="/js/chart.js?v=201807241613"></script>--}}
-    {{--<script src="/js/chart-data.js?v=201807241613"></script>--}}
-    <script src="/assets/d2eace91/js/echarts/echarts-all.js?v=201807241613"></script>
+    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css"/>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/assets/d2eace91/js/datetime/dateformat.js"></script>
+    <script src="/assets/d2eace91/js/echarts/echarts-all.js"></script>
 @stop
 
 {{--alet message page元素同级上面--}}
@@ -24,7 +22,7 @@
 
     <div class="table-content m-t-15 clearfix">
         <div class="search-term m-b-10">
-            <form id="searchForm" action="/finance/sales-analyse/amount.html" method="GET">
+            <form id="searchForm" action="/finance/sales-analyse/amount" method="GET">
                 <div class="simple-form-field ">
                     <div class="form-group">
                         <label class="control-label">

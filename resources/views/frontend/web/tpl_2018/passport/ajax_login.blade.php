@@ -39,7 +39,7 @@
 
             <div id="con_login_2" class="form">
                 <form id="form2" action="/login" method="POST">
-                    {{ csrf_field() }}
+                    @csrf
                     <div class="form-group item-name">
                         <!-- 错误项标注 给div另添加一个class值'error' star -->
                         <div class="form-control-box">
@@ -82,7 +82,6 @@
                     <div class="item-coagent">
 
                     </div>
-                    {{--<input type="hidden" name="back_url" value="http://seller.b2b2c.yunmall.68mall.com/index.html" />--}}
                     <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
 
                     <input type="hidden" name="ajax_layout" value="1" />
@@ -95,7 +94,7 @@
 
             <div id="con_login_1" class="form" style="display: none;">
                 <form id="form1" action="/login" method="POST">
-                    {{ csrf_field() }}
+                    @csrf
                     <div class="form-group item-name">
                         <!-- 错误项标注 给div另添加一个class值'error' star -->
                         <div class="form-control-box">
@@ -267,7 +266,7 @@
                 return false;
             }
 
-// 
+//
             var data = $(this).serializeJson();
             var url = $(this).attr("action");
             $.post(url, data, function(result){
@@ -286,7 +285,7 @@
                 }
             }, "json")
             return false;
-// 
+//
         });
 
         var validator1 = $(container).find("#form1").validate();
@@ -298,7 +297,7 @@
                 return false;
             }
 
-// 
+//
             var data = $(this).serializeJson();
             var url = $(this).attr("action");
             $.post(url, data, function(result){
@@ -313,7 +312,7 @@
                 }
             }, "json")
             return false;
-// 
+//
         });
 
         $(container).find("#btn_send_sms_code").click(function(){
@@ -420,7 +419,7 @@
     });
 
     var record = 0;
-    // 
+    //
     function qrcode_login(result) {
         if (typeof result == "undefined" || result == null) {
             return;
@@ -482,7 +481,7 @@
                 $('.login-mobile').eq(0).find('.qrcode-error').show();
                 record = 0;
             }
-// 
+//
             WS_QRCodeLogin({
                 user_id : result.data.user_id,
                 // url: "ws://push.laravelvip.com:7272",
@@ -499,4 +498,4 @@
             }, 180000);
         },'JSON');
     }
-</script> 
+</script>

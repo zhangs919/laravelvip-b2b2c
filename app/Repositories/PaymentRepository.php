@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Payment;
+use App\Repositories\Common\BaseRepository as Base;
 
 class PaymentRepository
 {
@@ -15,6 +16,24 @@ class PaymentRepository
     {
         $this->model = new Payment();
     }
+
+	/**
+	 * 根据支付方式code获取支付方式配置 格式：key-value
+	 *
+	 * @param string $pay_code 支付方式code
+	 * @return array
+	 */
+	public function getPayConfig($pay_code)
+	{
+		$res = $this->model->getByField('pay_code', $pay_code);
+		$pay_config = unserialize($res->pay_config);
+		$list = [];
+		foreach ($pay_config as $item) {
+			$list[$item['pay_name']] = $item['config_value'];
+		}
+
+		return $list;
+	}
 
     /**
      * 根据支付方式code获取支付方式id
@@ -60,20 +79,29 @@ class PaymentRepository
             // todo 微信端支付
             // todo APP端支付
 
+
+            $checked = $v->pay_code == $checked_pay_code ? "checked" : "";
+            if ($client == 'pc') {
+                if (empty($checked_pay_code) && array_first($list) == $v) {
+                    // 默认选中第一个
+                    $checked = "checked";
+                }
+            }
             $payment_list[] = [
-                'checked' => $v->pay_code == $checked_pay_code ? "checked" : "",
+                'checked' => $checked,
                 'code' => $v->pay_code,
                 'disabled' => $v->is_enable == 1 ? 0 : 1,
                 'id' => $v->pay_id,
                 'name' => $v->pay_name,
-                'tips' => ""
+                'tips' => "" //本次订单此支付方式需要额外支付￥2。
             ];
         }
 
+        // todo 货到付款是受商品影响决定是否展示，余额支付受账户是否有余额影响决定是否展示
         $offpay = [
             'checked' => $checked_pay_code == 'cod' ? "checked" : "",
             'code' => "cod",
-            'disabled' => 0,
+            'disabled' => 1,  // todo 暂时不展示货到付款方式 后期做好了该功能再展示
             'id' => -1,
             'name' => "货到付款",
             'tips' => ""
@@ -83,4 +111,26 @@ class PaymentRepository
 
         return $payment_list;
     }
+
+    /**
+     * 取得支付方式id列表
+     * @param bool $is_cod 是否货到付款
+     * @return  array
+     */
+    public function paymentIdList($is_cod)
+    {
+        $res = Payment::select('pay_id')->whereRaw(1);
+
+//        if ($is_cod) {
+//            $res = $res->where('is_cod', 1);
+//        } else {
+//            $res = $res->where('is_cod', 0);
+//        }
+
+        $res = Base::getToArrayGet($res);
+        $res = Base::getKeyPluck($res, 'pay_id');
+
+        return $res;
+    }
+
 }

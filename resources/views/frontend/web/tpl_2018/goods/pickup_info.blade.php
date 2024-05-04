@@ -1,10 +1,7 @@
 @extends('layouts.base')
 
-@section('header_js')
-    <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180813"></script>
+@section('header_css')
+    <link href="/css/goods.css" rel="stylesheet">
 @stop
 
 {{--follow_box 注意此效果只在首页面展示--}}
@@ -12,25 +9,17 @@
 
 @stop
 
-@section('style_js')
-    <!--页面css/js-->
-
-    <script src="/js/index.js?v=20180813"></script>
-    <script src="/js/tabs.js?v=20180813"></script>
-    <script src="/js/bubbleup.js?v=20180813"></script>
-    <script src="/js/jquery.hiSlider.js?v=20180813"></script>
-    <script src="/js/index_tab.js?v=20180813"></script>
-    <script src="/js/jump.js?v=20180813"></script>
-    <script src="/js/nav.js?v=20180813"></script>
-@stop
-
-
 
 @section('content')
 
 
     <!-- 内容 -->
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
     <style type="text/css">
         #panel {
@@ -44,7 +33,6 @@
         }
     </style>
     <!-- css -->
-    <link rel="stylesheet" href="/css/goods.css?v=20180702"/>
     <!-- 自提详情 _start -->
     <div class="w1210">
         <div class="pickup-box">
@@ -79,22 +67,49 @@
     </div>
 
     <script type="text/javascript">
-        $().ready(function() {
+        //
+    </script>
+    <!-- 自提详情 _end-->
 
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/index.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/bubbleup.js"></script>
+    <script src="/js/jquery.hiSlider.js"></script>
+    <script src="/js/index_tab.js"></script>
+    <script src="/js/jump.js"></script>
+    <script src="/js/nav.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/requestAnimationFrame.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        var map;
+        $().ready(function() {
             var x = "{{ $info->address_lng }}";
             var y = "{{ $info->address_lat }}";
             if (x == "" || y == "") {
                 x = 0;
                 y = 0;
                 var lnglatXY = new AMap.LngLat(x, y);
-                var map = new AMap.Map("container", {
+                map = new AMap.Map("container", {
                     resizeEnable: true,
                     doubleClickZoom: false,
                     zoom: 13
                 });
             } else {
                 var lnglatXY = new AMap.LngLat(x, y);
-                var map = new AMap.Map("container", {
+                map = new AMap.Map("container", {
                     resizeEnable: true,
                     doubleClickZoom: false,
                     zoom: 15,
@@ -126,7 +141,7 @@
                 });
             });
             // 点击地图改变坐标点位置
-            /* 	AMap.event.addListener(map, 'click', function(e) {
+            /*     AMap.event.addListener(map, 'click', function(e) {
                     var x = e.lnglat.getLng();
                     var y = e.lnglat.getLat();
                     lnglatXY = new AMap.LngLat(x, y);
@@ -135,7 +150,6 @@
                     $("#address_lng").val(x);
                     $("#address_lat").val(y);
                 }); */
-
             // 逆地理编码
             function regeocoder() {
                 // 加载地理编码插件
@@ -144,13 +158,11 @@
                         radius: 1000, // 以已知坐标为中心点，radius为半径，返回范围内兴趣点和道路信息
                         extensions: "base" //返回地址描述以及附近兴趣点和道路信息，默认"base"
                     });
-
                     // 返回地理编码结果
                     AMap.event.addListener(geocoder, "complete", geocoder_callBack);
                     // 逆地理编码
                     geocoder.getAddress(lnglatXY);
                 });
-
                 var zoom = map.getZoom();
                 var center = map.getCenter();
                 map.clearMap();
@@ -164,9 +176,8 @@
                 marker.setMap(map); // 在地图上添加点
                 map.setFitView();
                 map.setZoomAndCenter(zoom, center);
-
                 // 移动坐标点位置
-                /* 	marker.on('mouseup', function(e) {
+                /*     marker.on('mouseup', function(e) {
                         var x = e.lnglat.getLng();
                         var y = e.lnglat.getLat();
                         lnglatXY = new AMap.LngLat(x, y);
@@ -176,7 +187,6 @@
                         $("#address_lat").val(y);
                     }); */
             }
-
             function geocoder_callBack(data) {
                 if ($("#load").val() == 1) {
                     $("#load").val(0);
@@ -193,7 +203,6 @@
                     openInfo(address);
                 }
             }
-
             // 在指定位置打开信息窗体
             function openInfo(address) {
                 if (address == "") {
@@ -208,16 +217,59 @@
                 });
                 infoWindow.open(map, marker.getPosition());
             }
-
             // 回车搜索
             $("#selfpickup-pickup_address").keypress(function(e) {
                 if (event.keyCode == 13) {
                     $("#map_search").click();
                 }
             });
-
         });
+        //
+        //解决因为缓存导致获取分类ID不正确问题，需在ready之前执行
+        $(".SZY-DEFAULT-SEARCH").data("cat_id", "");
+        $().ready(function() {
+            $(".SZY-SEARCH-BOX-KEYWORD").val("");
+            $(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "");
+            //
+            $(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {
+                if ($(".search-li.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                        $(keyword_obj).val(keywords);
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function(){
+            // 缓载图片
+            $.imgloading.loading();
+        });
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '2711',
+                url: "wss://push.laravelvip.com:4431",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '2711') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+        $().ready(function() {
+        })
+        //
     </script>
-    <!-- 自提详情 _end-->
-
 @stop

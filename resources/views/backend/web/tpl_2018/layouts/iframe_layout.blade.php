@@ -30,6 +30,11 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/loading/loaders.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/index/index.css?v=1.2"/>
+
+    {{--自定义样式 整体改版--}}
+    <link href="/css/custom.css?v={{ time() }}" rel="stylesheet">
+    {{--自定义样式 整体改版--}}
+
     <!--[if lt IE 9]>
     <script src="/assets/d2eace91/js/html5shiv.min.js?v=1.2"></script>
     <script src="/assets/d2eace91/js/respond.min.js?v=1.2"></script>
@@ -64,8 +69,8 @@
 
 
             @foreach(backend_menu() as $k=>$menu)
-                <li class="@if($active_menus[0] == $menu['menus']) active @endif" data-param="{{ $menu['menus'] }}">
-                    <a href="#{{ $menu['menus'] }}" data-toggle="tab"  >{{ $menu['name'] }}</a>
+                <li class="@if(!empty($active_menus) && $active_menus[0] == $menu['name']) active @endif" data-param="{{ $menu['name'] }}">
+                    <a href="#{{ $menu['name'] }}" data-toggle="tab"  >{{ $menu['title'] }}</a>
                     <b class="arrow"></b>
                 </li>
             @endforeach
@@ -81,7 +86,7 @@
         <!--提醒、主题、全部功能、清除缓存、查看店铺、退出-->
         <ul class="operate shop-row">
             <li class="top-menu">
-                <a href="http://{{ env('FRONTEND_DOMAIN') }}" class="top_icon homepage" target="_blank" title="查看商城">
+                <a href="http://{{ config('lrw.frontend_domain') }}" class="top_icon homepage" target="_blank" title="查看商城">
                     <i></i>
                     <span>商城</span>
                 </a>
@@ -109,7 +114,7 @@
                         <strong>清理缓存</strong>
                     </div>
                     <form id="cacheForm" action="/index" method="POST">
-                        {{ csrf_field() }}
+                        @csrf
                         <ul class="clear-cache-list">
 
                             <li>
@@ -292,12 +297,12 @@
 
             <!--   -->
 
-            <li class="top-menu">
-                <a class="top_icon work-order" href="http://workorder.laravelvip.com" target="_blank" title="工单">
-                    <i></i>
-                    <span>工单</span>
-                </a>
-            </li>
+            <!--            <li class="top-menu">
+                            <a class="top_icon work-order" href="http://workorder.laravelvip.com" target="_blank" title="工单">
+                                <i></i>
+                                <span>工单</span>
+                            </a>
+                        </li>-->
 
 
             <li class="top-menu">
@@ -307,6 +312,12 @@
                 </a>
             </li>
         </ul>
+
+        <div style="float: left;display: inline-block;line-height: 48px;margin-right: 15px;font-weight: bold;">
+            {{--            <a href="javascript:;" style="color: #e9e9e9;">非商业授权</a>--}}
+            <a href="javascript:;" style="color: gold;">商业授权</a>
+        </div>
+
         <!--个人信息-->
         <div id="personal_message" class="manager">
             <div class="manager-btn">
@@ -382,78 +393,82 @@
 
 
         @foreach(backend_menu() as $k=>$menu)
-            <div id="{{ $menu['menus'] }}" class="nav-tabs tab-pane @if($active_menus[0] == $menu['menus']) active @endif">
+            <div id="{{ $menu['name'] }}" class="nav-tabs tab-pane @if(@$active_menus[0] == $menu['name']) active @endif">
                 <ul class="tab-bar">
 
+                    @if(!empty($menu['child']))
+                        @foreach($menu['child'] as $k2=>$menu2)
+                            <li class="J_ToolbarItem @if(@$active_menus[1] == $menu2['name']) active @endif SZY-MENU-2" href="#{{ $menu2['name'] }}" data-toggle="tab">
+                                <div class="wrap J_TGoldData">
+                                    <div class="left-line"></div>
 
-                    @foreach($menu['child'] as $k2=>$menu2)
-                        <li class="J_ToolbarItem @if($active_menus[1] == $menu2['menus']) active @endif SZY-MENU-2" href="#{{ $menu2['menus'] }}" data-toggle="tab">
-                            <div class="wrap J_TGoldData">
-                                <div class="left-line"></div>
+                                    <b class="{{ $menu2['icon'] }}"></b>
 
-                                <b class="{{ $menu2['icon'] }}"></b>
+                                    <div class="v-text">{{ $menu2['title'] }}</div>
+                                    <b class="fa fa-caret-left"></b>
+                                </div>
+                                <!-- 循环收缩的二级菜单 start -->
+                                <div class="submenu">
+                                    <ul>
 
-                                <div class="v-text">{{ $menu2['name'] }}</div>
-                                <b class="fa fa-caret-left"></b>
-                            </div>
-                            <!-- 循环收缩的二级菜单 start -->
-                            <div class="submenu">
-                                <ul>
+                                        @if(!empty($menu2['child']))
+                                            @foreach($menu2['child'] as $menu3)
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="openMenu('{{ $menu3['url'] }}',this, '{{ @$menu3['target'] }}')" data-menus="{{ $menu['name'] }}|{{ $menu2['name'] }}|{{ $menu3['name'] }}" data-param="{{ $menu3['name'] }}">{{ $menu3['title'] }}</a>
+                                                </li>
+                                            @endforeach
+                                        @endif
 
-                                    @foreach($menu2['child'] as $menu3)
-                                        <li>
-                                            <a href="javascript:void(0);" onclick="openMenu('{{ $menu3['url'] }}',this, '{{ @$menu3['target'] }}')" data-menus="{{ $menu['menus'] }}|{{ $menu2['menus'] }}|{{ $menu3['menus'] }}" data-param="{{ $menu3['menus'] }}">{{ $menu3['name'] }}</a>
-                                        </li>
-                                    @endforeach
-
-                                </ul>
-                            </div>
-                            <!-- 循环收缩的二级菜单 END -->
-                        </li>
-                    @endforeach
-
+                                    </ul>
+                                </div>
+                                <!-- 循环收缩的二级菜单 END -->
+                            </li>
+                        @endforeach
+                    @endif
 
                 </ul>
                 <ul class="toolbar J_ModuleSlides">
 
-                @foreach($menu['child'] as $k2=>$menu2)
-                    <!-- 循环展开的二级菜单 BEGIN -->
+                @if(!empty($menu['child']))
+                    @foreach($menu['child'] as $k2=>$menu2)
+                        <!-- 循环展开的二级菜单 BEGIN -->
 
 
-                        <li id="{{ $menu2['menus'] }}" class="slide tab-pane @if($active_menus[1] == $menu2['menus']) active @endif">
-                            <div class="product-nav-list">
-                                <ul>
+                            <li id="{{ $menu2['name'] }}" class="slide tab-pane @if(@$active_menus[1] == $menu2['name']) active @endif">
+                                <div class="product-nav-list">
+                                    <ul>
 
 
-
-                                    @foreach($menu2['child'] as $menu3)
-                                        @if($active_menus[2] == $menu3['menus'])
-                                            <script type="text/javascript">
-                                                $().ready(function() {
-                                                    //
-                                                    openMenu('{{ $active_url }}', $("[data-menus='{{ implode('|', $active_menus) }}']"), '');
-                                                    //
-                                                });
-                                            </script>
+                                        @if(!empty($menu2['child']))
+                                            @foreach($menu2['child'] as $menu3)
+                                                @if(@$active_menus[2] == $menu3['name'])
+                                                    <script type="text/javascript">
+                                                        $().ready(function() {
+                                                            //
+                                                            openMenu('{{ $active_url }}', $("[data-menus='{{ implode('|', $active_menus) }}']"), '');
+                                                            //
+                                                        });
+                                                    </script>
+                                                @endif
+                                                <li class="@if(@$active_menus[2] == $menu3['name']) active @endif">
+                                                    <a href="javascript:void(0);" onClick="openMenu('{{ $menu3['url'] }}',this, '{{ @$menu3['target'] }}')" data-menus="{{ $menu['name'] }}|{{ $menu2['name'] }}|{{ $menu3['name'] }}">
+                                                        <div class="nav-title">
+                                                        {{ $menu3['title'] }}
+                                                        <!--第三级菜单new图标添加，需判断<i class="new-icon"><img src="../assets/d2eace91/images/common/new.gif"></i>-->
+                                                            <em class="arrow-icon  fa fa-angle-right"></em>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @endforeach
                                         @endif
-                                        <li class="@if($active_menus[2] == $menu3['menus']) active @endif">
-                                            <a href="javascript:void(0);" onClick="openMenu('{{ $menu3['url'] }}',this, '{{ @$menu3['target'] }}')" data-menus="{{ $menu['menus'] }}|{{ $menu2['menus'] }}|{{ $menu3['menus'] }}">
-                                                <div class="nav-title">
-                                                {{ $menu3['name'] }}
-                                                <!--第三级菜单new图标添加，需判断<i class="new-icon"><img src="../assets/d2eace91/images/common/new.gif"></i>-->
-                                                    <em class="arrow-icon  fa fa-angle-right"></em>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    @endforeach
 
 
-                                </ul>
-                            </div>
-                        </li>
-                        <!-- 循环展开的二级菜单 END  -->
-                    @endforeach
-
+                                    </ul>
+                                </div>
+                            </li>
+                            <!-- 循环展开的二级菜单 END  -->
+                        @endforeach
+                    @endif
 
                 </ul>
             </div>
@@ -498,8 +513,8 @@
                                         @if(!empty($menu2['child']))
                                             <ul class="sm-three">
                                                 @foreach($menu2['child'] as $menu3)
-                                                    <li class="@if($active_menus[2] == $menu3['menus']) active @endif">
-                                                        <a href="javascript:void(0);" onclick="openMenu('{{ $menu3['url'] }}',this, '')" data-menus="{{ $menu['menus'] }}|{{ $menu2['menus'] }}|{{ $menu3['menus'] }}">{{ $menu3['name'] }}</a>
+                                                    <li class="@if(@$active_menus[2] == $menu3['name']) active @endif">
+                                                        <a href="javascript:void(0);" onclick="openMenu('{{ $menu3['url'] }}',this, '')" data-menus="{{ $menu['name'] }}|{{ $menu2['name'] }}|{{ $menu3['name'] }}">{{ $menu3['title'] }}</a>
                                                     </li>
                                                 @endforeach
 
@@ -564,7 +579,7 @@
 <div id="attention" class="modal-body" style="display: none">
     <div class="f14 p-10">
         <p class="m-b-5">
-            欢迎使用小京东+商城系统，请优先配置/开启
+            欢迎使用乐融沃商城系统，请优先配置/开启
             <a class="c-red" href="/system/config/index?group=alioss" target="_blank">阿里OSS对象存储服务</a>
             ，让您的数据更安全可靠，数据掌握在自己手中。
         </p>
@@ -590,7 +605,7 @@
         <div class="item-description arrow-left">
             <p>
                 发布商品，请前往卖家中心进行发布，更多功能需在卖家中心进行体验，
-                <a class="fb" style="color: #FFFF00" href="http://seller.68dsw.com/index.html" target="_blank">前往卖家中心</a>
+                <a class="fb" style="color: #FFFF00" href="http://{{ config('lrw.seller_domain') }}" target="_blank">前往卖家中心</a>
                 进行了解吧！
             </p>
             <div class="btns">
@@ -681,7 +696,7 @@
 <script type="text/javascript">
 
     WS_AddSys({
-        'user_id': 'system_1',
+        'user_id': 'system_{{ $admin->user_id ?? 0 }}',
 //        'url': "ws://push.laravelvip.com:8181",
         'url': "{{ get_ws_url('8181') }}",
         'type': "add_user"
@@ -709,7 +724,7 @@
     $('#message-pop-url').on("click", function() {
         if ($("#message-pop-url").attr("src_name") == "user")
         {
-            $("#workspace").attr("src", "/user/user/list.html");
+            $("#workspace").attr("src", "/user/user/list");
         }
         else
         {
@@ -723,6 +738,11 @@
     };
     $('.usage-guide-help .closes-btn').click(function() {
         $('.usage-guide-help').addClass('hide');
+    });
+
+    // 设置菜单默认展开
+    $.cookie('left_menu_state', true, {
+        expires: 365
     });
 </script>
 </html>

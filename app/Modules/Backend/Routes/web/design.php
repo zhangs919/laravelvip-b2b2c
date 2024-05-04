@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
     // Design route
     Route::group(['prefix' => 'design'], function () {
@@ -25,6 +25,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::post('batch-valid-tpls', 'Design\TplSettingController@batchValidTpls'); // 批量设置模板模块显示/隐藏
             Route::get('add-data', 'Design\TplSettingController@addData'); // addData
             Route::get('change-link-type', 'Design\TplSettingController@changeLinkType'); // changeLinkType
+            Route::get('link-goods-picker', 'Design\TplSettingController@linkGoodsPicker'); //
             Route::get('setting', 'Design\TplSettingController@setting'); // setting 发布
             Route::get('color-style-url', 'Design\TplSettingController@colorStyleUrl'); // colorStyleUrl
             Route::get('delete-tpls', 'Design\TplSettingController@deleteTpls'); // 删除模板模块
@@ -37,6 +38,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::post('save-tpls', 'Design\TplSettingController@saveTpls'); // saveTpls
 
             Route::post('set-static', 'Design\TplSettingController@setStatic'); // 开启/关闭静态页面
+            Route::get('preview', 'Design\TplSettingController@preview'); // 装修预览
+
 
         });
 

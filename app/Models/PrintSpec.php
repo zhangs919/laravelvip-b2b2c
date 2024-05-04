@@ -18,8 +18,19 @@ class PrintSpec extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'shop_id', 'printer', 'print_spec', 'is_default'
+        'shop_id', 'printer', 'print_spec', 'is_default','tpl_data'
     ];
 
     protected $primaryKey = 'id';
+
+
+    public function setTplDataAttribute($value)
+    {
+        $this->attributes['tpl_data'] = json_encode($value);
+    }
+
+    public function getTplDataAttribute()
+    {
+        return $this->attributes['tpl_data'] ?: '{}';
+    }
 }

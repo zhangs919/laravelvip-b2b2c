@@ -2,52 +2,57 @@
 
 {{--header_css--}}
 @section('header_css')
-    <link rel="stylesheet" href="/css/user.css"/>
-@stop
-
-{{--header_js--}}
-@section('header_js')
-
 @stop
 
 @section('content')
 
-    <script src="/js/jquery.rotate.min.js?v=20190121"></script>
-
-    <div class="fixed-header">
+    <header class="header-top-nav fixed-header">
         <div class="header">
             <div class="header-left">
-                <a class="sb-back" href="/user.html" title="返回"></a>
+                <a class="sb-back" href="javascript:history.back(-1);" title="返回">
+                    <i class="iconfont">&#xe606;</i>
+                </a>
             </div>
-            <div class="header-middle">收藏商品</div>
-
+            <div class="header-middle">收藏商品（{{ $goods_collect_count }}）</div>
             <div class="header-right">
-                <a class="goods_edit_btn text" href="javascript:void(0);">编辑</a>
+                <a class="goods-edit-btn text goods_edit_btn" href="javascript:void(0);">编辑</a>
             </div>
-
         </div>
-        <div class="tabmenu">
-            <ul>
-                <li class="cur">
-                    <a href="/user/collect/goods.html" class="SYZ_COLLECT_GOODS_COUNT">商品({{ $goods_collect_count }})</a>
-                </li>
-                <li>
-                    <a href="/user/collect/shop.html" class="SYZ_COLLECT_SHOP_COUNT">店铺({{ $shop_collect_count }})</a>
-                </li>
-
-            </ul>
-        </div>
-    </div>
+    </header>
     <div class="content-info"></div>
-
     <div class="shopcar cartbox">
         <a href="/cart.html">
             <span class="flow-cartnum SZY-CART-COUNT bg-color">0</span>
         </a>
     </div>
+    <script type="text/javascript">
+        //
+    </script>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
 
+    <!-- 积分消息 -->
+    <!-- 消息提醒 -->
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 第三方流量统计 -->
+    <div style="display: none;"></div>
+    <!-- 底部 _end-->
+    {{--引入版权信息--}}
+{{--    @include('frontend.web_mobile.modules.library.copy_right')--}}
 
-    <script type='text/javascript'>
+    <div style="height: 54px; line-height: 54px" class="handle-spacing"></div>
+    <script src="/assets/d2eace91/min/js/core.min.js"></script>
+    <script src="/js/app.frontend.mobile.min.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/address.js"></script>
+    <script src="/js/center.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.mobile.js"></script>
+    <script src="/js/jquery.rotate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
         $('.tabmenu ul li a').click(function() {
             $(this).parents('li').addClass('cur').siblings().removeClass('cur');
         });
@@ -63,25 +68,26 @@
                 }
             });
         })
-    </script>
+        //
+        $().ready(function () {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('7272') }}",
+                type: "add_point_set"
+            });
+        });
 
-    <script type="text/javascript">
-        $().ready(function() {
-        })
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
     </script>
-    <script src="/js/jquery.fly.min.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20190121"></script>
-
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
-    <!-- 第三方流量统计 -->
-    <div style="display: none;"></div>
-    <!-- 底部 _end-->
 
 @stop

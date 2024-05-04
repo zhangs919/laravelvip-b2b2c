@@ -1,9 +1,17 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
 @stop
 
 {{--content--}}
@@ -56,13 +64,13 @@
                 <option value="5">按图片名降序</option>
             </select>
             <span>
-			<input type="text" id="image_name" class="form-control form-control-sm w150"  placeholder="请输入图片名称" />
-			<a class="btn btn-primary btn-sm m-r-2 image-search">
-				<i class="fa fa-search"></i>
-				搜索
-			</a>
-		</span>
-            <div class="btn-group m-l-10 va-top" style="padding-top: 2px;">
+            <input type="text" id="image_name" class="form-control form-control-sm w150"  placeholder="请输入图片名称" />
+            <a class="btn btn-primary btn-sm m-r-2 image-search">
+                <i class="fa fa-search"></i>
+                搜索
+            </a>
+        </span>
+            <div class="btn-group m-l-10">
                 <a href="javascript:void(0);" class="btn btn-default btn-sm br-1 toggle-type active" data-type="0" title="大图模式">
                     <i class="fa fa-th-large m-r-0"></i>
                 </a>
@@ -100,34 +108,58 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+
+	<script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=1.2"></script>
+	<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+	<!-- AJAX上传+图片预览 -->
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180710"></script>
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180710"></script>
-    <script type="text/javascript">
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        $().ready(function() {
+            $("img").one("error", function() {
+                $(this).attr("src", "{{ get_image_url(sysconf('default_goods_image')) }}")
+            });
+        });
+        //
         var tablelist = null;
         $().ready(function() {
-
             // 缓载
             function lazyload() {
                 $(".lazy").each(function() {
                     var url = $(this).data("original");
-
                     if (url.indexOf("?") == -1) {
                         url = url + "?k=" + new Date().getTime();
                     } else {
                         url = url + "&k=" + new Date().getTime();
                     }
-
                     $(this).attr("src", url);
                 })
             }
-
             lazyload();
-
             tablelist = $("#table_list").tablelist({
                 dataCallback: function(data) {
                     data.dir_id = "{{ $dir_id }}";
@@ -139,31 +171,25 @@
                     lazyload();
                 }
             });
-
             // 按图片名称搜索
             $("body").on("click", ".image-search", function() {
                 tablelist.load();
             });
-
             $(".toggle-type").click(function() {
                 $(this).parents("div").find("a").removeClass("active");
                 $(this).addClass("active");
                 var type = $(this).data("type");
-
                 tablelist.load({
                     dir_id: "{{ $dir_id }}",
                     type: type
                 });
             });
-
             $(".check-all").click(function() {
                 $("#table_list").find(".checkbox").prop("checked", true);
             });
-
             $(".cancel-checked").click(function() {
                 $("#table_list").find(".checkbox").prop("checked", false);
             });
-
             function checkedValues() {
                 var ids = [];
                 $(".checkbox:checked").each(function() {
@@ -171,7 +197,6 @@
                 });
                 return ids;
             }
-
             // 上传图片
             $("#btn_upload_image").click(function() {
                 $.imageupload({
@@ -194,7 +219,6 @@
                     }
                 });
             });
-
             // 删除选择的图片
             $('body').on("click", ".delete-image", function() {
                 var id = $(this).data("id");
@@ -208,26 +232,26 @@
                     $.msg('请选择要删除的图片！');
                     return;
                 }
-
                 $.confirm('被删除的图片将被放入图片空间回收站，您可以在回收站彻底销毁图片或者还原。您确定要删除选择的图片吗？', function() {
                     //加载提示
                     $.loading.start();
                     $.post('delete', {
                         ids: img_ids,
                     }, function(result) {
-                        $.loading.stop();
                         if (result.code == 0) {
-                            $.msg(result.message);
-                            tablelist.load();
+                            $.msg(result.message, function(){
+                                tablelist.load();
+                            });
                         } else {
                             $.msg(result.message, {
                                 time: 5000
                             });
                         }
-                    }, 'json');
+                    }, 'json').always(function(){
+                        $.loading.stop();
+                    });
                 })
             });
-
             // 设为封面
             $('body').on("click", ".cover-image", function() {
                 var id = $(this).data("id");
@@ -239,13 +263,11 @@
                     $.msg('请选择要设为封面的图片！');
                     return;
                 }
-
                 //加载提示
                 $.loading.start();
                 $.post('cover', {
                     id: id,
                 }, function(result) {
-                    $.loading.stop();
                     if (result.code == 0) {
                         $.msg(result.message);
                     } else {
@@ -253,17 +275,14 @@
                             time: 5000
                         });
                     }
-                }, 'json');
-
+                }, 'json').always(function(){
+                    $.loading.stop();
+                });
             });
-
             // 移动图片
             $('body').on("click", ".move-image", function() {
-
                 var id = $(this).data("id");
-
                 var img_ids = [];
-
                 if (id) {
                     img_ids = [id];
                 } else {
@@ -271,12 +290,10 @@
                         img_ids.push($(this).val());
                     });
                 }
-
                 if (img_ids.length == 0) {
                     $.msg('请选择要移动的图片！');
                     return;
                 }
-
                 if ($.modal($(this))) {
                     $.modal($(this)).show();
                 } else {
@@ -294,12 +311,9 @@
                     });
                 }
             });
-
             // 移动图片
             $('body').on("click", ".edit-name", function() {
-
                 var id = $(this).data("id");
-
                 if ($.modal($(this))) {
                     $.modal($(this)).show();
                 } else {
@@ -319,13 +333,10 @@
                     });
                 }
             });
-
             // 移动图片
             $('body').on("click", ".make-image", function() {
                 var checkedValues = checkedValues();
-
             });
-
             // 替换图片
             $('body').on("click", ".replace-image", function() {
                 var id = $(this).data("id");
@@ -339,8 +350,9 @@
                     // @params result 返回的数据
                     callback: function(result) {
                         if (result.code == 0) {
-                            $.msg(result.message);
-                            tablelist.load();
+                            $.msg(result.message, function(){
+                                tablelist.load();
+                            });
                         } else {
                             $.msg(result.message, {
                                 time: 5000
@@ -349,13 +361,10 @@
                     }
                 });
             });
-
             // 排序
             $("#sortname").change(function() {
                 var sort = $(this).val();
-
                 var data = {};
-
                 switch (sort) {
                     case "1":
                         // 按上传时间从早到晚
@@ -400,7 +409,6 @@
                         };
                         break;
                 }
-
                 tablelist.load(data);
             });
         });

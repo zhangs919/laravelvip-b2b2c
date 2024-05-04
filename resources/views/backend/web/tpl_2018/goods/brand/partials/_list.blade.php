@@ -68,7 +68,7 @@
                 @endif
             </td>
             <td>
-                <a href="" target="_blank"></a>
+                <a href="{{ $v->site_url }}" target="_blank">{{ $v->site_url }}</a>
             </td>
             <!--
             <td  class="text-c"><span data-action="set-is-recommend?id={{ $v->brand_id }}" class="ico-switch" data-value='[0,1]' data-label='["\u7981\u6b62","\u5141\u8bb8"]' data-class='["fa fa-toggle-off","fa fa-toggle-on"]'><i class="fa fa-toggle-off"></i>禁止</span></td>

@@ -18,7 +18,7 @@
 {{--todo 多张图片 以|分隔--}}
 <input type="hidden" id="systemconfigmodel-default_goods_image" class="form-control"
        name="SystemConfigModel[default_goods_image]"
-       value="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif">
-       {{--value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_0.jpg|http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/idcard_demo_image_1.jpg|http://images.68mall.com/system/config/default_image/idcard_demo_image_2.jpg">--}}
+       value="{{ get_image_url(sysconf('default_goods_image')) }}">
+       {{--value="http://xxxx/demo/system/config/default_image/idcard_demo_image_0.jpg|http://xxxx/demo/system/config/default_image/idcard_demo_image_1.jpg|http://xxxx/system/config/default_image/idcard_demo_image_2.jpg">--}}
 
 <!-- 图片组 end -->

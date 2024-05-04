@@ -1,13 +1,14 @@
 <?php
 
 
-namespace app\Modules\Backend\Http\Controllers\Design;
+namespace App\Modules\Backend\Http\Controllers\Design;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
 use App\Repositories\NavCategoryRepository;
 use App\Repositories\SystemConfigRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class NavCategoryController extends Backend
 {
@@ -31,16 +32,16 @@ class NavCategoryController extends Backend
     protected $systemConfig;
 
     public function __construct(
-        NavCategoryRepository $navCategoryRepository,
-        CategoryRepository $categoryRepository,
-        SystemConfigRepository $systemConfigRepository)
+        NavCategoryRepository $navCategory
+        ,CategoryRepository $category
+        ,SystemConfigRepository $systemConfig
+    )
     {
         parent::__construct();
-//        setcookie('theme_style', "true"); // todo 设置theme_style 改变整体样式
 
-        $this->navCategory = $navCategoryRepository; // 分类导航
-        $this->category = $categoryRepository; // 商品分类
-        $this->systemConfig = $systemConfigRepository; // 系统配置
+        $this->navCategory = $navCategory; // 分类导航
+        $this->category = $category; // 商品分类
+        $this->systemConfig = $systemConfig; // 系统配置
     }
 
     public function lists(Request $request)
@@ -128,7 +129,7 @@ class NavCategoryController extends Backend
             $data = $request->get('data');
             $nav_json = json_encode($data);
             $name = implode('、', array_column($data, 'name'));
-            $nav_icon = array_first(array_column($data, 'icon'));
+            $nav_icon = Arr::first(array_column($data, 'icon'));
             $insert = [
                 'name' => $name,
                 'nav_page' => $nav_page,
@@ -203,7 +204,7 @@ class NavCategoryController extends Backend
             $data = $request->get('data');
             $nav_json = json_encode($data);
             $name = implode('、', array_column($data, 'name'));
-            $nav_icon = array_first(array_column($data, 'icon'));
+            $nav_icon = Arr::first(array_column($data, 'icon'));
             $update = [
                 'id' => $id,
                 'name' => $name,

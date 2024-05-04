@@ -1,14 +1,6 @@
 /**
  * AJAX后台、卖家中心公共组件
- * 
- * ============================================================================
- * 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。
- * ============================================================================
- * 
- * @author: niqingyang
- * @version 1.0
- * @date 2015-11-19
- * @link http://www.68ecshop.com
+ *
  */
 
 (function($) {
@@ -71,7 +63,7 @@
 							$(this).text(curr_text).attr('num', curr_num).siblings('.curr').text(this_text).attr('num', this_num);
 							$(".SZY-SEARCH-BOX-FORM").find('.searchtype').val(this_num);
 							$(".SZY-SEARCH-BOX-FORM").find('.search-type').css({
-								"height": 36,
+								"height": 35,
 								"overflow": "hidden"
 							});
 						});
@@ -143,7 +135,7 @@
 							}
 
 						}
-						
+
 					}
 				}, "json");
 			}
@@ -393,6 +385,12 @@
 							url: '/goods/validate.html',
 						},
 					});
+				} else if (result.code == 2) {
+					//未绑定手机号先去验证
+					$.confirm(result.message, function() {
+						$.go('/user/security/edit-mobile.html');
+					});
+					return false;
 				} else {
 					$.msg(result.message, {
 						time: 3000
@@ -702,7 +700,7 @@
 		},
 		/**
 		 * 根据规格串的数组获取SKU编号
-		 * 
+		 *
 		 * @params array spec_ids 规格串的数组
 		 * @params array sku_ids 以SKU规格串为Key，包含“sku_id”属性的数组
 		 */

@@ -25,6 +25,7 @@ namespace App\Repositories;
 
 use App\Models\Bonus;
 use App\Models\Goods;
+use App\Models\Shop;
 use App\Models\UserBonus;
 
 class BonusRepository
@@ -84,6 +85,67 @@ class BonusRepository
                     $list[$key]['is_self_shop'] = $item['bonus_data']['is_self_shop'];
                 }
                 $list[$key]['goods_ids'] = $item['bonus_data']['goods_ids'];
+
+            }
+        }
+
+        return [$list, $total];
+    }
+
+    public function getFrontendBonusList($condition = [], $user_id = 0)
+    {
+        // 列表
+        list($list, $total) = $this->getList($condition);
+        $list = $list->toArray();
+        if (!empty($list)) {
+            foreach ($list as $key=>$item) {
+
+                $bonusData = $item['bonus_data'];
+
+//                $list[$key]['user_bonus_count'] = '0'; // 用户已领取数量
+                $list[$key]['shop_name'] = Shop::where('shop_id', $item['shop_id'])->select(['shop_name'])->value('shop_name');
+                $list[$key]['start_time_format'] = format_time(strtotime($item['start_time']), 'Y-m-d');
+                $list[$key]['end_time_format'] = format_time(strtotime($item['end_time']), 'Y-m-d');
+
+                // 当前登录用户已领取
+                if (UserBonus::where([['bonus_id',$item['bonus_id']], ['user_id', $user_id]])->exists()) {
+                    $list[$key]['class'] = 'coupon-box-receive';
+                    $list[$key]['bonus_status'] = 1;
+                }
+
+
+                // 红包类型 默认0 1-主动领红包/到店送红包 2-收藏送红包 4-会员送红包 6-注册送红包 9-推荐送红包 10-积分兑换红包
+//                $list[$key]['bonus_type_name'] = format_bonus_type($item['bonus_type']);
+//                $list[$key]['min_goods_amount_format'] = '￥'.$item['min_goods_amount'];
+//                // 红包状态 0-正常 1-已抢完 2-已失效
+//                if (strtotime($item['end_time']) < time() && $item['bonus_type'] != 4) {/*不是4-会员送红包*/
+//                    // 已失效
+//                    $bonus_status = 2;
+//                    $bonus_status_format = '已失效';
+//                } elseif ($item['bonus_number'] == $item['receive_number'] && $item['bonus_type'] != 4) {/*不是4-会员送红包*/
+//                    // 已抢完
+//                    $bonus_status = 1;
+//                    $bonus_status_format = '已抢完';
+//                } else {
+//                    // 正常
+//                    $bonus_status = 0;
+//                    $bonus_status_format = '正常';
+//                }
+//                $list[$key]['bonus_status'] = $bonus_status;
+//                $list[$key]['bonus_status_format'] = $bonus_status_format;
+//                // 当前登录用户对于该红包的红包状态
+//                $list[$key]['user_bonus_status'] = 1;
+//
+//                $list[$key]['bonus_amount_format'] = '￥'.$item['bonus_amount'];
+
+                $list[$key]['act_status'] = 1;
+                $list[$key]['time_mode'] = @$bonusData['time_mode'];
+                $list[$key]['delay_days'] = @$bonusData['delay_days'];
+                $list[$key]['valid_days'] = @$bonusData['valid_days'];
+                $list[$key]['is_self_shop'] = @$bonusData['is_self_shop'];
+                $list[$key]['cat_ids'] = @$bonusData['cat_ids'];
+                $list[$key]['goods_ids'] = @$bonusData['goods_ids'];
+                $list[$key]['search_url'] = "/shop/{$item['shop_id']}.html";
 
             }
         }
@@ -154,4 +216,92 @@ class BonusRepository
         return $data;
     }
 
+    /**
+     * 获取下单页面用户红包列表
+     * todo 未完成
+     *
+     * @param int $goods_id
+     * @param int $user_id
+     * @return array
+     */
+    public function getCheckoutUserBonus($goods_id = 0,$user_id = 0)
+    {
+        $init_list = [
+            [
+                'user_bonus_id' => 0,
+                'bonus_name' => '不使用红包',
+                'bonus_limit' => '0',
+                'bonus_price' => '0',
+            ]
+        ];
+
+        //
+        $platform_bonus = [];
+        $shop_bonus = [];
+        if (empty($platform_bonus) && empty($shop_bonus)) {
+            return [];
+        }
+        $list = array_merge($init_list, $platform_bonus, $shop_bonus);
+
+        return $list;
+    }
+
+
+    public function bonusFilterData($params)
+    {
+        extract($params);
+
+        // 排序
+        $sorts = [];
+        $sort = isset($sort) ? $sort : 0;
+        $order = isset($order) ? $order : 0;
+        foreach (get_bonus_sort_array() as $v) {
+
+            if ($sort == $v['value'] && $order == 'ASC') {
+                $v['order'] = $order;
+                $v['selected'] = 1;
+                $v['url'] = build_bonus_uri($params, ['sort'=>$v['value'],'order'=>'DESC']);
+            } elseif ($sort == $v['value'] && $order == 'DESC') {
+                $v['order'] = $order;
+                $v['selected'] = 1;
+                $v['url'] = build_bonus_uri($params, ['sort'=>$v['value'],'order'=>'ASC']);
+
+            } else {
+                $v['selected'] = 0;
+                $v['url'] = build_bonus_uri($params, ['sort'=>$v['value'],'order'=>$v['order']]);
+            }
+
+            // 综合排序
+            if ($sort == 0 && $v['value'] == 0) {
+                $v['order'] = 0;
+                $v['selected'] = 1;
+            }
+
+            $sorts[] = $v;
+        }
+
+        // 分页
+        $page = [
+            'name' => '分页',
+            'param' => 'go',
+            'value' => isset($go) ? $go : '1',
+            'url' => build_bonus_uri($params,['go'=>'{0}']),
+            'items' => null // todo
+        ];
+
+        // 关键词搜索
+        $keyword = [
+            'name' => '关键词',
+            'param' => 'keyword',
+            'value' => !empty($keyword) ? $keyword : null,
+            'url' => build_bonus_uri($params, ['keyword'=>'{0}'])
+        ];
+
+        return [
+            'sorts' => $sorts,
+            'page' => $page, // 顶部简洁分页（只有上一页/下一页）
+            'keyword' => $keyword,
+            'url' => '/bonus-list.html'
+        ];
+    }
 }

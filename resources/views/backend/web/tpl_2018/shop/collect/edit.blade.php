@@ -17,7 +17,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="CollectModel" class="form-horizontal" name="CollectModel" action="/shop/collect/edit?id={{ $info->shop_id }}" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
 
             <!-- 采集店铺 -->
             <div class="simple-form-field">

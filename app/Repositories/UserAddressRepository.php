@@ -117,7 +117,7 @@ class UserAddressRepository
                         } else {
                             $selected = 0;
                         }
-                    } else {
+                    } else { // 取默认地址
                         $selected = $item['is_default'];
                     }
                     $item['selected'] = $selected;

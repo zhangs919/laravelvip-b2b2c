@@ -22,7 +22,7 @@
 
         <h5>
             (&nbsp;共
-            <span data-total-record=true></span>
+            <span data-total-record="true" class="pagination-total-record"></span>
             条记录&nbsp;)
         </h5>
 
@@ -61,32 +61,62 @@
                 </tr>
                 </thead>
                 <tbody>
+
+                @foreach($list as $key=>$item)
                 <tr>
                     <td class="tcheck">
-                        <input type="checkbox" class="checkbox" name="goods_ids[]" value="577454871963" checked="">
+                        <input type="checkbox" class="checkbox" name="goods_ids[]" value="{{ $item['third_goods_id'] }}" checked="">
                     </td>
-                    <td class="text-c">1</td>
-                    <td>577454871963</td>
+                    <td class="text-c">{{ $key+1 }}</td>
+                    <td>{{ $item['third_goods_id'] }}</td>
                     <td>
                         <div class="goodsPicBox pull-left m-r-10">
-                            <a href="javascript:;" target="_blank">
+                            <a href="javascript:;" >
                                 <!-- 图片缩略图 -->
-                                <img src="http://gd1.alicdn.com/imgextra/i4/57709795/O1CN012ME9vE6SGJOIIwt_!!57709795.jpg" class="goods-thumb">
+                                <img src="{{ $item['images'] }}" class="goods-thumb">
                             </a>
                         </div>
                         <div class="ng-binding goods-message w200">
                             <div class="name">
-                                <a href="javascript:;" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="" data-original-title="GBOY秋冬季港风chic加绒卫衣男连帽衫潮牌情侣加厚ins超火的外套">GBOY秋冬季港风chic加绒卫衣男连帽衫潮牌情侣加厚ins超火的外套</a>
+                                <a href="javascript:;" data-toggle="tooltip" data-placement="auto bottom" title="" data-original-title="{{ $item['goods_name'] }}">{{ $item['goods_name'] }}</a>
                             </div>
 
                         </div>
                     </td>
-                    <td class="text-c">108.00</td>
-                    <td class="text-c">0</td>
+                    <td class="text-c">{{ $item['goods_price'] }}</td>
+                    <td class="text-c">{{ $item['tm_count'] }}</td>
                     <!--<td class="handle">
                         <a href="javascript:;" class="del">删除</a>
                     </td>-->
                 </tr>
+                @endforeach
+
+                {{--<tr>--}}
+                    {{--<td class="tcheck">--}}
+                        {{--<input type="checkbox" class="checkbox" name="goods_ids[]" value="577454871963" checked="">--}}
+                    {{--</td>--}}
+                    {{--<td class="text-c">1</td>--}}
+                    {{--<td>577454871963</td>--}}
+                    {{--<td>--}}
+                        {{--<div class="goodsPicBox pull-left m-r-10">--}}
+                            {{--<a href="javascript:;" target="_blank">--}}
+                                {{--<!-- 图片缩略图 -->--}}
+                                {{--<img src="http://gd1.alicdn.com/imgextra/i4/57709795/O1CN012ME9vE6SGJOIIwt_!!57709795.jpg" class="goods-thumb">--}}
+                            {{--</a>--}}
+                        {{--</div>--}}
+                        {{--<div class="ng-binding goods-message w200">--}}
+                            {{--<div class="name">--}}
+                                {{--<a href="javascript:;" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="" data-original-title="GBOY秋冬季港风chic加绒卫衣男连帽衫潮牌情侣加厚ins超火的外套">GBOY秋冬季港风chic加绒卫衣男连帽衫潮牌情侣加厚ins超火的外套</a>--}}
+                            {{--</div>--}}
+
+                        {{--</div>--}}
+                    {{--</td>--}}
+                    {{--<td class="text-c">108.00</td>--}}
+                    {{--<td class="text-c">0</td>--}}
+                    {{--<!--<td class="handle">--}}
+                        {{--<a href="javascript:;" class="del">删除</a>--}}
+                    {{--</td>-->--}}
+                {{--</tr>--}}
 
                 </tbody>
                 <tfoot>

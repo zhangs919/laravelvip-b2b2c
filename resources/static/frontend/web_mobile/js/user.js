@@ -66,6 +66,34 @@ $(function() {
 			$(this).html("编辑");
 		}
 	});
+	// ------- 收藏二手物品 编辑/完成 ------- //
+	// 编辑状态的class标识
+	var editClass = 'is_edit_status';
+	$('body').on('click', '.collect-edit-btn', function() {
+		var $self = $(this);
+		if (!$self.hasClass(editClass)) {
+			$self.addClass(editClass);
+			// 底部box
+			$(".colect-used-footer").show();
+			// collect-used-edit
+			$('.order-list-goods').addClass('collect-used-edit');
+			// 同意 checkbox
+			$('.agree-checkbox').show();
+			$('.order-list-goods').find('a').css("pointer-events", "none");
+			$self.text('完成');
+		} else {
+			$self.removeClass(editClass);
+			// 底部box
+			$(".colect-used-footer").hide();
+			// collect-used-edit
+			$('.order-list-goods').removeClass('collect-used-edit');
+			// 同意 checkbox
+			$('.agree-checkbox').hide();
+			$('.order-list-goods').find('a').removeAttr("style");
+			$self.text('编辑');
+		}
+	});
+
 	$('body').on('click', '.collect-shop-box li', function() {
 		var $num = parseInt($('.shop-seleted').find('em').text());
 		if ($(this).find('.agree-checkbox').hasClass('checked')) {
@@ -93,10 +121,7 @@ function select_coupon_category() {
 	$("#recharge_category_coupon").animate({
 		height: '70%'
 	}, [10000]);
-	var total = 0,
-		h = $(window).height(),
-		top = $('.discount-coupon h2').height() || 0,
-		con = $('.coupon-list');
+	var total = 0, h = $(window).height(), top = $('.discount-coupon h2').height() || 0, con = $('.coupon-list');
 	total = 0.7 * h;
 	con.height(total - top + 'px');
 	$(".mask-div").show();
@@ -121,10 +146,7 @@ function select_coupon_goods() {
 	$("#recharge_goods_coupon").animate({
 		height: '70%'
 	}, [10000]);
-	var total = 0,
-		h = $(window).height(),
-		top = $('.discount-coupon h2').height() || 0,
-		con = $('.coupon-list');
+	var total = 0, h = $(window).height(), top = $('.discount-coupon h2').height() || 0, con = $('.coupon-list');
 	total = 0.7 * h;
 	con.height(total - top + 'px');
 	$(".mask-div").show();

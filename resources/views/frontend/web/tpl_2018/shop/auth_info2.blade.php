@@ -66,7 +66,7 @@
 
         <!--企业信息认证-->
         <form id="ShopFieldValueModel" class="form-horizontal" name="ShopFieldValueModel" action="/shop/apply/auth-info.html?is_supply={{ $is_supply }}&amp;shop_type={{ $shop_type }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <div class="item-box">
                 <div class="title">
                     <span>企业信息</span>

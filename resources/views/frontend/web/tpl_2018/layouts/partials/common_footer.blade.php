@@ -128,7 +128,7 @@
 
                     @if(!empty($footer_navigation))
                     @foreach($footer_navigation as $k=>$v)
-                    <a href="{{ $v->nav_link ?? 'javascript:void(0)'}}" target="@if($v->new_open) _blank @else _self @endif">{{ $v->nav_name }}</a>
+                    <a href="{{ $v['nav_link'] ?? 'javascript:void(0)'}}" target="@if($v['new_open']) _blank @else _self @endif">{{ $v['nav_name'] }}</a>
 
                     @if((count($footer_navigation)-($k+1)) != 0)
                     <em>|</em>

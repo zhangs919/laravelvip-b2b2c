@@ -135,6 +135,37 @@ $(function() {
 			});
 		})
 	});
+	
+	// 清空失效商品
+	$("body").on('click', '.del-invalid', function() {
+		var cart_ids = [];
+		
+		$("#cart_list").find(".SZY-INVALID-GOODS").each(function() {
+			cart_ids.push($(this).data('cart-id'));
+		});
+
+		if (cart_ids.length == 0) {
+			$.msg("没有发现任何失效的商品！");
+			return;
+		}
+
+		cart_ids = cart_ids.join(',');
+
+		$.confirm("您确定要清空失效商品吗?", function() {
+			$.cart.del(cart_ids, function(result) {
+				if (result.code == 0) {
+					$(".content").replaceWith(result.data);
+					// 重新初始化
+					init();
+					//if (goods_id) {
+					//	$('.whole-edit-' + goods_id).parents('.td-item').siblings('.whole-info').addClass('whole-info-select');
+					//	$('.whole-edit-' + goods_id).html('<i></i>退出');
+					//	$('.whole-edit-' + goods_id).data('status', 0);
+					//}
+				}
+			});
+		})
+	});
 
 	$("body").on('click', '.whole-del', function() {
 		var cart_ids = $(this).attr('data-cart-id');
@@ -212,21 +243,29 @@ $(function() {
 				var number = value;
 				var max = this.max;
 				$.loading.start();
-				$.cart.changeNumber(sku_id, number,cart_id, function(result) {
+				$.cart.changeNumber(sku_id, number, cart_id, function(result) {
 					if (result.code == 0) {
 						$(".content").replaceWith(result.data);
 						// 重新初始化
 						init();
 						$(element).focus();
 						$.loading.stop();
+					} else if (result.code == 95) {
+						// 限购商品
+						$(element).val(result.data.max);
 					} else {
 						$(element).val(goods_number);
 						$.loading.stop();
 					}
 				});
+			},
+			max_callback: function() {
+				$.msg("最多只能购买" + this.max + "件");
+			},
+			min_callback: function() {
+				$.msg("商品数量必须大于" + (this.min - 1));
 			}
 		});
-		// select();
 	}
 
 	// 领取红包
@@ -290,10 +329,50 @@ function submit() {
 			}, function() {
 				$.go('/cart.html');
 			});
-		} else {
+		}else if(result.code == 103){
+			//实名认证
+			$.msg(result.message, {
+				time: 3000
+			}, function() {
+				$.go('/user/profile.html');
+			});
+		}else {
 			$.msg(result.message, {
 				time: 5000
 			});
 		}
 	}, "json");
 }
+
+// 结算按钮行随屏幕滚动悬浮
+var request = null;
+var b = 0;
+var c = 0;
+if ($(".cart-foot").size() > 0) {
+	// 结算页面提交按钮滚动悬浮效果
+	b = $(".cart-foot").offset().top;
+	c = $(".cart-foot").outerHeight();
+	$(window).scroll(function(event) {
+		resetSubmitPosition(b, c);
+	});
+}
+function resetSubmitPosition(bb, cc) {
+	if ($(".cart-foot").size() > 0) {
+		if (bb == undefined || cc == undefined) {
+			b = $(".cart-foot").offset().top;
+			c = $(".cart-foot").outerHeight();
+		} else {
+			b = bb;
+			c = cc;
+		}
+		var d = $(window).height();
+		var e = $(window).scrollTop();
+		var f = $('.site-footer').height();
+		b - d - e + c - 10 > 0 ? ($(".cart-foot").addClass("bottom")) : ($(".cart-foot").removeClass("bottom"));
+	}
+}
+
+$(function() {
+	// 活动轮播切换
+
+})

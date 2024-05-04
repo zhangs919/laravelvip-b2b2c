@@ -13,6 +13,12 @@ $(function() {
 	if (typeof (topic_id) == 'undefined') {
 		topic_id = 0;
 	}
+	if (typeof (goods_tpl_id) == 'undefined') {
+		goods_tpl_id = 0;
+	}
+	if (typeof (comstore_group_id) == 'undefined') {
+		comstore_group_id = 0;
+	}
 	/* -------------------- 主区域拖拽事件start ---------------------- */
 
 	/**
@@ -35,7 +41,10 @@ $(function() {
 						code: ui.draggable['context']['dataset']['code'],
 						sort: $(".drop-item").size() + 1,
 						page: page,
-						topic_id: topic_id
+						topic_id: topic_id,
+						goods_tpl_id: goods_tpl_id,
+						position: $(ui.draggable[0]).parents('.SZY-TEMPLATE-MAIN-CONTAINER').data('position'),
+						comstore_group_id: comstore_group_id
 					},
 					beforeSend: function() {
 						$.loading.start();
@@ -115,7 +124,8 @@ $(function() {
 			dataType: 'json',
 			data: {
 				page: page,
-				topic_id: topic_id
+				topic_id: topic_id,
+                		comstore_group_id: comstore_group_id
 			},
 			success: function(result) {
 				if (result.code == 0 && result.url != null) {
@@ -129,6 +139,44 @@ $(function() {
 						});
 					}
 
+				} else {
+					$.msg(result.message);
+				}
+			}
+		}).always(function() {
+			$.loading.stop();
+		});
+	});
+
+	/**
+	 * 预览
+	 */
+	$('.SZY-TPL-PREVIEW').click(function() {
+		var target = $(this);
+		$.loading.start();
+		$.ajax({
+			type: 'get',
+			// async: false, // 同步请求
+			url: 'preview',
+			dataType: 'json',
+			data: {
+				page: page,
+				topic_id: topic_id,
+				is_preview: 1,
+				comstore_group_id: comstore_group_id
+			},
+			success: function(result) {
+				if (result.code == 0) {
+					if (result.qrcode) {
+						$.loading.start();
+						$.open({
+							title: '扫码预览',
+							btn: false,
+							content: '<div class="success-box"><img src="' + result.qrcode + '"></div>'
+						});
+					} else {
+						window.open(result.url);
+					}
 				} else {
 					$.msg(result.message);
 				}
@@ -161,6 +209,28 @@ $(function() {
 	});
 
 	/**
+	 * 整站改色模块
+	 */
+	$('.SZY-SHOP-STYLE').click(function() {
+		var group = $(this).data('group');
+		$.loading.start();
+		modal = $.modal($(this));
+		if (modal) {
+			modal.show();
+			$.loading.stop();
+		} else {
+			modal = $.modal({
+				title: '自定义风格',
+				trigger: $(this),
+				ajax: {
+					url: '/shop/config/index?group=' + group,
+				},
+
+			});
+		}
+	});
+
+	/**
 	 * 模板备份
 	 */
 	$('.SZY-TPL-BACKUP').click(function() {
@@ -178,6 +248,7 @@ $(function() {
 					data: {
 						action: 'add',
 						output: 1,
+						comstore_group_id: comstore_group_id
 					}
 				},
 
@@ -204,7 +275,8 @@ $(function() {
 						action: 'list',
 						output: 1,
 						design_page: page,
-						search_id: $(this).data('id')
+						search_id: $(this).data('id'),
+						comstore_group_id: comstore_group_id
 					}
 				},
 
@@ -332,6 +404,7 @@ function savesortHelper() {
 		var tpl = {};
 		tpl.uid = $(v).data('id');
 		tpl.sort = i + 1;
+		tpl.position = $(v).data('position');
 		if (tpl.uid && tpl.sort) {
 			arr.push(tpl);
 		}
@@ -343,11 +416,11 @@ function savesortHelper() {
 			tpl: arr,
 		},
 		success: function(result) {
-			var $item = $('<div></div>');
+			var item = $('<div></div>');
 			$.each(arr, function(i, v) {
-				$item.append($('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + v.uid));
+				item.append($('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + v.uid));
 			});
-			$('.SZY-TEMPLATE-MAIN-CONTAINER').html($item);
+			$('.SZY-TEMPLATE-MAIN-CONTAINER').html(item);
 		}
 	});
 }
@@ -452,6 +525,7 @@ function getHelper(id) {
 		var uid = $(this).attr('id');
 		var selected_class = '';
 		var tpl_type = $(this).data("tpl_type");
+		var position = $(this).parents('.SZY-TEMPLATE-MAIN-CONTAINER').data('position');
 		var is_valid_item = '';
 		var is_valid_class = '';
 		if ($(this).data('is_valid') > 0) {
@@ -461,7 +535,7 @@ function getHelper(id) {
 			is_valid_item = "<i class='fa fa-times-circle-o'></i>隐藏";
 			is_valid_class = 'no-open';
 		}
-		var element = $($.parseHTML("<tr " + cardinal + " data-id='" + uid + "'><td><input class='checkBox table-list-checkbox' value='" + uid + "' type='checkbox'><span class='columnParent'>" + tpl_type + "</span><span class='columnNameText' id='columnNameText_" + uid + "'>" + title + "</span></td>" + "<td><span class='ico-switch "+ is_valid_class +"' onclick=setIsValidTpls('" + uid + "')> " + is_valid_item + "</span></td>" + "<td class='handle'><a href=javascript:delTpls('" + uid + "') title='删除'><i class='fa fa-trash-o'></i></a></a></a><a class='handle' href=javascript:setSortTpls('" + uid + "','up') title='上移'><i class='fa fa-arrow-circle-o-up'></i></a><a class='handle' href=javascript:setSortTpls('" + uid + "','down') title='下移'><i class='fa fa-arrow-circle-o-down'></i></a></td></tr>"));
+		var element = $($.parseHTML("<tr " + cardinal + " data-id='" + uid + "' data-position='" + position + "'><td><input class='checkBox table-list-checkbox' value='" + uid + "' type='checkbox'><span class='columnParent'>" + tpl_type + "</span><span class='columnNameText' id='columnNameText_" + uid + "'>" + title + "</span></td>" + "<td><span class='ico-switch " + is_valid_class + "' onclick=setIsValidTpls('" + uid + "')> " + is_valid_item + "</span></td>" + "<td class='handle'><a href=javascript:delTpls('" + uid + "') title='删除'><i class='fa fa-trash-o'></i></a></a></a><a class='handle' href=javascript:setSortTpls('" + uid + "','up') title='上移'><i class='fa fa-arrow-circle-o-up'></i></a><a class='handle' href=javascript:setSortTpls('" + uid + "','down') title='下移'><i class='fa fa-arrow-circle-o-down'></i></a></td></tr>"));
 		if (id != '' && id == uid) {
 			$(element).find('.columnNameText').addClass('selected');
 		}
@@ -487,14 +561,16 @@ function getHelper(id) {
 		count++;
 	});
 
-	$("#mobile_helper").find('tbody').sortable({
-		revert: true,
-		tolerance: 'intersect',
-		opacity: 0.6,
-		out: function(event, ui) {
-			savesortHelper();
-		}
-	});
+	if (page != 'm_goods') {
+		$("#mobile_helper").find('tbody').sortable({
+			revert: true,
+			tolerance: 'intersect',
+			opacity: 0.6,
+			out: function(event, ui) {
+				savesortHelper();
+			}
+		});
+	}
 
 	// $("#helper_tool_nav").find(".count").html(count);
 }
@@ -524,14 +600,13 @@ function refreshTpl(page, uid) {
 		data: {
 			page: page,
 			uid: uid,
+			topic_id: topic_id,
+			goods_tpl_id: goods_tpl_id
 		},
 		beforeSend: function() {
 			// $.loading.start();
 		},
 		success: function(tpls) {
-			if (uid == undefined || uid == '') {
-				$('.SZY-TEMPLATE-MAIN-CONTAINER').html('');
-			}
 			$.each(tpls, function(index, value) {
 				var $el = $(value.file);
 				var is_valid_class = '';
@@ -544,44 +619,26 @@ function refreshTpl(page, uid) {
 					is_valid_class = 'fa fa-times-circle-o';
 					is_eye_valid_class = 'show-btn';
 				}
-				if (value.type == '{NAV_CAT_TPL}') {
-					$el.append($('<div class="item_type">' + value.tpl_name + '</div>'));
-					var $handle = $('<div class="operateEdit"></div>');
+		
+				$el.append($('<div class="item_type">' + value.tpl_name + '</div>'));
+				var $handle = $('<div class="operateEdit"></div>');
 
-					$handle.append($('<a class="upMove-btn" href="javascript:;" title="上移"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>'));
-					$handle.append($('<a class="downMove-btn" href="javascript:;" title="下移"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>'));
-					$handle.append($('<a class="hide-btn" href="javascript:;" title="隐藏"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>隐藏</div></a>'));
-					$handle.append($('<a class="deletes-btn" href="javascript:;" title="删除"><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>'));
-					$el.append($handle);
-					if (uid == undefined || uid == '') {
-						$('.SZY-TEMPLATE-MAIN-CONTAINER').append($el);
-					} else {
-						$('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + value.uid).replaceWith($el);
-					}
-				} else {
-					$el.append($('<div class="item_type">' + value.tpl_name + '</div>'));
-					var $handle = $('<div class="operateEdit"></div>');
+				$handle.append($('<a class="decor-btn upMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>').click(function() {
+					setSortTpls(value.uid, 'up');
+				}));
+				$handle.append($('<a class="decor-btn downMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>').click(function() {
+					setSortTpls(value.uid, 'down');
+				}));
 
-					$handle.append($('<a class="decor-btn upMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>').click(function() {
-						setSortTpls(value.uid, 'up');
-					}));
-					$handle.append($('<a class="decor-btn downMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>').click(function() {
-						setSortTpls(value.uid, 'down');
-					}));
-
-					$handle.append($('<a class="decor-btn ' + is_eye_valid_class + '"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + value.format_is_valid + '</div></a>').click(function() {
-						setIsValidTpls(value.uid);
-					}));
-					$handle.append($('<a class="decor-btn deletes-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>').click(function() {
-						delTpls(value.uid);
-					}));
-					$el.append($handle);
-					if (uid == undefined || uid == '') {
-						$('.SZY-TEMPLATE-MAIN-CONTAINER').append($el);
-					} else {
-						$('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + value.uid).replaceWith($el);
-					}
-				}
+				$handle.append($('<a class="decor-btn ' + is_eye_valid_class + '"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + value.format_is_valid + '</div></a>').click(function() {
+					setIsValidTpls(value.uid);
+				}));
+				$handle.append($('<a class="decor-btn deletes-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>').click(function() {
+					delTpls(value.uid);
+				}));
+				$el.append($handle);
+				
+				$('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + value.uid).replaceWith($el);
 			});
 			// 图片缓载
 			$.imgloading.loading();
@@ -618,4 +675,41 @@ function ajaxRender(page, tpl, container) {
 
 		}
 	});
+}
+// 公告版式一
+function comments_scroll(id) {
+	var liLen = $(id).find('.hot ul li').length;
+	var num3 = 0;
+	$(id + ' .hot').find('ul').append($(id + ' .hot ul').html());
+	function autoplay() {
+		if (num3 > liLen) {
+			num3 = 1;
+			$(id + ' .hot').find('ul').css('top', 0);
+		}
+		$(id + ' .hot').find('ul').stop().animate({
+			'top': -60 * num3
+		}, 500);
+		num3++;
+	}
+	var mytime = setInterval(autoplay, 5000);
+}
+
+// 公告版式二
+function notice_scroll(id) {
+	var totalHeight = $(id + ' .shop-notice-info').height();
+	var top = 0;
+	var lineHeight = 30;
+	var mytime;
+	$(id + ' .shop-notice-info p').eq(0).clone().appendTo('.shop-notice-info');
+	function marquee() {
+		if (top >= totalHeight + lineHeight) {
+			top = 0;
+			$(id + ' .shop-notice-info').css('top', 0);
+		}
+		$(id + ' .shop-notice-info').stop().animate({
+			'top': -top
+		}, 600);
+		top = top + lineHeight;
+	}
+	mytime = setInterval(marquee, 3000);
 }

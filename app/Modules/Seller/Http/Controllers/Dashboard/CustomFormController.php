@@ -27,7 +27,6 @@ use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\CustomFormRepository;
 use App\Repositories\CustomFormTemplateRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 /**
  *
@@ -46,12 +45,15 @@ class CustomFormController extends Seller
     protected $customForm;
     protected $customFormTemplate;
 
-    public function __construct()
+    public function __construct(
+        CustomFormRepository $customForm
+        ,CustomFormTemplateRepository $customFormTemplate
+    )
     {
         parent::__construct();
 
-        $this->customForm = new CustomFormRepository();
-        $this->customFormTemplate = new CustomFormTemplateRepository();
+        $this->customForm = $customForm;
+        $this->customFormTemplate = $customFormTemplate;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }

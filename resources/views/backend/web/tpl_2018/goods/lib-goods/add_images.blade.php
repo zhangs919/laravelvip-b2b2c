@@ -17,6 +17,7 @@
     <div class="table-content">
         <!--步骤-->
 
+        @if($is_publish)
         <ul class="add-goods-step">
             <li id="step_1">
                 <i class="fa fa-list-alt step"></i>
@@ -47,6 +48,7 @@
                 $("#step_3").addClass("current");
             });
         </script>
+        @endif
 
         <!-- 温馨提示 -->
         <div class="content">
@@ -54,241 +56,43 @@
             <div class="goods-info-three">
                 <div class="col-sm-9">
 
-                    <div class="goodspic-list image-list">
-                        <div class="title">
-                            <h3>规格：无</h3>
+                    @foreach($spec_list as $v)
+                        <div class="goodspic-list image-list">
+                            <div class="title">
+                                <h3>{{ $spec_name }}：{{ $v['attr_value'] }}</h3>
+                            </div>
+                            <!-- 容器 -->
+                            <div id="goods_images_container_{{ $v['spec_id'] }}" class="goods-images-container" data-spec_id="{{ $v['spec_id'] }}">
+                                <ul class="image-group">
+                                    <li class="image-group-button" data-label-index="0" title="点击并选择上传的图片">
+                                        <div class="image-group-bg"></div>
+                                    </li>
+                                    <li class="image-group-button" data-label-index="1" title="点击并选择上传的图片">
+                                        <div class="image-group-bg"></div>
+                                    </li>
+                                    <li class="image-group-button" data-label-index="2" title="点击并选择上传的图片">
+                                        <div class="image-group-bg"></div>
+                                    </li>
+                                    <li class="image-group-button" data-label-index="3" title="点击并选择上传的图片">
+                                        <div class="image-group-bg"></div>
+                                    </li>
+                                    <li class="image-group-button" data-label-index="4" title="点击并选择上传的图片">
+                                        <div class="image-group-bg"></div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        <ul class="goods-pic-list">
-                            <!-- 遍历图片列表 -->
+                    @endforeach
 
-                            <li class="goodspic-upload image-item">
-                                <div class="upload-thumb">
+                    <div class="goods-next p-b-30 text-c p-l-0">
 
-                                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif">
+                        @if(!$is_publish)
+                            <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary btn-lg" />
+                        @else
+                            <input type="button" id="btn_submit" value="下一步，确认商品发布" class="btn btn-primary" />
+                    @endif
 
-                                    <!-- 第一个为默认图片 -->
-                                    <div class="show-default selected">
-                                        <p class="set-default">
-                                            <i class="fa fa-check-circle-o"></i>
-                                            默认主图
-                                        </p>
-                                        <a href="javascript:void(0)" class="del del-image" title="移除">X</a>
-                                    </div>
-                                </div>
-                                <div class="upload-info">
-                                    <div class="show-sort">
-                                        排序：
-                                        <input type="text" name="goods_images[default][0][sort]" class="text image-sort" size="1" value="0" maxlength="1">
-                                    </div>
-                                    <div class="upload-btn">
-                                        <a href="javascript:void(0);">
-											<span class="image-upload">
-												<input type="hidden" name="goods_images[default][0][is_default]" value="1" class="image-default">
-												<input type="hidden" name="goods_images[default][0][path]" value="" class="image-path">
-											</span>
-                                            <p>
-                                                <i class="fa fa-upload"></i>
-                                                上传
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="goodspic-upload image-item">
-                                <div class="upload-thumb">
-
-                                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif">
-
-                                    <!-- 第一个为默认图片 -->
-                                    <div class="show-default ">
-                                        <p class="set-default">
-                                            <i class="fa fa-check-circle-o"></i>
-                                            默认主图
-                                        </p>
-                                        <a href="javascript:void(0)" class="del del-image" title="移除">X</a>
-                                    </div>
-                                </div>
-                                <div class="upload-info">
-                                    <div class="show-sort">
-                                        排序：
-                                        <input type="text" name="goods_images[default][1][sort]" class="text image-sort" size="1" value="0" maxlength="1">
-                                    </div>
-                                    <div class="upload-btn">
-                                        <a href="javascript:void(0);">
-											<span class="image-upload">
-												<input type="hidden" name="goods_images[default][1][is_default]" value="0" class="image-default">
-												<input type="hidden" name="goods_images[default][1][path]" value="" class="image-path">
-											</span>
-                                            <p>
-                                                <i class="fa fa-upload"></i>
-                                                上传
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="goodspic-upload image-item">
-                                <div class="upload-thumb">
-
-                                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif">
-
-                                    <!-- 第一个为默认图片 -->
-                                    <div class="show-default ">
-                                        <p class="set-default">
-                                            <i class="fa fa-check-circle-o"></i>
-                                            默认主图
-                                        </p>
-                                        <a href="javascript:void(0)" class="del del-image" title="移除">X</a>
-                                    </div>
-                                </div>
-                                <div class="upload-info">
-                                    <div class="show-sort">
-                                        排序：
-                                        <input type="text" name="goods_images[default][2][sort]" class="text image-sort" size="1" value="0" maxlength="1">
-                                    </div>
-                                    <div class="upload-btn">
-                                        <a href="javascript:void(0);">
-											<span class="image-upload">
-												<input type="hidden" name="goods_images[default][2][is_default]" value="0" class="image-default">
-												<input type="hidden" name="goods_images[default][2][path]" value="" class="image-path">
-											</span>
-                                            <p>
-                                                <i class="fa fa-upload"></i>
-                                                上传
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="goodspic-upload image-item">
-                                <div class="upload-thumb">
-
-                                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif">
-
-                                    <!-- 第一个为默认图片 -->
-                                    <div class="show-default ">
-                                        <p class="set-default">
-                                            <i class="fa fa-check-circle-o"></i>
-                                            默认主图
-                                        </p>
-                                        <a href="javascript:void(0)" class="del del-image" title="移除">X</a>
-                                    </div>
-                                </div>
-                                <div class="upload-info">
-                                    <div class="show-sort">
-                                        排序：
-                                        <input type="text" name="goods_images[default][3][sort]" class="text image-sort" size="1" value="0" maxlength="1">
-                                    </div>
-                                    <div class="upload-btn">
-                                        <a href="javascript:void(0);">
-											<span class="image-upload">
-												<input type="hidden" name="goods_images[default][3][is_default]" value="0" class="image-default">
-												<input type="hidden" name="goods_images[default][3][path]" value="" class="image-path">
-											</span>
-                                            <p>
-                                                <i class="fa fa-upload"></i>
-                                                上传
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="goodspic-upload image-item">
-                                <div class="upload-thumb">
-
-                                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif">
-
-                                    <!-- 第一个为默认图片 -->
-                                    <div class="show-default ">
-                                        <p class="set-default">
-                                            <i class="fa fa-check-circle-o"></i>
-                                            默认主图
-                                        </p>
-                                        <a href="javascript:void(0)" class="del del-image" title="移除">X</a>
-                                    </div>
-                                </div>
-                                <div class="upload-info">
-                                    <div class="show-sort">
-                                        排序：
-                                        <input type="text" name="goods_images[default][4][sort]" class="text image-sort" size="1" value="0" maxlength="1">
-                                    </div>
-                                    <div class="upload-btn">
-                                        <a href="javascript:void(0);">
-											<span class="image-upload">
-												<input type="hidden" name="goods_images[default][4][is_default]" value="0" class="image-default">
-												<input type="hidden" name="goods_images[default][4][path]" value="" class="image-path">
-											</span>
-                                            <p>
-                                                <i class="fa fa-upload"></i>
-                                                上传
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-
-                        </ul>
-                        <!--新要更换上传图片
-                      <ul class="goods-pic-list-update">
-                              <li>
-                                  <div class="images-thumb">
-                                  <span title="删除">删除图片</span>
-                                  <a href="/images/ceshi/1.jpg" class="highslide" onclick="return hs.expand(this)">
-                                      <img src="/images/ceshi/1.jpg" />
-                                  </a>
-                                  </div>
-                              </li>
-                              <li>
-                                  <div class="images-thumb">
-                                  <span title="删除">删除图片</span>
-                                  <a href="/images/ceshi/1.jpg" class="highslide" onclick="return hs.expand(this)">
-                                      <img src="/images/ceshi/1.jpg" />
-                                  </a>
-                                  </div>
-                              </li>
-                              <li>
-                                  <div class="images-thumb">
-                                  <span title="删除">删除图片</span>
-                                  <a href="/images/ceshi/1.jpg" class="highslide" onclick="return hs.expand(this)">
-                                      <img src="/images/ceshi/1.jpg" />
-                                  </a>
-                                  </div>
-                              </li>
-                              <li>
-                                  <div class="images-thumb">
-                                  <span title="删除">删除图片</span>
-                                  <a href="/images/ceshi/1.jpg" class="highslide" onclick="return hs.expand(this)">
-                                      <img src="/images/ceshi/1.jpg" />
-                                  </a>
-                                  </div>
-                              </li>
-                              <li class="image-group-button">
-                                  <div class="images-thumb">
-                                  <div class="image-group-bg"><i class="fa fa-plus"></i></div>
-                                  <input type="file" class="inputstyle">
-                                  </div>
-                              </li>
-                      </ul>
-                      -->
-                        <div class="select-album">
-                            <a href="javascript:void(0);" class="btn btn-primary btn-imagegallery">
-                                <i class="fa fa-picture-o"></i>
-                                从图片空间选择
-                            </a>
-                            <div class="imagegallery-container" data-spec-id="default" style="width: 100%;"></div>
-                        </div>
-
-                    </div>
-
-                    <div class="goods-next text-c p-l-0">
-
-                        <input type="button" id="btn_submit" value="下一步，确认商品发布" class="btn btn-primary">
-
-                        <!--不可点击状态的下一步-->
+                    <!--不可点击状态的下一步-->
                         <!--<button class="btn btn-default">下一步，确认商品发布</button>-->
                     </div>
                 </div>
@@ -296,7 +100,7 @@
                     <div class="pic-upload-request p-15">
                         <h4>上传要求：</h4>
                         <ul>
-                            <li>1. 请使用jpg、jpeg、png等格式，单张大小不超过4M的正方形图片。</li>
+                            <li>1. 请使用jpg、jpeg、png等格式、单张大小不超过4M的正方形图片。</li>
                             <li>2. 上传图片最大尺寸将被保留为1280像素，建议使用尺寸800*800像素。</li>
                             <li>3. 每种颜色最多5张图片，可上传图片或从图片空间中选择已有的图片，上传后的图片也将被保存在店铺图片空间中以便其它使用。</li>
                             <li>4. 通过更改排序数字修改商品图片的显示顺序。</li>
@@ -337,117 +141,91 @@
 @section('footer_script')
 
     <!-- AJAX上传 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180418"></script>
     <!-- 图片上传、图片空间 -->
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180418"></script>
     <!-- 验证规则 -->
     <script id="client_rules" type="text">
 
     </script>
     <script type="text/javascript">
         $().ready(function() {
-            var default_image = "http://images.68mall.com/system/config/default_image/default_goods_image_0.gif";
-
-            // AJAX上传文件
-            $("body").on("click", ".image-upload", function() {
-
-                var image = $(this).parents(".image-item").find("img");
-                var image_path = $(this).parents(".image-item").find(".image-path");
-
-                $.imageupload({
-                    url: '/site/upload-goods-image',
-                    callback: function(result) {
-                        if (result.code == 0) {
-                            $(image).attr("src", result.data.url);
-                            $(image_path).val(result.data.path);
-                            // 显示提示信息
-                            $.msg(result.message);
-                        } else if (result.message) {
-                            // 显示错误信息
-                            $.msg(result.message, {
-                                time: 5000
-                            });
-                        }
-                    }
-                });
-
-                return true;
-            });
-
-            // 相册空间
-            $(".btn-imagegallery").click(function() {
-
-                var container = $(this).parents(".image-list").find(".imagegallery-container");
-
-                var image_list = $(this).parents(".image-list");
-
-                var page_id = "ImageGallery_" + $(container).data("spec-id");
-
-                if (!$.imagegallery(container)) {
-                    $(this).html("<i class=\"fa fa-picture-o\"></i>关闭图片空间");
-                    if ($(this).data("toggle") == false) {
-                        $(container).show();
-                        $(this).data("toggle", true);
-                        return;
-                    }
-                    var imagegallery = $(container).imagegallery({
-                        data: {
-                            page: {
-                                page_id: page_id
-                            }
-                        },
-                        click: function(target, path) {
-                            var url = $(target).attr("src");
-
-                            $(image_list).find("img").each(function() {
-                                if ($(this).attr("src") == default_image) {
-                                    $(this).attr("src", url);
-                                    $(this).parents(".image-item").find(".image-path").val(path);
-                                    return false;
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    if ($(container).is(":hidden")) {
-                        $(this).html("<i class=\"fa fa-picture-o\"></i>关闭图片空间");
-                        $(container).show();
+            window.onscroll = function() {
+                $(window).scroll(function() {
+                    var scrollTop = $(document).scrollTop();
+                    var height = $(".table-content").height();
+                    var wHeight = $(window).height();
+                    if (scrollTop > (height - wHeight)) {
+                        $(".goods-next").removeClass("goods-btn-fixed");
                     } else {
-                        $(this).html("<i class=\"fa fa-picture-o\"></i>从图片空间选择");
-                        $(container).hide();
+                        $(".goods-next").addClass("goods-btn-fixed");
                     }
-                }
-
-            });
-
-            // 将图片设置为默认主图
-            $(".show-default").click(function() {
-                $(this).parents(".image-list").find(".show-default").removeClass("selected");
-                $(this).parents(".image-list").find(".image-default").each(function() {
-                    $(this).val(0);
                 });
-                $(this).addClass("selected");
-                $(this).parents(".image-item").find(".image-default").val(1);
-            });
 
-            // 将图片设置为默认图片
-            $(".del-image").click(function() {
-                $(this).parents(".image-item").find("img").attr("src", default_image);
-                $(this).parents(".image-item").find(".image-path").val("");
+            };
+
+            $("#btn_view").click(function() {
+                $.go("{{ route('pc_show_goods', ['goods_id'=>$model['goods_id']]) }}", "_blank");
             });
         });
     </script>
+    <script id="goods_images_list" type="text">
+        {!! json_encode($goods_images) !!}
+    </script>
     <script type="text/javascript">
         $().ready(function() {
+
+            var imagegroups = [];
+
+            var images = $.parseJSON($("#goods_images_list").text());
+
+            @foreach($spec_list as $v)
+                imagegroups["spec_{{ $v['spec_id'] }}"] = $("#goods_images_container_{{ $v['spec_id'] }}").imagegroup({
+                size: 5,
+                mode: 1,
+                host: "{{ get_oss_host() }}",
+                values: images["{{ $v['spec_id'] }}"],
+                gallery: true,
+            });
+            @endforeach
+
             // 提交
             $("#btn_submit").click(function() {
-                var goods_images = [];
-                var data = $(".image-list").serializeJson();
+                var goods_images = {};
+
+                $(".goods-images-container").each(function() {
+                    var spec_id = $(this).data("spec_id");
+                    var imagegroup = imagegroups["spec_" + spec_id];
+
+                    if (!goods_images[spec_id]) {
+                        goods_images[spec_id] = [];
+                    }
+
+                    var index = 0;
+
+                    for (var i = 0; i < imagegroup.values.length; i++) {
+
+                        var path = imagegroup.values[i];
+
+                        if (path && path != "") {
+                            goods_images[spec_id].push({
+                                path: path,
+                                is_default: index == 0 ? 1 : 0,
+                                sort: i + 1
+                            });
+                            index++;
+                        }
+                    }
+                });
+
+                var data = {
+                    goods_images: goods_images
+                };
 
                 // 加载
                 $.loading.start();
 
-                $.post('/goods/lib-goods/edit-images?id=6', data, function(result) {
+                $.post('/goods/lib-goods/edit-images?id={{ $model['goods_id'] }}', data, function(result) {
                     // 加载
                     $.loading.stop();
 
@@ -457,7 +235,11 @@
                         }, function() {
                             // 加载
                             $.loading.start();
-                            $.go('/goods/lib-goods/success?id=6');
+                            @if(!$is_publish)
+                            $.go('');
+                            @else
+                            $.go('/goods/lib-goods/success?id={{ $model['goods_id'] }}');
+                            @endif
                         });
                     } else {
                         $.msg(result.message, {

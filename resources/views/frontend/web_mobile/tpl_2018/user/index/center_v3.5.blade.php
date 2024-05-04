@@ -1,10 +1,5 @@
 @extends('layouts.user_layout')
 
-{{--header_css--}}
-@section('header_css')
-    <link rel="stylesheet" href="/css/user.css?v=20180702"/>
-@stop
-
 {{--header_js--}}
 @section('header_js')
     <script src="/assets/d667b223/js/jquery.js?v=20190121"></script>
@@ -22,7 +17,12 @@
     <script src="/assets/d667b223/js/szy.page.more.js?v=20190121"></script>
 
     <!-- GPS获取坐标 -->
-    <script src="http://webapi.amap.com/maps?v=1.4.6&key={{ sysconf('amap_js_key') }}"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script src="/assets/d667b223/js/geolocation/amap.js?v=20190121"></script>
     <script type="text/javascript">
@@ -290,14 +290,9 @@
     <script src="/js/jquery.fly.min.js?v=20180813"></script>
     <script src="/assets/d2eace91/js/szy.cart.mobile.js?v=20180813"></script>
 
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
+
     <!-- 第三方流量统计 -->
     <div style="display: none;"></div>
     <!-- 底部 _end-->

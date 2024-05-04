@@ -15,7 +15,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="CategoryModel" class="form-horizontal" name="CategoryModel" action="/goods/category/edit-brand?id={{ $id }}" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="categorymodel-cat_id" class="form-control" name="cat_id" value="{{ $id }}">
             <!-- 品牌 -->

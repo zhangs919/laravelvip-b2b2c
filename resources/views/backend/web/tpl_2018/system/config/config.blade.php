@@ -7,7 +7,7 @@
 @section('content')
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group={{ $group }}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="{{ $group }}">
         <input type="hidden" name="tabs" value="">
 
@@ -37,7 +37,7 @@
                         <div class="col-sm-8">
                             <div class="form-control-box">
 
-                                @include('components.form.form_items'){{ $form->unit }}
+                                @include('components.form.form_items')
 
                             </div>
 

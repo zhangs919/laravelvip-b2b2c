@@ -16,7 +16,7 @@
         <i></i>
         公告
         </span>
-            <a href="http://{{ env('FRONTEND_DOMAIN') }}/help/notice.html" target="_blank">
+            <a href="http://{{ config('lrw.frontend_domain') }}/help/notice.html" target="_blank">
                 更多
                 <i>></i>
             </a>

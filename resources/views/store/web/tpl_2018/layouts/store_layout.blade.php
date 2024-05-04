@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.2"/>
     <!-- ================== END BASE CSS STYLE ================== -->
     <!-- 卖家中心 -->
-    <link rel="stylesheet" href="/store/css/store.css?v=1.2"/>
+    <link rel="stylesheet" href="/css/store.css?v=1.2"/>
     <link rel="stylesheet" href="/assets/d2eace91/js/chosen/chosen.css?v=1.2"/>
     <!-- 公共脚本 -->
     <!-- ================== BEGIN BASE JS ================== -->
@@ -101,7 +101,7 @@
         <div class="right-menu">
             <ul>
                 <li>
-                    <a class="go-store" href='http://www.cp6znq.yunmall.68mall.com' title="前往首页" target="_blank">
+                    <a class="go-store" href='http://{{ env('FRONTEND_DOMAIN') }}' title="前往首页" target="_blank">
                         <i></i>
                         <span>首页</span>
                     </a>
@@ -222,7 +222,8 @@
 
     WS_AddUser({
         'user_id': 'store_4',
-        'url': "ws://{{ env('PUSH_DOMAIN') }}:8181",
+        {{--'url': "ws://{{ config('lrw.push_domain') }}:8181",--}}
+        'url': "{{ get_ws_url('8181') }}",
         'type': "add_user"
     });
 

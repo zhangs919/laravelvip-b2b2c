@@ -6,17 +6,12 @@
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
 
-
-
-
-
-
-
-    <div class="w1210 floor-list">
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif" data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
         <div class="floor">
             <div class="floor-con2 floor-title">
                 <h2>
-                    <i class="color-mark" style='background-color: {{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '' }}; '></i>
+                    <i class="color-mark" style='background-color: {{ !empty($data['4-1'][0]['bgcolor']) ? $data['4-1'][0]['bgcolor'] : '' }}; '></i>
 
                     @if(!empty($data['4-1']))
                         @foreach($data['4-1'] as $v)
@@ -40,7 +35,7 @@
 
                         @if(!empty($data['6-1']))
                             @foreach($data['6-1'] as $v)
-                                <a class="hot-word" href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                <a class="hot-word" href="{{ $v['link'] }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                             @endforeach
                         @else
                             @for($i=1; $i <= 3; $i++)
@@ -55,7 +50,7 @@
                             </a>
                         @endif
                     </div>
-                    <div class="floor-con" style='border-color: {{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '' }} '>
+                    <div class="floor-con" style='border-color: {{ !empty($data['4-1'][0]['bgcolor']) ? $data['4-1'][0]['bgcolor'] : '' }} '>
                         <div class="big-banner-con">
                             <div class="big-banner">
 

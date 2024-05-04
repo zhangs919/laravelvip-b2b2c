@@ -50,9 +50,9 @@
     <!--logo信息-->
     <div class="admincp-name">
         <h1 class="logo-image">
-            <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/website/backend_logo_0.png" />
+            <img src="http://XXXX/demo/system/config/website/backend_logo_0.png" />
         </h1>
-        <h1 class="logo-text">商之翼B2B2C商城演示站平台管理中心</h1>
+        <h1 class="logo-text">B2B2C商城演示站平台管理中心</h1>
         <h2 class="logo-text-small">Platform Management Center</h2>
         <div id="foldSidebar" data-switch-toggle="state">
             <i class="arrow arrow-left"></i>
@@ -113,7 +113,7 @@
         <!--提醒、主题、全部功能、清除缓存、查看店铺、退出-->
         <ul class="operate shop-row">
             <li class="top-menu">
-                <a href="http://www.b2b2c.yunmall.68mall.com" class="top_icon homepage" target="_blank" title="查看商城">
+                <a href="http://www.test.com" class="top_icon homepage" target="_blank" title="查看商城">
                     <i></i>
                     <span>商城</span>
                 </a>
@@ -325,7 +325,7 @@
             <!--   -->
 
             <li class="top-menu">
-                <a class="top_icon work-order" href="http://workorder.68mall.com" target="_blank" title="工单">
+                <a class="top_icon work-order" href="http://workorder.xxxx.com" target="_blank" title="工单">
                     <i></i>
                     <span>工单</span>
                 </a>
@@ -4274,7 +4274,7 @@
         <p class="m-b-5">如因未配置/开启阿里OSS，造成的数据丢失，由您自行负责！！快去配置吧~</p>
         <p class="m-b-5">
             如何申请以及配置阿里OSS，请参考
-            <a class="c-red" href="http://help.68mall.com/info/112.html" target="_blank">阿里OSS配置教程</a>
+            <a class="c-red" href="http://help.laravelvip.com/info/112.html" target="_blank">阿里OSS配置教程</a>
             。
         </p>
     </div>
@@ -4293,7 +4293,7 @@
         <div class="item-description arrow-left">
             <p>
                 发布商品，请前往卖家中心进行发布，更多功能需在卖家中心进行体验，
-                <a class="fb" style="color: #FFFF00" href="http://seller.68dsw.com/index.html" target="_blank">前往卖家中心</a>
+                <a class="fb" style="color: #FFFF00" href="http://seller.XXXX.com/index.html" target="_blank">前往卖家中心</a>
                 进行了解吧！
             </p>
             <div class="btns">

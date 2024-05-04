@@ -59,47 +59,47 @@
 
 
 <script type="text/javascript">
-    $(function() {
-// 楼层品牌切换效果 注意：依赖于 js/index_tab.js
-        $("#{{ $uid }}").find(".brand-con").hover(function() {
-            var num = $(this).find("li").length;
-            if (num > 10) {
-                $(this).find(".brand-btn").fadeTo('fast', 0.4);
-            }
-        }, function() {
-            $(this).find(".brand-btn").fadeTo('fast', 0);
-        });
+    {{--$(function() {--}}
+        {{--// 楼层品牌切换效果 注意：依赖于 js/index_tab.js--}}
+        {{--$("#{{ $uid }}").find(".brand-con").hover(function() {--}}
+            {{--var num = $(this).find("li").length;--}}
+            {{--if (num > 10) {--}}
+                {{--$(this).find(".brand-btn").fadeTo('fast', 0.4);--}}
+            {{--}--}}
+        {{--}, function() {--}}
+            {{--$(this).find(".brand-btn").fadeTo('fast', 0);--}}
+        {{--});--}}
 
-        $("#{{ $uid }}").find('.tabs-brand').each(function() {
-            var num = 0;
-            var shu = 10;
-            var llishu = $(this).find(".brand-list").first().children().length;
-            var liwidth = $(this).find(".brand-list").children().width();
-            var boxwidth = llishu * liwidth;
-            var shuliang = llishu - shu;
-            $(this).find('.brand-right').click(function() {
-                $(this).parents(".brand-con").find(".brand-list").css('width', boxwidth + 'px');
-                num++;
-                if (num > shuliang) {
-                    num = shuliang;
-                }
-                var move = -liwidth * num;
-                $(this).closest($(this).parents(".brand")).find(".brand-list").stop().animate({
-                    'left': move + 'px'
-                }, 500);
-            })
-            $(this).find('.brand-left').click(function() {
-                $(this).parents(".brand-con").find(".brand-list").css('width', '' + boxwidth + 'px');
-                num--;
-                if (num < 0) {
-                    num = 0;
-                }
-                var move = -liwidth * num;
-                $(this).closest($(this).parents(".brand")).find(".brand-list").stop().animate({
-                    'left': move + 'px'
-                }, 500);
-            })
+        {{--$("#{{ $uid }}").find('.tabs-brand').each(function() {--}}
+            {{--var num = 0;--}}
+            {{--var shu = 10;--}}
+            {{--var llishu = $(this).find(".brand-list").first().children().length;--}}
+            {{--var liwidth = $(this).find(".brand-list").children().width();--}}
+            {{--var boxwidth = llishu * liwidth;--}}
+            {{--var shuliang = llishu - shu;--}}
+            {{--$(this).find('.brand-right').click(function() {--}}
+                {{--$(this).parents(".brand-con").find(".brand-list").css('width', boxwidth + 'px');--}}
+                {{--num++;--}}
+                {{--if (num > shuliang) {--}}
+                    {{--num = shuliang;--}}
+                {{--}--}}
+                {{--var move = -liwidth * num;--}}
+                {{--$(this).closest($(this).parents(".brand")).find(".brand-list").stop().animate({--}}
+                    {{--'left': move + 'px'--}}
+                {{--}, 500);--}}
+            {{--})--}}
+            {{--$(this).find('.brand-left').click(function() {--}}
+                {{--$(this).parents(".brand-con").find(".brand-list").css('width', '' + boxwidth + 'px');--}}
+                {{--num--;--}}
+                {{--if (num < 0) {--}}
+                    {{--num = 0;--}}
+                {{--}--}}
+                {{--var move = -liwidth * num;--}}
+                {{--$(this).closest($(this).parents(".brand")).find(".brand-list").stop().animate({--}}
+                    {{--'left': move + 'px'--}}
+                {{--}, 500);--}}
+            {{--})--}}
 
-        });
-    });
+        {{--});--}}
+    {{--});--}}
 </script>

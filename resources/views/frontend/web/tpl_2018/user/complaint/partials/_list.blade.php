@@ -22,27 +22,47 @@
         <td>
             <p class="shop-name">
                 店铺：
-                <a href="/shop/{{ $v['shop_id'] }}.html" title="楠丹木业" target="_blank" class="btn-link">楠丹木业</a>
+                <a href="/shop/{{ $v['shop_id'] }}.html" title="{{ $v['shop_name'] }}" target="_blank" class="btn-link">{{ $v['shop_name'] }}</a>
             </p>
             <p>
-                卖家：测试店铺
+                卖家：{{ $v['user_name'] }}
 
 
+                @if(!empty($customer_main))
+                {{--客服工具 默认0 0无客服 1QQ 2旺旺--}}
+                @if($customer_main['customer_tool'] == 2)
+                    <span class="ww-light">
+                                <!-- 旺旺不在线 i 标签的 class="ww-offline" -->
 
+                        <!-- s等于1时带文字，等于2时不带文字 -->
+                                <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid={{ $customer_main['customer_account'] }}&site=cntaobao&s=2&groupid=0&charset=utf-8">
+                                    <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid={{ $customer_main['customer_account'] }}&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
+                                    <span></span>
+                                </a>
+
+                            </span>
+                @elseif($customer_main['customer_tool'] == 1)
                 <!-- s等于1时带文字，等于2时不带文字 -->
-                <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=&site=cntaobao&s=2&groupid=0&charset=utf-8">
-                    <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
-                    <span></span>
-                </a>
+                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={{ $customer_main['customer_account'] }}&site=qq&menu=yes" class="service-btn">
+                        <img border="0" onload="load_qq_customer_image(this, 'http://')" src="http://wpa.qq.com/pa?p=2:{{ $customer_main['customer_account'] }}:52" alt="QQ" title="" style="height: 20px;" />
+                        <span></span>
+                    </a>
+                @else{{--默认 平台客服--}}
+                    <a href='{{ $customer_main['yikf_url'] ?? 'javascript:;' }}' class="ww-light  color" target="_blank" title="点击联系在线客服">
+                        <i class="iconfont">&#xe6ad;</i>
+                    </a>
+                @endif
+            @endif
 
 
             </p>
         </td>
-        <td align="center">未按成交价格进行交易
-        </td>
-        <td align="center">2018-11-10 10:58:05</td>
         <td align="center">
-            <p>买家提起投诉，等待卖家处理</p>
+            {{ format_complaint_type($v['complaint_type']) }}
+        </td>
+        <td align="center">{{ format_time($v['add_time']) }}</td>
+        <td align="center">
+            <p>{{ format_complaint_status($v['complaint_status'],1) }}</p>
         </td>
         <td align="center">
             <div class="operate">

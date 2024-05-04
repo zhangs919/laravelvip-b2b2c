@@ -16,11 +16,13 @@ class ActivityRepository
     use BaseRepository;
 
     protected $model;
+    protected $goodsActivity;
 
 
     public function __construct()
     {
         $this->model = new Activity();
+        $this->goodsActivity = new GoodsActivityRepository();
     }
 
     /**
@@ -101,7 +103,13 @@ class ActivityRepository
                     if (!empty($v['ext_info'])) {
                         $v['ext_info'] = json_encode($v['ext_info']);
                     }
-                    GoodsActivity::where($goodsActivityWhere)->update($v);
+                    $ga = GoodsActivity::where($goodsActivityWhere)->first();
+                    if (!empty($ga)) {
+                        $ga->update($v);
+                    } else {
+                        $v['act_id'] = $activityData['act_id'];
+                        $this->goodsActivity->store($v);
+                    }
                 }
             }
 
@@ -251,6 +259,8 @@ class ActivityRepository
                     $status_message = '';
                 }
                 $list[$key]['status_message'] = $status_message;
+                $list[$key]['shop_name'] = Shop::where('shop_id', $item['shop_id'])->value('shop_name');
+
             }
         }
 
@@ -354,8 +364,7 @@ class ActivityRepository
             'sortname' => 'act_id',
             'sortorder' => 'asc',
         ];
-        $goodsActivityRep = new GoodsActivityRepository();
-        list($goods_list, $total) = $goodsActivityRep->getList($condition);
+        list($goods_list, $total) = $this->goodsActivity->getList($condition);
         $goods_list = $goods_list->toArray();
 
         $list = [];
@@ -462,6 +471,8 @@ class ActivityRepository
                     $status_message = '';
                 }
                 $list[$key]['status_message'] = $status_message;
+
+                $list[$key]['shop_name'] = Shop::where('shop_id', $item['shop_id'])->value('shop_name');
             }
         }
 
@@ -476,27 +487,58 @@ class ActivityRepository
      */
     public function getLimitDiscountGoodsActivityList($act_id)
     {
-        $goods_list = GoodsActivity::where('act_id', $act_id)->get()->toArray();
+        $goods_list = GoodsActivity::with(['goods'=>function($query) {
+            $query->select(['goods_id','sku_open','goods_price','goods_number','goods_name']);
+        }, 'goodsSku' => function($query) {
+            $query->select(['goods_id', 'sku_id','goods_price','goods_number']);
+        }])->where('act_id', $act_id)->get()->toArray();
         $list = [];
         if (!empty($goods_list)) {
-            foreach ($goods_list as $v) {
-                $goods_info = Goods::where('goods_id', $v['goods_id'])
-                    ->select(['goods_price','goods_number','goods_name'])->first();
-                $list[$v['goods_id']] = [
-                    'goods_price' => $goods_info->goods_price,
-                    'format_goods_price' => $v['act_price'],
-                    // 折扣方式不同 只返回对应的字段
-                    'goods_reduce' => $v['goods_id'].'-'.($goods_info->goods_price - $v['act_price']), // 减价
-//                    'goods_discount' => $v['goods_id'].'-'.($goods_info->goods_price - $v['act_price']), // 折扣
+            foreach ($goods_list as $item) {
+                $goods = $item['goods'];
+                $sku_open = $goods['sku_open'];
+                $sku = $item['goodsSku'];
+                $sku_price_arr = array_column($sku,'goods_price');
+                foreach ($sku as $sItem) {
+                    if ($item['sku_id'] == $sItem['sku_id']) {
+                        $sku_num = $sItem['goods_number'];
+                    }
+                }
+                $list[$item['goods_id']] = [
+                    'goods_price' => $goods['goods_price'],
+                    'goods_price_format' => $sku_open ? '￥'.min($sku_price_arr).'-￥'.max($sku_price_arr) : '￥'.$goods['goods_price'],
+                    'sku_num' => $sku_num ?? 0,
+                    'act_stock' => $item['act_stock'],
+                    'goods_discount_num' => '8',
+                    'act_stock_init' => $item['act_stock'],
+                    'discount_val' => '8',
+                    'after_price' => $after_price,
+                    'goods_discount' => $goods_discount,
+                    'goods_reduce' => $goods_reduce,
+                    'goods_set' => '',
+                    'goods_stock' => $goods_stock,
+                    'min_goods_price' => $min_goods_price,
+                    'max_goods_price' => $max_goods_price,
+                    'goods_id'=>$item['goods_id'],
+                    'sku_id'=>$item['sku_id'],
+                    'goods_name'=>$goods['goods_name'],
+                    'sku_open' => $sku_open,
+                    'discount_mode' => 0,
+                    'discount_num' => '8',
+                    'goods_number' => $goods['goods_number'],
 
-                    'min_goods_price' => $goods_info->goods_price,
-                    'max_goods_price' => $goods_info->goods_price,
-                    'goods_id' => $v['goods_id'],
-                    'sku_id' => $v['sku_id'],
-                    'goods_name' => $goods_info->goods_name,
-                    'discount_mode' => 0, // 0
-                    'discount_num' => ($goods_info->goods_price - $v['act_price']),
-                    'goods_number' => $goods_info->goods_number
+//                    // 折扣方式不同 只返回对应的字段
+//                    'goods_reduce' => $v['goods_id'].'-'.($goods_info->goods_price - $v['act_price']), // 减价
+////                    'goods_discount' => $v['goods_id'].'-'.($goods_info->goods_price - $v['act_price']), // 折扣
+//
+//                    'min_goods_price' => $goods_info->goods_price,
+//                    'max_goods_price' => $goods_info->goods_price,
+//                    'goods_id' => $v['goods_id'],
+//                    'sku_id' => $v['sku_id'],
+//                    'goods_name' => $goods_info->goods_name,
+//                    'discount_mode' => 0, // 0
+//                    'discount_num' => ($goods_info->goods_price - $v['act_price']),
+//                    'goods_number' => $goods_info->goods_number
 
                 ];
             }
@@ -544,6 +586,9 @@ class ActivityRepository
                     $status_message = '';
                 }
                 $list[$key]['status_message'] = $status_message;
+
+                $list[$key]['shop_name'] = Shop::where('shop_id', $item['shop_id'])->value('shop_name');
+
             }
         }
 
@@ -588,9 +633,160 @@ class ActivityRepository
                     $status_message = '';
                 }
                 $list[$key]['status_message'] = $status_message;
+                $list[$key]['shop_name'] = Shop::where('shop_id', $item['shop_id'])->value('shop_name');
+
             }
         }
 
         return [$list, $total];
+    }
+
+
+    /**
+     * 获取拼团活动列表
+     * todo 此方法有问题 后面再完善
+     * 需从goods_activity表中查询数据
+     *
+     * @param array $where 查询条件
+     * @return array
+     */
+    public function getFightGroupGoodsActivityList($where = [])
+    {
+        $where[] = ['act_type', 6]; // 6-拼团
+
+        // 列表
+        $condition = [
+            'where' => $where,
+            'sortname' => 'act_id',
+            'sortorder' => 'asc',
+        ];
+        list($list, $total) = $this->getList($condition);
+        $list = $list->toArray();
+        if (!empty($list)) {
+            foreach ($list as $key=>$item) {
+                $ext_info = $item['ext_info'];
+
+                $shop_name = Shop::select('shop_name')->where('shop_id', $item['shop_id'])->value('shop_name');
+                $goods_info = Goods::where('act_id', $item['act_id'])
+                    ->select(['goods_name','goods_image','goods_price'])->first();
+                $cat_name = ActivityCategory::where('id', $item['cat_id'])->value('cat_name');
+
+                $list[$key]['shop_name'] = $shop_name;
+                $list[$key]['goods_name'] = $goods_info->goods_name;
+                $list[$key]['goods_image'] = $goods_info->goods_image;
+                $list[$key]['goods_price'] = $goods_info->goods_price;
+                $list[$key]['cat_name'] = $cat_name;
+                $list[$key]['fight_num'] = '3'; // 参与拼团人数
+
+
+                /*if (strtotime($item['end_time']) < time()) {
+                    // 已结束
+                    $status_message = '已结束';
+                } elseif (strtotime($item['start_time']) > time()) {
+                    // 未开始
+                    $status_message = '未开始';
+                } elseif (strtotime($item['end_time']) > time()) {
+                    // 进行中
+                    $status_message = '进行中';
+                } else {
+                    $status_message = '';
+                }
+                $list[$key]['status_message'] = $status_message;*/
+            }
+        }
+
+        return [$list, $total];
+    }
+
+    /**
+     * 获取预售活动列表
+     *
+     * todo 此方法有问题 后面再完善
+     * 需从goods_activity表中查询数据
+     *
+     * @param array $where 查询条件
+     * @return array
+     */
+    public function getPreSaleGoodsActivityList($where = [])
+    {
+        $where[] = ['act_type', 2]; // 2-预售
+
+        // 列表
+        $condition = [
+            'where' => $where,
+            'sortname' => 'act_id',
+            'sortorder' => 'asc',
+        ];
+        list($list, $total) = $this->getList($condition);
+        $list = $list->toArray();
+        if (!empty($list)) {
+            foreach ($list as $key=>$item) {
+                $ext_info = $item['ext_info'];
+
+                $shop_name = Shop::select('shop_name')->where('shop_id', $item['shop_id'])->value('shop_name');
+                $goods_info = Goods::where('act_id', $item['act_id'])
+                    ->select(['goods_name','goods_image','goods_price'])->first();
+
+                $list[$key]['shop_name'] = $shop_name;
+                $list[$key]['goods_name'] = $goods_info->goods_name;
+                $list[$key]['goods_image'] = $goods_info->goods_image;
+                $list[$key]['goods_price'] = $goods_info->goods_price;
+
+                $list[$key]['pre_sale_mode'] = $ext_info['pre_sale_mode'];
+                $list[$key]['deliver_time_type'] = $ext_info['deliver_time_type'];
+                $list[$key]['deliver_time'] = $ext_info['deliver_time'];
+                $list[$key]['earnest_money'] = $ext_info['earnest_money'];
+                $list[$key]['tail_money'] = $ext_info['tail_money'];
+
+            }
+        }
+
+        return [$list, $total];
+    }
+
+    /**
+     * 获取直播活动商品列表
+     *
+     * @param $act_id integer 活动id
+     * @return array
+     */
+    public function getLiveGoodsActivityInfo($act_id)
+    {
+        $act_info = Activity::find($act_id);
+        if (empty($act_info)) {
+            return [];
+        }
+        $ext_info = $act_info->ext_info;
+
+        $goods_list = GoodsActivity::where('act_id', $act_id)->get()->toArray();
+        $list = [];
+        if (!empty($goods_list)) {
+            foreach ($goods_list as $v) {
+                $goods_info = Goods::where('goods_id', $v['goods_id'])
+                    ->select(['goods_price','goods_number','goods_name','goods_image'])->first();
+                $list[] = [
+                    'id' => $v['id'],
+                    'act_id' => $v['act_id'],
+                    'shop_id' => $act_info->shop_id,
+                    'act_type' => $act_info->act_type,
+                    'sku_id' => $v['sku_id'],
+                    'goods_id' => $v['goods_id'],
+                    'cat_id' => $v['cat_id'],
+                    'sale_base' => $v['sale_base'],
+                    'act_price' => $v['act_price'],
+                    'act_stock' => $v['act_stock'],
+                    'ext_info' => $ext_info,
+                    'click_count' => $v['click_count'],
+                    'sort' => $act_info->sort,
+                    'goods_name' => $goods_info->goods_name,
+                    'goods_price' => $goods_info->goods_price,
+                    'goods_image' => get_image_url($goods_info->goods_image),
+                    'cost_price' => $goods_info->cost_price,
+                    'goods_number' => $goods_info->goods_number,
+                ];
+            }
+        }
+
+        return $list;
     }
 }

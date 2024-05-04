@@ -17,7 +17,7 @@
     <div class="table-content m-t-30 clearfix">
 
         <form id="AttributeModel" class="form-horizontal" name="AttributeModel" action="/goods/attribute/add-spec?type_id={{ $type_id }}" method="POST" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="attributemodel-attr_id" class="form-control" name="AttributeModel[attr_id]">
 

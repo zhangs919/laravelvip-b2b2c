@@ -1,0 +1,160 @@
+@charset "utf-8";
+.get-card-con{ position: relative;padding:10px 0 30px; background: #fff;}
+.get-card-con .card-info{position: relative; background-color:#ffc241;padding: 20px; margin:0 10px 10px;color: #fff; box-sizing: border-box; border-radius: 5px; background-position: center; background-repeat: no-repeat; background-size: cover !important;}
+.get-card-con .card-info .card-info-hd{ height: 35px; line-height: 35px; font-size: 16px; margin-bottom: 30px; position: relative; overflow:hidden; }
+.get-card-con .card-info .card-info-hd .shop-name{ float: left; background-size: 30px; height: 30px; line-height: 30px; text-shadow: 0 1px 4px rgba(0,0,0,.2);  word-break: break-all; font-weight: normal;}
+.get-card-con .card-info .card-info-hd .shop-name .shop-logo{ width: 30px; height: 30px;display: inline-block;vertical-align: top;  border-radius: 100%;margin-right: 3px;}
+.get-card-con .card-info .member-card-type{font-size: 20px; line-height: 24px; margin-bottom: 10px; text-shadow: 0 1px 4px rgba(0,0,0,.2); display: flex; align-items: center;}
+.get-card-con .card-info .member-card-type em{background: rgba(255,255,255,.9);text-shadow: none; font-size: 12px; display: inline-block;line-height: 20px; border-radius: 10px; margin-left: 5px;padding:0 8px;}
+.get-card-con .card-info .card-info-ft{  font-size: 14px; overflow: hidden; text-shadow: 0 1px 4px rgba(0,0,0,.2); display: flex; }
+.get-card-con .card-info .card-info-ft .card-time{flex: 1;}
+.get-card-con .card-info .card-info-item{font-size: 14px; overflow: hidden; text-shadow: 0 1px 4px rgba(0,0,0,.2);}
+.get-card-con .member-benefits{ background: #fff; }
+.get-card-con .member-benefits .member-benefits-title{padding: 10px 0; margin-left: 10px; line-height: 22px; color:#353535; box-sizing: border-box;}
+.get-card-con .member-benefits .member-benefits-title i{ display: inline-block;vertical-align: middle;  font-size: 20px;margin-right: 5px;color:#999;}
+.get-card-con .member-benefits ul{ padding:0 10px; font-size: 0; box-sizing: border-box; }
+.get-card-con .member-benefits ul li{ position: relative; float: left; width:33.33%; padding: .4rem 0; box-sizing: border-box;}
+.get-card-con .member-benefits ul li i{ display: block;background-size: 50px;background-repeat: no-repeat;background-position: center top; width:50px; height: 30px;margin: 0 auto 5px;background-image: url(../images/member-card-icon.png);background-repeat: no-repeat;background-size:248px auto;}
+.get-card-con .member-benefits ul li i.posting{ background-position:-184px -20px; }
+.get-card-con .member-benefits ul li i.discount{background-position:-7px -20px;}
+.get-card-con .member-benefits ul li i.coupon{background-position:-130px -20px;}
+.get-card-con .member-benefits ul li i.integration{background-position:-69px -20px;}
+.get-card-con .member-benefits ul li i.gift{background-position: -7px -75px;}
+.get-card-con .member-benefits ul li p{ display: block; font-size:14px; line-height: 1rem; text-align: center; color: #666; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+.get-card-con .member-benefits ul li p:last-child{ color: #999; font-size: 12px;line-height: 16px; }
+.get-card-con .member-benefits ul li p.more-btn:after{ content: '';display: inline-block;width:7px; height:7px; border-top:1px solid #666; border-right: 1px solid #666; transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg); }
+.get-card-con .member-help{ background: #fff;}
+.get-card-con .member-help .help-title{padding: 10px 0; margin-left: 10px; line-height: 22px; color:#353535; box-sizing: border-box;}
+.get-card-con .member-help .help-title i{ display: inline-block;vertical-align: middle;  font-size: 20px;margin-right: 5px;color:#999;}
+.get-card-con .member-help .card-des{padding:10px;color: #999; font-size: 12px;}
+.get-card-con .member-help .card-des p{display: flex;}
+.get-card-con .member-help .card-des p span:first-child{ width: 75px;display: block; }
+.get-card-con .member-help .card-des p span:last-child{ flex: 1; color: #666; }
+.card-buy-ft{ display: block; z-index: 100; position: fixed; left: 0;right:0;bottom: 0; width: 100%; text-align: center; padding: 6px 7px; background-color:#fff; }
+.card-buy-ft.card-details-ft{ display: flex; box-sizing: border-box; align-items: center;justify-content: space-around;padding: 6px 8%;}
+.card-buy-ft:before {height:1px;content:''; width:100%; border-bottom:1px solid #e3e5e9; position:absolute;top:-1px;right:0;transform:scaleY(0.5); -webkit-transform:scaleY(0.5); z-index:10}
+.card-buy-ft a{ width: 50%; color:#fff; padding:5px 0; line-height:25px; border-radius: 16px; display: block;margin: 0 auto;}
+.card-buy-ft.card-details-ft a{ width: 40%; box-sizing: border-box; width: 40%; }
+.card-buy-ft.card-details-ft a.del-card-btn{ background:#fb8f46 }
+.renew-btn{ line-height: 25px;border-radius: 13px; font-size: 14px;     background-color: #ffc241; color:#fff;padding:0 10px;position: absolute; right: 10px; top: 10px;}
+
+/*会员卡支付页面*/
+.card-payment-con{ position: relative; background: #fff;}
+.card-payment-con .header{ background: #3d3d40; }
+.card-payment-con .header .iconfont{ color: #fff; }
+.card-payment-con .header-left i{font-size: .9rem;}
+.card-payment-con .header .header-middle{background-image: linear-gradient(to right, #e6d0b2,#eb9c30);-webkit-background-clip: text;-moz-background-clip: text;background-clip: text;
+box-decoration-break: clone;-webkit-box-decoration-break: clone;-moz-box-decoration-break: clone;color: transparent;font-weight: bold;}
+.card-payment-con .header:after{ border-top-color:#3d3d40;  }
+.card-payment-con .card-payment-hd{background:#3d3d40; display: flex;padding:15px 10px;align-items:center;}
+.card-payment-con .card-payment-hd .user-logo{width: 50px; height: 50px;border-radius: 50px;margin-right: 10px;}
+.card-payment-con .card-payment-hd .user-logo img{width: 50px; height: 50px;border-radius: 50px;}
+.card-payment-con .card-payment-hd .user-name{ font-size: 18px; color: #fff; }
+.card-payment-con .card-payment-ul{ position: relative;padding: 15px;display:flex;overflow-x: auto;-webkit-overflow-scrolling: touch;}
+.card-payment-con .card-payment-ul li{-webkit-box-flex: 0;-webkit-flex: 0 0 32%;-moz-box-flex: 0;flex: 0 0 32%;width: 32%; margin-right: 2%; border-radius:5px; display: flex;flex-direction: column;text-align: center;padding:20px 0; position: relative;}
+.card-payment-con .card-payment-ul li:after {content: "";position: absolute;top: 0;left: 0;height: 200%;width: 200%;border: 1px solid #d9d9d9;border-radius: 8px;transform: scale(.5);-webkit-transform: scale(.5);transform-origin: left top;-webkit-transform-origin: left top;z-index: 200;box-sizing: border-box;-webkit-box-sizing: border-box-webkit-backface-visibility: hidden;-webkit-transform-style: preserve-3d;}
+.card-payment-con .card-payment-ul li .card-name{ font-size: 16px;color: #767676;font-weight: bold; }
+.card-payment-con .card-payment-ul li .card-price{color: #c07c57; font-size: 14px;font-weight: 700;}
+.card-payment-con .card-payment-ul li .card-price em{color:#a57459; font-size: 26px;line-height: 40px;margin-left: 3px;}
+.card-payment-con .card-payment-ul li .card-des{ color: #999; font-size: 12px; }
+.card-payment-con .card-payment-ul li.current{ background: #fffaf2; }
+.card-payment-con .card-payment-ul li.current:after{ border-color: #e7bb78 }
+/*支付方式*/
+.pay-type-content{ background:#fff; margin-top:0.5rem; position:relative;}
+.other-pay-box{position:relative}
+.other-pay-box .hd{padding: 0 2.5%;}
+.other-pay-box .hd .other-pay{ position:relative; border:none;padding: 0.65rem 0px;line-height: 0.95rem;height: auto;}
+.other-pay-l{ position:relative;color: #262629;font-size: 14px;padding-right:58px;}
+.pay-type-content .other-pay span{ margin-left:5px;}
+.pay-type-content .other-pay>.on-off-div{ right:0;}
+.surplus-pay{ font-size:0.6rem;line-height:2rem; color:#686868; height:2rem; position:relative;padding: 0 2.5% 0.5rem; box-sizing: border-box;}
+.txt-box{ font-size:0.6rem; line-height:2rem; color:#686868; padding-left:0.2rem;}
+input.tc-text{width: 44px;margin-right: 5px;height: 20px;padding: 2px 5px;border: 1px solid #ddd;background: #fff;outline: 0;resize: none; line-height:26px;}
+.pay-way-info{ display:block;}
+.pay-type-box{background: #fff;padding: 0 2.5%;}
+.pay-type-box>.pay-type-content{padding: 0;margin-top: 0;border: none;}
+.card-payment-con .payment-tab{ background:#fff; width:100%; margin:0 auto; padding:0rem 2.5%; box-sizing:border-box;}
+.card-payment-con .payment-title{line-height: 2rem;font-size: 15px;color: #666;padding: 0 2.5%; font-weight: normal;}
+.other-pay-choose{display: none}
+.other-pay-choose + label {background-color: #fafbfa;padding: 9px;border-radius: 50px;position:absolute; right:0px; top:50%; z-index:9;float:right;-webkit-transition: all 0.1s ease-in;transition: all 0.1s ease-in;width: 30px;height: 8px; margin-top:-13px;}
+.other-pay-choose + label:before {content: ' ';position: absolute;background: white;top: 0px;left: 1px;z-index: 999999;width: 26px;-webkit-transition: all 0.1s ease-in;transition: all 0.1s ease-in;height: 26px;border-radius: 100px;box-shadow: 0 3px 1px rgba(0,0,0,0.05), 0 0px 1px rgba(0,0,0,0.3);}
+.other-pay-choose:checked + label:before {content: ' ';position: absolute;left: 22px;border-radius: 100px;}
+.other-pay-choose:checked + label:after {content: ' ';font-size: 1.5em;position: absolute;background: #4cda60;box-shadow: 0 0 1px #4cda60;}
+.other-pay-choose + label:after {content: ' ';position: absolute;top: 0;-webkit-transition: box-shadow 0.1s ease-in;transition: box-shadow 0.1s ease-in;
+left: 0;width: 100%;height: 100%;border-radius: 100px;box-shadow: inset 0 0 0 0 #eee, 0 0 1px rgba(0,0,0,0.4);}
+.card-payment-con .payment-tab>li{ display:block; position:relative;height:2.25rem; line-height:1.25rem; font-size:14px; font-variant:600; color:#353535;border-radius:4px; position:relative; z-index:2;box-sizing: border-box; padding:0.5rem 0px;}
+.card-payment-con .payment-tab>li:last-child{ margin-bottom:0;}
+.card-payment-con .payment-tab>li.hide{ display:none;}
+.card-payment-con .payment-tab>li i.iconfont{ display:inline-block;vertical-align:middle; margin-right:0.25rem;}
+.card-payment-con .payment-tab>li.weixin i{background:url(../images/user/ic_wechat.png); width:1rem; height:1rem; background-size:1rem auto;}
+.payment-tab>li.to-pay i{background:url(../images/user/ic_to_pay.png); width:1rem; height:1rem; background-size:1rem auto;}
+.payment-tab>li.alipay i{background:url(../images/user/ic_alipay.png); width:1rem; height:1rem; background-size:1rem auto;}
+.payment-tab>li.union i{background:url(../images/user/ic_bank_card.png) no-repeat; width:1.05rem; height:1.05rem; background-size:contain;}
+.payment-tab>li.ccb i{background:url(../images/user/ic_ccb.png) no-repeat; width:1.05rem; height:1.05rem; background-size:contain;}
+.payment-tab>li.cash-on-delivery i{ background:url(../images/user/ic_cash.png); width:1rem; height:1rem; background-size:1rem auto;}
+.payment-tab>li span{ display:inline-block; text-align:left; min-width:60px;}
+.payment-tab>li em{position: relative;line-height: 0.8rem;background-color:#FA8217;border-radius: 1px; padding: 0 0.2rem;;margin: 0 2px 4px 2px;display:none; font-size:0.5rem;vertical-align: middle;font-family: -apple-system,Helvetica,sans-serif; color:#fff;}
+.payment-tab>li.cash-on-delivery em{ display:inline;}
+.payment-tab>li em s {position: absolute;width: 0;display: block;font-size: 0;left: -4px;bottom: 0;height: 0;border: 3px solid #FA8217;border-color: transparent #FA8217 #FA8217 transparent;}
+.payment-tab>li span em{ font-size:0.55rem; color:#999;}
+.payment-tab>li .pay-way-checkbox { position:absolute; top:0; left:0; width:100%; height:100%;border-radius:0;border:none; z-index:-1;}
+.payment-tab>li .pay-way-checkbox:checked{ background:none;}
+.payment-tab>li .check-div{position: absolute;top: 13px;right: 0;margin-top: 0;margin-left: 10px;height: 20px;width: 20px;overflow: hidden;}
+.payment-tab>li .check-div>label {position: relative;vertical-align: middle;display: block;width: 20px;height: 20px;background: url(../images/flow/cart_icon_con.png) no-repeat 0px 0px;background-size: 55px auto;  border-radius: 100%;}
+.payment-tab>li .pay-way-checkbox:checked+.check-div>label{background-position: -27px 0px;}
+.card-payment-footer{ position: fixed;bottom: 0; width: 100%; height: 2.2rem;background: #fff;box-sizing: border-box; max-width: 640px; min-width: 320px; z-index: 22; }
+.card-payment-footer:before {height:1px;content:''; width:100%; border-bottom:1px solid #e3e5e9; position:absolute;top:-1px;right:0;transform:scaleY(0.5); -webkit-transform:scaleY(0.5); z-index:10}
+.card-payment-footer .payment-total{display:block; float: left; width: 71%; text-align: right;line-height: 2.2rem;padding-right:1rem; box-sizing: border-box; font-size: .7rem;}
+.card-payment-footer .payment-total em{ font-size:.75rem; }
+.card-payment-footer .payment-btn{ display: block; float: right; width: 26%; height: 1.6rem; position: relative; border-radius: 25px; margin-top: .3rem; margin-right: 3%; text-align: center;line-height: 1.6rem;color: #fff; font-size: 16px;}
+.card-content{ padding:10px 4% 0; position: relative; }
+.card-content .member-card{ position: relative;display: block; width: 100%; border-radius: 6px;margin-bottom: 10px;background-color: #0a0; cursor: pointer; color: #fff;}
+.card-content .member-card.member-card-expire{ background: #bbb !important; }
+.card-content .member-card .member-card-hd .shop-logo{ position: absolute; top: 14px; left: 20px; width: 25px; height: 25px; border-radius: 50%; }
+.card-content .member-card .member-card-hd .shop-name{ padding:14px 80px 0 50px; height: 25px; line-height: 25px; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: normal;}
+.card-content .member-card .card-name{margin-left: 20px; margin-top: 15px; display: inline-block;max-width: 10em;text-overflow: ellipsis; white-space: nowrap;font-size: 15px; line-height: 18px;position: relative;}
+.card-content .member-card .card-name em{opacity: .95;position: absolute;background-image: -webkit-linear-gradient(right,#ff4142,#ff4b2b);background-image: -webkit-gradient(linear,right top,left top,from(#ff4142),to(#ff4b2b));background-image: linear-gradient(270deg,#ff4142,#ff4b2b);font-family: -apple-system,Helvetica,sans-serif;font-size:10px;color: #fff;border-radius: .7rem .7rem .7rem 0;top: 0;padding: 0 .25rem;z-index: 10;height: .6rem;line-height:normal;overflow: hidden; vertical-align: middle;margin-left: 1px;}
+.card-content .member-card .member-card-ft{ font-size: 14px; overflow: hidden; text-shadow: 0 1px 4px rgba(0,0,0,.2); display: flex;padding:0 20px 10px; box-sizing: border-box;}
+.card-content .member-card .member-card-ft p:last-child{ flex: 1;text-align: right; }
+.card-content .member-card .card-status,.get-card-con .card-info .card-status{ position: absolute; right: 20px; top: 14px;; width: 50px; line-height: 20px; background-color: hsla(0,0%,100%,.2); border-radius: 10px; font-size: 12px; text-align:center;}
+.get-card-con .card-info .card-status{ top: 25px; }
+
+/*领取红包*/
+.give-coupon-con{ display: none; }
+.coupon-ul{ padding: 0 25px;position: relative; }
+.coupon-ul li{background-color: #fffbf0;position: relative; text-align: center; display: flex;margin-bottom: 8px; border:1px solid #cfae68; border-radius: 5px;}
+.coupon-ul li .coupon-left{ flex: 1;position:relative; text-align: left; padding:15px 10px 10px 15px; box-sizing: border-box;}
+.coupon-ul li .coupon-left:before,.coupon-ul li .coupon-left:after{ content: '';width:7px;height:7px;z-index:201;display: inline-block;position: absolute;right:-4px;bottom:-1px;border-radius: 50% 50% 0 0/100% 100% 0 0;border-bottom: none; background-color: #fff; border-width: .5px;border: 1px solid #cfae68;}
+.coupon-ul li .coupon-left:before{border-radius: 0 0 50% 50%/0 0 100% 100% ;bottom: auto; top: -1px;border-top: none;}
+.coupon-ul li .coupon-left:after{border-bottom: none;}
+.coupon-ul li .coupon-all,.coupon-ul li .coupon-usable{font-size:12px;color: #cc9c2d;line-height: 18px;}
+.coupon-ul li .coupon-denomiantion {height: 1.0667rem;color: #cc9c2d;display: inline-block;position: relative;padding-left: .5333rem;font-size:.8rem;}
+.coupon-ul li .coupon-denomiantion em{ font-size: 1.0667rem;}
+.coupon-ul li .coupon-right{ display: flex; align-items: center;justify-content: space-around;padding: 0 15px; border-width: 0px 0px 0px 1.104px;border-style: solid solid solid dashed;border-color: black black black #cfae68;}
+.coupon-ul li .coupon-right a{ width: 90px; height: 30px; line-height: 30px;color: #fff; background-color: #cc9c2d; border-radius: 15px; }
+.give-gift-con{ display: none; }
+.give-gift-con .gift-con{ position: relative; display: flex;padding: 0 25px; }
+.give-gift-con .gift-pic,.give-gift-con .gift-pic img{ width:80px; height:80px; border-radius: 5px;}
+.give-gift-con .gift-pic{margin-right: 10px;}
+.give-gift-con .gift-info{ flex: 1; display: flex;flex-direction: column;justify-content: space-between; }
+.give-gift-con .gift-info .gift-name{ font-size: 14px; color: #353535; height: 40px; line-height: 20px; font-weight: normal; }
+.give-gift-con .gift-info .gift-num{ font-size: 12px; color: #666; }
+/*支付成功*/
+.card-payment{  position: relative;display: -webkit-box;display: -webkit-flex;display: flex;-webkit-box-orient: vertical;-webkit-box-direction: normal;-webkit-flex-direction: column;flex-direction: column;-webkit-box-pack: justify;-webkit-justify-content: space-between;justify-content: space-between;min-height: 100vh;}
+.card-payment .payment-con{padding-top:25px;-webkit-box-flex: 1;-webkit-flex: 1;flex: 1;background-color: #fff; }
+.card-payment .payment-con .success-con{min-height: calc(100vh - 32px);padding: 20px 0 100px;box-sizing: border-box;font-size: 14px;line-height: 20px;color: #353535;position: relative;}
+.card-payment .payment-con .success-con .success-banner {padding-top: 30px;display: -webkit-box;display: -webkit-flex;display: flex;-webkit-box-orient: vertical;-webkit-box-direction: normal;-webkit-flex-direction: column;flex-direction: column;-webkit-box-align: center;-webkit-align-items: center;align-items: center;}
+.card-payment .payment-con .success-con .success-icon {width: 60px;height: 60px;margin-bottom: 10px;border-radius: 100%;display: flex; align-items: center;justify-content: center;}
+.card-payment-failed .payment-con .success-con .success-icon{  background:#03c160 !important; }
+.card-payment .payment-con .success-con .success-icon i{ color: #fff; font-size:35px; }
+.card-payment-failed .payment-con .success-con .success-icon i{ font-size: 28px; }
+.card-payment .payment-con .success-con .success-text {color: #666;width: 100%;padding-bottom:5px;text-align: center;}
+.card-payment .payment-con .success-con .success-amount {font-size: 24px;font-weight: 600;line-height: 34px;margin-bottom: 20px;}
+.card-payment .payment-con .success-con .success-bottom{margin: 0 auto 10px;width:84%;padding-top: 20px;box-sizing: border-box;text-align: center;border-top: 1px dashed #e5e5e5;}
+.card-payment .payment-con .success-con .success-bottom .des-info{ line-height: 20px; color: #999; font-size: 14px; display: flex;}
+.card-payment .payment-con .success-con .success-bottom .des-info span{ display: block;flex: 1; text-align: right; }
+.card-payment .payment-con .success-con .success-bottom .des-info span:first-child{ text-align: left; }
+.card-payment .payment-con .success-con .success-bottom .handle-btn{ width:120px; height: 30px;line-height: 30px; font-size: 14px; color: #fff;margin:50px auto 0;  display: inline-block;border-radius: 18px; }
+.user-card-con{padding: 10px;overflow: hidden; position: relative; margin-bottom: 10px; display: flex;}
+.user-card-con .user-logo,.user-card-con .user-logo img{width: 50px; height: 50px; border-radius: 100%;}
+.user-card-con .user-info-item{margin-left:10px;line-height: 25px;font-size: 14px; color: #353535;}

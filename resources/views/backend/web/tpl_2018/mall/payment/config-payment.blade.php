@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form class="form-horizontal" action="/mall/payment/config-payment?pay_id={{ $info->pay_id }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" name="pay_id" value="{{ $info->pay_id }}">
             <input type="hidden" name="pay_code" value="{{ $info->pay_code }}">

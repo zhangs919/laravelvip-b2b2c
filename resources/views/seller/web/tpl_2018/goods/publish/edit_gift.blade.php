@@ -11,13 +11,12 @@
 @section('content')
 
     <form id="form1" class="form-horizontal" action="/goods/publish/edit-gift.html?id=43&amp;scid=0" method="POST">
-        <input type="hidden" name="_csrf" value="f6PqJnRs0998D5A1S5VbYfHKwfWAMWPLB03SVrg6eAYqjrtCABmxmyxN5Hpm8TYbuYKvsuRwVfNqO_8B4FIVTA==">
-
+        @csrf
         <div class="table-content m-t-10 clearfix goods-sku" data-sku-id="462">
             <div class="form-goods-gift">
                 <div class="goods-pic">
 				<span>
-					<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2018/04/13/15236100417381.jpg?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" alt="">
+					<img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/gallery/2018/04/13/15236100417381.jpg?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" alt="">
 				</span>
                 </div>
                 <div class="goods-summary">
@@ -124,7 +123,7 @@
             };
 
             $("#btn_view").click(function() {
-                $.go("http://www.b2b2c.yunmall.68mall.com/goods-43.html", "_blank");
+                $.go("http://{{ env('FRONTEND_DOMAIN') }}/goods-43.html", "_blank");
             });
 
             /**

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Modules\Seller\Http\Controllers\Activity;
+namespace App\Modules\Seller\Http\Controllers\Activity;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use Illuminate\Http\Request;

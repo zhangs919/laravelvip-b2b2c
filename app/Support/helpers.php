@@ -19,6 +19,48 @@
 // | Date:2018-07-26
 // | Description: 公共助手函数
 // +----------------------------------------------------------------------
+use App\Extensions\Http;
+
+/**
+ * 输出语言包
+ * @param null $key
+ * @param array $replace
+ * @param null $locale
+ * @return array|\Illuminate\Contracts\Translation\Translator|null|string
+ * @throws Exception
+ */
+function lang($key = null, $replace = [], $locale = null)
+{
+    if (is_null($locale)) {
+        $locale = config('app.locale');
+    }
+
+    return trans($key, $replace, $locale);
+}
+
+/**
+ * 获取系统版本信息
+ * @return array|mixed
+ */
+function get_version_info() {
+    $response = Http::doGet(config('lrw.upgrade_server').'/update/history.html?format=json&latest=true');
+    $latest_version = json_decode($response,true)['data'] ?? [];
+    return $latest_version;
+}
+
+/**
+ * 获取系统版本号
+ */
+function get_version() {
+    return get_version_info()['version'];
+}
+
+/**
+ * 获取系统版本发行日期
+ */
+function get_release() {
+    return get_version_info()['release'];
+}
 
 /**
  * 获取浏览器 phpsessionid
@@ -27,13 +69,18 @@
  */
 function real_cart_mac_ip()
 {
-    $upperDomain = str_replace('.','_', strtoupper(env('ROOT_DOMAIN'))).'_USER_PHPSESSID';
+    $upperDomain = str_replace('.','_', strtoupper(config('lrw.root_domain'))).'_USER_PHPSESSID';
 
-    session_name($upperDomain);
+//    session_name($upperDomain);
+
     $session_id_ip = cookie($upperDomain)->getValue();
 
     if (empty($session_id_ip) && $upperDomain != '_USER_PHPSESSID') {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_name($upperDomain);
+
+            session_start();
+        }
 //        $session_id_ip = md5(session_id() . dirname(__DIR__));
         $session_id_ip = session_id();
         $time = 60 * 24 * 365;
@@ -49,6 +96,7 @@ if (!function_exists('get_client_ip')) {
      * @param int $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
      * @param bool $adv 是否进行高级模式获取（有可能被伪装）
      * @return mixed
+     * TODO 此方法有问题，当使用swoole时，会丢失$_SERVER参数，swoole不支持全局变量参数！！！
      */
     function get_client_ip($type = 0, $adv = false) {
         $type       =  $type ? 1 : 0;
@@ -92,36 +140,59 @@ if (! function_exists('sysconf')) {
      * 设置或配置系统参数
      * @param string $code 参数code
      * @param bool $value 默认是false为获取值，否则为更新
-     * @return string|bool
+     *
+     * @return bool|string
      */
     function sysconf($code, $value = false)
     {
-//        static $config = [];
-        $config = [];
-        $systemConfigRep = new \App\Repositories\SystemConfigRepository();
-
         // 将值为0的情况转换为字符串形式:'0',防止不能更新
         if (is_int($value)) {
             $value = strval($value);
         }
-        if ($value !== false) {
-            list($config, $data) = [[], ['code' => $code, 'value' => $value]];
-
-            if (\App\Models\SystemConfig::where(['code'=>$code])->count() == 0) {
+        if ($value !== false) { // 更新配置信息
+            $info = \App\Models\SystemConfig::where(['code'=>$code])->first();
+            if (empty($info)) { // 配置信息不存在 返回 false
                 return false;
             }
+
+            $updateData = ['code' => $code, 'value' => $value];
+
             // 更新
-            return $systemConfigRep->updates(['code'=>$code], $data);
-        }
-        if (empty($config)) {
-            $config = $systemConfigRep->detail(['code'=>$code]);
-            if (!empty($config)) {
-                $config = [
-                    $code => $config['value']
-                ];
+            $systemConfigRep = new \App\Repositories\SystemConfigRepository();
+            $ret = $systemConfigRep->updates(['code'=>$code], $updateData);
+            if ($ret === true) { // 更新成功 更新系统配置缓存
+                cache()->put('sysconf_'.$code, $value, 30*60); // 默认缓存30分钟
+            }
+            return $ret;
+        } else { // 获取配置信息
+            // 先从缓存中读取
+            $se_val = \Illuminate\Support\Facades\Cache::get('sysconf_'.$code, function () use ($code) {
+                // 缓存不存在 从数据库中读取
+                $systemConfigRep = new \App\Repositories\SystemConfigRepository();
+                $config = $systemConfigRep->detail(['code'=>$code], ['code', 'value']);
+                if (!empty($config)) {
+                    $config = [
+                        $code => $config['value']
+                    ];
+                }
+
+                $configValue = isset($config[$code]) ?  html_entity_decode($config[$code]) : '';
+
+                // 将值为0的情况转换为字符串形式:'0',防止不能更新
+                if (is_int($configValue)) {
+                    $configValue = strval($configValue);
+                }
+
+                // 如果缓存中不存在 则写入缓存
+                cache()->put('sysconf_'.$code, $configValue, 30*60); // 默认缓存30分钟
+                return $configValue;
+            });
+
+            if (isset($se_val) && $se_val !== false) { // 如果缓存存在 直接读取并返回
+                return html_entity_decode($se_val);
             }
         }
-        return isset($config[$code]) ?  html_entity_decode($config[$code]) : '';
+
     }
 }
 
@@ -152,28 +223,63 @@ if (! function_exists('shopconf')) {
             }
 
             // 更新
-            $ret = \App\Models\ShopConfig::where($condition)->update(['value'=>$value]);
+            $shopConfigRep = new \App\Repositories\ShopConfigRepository();
+            $ret = $shopConfigRep->updates($condition, ['value'=>$value]);
+            if ($ret === true) { // 更新成功 更新系统配置缓存
+                cache()->put('shopconf_'.$shop_id.'_'.$code, $value, 30*60);
+            }
             return $ret;
+        } else { // 获取配置信息
+            // 先从缓存中读取
+            $se_val = cache()->get('shopconf_'.$shop_id.'_'.$code, function () use ($shop_id, $condition, $code) {
+                // 缓存不存在 从数据库中读取
+                $configValue = \App\Models\ShopConfig::where($condition)->value('value');
+                $configValue = isset($configValue) ? html_entity_decode($configValue) : '';
+
+                // 将值为0的情况转换为字符串形式:'0',防止不能更新
+                if (is_int($configValue)) {
+                    $configValue = strval($configValue);
+                }
+                // 如果缓存中不存在 则写入缓存
+                cache()->put('shopconf_'.$shop_id.'_'.$code, $configValue, 30*60); // 默认缓存30分钟
+                return $configValue;
+            });
+
+            if (isset($se_val) && $se_val !== false) {
+                return html_entity_decode($se_val);
+            }
+
         }
 
-        $retValue = \App\Models\ShopConfig::where($condition)->value('value');
 
-        return !empty($retValue) ? html_entity_decode($retValue) : '';
     }
 }
 
 if (! function_exists('assets_path')) {
+    /**
+     * 返回assets静态文件目录地址
+     *
+     * @param $filename
+     * @return string
+     */
     function assets_path($filename)
     {
-        $assets_path = asset('assets/d2eace91/'.$filename);
+        $assets_path = asset('assets/d2eace91/'.ltrim($filename, '/'));
         return $assets_path;
     }
 }
 
-/**
- * 返回json格式数据
- */
 if (! function_exists('result')) {
+    /**
+     * 返回json格式数据
+     *
+     * @param int $code code
+     * @param string $data 数据
+     * @param string $message 消息
+     * @param array $extra 额外数据
+     * @param bool $is_json 是否json格式返回
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     */
     function result($code = 0, $data = "0", $message = "", $extra = [], $is_json = true)
     {
         $result = [
@@ -188,28 +294,37 @@ if (! function_exists('result')) {
         }
         if ($is_json) {// 返回json格式
             return response($result, 200)
-                ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错
+                ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错 特别注意：这里不能修改，否则上传图片接口会报错！！！！！！
         }
 
         return $result; // 返回数组格式
     }
 }
 
-/**
- * 返回json格式数据
- */
 if (! function_exists('json_result')) {
+    /**
+     * 返回json格式数据
+     *
+     * @param array $data 数据
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     */
     function json_result($data)
     {
         return response($data, 200)
-            ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错
+            ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错 特别注意：这里不能修改，否则上传图片接口会报错！！！！！！
     }
 }
 
-/**
- * 返回数组格式数据
- */
 if (! function_exists('arr_result')) {
+    /**
+     * 返回数组格式数据
+     *
+     * @param int $code code
+     * @param string $data 数据
+     * @param string $message 消息
+     * @param array $extra 额外数据
+     * @return array
+     */
     function arr_result($code = 0, $data = "0", $message = "", $extra = [])
     {
         $result = result($code, $data, $message, $extra, false);
@@ -559,7 +674,6 @@ if (! function_exists('pagination')) {
             $html .= '条';
             $html .= '</div>';
 
-
             $html .= '<ul class="pagination">';
             if($curPage > 1) {
                 $html .= '<li style="display: none;">
@@ -615,6 +729,7 @@ if (! function_exists('pagination')) {
             </div>';
 
             $html .= '</div>';
+            /*todo 后期将下面的script注释掉*/
             $html .= '<script type="text/javascript">
                 $().ready(function () {
                     $(".pagination-goto > .goto-input").keyup(function (e) {
@@ -778,6 +893,12 @@ if (! function_exists('frontend_pagination')) {
 }
 
 if (! function_exists('cdn')) {
+    /**
+     * 返回cdn静态加速地址
+     *
+     * @param $filepath
+     * @return string
+     */
     function cdn($filepath)
     {
         if (env('URL_STATIC')) {
@@ -787,7 +908,6 @@ if (! function_exists('cdn')) {
         }
     }
 }
-
 
 if (! function_exists('article_cat_type')) {
 
@@ -829,90 +949,97 @@ if (! function_exists('flash')) {
      * @param string $msg
      * @param string $key
      */
-    function flash($status = 'success', $msg = '操作成功', $key = 'layerMsg')
+    function flash($status = 'success', $msg = OPERATE_SUCCESS, $key = 'layerMsg')
     {
         session()->flash($key, ['status' => $status, 'msg' => $msg]);
     }
 }
 
-function get_form_item_type()
-{
-//    text:单行文本
-//textarea:多行文本
-//password:密码
-//hidden:隐藏
-//switch:开关
-//radio:单选按钮
-//imagegroup:图片组
-    $data = [
-        'text' => [
-            'name' => 'text',
-            'title' => '单行文本'
-        ],
-        'textarea' => [
-            'name' => 'textarea',
-            'title' => '多行文本'
-        ],
-        'short_text' => [
-            'name' => 'short_text',
-            'title' => '短单行文本'
-        ],
-        'html' => [
-            'name' => 'html',
-            'title' => '自定义html' // 自定义html包含配置信息
-        ],
-        'static' => [
-            'name' => 'static',
-            'title' => '静态文本' // label
-        ],
-        'password' => [
-            'name' => 'password',
-            'title' => '密码'
-        ],
-        'hidden' => [
-            'name' => 'hidden',
-            'title' => '隐藏'
-        ],
-        'switch' => [
-            'name' => 'switch',
-            'title' => '开关'
-        ],
-        'radio' => [
-            'name' => 'radio',
-            'title' => '单选按钮'
-        ],
-        'imagegroup' => [
-            'name' => 'imagegroup',
-            'title' => '图片组'
-        ],
-        'select' => [
-            'name' => 'select',
-            'title' => '下拉框'
-        ],
-        'checkbox' => [
-            'name' => 'checkbox',
-            'title' => '复选框'
-        ],
-        'kindeditor' => [
-            'name' => 'kindeditor',
-            'title' => 'KindEditor'
-        ],
-        'region' => [
-            'name' => 'region',
-            'title' => '地区联动'
-        ],
-        'colorpicker' => [
-            'name' => 'colorpicker',
-            'title' => '取色器'
-        ],
-    ];
+if (! function_exists('get_form_item_type')) {
+    /**
+     * Get form item types.
+     * @return array
+     */
+    function get_form_item_type()
+    {
+        $data = [
+            'text' => [
+                'name' => 'text',
+                'title' => '单行文本'
+            ],
+            'textarea' => [
+                'name' => 'textarea',
+                'title' => '多行文本'
+            ],
+            'short_text' => [
+                'name' => 'short_text',
+                'title' => '短单行文本'
+            ],
+            'html' => [
+                'name' => 'html',
+                'title' => '自定义html' // 自定义html包含配置信息
+            ],
+            'static' => [
+                'name' => 'static',
+                'title' => '静态文本' // label
+            ],
+            'password' => [
+                'name' => 'password',
+                'title' => '密码'
+            ],
+            'hidden' => [
+                'name' => 'hidden',
+                'title' => '隐藏'
+            ],
+            'switch' => [
+                'name' => 'switch',
+                'title' => '开关'
+            ],
+            'radio' => [
+                'name' => 'radio',
+                'title' => '单选按钮'
+            ],
+            'imagegroup' => [
+                'name' => 'imagegroup',
+                'title' => '图片组'
+            ],
+            'select' => [
+                'name' => 'select',
+                'title' => '下拉框'
+            ],
+            'checkbox' => [
+                'name' => 'checkbox',
+                'title' => '复选框'
+            ],
+            'kindeditor' => [
+                'name' => 'kindeditor',
+                'title' => 'KindEditor'
+            ],
+            'region' => [
+                'name' => 'region',
+                'title' => '地区联动'
+            ],
+            'colorpicker' => [
+                'name' => 'colorpicker',
+                'title' => '取色器'
+            ],
+            'time' => [
+                'name' => 'time',
+                'title' => '时间'
+            ],
 
-    return $data;
+            'array' => [ // 配置值为数组json_encode 获取值时需要json_decode
+                'name' => 'array',
+                'title' => '数组'
+            ]
+        ];
+
+        return $data;
+    }
 }
 
 if (! function_exists('get_config_groups'))
 {
-
     /**
      * 平台后台配置分组
      *
@@ -1004,6 +1131,14 @@ if (! function_exists('get_config_groups'))
                 'title' => '默认图片',
                 'explain' => [],
 //                'validate_json' => '[{"id": "systemconfigmodel-default_goods_image", "name": "SystemConfigModel[default_goods_image]", "attribute": "default_goods_image", "rules": {"string":true,"messages":{"string":"默认商品图片必须是一条字符串。"}}},{"id": "systemconfigmodel-default_goods_image", "name": "SystemConfigModel[default_goods_image]", "attribute": "default_goods_image", "rules": {"required":true,"messages":{"required":"默认商品图片不能为空。"}}},{"id": "systemconfigmodel-default_shop_logo", "name": "SystemConfigModel[default_shop_logo]", "attribute": "default_shop_logo", "rules": {"string":true,"messages":{"string":"默认店铺Logo必须是一条字符串。"}}},{"id": "systemconfigmodel-default_shop_logo", "name": "SystemConfigModel[default_shop_logo]", "attribute": "default_shop_logo", "rules": {"required":true,"messages":{"required":"默认店铺Logo不能为空。"}}},{"id": "systemconfigmodel-default_shop_image", "name": "SystemConfigModel[default_shop_image]", "attribute": "default_shop_image", "rules": {"string":true,"messages":{"string":"默认店铺头像必须是一条字符串。"}}},{"id": "systemconfigmodel-default_user_portrait", "name": "SystemConfigModel[default_user_portrait]", "attribute": "default_user_portrait", "rules": {"string":true,"messages":{"string":"默认用户头像必须是一条字符串。"}}},{"id": "systemconfigmodel-default_micro_shop_image", "name": "SystemConfigModel[default_micro_shop_image]", "attribute": "default_micro_shop_image", "rules": {"string":true,"messages":{"string":"默认微店头像必须是一条字符串。"}}},{"id": "systemconfigmodel-default_article_cat_image", "name": "SystemConfigModel[default_article_cat_image]", "attribute": "default_article_cat_image", "rules": {"string":true,"messages":{"string":"默认文章分类图片必须是一条字符串。"}}},{"id": "systemconfigmodel-default_lazyload", "name": "SystemConfigModel[default_lazyload]", "attribute": "default_lazyload", "rules": {"string":true,"messages":{"string":"PC端默认缓载图片必须是一条字符串。"}}},{"id": "systemconfigmodel-default_lazyload_mobile", "name": "SystemConfigModel[default_lazyload_mobile]", "attribute": "default_lazyload_mobile", "rules": {"string":true,"messages":{"string":"手机端默认缓载图片必须是一条字符串。"}}},{"id": "systemconfigmodel-default_noresult", "name": "SystemConfigModel[default_noresult]", "attribute": "default_noresult", "rules": {"string":true,"messages":{"string":"无记录默认图片必须是一条字符串。"}}},{"id": "systemconfigmodel-default_video_image", "name": "SystemConfigModel[default_video_image]", "attribute": "default_video_image", "rules": {"string":true,"messages":{"string":"默认视频封面图必须是一条字符串。"}}},{"id": "systemconfigmodel-idcard_demo_image", "name": "SystemConfigModel[idcard_demo_image]", "attribute": "idcard_demo_image", "rules": {"string":true,"messages":{"string":"实名认证示例图片必须是一条字符串。"}}},{"id": "systemconfigmodel-company_demo_image", "name": "SystemConfigModel[company_demo_image]", "attribute": "company_demo_image", "rules": {"string":true,"messages":{"string":"企业认证示例图片必须是一条字符串。"}}},]'
+            ],
+            'log' => [
+                'code' => 'log',
+                'title' => '操作日志 - 设置',
+                'explain' => [
+                    '操作日志开启与关闭由平台方控制，开启操作日志可以记录管理人员的关键操作，但会轻微加重系统负担'
+                ],
+                'anchor' => [],
             ],
             'image_upload' => [
                 'code' => 'image_upload',
@@ -1146,6 +1281,14 @@ if (! function_exists('get_config_groups'))
                     '系统在调取物流信息时将调用快递鸟的“即时查询API”接口获取物流数据',
                     '您可以通过&nbsp;<a href="/site/trackquery" target="_blank" style="color: red;"><b>测试物流查询</b></a>&nbsp;链接测试物流信息查询'
                 ],
+                'anchor' => [],
+            ],
+
+            /*系统-站点*/
+            'subsite' => [
+                'code' => 'subsite',
+                'title' => '站点 - 站点设置',
+                'explain' => [],
                 'anchor' => [],
             ],
 
@@ -1319,6 +1462,70 @@ if (! function_exists('get_config_groups'))
                 'explain' => [],
                 'anchor' => [],
             ],
+
+            'desc_conform' => [
+                'code' => 'desc_conform',
+                'title' => '店铺评分-宝贝与描述相符',
+                'explain' => [
+                    '店铺评分分为四项指标：宝贝与描述相符、卖家的服务态度、卖家的发货速度、物流公司的服务，以上均分为5个分值（5分、4分、3分、2分、1分）',
+                    '店铺评分生效后，宝贝与描述相符、卖家的服务态度、卖家的发货速度三项指标将分别平均计入卖家的店铺评分中，物流公司的服务评分不计入卖家的店铺评分中',
+                    '店铺评分规则：取样订单—确认收货并评价完成的订单；取样周期—取评分周期内完成的订单',
+                    '评分规则—宝贝与描述相符度：自动取订单内的每个商品评分之和/商品数，取其平均数',
+                    '卖家的服务态度、卖家的发货速度、物流公司的服务：每笔订单对应这三个评价，取所有订单的各自分值之和/订单数，取其平均数',
+                    '综合评分：取宝贝与描述相符度、卖家的服务态度、卖家的发货速度的算术平均值',
+                    '宝贝与描述相符的“5个分值”分别对应“好评”、“中评”、“差评”，可按照网站经营的规则合理自定义，定义好后请勿随意修改，以免网站评价数据混乱',
+                ],
+                'anchor' => [],
+            ],
+            'service_desc' => [
+                'code' => 'service_desc',
+                'title' => '店铺评分-卖家的服务态度',
+                'explain' => [
+                    '店铺评分分为四项指标：宝贝与描述相符、卖家的服务态度、卖家的发货速度、物流公司的服务，以上均分为5个分值（5分、4分、3分、2分、1分）',
+                    '店铺评分生效后，宝贝与描述相符、卖家的服务态度、卖家的发货速度三项指标将分别平均计入卖家的店铺评分中，物流公司的服务评分不计入卖家的店铺评分中',
+                    '店铺评分规则：取样订单—确认收货并评价完成的订单；取样周期—取评分周期内完成的订单',
+                    '评分规则—宝贝与描述相符度：自动取订单内的每个商品评分之和/商品数，取其平均数',
+                    '卖家的服务态度、卖家的发货速度、物流公司的服务：每笔订单对应这三个评价，取所有订单的各自分值之和/订单数，取其平均数',
+                    '综合评分：取宝贝与描述相符度、卖家的服务态度、卖家的发货速度的算术平均值',
+                    '宝贝与描述相符的“5个分值”分别对应“好评”、“中评”、“差评”，可按照网站经营的规则合理自定义，定义好后请勿随意修改，以免网站评价数据混乱',
+                ],
+                'anchor' => [],
+            ],
+            'send_desc' => [
+                'code' => 'send_desc',
+                'title' => '店铺评分-卖家的发货速度',
+                'explain' => [
+                    '店铺评分分为四项指标：宝贝与描述相符、卖家的服务态度、卖家的发货速度、物流公司的服务，以上均分为5个分值（5分、4分、3分、2分、1分）',
+                    '店铺评分生效后，宝贝与描述相符、卖家的服务态度、卖家的发货速度三项指标将分别平均计入卖家的店铺评分中，物流公司的服务评分不计入卖家的店铺评分中',
+                    '店铺评分规则：取样订单—确认收货并评价完成的订单；取样周期—取评分周期内完成的订单',
+                    '评分规则—宝贝与描述相符度：自动取订单内的每个商品评分之和/商品数，取其平均数',
+                    '卖家的服务态度、卖家的发货速度、物流公司的服务：每笔订单对应这三个评价，取所有订单的各自分值之和/订单数，取其平均数',
+                    '综合评分：取宝贝与描述相符度、卖家的服务态度、卖家的发货速度的算术平均值',
+                    '宝贝与描述相符的“5个分值”分别对应“好评”、“中评”、“差评”，可按照网站经营的规则合理自定义，定义好后请勿随意修改，以免网站评价数据混乱',
+                ],
+                'anchor' => [],
+            ],
+            'shipping_desc' => [
+                'code' => 'shipping_desc',
+                'title' => '店铺评分-物流公司的服务',
+                'explain' => [
+                    '店铺评分分为四项指标：宝贝与描述相符、卖家的服务态度、卖家的发货速度、物流公司的服务，以上均分为5个分值（5分、4分、3分、2分、1分）',
+                    '店铺评分生效后，宝贝与描述相符、卖家的服务态度、卖家的发货速度三项指标将分别平均计入卖家的店铺评分中，物流公司的服务评分不计入卖家的店铺评分中',
+                    '店铺评分规则：取样订单—确认收货并评价完成的订单；取样周期—取评分周期内完成的订单',
+                    '评分规则—宝贝与描述相符度：自动取订单内的每个商品评分之和/商品数，取其平均数',
+                    '卖家的服务态度、卖家的发货速度、物流公司的服务：每笔订单对应这三个评价，取所有订单的各自分值之和/订单数，取其平均数',
+                    '综合评分：取宝贝与描述相符度、卖家的服务态度、卖家的发货速度的算术平均值',
+                    '宝贝与描述相符的“5个分值”分别对应“好评”、“中评”、“差评”，可按照网站经营的规则合理自定义，定义好后请勿随意修改，以免网站评价数据混乱',
+                ],
+                'anchor' => [],
+            ],
+            'mark_set' => [
+                'code' => 'mark_set',
+                'title' => '店铺评分-评分设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+
             'shop_collect' => [
                 'code' => 'shop_collect',
                 'title' => '采集控制 - 设置',
@@ -1384,6 +1591,25 @@ if (! function_exists('get_config_groups'))
                 'explain' => [],
                 'anchor' => [],
             ],
+            'bonus' => [
+                'code' => 'bonus',
+                'title' => '营销中心 - 红包设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+            'group_buy_slide' => [
+                'code' => 'group_buy_slide',
+                'title' => '营销中心 - 团购幻灯片管理',
+                'explain' => [
+                    '该组幻灯片滚动图片应用于团购页面使用，最多可上传4张图片',
+                    'pc端图片要求使用1920*440像素；手机端要求使用1000*400像素jpg、gif、png格式的图片',
+                    '上传图片后请添加格式为“http://网址...”链接地址，设定后将在显示页面中点击幻灯片将以另打开窗口的形式跳转到指定网址',
+                ],
+                'anchor' => [
+                    'PC端图片设置',
+                    '手机端图片设置',
+                ],
+            ],
 
             /*商城-装修*/
             'nav_category_site' => [
@@ -1428,6 +1654,13 @@ if (! function_exists('get_config_groups'))
                 'explain' => [],
                 'anchor' => [],
             ],
+            /*资金-设置*/
+            'deposit' => [
+                'code' => 'deposit',
+                'title' => '提现管理 - 设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
             /*APP-设置*/
             'app_setting' => [
                 'code' => 'app_setting',
@@ -1448,6 +1681,14 @@ if (! function_exists('get_config_groups'))
                 'explain' => [
                     '引导图作用：初次安装APP时引导用户进入商城APP首页的引导图片，建议设置2张以上',
                     '进入按钮作用：显示在最后一张引导图片上的按钮，点击可进入APP主页'
+                ],
+                'anchor' => [],
+            ],
+            'app_push' => [
+                'code' => 'app_push',
+                'title' => '消息推送 - 推送设置',
+                'explain' => [
+                    'APP端推送借助<a class="c-red" target="_blank" href="http://xg.qq.com/">腾讯信鸽平台</a>，您需要在腾讯信鸽平台进行应用申请，并填写应用信息'
                 ],
                 'anchor' => [],
             ],
@@ -1490,6 +1731,15 @@ if (! function_exists('get_config_groups'))
                     '个性化'
                 ],
             ],
+            'seller_app_push' => [
+                'code' => 'seller_app_push',
+                'title' => '消息推送 - 推送设置',
+                'explain' => [
+                    'APP端推送借助<a class="c-red" target="_blank" href="http://xg.qq.com/">腾讯信鸽平台</a>，您需要在腾讯信鸽平台进行应用申请，并填写应用信息'
+                ],
+                'anchor' => [],
+            ],
+            /*APP-网点*/
             'app_store_setting' => [
                 'code' => 'app_store_setting',
                 'title' => '网点设置 - APP网点设置',
@@ -1502,6 +1752,14 @@ if (! function_exists('get_config_groups'))
                     '强制更新',
                     '个性化'
                 ],
+            ],
+            'store_app_push' => [
+                'code' => 'store_app_push',
+                'title' => '消息推送 - 推送设置',
+                'explain' => [
+                    'APP端推送借助<a class="c-red" target="_blank" href="http://xg.qq.com/">腾讯信鸽平台</a>，您需要在腾讯信鸽平台进行应用申请，并填写应用信息'
+                ],
+                'anchor' => [],
             ],
 
             /*微商城-设置*/
@@ -1604,6 +1862,108 @@ if (! function_exists('admin_log'))
     }
 }
 
+if (! function_exists('user_log'))
+{
+    /**
+     * 记录会员操作日志
+     *
+     * @param int $user_id 会员id
+     * @param int $change_type 操作类型
+     * @param string $logon_service
+     * @return bool|int
+     */
+    function user_log($user_id, $change_type = 1, $logon_service = 'pc')
+    {
+        // 访问客户端类型 pc、mobile
+        $host = request()->header('host');
+        if (!empty($host) && $host == config('lrw.mobile_domain')) {
+            $logon_service = 'mobile';
+        }
+
+        // 检查是否登录
+        if (!auth('user')->check()) {
+            return false;
+        }
+        $admin_id = 0;
+        // 检查管理员是否登录
+        if (auth('admin')->check()) {
+            $admin_id = auth('admin')->id();
+        }
+
+//        $IpCity = new \App\Services\IpCity\IpCity();
+//        $change_city = $IpCity->getCity(real_ip());
+
+        $insert = [
+            'user_id' => $user_id,
+            'change_time' => time(),
+            'change_type' => $change_type,
+            'ip_address' => request()->ip(),
+//            'change_city' => $change_city,
+            'admin_id' => $admin_id,
+            'logon_service' => $logon_service,
+            'created_at' => \Carbon\Carbon::now()
+        ];
+
+        $ret = \Illuminate\Support\Facades\DB::table('user_log')->insertGetId($insert);
+
+        return $ret;
+    }
+}
+
+if (! function_exists('real_ip'))
+{
+    /**
+     * 获取客户端真实IP地址
+     * TODO 此方法有问题，当使用swoole时，会丢失$_SERVER参数，swoole不支持全局变量参数！！！
+     *
+     * @return array|false|string
+     */
+    function real_ip()
+    {
+        static $realip;
+
+        if ($realip !== NULL) {
+            return $realip;
+        }
+
+        if (isset($_COOKIE['real_ipd']) && !empty($_COOKIE['real_ipd'])) {
+            $realip = $_COOKIE['real_ipd'];
+            return $realip;
+        }
+
+        if (isset($_SERVER)) {
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+
+                foreach ($arr as $ip) {
+                    $ip = trim($ip);
+
+                    if ($ip != 'unknown') {
+                        $realip = $ip;
+                        break;
+                    }
+                }
+            } else if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $realip = $_SERVER['HTTP_CLIENT_IP'];
+            } else if (isset($_SERVER['REMOTE_ADDR'])) {
+                $realip = $_SERVER['REMOTE_ADDR'];
+            } else {
+                $realip = '0.0.0.0';
+            }
+        } else if (getenv('HTTP_X_FORWARDED_FOR')) {
+            $realip = getenv('HTTP_X_FORWARDED_FOR');
+        } else if (getenv('HTTP_CLIENT_IP')) {
+            $realip = getenv('HTTP_CLIENT_IP');
+        } else {
+            $realip = getenv('REMOTE_ADDR');
+        }
+
+        preg_match('/[\\d\\.]{7,15}/', $realip, $onlineip);
+        $realip = !empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0';
+        setcookie('real_ipd', $realip, time() + 36000, '/');
+        return $realip;
+    }
+}
 
 if (! function_exists('image_dir_group'))
 {
@@ -1637,24 +1997,26 @@ function get_video_url($path = '', $type = '', $isOss = true, $isCover = false)
         $domain = sysconf('oss_domain');
     } else {
         // 本地视频
-        $domain = env('BACKEND_DOMAIN');
+        $domain = config('lrw.backend_domain');
     }
     $host = request()->getScheme().'://'.$domain.'/'.sysconf('alioss_root_path').'/';
 
     $url = $host.ltrim($path, '/');
     if ($isCover) {
         $url .= '!poster.png';
+//        $url .='?x-oss-process=video/snapshot,t_10000,m_fast';
     }
-//    dd($url);
     return $url;
 }
 
 function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shopId = 0)
 {
-    if (str_contains($path, 'http')) {
+    if (\Illuminate\Support\Str::contains($path, 'http')) {
         // url已经包含域名 直接返回
         return $path;
     }
+    $watermark = ""; // 水印
+//    $watermark = ",image/watermark,text_".base64_encode("乐融沃");
 
     // 默认图片设置
     if ($type == 'shop_logo') { // 默认店铺logo
@@ -1671,6 +2033,7 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
         $default = '';
     } elseif ($type == 'goods_image') { // 默认商品图片
         $default = get_image_url(sysconf('default_goods_image'));
+
     } elseif ($type == 'm_login_bgimg') { // 微信端 登录页面背景图
         $default = '/images/login_top_bg.png';
     }
@@ -1687,7 +2050,7 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
         $domain = sysconf('oss_domain');
     } else {
         // 本地图片
-        $domain = env('BACKEND_DOMAIN');
+        $domain = config('lrw.backend_domain');
     }
 //    if ($siteId) {
 //        $host = 'http://'.$domain.'/'.sysconf('alioss_root_path')./*'/site/'.$siteId.*/'/';
@@ -1696,9 +2059,10 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
 //    } else {
 //        $host = 'http://'.$domain.'/'.sysconf('alioss_root_path').'/';
 //    }
-    $host = 'http://'.$domain.'/'.sysconf('alioss_root_path').'/';
+    // $host = request()->getScheme().'://'.$domain.'/'.sysconf('alioss_root_path').'/';
+    $host = 'https://'.$domain.'/'.sysconf('alioss_root_path').'/';
 
-    $url = $host.ltrim($path, '/');
+    $url = $host.ltrim($path, '/').$watermark;
     return $url;
 }
 
@@ -1706,7 +2070,8 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
 if (!function_exists('array_group_combine'))
 {
     /**
-     * 二维数组的排列组合
+     * 二维数组的排列组合（笛卡尔积组合）
+     *
      * 该函数只支持按数组下标排列组合 如按照规格ID对规格的可选值进行排列组合
      * 例如：---------
      * $arr['11'] = ['32GB', '64GB', '128GB'];
@@ -1813,7 +2178,7 @@ if (!function_exists('msubstr')) {
  */
 function get_oss_host()
 {
-    $host = 'http://'.sysconf('oss_domain').'/'.sysconf('alioss_root_path').'/';
+    $host = request()->getScheme().'://'.sysconf('oss_domain').'/'.sysconf('alioss_root_path').'/';
     return $host;
 }
 
@@ -1834,15 +2199,14 @@ function uuid($separate = '')
 
 /**
  * 生成唯一的随机字符串
+ * 十位数字（当前时间戳） + 六位字母（A-Z）
+ * e.1518931658BPLWJE
  *
  * @return string
  */
 function make_uuid()
 {
-//    1518931658BPLWJE
-    // 十位数字（当前时间戳） + 六位字母（A-Z）
     $uuid = time().create_random_str(6);
-
     return $uuid;
 }
 
@@ -1914,8 +2278,6 @@ function link_type($key = '')
     return $data;
 }
 
-
-
 /**
  * 导航显示位置
  *
@@ -1924,20 +2286,14 @@ function link_type($key = '')
  */
 function nav_position($key = '')
 {
-//    if ($key == 0) {
-//        return '';
-//    }
     $data = [
         1 => '头部',
         2 => '中间',
         3 => '底部',
     ];
-
     if (isset($data[$key])) {
         return $data[$key];
     }
-
-
     if (!empty($key)) {
         return isset($data[$key]) ? $data[$key] : false;
     }
@@ -1975,9 +2331,10 @@ function nav_layout($key = '')
  */
 function get_ws_url($port = '8181')
 {
-    $host = env('PUSH_DOMAIN');
-
-    return 'ws://'.$host.':'.$port;
+    $host = config('lrw.push_domain');
+    
+    return 'wss://'.$host.':'.$port;
+    // return (request()->isSecure() ? 'wss': 'ws').'://'.$host.':'.$port;
 }
 
 function attr_style($key = '')
@@ -2021,25 +2378,6 @@ function format_unit($key)
     }
     return $data;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2097,7 +2435,7 @@ if (! function_exists('calc_width'))
  * @param   int     $selected   当前选中分类的ID
  * @param   boolean $re_type    返回的类型: 值为真时返回下拉列表,否则返回数组
  * @param   int     $level      限定返回的级数。为0时返回所有级数
- * @param   int     $is_show_all 如果为true显示所有分类，如果为false隐藏不可见分类。
+ * @param   boolean $is_show_all 如果为true显示所有分类，如果为false隐藏不可见分类。
  * @return  mixed
  */
 function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_show_all = true)
@@ -2119,7 +2457,7 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
                 "GROUP BY c.cat_id ".
                 'ORDER BY c.parent_id, c.cat_sort ASC';
             $res = \Illuminate\Support\Facades\DB::select($sql);
-//            dd($res);
+
             $sql = "SELECT cat_id, COUNT(*) AS goods_num " .
                 " FROM " . $goodsTable .
                 " WHERE is_delete = 0 AND goods_status = 1 " .
@@ -2151,7 +2489,6 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
             foreach($res as $k=>$v)
             {
                 $v = (array)$v;
-//                $res[$k]['goods_num'] = !empty($newres[$v['cat_id']]) ? $newres[$v['cat_id']] : 0;
                 $v['goods_num'] = !empty($newres[$v['cat_id']]) ? $newres[$v['cat_id']] : 0;
             }
             //如果数组过大，不采用静态缓存方式
@@ -2255,9 +2592,8 @@ function cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, $is_s
  * 过滤和排序所有分类，返回一个带有缩进级别的数组
  *
  * @access  private
- * @param   int     $cat_id     上级分类ID
+ * @param   int     $spec_cat_id     上级分类ID
  * @param   array   $arr        含有所有分类的数组
- * @param   int     $level      级别
  * @return  mixed
  */
 function cat_options($spec_cat_id, $arr)
@@ -2480,7 +2816,7 @@ function cat_options($spec_cat_id, $arr)
 
 /**
  * 获取某个商品分类的 儿子 孙子  重子重孙 的 id
- *
+ * todo 该方法存在严重性能问题 待优化
  * @param int $cat_id
  * @return array|mixed
  */
@@ -2514,6 +2850,51 @@ function get_cat_grandson2($cat_id)
         }
     }
 }
+
+/**
+ * 获取商品分类的父级分类
+ * 递归
+ *
+ * @param $categories
+ * @param $cat_id
+ * @return array
+ */
+function get_cat_parent($categories, $cat_id)
+{
+    $tree = [];
+    foreach ($categories as $item) {
+        if ($item['cat_id'] == $cat_id) {
+            $tree[] = $item;
+            $tree = array_merge(get_cat_parent($categories, $item['parent_id']), $tree);
+        }
+    }
+
+    return $tree;
+}
+
+/**
+ * 获取商品分类的父级分类
+ * 迭代
+ *
+ * @param $categories
+ * @param $cat_id
+ * @return array
+ */
+function get_cat_parent2($categories, $cat_id)
+{
+    $tree = [];
+    while ($cat_id != 0) {
+        foreach ($categories as $item) {
+            if ($item['cat_id'] == $cat_id) {
+                $tree[] = $item;
+                $cat_id = $item['parent_id'];
+                break;
+            }
+        }
+    }
+    return $tree;
+}
+
 
 /**
  * 获取某个文章分类的 儿子 孙子  重子重孙 的 id
@@ -2647,7 +3028,7 @@ if (!function_exists('format_time')) {
      * @param string $format 输出格式
      * @return false|string
      */
-    function format_time($time = '', $format='Y-m-d H:i') {
+    function format_time($time = '', $format='Y-m-d H:i:s') {
         return !$time ? '' : date($format, intval($time));
     }
 }
@@ -2877,17 +3258,19 @@ function get_parent_region_list($parent_code, $isReturnNames = false){
     }
     $region = \Illuminate\Support\Facades\DB::table('region')->where($where)->first();
 
-    $region_list = [
-        'region_code' => $region->region_code,
-        'region_name' => $region->region_name
-    ];
+    if (!empty($region)) {
+        $region_list = [
+            'region_code' => $region->region_code,
+            'region_name' => $region->region_name
+        ];
 
-    array_push($list, $region_list);
-    if($region->parent_code != 0){
-        $nregion = get_parent_region_list($region->parent_code);
-        if(!empty($nregion)){
-            $names = array_merge($names, $nregion);
-            $list = array_merge($list, $nregion);
+        array_push($list, $region_list);
+        if($region->parent_code != 0){
+            $nregion = get_parent_region_list($region->parent_code);
+            if(!empty($nregion)){
+                $names = array_merge($names, $nregion);
+                $list = array_merge($list, $nregion);
+            }
         }
     }
 
@@ -2902,10 +3285,12 @@ function get_parent_region_list($parent_code, $isReturnNames = false){
  * @return bool
  */
 function is_weixin(){
-    if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ) {
-        return true;
-    }
-    return false;
+	$user_agent = request()->header('user-agent');
+	if (strpos($user_agent, 'MicroMessenger') !== false) {
+		return true; // 返回真表示是微信环境
+	} else {
+		return false; // 返回假表示不是微信环境
+	}
 }
 
 /**
@@ -2927,153 +3312,7 @@ function format_freight_valuation($valuation = 0)
     return $data[$valuation];
 }
 
-/**
- * 格式化数据订单来源
- *
- * @param int $order_from
- * @return mixed|string
- */
-function format_order_from($order_from = 1)
-{
-    $data = [
-        1 => 'PC端',
-        2 => 'WAP端',
-        3 => 'Android客户端',
-        4 => 'iOS客户端',
-        5 => '小程序端'
-    ];
-    if (!isset($data[$order_from])) {
-        return '';
-    }
-    return $data[$order_from];
-}
 
-/**
- * 格式化订单状态
- *
- * @param $k
- * @return mixed|string
- */
-function format_order_status($k)
-{
-//    订单状态 0-订单已确认 1-交易成功 2-卖家取消 3-买家取消 4-系统自动取消 10-抢单中
-    $data = [
-        0 => '订单已确认',
-        1 => '交易成功',
-        2 => '卖家取消',
-        3 => '买家取消',
-        4 => '系统自动取消', // 交易关闭
-        /*todo 中间有可能还有其他状态*/
-        10 => '抢单中'
-    ];
-    if (!isset($data[$k])) {
-        return '';
-    }
-    return $data[$k];
-}
-
-/**
- * 格式化配送状态
- *
- * @param $k
- * @return mixed|string
- */
-function format_shipping_status($k)
-{
-//    配送状态 0-待发货 1-已发货 2-发货中 3-已提交物流系统
-    $data = [
-        0 => '待发货',
-        1 => '已发货',
-        2 => '发货中',
-        3 => '已提交物流系统',
-    ];
-    if (!isset($data[$k])) {
-        return '';
-    }
-    return $data[$k];
-}
-
-/**
- * 格式化红包类型
- *
- * 红包类型 默认0 1-主动领红包/到店送红包 2-收藏送红包 4-会员送红包 6-注册送红包 9-推荐送红包 10-积分兑换红包
- * @param int $bonus_type
- * @return mixed|string
- */
-function format_bonus_type($bonus_type = 0)
-{
-    $data = [
-        1 => '到店送红包',
-        2 => '收藏送红包',
-        4 => '会员送红包',
-        6 => '注册送红包',
-        9 => '推荐送红包',
-        10 => '积分兑换红包'
-    ];
-    if (!isset($data[$bonus_type])) {
-        return '';
-    }
-    return $data[$bonus_type];
-}
-
-/**
- * 检查订单来源
- *
- * @return int
- */
-function check_order_from()
-{
-    if (is_app('weapp')) { // 微信小程序端访问
-        return 5;
-    } elseif (is_app('ios')) { // Ios端访问
-        return 4;
-    } elseif (is_app('android')) { // Android端访问
-        return 3;
-    } elseif (is_mobile() && !is_app()) { // 手机端访问 针对微信端
-        return 2;
-    } else { // PC端
-        return 1;
-    }
-}
-
-/**
- * 格式化数据订单配送方式
- *
- * @param int $pickup
- * @return mixed|string
- */
-function format_order_pickup($pickup = 0)
-{
-    $data = [
-        0 => '普通配送',
-        1 => '上门自提'
-    ];
-    if (!isset($data[$pickup])) {
-        return '';
-    }
-    return $data[$pickup];
-}
-
-/**
- * 格式化数据订单支付方式
- *
- * @param int $pay_type
- * @return mixed|string
- */
-function format_pay_type($pay_type = '')
-{
-    $data = [
-        'alipay' => '支付宝',
-        'union' => '银联支付',
-        'weixin' => '微信支付',
-        'balance' => '余额支付',
-        'cod' => '货到付款',
-    ];
-    if (!isset($data[$pay_type])) {
-        return '';
-    }
-    return $data[$pay_type];
-}
 
 /**
  * 格式化数据会员注册来源
@@ -3126,7 +3365,7 @@ function get_cart_image()
     if(sysconf('custom_style_enable')) {
         $data = get_image_url(sysconf('cart_image'));
     } else {
-        $data = __HTTP__.env('FRONTEND_DOMAIN').'/images/add-cart.jpg';
+        $data = request()->getScheme().'://'.config('lrw.frontend_domain').'/images/add-cart.jpg';
     }
     return $data;
 }
@@ -3135,13 +3374,25 @@ function get_cart_image()
 //    return preg_replace_callback('#s:(\d+):"(.*?)";#s',function($match){return 's:'.strlen($match[2]).':"'.$match[2].'";';},$str);
 //}
 
+/**
+ * 获取手机号码归属地信息
+ *
+ * @param string $mobile 手机号码
+ * @return array|string
+ */
 function get_mobile_area($mobile){
 
     if (!check_is_mobile($mobile)) {
         return '';
     }else{
+        if (config('app.env') == 'local') { // 本地环境不请求接口
+            return '';
+        }
         $phone_json = file_get_contents('http://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?query={'.$mobile.'}&resource_id=6004&ie=utf8&oe=utf8&format=json');
         $phone_array = json_decode($phone_json,true);
+        if (empty($phone_array['data'])) {
+        	return '';
+		}
         $phone_info = array();
         $phone_info['mobile'] = $mobile;
         $phone_info['type'] = $phone_array['data'][0]['type'];
@@ -3230,7 +3481,7 @@ function get_application_list()
                     'label' => '',
                     'is_disp_block' => false,
                     'logo' => 'zp',
-                    'url' => 'javascript:;',
+                    'url' => '/dashboard/gift/list',
                     'field' => 'gift',
                     'type' => 2,
                 ],
@@ -3244,16 +3495,16 @@ function get_application_list()
                     'field' => 'full_cut',
                     'type' => 2,
                 ],
-                [
-                    'name' => '满件优惠',
-                    'desc' => '设置购买指定件享受优惠',
-                    'label' => '敬请期待',
-                    'is_disp_block' => true,
-                    'logo' => 'yh',
-                    'url' => 'javascript:;',
-                    'field' => 'full_discount',
-                    'type' => 2,
-                ],
+//                [
+//                    'name' => '满件优惠',
+//                    'desc' => '设置购买指定件享受优惠',
+//                    'label' => '敬请期待',
+//                    'is_disp_block' => true,
+//                    'logo' => 'yh',
+//                    'url' => 'javascript:;',
+//                    'field' => 'full_discount',
+//                    'type' => 2,
+//                ],
 //                [
 //                    'name' => '加价购',
 //                    'desc' => '设置订单满指定金额加价换购商品',
@@ -3263,28 +3514,29 @@ function get_application_list()
 //                    'url' => 'javascript:;',
 //                    'field' => '',
 //                ],
-                [
-                    'name' => '购物返现',
-                    'desc' => '购买商品满足指定条件返部分现金',
-                    'label' => '敬请期待',
-                    'is_disp_block' => true,
-                    'logo' => 'gwfx',
-                    'url' => 'javascript:;',
-                    'field' => 'buy_back',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '订单返现',
-                    'desc' => '设置订单满指定金额返部分现金',
-                    'label' => '敬请期待',
-                    'is_disp_block' => true,
-                    'logo' => 'ddf',
-                    'url' => 'javascript:;',
-                    'field' => '',
-                    'type' => 1,
-                ],
+                // [
+                //     'name' => '购物返现',
+                //     'desc' => '购买商品满足指定条件返部分现金',
+                //     'label' => '敬请期待',
+                //     'is_disp_block' => true,
+                //     'logo' => 'gwfx',
+                //     'url' => 'javascript:;',
+                //     'field' => 'buy_back',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '订单返现',
+                //     'desc' => '设置订单满指定金额返部分现金',
+                //     'label' => '敬请期待',
+                //     'is_disp_block' => true,
+                //     'logo' => 'ddf',
+                //     'url' => 'javascript:;',
+                //     'field' => '',
+                //     'type' => 1,
+                // ],
             ]
         ],
+        // todo 暂时注释 后期再做
         [
             'name' => '引流裂变',
             'desc' => '',
@@ -3314,66 +3566,66 @@ function get_application_list()
                     'field' => 'bargain',
                     'type' => 2,
                 ],
-                [
-                    'name' => '短信推送',
-                    'desc' => '向消费者发送短信消息通知',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'dx',
-                    'url' => '/dashboard/sms-group/index',
-                    'field' => 'sms_send',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '邮件推送',
-                    'desc' => '向消费者发送邮件消息通知',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'yj',
-                    'url' => '/dashboard/email-group/index',
-                    'field' => 'email_send',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '微信推送',
-                    'desc' => '向消费者发送微信消息通知',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'wx',
-                    'url' => '/weixin/push/index?btn=back',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '分销',
-                    'desc' => '三级分销，爆炸式推广',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'fx',
-                    'url' => '/system/config/index?group=distrib',
-                    'field' => 'distrib',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '直播',
-                    'desc' => '直播引流，效果直观',
-                    'label' => '',
-                    'is_disp_block' => true,
-                    'logo' => 'live',
-                    'url' => '/dashboard/live/index',
-                    'field' => 'live',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '预售',
-                    'desc' => '预定形式销售',
-                    'label' => '',
-                    'is_disp_block' => true,
-                    'logo' => 'ys',
-                    'url' => '/dashboard/pre-sale/index',
-                    'field' => 'pre_sale',
-                    'type' => 1,
-                ],
+                // [
+                //     'name' => '短信推送',
+                //     'desc' => '向消费者发送短信消息通知',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'dx',
+                //     'url' => '/dashboard/sms-group/index',
+                //     'field' => 'sms_send',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '邮件推送',
+                //     'desc' => '向消费者发送邮件消息通知',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'yj',
+                //     'url' => '/dashboard/email-group/index',
+                //     'field' => 'email_send',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '微信推送',
+                //     'desc' => '向消费者发送微信消息通知',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'wx',
+                //     'url' => '/weixin/push/index?btn=back',
+                //     'field' => '',
+                //     'type' => 1,
+                // ],
+                // [
+                //     'name' => '分销',
+                //     'desc' => '三级分销，爆炸式推广',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'fx',
+                //     'url' => '/system/config/index?group=distrib',
+                //     'field' => 'distrib',
+                //     'type' => 2,
+                // ],
+                 [
+                     'name' => '直播',
+                     'desc' => '直播引流，效果直观',
+                     'label' => '',
+                     'is_disp_block' => true,
+                     'logo' => 'live',
+                     'url' => '/dashboard/live/index',
+                     'field' => 'live',
+                     'type' => 1,
+                 ],
+                // [
+                //     'name' => '预售',
+                //     'desc' => '预定形式销售',
+                //     'label' => '',
+                //     'is_disp_block' => true,
+                //     'logo' => 'ys',
+                //     'url' => '/dashboard/pre-sale/index',
+                //     'field' => 'pre_sale',
+                //     'type' => 1,
+                // ],
             ]
         ],
         [
@@ -3395,46 +3647,46 @@ function get_application_list()
                     'field' => 'topic',
                     'type' => 2,
                 ],
-                [
-                    'name' => '商超便利超市-自由购',
-                    'desc' => '超市现场使用，扫码核销免排队',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'zyg',
-                    'url' => '/dashboard/freebuy/desc',
-                    'field' => 'free_buy',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '堂内点餐',
-                    'desc' => '到店扫码方便快捷',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'ddg',
-                    'url' => '/dashboard/reachbuy-shops/list',
-                    'field' => 'reach_buy',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '扫码付',
-                    'desc' => '扫码支付',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'smf',
-                    'url' => '/dashboard/scan-code/index',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '限购',
-                    'desc' => '不同等级消费者限制购买',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'xg',
-                    'url' => '/dashboard/purchase/list',
-                    'field' => 'purchase',
-                    'type' => 1,
-                ],
+                // [
+                //     'name' => '商超便利超市-自由购',
+                //     'desc' => '超市现场使用，扫码核销免排队',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'zyg',
+                //     'url' => '/dashboard/freebuy/desc',
+                //     'field' => 'free_buy',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '堂内点餐',
+                //     'desc' => '到店扫码方便快捷',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'ddg',
+                //     'url' => '/dashboard/reachbuy-shops/list',
+                //     'field' => 'reach_buy',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '扫码付',
+                //     'desc' => '扫码支付',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'smf',
+                //     'url' => '/dashboard/scan-code/index',
+                //     'field' => '',
+                //     'type' => 1,
+                // ],
+                // [
+                //     'name' => '限购',
+                //     'desc' => '不同等级消费者限制购买',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'xg',
+                //     'url' => '/dashboard/purchase/list',
+                //     'field' => 'purchase',
+                //     'type' => 1,
+                // ],
                 [
                     'name' => '万能表单',
                     'desc' => '自定义表单文件',
@@ -3445,16 +3697,16 @@ function get_application_list()
                     'field' => 'custom_form',
                     'type' => 1,
                 ],
-                [
-                    'name' => '虚拟商品',
-                    'desc' => '服务商品、电子卡券',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'xnsp',
-                    'url' => '/trade/virtual-order/list',
-                    'field' => 'virtual',
-                    'type' => 1,
-                ],
+                // [
+                //     'name' => '虚拟商品',
+                //     'desc' => '服务商品、电子卡券',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'xnsp',
+                //     'url' => '/trade/virtual-order/list',
+                //     'field' => 'virtual',
+                //     'type' => 1,
+                // ],
             ]
         ],
         [
@@ -3476,46 +3728,46 @@ function get_application_list()
                     'field' => 'integralmall',
                     'type' => 2,
                 ],
-                [
-                    'name' => '平台储值卡',
-                    'desc' => '平台方向消费者发放储值卡',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'czk',
-                    'url' => '/dashboard/recharge-card-type/list',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '店铺购物卡',
-                    'desc' => '店铺向会员发放的购物卡',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'czk',
-                    'url' => '/dashboard/store-card-type/list',
-                    'field' => 'shop_store_card',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '提货券',
-                    'desc' => '向消费者发放提货券',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'lpk',
-                    'url' => '/dashboard/gift-card/list',
-                    'field' => 'gift_card',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '充值有礼',
-                    'desc' => '充值翻倍、有礼',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'czyl',
-                    'url' => '/dashboard/recharge-polite/list',
-                    'field' => '',
-                    'type' => 1,
-                ],
+                // [
+                //     'name' => '平台储值卡',
+                //     'desc' => '平台方向消费者发放储值卡',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'czk',
+                //     'url' => '/dashboard/recharge-card-type/list',
+                //     'field' => '',
+                //     'type' => 1,
+                // ],
+                // [
+                //     'name' => '店铺购物卡',
+                //     'desc' => '店铺向会员发放的购物卡',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'czk',
+                //     'url' => '/dashboard/store-card-type/list',
+                //     'field' => 'shop_store_card',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '提货券',
+                //     'desc' => '向消费者发放提货券',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'lpk',
+                //     'url' => '/dashboard/gift-card/list',
+                //     'field' => 'gift_card',
+                //     'type' => 2,
+                // ],
+                // [
+                //     'name' => '充值有礼',
+                //     'desc' => '充值翻倍、有礼',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'czyl',
+                //     'url' => '/dashboard/recharge-polite/list',
+                //     'field' => '',
+                //     'type' => 1,
+                // ],
 //                [
 //                    'name' => '抢红包',
 //                    'desc' => '抢红包',
@@ -3547,187 +3799,187 @@ function get_application_list()
                 ],
             ]
         ],
-        [
-            'name' => '经营分析',
-            'desc' => '',
-            'label' => '',
-            'is_disp_block' => false,
-            'logo' => '',
-            'url' => '',
-            'field' => '',
-            'child' => [
-//                [
-//                    'name' => '众筹',
-//                    'desc' => '用户打造自己喜欢的产品',
-//                    'label' => '已购',
-//                    'is_disp_block' => false,
-//                    'logo' => 'zc',
-//                    'url' => 'javascript:;',
-//                ],
-                [
-                    'name' => '客户分析',
-                    'desc' => '平台客户分析及定向营销',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'khfx',
-                    'url' => '/dashboard/customer-analysis/index',
-                    'field' => 'customer_analysis',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '商圈营销',
-                    'desc' => '同城电商区域分析',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'sqyx',
-                    'url' => '/dashboard/trade-area/list',
-                    'field' => 'trade_area',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '数据导出',
-                    'desc' => '商城商品数据导出',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'sjdc',
-                    'url' => '/dashboard/data-export/index',
-                    'field' => 'data_import',
-                    'type' => 2,
-                ],
-            ]
-        ],
-        [
-            'name' => '店铺拓展',
-            'desc' => '',
-            'label' => '',
-            'is_disp_block' => false,
-            'logo' => '',
-            'url' => '',
-            'field' => '',
-            'child' => [
-                [
-                    'name' => '预上线店铺',
-                    'desc' => '推进商城招商入驻',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'ysx',
-                    'url' => '/shop/shop/pre-line-list?is_supply=0',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '神码收银',
-                    'desc' => '生成直接收款页面和收款码',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'mssy',
-                    'url' => '/finance/cashier/stats',
-                    'field' => 'god_qrcode',
-                    'type' => 2,
-                ],
-            ]
-        ],
-        [
-            'name' => '销售渠道',
-            'desc' => '',
-            'label' => '',
-            'is_disp_block' => false,
-            'logo' => '',
-            'url' => '',
-            'field' => '',
-            'child' => [
-                [
-                    'name' => '微商城',
-                    'desc' => '连接公众号，玩转微信生态',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'wsc',
-                    'url' => '/system/config/index?group=weixin',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => 'WAP端',
-                    'desc' => '手机浏览器，玩转电商系统',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'wap',
-                    'url' => '/system/config/index?group=mobile_setting_basic',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '站点',
-                    'desc' => '多城市区域独立经营',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'zd',
-                    'url' => '/dashboard/site/index',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '批发市场',
-                    'desc' => '阶梯价批发售卖商品',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'pfsc',
-                    'url' => '/dashboard/market/index',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '消费者APP',
-                    'desc' => '一款满足消费者线上购物需求的软件',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'xfz-app',
-                    'url' => '/system/config/index?group=app_setting',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '商家版APP',
-                    'desc' => '最实用的商家开店手机助手',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'sjb-app',
-                    'url' => '/system/config/index?group=app_seller_setting',
-                    'field' => '',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '收银台',
-                    'desc' => '一站式收银台解决方案',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'syt',
-                    'url' => '/dashboard/cashier-desk/index',
-                    'field' => 'cashier',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '网点',
-                    'desc' => '自动接收订单，就近配送',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'wd',
-                    'url' => 'javascript:;',
-                    'field' => 'wd',
-                    'type' => 1,
-                ],
-                [
-                    'name' => '区域合伙人',
-                    'desc' => '区域加盟，扩大推广',
-                    'label' => '敬请期待',
-                    'is_disp_block' => true,
-                    'logo' => 'qyhhw',
-                    'url' => 'javascript:;',
-                    'field' => '',
-                    'type' => 1,
-                ],
-            ]
-        ],
+//         [
+//             'name' => '经营分析',
+//             'desc' => '',
+//             'label' => '',
+//             'is_disp_block' => false,
+//             'logo' => '',
+//             'url' => '',
+//             'field' => '',
+//             'child' => [
+// //                [
+// //                    'name' => '众筹',
+// //                    'desc' => '用户打造自己喜欢的产品',
+// //                    'label' => '已购',
+// //                    'is_disp_block' => false,
+// //                    'logo' => 'zc',
+// //                    'url' => 'javascript:;',
+// //                ],
+//                 [
+//                     'name' => '客户分析',
+//                     'desc' => '平台客户分析及定向营销',
+//                     'label' => '已购',
+//                     'is_disp_block' => false,
+//                     'logo' => 'khfx',
+//                     'url' => '/dashboard/customer-analysis/index',
+//                     'field' => 'customer_analysis',
+//                     'type' => 2,
+//                 ],
+//                 [
+//                     'name' => '商圈营销',
+//                     'desc' => '同城电商区域分析',
+//                     'label' => '已购',
+//                     'is_disp_block' => false,
+//                     'logo' => 'sqyx',
+//                     'url' => '/dashboard/trade-area/list',
+//                     'field' => 'trade_area',
+//                     'type' => 2,
+//                 ],
+//                 [
+//                     'name' => '数据导出',
+//                     'desc' => '商城商品数据导出',
+//                     'label' => '已购',
+//                     'is_disp_block' => false,
+//                     'logo' => 'sjdc',
+//                     'url' => '/dashboard/data-export/index',
+//                     'field' => 'data_import',
+//                     'type' => 2,
+//                 ],
+//             ]
+//         ],
+        // [
+        //     'name' => '店铺拓展',
+        //     'desc' => '',
+        //     'label' => '',
+        //     'is_disp_block' => false,
+        //     'logo' => '',
+        //     'url' => '',
+        //     'field' => '',
+        //     'child' => [
+        //         [
+        //             'name' => '预上线店铺',
+        //             'desc' => '推进商城招商入驻',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'ysx',
+        //             'url' => '/shop/shop/pre-line-list?is_supply=0',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '神码收银',
+        //             'desc' => '生成直接收款页面和收款码',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'mssy',
+        //             'url' => '/finance/cashier/stats',
+        //             'field' => 'god_qrcode',
+        //             'type' => 2,
+        //         ],
+        //     ]
+        // ],
+        // [
+        //     'name' => '销售渠道',
+        //     'desc' => '',
+        //     'label' => '',
+        //     'is_disp_block' => false,
+        //     'logo' => '',
+        //     'url' => '',
+        //     'field' => '',
+        //     'child' => [
+        //         [
+        //             'name' => '微商城',
+        //             'desc' => '连接公众号，玩转微信生态',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'wsc',
+        //             'url' => '/system/config/index?group=weixin',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => 'WAP端',
+        //             'desc' => '手机浏览器，玩转电商系统',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'wap',
+        //             'url' => '/system/config/index?group=mobile_setting_basic',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '站点',
+        //             'desc' => '多城市区域独立经营',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'zd',
+        //             'url' => '/dashboard/site/index',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '批发市场',
+        //             'desc' => '阶梯价批发售卖商品',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'pfsc',
+        //             'url' => '/dashboard/market/index',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '消费者APP',
+        //             'desc' => '一款满足消费者线上购物需求的软件',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'xfz-app',
+        //             'url' => '/system/config/index?group=app_setting',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '商家版APP',
+        //             'desc' => '最实用的商家开店手机助手',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'sjb-app',
+        //             'url' => '/system/config/index?group=app_seller_setting',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '收银台',
+        //             'desc' => '一站式收银台解决方案',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'syt',
+        //             'url' => '/dashboard/cashier-desk/index',
+        //             'field' => 'cashier',
+        //             'type' => 2,
+        //         ],
+        //         [
+        //             'name' => '网点',
+        //             'desc' => '自动接收订单，就近配送',
+        //             'label' => '',
+        //             'is_disp_block' => false,
+        //             'logo' => 'wd',
+        //             'url' => 'javascript:;',
+        //             'field' => 'wd',
+        //             'type' => 1,
+        //         ],
+        //         [
+        //             'name' => '区域合伙人',
+        //             'desc' => '区域加盟，扩大推广',
+        //             'label' => '敬请期待',
+        //             'is_disp_block' => true,
+        //             'logo' => 'qyhhw',
+        //             'url' => 'javascript:;',
+        //             'field' => '',
+        //             'type' => 1,
+        //         ],
+        //     ]
+        // ],
 
         /*[
             'name' => '互动活动',
@@ -3803,6 +4055,53 @@ function get_application_list()
 function get_shop_application_list()
 {
     $data = [
+         [
+             'name' => '销售渠道',
+             'desc' => '',
+             'label' => '',
+             'is_disp_block' => false,
+             'logo' => '',
+             'url' => '',
+             'field' => '',
+             'child' => [
+                 [
+                     'name' => '移动端',
+                     'desc' => '连接公众号，玩转微信生态',
+                     'label' => '',
+                     'is_disp_block' => false,
+                     'logo' => 'ydd',
+                     'url' => '/shop/weixin-config/index.html',
+                     'field' => 'mobile',
+                 ],
+//                 [
+//                     'name' => '网点',
+//                     'desc' => '自动接收订单，就近配送',
+//                     'label' => '',
+//                     'is_disp_block' => false,
+//                     'logo' => 'wd',
+//                     'url' => '/store/default/list',
+//                     'field' => 'wd',
+//                 ],
+//                 [
+//                     'name' => '视频号',
+//                     'desc' => '视频号挂载小程序',
+//                     'label' => '',
+//                     'is_disp_block' => false,
+//                     'logo' => 'sph',
+//                     'url' => '/dashboard/mini-video/live-list',
+//                     'field' => 'mini_video',
+//                 ],
+                 [
+                     'name' => '多连锁门店',
+                     'desc' => '根据客户位置推荐最近门店',
+                     'label' => '',
+                     'is_disp_block' => false,
+                     'logo' => 'multi_store',
+                     'url' => '/dashboard/multi-store/index',
+                     'field' => 'multi_store',
+                 ],
+             ]
+         ],
         [
             'name' => '促销转化',
             'desc' => '',
@@ -3866,24 +4165,24 @@ function get_shop_application_list()
                     'url' => '/dashboard/full-cut/list',
                     'field' => 'full_cut',
                 ],
-                [
-                    'name' => '满件优惠',
-                    'desc' => '设置购买指定件享受优惠',
-                    'label' => '敬请期待',
-                    'is_disp_block' => true,
-                    'logo' => 'yh',
-                    'url' => 'javascript:;',
-                    'field' => 'full_discount',
-                ],
-                [
-                    'name' => '订单返现',
-                    'desc' => '购买商品订单满足指定条件返部分现金',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'gwfx',
-                    'url' => '/dashboard/cash-back/list',
-                    'field' => 'cash_back',
-                ],
+//                [
+//                    'name' => '满件优惠',
+//                    'desc' => '设置购买指定件享受优惠',
+//                    'label' => '敬请期待',
+//                    'is_disp_block' => true,
+//                    'logo' => 'yh',
+//                    'url' => 'javascript:;',
+//                    'field' => 'full_discount',
+//                ],
+                // [
+                //     'name' => '订单返现',
+                //     'desc' => '购买商品订单满足指定条件返部分现金',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'gwfx',
+                //     'url' => '/dashboard/cash-back/list',
+                //     'field' => 'cash_back',
+                // ],
 //                [
 //                    'name' => '签到',
 //                    'desc' => '每日签到领取积分或奖励',
@@ -3895,6 +4194,7 @@ function get_shop_application_list()
 //                ],
             ]
         ],
+        // todo 暂时注释 后期再做
         [
             'name' => '引流裂变',
             'desc' => '',
@@ -3922,51 +4222,51 @@ function get_shop_application_list()
                     'url' => '/dashboard/bargain/list',
                     'field' => 'bargain',
                 ],
-                [
-                    'name' => '短信推送',
-                    'desc' => '向消费者发送短信消息通知',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'dx',
-                    'url' => '/dashboard/sms-set/index',
-                    'field' => 'sms_send',
-                ],
-                [
-                    'name' => '邮件推送',
-                    'desc' => '向消费者发送邮件消息通知',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'yj',
-                    'url' => '/dashboard/email-group/index',
-                    'field' => 'email_send',
-                ],
-                [
-                    'name' => '分销',
-                    'desc' => '三级分销，爆炸式推广',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'fx',
-                    'url' => '/dashboard/distrib-goods/list',
-                    'field' => 'distrib',
-                ],
-                [
-                    'name' => '直播',
-                    'desc' => '直播引流，效果直观',
-                    'label' => '',
-                    'is_disp_block' => true,
-                    'logo' => 'live',
-                    'url' => '/dashboard/live/index',
-                    'field' => 'live',
-                ],
-                [
-                    'name' => '预售',
-                    'desc' => '预定形式销售',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'ys',
-                    'url' => '/dashboard/pre-sale/list',
-                    'field' => 'pre_sale',
-                ],
+                // [
+                //     'name' => '短信推送',
+                //     'desc' => '向消费者发送短信消息通知',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'dx',
+                //     'url' => '/dashboard/sms-set/index',
+                //     'field' => 'sms_send',
+                // ],
+                // [
+                //     'name' => '邮件推送',
+                //     'desc' => '向消费者发送邮件消息通知',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'yj',
+                //     'url' => '/dashboard/email-group/index',
+                //     'field' => 'email_send',
+                // ],
+                // [
+                //     'name' => '分销',
+                //     'desc' => '三级分销，爆炸式推广',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'fx',
+                //     'url' => '/dashboard/distrib-goods/list',
+                //     'field' => 'distrib',
+                // ],
+                 [
+                     'name' => '直播',
+                     'desc' => '直播引流，效果直观',
+                     'label' => '',
+                     'is_disp_block' => true,
+                     'logo' => 'live',
+                     'url' => '/dashboard/live/list',
+                     'field' => 'live',
+                 ],
+                // [
+                //     'name' => '预售',
+                //     'desc' => '预定形式销售',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'ys',
+                //     'url' => '/dashboard/pre-sale/list',
+                //     'field' => 'pre_sale',
+                // ],
             ]
         ],
         [
@@ -3987,33 +4287,33 @@ function get_shop_application_list()
                     'url' => '/topic/topic/list',
                     'field' => 'topic',
                 ],
-                [
-                    'name' => '商超便利超市-自由购',
-                    'desc' => '超市现场使用，扫码核销免排队',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'zyg',
-                    'url' => '/dashboard/free-buy/index',
-                    'field' => 'free_buy',
-                ],
-                [
-                    'name' => '堂内点餐',
-                    'desc' => '到店扫码方便快捷',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'ddg',
-                    'url' => '/dashboard/reachbuy/index',
-                    'field' => 'reach_buy',
-                ],
-                [
-                    'name' => '限购',
-                    'desc' => '不同等级消费者限制购买',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'xg',
-                    'url' => '/dashboard/purchase/list',
-                    'field' => 'purchase',
-                ],
+                // [
+                //     'name' => '商超便利超市-自由购',
+                //     'desc' => '超市现场使用，扫码核销免排队',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'zyg',
+                //     'url' => '/dashboard/free-buy/index',
+                //     'field' => 'free_buy',
+                // ],
+                // [
+                //     'name' => '堂内点餐',
+                //     'desc' => '到店扫码方便快捷',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'ddg',
+                //     'url' => '/dashboard/reachbuy/index',
+                //     'field' => 'reach_buy',
+                // ],
+                // [
+                //     'name' => '限购',
+                //     'desc' => '不同等级消费者限制购买',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'xg',
+                //     'url' => '/dashboard/purchase/list',
+                //     'field' => 'purchase',
+                // ],
                 [
                     'name' => '万能表单',
                     'desc' => '自定义表单文件',
@@ -4023,15 +4323,15 @@ function get_shop_application_list()
                     'url' => '/dashboard/custom-form/list',
                     'field' => 'custom_form',
                 ],
-                [
-                    'name' => '虚拟商品',
-                    'desc' => '服务商品、电子卡券',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'xnsp',
-                    'url' => '/trade/virtual-order/list',
-                    'field' => 'virtual',
-                ],
+                // [
+                //     'name' => '虚拟商品',
+                //     'desc' => '服务商品、电子卡券',
+                //     'label' => '已购',
+                //     'is_disp_block' => false,
+                //     'logo' => 'xnsp',
+                //     'url' => '/trade/virtual-order/list',
+                //     'field' => 'virtual',
+                // ],
             ]
         ],
         [
@@ -4052,113 +4352,85 @@ function get_shop_application_list()
                     'url' => '/dashboard/integral-mall/revision',
                     'field' => 'integralmall',
                 ],
-                [
-                    'name' => '店铺购物卡',
-                    'desc' => '向消费者派发的购物卡',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'czk',
-                    'url' => '/dashboard/store-card-type/list',
-                    'field' => 'shop_store_card',
-                ],
-                [
-                    'name' => '提货券',
-                    'desc' => '向消费者发放提货券',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'lp',
-                    'url' => '/dashboard/gift-card/list',
-                    'field' => 'gift_card',
-                ],
+                // [
+                //     'name' => '店铺购物卡',
+                //     'desc' => '向消费者派发的购物卡',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'czk',
+                //     'url' => '/dashboard/store-card-type/list',
+                //     'field' => 'shop_store_card',
+                // ],
+                // [
+                //     'name' => '提货券',
+                //     'desc' => '向消费者发放提货券',
+                //     'label' => '',
+                //     'is_disp_block' => false,
+                //     'logo' => 'lp',
+                //     'url' => '/dashboard/gift-card/list',
+                //     'field' => 'gift_card',
+                // ],
             ]
         ],
-        [
-            'name' => '经营分析',
-            'desc' => '',
-            'label' => '',
-            'is_disp_block' => false,
-            'logo' => '',
-            'url' => '',
-            'field' => '',
-            'child' => [
-                [
-                    'name' => '客户分析',
-                    'desc' => '店铺客户分析及定向营销',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'khfx',
-                    'url' => '/dashboard/customer-analysis/index',
-                    'field' => 'customer-analysis',
-                ],
-                [
-                    'name' => '商圈营销',
-                    'desc' => '同城电商区域分析',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'sqyx',
-                    'url' => '/dashboard/trade-area/list',
-                    'field' => 'trade_area',
-                ],
-                [
-                    'name' => '数据导出',
-                    'desc' => '商城商品数据导出',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'sjdc',
-                    'url' => '/dashboard/data-export/index',
-                    'field' => 'data_import',
-                ],
-            ]
-        ],
-        [
-            'name' => '店铺拓展',
-            'desc' => '',
-            'label' => '',
-            'is_disp_block' => false,
-            'logo' => '',
-            'url' => '',
-            'field' => '',
-            'child' => [
-                [
-                    'name' => '神码收银',
-                    'desc' => '生成直接收款页面和收款码',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'mssy',
-                    'url' => '/dashboard/cashier/list',
-                    'field' => 'god_qrcode',
-                ],
-            ]
-        ],
-        [
-            'name' => '销售渠道',
-            'desc' => '',
-            'label' => '',
-            'is_disp_block' => false,
-            'logo' => '',
-            'url' => '',
-            'field' => '',
-            'child' => [
-                [
-                    'name' => '移动端',
-                    'desc' => '连接公众号，玩转微信生态',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'ydd',
-                    'url' => '/shop/weixin-config/index',
-                    'field' => 'mobile',
-                ],
-                [
-                    'name' => '网点',
-                    'desc' => '自动接收订单，就近配送',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'wd',
-                    'url' => '/store/default/list',
-                    'field' => 'wd',
-                ],
-            ]
-        ],
+        // [
+        //     'name' => '经营分析',
+        //     'desc' => '',
+        //     'label' => '',
+        //     'is_disp_block' => false,
+        //     'logo' => '',
+        //     'url' => '',
+        //     'field' => '',
+        //     'child' => [
+        //         [
+        //             'name' => '客户分析',
+        //             'desc' => '店铺客户分析及定向营销',
+        //             'label' => '',
+        //             'is_disp_block' => false,
+        //             'logo' => 'khfx',
+        //             'url' => '/dashboard/customer-analysis/index',
+        //             'field' => 'customer-analysis',
+        //         ],
+        //         [
+        //             'name' => '商圈营销',
+        //             'desc' => '同城电商区域分析',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'sqyx',
+        //             'url' => '/dashboard/trade-area/list',
+        //             'field' => 'trade_area',
+        //         ],
+        //         [
+        //             'name' => '数据导出',
+        //             'desc' => '商城商品数据导出',
+        //             'label' => '已购',
+        //             'is_disp_block' => false,
+        //             'logo' => 'sjdc',
+        //             'url' => '/dashboard/data-export/index',
+        //             'field' => 'data_import',
+        //         ],
+        //     ]
+        // ],
+        // [
+        //     'name' => '店铺拓展',
+        //     'desc' => '',
+        //     'label' => '',
+        //     'is_disp_block' => false,
+        //     'logo' => '',
+        //     'url' => '',
+        //     'field' => '',
+        //     'child' => [
+        //         [
+        //             'name' => '神码收银',
+        //             'desc' => '生成直接收款页面和收款码',
+        //             'label' => '',
+        //             'is_disp_block' => false,
+        //             'logo' => 'mssy',
+        //             'url' => '/dashboard/cashier/list',
+        //             'field' => 'god_qrcode',
+        //         ],
+        //     ]
+        // ],
+
 
         /*[
             'name' => '互动活动',
@@ -4247,3 +4519,536 @@ function base64_encode_image($image_file) {
     return $base64_image_content;
 }
 
+/**
+ * 编辑器内容
+ *
+ * @param string $id 编辑器id名称
+ * @param string $name 编辑器名称
+ * @param string $value 编辑器内容
+ * @param string $width 宽 带px
+ * @param string $height 高 带px
+ * @param string $upload_state 上传状态，默认是开启
+ * @param boolean $media_open
+ * @param string $type
+ *
+ * @return mixed
+ */
+function show_editor($id, $name, $value='', $width='100%', $height='450px',$upload_state="true", $media_open=false, $type='all'){
+    //是否开启多媒体
+    $media = '';
+    if ($media_open){
+        $media = ", 'flash', 'media'";
+    }
+    switch($type) {
+        case 'basic':
+            $items = "['source', '|', 'fullscreen', 'undo', 'redo', 'cut', 'copy', 'paste', '|', 'about']";
+            break;
+        case 'simple':
+            $items = "['source', '|', 'fullscreen', 'undo', 'redo', 'cut', 'copy', 'paste', '|',
+            'fontname', 'fontsize', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+            'removeformat', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+            'insertunorderedlist', '|', 'emoticons', 'image', 'link', '|', 'about']";
+            break;
+        default:
+            $items = "['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
+            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', '|', 'selectall', 'clearhtml','quickformat','|',
+            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image'".$media.", 'multiimage'".$media.", 'table', 'hr', 'emoticons', 'link', 'unlink']";
+            break;
+    }
+    //图片、Flash、视频、文件的本地上传都可开启。默认只有图片，要启用其它的需要修改resource\kindeditor\php下的upload_json.php的相关参数
+    echo '<textarea id="'. $id .'" class="form-control" name="'. $name .'">'.$value.'</textarea>';
+    echo '
+    <!-- 在线文本编辑器 -->
+    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js"></script>
+    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js"></script>
+    <!-- 创建KindEditor的脚本 必须设置editor_id属性-->
+    <script type="text/javascript">
+      KindEditor.ready(function(K) {
+         var extraFileUploadParams = [];
+         extraFileUploadParams[\'LBYDVIP_COM_BACKEND_PHPSESSID\'] = \'xxxxxxxxxxxx\';
+         window.editor = K.create("#'.$id.'", {
+            width: "'.$width.'",
+            height: "'.$height.'",
+            items : '.$items.',
+            themesPath: "/assets/d2eace91/js/editor/themes/",
+            cssPath: "/assets/d2eace91/js/editor/themes/default/default.css",
+            uploadJson: "/site/upload-image",
+            extraFileUploadParams: extraFileUploadParams,
+            allowImageUpload : '.$upload_state.',
+            allowFlashUpload : false,
+            allowMediaUpload : false,
+            allowFileManager : true,
+            syncType:"form",
+            // 设置粘贴类型，0:禁止粘贴, 1:纯文本粘贴, 2:HTML粘贴
+            pasteType: 2,
+            afterCreate : function() {
+                var self = this;
+                self.sync();
+            },
+            afterChange : function() {
+                var self = this;
+                self.sync();
+            },
+            afterBlur : function() {
+                var self = this;
+                self.sync();
+            }
+         });
+      });
+    </script>
+	';
+}
+
+/**
+ * 百度编辑器内容
+ *
+ * @param string $id 编辑器id名称
+ * @param string $name 编辑器名称
+ * @param string $value 编辑器内容
+ * @param string $width 宽 带px
+ * @param string $height 高 带px
+ * @param int $user_id 会员id 上传到某个会员的私有相册中
+ * @param string $upload_state 上传状态，默认是开启
+ * @param boolean $media_open
+ * @param string $type
+ *
+ * @return mixed
+ */
+function show_ueditor($id, $name, $value='', $width=415, $height=450, $user_id = 0, $upload_state="true", $media_open=false, $type='simple'){
+    //是否开启多媒体
+    $media = '';
+    if ($media_open){
+        $media = ", 'flash', 'media'";
+    }
+    switch($type) {
+        case 'basic':
+            $items = "[['source', 'fullscreen', 'undo', 'redo', 'pasteplain', 'help']]";
+            break;
+        case 'simple':
+            $items = "[[
+            'undo',
+            'redo',
+            '|',
+            'paragraph',
+            '|',
+            'fontsize',
+            '|',
+            'blockquote',
+            'horizontal',
+            '|',
+            'removeformat',
+            'formatmatch',
+            '|',
+            'directionalityltr',
+            'directionalityrtl',
+            '|',
+            'simpleupload', //单图上传
+            'insertimage', //多图上传
+//            'addimgv2',
+//            'addaudiov2',
+//            'addvideov2',
+            'insertvideo',
+            'link',
+            'emotion',
+            'spechars',
+            '||',
+            'bold',
+            'italic',
+            'underline',
+            'strikethrough',
+            'forecolor',
+            'backcolor',
+            '|',
+            'indent',
+            '|',
+            'justifyleft',
+            'justifycenter',
+            'justifyright',
+            'justifyjustify',
+            'lineheight',
+            '|',
+            'rowspacingtop',
+            'rowspacingbottom',
+            '|',
+            'insertorderedlist',
+            'insertunorderedlist',
+            '|',
+            'source',
+            'searchreplace',
+            'fullscreen'
+        ]]";
+            break;
+        default:
+            $items = "";
+            break;
+    }
+    //图片、Flash、视频、文件的本地上传都可开启。默认只有图片，要启用其它的需要修改resource\kindeditor\php下的upload_json.php的相关参数
+    echo '<script id="'. $id .'" name="'. $name .'" type="text/plain">'.$value.'</script>';
+//    echo '<textarea id="'. $id .'" class="form-control" name="'. $name .'">'.$value.'</textarea>';
+
+    echo '
+    <!-- 配置文件 -->
+	<script type="text/javascript" src="/assets/d2eace91/js/ueditor/ueditor.config.evil.js"></script>
+	<!-- 编辑器源码文件 -->
+	<script type="text/javascript" src="/assets/d2eace91/js/ueditor/ueditor.all.evil.min.js"></script>
+
+	<!--引入秀米文件-->
+	<script type="text/javascript" charset="utf-8" src="/assets/d2eace91/js/ueditor/third-party/xiumi/xiumi-ue-dialog-v5.js"></script>
+    <link rel="stylesheet" href="/assets/d2eace91/js/ueditor/third-party/xiumi/xiumi-ue-v5.css">
+
+	<!-- 实例化编辑器 -->
+	<script type="text/javascript">
+
+	    var ueditor_config = {
+	        serverUrl: "/ueditor/serve",
+//	        serverUrl: "http://backend.lanbeoa.com/site?user_id='.$user_id.'",
+            initialFrameWidth: "'.$width.'",
+            initialFrameHeight: "'.$height.'",
+            autoHeightEnabled: false,
+            enableAutoSave: false, // 自动保存
+            saveInterval:0,
+            toolbars: '.$items.'
+	    };
+	    var ue = UE.getEditor("'.$id.'", ueditor_config);
+	</script>
+	';
+}
+
+// 解析 url，数组的形式返回 url 的 query 部分
+function get_query($url='')
+{
+    $url=trim($url);
+    if($url=='')
+        return false;
+    // 解析 url，获取 query 部分，它是一个字符串
+    $query=parse_url($url, PHP_URL_QUERY);
+    if($query===null)
+        return null;
+    // 解析 query 部分，将会保存到一个数组
+    parse_str($query, $params);
+    return $params;
+}
+
+
+/**
+ * 获取微信分享配置信息
+ *
+ * @param array $APIs
+ * @param string $url
+ * @return array|bool|string
+ */
+function get_wx_share_data($APIs = [], $url = '', $debug = false)
+{
+    if (is_weixin()) {
+        $config = [
+            'app_id' => sysconf('appid'),
+            'secret' => sysconf('appsecret'),
+            // 指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
+            'response_type' => 'array',
+
+            //...
+        ];
+//        $APIs = ["onMenuShareTimeline", "onMenuShareAppMessage", "scanQRCode"];
+        // try {
+        //     $app = \EasyWeChat\Factory::officialAccount($config);
+        //     $res = $app->jssdk->buildConfig($APIs, $debug = false, $beta = false, $json = false, [], $url);
+        //     return $res;
+        // } catch (\EasyWeChat\Kernel\Exceptions\InvalidConfigException $e){
+        //     // todo
+        //     return false;
+        // } catch (\EasyWeChat\Kernel\Exceptions\RuntimeException $e) {
+        //     // todo
+        //     return false;
+        // } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
+        //     // todo
+        //     return false;
+        // }
+
+        try {
+            $app = new \EasyWeChat\OfficialAccount\Application($config);
+            $utils = $app->getUtils();
+            $res = $utils->buildJsSdkConfig($url, $APIs, [], $debug);
+            return $res;
+        } catch (\EasyWeChat\Kernel\Exceptions\InvalidConfigException $e) {
+            return false;
+        } catch (\EasyWeChat\Kernel\Exceptions\RuntimeException $e) {
+            // todo
+            return false;
+        } catch (\EasyWeChat\Kernel\Exceptions\InvalidArgumentException $e) {
+            // todo
+            return false;
+        }
+    }
+}
+
+/**
+ * 获取最近一周，一个月，一年
+ *
+ * @param string $type
+ * @return array
+ */
+function get_lately_time($type = 'week'){
+    $now = time();
+    $result = [];
+    if($type == 'week'){
+        //最近一周
+        for($i=0;$i<7;$i++){
+            $result[] = date('Y-m-d',strtotime('-'.$i.' day', $now));
+        }
+    }elseif($type == 'month'){
+        //最近一个月
+        for($i=0;$i<30;$i++){
+            $result[] = date('Y-m-d',strtotime('-'.$i.' day', $now));
+        }
+    }elseif($type == 'year'){
+        //最近一年
+        for($i=0;$i<12;$i++){
+            $result[] = date('Y-m',strtotime('-'.$i.' month', $now));
+        }
+    }
+    return array_reverse($result);
+}
+
+/**
+ * 获取最近一周的日期
+ * @return false|string
+ */
+function get_lately_week_date() {
+    return date('Y-m-d',strtotime('-6 day', time()));
+}
+
+/**
+ * 获取两个指定日期之间的日期数组
+ *
+ * @param $start
+ * @param $end
+ * @return array
+ */
+function get_dates_between($start,$end){
+    $dt_start = strtotime($start);
+    $dt_end = strtotime($end);
+    $result = [];
+    while ($dt_start<=$dt_end){
+        $result[] = date('Y-m-d',$dt_start);
+        $dt_start = strtotime('+1 day',$dt_start);
+    }
+
+    return $result;
+}
+
+function get_http() {
+    return (request()->isSecure() ? 'https://' : 'http://');
+}
+
+/**
+ * 转义decode JSON 对象
+ *
+ * @param $text
+ * @param int $type 0 对象,1数组
+ * @return bool|mix|string
+ */
+function lrw_decode($text, $type = 0)
+{
+    if (empty($text)) {
+        return '';
+    } elseif (!is_string($text)) {
+        return false;
+    }
+
+    return addslashes_deep_obj(json_decode(stripslashes($text), $type));
+}
+
+/**
+ * 将对象成员变量或者数组的特殊字符进行转义
+ *
+ * @access   public
+ * @param mix $obj 对象或者数组
+ * @return   mix                  对象或者数组
+ * @author   Xuan Yan
+ */
+function addslashes_deep_obj($obj)
+{
+    if (is_object($obj) == true) {
+        foreach ($obj as $key => $val) {
+            $obj->$key = addslashes_deep($val);
+        }
+    } else {
+        $obj = addslashes_deep($obj);
+    }
+
+    return $obj;
+}
+
+/**
+ * 递归方式的对变量中的特殊字符进行转义
+ * @param $value
+ * @return array|string
+ */
+function addslashes_deep($value)
+{
+    if (empty($value)) {
+        return $value;
+    } else {
+        if (is_array($value)) {
+            return array_map('addslashes_deep', $value);
+        } else {
+            $value = simple_remove_xss($value);
+            return addslashes($value);
+        }
+    }
+}
+
+/**
+ * XSS（跨站脚本攻击）可以用于窃取其他用户的Cookie信息，要避免此类问题，可以采用如下解决方案：
+ * 1.直接过滤所有的JavaScript脚本；
+ * 2.转义Html元字符，使用htmlentities、htmlspecialchars等函数；
+ * 3.系统的扩展函数库提供了XSS安全过滤的remove_xss方法；
+ * 4.对URL访问的一些系统变量做XSS处理。
+ *
+ * 移除Html代码中的XSS攻击
+ *
+ * @param $val
+ * @return string
+ */
+function simple_remove_xss($val)
+{
+    // remove all non-printable characters. CR(0a) and LF(0b) and TAB(9) are allowed
+    // this prevents some character re-spacing such as <javascript>
+    // note that you have to handle splits with
+    // $val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $val);
+
+    // straight replacements, the user should never need these since they're normal characters
+    // this prevents like <IMG SRC=@avascript:alert('XSS')>
+    $search = 'abcdefghijklmnopqrstuvwxyz';
+    $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $search .= '1234567890!@#$%^&*()';
+    $search .= '~`";:?+/={}[]-_|\'\\';
+
+    for ($i = 0; $i < strlen($search); $i++) {
+        // ;? matches the ;, which is optional
+        // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars
+
+        // @ @ search for the hex values
+        $val = preg_replace('/(&#[xX]0{0,8}' . dechex(ord($search[$i])) . ';?)/i', $search[$i], $val);
+        // @ @ 0{0,7} matches '0' zero to seven times
+        $val = preg_replace('/(&#0{0,8}' . ord($search[$i]) . ';?)/', $search[$i], $val);
+    }
+
+    // now the only remaining whitespace attacks are, and later since they *are* allowed in some inputs
+    $ra1 = array('expression', 'applet', 'embed', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound');
+    $ra2 = array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+    $ra = array_merge($ra1, $ra2);
+
+    $found = true; // keep replacing as long as the previous round replaced something
+
+    while ($found == true) {
+        $val_before = $val;
+        for ($i = 0; $i < sizeof($ra); $i++) {
+            $pattern = '/';
+            for ($j = 0; $j < strlen($ra[$i]); $j++) {
+                if ($j > 0) {
+                    $pattern .= '(';
+                    $pattern .= '(&#[xX]0{0,8}([9ab]);)';
+                    $pattern .= '|';
+                    $pattern .= '|(&#0{0,8}([9|10|13]);)';
+                    $pattern .= ')*';
+                }
+                $pattern .= $ra[$i][$j];
+            }
+            $pattern .= '/i';
+            $replacement = 'data-xss'; // substr($ra[$i], 0, 2) . '<x>' . substr($ra[$i], 2); // add in <> to nerf the tag
+            $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags
+            if ($val_before == $val) {
+                // no replacements were made, so exit the loop
+                $found = false;
+            }
+        }
+    }
+
+    return $val;
+}
+
+/**
+ * 根据门店id和商品id 拼接地址
+ * @param $storeId
+ * @param $goodsId
+ * @return string
+ */
+function get_store_goods_url($storeId, $goodsId)
+{
+    // 生成门店编号
+    $storeNo = get_store_code($storeId); // m94gtdwcq
+    $url = get_http() . config('lrw.mobile_domain') . "/$storeNo/goods-$goodsId.html";
+    return $url;
+}
+
+function get_store_code($storeId)
+{
+    $salt = env('app_key');
+    //https://m.lrw.com/mapacp5hv/index.html
+    $storeNo = substr(md5($salt.$storeId), 0, 9);
+    return $storeNo;
+}
+
+function get_shop_code($shopId)
+{
+    //https://m.lrw.com/mn06d12/shop/309.html
+    $salt = env('app_key');
+    $shopNo = substr(md5($salt.$shopId), 0, 7);
+    return $shopNo;
+}
+
+function shop_prefix_url($shopId, $routeName = 'mobile_shop_home')
+{
+    $url = route($routeName, ['shop_id'=>$shopId]);
+    return $url;
+}
+
+/**
+ * 获取头部 meta 标识店铺编码或门店编码
+ * @return mixed|string
+ */
+function get_lrw_tag()
+{
+    $path = \request()->path();
+    $pathArr = explode('/', $path);
+//    \Illuminate\Support\Facades\Log::stack(['api'])->info(request()->url()."--".$path." -- ".json_encode($pathArr));
+    if ((strlen($pathArr[0]) == 7 || strlen($pathArr[0]) == 9) && !\Illuminate\Support\Str::contains($pathArr[0],'.html')) {
+        return $pathArr[0];
+    }
+    return '';
+}
+
+function lrw_tag_encrypt($shopId = 0, $storeId = 0)
+{
+
+    return 0;
+}
+
+function lrw_tag_decrypt($lrwTag)
+{
+
+    return 1;
+}
+
+/**
+ * 缓存数据
+ * @param array $cache_key 缓存key
+ * @param callable $callback 需要缓存的数据
+ * @param array $extra 额外的参数
+ * @return mixed
+ */
+function cache_data($cache_key, $callback, $extra = [])
+{
+    $extra = !empty($extra) ? ':'.implode(':', $extra) : '';
+    $cache_id = $cache_key[0].$extra;
+    if ($list = cache()->get($cache_id)) {
+        return $list;
+    }
+    cache()->put($cache_id, $callback, $cache_key[1]);
+
+    return $callback;
+}

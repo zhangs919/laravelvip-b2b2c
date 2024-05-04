@@ -8,12 +8,12 @@
 
 
 
-    <option value="/article/36.html" >翼商城持续更新中...</option>
+    <option value="/article/36.html" >云商城持续更新中...</option>
 
 
 
 
-    <option value="/article/20.html" >翼商城火热招商中</option>
+    <option value="/article/20.html" >云商城火热招商中</option>
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-    <option value="/article/17.html" >2016年翼商城店铺续签公告</option>
+    <option value="/article/17.html" >2016年云商城店铺续签公告</option>
 
 
 
@@ -118,7 +118,7 @@
 
 
 
-    <option value="/article/32.html" >翼商城更新啦....</option>
+    <option value="/article/32.html" >云商城更新啦....</option>
 
 
 
@@ -133,7 +133,7 @@
 
 
 
-    <option value="/article/35.html" >翼商城介绍</option>
+    <option value="/article/35.html" >云商城介绍</option>
 
 
 
@@ -148,7 +148,7 @@
 
 
 
-    <option value="/article/41.html" >翼商城火热招商中</option>
+    <option value="/article/41.html" >云商城火热招商中</option>
 
 
 

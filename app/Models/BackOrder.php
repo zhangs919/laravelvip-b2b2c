@@ -59,10 +59,79 @@ class BackOrder extends BaseModel
         'refund_status','back_desc','back_img1','back_img2','back_img3','send_time','shipping_id','shipping_code','shipping_name',
         'shipping_sn','seller_reason','seller_desc','seller_img1','seller_img2','seller_img3','seller_address','reminder_times',
         'exchange_reason','repair_reason','user_address','exchange_desc','repair_desc','is_after_sale','update_time',
+        'chargeoff_status','negative_id','return_rate_price'
 
-        // 以下字段app接口返回 不用存表
-//        'back_reason_format', 'address_info','seller_back_desc'
     ];
 
     protected $primaryKey = 'back_id';
+
+    /**
+     * 关联商家表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class,'shop_id','shop_id');
+    }
+
+    /**
+     * 关联会员表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','user_id');
+    }
+
+    /**
+     * 关联订单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderInfo()
+    {
+        return $this->belongsTo(OrderInfo::class,'order_id','order_id');
+    }
+
+    public function deliveryOrder()
+    {
+        return $this->belongsTo(DeliveryOrder::class,'delivery_id','delivery_id');
+    }
+
+    /**
+     * 关联订单商品表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderGoods()
+    {
+        return $this->belongsTo(OrderGoods::class,'record_id','record_id');
+    }
+
+    public function goodsSku()
+    {
+        return $this->belongsTo(GoodsSku::class,'sku_id','sku_id');
+    }
+
+    public function getSellerNegativeOrder()
+    {
+        return $this->hasOne('App\Models\SellerNegativeOrder', 'ret_id', 'back_id');
+    }
+
+    public function getSellerBillBackOrder()
+    {
+        return $this->hasOne('App\Models\SellerBillBackOrder', 'ret_id', 'back_id');
+    }
+
+    public function getSellerBillOrder()
+    {
+        return $this->hasOne('App\Models\SellerBillOrder', 'order_id', 'order_id');
+    }
+
+    public function getSellerBillGoods()
+    {
+        return $this->hasOne('App\Models\SellerBillGoods', 'rec_id', 'record_id');
+    }
 }

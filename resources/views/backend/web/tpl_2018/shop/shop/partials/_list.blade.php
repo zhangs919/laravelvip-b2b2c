@@ -28,7 +28,7 @@
 
                     <span class="id">
 								店铺ID：{{ $v->shop_id }}
-								<font class="c-green m-l-10"> 个人店铺</font>
+								<font class="c-green m-l-10"> {{ str_replace([1,2],['个人店铺','企业店铺'], $v->shop_type) }}</font>
 							</span>
                     <!-- 新加start -->
                     <div class="active">
@@ -50,12 +50,12 @@
             </td>
             <td class="text-c">
                 <div class="ng-binding">
-                    <span class="text-c">{{ $v->user_name }}</span>
+                    <span class="text-c">{{ $v->user->user_name }}</span>
 
                     <span class="tool text-c">
 
-								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2697138383&amp;site=qq&amp;menu=yes">
-									<img border="0" src="http://wpa.qq.com/pa?p=2:2697138383:51" alt="点击这里给我发消息" title="点击这里给我发消息">
+								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=123456&amp;site=qq&amp;menu=yes">
+									<img border="0" src="http://wpa.qq.com/pa?p=2:123456:51" alt="点击这里给我发消息" title="点击这里给我发消息">
 								</a>
 
 							</span>
@@ -65,7 +65,7 @@
             <td class="text-c">
                 <div class="ng-binding">
 							<span class="text-c">
-								<img src="http://images.68mall.com/system/credit/2016/06/07/14653016253926.gif" class="rank" title="" data-toggle="tooltip" data-placement="auto bottom" height="16" data-original-title="一星">
+								<img src="{{ get_image_url($v->credit_img) }}" class="rank" title="" data-toggle="tooltip" data-placement="auto bottom" height="16" data-original-title="{{ $v->credit_name }}">
 							</span>
                     <span class="text-c">{{ $v->credit }} 分</span>
                 </div>
@@ -84,25 +84,25 @@
                                 <div class="dt">
                                     <span>描述：</span>
                                 </div>
-                                <div class="dd text-l">5.00分</div>
+                                <div class="dd text-l">{{ $v->desc_score }}分</div>
                             </li>
                             <li>
                                 <div class="dt">
                                     <span>服务：</span>
                                 </div>
-                                <div class="dd text-l">5.00分</div>
+                                <div class="dd text-l">{{ $v->service_score }}分</div>
                             </li>
                             <li>
                                 <div class="dt">
                                     <span>发货：</span>
                                 </div>
-                                <div class="dd text-l">5.00分</div>
+                                <div class="dd text-l">{{ $v->send_score }}分</div>
                             </li>
                             <li>
                                 <div class="dt">
                                     <span>物流：</span>
                                 </div>
-                                <div class="dd text-l">5.00分</div>
+                                <div class="dd text-l">{{ $v->logistics_score }}分</div>
                             </li>
                         </ul>
                     </div>
@@ -110,17 +110,17 @@
             </td>
             <td>
 
-                {{ format_time(strtotime($v->begin_time), 'Y-m-d') }}
+                {{ format_time($v->open_time, 'Y-m-d') }}
                 <br>
                 ~
                 <br>
-                {{ format_time(strtotime($v->end_time), 'Y-m-d') }}
+                {{ format_time($v->end_time, 'Y-m-d') }}
 
             </td>
             <td>
                 <div class="ng-binding">
-                    <span>会员数量：0</span>
-                    <span>订单数量：1</span>
+                    <span>会员数量：{{ $v->member_count }}</span>
+                    <span>订单数量：{{ $v->order_info_count }}</span>
                     <span>佣金比例：{{ $v->take_rate }}%</span>
                 </div>
             </td>
@@ -166,24 +166,15 @@
                 </div>
             </td>
             <td class="handle">
-
-
-                <a href="edit?id={{ $v->shop_id }}&amp;shop_type={{ $v->shop_type }}&amp;is_supply={{ $v->is_supply }}">编辑</a>
+                <a href="edit?id={{ $v->shop_id }}&shop_type={{ $v->shop_type }}&is_supply={{ $v->is_supply }}">编辑</a>
                 <span>|</span>
-
-
-
                 <a href="{{ route('pc_shop_home', ['shop_id'=>$v->shop_id]) }}" target="_blank">查看店铺</a>
-
-
-                <a href="pay-add?id={{ $v->shop_id }}&amp;shop_type=1&amp;is_supply=0">添加付款单</a>
+                <a href="pay-add?id={{ $v->shop_id }}&shop_type=1&is_supply=0">添加付款单</a>
                 <span>|</span>
                 <a href="javascript:void(0);" data-shop-id="{{ $v->shop_id }}" data-shop-name="{{ $v->shop_name }}" class="del border-none">删除</a>
                 <!-- <span class="text-r">
-                        <a href="http://seller.cp6znq.yunmall.68mall.com/login?account=测试店铺" target="_blank">登录卖家中心</a>
+                        <a href="http://seller.mall.laravelvip.com/login?account=测试店铺" target="_blank">登录卖家中心</a>
                     </span> -->
-
-
             </td>
         </tr>
     @endforeach

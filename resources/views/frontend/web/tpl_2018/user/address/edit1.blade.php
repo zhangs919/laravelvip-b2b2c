@@ -1,5 +1,5 @@
 <form id="UserAddressModel" class="form-horizontal" name="UserAddressModel" action="/user/address/edit.html?address_id={{ $address_info->address_id }}" method="post">
-    {{ csrf_field() }}
+    @csrf
     <input type="hidden" id="useraddressmodel-address_lng" class="address_lng" name="UserAddressModel[address_lng]" value="{{ $address_info->address_lng }}">
     <input type="hidden" id="useraddressmodel-address_lat" class="address_lat" name="UserAddressModel[address_lat]" value="{{ $address_info->address_lat }}">
     <div class="form-group form-group-spe" >

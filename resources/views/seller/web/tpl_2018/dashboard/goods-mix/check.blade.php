@@ -10,7 +10,7 @@
 @section('content')
 
     <form id="GoodsMixModel" class="form-horizontal" name="GoodsMixModel" action="/dashboard/goods-mix/check?id={{ $model['act_id'] }}" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix goods-mix-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->
@@ -269,7 +269,7 @@
 
 		<tr data-goods-mix-sku-id="872" data-goods-mix-goods-id="178">
 			<td>
-				<a href="http://www.b2b2c.yunmall.68mall.com/goods-178.html" target=_blank>古古怪怪</a>
+				<a href="http://www.test.com/goods-178.html" target=_blank>古古怪怪</a>
 				<input type="hidden" id="178-spu" name="goods_sku[]" value="871,872">
 				<input type="hidden" name="goods_spu[]" value="178">
 				<input type="hidden" name="goods_sku_act_price[]" value="" class="178-sku_price calculation_price">
@@ -287,7 +287,7 @@
 
 		<tr data-goods-mix-sku-id="832" data-goods-mix-goods-id="167">
 			<td>
-				<a href="http://www.b2b2c.yunmall.68mall.com/goods-167.html" target=_blank>【全国七仓速达】TP-LINK 路由器 无线家用穿墙高速wifi 穿墙王 光纤 tplink 千兆双频无线速率 百兆端口</a>
+				<a href="http://www.test.com/goods-167.html" target=_blank>【全国七仓速达】TP-LINK 路由器 无线家用穿墙高速wifi 穿墙王 光纤 tplink 千兆双频无线速率 百兆端口</a>
 				<input type="hidden" id="167-spu" name="goods_sku[]" value="831,832">
 				<input type="hidden" name="goods_spu[]" value="167">
 				<input type="hidden" name="goods_sku_act_price[]" value="" class="167-sku_price calculation_price">

@@ -21,15 +21,15 @@
 
                 <div class="item-pic">
 
-
-                    {{--todo 获取商品标签--}}
-                    <!--商品标签添加 start-->
-                    {{--<div class="goodstag-seat location0" id="show_seat">
-                        <div class="goodstag-item tag" id="iconfont_show">
-                            <img src="http://ishuocha.oss-cn-beijing.aliyuncs.com/images/shop/5/images/2019/03/28/15537403563623.png">
-                        </div>
-                    </div>--}}
-                    <!--商品标签添加 end-->
+					@if(!empty($v['tag_image']))
+						<!--商品标签添加 start-->
+						<div class="goodstag-seat location{{ $v['tag_position'] }}" id="show_seat">
+							<div class="goodstag-item tag" id="iconfont_show">
+								<img src="{{ $v['tag_image'] }}">
+							</div>
+						</div>
+						<!--商品标签添加 end-->
+					@endif
 
 
                     <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_id'] }}" target="_blank">
@@ -114,7 +114,6 @@
                                 @else
                                     <a href="javascript:void(0);" style="background-image: url(/images/add-cart.jpg); background-size: 30px 30px;" data-goods-id="{{ $v['goods_id'] }}" data-image-url="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="add-cart" title="加入购物车"></a>
                                 @endif
-                                {{--<a href="javascript:void(0);" style="background-image: url(/images/add-cart.jpg); background-size: 30px 30px;" data-goods-id="7" data-image-url="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036309445765.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="add-cart" title="加入购物车"></a>--}}
 
 
                             </div>

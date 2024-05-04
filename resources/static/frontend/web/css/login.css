@@ -37,3 +37,5 @@
 .login-footer .footer-info .info-text .nav-bottom a { color: #666; }
 .login-footer .footer-info .info-text p a { color: #666; }
 .login-footer .footer-related { background: #fff none repeat scroll 0 0; padding: 0 0 0; }
+.login-footer .footer-info .copyright a.copyright-logo{ color: #999;}
+.login-footer .footer-info .copyright a.copyright-logo:hover{ color: #aaa;}

@@ -113,7 +113,7 @@
         <!--提醒、主题、全部功能、清除缓存、查看店铺、退出-->
         <ul class="operate shop-row">
             <li class="top-menu">
-                <a href="http://{{ env('FRONTEND_DOMAIN') }}" class="top_icon homepage" target="_blank" title="查看商城">
+                <a href="http://{{ config('lrw.frontend_domain') }}" class="top_icon homepage" target="_blank" title="查看商城">
                     <i></i>
                     <span>商城</span>
                 </a>
@@ -141,7 +141,7 @@
                         <strong>清理缓存</strong>
                     </div>
                     <form id="cacheForm" action="/index" method="POST">
-                        {{ csrf_field() }}
+                        @csrf
                         <ul class="clear-cache-list">
 
                             <li>
@@ -4320,7 +4320,7 @@
         <div class="item-description arrow-left">
             <p>
                 发布商品，请前往卖家中心进行发布，更多功能需在卖家中心进行体验，
-                <a class="fb" style="color: #FFFF00" href="http://seller.68dsw.com/index.html" target="_blank">前往卖家中心</a>
+                <a class="fb" style="color: #FFFF00" href="http://seller.xxxx.com/index.html" target="_blank">前往卖家中心</a>
                 进行了解吧！
             </p>
             <div class="btns">

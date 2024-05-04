@@ -39,7 +39,7 @@
         </div>
         <div class="tabs-panel tabs-hide">
             <a href="/shop/apply.html" title="申请商家入驻；已提交申请，可查看当前审核状态。" class="store-join-btn" target="_blank">&nbsp;</a>
-            <a href="http://{{ env('SELLER_DOMAIN') }}" target="_blank" class="store-join-help">
+            <a href="http://{{ config('lrw.seller_domain') }}" target="_blank" class="store-join-help">
                 <i class="icon-cog"></i>
                 登录商家管理中心
             </a>
@@ -48,4 +48,4 @@
     <!-- banner右侧公告等tab切换 _end -->
 
 </div>
-<script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index.js"></script>
+{{--<script src="http://{{ config('lrw.frontend_domain') }}/js/index.js"></script>--}}

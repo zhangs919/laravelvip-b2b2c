@@ -86,54 +86,105 @@
                     </div>
 
                     <div id="con_status_2" style="display: none;">
-                        <!---->
                         <div class="growth-value-text">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th style="width: 35%;">来源/用途</th>
-                                    <th style="width: 15%;">订单号/退款编号</th>
-                                    <th style="width: 15%;">实付款</th>
-                                    <th style="width: 10%;">成长值</th>
-                                    <th style="width: 25%;">获取时间</th>
-                                </tr>
-                                </thead>
-                            </table>
-                            <div class="tip-box">
-                                <img src="/images/noresult.png" class="tip-icon" />
-                                <div class="tip-text">暂无成长值</div>
-                            </div>
+                            @include('user.rank.partials._growth_value_list')
                         </div>
-                        <!---->
                         <div class="growth-value-text">
-                            <!---->
-                            <!---->
-                            <!---->
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script type="text/javascript">
-            var tablelist = null;
-            $().ready(function() {
-                tablelist = $("#table_list").tablelist({
-                    params: $("#searchForm").serializeJson()
-                });
-                $("#searchForm").submit(function() {
-                    // 序列化表单为JSON对象
-                    var data = $(this).serializeJson();
-                    console.info(data);
-                    // Ajax加载数据
-                    tablelist.load(data);
-                    // 阻止表单提交
-                    return false;
-                });
-
-            });
-        </script>
-        <!---->
+        
     </div>
 
-@endsection
+@stop
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        var tablelist = null;
+        $().ready(function() {
+            tablelist = $("#table_list").tablelist({
+                params: $("#searchForm").serializeJson()
+            });
+            $("#searchForm").submit(function() {
+                // 序列化表单为JSON对象
+                var data = $(this).serializeJson();
+                console.info(data);
+                // Ajax加载数据
+                tablelist.load(data);
+                // 阻止表单提交
+                return false;
+            });
+        });
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function() {
+        })
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+    </script>
+@stop

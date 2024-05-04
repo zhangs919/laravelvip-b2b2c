@@ -11,7 +11,7 @@
 
         @foreach($list as $v)
             <li class="shop-item" id="shop_item_{{ $v['collect_id'] }}">
-                <a class="shop_info" href="{{ route('mobile_shop_home',['shop_id'=>$v['shop_id']]) }}">
+                <a class="shop_info" href="{{ shop_prefix_url($v['shop_id']) }}">
                     <span class="shop-logo">
                     <img src="{{ get_image_url($v['shop_logo'], 'shop_logo') }}">
                     </span>
@@ -52,7 +52,7 @@
 <div class="blank-div-footer"></div>
 <div class="colect-shop-footer">
     <!--全选后给shop-check-all增加select样式-->
-    <lable class="shop-check-all"></lable>
+    <lable class="shop-check-all"><i></i></lable>
     <span class="shop-seleted">
 已选择
 <em class="color">0</em>

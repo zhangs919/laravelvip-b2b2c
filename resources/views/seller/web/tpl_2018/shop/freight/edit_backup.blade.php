@@ -15,7 +15,7 @@
 
 
             <form id="form1" class="form-horizontal" name="Freight" action="/shop/freight/edit?id={{ $info->freight_id }}" method="post" left="col-sm-3" right="col-sm-9">
-                {{ csrf_field() }}
+                @csrf
                 <!-- 模板ID -->
                 <input type="hidden" id="freight-freight_id" class="form-control" name="Freight[freight_id]" value="{{ $info->freight_id }}">
                 <!-- 模板类型 -->
@@ -1334,7 +1334,12 @@
             }
         });
     </script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=fa78e2878a855b797089dfd08d5ac961&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.PlaceSearch"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key=fa78e2878a855b797089dfd08d5ac961&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.PlaceSearch"></script>
     <script type="text/javascript">
         //当前已选择的地区
         var region_codes_now = [];

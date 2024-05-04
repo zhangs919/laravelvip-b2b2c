@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-10 clearfix ">
         <form id="SelfShopModel" class="form-horizontal" name="SelfShopModel" action="/shop/self-shop/add?is_supply=0" method="post">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="selfshopmodel-is_supply" class="form-control" name="SelfShopModel[is_supply]" value="0">
 
@@ -146,9 +146,9 @@
                                     <ul class="image-group">
                                         <li>
                                             <a href="javascript:void(0);" class="highslide">
-                                                <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/company_demo_image_0.jpg" />
+                                                <img src="{{ get_image_url(sysconf('company_demo_image')) }}" />
                                             </a>
-                                            <img class="enlarge-image" src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/default_image/company_demo_image_0.jpg" />
+                                            <img class="enlarge-image" src="{{ get_image_url(sysconf('company_demo_image')) }}" />
                                         </li>
                                     </ul>
                                 </div>
@@ -443,7 +443,6 @@
             var value = $(target).val();
 
             $(this).imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
                 host: "{{ get_oss_host() }}",
                 size: size,
                 values: value.split("|"),

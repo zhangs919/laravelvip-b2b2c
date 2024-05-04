@@ -4,7 +4,6 @@
 namespace App\Services;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
 
 
 /**
@@ -41,6 +40,8 @@ class Tree extends Controller {
                         $parent =& $refer[$parentId];
                         $parent['childs'][] = $data[$pk];
                         $parent[$child][] =& $list[$key];
+                    } else {
+                        $tree[] =& $list[$key];
                     }
                 }
             }

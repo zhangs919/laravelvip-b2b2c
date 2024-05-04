@@ -36,7 +36,6 @@
 .type-file-text { height: 30px !important; }
 .form-horizontal .form-group .input-file-show .type-file-box .type-file-button { float: right !important }
 .pagination { display: inline-block;}
-.page-box .pagination-info select,.page-box .pagination a,input.form-control,select.form-control,.search-term .form-control{ height:18px !important;}
 select.form-control-xs { height:24px !important;}
 .table tbody tr td {padding: 4px 8px;}
 .search-condition .chosen-container,.search-condition .form-control{ width:150px !important}
@@ -387,21 +386,21 @@ ul.designTypeBox li.selected a{color: #1B9AF7;}
 .ul-tool li a i.other-tool-icon1, .ui-draggable-dragging a i.other-tool-icon1 { background-position: -23px -133px}
 .ul-tool li a i.other-tool-icon2, .ui-draggable-dragging a i.other-tool-icon2 { background-position: -70px -274px}
 .ui-draggable-dragging { display: inline-block; width: 80px; height: 60px; text-align: center; background: rgba(255,255,255,0.9); border: 2px dashed #aaa; opacity: 1;}
-
+ 
 /*右侧内容*/
 .right-operate{ width:325px; opacity: 0; position: absolute; top:0px; right:360px; transition: .2s ease; float: right; top: 0px; z-index: 0; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 1px solid rgb(226, 226, 226);}
 .right-operate.show{ right: 0px; top:auto; opacity: 1; z-index: 20; transition: .2s ease;}
 .jt{width: 13px; height: 26px; opacity: 0; right: 700px; z-index: 0;  transition: .2s ease; position: absolute;background-position: -77px -36px;}
 .jt.show{ top:70px; right: 325px; opacity: 1; z-index: 21; transition: .2s ease;}
-.right-operate .top-title-box .bt { color: rgb(69, 69, 69); padding: 15px 15px 22px;  height: 24px; line-height: 24px;font-size: 15px; border-bottom: 1px solid rgb(233, 233, 233);font-weight: normal;}
+.right-operate .top-title-box .bt {height: 62px; color: rgb(69, 69, 69); padding: 15px 15px 22px;  box-sizing: border-box; line-height: 24px;font-size: 15px; border-bottom: 1px solid rgb(233, 233, 233);font-weight: normal;}
 .right-operate .top-title-box .promptSet {  position: absolute;display: inline-block;font-size: 12px;left: 0px;top: 38px;line-height: 1.4; padding-left: 15px;}
 .right-operate .top-title-box .close,.left-template-head .close { cursor: pointer; display: inline-block;width: 14px;height: 14px; position: absolute; right: 15px; top: 20px; background-position: -79px -1px;}
 .right-operate .top-title-box .close:hover,.left-template-head .close:hover {background-position: -79px -15px}
 .operate-nr{ padding: 15px; overflow: hidden;}
 .operate-nr .operate-tit-sm{color: rgb(69, 69, 69); font-size: 14px; margin: 0px -3px 10px; background: #eee; padding: 3px 10px; border-radius: 1px; }
 .operate-nr .form-horizontal .form-group{ margin: 0 -10px 10px; overflow: hidden;}
-.operate-nr .form-horizontal .form-group .control-label{display: inline-block; float: left; width: 60px !important; min-width: auto !important; text-align: right; vertical-align: middle; padding-top: 7px;}
-.operate-nr .form-horizontal .form-group .col-sm-8{display: inline-block; float: left; width: 250px;}
+.operate-nr .form-horizontal .form-group .control-label{display: inline-block; float: left; padding-left: 0; width: 60px !important; min-width: auto !important; text-align: right; vertical-align: middle; padding-top: 7px;}
+.operate-nr .form-horizontal .form-group .col-sm-8{display: inline-block; padding-left: 0; float: left; width: 250px;}
 .operate-nr .form-horizontal .form-group .col-sm-8 .form-control-box{ margin-right: 0px;}
 .operate-nr .form-horizontal .form-group .col-sm-8 .form-control-box .form-control{ resize: none; width: 220px; min-width: auto !important;}
 .operate-nr .form-horizontal .form-group .col-sm-8 .form-control-box select.form-control{ height: 32px !important;}
@@ -449,7 +448,7 @@ ul.designTypeBox li.selected a{color: #1B9AF7;}
 .drop-field.form-title:hover,.drop-field.form-desc:hover{ padding: 19px !important;}
 .top-images.drop-field{ margin: 0; border: none; padding: 0;}
 .type-content{ position: relative; padding: 0px 20px; cursor: move;}
-.type-content img{ max-width: 100%; height: auto;}
+.type-content img,.center-content img{ max-width: 100%; height: auto;}
 .type-content .form-control-error{min-height: auto;}
 .type-content .help-block-t{ font-size: 13px;}
 .question-title{padding: 5px 0 5px 0; line-height: 30px; position: relative;}
@@ -564,7 +563,7 @@ ul.designTypeBox li.selected a{color: #1B9AF7;}
 .form-success-wrap .qrcode:after { content: ''; position: absolute; top: -8px; left: 222px; width: 14px; height: 14px; background: #e3f3fe; border: 1px dashed #bfd8ee; border-right: none; border-bottom: none; transform:rotate(45deg); -ms-transform:rotate(45deg); -moz-transform:rotate(45deg); -webkit-transform:rotate(45deg); -o-transform:rotate(45deg); }
 .form-success-wrap .qrcode .qrcode-img { float: left; border: 1px solid #ddd;}
 .form-success-wrap .qrcode .qrcode-img img { display: block; width: 150px;}
-.form-success-wrap .qrcode .qrcode-info { float: left; padding: 20px 0 0 40px;}
+.form-success-wrap .qrcode .qrcode-info { float: left; padding: 20px 0 0 30px;}
 .form-success-wrap .qrcode .qrcode-info h2 { font-size: 16px; font-weight: normal; color: #333;}
 .form-success-wrap .qrcode .qrcode-info p { font-size: 14px; color: #999;}
 .form-success-wrap .qrcode .qrcode-info .btn { display: block; width: 110px; height: 36px; padding: 0; font-size: 13px; line-height: 36px; color: #85c8ff; text-align: center; border: 1px solid #85c8ff;}
@@ -583,8 +582,7 @@ ul.designTypeBox li.selected a{color: #1B9AF7;}
 
 
 /*解决冲突*/
-.mod-selected{ height: 90px !important; width:auto !important}
-.attachment-list-region{width: 530px!important;}
+.mod-selected{ height: 90px !important; width:auto !important} 
 
 /*附件上传progress bar*/
 .progress {height:20px;margin-bottom:20px;overflow:hidden;background-color:#f5f5f5;border-radius:4px;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.1);box-shadow:inset 0 1px 2px rgba(0,0,0,.1)}

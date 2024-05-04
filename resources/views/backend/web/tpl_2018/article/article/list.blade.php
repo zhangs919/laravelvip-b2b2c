@@ -52,7 +52,7 @@
                             @if(!empty($cat_list))
                             @foreach($cat_list as $cat)
 
-                            <option value="{{ $cat['cat_id'] }}">@if($cat['_child']){{--<span>◢</span>--}}@endif {{ $cat['title_show'] }}</option>
+                            <option value="{{ $cat['cat_id'] }}">@if($cat['_child']){{--<span>◢</span>--}}@endif {!! $cat['title_show'] !!}</option>
 
                             @endforeach
                             @endif
@@ -99,7 +99,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record="true"></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 

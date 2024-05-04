@@ -21,6 +21,9 @@ class SyncArticles extends Command
         // 获取 Elasticsearch 对象
         $es = app('es');
 
+        // 先删除索引
+        $es->indices()->delete(['index' => $this->option('index')]);
+
         Article::query()
             // 使用 chunkById 避免一次性加载过多数据
             ->chunkById(100, function ($articles) use ($es) {
@@ -37,10 +40,11 @@ class SyncArticles extends Command
                         'index' => [
                             // 从参数中读取索引名称
                             '_index'    => $this->option('index'),
-                            '_type'     => '_doc',
+//                            '_type'     => '_doc',
                             '_id'       => $data['article_id'],
                         ],
                     ];
+                    $req['body'][] = $data;
                 }
                 try {
                     // 使用 bulk 方法批量创建

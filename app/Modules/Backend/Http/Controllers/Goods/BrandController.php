@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Exports\BrandsExport;
 use App\Modules\Base\Http\Controllers\Backend;
@@ -24,12 +24,17 @@ class BrandController extends Backend
 
 
 
-    public function __construct(BrandRepository $brandRepository, ToolsRepository $toolsRepository, Excel $excel)
+
+    public function __construct(
+        BrandRepository $brand
+        , ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->brand = $brandRepository;
-        $this->tools = $toolsRepository;
+        $this->brand = $brand;
+        $this->tools = $tools;
+
     }
 
 
@@ -116,7 +121,7 @@ class BrandController extends Backend
 
         }
 
-        $fixed_title = '品牌管理 - '.$title;
+        $fixed_title = '品牌管理 - ' . $title;
 
         $action_span = [
             [
@@ -149,7 +154,7 @@ class BrandController extends Backend
             // 编辑
             $ret = $this->brand->update($post['brand_id'], $post);
             $msg = '商品品牌编辑';
-        }else {
+        } else {
             // 添加
             $ret = $this->brand->store($post);
             $msg = '商品品牌添加';
@@ -157,11 +162,11 @@ class BrandController extends Backend
 
         if ($ret === false) {
             // fail
-            flash('error', $msg.'失败');
+            flash('error', $msg . '失败');
             return redirect('/goods/brand/list');
         }
         // success
-        flash('success', $msg.'成功');
+        flash('success', $msg . '成功');
         return redirect('/goods/brand/list');
     }
 
@@ -241,12 +246,12 @@ class BrandController extends Backend
         $ret = $this->brand->del($id);
         if ($ret === false) {
             // Log
-            admin_log('商品品牌删除失败。ID：'.$id);
+            admin_log('商品品牌删除失败。ID：' . $id);
             return result(-1, '', '删除失败');
         }
 
         // Log
-        admin_log('商品品牌删除成功。ID：'.$id);
+        admin_log('商品品牌删除成功。ID：' . $id);
         return result(0, '', '删除成功');
     }
 
@@ -258,18 +263,18 @@ class BrandController extends Backend
         $ids = implode(',', $ids);
         if ($ret === false) {
             // Log
-            admin_log('商品品牌批量删除失败。ID：'.$ids);
+            admin_log('商品品牌批量删除失败。ID：' . $ids);
             return result(-1, '', '删除失败');
         }
         // Log
-        admin_log('商品品牌批量删除成功。ID：'.$ids);
+        admin_log('商品品牌批量删除成功。ID：' . $ids);
         return result(0, '', '删除成功');
     }
 
     public function export(Request $request, BrandsExport $brandsExport)
     {
         $brand_name = $request->get('brand_name', '');
-        $filename = '乐融沃B2B2C商城演示站_品牌列表-'.date('Ymdhis').'.xls';
+        $filename = sysconf('site_name').'_品牌列表-' . date('Ymdhis') . '.xls';
 
         return Excel::download($brandsExport, $filename);
     }
@@ -309,7 +314,7 @@ class BrandController extends Backend
         list($list, $total) = $this->brand->getList($condition);
         $pageHtml = short_pagination($total);
 
-        $render = view('goods.brand.'.$tpl, compact('page_id', 'pagination_id', 'list', 'pageHtml', 'selected_ids'))->render();
+        $render = view('goods.brand.' . $tpl, compact('page_id', 'pagination_id', 'list', 'pageHtml', 'selected_ids'))->render();
         return result(0, $render);
     }
 }

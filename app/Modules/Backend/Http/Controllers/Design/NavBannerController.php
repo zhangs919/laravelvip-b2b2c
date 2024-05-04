@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Modules\Backend\Http\Controllers\Design;
+namespace App\Modules\Backend\Http\Controllers\Design;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
@@ -26,10 +26,12 @@ class NavBannerController extends Backend
 
     protected $systemConfig;
 
-    public function __construct(NavBannerRepository $navBannerRepository, SystemConfigRepository $systemConfigRepository)
+    public function __construct(
+        NavBannerRepository $navBannerRepository
+        , SystemConfigRepository $systemConfigRepository
+    )
     {
         parent::__construct();
-//        setcookie('theme_style', "true"); // todo 设置theme_style 改变整体样式
 
         $this->navBanner = $navBannerRepository; // 首页焦点图
         $this->systemConfig = $systemConfigRepository; // 系统配置

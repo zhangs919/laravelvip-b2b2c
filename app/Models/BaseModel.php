@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 class BaseModel extends Model
 {
 
+    protected function serializeDate(DateTimeInterface $date){
+        return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
+    }
 
     /**
      * 批量更新 todo 是否有bug 有待检查
@@ -56,15 +60,24 @@ class BaseModel extends Model
         }
     }
 
+    public function getById($id)
+    {
+        return $this->find($id);
+    }
+
     public function getByField($field, $value)
     {
         $info = $this->where($field, $value)->first();
         return $info;
     }
 
+    public function getFieldById($id, $field)
+    {
+        return $this->where($this->primaryKey, $id)->value($field);
+    }
+
     public function getList($condition = [], $column = '')
     {
-//        dd($condition);
         $pageArr = request()->all();
         $curPage = !empty($pageArr['page']['cur_page']) ? $pageArr['page']['cur_page'] : 1;
         $pageSize = !empty($pageArr['page']['page_size']) ? $pageArr['page']['page_size'] : 10;
@@ -92,25 +105,37 @@ class BaseModel extends Model
         $query = $this->select($field)->where($where);
 
         if (!empty($condition['where_raw'])) { // 查询某个字段中包含某个值
+            // "(concat(user_name,',',mobile,',',email) like '%".$keyword."%')"
             $query = $query->whereRaw($condition['where_raw']['field'], $condition['where_raw']['condition']);
+        }
+
+        if (!empty($condition['multi_like'])) {
+            $query = $query->whereRaw($condition['multi_like']);
         }
 
         if (!empty($condition['not_in'])) {
             $query = $query->whereNotIn($condition['not_in']['field'], $condition['not_in']['condition']);
         }
 
-        if (!empty($condition['in'])) {
+        if (!empty($condition['in'])) { // 单个whereIn查询
             $query = $query->whereIn($condition['in']['field'], $condition['in']['condition']);
+        }
+        if (!empty($condition['where_in'])) { // 多个whereIn查询
+            foreach ($condition['where_in'] as $in) {
+                $query = $query->whereIn($in[0], $in[1]);
+            }
         }
 
         if (!empty($condition['between'])) {
             $query = $query->whereBetween($condition['between']['field'], $condition['between']['condition']);
         }
 
-        // 链接查询
+        // 链接查询 支持多个表
         if (!empty($condition['join'])) {
-            extract($condition['join']);
-            $query = $query->join($join_table, $join_first, $join_operator, $join_second, $join_type, $join_where);
+            foreach ($condition['join'] as $join) {
+                extract($join);
+                $query = $query->join($join_table, $join_first, $join_operator, $join_second, $join_type, $join_where);
+            }
         }
 
         // 关联查询数量
@@ -119,16 +144,7 @@ class BaseModel extends Model
         }
         // 关联查询其他表 支持关联多个表 多个为数组
         if (!empty($condition['with'])) {
-            if (is_array($condition['with'])) {
-                // 关联多个表
-                foreach ($condition['with'] as $with) {
-                    // todo
-                    $query = $query->with($with);
-                }
-            } elseif (is_string($condition['with'])) {
-                // 关联单个表
-                $query = $query->with($condition['with']);
-            }
+            $query = $query->with($condition['with']);
         }
 
         $count = $query->count();
@@ -142,7 +158,7 @@ class BaseModel extends Model
             $list = $query
 //            ->offset($offset)
 //            ->limit($pageSize)
-                ->orderBy($sortname, $sortorder)
+                ->orderBy($sortname, $sortorder) // todo 会影响全局
                 ->get();
         } else {
             $list = $query
@@ -216,7 +232,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function ChangeStatus($id)
+    public function changeStatus($id)
     {
         $ret = $this->changeState($id, 'status');
         return $ret;
@@ -228,7 +244,7 @@ class BaseModel extends Model
         if ($primaryKey == null) {
             $primaryKey = $this->primaryKey;
         }
-        $result = $result = $this->where($primaryKey, $id)->first([$statusField]); // 查询当前状态
+        $result = $this->where($primaryKey, $id)->first([$statusField]); // 查询当前状态
         return $result[$statusField];
     }
 
@@ -241,12 +257,26 @@ class BaseModel extends Model
         $isValid = $this->checkState($id, $statusField, $primaryKey); // 查询当前状态
         if ($isValid) {
             // 当前状态是1，则设置为否0
-            $ret = $result = $this->where($primaryKey, $id)->update([$statusField => 0]);
+            $ret = $this->where($primaryKey, $id)->update([$statusField => 0]);
         } else {
             // 当前状态是0，则设置为是1
-            $ret = $result = $this->where($primaryKey, $id)->update([$statusField => 1]);
+            $ret = $this->where($primaryKey, $id)->update([$statusField => 1]);
         }
 
+        if ($ret === false) {
+            return false;
+        }
+        return $isValid ? 0 : 1;
+    }
+
+    public function changeStateReverse($id, $statusField, $primaryKey = null)
+    {
+        if ($primaryKey == null) {
+            $primaryKey = $this->primaryKey;
+        }
+
+        $isValid = $this->checkState($id, $statusField, $primaryKey); // 查询当前状态
+        $ret = $this->where($primaryKey, $id)->update([$statusField => $isValid ? 0 : 1]);
         if ($ret === false) {
             return false;
         }
@@ -290,6 +320,7 @@ class BaseModel extends Model
         // 如果传入的是id为空 则使用主键id
         $primaryKey = !empty($request->post('id', 0)) ? 'id' : $this->primaryKey;
         $id = intval($request->post($primaryKey));
+
 
         $title = $request->post('title');
         $value = intval($request->post('value'));
@@ -341,5 +372,15 @@ class BaseModel extends Model
     {
         $rs = DB::table($this->getTable())->insert($data);
         return $rs;
+    }
+
+    /**
+     * 插入数据
+     * @param $data
+     */
+    public function add($data)
+    {
+        $this->fill($data);
+        $this->save();
     }
 }

@@ -1,21 +1,31 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.2"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ShopRoleModel" class="form-horizontal" name="ShopRoleModel" action="/shop/role/add" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 角色ID -->
             <input type="hidden" id="shoprolemodel-role_id" class="form-control" name="ShopRoleModel[role_id]" value="{{ $info->role_id ?? '' }}">
             <!-- 店铺ID -->
-            <input type="hidden" id="shoprolemodel-shop_id" class="form-control" name="ShopRoleModel[shop_id]" value="{{ $shop_info->shop_id }}">
+            <input type="hidden" id="shoprolemodel-shop_id" class="form-control" name="ShopRoleModel[shop_id]" value="{{ $shop->shop_id }}">
             <!-- 角色名称 -->
             <div class="simple-form-field" >
                 <div class="form-group">
@@ -143,7 +153,9 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <script id="client_rules" type="text">
+        [{"id": "shoprolemodel-role_name", "name": "ShopRoleModel[role_name]", "attribute": "role_name", "rules": {"required":true,"messages":{"required":"角色名称不能为空。"}}},{"id": "shoprolemodel-shop_id", "name": "ShopRoleModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Shop Id必须是整数。"}}},{"id": "shoprolemodel-role_type", "name": "ShopRoleModel[role_type]", "attribute": "role_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Role Type必须是整数。"}}},{"id": "shoprolemodel-role_name", "name": "ShopRoleModel[role_name]", "attribute": "role_name", "rules": {"string":true,"messages":{"string":"角色名称必须是一条字符串。","maxlength":"角色名称只能包含至多60个字符。"},"maxlength":60}},{"id": "shoprolemodel-role_alias", "name": "ShopRoleModel[role_alias]", "attribute": "role_alias", "rules": {"string":true,"messages":{"string":"Role Alias必须是一条字符串。","maxlength":"Role Alias只能包含至多60个字符。"},"maxlength":60}},{"id": "shoprolemodel-role_desc", "name": "ShopRoleModel[role_desc]", "attribute": "role_desc", "rules": {"string":true,"messages":{"string":"角色说明必须是一条字符串。","maxlength":"角色说明只能包含至多100个字符。"},"maxlength":100}},]
+    </script>
 @stop
 
 
@@ -157,15 +169,14 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
-    <script id="client_rules" type="text">
-        [{"id": "shoprolemodel-role_name", "name": "ShopRoleModel[role_name]", "attribute": "role_name", "rules": {"required":true,"messages":{"required":"角色名称不能为空。"}}},{"id": "shoprolemodel-shop_id", "name": "ShopRoleModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Shop Id必须是整数。"}}},{"id": "shoprolemodel-role_type", "name": "ShopRoleModel[role_type]", "attribute": "role_type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Role Type必须是整数。"}}},{"id": "shoprolemodel-role_name", "name": "ShopRoleModel[role_name]", "attribute": "role_name", "rules": {"string":true,"messages":{"string":"角色名称必须是一条字符串。","maxlength":"角色名称只能包含至多60个字符。"},"maxlength":60}},{"id": "shoprolemodel-role_alias", "name": "ShopRoleModel[role_alias]", "attribute": "role_alias", "rules": {"string":true,"messages":{"string":"Role Alias必须是一条字符串。","maxlength":"Role Alias只能包含至多60个字符。"},"maxlength":60}},{"id": "shoprolemodel-role_desc", "name": "ShopRoleModel[role_desc]", "attribute": "role_desc", "rules": {"string":true,"messages":{"string":"角色说明必须是一条字符串。","maxlength":"角色说明只能包含至多100个字符。"},"maxlength":100}},]
-    </script>
+
     <script type="text/javascript">
         $().ready(function() {
             //悬浮显示上下步骤按钮
@@ -252,8 +263,8 @@
 
         //全选权限
         function selectAuthsAll(target) {
-            $("[data-parent-id='root'").prop("checked", $(target).prop("checked"));
-            $("[data-parent-id='root'").change();
+            $("[data-parent-id='root']").prop("checked", $(target).prop("checked"));
+            $("[data-parent-id='root']").change();
         }
     </script>
 @stop

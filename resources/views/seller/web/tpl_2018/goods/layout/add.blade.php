@@ -1,10 +1,17 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180710"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
 @stop
 
 {{--content--}}
@@ -12,7 +19,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="GoodsLayoutModel" class="form-horizontal" name="GoodsLayoutModel" action="/goods/layout/add" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="goodslayoutmodel-layout_id" class="form-control" name="GoodsLayoutModel[layout_id]" value="{{ $info->layout_id ?? '' }}">
             <!-- 版式名称 -->
@@ -119,7 +126,15 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "goodslayoutmodel-layout_name", "name": "GoodsLayoutModel[layout_name]", "attribute": "layout_name", "rules": {"required":true,"messages":{"required":"分类名称不能为空。"}}},{"id": "goodslayoutmodel-position", "name": "GoodsLayoutModel[position]", "attribute": "position", "rules": {"required":true,"messages":{"required":"模板位置不能为空。"}}},{"id": "goodslayoutmodel-content", "name": "GoodsLayoutModel[content]", "attribute": "content", "rules": {"required":true,"messages":{"required":"模板内容不能为空。"}}},{"id": "goodslayoutmodel-shop_id", "name": "GoodsLayoutModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "goodslayoutmodel-position", "name": "GoodsLayoutModel[position]", "attribute": "position", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"模板位置必须是整数。"}}},{"id": "goodslayoutmodel-position", "name": "GoodsLayoutModel[position]", "attribute": "position", "rules": {"in":{"range":["0","1","2","3"]},"messages":{"in":"模板位置是无效的。"}}},{"id": "goodslayoutmodel-content", "name": "GoodsLayoutModel[content]", "attribute": "content", "rules": {"string":true,"messages":{"string":"模板内容必须是一条字符串。"}}},{"id": "goodslayoutmodel-layout_name", "name": "GoodsLayoutModel[layout_name]", "attribute": "layout_name", "rules": {"string":true,"messages":{"string":"分类名称必须是一条字符串。","maxlength":"分类名称只能包含至多10个字符。"},"maxlength":10}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script><script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -133,37 +148,28 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js"></script>
+    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180710"></script>
-    <!-- 在线文本编辑器 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js?v=20180710"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-        [{"id": "goodslayoutmodel-layout_name", "name": "GoodsLayoutModel[layout_name]", "attribute": "layout_name", "rules": {"required":true,"messages":{"required":"版式名称不能为空。"}}},{"id": "goodslayoutmodel-position", "name": "GoodsLayoutModel[position]", "attribute": "position", "rules": {"required":true,"messages":{"required":"模板位置不能为空。"}}},{"id": "goodslayoutmodel-content", "name": "GoodsLayoutModel[content]", "attribute": "content", "rules": {"required":true,"messages":{"required":"模板内容不能为空。"}}},{"id": "goodslayoutmodel-shop_id", "name": "GoodsLayoutModel[shop_id]", "attribute": "shop_id", "rules": {"required":true,"messages":{"required":"店铺ID不能为空。"}}},{"id": "goodslayoutmodel-position", "name": "GoodsLayoutModel[position]", "attribute": "position", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"模板位置必须是整数。"}}},{"id": "goodslayoutmodel-position", "name": "GoodsLayoutModel[position]", "attribute": "position", "rules": {"in":{"range":["0","1","2","3"]},"messages":{"in":"模板位置是无效的。"}}},{"id": "goodslayoutmodel-content", "name": "GoodsLayoutModel[content]", "attribute": "content", "rules": {"string":true,"messages":{"string":"模板内容必须是一条字符串。"}}},{"id": "goodslayoutmodel-layout_name", "name": "GoodsLayoutModel[layout_name]", "attribute": "layout_name", "rules": {"string":true,"messages":{"string":"版式名称必须是一条字符串。","maxlength":"版式名称只能包含至多10个字符。"},"maxlength":10}},]
-    </script>
-
-
-    <script type="text/javascript">
+    <script>
         KindEditor.ready(function(K) {
-
             var extraFileUploadParams = [];
-            extraFileUploadParams['B2B2C_YUNMALL_68MALL_COM_USER_PHPSESSID'] = '2c7ceqdhek0t8tsp4m0m2a1sh0';
-
+            extraFileUploadParams['LARAVELVIP_COM_USER_PHPSESSID'] = 'gg23t4si8o3t171kpg82ft3tj5';
             window.editor = K.create('#content', {
                 width: '100%',
+                minWidth: '650',
                 height: '450px',
-                items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', '|', 'selectall', 'clearhtml', 'quickformat', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'table', 'hr', 'emoticons', 'link', 'unlink', '|', 'about'],
+                items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', '|', 'quickformat', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'table', 'hr', 'emoticons', 'link', 'unlink', '|', 'about'],
                 themesPath: "/assets/d2eace91/js/editor/themes/",
                 cssPath: "/assets/d2eace91/js/editor/themes/default/default.css",
-                uploadJson: "/site/upload-image",
+                uploadJson: "/site/upload-image.html",
                 extraFileUploadParams: extraFileUploadParams,
                 allowImageUpload: true,
                 allowFlashUpload: false,
@@ -186,9 +192,7 @@
                 }
             });
         });
-    </script>
-    <script type="text/javascript">
-
+        //
         $().ready(function() {
             var validator = $("#GoodsLayoutModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -197,18 +201,15 @@
                 if (!validator.form()) {
                     return;
                 }
-
                 var data = $("#GoodsLayoutModel").serializeJson();
-
                 //加载提示
                 $.loading.start();
-
                 var url = $("#GoodsLayoutModel").attr("action");
-
                 $.post(url, data, function(result) {
                     if (result.code == 0) {
-                        $.msg(result.message);
-                        $.go('/goods/layout/list');
+                        $.msg(result.message, function(){
+                            $.go('/goods/layout/list');
+                        });
                     } else {
                         $.msg(result.message, {
                             time: 5000
@@ -217,7 +218,6 @@
                 }, "json").always(function() {
                     $.loading.stop();
                 });
-
             });
         });
     </script>

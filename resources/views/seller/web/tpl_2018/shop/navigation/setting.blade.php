@@ -1,5 +1,16 @@
 {{--模板继承--}}
-@extends('layouts.seller_layout')
+@extends('layouts.'.$base_layout)
+
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/js/colour/css/spectrum.css?v=4.0" rel="stylesheet">
+
+@stop
 
 {{--css style page元素同级上面--}}
 @section('style')
@@ -10,7 +21,7 @@
 @section('content')
 
     <form id="ShopConfigModel" class="form-horizontal" name="ShopConfigModel" action="/shop/config/index" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="navigation">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -68,7 +79,13 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "shopconfigmodel-nav_bgcolor", "name": "ShopConfigModel[nav_bgcolor]", "attribute": "nav_bgcolor", "rules": {"string":true,"messages":{"string":"导航背景色必须是一条字符串。"}}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -79,6 +96,17 @@
 
 {{--自定义css样式--}}
 @section('style_css')
+
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/validate/jquery.metadata.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/colour/js/spectrum.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/colour/js/docs.js?v=202003261806"></script>
 
 @stop
 

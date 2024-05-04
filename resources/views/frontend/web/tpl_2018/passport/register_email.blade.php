@@ -103,7 +103,7 @@
 
                         <!-- 邮箱注册 star -->
                         <form id="EmailRegisterModel" class="form-horizontal" name="EmailRegisterModel" action="/register/email.html" method="post">
-                            {{ csrf_field() }}
+                            @csrf
                             <!-- 邮箱 -->
                             <div class="form-group form-group-spe" >
                                 <label for="emailregistermodel-email" class="input-left">

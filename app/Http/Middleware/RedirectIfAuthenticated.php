@@ -27,6 +27,9 @@ class RedirectIfAuthenticated
 //            if ($request->ajax() && Auth::guard($guard)->check()) {
 //                return result(0, null, '登录成功');
 //            }
+//            if (Auth::guard($guard)->check()) {
+//                return redirect('/');
+//            }
         }
 
         // 商家中心登录

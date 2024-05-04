@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
 
     // 会员
     Route::group(['prefix' => 'member'], function () {
@@ -14,7 +14,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('user-info', 'Member\MemberController@userInfo'); // 会员详情
             Route::post('user-info', 'Member\MemberController@userInfoSave'); // 更新会员信息
             Route::get('user-address', 'Member\MemberController@userAddress'); // 会员收货地址
-            Route::get('add-to-erp', 'Member\MemberController@addToErp'); // 添加到erp
+            Route::post('add-to-erp', 'Member\MemberController@addToErp'); // 添加到erp
             Route::any('edit-desc', 'Member\MemberController@editDesc'); // 编辑会员备注
 
         });

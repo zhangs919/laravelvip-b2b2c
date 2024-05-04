@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ZH-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{ $seo_title }}</title>
+    <link rel="stylesheet" href="/installs/css/base.css">
+    <link rel="stylesheet" href="/installs/css/install.css">
+
+	<style>
+		.check-state img {
+			width: 25px;
+		}
+	</style>
+</head>
+<body>
+<header>
+    <div class="head">
+        <div class="head_left">
+            <img src="/installs/images/header.png" class="head_img" alt="">
+            <div>安装向导</div>
+        </div>
+        <div class="head_right">
+            <div><a href="https://www.laravelvip.com" target="_blank">官方网站</a></div>
+        </div>
+    </div>
+</header>
+<div class="box">
+    <div class="header">
+        <ul>
+            <li>
+                <span class="header_left header_left_active">1</span>
+                <span class="header_right header_right_active">许可协议</span>
+            </li>
+            <li>
+                <span class="header_left header_left_active">2</span>
+                <span class="header_right header_right_active">环境检测</span>
+            </li>
+            <li>
+                <span class="header_left">3</span>
+                <span class="header_right">参数配置</span>
+            </li>
+            <li>
+                <span class="header_left">4</span>
+                <span class="header_right">安装完成</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 环境检测 -->
+    <div class="detection" data-index="2">
+        <div class="detection_content">
+            <div class="detection_content_title">
+                <div
+                    class="detection_content_title_left font-18 font-weight">系统环境</div>
+                <div class="detection_content_title_right font-16">系统环境必须满⾜下列所有条件，否则系统或系统部分功能将⽆法使⽤</div>
+            </div>
+            <div class="d-flex a-content h-55 border-bottom font-weight">
+                <div class="flex-1 ml-25 font-17">要求</div>
+                <div class="flex-1 ml-25 font-17">选项</div>
+                <div class="flex-1 ml-25 font-17">状态</div>
+                <div class="flex-1 ml-25 font-17">说明及帮助</div>
+            </div>
+			@foreach($env as $item)
+            <div class="d-flex a-content h-55 border-bottom bg @if($item[4] != 'success'){{ '-f2' }}@endif">
+                <div class="flex-1 ml-25 font-16">{{ $item[0] }}</div>
+                <div class="flex-1 ml-25 font-16">{{ $item[2] }}</div>
+                <div class="flex-1 ml-25 font-16">{{ $item[3] }}</div>
+                <div class="flex-1 ml-25 font-16">{{ $item[1] }}</div>
+            </div>
+			@endforeach
+
+			@foreach($func as $item)
+            <div class="d-flex a-content h-55 border-bottom bg @if($item[2] != 'success'){{ '-f2' }}@endif>">
+                <div class="flex-1 ml-25 font-16">{{ $item[0] }}</div>
+                <div class="flex-1 ml-25 font-16"></div>
+                <div class="flex-1 ml-25 font-16 check-state">
+					@if($item[2] == 'success')
+                    <img src="/installs/images/pair.png" />
+                    @else
+                    <img src="/installs/images/error.png" />
+                    @endif
+                </div>
+                <div class="flex-1 ml-25 font-16">{{ $item[3] }}</div>
+            </div>
+			@endforeach
+        </div>
+
+        <div class="detection_content">
+            <div class="detection_content_title">
+                <div
+                    class="detection_content_title_left font-18 font-weight">目录权限</div>
+                <div class="detection_content_title_right font-16">系统要求必须满⾜下列所有的⽬录权限，才能使⽤乐融沃商城所有功能。</div>
+            </div>
+            <div class="d-flex a-content h-55 border-bottom font-weight">
+                <div class="flex-1 ml-25 font-17">⽬录</div>
+                <div class="flex-1 ml-25 font-17">要求</div>
+                <div class="flex-1 ml-25 font-17">状态</div>
+                <div class="flex-1 ml-25 font-17">说明及帮助</div>
+            </div>
+			@foreach($dirfile as $item)
+            <div class="d-flex a-content h-55 border-bottom bg @if($item[2] != 'success'){{ '-f2' }}@endif">
+                <div class="flex-1 ml-25 font-16">{{ $item[3] }}</div>
+                <div class="flex-1 ml-25 font-16">可写</div>
+                <div class="flex-1 ml-25 font-16 check-state">
+					@if($item[2] == 'success')
+                    <img src="/installs/images/pair.png" />
+                    @else
+                    <img src="/installs/images/error.png" />
+                    @endif
+                </div>
+                <div class="flex-1 ml-25 font-16"></div>
+            </div>
+			@endforeach
+    </div>
+    <div class="protocol_footer">
+        <button id="detection_last" onclick="location.href='/install/index.html'">上一步</button>
+        @if($ins_error)
+        <button id="detection_afresh" onclick="location.reload()">重新检测</button>
+        @else
+        <button id="detection_next" onclick="location.href='/install/setting.html'">下一步</button>
+		@endif
+    </div>
+</div>
+</div>
+
+<script src="/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/installs/js/layui/layui.js" type="text/javascript"></script>
+<script src="/installs/js/Validform_min.js" type="text/javascript"></script>
+<script src="/installs/js/install.js" type="text/javascript"></script>
+</body>
+</html>

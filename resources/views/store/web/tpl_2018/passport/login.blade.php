@@ -19,12 +19,12 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-    <link type="text/css" rel="stylesheet" href="/css/common.css">
+    <link type="text/css" rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/common.css">
     <script src="/assets/d2eace91/js/jquery.js?v=20180418"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="//{{ config('lrw.frontend_domain') }}/js/common.js"></script>
 
     <!-- 加载Layer插件 -->
-    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
+    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/skin/default/layer.css?v=3.1.0" id="layuicss-layer">
 
 </head>
 <body>
@@ -48,15 +48,15 @@
 @endif
 <div class="header login-header w990">
     <div class="logo-info">
-        <a href="./" class="logo">
+        <a href="//{{ config('lrw.frontend_domain') }}/" class="logo">
             <img src="{{ get_image_url(sysconf('mall_logo')) }}" />
         </a>
         <span class="findpw">欢迎登录</span>
     </div>
     <div class="logo-right">
         <ul class="logo-right-menu">
-            <li ><a class="seller" href="http://{{ env('SELLER_DOMAIN') }}/index.html" target="_blank"><i></i>商家管理中心</a></li>
-            <li class="current"><a class="store" href="http://{{ env('STORE_DOMAIN') }}/index.html" target="_blank"><i></i>网点管理中心</a></li>
+            <li ><a class="seller" href="//{{ config('lrw.seller_domain') }}/index" target="_blank"><i></i>商家管理中心</a></li>
+            <li class="current"><a class="store" href="//{{ config('lrw.store_domain') }}/index" target="_blank"><i></i>网点管理中心</a></li>
         </ul>
     </div>
 </div>
@@ -66,13 +66,13 @@
         <div class="w990 pos-r">
 
 
-            <link type="text/css" rel="stylesheet" href="/css/login.css">
+            <link type="text/css" rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/login.css">
             <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
             <!--整站改色 _start-->
             @if(sysconf('custom_style_enable') == 1)
-                <link rel="stylesheet" href="/css/custom/site-color-style-0.css?v=1.6"/>
+                <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=1.6"/>
             @else
-                <link rel="stylesheet" href="/css/color-style.css?v=1.6"/>
+                <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6"/>
             @endif
             <!--整站改色 _end-->
             <script src="/assets/d2eace91/js/layer/layer.js?v=20180418"></script>
@@ -99,7 +99,7 @@
 
                         <div id="con_login_2" class="form">
                             <form id="form2" action="/login" method="POST">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group item-name">
                                     <!-- 错误项标注 给div另添加一个class值'error' star -->
                                     <div class="form-control-box">
@@ -132,7 +132,7 @@
                                         <span>自动登录</span>
                                     </label>
 
-                                    <a class="forget-password fr" href="http://www.laravelvip.com/user/find-password">忘记密码？</a>
+                                    <a class="forget-password fr" href="//{{ config('lrw.frontend_domain') }}/user/find-password.html">忘记密码？</a>
                                 </div>
                                 <div class="login-btn">
                                     <input type="hidden" name="act" value="act_login" />
@@ -152,7 +152,7 @@
 
                         <div id="con_login_1" class="form" style="display: none;">
                             <form id="form1" action="/login" method="POST">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group item-name">
                                     <!-- 错误项标注 给div另添加一个class值'error' star -->
                                     <div class="form-control-box">
@@ -226,7 +226,7 @@
                             </div>
                             <div class="login-links">
                                 <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                                <a href="http://www.laravelvip.com/register.html" class="register" target="_blank">免费注册</a>
+                                <a href="//{{ config('lrw.frontend_domain') }}/register.html" class="register" target="_blank">免费注册</a>
                             </div>
                         </div>
                     </div>
@@ -250,7 +250,7 @@
                             </div>
                             <div class="login-links">
                                 <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                                <a href="http://www.laravelvip.com/register.html" class="register" target="_blank">免费注册</a>
+                                <a href="//{{ config('lrw.frontend_domain') }}/register.html" class="register" target="_blank">免费注册</a>
                             </div>
                         </div>
                     </div>
@@ -282,7 +282,7 @@
                     });
                     $("body").on('click', '.website-login', function() {
                         var type = $(this).data("id");
-                        $.go("http://www.laravelvip.com"+"/website/login?type="+type);
+                        $.go("//{{ config('lrw.frontend_domain') }}"+"/website/login?type="+type);
                     })
 
                     var container = $("#1524381447rads9d");
@@ -490,7 +490,7 @@
                         $('.SZY-QRCODE-LOGIN').qrcode({
                             width:150,
                             height:150,
-                            text: 'http://www.laravelvip.com/site/qrcode-login.html?k=' + result.data.key
+                            text: '//{{ config('lrw.frontend_domain') }}/site/qrcode-login.html?k=' + result.data.key
                         });
 
                         var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';

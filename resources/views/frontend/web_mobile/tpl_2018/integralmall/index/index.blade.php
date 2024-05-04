@@ -39,34 +39,32 @@
             <div class="tab_nav">
                 <div class="header">
                     <div class="header-left">
-                        <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
+                        <a class="sb-back" href="javascript:history.back(-1)" title="返回">
+                            <i class="iconfont"></i>
+                        </a>
                     </div>
                     <div class="header-middle">积分商城</div>
                     <div class="header-right">
                         <aside class="show-menu-btn">
                             <div class="show-menu" id="show_more">
-                                <a href="javascript:void(0)"></a>
+                                <a href="javascript:void(0)">
+                                    <i class="iconfont"></i>
+                                </a>
                             </div>
                         </aside>
                     </div>
                 </div>
             </div>
         </header>
-        <div class="show-menu-info" id="menu">
-            <ul>
-                <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-                <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-                <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-                <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-            </ul>
-        </div>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
         <!--轮播图-->
 
         <!--菜单-->
         <nav class="nav-list nav-col04-list">
             <ul>
                 <li>
-                    <a href="/index.html">
+                    <a href="/">
                         <img src="/images/exchange/index_icon.png">
                         <span>商城首页</span>
                     </a>
@@ -111,32 +109,40 @@
 
             <ul class="list-grid tablelist-append">
 
+                @foreach($list as $v)
                 <li>
                     <div class="item">
-                        <a class="item-pic" href="/integralmall/goods-11.html" style="background: url() no-repeat center center" target="_blank">
-                            <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/15/gallery/2018/04/17/15239490849627.jpg?x-oss-process=image/resize,m_pad,limit_0,h_180,w_180">
+                        <a class="item-pic" href="/integralmall/goods-{{ $v['goods_id'] }}.html" style="background: url() no-repeat center center" target="_blank">
+                            <img class="lazy" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_180,w_180">
 
                         </a>
 
                         <div class="item-info">
-                            <a class="item-name" href="/integralmall/goods-11.html">积分兑换测试商品</a>
-                            <p class="item-time">无时间条件限制</p>
+                            <a class="item-name" href="/integralmall/goods-{{ $v['goods_id'] }}.html">{{ $v['goods_name'] }}</a>
+                            <p class="item-time">
+                                @if($v['is_limit'] == 0)
+                                    无时间条件限制
+                                @elseif($v['is_limit'] == 1)
+                                    有效期: {{ $v['start_time'] }} 至 {{ $v['end_time'] }}
+                                @endif
+                            </p>
                             <div class="item-exchange">
 						<span class="sale-exchange">
-							30
+							{{ $v['goods_integral'] }}
 							<em>积分</em>
 						</span>
-                                <span class="sale-count">已兑换1次</span>
+                                <span class="sale-count">已兑换{{ $v['exchange_number'] }}次</span>
                             </div>
                             <div class="item-footer">
 
-                                <a class="item-shop" href="/shop/15.html">阿迪达斯旗舰店</a>
+                                <a class="item-shop" href="/shop/{{ $v['shop_id'] }}.html">{{ $v['shop_name'] }}</a>
 
-                                <a href="javascript:void(0)" data-goods_id="11" data-goods_number="99" data-diff="-1" class="on-exchange goods-exchange disabled">立即兑换</a>
+                                <a href="javascript:void(0)" data-goods_id="{{ $v['goods_id'] }}" data-goods_number="{{ $v['goods_number'] }}" data-diff="{{ $v['diff'] }}" class="on-exchange goods-exchange disabled">立即兑换</a>
                             </div>
                         </div>
                     </div>
                 </li>
+                @endforeach
 
             </ul>
             <!-- 分页 -->
@@ -150,8 +156,8 @@
 
                 </div>
                 <script data-page-json="true" type="text" id="page_json">
-	{"page_key":"page","page_id":"pagination","default_page_size":10,"cur_page":1,"page_size":10,"page_size_list":[10,50,500,1000],"record_count":1,"page_count":1,"offset":0,"url":null,"sql":null}
-	</script>
+                    {!! $json_page !!}
+                </script>
             </div>
 
         </div>
@@ -194,14 +200,8 @@
         </script>
 
     </div>
-    <div class="show-menu-info" id="menu">
-        <ul>
-            <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-            <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-            <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-            <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-        </ul>
-    </div>
+    {{--引入右上角菜单--}}
+    @include('layouts.partials.right_top_menu')
     <!-- 第三方流量统计 -->
     <div style="display: none;"></div>
     <!-- 底部 _end-->

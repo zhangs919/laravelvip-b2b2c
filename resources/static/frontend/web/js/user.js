@@ -6,7 +6,7 @@ $(function() {
 		var this_div = $(this).parent();
 		var all_shop = $("#all_shop em").html();
 		var buy_shop_list = $("#buy_shop_list em").html();
-		$.confirm("是否删除选定内容？", function(s) {
+		$.confirm("是否删除选中内容？", function(s) {
 			if (s) {
 				$.ajax({
 					type: 'GET',
@@ -31,7 +31,7 @@ $(function() {
 		var arr = $(this).attr('name');
 		var shop = arr.split(',');
 		var fig = $(this).data("fig");
-		$.confirm("是否删除选定内容？", function(s) {
+		$.confirm("是否删除选中内容？", function(s) {
 			if (s) {
 				$.ajax({
 					type: 'GET',

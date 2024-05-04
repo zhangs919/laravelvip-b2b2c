@@ -1,6 +1,6 @@
 <div id="{{ $uuid }}">
     <form class="form-horizontal" action="/user/user/card-search?id={{ $info['id'] }}" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-10 clearfix">
             <div class="simple-form-field">
                 <div class="form-group">

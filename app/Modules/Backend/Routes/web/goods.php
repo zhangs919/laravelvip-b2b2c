@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
 
 // Goods Route
@@ -117,6 +117,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::get('picker', 'Goods\DefaultController@picker'); // picker
             Route::post('picker', 'Goods\DefaultController@picker'); // picker
 
+            Route::get('build-goods-region.html', 'Goods\DefaultController@buildGoodsRegion'); // 重建商品数据关联关系
 
         });
 
@@ -136,20 +137,35 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
         // LibGoods 商品
         Route::group(['prefix' => 'lib-goods'], function () {
             Route::get('list', 'Goods\LibGoodsController@lists')->name('lib-goods-manage'); // lists
-            Route::get('cat-list', 'Goods\LibGoodsController@catList')->name('lib-category--manage'); // catList
+
             Route::get('add', 'Goods\LibGoodsController@add')->name('lib-goods-manage'); // add
+            Route::get('index', 'Goods\LibGoodsController@add')->name('lib-goods-manage'); // index
+            Route::get('index.html', 'Goods\LibGoodsController@add')->name('lib-goods-manage'); // index
+            if (request()->get('cat_id',0)) {
+                Route::get('index', 'Goods\LibGoodsController@index'); // index
+                Route::get('index.html', 'Goods\LibGoodsController@index'); // index
+            }
             Route::post('add', 'Goods\LibGoodsController@saveData')->name('lib-goods-manage'); // saveData
-            Route::get('index', 'Goods\LibGoodsController@index')->name('lib-goods-manage'); // index
+            Route::get('cat-list', 'Goods\LibGoodsController@catList')->name('lib-category--manage'); // catList
             Route::get('add-images', 'Goods\LibGoodsController@addImages')->name('lib-goods-manage'); // addImages
             Route::get('edit-images', 'Goods\LibGoodsController@editImages')->name('lib-goods-manage'); // editImages
             Route::post('edit-images', 'Goods\LibGoodsController@saveImageData')->name('lib-goods-manage'); // saveImageData
             Route::get('success', 'Goods\LibGoodsController@success')->name('lib-goods-manage'); // success
             Route::get('edit', 'Goods\LibGoodsController@edit')->name('lib-goods-manage'); // edit
+            Route::post('edit', 'Goods\LibGoodsController@saveData')->name('lib-goods-manage'); // saveData
+            Route::post('edit-lib-goods-info', 'Goods\LibGoodsController@editLibGoodsInfo')->name('lib-goods-manage');
+
+
             Route::any('add-excel-goods', 'Goods\LibGoodsController@addExcelGoods')->name('lib-goods-manage'); // 导入Excel商品
             Route::get('download-add', 'Goods\LibGoodsController@downloadAdd')->name('lib-goods-manage'); // 下载上传商品文件模板
             Route::any('import', 'Goods\LibGoodsController@import')->name('lib-goods-manage'); // 导入店铺商品
             Route::any('batch-upload', 'Goods\LibGoodsController@batchUpload')->name('lib-goods-manage'); // 导入ecshop商品
+            Route::get('cat-search', 'Goods\LibGoodsController@catSearch'); // 搜索商品分类
 
+            Route::get('sku-list', 'Goods\LibGoodsController@skuList'); // skuList
+
+            Route::get('qrcode', 'Goods\LibGoodsController@qrcode'); // qrcode
+            Route::get('download-qrcode', 'Goods\LibGoodsController@downloadQrCode'); // 下载商品二维码
 
         });
 

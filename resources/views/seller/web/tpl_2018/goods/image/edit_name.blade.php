@@ -1,5 +1,5 @@
 <form id="{{ $uuid }}" class="form-horizontal" action="add" method="POST">
-    {{ csrf_field() }}
+    @csrf
     <input type="hidden" id="imagemodel-img_id" class="form-control" name="ImageModel[img_id]" value="{{ $info->img_id }}">
     <div class="table-content m-t-10 clearfix">
         <!-- 相册名称 -->

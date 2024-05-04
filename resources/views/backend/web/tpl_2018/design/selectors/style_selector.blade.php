@@ -310,7 +310,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="simple-form-field banner-set hide">
+                <div class="simple-form-field banner-set @if(@$selector_data[0]['banner_roll'] == 0) hide @endif">
                     <div class="form-group">
                         <label for="text4" class="col-sm-3 control-label">
                             <span class="ng-binding">设置背景颜色：</span>
@@ -320,7 +320,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="simple-form-field banner-set hide">
+                <div class="simple-form-field banner-set @if(@$selector_data[0]['banner_roll'] == 0) hide @endif">
                     <div class="form-group">
                         <label for="text4" class="col-sm-3 control-label">
                             <span class="ng-binding">设置背景图片：</span>
@@ -404,6 +404,25 @@
                 </div>
             @endif
 
+            @if(!empty($data['style_roll']))
+                <div class="simple-form-field">
+                    <div class="form-group">
+                        <label for="text4" class="col-sm-3 control-label">
+                            <span class="ng-binding">显示样式：</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <label class="control-label cur-p m-r-10">
+                                <input type="radio" name="roll" @if(@$selector_data[0]['roll'] == 0) checked @endif value="0" />
+                                默认样式
+                            </label>
+                            <label class="control-label cur-p m-r-10">
+                                <input type="radio" name="roll" @if(@$selector_data[0]['roll'] == 1) checked @endif value="1" />
+                                经典样式
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
 
         </div>
@@ -415,73 +434,21 @@
     </form>
 </div>
 <!-- AJAX上传+图片预览 -->
-<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180528"></script>
-<script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180528"></script>
-<script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1"></script>
 <script type="text/javascript">
     $().ready(function() {
-        var type = '{{ $data['type'] }}';
-        var cat_id = '{{ $data['cat_id'] ?? 1 }}';
-        var uid = '{{ $data['uid'] }}';
-        var select_count = '0';
-        var max_number = '{{ $data['number'] }}';
-        var dataform = $("#{{ $page_id }}").find('#tpl_style_form');
-        $("#{{ $page_id }}").find("#ok").click(function() {
-            if(! validator(dataform)){
-                return false;
-            }
-            //var bgcolor = $("#{{ $page_id }}").find("input[name='bgcolor']").val();
-            var obj_data = dataform.serializeJson();
 
-            chk_value = [];
-            chk_value.push(obj_data);
-
-            //上传数据
-            $.designadddata({
-                data: {
-                    uid: uid,
-                    chk_value: chk_value,
-                    type: type,
-                    cat_id: cat_id,
-                },
-            });
-        });
-
-        function validator(dataform){
-            if(dataform.find("input[name='width']").length > 0){
-                var number = /^\+?[1-9][0-9]*$/;
-                if(dataform.find("input[name='width']").val() != '' && !number.test(dataform.find("input[name='width']").val())){
-                    $.msg('输入不合法，请输入大于0的整数');
-                    dataform.find("input[name='width']").addClass('error');
-                    return false;
-                }
-            }
-            if(dataform.find("input[name='height']").length > 0){
-                var number = /^\+?[1-9][0-9]*$/;
-                if(dataform.find("input[name='height']").val() != '' && !number.test(dataform.find("input[name='height']").val())){
-                    $.msg('输入不合法，请输入大于0的整数');
-                    dataform.find("input[name='height']").addClass('error');
-                    return false;
-                }
-            }
-            if(dataform.find("input[name='timer']").length > 0){
-                var number = /^\+?[0-9][0-9]*$/;
-                if(dataform.find("input[name='timer']").val() != '' && !number.test(dataform.find("input[name='timer']").val())){
-                    $.msg('输入不合法，请输入大于等于0的整数');
-                    dataform.find("input[name='timer']").addClass('error');
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        $("input").focus(function(){
-            if($(this).hasClass('error')){
-                $(this).removeClass('error');
+        @if(isset($data['style_colorpicker']))
+        $('#{{ $page_id }}').find('.colorpicker').colorpicker({
+            callback: function(color) {
+                $("#{{ $page_id }}").find("input[name='bgcolor']").val(color);
             }
         });
+        @endif
 
-        @if(!empty($data['style_image']))
+        @if(isset($data['style_image']))
         // 上传图片
         var image_container = $("#{{ $page_id }}").find(".szy-imagegroup");
         image_container.imagegroup({
@@ -495,60 +462,9 @@
                 image_container.parent().find('.bg-image').val("");
             }
         });
-        @elseif(!empty($data['style_banner_roll']))
-        // 上传图片
-        var image_container = $("#{{ $page_id }}").find(".szy-imagegroup");
-        image_container.imagegroup({
-            // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
-            host: "{{ get_oss_host() }}",
-            values: image_container.parent().find('.bg-image').val().split("|"),
-            callback: function(data) {
-                image_container.parent().find('.bg-image').val(data.path);
-                image_container.parent().find('.bg-image-height').val(data.height);
-                image_container.parent().find('.bg-image-width').val(data.width);
-
-            },
-            remove: function(value, values) {
-                image_container.parent().find('.bg-image').val("");
-                image_container.parent().find('.bg-image-height').val('');
-                image_container.parent().find('.bg-image-width').val('');
-            }
-        });
         @endif
 
-        @if(!empty($data['style_banner_roll']))
-        $("#{{ $page_id }}").find("input[name='banner_roll']").click(function () {
-            var inputVal=$("#{{ $page_id }}").find("input[name='banner_roll']:checked").val();
-            if(inputVal==1)
-            {
-                $('.banner-set').removeClass('hide');
-            }
-            else
-            {
-                $('.banner-set').addClass('hide');
-            }
-        });
-        @endif
-
-
-    });
-
-
-    @if(isset($data['style_colorpicker']))
-        $('#{{ $page_id }}').find('.colorpicker').colorpicker({
-            color: '{{ $selector_data[0]['bgcolor'] ?? '' }}'
-        }).on('change.color', function(evt, color) {
-            $("#{{ $page_id }}").find("input[name='bgcolor']").val(color);
-        });
-    @elseif(isset($data['style_banner_roll']))
-        $('#{{ $page_id }}').find('.colorpicker').colorpicker({
-            color: '{{ $selector_data[0]['banner_bgcolor'] ?? '' }}'
-        }).on('change.color', function(evt, color) {
-            $("#{{ $page_id }}").find("input[name='banner_bgcolor']").val(color);
-        });
-    @endif
-
-    @if(isset($data['style_structure_layout']))
+        @if(isset($data['style_structure_layout']))
         var index = $('#{{ $page_id }} .structure-layout-nav li').length;
         // 添加
         $('#{{ $page_id }} .style-structure-layout').on('click','.add-tab-btn',function(){
@@ -625,5 +541,117 @@
         setTimeout(function(){
             $('#{{ $page_id }} .style-structure-layout .structure-layout-list').eq(0).click();
         }, 1000);
-    @endif
+        @endif
+
+        @if(isset($data['style_banner_roll']))
+        var image_container = $("#{{ $page_id }}").find(".szy-imagegroup");
+        image_container.imagegroup({
+            host: "{{ get_oss_host() }}",
+            gallery: true,
+            values: image_container.parent().find('.bg-image').val().split("|"),
+            callback: function(data) {
+                image_container.parent().find('.bg-image').val(data.path);
+                image_container.parent().find('.bg-image-height').val(data.height);
+                image_container.parent().find('.bg-image-width').val(data.width);
+
+            },
+            remove: function(value, values) {
+                image_container.parent().find('.bg-image').val("");
+                image_container.parent().find('.bg-image-height').val('');
+                image_container.parent().find('.bg-image-width').val('');
+            }
+        });
+
+        $("#{{ $page_id }}").find("input[name='banner_roll']").click(function() {
+            var inputVal = $("#{{ $page_id }}").find("input[name='banner_roll']:checked").val();
+            if (inputVal == 1) {
+                $("#{{ $page_id }}").find('.banner-set').removeClass('hide');
+            } else {
+                $("#{{ $page_id }}").find('.banner-set').addClass('hide');
+            }
+        });
+
+        $('#{{ $page_id }}').find('.colorpicker').colorpicker({
+            callback: function(color){
+                $("#{{ $page_id }}").find("input[name='banner_bgcolor']").val(color);
+            }
+        });
+        @endif
+
+
+    })
+
+
+    var type = '{{ $data['type'] }}';
+    var cat_id = '{{ $data['cat_id'] ?? 1 }}';
+    var uid = '{{ $data['uid'] }}';
+    var select_count = '0';
+    var max_number = '{{ $data['number'] }}';
+    var dataform = $("#{{ $page_id }}").find('#tpl_style_form');
+
+    function validator(dataform){
+        if(dataform.find("input[name='width']").length > 0){
+            var number = /^\+?[1-9][0-9]*$/;
+            if(dataform.find("input[name='width']").val() != '' && !number.test(dataform.find("input[name='width']").val())){
+                $.msg('输入不合法，请输入大于0的整数');
+                dataform.find("input[name='width']").addClass('error');
+                return false;
+            }
+        }
+        if(dataform.find("input[name='height']").length > 0){
+            var number = /^\+?[1-9][0-9]*$/;
+            if(dataform.find("input[name='height']").val() != '' && !number.test(dataform.find("input[name='height']").val())){
+                $.msg('输入不合法，请输入大于0的整数');
+                dataform.find("input[name='height']").addClass('error');
+                return false;
+            }
+        }
+        if(dataform.find("input[name='timer']").length > 0){
+            var number = /^\+?[0-9][0-9]*$/;
+            if(dataform.find("input[name='timer']").val() != '' && !number.test(dataform.find("input[name='timer']").val())){
+                $.msg('输入不合法，请输入大于等于0的整数');
+                dataform.find("input[name='timer']").addClass('error');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    $().ready(function() {
+
+        $("#{{ $page_id }}").find("#ok").click(function() {
+            if(! validator(dataform)){
+                return false;
+            }
+            //var bgcolor = $("#{{ $page_id }}").find("input[name='bgcolor']").val();
+            var obj_data = dataform.serializeJson();
+            <!--  -->
+            chk_value = [];
+            chk_value.push(obj_data);
+
+            //上传数据
+            $.designadddata({
+                data: {
+                    uid: uid,
+                    chk_value: chk_value,
+                    type: type,
+                    cat_id: cat_id,
+                },
+            });
+        });
+
+        $("input").focus(function(){
+            if($(this).hasClass('error')){
+                $(this).removeClass('error');
+            }
+        });
+
+        $("#{{ $page_id }}").find('.clear').click(function(){
+            $(this).parent().find('input').val('');
+        });
+
+    });
+
+
+
 </script>

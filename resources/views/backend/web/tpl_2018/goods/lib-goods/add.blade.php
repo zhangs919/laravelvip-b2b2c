@@ -121,13 +121,22 @@
             </div>
 
 
-
-            <form id="catForm" action="/goods/lib-goods/index" method="GET">
-                <input type="hidden" id="cat_id" name="cat_id" value="">
-                <div class="goods-next p-b-30 text-c p-l-0">
-                    <button id="btn_next_step" class="btn disabled" disabled="disabled">下一步，填写商品信息</button>
-                </div>
-            </form>
+            @if(!empty($id))
+                <form id="catForm" action="/goods/lib-goods/edit" method="GET">
+                    <input type="hidden" name="id" value="{{ $id }}">
+                    <input type="hidden" id="cat_id" name="cat_id" value="" />
+                    <div class="goods-next p-b-30 text-c p-l-0">
+                        <button id="btn_next_step" class="btn disabled" disabled="disabled">下一步，填写商品信息</button>
+                    </div>
+                </form>
+            @else
+                <form id="catForm" action="/goods/lib-goods/index" method="GET">
+                    <input type="hidden" id="cat_id" name="cat_id" value="" />
+                    <div class="goods-next p-b-30 text-c p-l-0">
+                        <button id="btn_next_step" class="btn disabled" disabled="disabled">下一步，填写商品信息</button>
+                    </div>
+                </form>
+            @endif
         </div>
     </div>
 

@@ -10,7 +10,7 @@
 @section('content')
 
     <form id="MemberModel" class="form-horizontal" name="MemberModel" action="/member/member/add" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 会员账号 -->
             <div class="simple-form-field" >

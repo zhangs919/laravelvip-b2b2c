@@ -71,7 +71,7 @@ class ContractRepository
         return false;
     }
 
-    public function getSellerShopContract($shop_id)
+    public function getSellerShopContract($shop_id, $type = 0)
     {
         // 列表
         $condition = [
@@ -80,13 +80,22 @@ class ContractRepository
             'sortorder' => 'asc',
         ];
         list($list, $total) = $this->model->getList($condition);
-        $new_result = [];
+        $list = $list->toArray();
+
+        $new_result_0 = [];
+        $new_result_1 = [];
         foreach ($list as $item) {
-            $item->is_joined = $this->checkIsJoined($item->contract_id,$shop_id);
-            $item->status = ShopContract::where([['shop_id',$shop_id],['contract_id',$item->contract_id]])->value('status');
-            $new_result[$item->contract_type][] = $item;
+            $item['is_joined'] = $this->checkIsJoined($item['contract_id'],$shop_id);
+            $item['status'] = ShopContract::where([['shop_id',$shop_id],['contract_id',$item['contract_id']]])->value('status');
+            $new_result_0[$item['contract_type']][] = $item;
+
+            $new_result_1[] = $item;
         }
 
-        return $new_result;
+        if ($type == 1) {
+            return $new_result_1;
+        }
+
+        return $new_result_0;
     }
 }

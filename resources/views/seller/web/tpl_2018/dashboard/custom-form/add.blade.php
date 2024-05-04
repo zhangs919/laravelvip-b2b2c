@@ -11,7 +11,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="Form" class="form-horizontal" name="Form" action="/dashboard/custom-form/add" method="post" target="_blank" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             {{--隐藏域--}}
             <input type="hidden" id="form-form_id" class="form-control" name="Form[form_id]" value="{{ $info->form_id ?? '' }}">
 

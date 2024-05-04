@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Modules\Backend\Http\Controllers\Design;
+namespace App\Modules\Backend\Http\Controllers\Design;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
@@ -27,13 +27,15 @@ class NavigationController extends Backend
 
     protected $linkType;
 
-    public function __construct(NavigationRepository $navigationRepository)
+    public function __construct(
+        NavigationRepository $navigation
+        ,LinkTypeRepository $linkType
+    )
     {
         parent::__construct();
-//        setcookie('theme_style', "true"); // todo 设置theme_style 改变整体样式 感觉不需要设置
 
-        $this->navigation = $navigationRepository;
-        $this->linkType = new LinkTypeRepository();
+        $this->navigation = $navigation;
+        $this->linkType = $linkType;
     }
 
     public function lists(Request $request)
@@ -186,7 +188,7 @@ class NavigationController extends Backend
     public function saveData(Request $request)
     {
         $nav_position = $request->get('nav_position', 0);
-        
+
         $post = $request->post('NavigationModel');
         $nav_page = $request->get('nav_page');
         if (empty($nav_position)) {
@@ -207,6 +209,9 @@ class NavigationController extends Backend
             $msg = '商城导航添加';
         }
         $extra = '?nav_page='.$nav_page.'&nav_position='.$nav_position.'&show_all=0';
+		// 重新设置缓存
+		$cache_id = CACHE_KEY_NAVIGATION[0].'_'.$nav_page.'_'.$nav_position; // 缓存id
+		cache()->forget($cache_id);
 
         if ($ret === false) {
             // fail

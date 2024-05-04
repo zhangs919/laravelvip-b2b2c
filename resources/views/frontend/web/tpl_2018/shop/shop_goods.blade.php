@@ -72,100 +72,50 @@
                         <!--排序-->
                         <form method="GET" name="listform" action="category.php">
                             <div class="fore1">
-                                <dl class="order">
-
-                                    <dd class="first curr">
-                                        <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-0-0-4-0-0.html">
-                                            综合
-
-                                        </a>
-                                    </dd>
-
-                                    <dd class="">
-                                        <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-0-1-3-0-0.html">
-                                            销量
-
-                                            <i class="iconfont icon-DESC"></i>
-
-                                        </a>
-                                    </dd>
-
-                                    <dd class="">
-                                        <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-0-2-3-0-0.html">
-                                            新品
-
-                                            <i class="iconfont icon-DESC"></i>
-
-                                        </a>
-                                    </dd>
-
-                                    <dd class="">
-                                        <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-0-3-3-0-0.html">
-                                            评论
-
-                                            <i class="iconfont icon-DESC"></i>
-
-                                        </a>
-                                    </dd>
-
-                                    <dd class="">
-                                        <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-0-4-3-0-0.html">
-                                            价格
-
-                                            <i class="iconfont icon-DESC"></i>
-
-                                        </a>
-                                    </dd>
-
-                                    <dd class="">
-                                        <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-0-5-3-0-0.html">
-                                            人气
-
-                                            <i class="iconfont icon-DESC"></i>
-
-                                        </a>
-                                    </dd>
-
-                                </dl>
-                                <div class="pagin">
-                                    <!---->
-                                    <a class="prev disabled">
-                                        <span class="icon prev-disabled"></span>
-                                    </a>
-                                    <!---->
-                                    <span class="text">
-								<font class="color">1</font>
-								/
-
-								1
-
-							</span>
-                                    <!---->
-                                    <a class="next next-page" data-go-page="2" href="javascript:;">
-                                        <span class="icon next-btn"></span>
-                                    </a>
-
-                                </div>
-                                <div class="total">
-                                    共
-                                    <span class="color">{{ $goods_total }}</span>
-                                    个商品
-                                </div>
+								<dl class="order">
+									@foreach($filter['sorts'] as $item)
+										<dd class="first @if($item['selected'] == 1){{ 'curr' }}@endif">
+											<a href="{{ $item['url'] }}">
+												{{ $item['name'] }}
+												@if(!empty($item['order']))
+													<i class="iconfont icon-{{ $item['order'] }}"></i>
+												@endif
+											</a>
+										</dd>
+									@endforeach
+								</dl>
+								@if($page_array['page_count'] > 0)
+									<div class="pagin">
+										<a class="prev @if($page_array['cur_page'] == 1) disabled @else prev-page @endif">
+											<span class="icon @if($page_array['cur_page'] == 1) prev-disabled @else prev-btn @endif"></span>
+										</a>
+										<span class="text">
+											<font class="color">{{ $page_array['cur_page'] }}</font>
+											/
+											{{ $page_array['page_count'] }}
+										</span>
+										<a class="next @if($page_array['cur_page'] == $page_array['page_count']) disabled @else next-page @endif" data-go-page="2" href="javascript:;">
+											<span class="icon @if($page_array['cur_page'] == $page_array['page_count']) next-disabled @else next-btn @endif"></span>
+										</a>
+									</div>
+									<div class="total">
+										共
+										<span class="color">{{ $total }}</span>
+										个商品
+									</div>
+								@endif
                             </div>
                             <div class="fore2">
                                 <div class="filter-btn">
 
-                                    <a href="javascript:void(0);" data-go="/shop-list-1-0-0-1-0-0-0-3-0-0.html" class="filter-tag ">
-                                        <input class="none" name="fff" onclick="" type="checkbox">
-                                        <i class="iconfont">&#xe715;</i>
-                                        <span class="text">包邮</span>
-                                    </a>
-
-                                    <a href="javascript:void(0);" data-go="/shop-list-1-0-0-0-0-1-0-3-0-0.html" class="filter-tag ">
-                                        <input class="none" name="fff" onclick="" type="checkbox">
-                                        <i class="iconfont">&#xe715;</i>
-                                        <span class="text">仅显示有货</span>
-                                    </a>
+									<!-- 选中的筛选条件给 a 标签追加类名 即  class="filter-tag curr" _star-->
+									@foreach($filter['others'] as $item)
+										<a href="{{ $item['url'] }}" class="filter-tag @if($item['selected'] == 1){{ 'curr' }}@endif">
+											<input class="none" name="fff" onclick="" type="checkbox">
+											<i class="iconfont">@if($item['selected'] == 1)&#xe6ae;@else&#xe715;@endif</i>
+											<span class="text">{{ $item['name'] }}</span>
+										</a>
+									@endforeach
 
                                 </div>
                             </div>
@@ -180,7 +130,7 @@
 
                         </ul>
                         <!--当没有数据时，显示如下div-->
-                        @if($goods_total == 0)
+                        @if($total == 0)
                         <div class="tip-box">
                             <img src="/images/noresult.png" class="tip-icon">
                             <div class="tip-text">抱歉！没有搜索到您想要的结果……</div>
@@ -205,7 +155,7 @@
         <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20181123"></script>
         <script type="text/javascript">
             $().ready(function() {
-                var page_url = "/shop-list-1-0-{0}-0-0-0-0-3-0-0.html";
+                var page_url = "{{ $filter['region']['url'] }}";
                 page_url = page_url.replace(/&amp;/g, '&');
 
                 var tablelist = $("#table_list").tablelist({

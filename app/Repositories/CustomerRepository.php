@@ -25,6 +25,7 @@ namespace App\Repositories;
 
 
 use App\Models\Customer;
+use App\Models\CustomerType;
 
 class CustomerRepository
 {
@@ -55,5 +56,26 @@ class CustomerRepository
         }
 
         return $info;
+    }
+
+    /**
+     * 获取商品详情店铺客服列表
+     *
+     * @param $shopId
+     * @return mixed
+     */
+    public function getCustomerList($shopId)
+    {
+        $list = Customer::where([['shop_id',$shopId],['is_show',1]])
+            ->select(['type_id','customer_name','customer_account','customer_tool','shop_id'])
+            ->get()->toArray();
+        if (!empty($list)) {
+            foreach ($list as &$item) {
+                $item['shop_type'] = 1; // todo 暂时不知道从值哪来的
+                $item['customer_type_name'] = CustomerType::where('type_id', $item['type_id'])->value('type_name');
+            }
+        }
+
+        return $list;
     }
 }

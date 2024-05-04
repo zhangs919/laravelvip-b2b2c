@@ -6,7 +6,6 @@ namespace App\Repositories;
 use App\Models\Cart;
 use App\Models\Goods;
 use App\Models\GoodsSku;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,6 +15,7 @@ class CartRepository
 
     protected $model;
 
+    protected $goodsRep;
     protected $goods; // 商品模型
     protected $goodsSku; // 商品规格模型
     protected $goodsBuyNum; // 购买的商品数量
@@ -36,6 +36,7 @@ class CartRepository
     public function __construct()
     {
         $this->model = new Cart();
+        $this->goodsRep = new GoodsRepository();
 
     }
 
@@ -141,7 +142,7 @@ class CartRepository
     public function getUserCartGoodsNum()
     {
 
-        if (!empty($_COOKIE['cart_goods_num'])) {
+        if (!empty($_COOKIE['cart_goods_num']) && !$this->user_id) {
             return (int)$_COOKIE['cart_goods_num'];
         }
         if ($this->user_id) {
@@ -161,10 +162,12 @@ class CartRepository
         if (empty($this->goodsSku)) {
             $price = $this->goods->goods_price;
             $goods_number = $this->goods->goods_number;
+            $sku_id = $this->goods->sku_id;
         } else {
             //如果有规格价格，就使用规格价格，否则使用本店价
             $price = $this->goodsSku->goods_price;
             $goods_number = $this->goodsSku->goods_number;
+            $sku_id = $this->goodsSku->sku_id;
         }
         // 查询购物车是否存在该商品
         if (!$this->user_id) {
@@ -172,7 +175,7 @@ class CartRepository
                 ['user_id',$this->user_id],
                 ['session_id',$this->session_id],
                 ['goods_id',$this->goods->goods_id],
-                ['sku_id',$this->goods->sku_id]
+                ['sku_id',$sku_id]
 //                ['spec_key', (!empty($this->goodsSku) ? $this->goodsSku->key : null)]
             ];
 
@@ -181,14 +184,13 @@ class CartRepository
             $condition = [
                 ['user_id',$this->user_id],
                 ['goods_id',$this->goods->goods_id],
-                ['sku_id',$this->goods->sku_id],
+                ['sku_id',$sku_id],
 //                ['spec_key', (!empty($this->goodsSku) ? $this->goodsSku->key : null)]
             ];
-
             $userCartGoods = Cart::where($condition)->first();
         }
 
-        if (count($userCartGoods) > 0) {
+        if (!empty($userCartGoods)) {
 
             // 该商品已经加入购物车
             $userWantGoodsNum = $this->goodsBuyNum + $userCartGoods['goods_number'];//本次要购买的数量加上购物车的本身存在的数量
@@ -199,7 +201,6 @@ class CartRepository
                 return arr_result(-4, '', '商品库存不足，剩余'.$goods_number.',当前购物车已有'.$userCartGoods['goods_number'].'件');
             }
             $update = ['goods_number' => $userWantGoodsNum,'goods_price'=>$price,'member_goods_price'=>$price];
-//            $cartRes = Cart::where($condition)->update($update);
             $cartRes = $userCartGoods->update($update); // 更新购物车商品信息
         } else {
             // 该商品未加入购物车
@@ -211,7 +212,7 @@ class CartRepository
                 'session_id' => $this->session_id,   // session_id
                 'shop_id' => $this->goods->shop_id,   // 店铺id
                 'goods_id' => $this->goods->goods_id,   // 商品id
-                'sku_id' => $this->goods->sku_id,
+                'sku_id' => $sku_id,
                 'cart_act_id' => 0, // 活动id
                 'goods_name' => $this->goods->goods_name,   // 商品名称
                 'goods_number' => $this->goodsBuyNum, // 购买数量
@@ -248,6 +249,180 @@ class CartRepository
     }
 
     /**
+     * 获取购物车盒子数据
+     * @param int $select 是否被用户勾选中的 0 为全部 1为选中  一般没有查询不选中的商品情况
+     * @param int $isCart 是否购物车页面获取数据 1-是 0-否
+     * @return array
+     */
+    public function getCartGoodsList($select = 0, $isCart = 0)
+    {
+        if ($this->user_id) {
+            $cartCondition[] = ['user_id', $this->user_id];
+        } else {
+            $cartCondition[] = ['session_id', $this->session_id];
+        }
+        if ($select != 0) {
+            $cartCondition[] = ['select', 1];
+        }
+        $cartList = Cart::with(['goods','shop','sku'])->where($cartCondition)->get()->toArray();
+        if (empty($cartList)) {
+            return [];
+        }
+        $data = $this->checkCartList($cartList);
+        $cartGoodsTotalNum = array_sum(array_map(function($val){return $val['goods_number'];}, $data));//购物车购买的商品总数
+        setcookie('cart_goods_num', (int)$cartGoodsTotalNum, null, '/');
+        foreach ($data as &$item) {
+            $goods = $item['goods'];
+            $sku = $item['sku'];
+            $shop = $item['shop'];
+
+            $item['buy_type'] = '0';
+            $item['ext_info'] = $goods['ext_info'];
+            $item['cart_key'] = null;
+            $item['sku_open'] = $goods['sku_open'];
+            $item['prop_open'] = $goods['prop_open'];
+            $item['basic_goods_name'] = $goods['goods_name'];
+            $item['cat_id'] = $goods['cat_id'];
+            $item['brand_id'] = $goods['brand_id'];
+            $item['goods_sn'] = $goods['goods_sn'];
+            $item['goods_status'] = $goods['goods_status'] == 1;
+            $item['goods_audit'] = $goods['goods_audit'];
+            $item['is_delete'] = $goods['is_delete'];
+            $item['goods_image'] = get_image_url($goods['goods_image']);
+            $item['give_integral'] = $goods['give_integral'];
+            $item['invoice_type'] = $goods['invoice_type'];
+            $item['stock_mode'] = $goods['stock_mode'];
+            $item['spu_number'] = $goods['goods_number'];
+            $item['contract_ids'] = $goods['contract_ids'];
+            $item['act_id'] = $goods['act_id'];
+            $item['order_act_id'] = $goods['order_act_id'];
+            $item['goods_moq'] = $goods['goods_moq'];
+            $item['user_discount'] = $goods['user_discount'];
+            $item['sales_model'] = $goods['sales_model'];
+
+            $item['sku_name'] = $sku['sku_name'];
+            $item['is_spu'] = $sku['is_spu'];
+            $item['sku_image'] = get_image_url($sku['sku_image']);
+            $item['sku_number'] = $sku['goods_number'];
+            $item['market_price'] = $sku['market_price'];
+            $item['spec_names'] = $sku['spec_names'] ? explode(' ', $sku['spec_names']) : [];
+            $item['sku_sn'] = $sku['goods_sn'];
+            $item['original_price'] = $sku['goods_price'];
+            $item['cost_price'] = $sku['cost_price'];
+            $item['sku_enable'] = '0';
+            $item['cart_step'] = '1';
+            $item['shop_status'] = $shop['shop_status'];
+            $item['act_type'] = null;
+            $item['is_cross_border'] = $goods['is_cross_border'];
+
+            $item['m_order_act_id'] = '0';
+            // 门店
+            $item['is_self_mention'] = '1';
+            $item['is_sell'] = '1';
+
+            $item['comstore_name'] = null;
+            $item['activity'] = null;
+            $item['order_activity'] = null;
+            $item['goods_min_number'] = $goods['goods_moq']; // 最小起订量
+            $item['goods_max_number'] = $sku['goods_number'];
+            $item['prices'] = [// todo
+                'is_original_price' =>true,
+                'price_type' =>'original_price',
+                'original_price' => $sku['goods_price'],
+                'activity_price' =>false,
+                'member_price' =>false,
+                'member_price_type' =>'',
+                'goods_price' => $sku['goods_price'],
+                'activity_enable'=>0
+            ];
+            $item['goods_price_format'] = "￥".$sku['goods_price'];
+            $item['market_price_format'] = "￥".$sku['market_price'];
+            $item['original_price_format'] = "￥".$sku['goods_price'];
+            $item['order_act_type'] = null;
+            $item['floor_price_init'] = true;
+            $item['floor_price_label'] = '市场价';
+            $item['floor_price'] = format_price($sku['market_price']);
+            $item['floor_price_format'] = "￥".$sku['market_price'];
+
+            // 以下字段购物车列表页面返回
+            $item['add_time_format'] = format_time($item['add_time']);
+            $item['goods_amount'] = $item['goods_price']*$item['goods_number'];
+            $item['goods_amount_format'] = "￥".$item['goods_amount'];
+            $item['cart_disable'] = 0; //
+            $item['contract_list'] = null; //
+            $item['gift_list'] = null; //
+
+            unset($item['goods'], $item['shop'], $item['sku']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * 购物车商品以店铺ID分组显示
+     * @return array
+     */
+    public function getShopCartList($cart_list)
+    {
+        // 购物车商品以店铺ID分组显示
+        $temp_list = [];
+        foreach ($cart_list as $item) {
+            $temp_list[$item['shop_id']][] = $item;
+        }
+        $shopRep = new ShopRepository();
+        $shop_list = []; // 购物车列表
+        foreach ($temp_list as $shop_id=>$item) {
+
+            $shop_list[] = [
+                'select' => in_array(1, array_column($item, 'select')) ? 1 : 0,
+                'add_time' => last($item)['add_time'],
+                'add_time_format' => format_time(last($item)['add_time']),
+                'shop_info' => $shopRep->getShopInfo($shop_id),
+                'bonus_list' => null,
+                'goods_list' => $item
+            ];
+        }
+
+        return $shop_list;
+    }
+
+    /**
+     * 获取购物车信息
+     *
+     * @return array
+     */
+    public function getShopCartData()
+    {
+        $cart_list = $this->getCartGoodsList(0, 1);
+        $shop_list = $this->getShopCartList($cart_list);
+        $cart_price_info = $this->getCartPriceInfo($cart_list);
+        $cart = [
+            'select_goods_number' => $cart_price_info['goods_number'],
+            'select_goods_amount' => $cart_price_info['select_goods_amount'],
+            'select_goods_amount_format' => '￥'.$cart_price_info['select_goods_amount'],
+            'goods_number' => $cart_price_info['count'],
+            'full_cut_amount' => 0,
+            'goods_amount' => $cart_price_info['goods_amount'],
+            'pre_sale_mode' => null,
+            'shop_delivery_enable' => [
+                [
+                    'shop_id' => 1,
+                    'enable' => 1,
+                ],
+                [
+                    'shop_id' => 2,
+                    'enable' => 1,
+                ],
+            ],
+            'submit_enable' => 1,
+            'show_start_price_ids' => null,
+            'shop_list' => $shop_list,
+            'invalid_list' => null
+        ];
+        return $cart;
+    }
+
+    /**
      * 获取用户购物车列表
      *
      * @param int $select 是否被用户勾选中的 0 为全部 1为选中  一般没有查询不选中的商品情况
@@ -263,11 +438,9 @@ class CartRepository
         if ($select != 0) {
             $cartCondition[] = ['select', 1];
         }
-        $cartList = Cart::with(['goods','shop'])->where($cartCondition)->get();
+        $cartList = Cart::with(['goods','shop','sku'])->where($cartCondition)->get();
         $afterCheckCartList = $this->checkCartList($cartList);
-//        dd(Cookie::get('cart_goods_num'));
         $cartGoodsTotalNum = array_sum(array_map(function($val){return $val['goods_number'];}, $afterCheckCartList->toArray()));//购物车购买的商品总数
-//        \cookie('cart_goods_num', $cartGoodsTotalNum, 0, null, '/');
         setcookie('cart_goods_num', (int)$cartGoodsTotalNum, null, '/');
         return $afterCheckCartList->toArray(); // 转成数组返回
     }
@@ -280,8 +453,8 @@ class CartRepository
     public function checkCartList($cartList)
     {
         foreach ($cartList as $k=>$cart) {
-            if ($cart->goods->count() <= 0 || $cart->goods->goods_status != 1 || $cart->goods->goods_audit != 1) {
-                Cart::where('cart_id', $cart->cart_id)->delete(); // 删除
+            if (count($cart['goods']) <= 0 || $cart['goods']['goods_status'] != 1 || $cart['goods']['goods_audit'] != 1) {
+                Cart::where('cart_id', $cart['cart_id'])->delete(); // 删除
                 unset($cartList[$k]);
                 continue;
             }
@@ -335,8 +508,7 @@ class CartRepository
 
         $cart = Cart::find($cart_id);
         if (empty($cart)) {
-            $goodsRep = new GoodsRepository();
-            $goods_id = $goodsRep->getGoodsId($sku_id);
+            $goods_id = $this->goodsRep->getGoodsId($sku_id);
             $cart = Cart::where('goods_id', $goods_id)->first();
         }
         if($goods_num > 200){
@@ -346,7 +518,7 @@ class CartRepository
 
         // 判断商品库存
         $sku_goods_number = GoodsSku::where('sku_id', $sku_id)->value('goods_number');
-        if ($goods_num >= $sku_goods_number) {
+        if ($goods_num > $sku_goods_number) {
             return arr_result(-1, '', '商品数量不能大于库存');
         }
         $ret = $cart->save(); // 更新数据
@@ -360,9 +532,10 @@ class CartRepository
      * 购物车商品 删除
      *
      * @param array $cart_ids 购物车ids
+     * @param int $goods_id 商品id
      * @return mixed
      */
-    public function delete($cart_ids = [])
+    public function delete($cart_ids = [], $goods_id = 0)
     {
         if ($this->user_id) {
             $cartCondition[] = ['user_id', $this->user_id];
@@ -370,12 +543,18 @@ class CartRepository
             $cartCondition[] = ['session_id', $this->session_id];
             $cartCondition[] = ['user_id', 0];
         }
-        if (is_array($cart_ids)) {
-            $ret = Cart::where($cartCondition)->whereIn('cart_id', $cart_ids)->delete();
-        } else {
-            $cartCondition[] = ['cart_id', $cart_ids];
+        if (!empty($cart_ids)) {
+            if (is_array($cart_ids)) {
+                $ret = Cart::where($cartCondition)->whereIn('cart_id', $cart_ids)->delete();
+            } else {
+                $cartCondition[] = ['cart_id', $cart_ids];
+                $ret = Cart::where($cartCondition)->delete();
+            }
+        } elseif (!empty($goods_id)) {
+            $cartCondition[] = ['goods_id', $goods_id];
             $ret = Cart::where($cartCondition)->delete();
         }
+
 
         return $ret;
     }
@@ -387,16 +566,20 @@ class CartRepository
      */
     public function getCartPriceInfo($cartList = null)
     {
-        $total_fee = $goods_number = 0;//初始化数据。商品总额/商品总共数量
+        $select_goods_amount = $goods_number = 0;//初始化数据。商品总额/商品总共数量
+        $count = $goods_amount = 0;
         if($cartList){
             foreach ($cartList as $cartKey => $cartItem) {
                 if ($cartItem['select'] == 1) {
-                    $total_fee += $cartItem['goods_number'] * $cartItem['goods_price'];
+                    $select_goods_amount += $cartItem['goods_number'] * $cartItem['goods_price'];
                     $goods_number += $cartItem['goods_number'];
                 }
+                $count += $cartItem['goods_number'];
+                $goods_amount += $cartItem['goods_price'];
+
             }
         }
-        return compact('total_fee', 'goods_number');
+        return compact('select_goods_amount', 'goods_number', 'count', 'goods_amount');
     }
 
     /**
@@ -437,7 +620,7 @@ class CartRepository
         }
 
         // 处理选中商品信息
-        $cart_list = $this->getCartList();
+        $cart_list = $this->getCartGoodsList();
 
         // 购物车商品以店铺ID分组显示
         $select_shop_amount = $shop_delivery_enable = [];

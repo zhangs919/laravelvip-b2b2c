@@ -20,7 +20,7 @@
 // | Description: 客服类型
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\CustomerTypeRepository;
@@ -42,11 +42,11 @@ class CustomerTypeController extends Seller
 
     protected $customerType;
 
-    public function __construct()
+    public function __construct(CustomerTypeRepository $customerType)
     {
         parent::__construct();
 
-        $this->customerType = new CustomerTypeRepository();
+        $this->customerType = $customerType;
 
         $this->set_menu_select('account', 'shop-customer-type-list');
     }

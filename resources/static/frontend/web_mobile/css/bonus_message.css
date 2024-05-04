@@ -3,27 +3,27 @@
 .layer-mask-box { width:290px; max-height: 100%; margin:auto; position:fixed; z-index: 10000;top: 50%; left: 50%; right: 0; transform: translate3d(-50%,-50%,0); display: none;}
 .layer-mask-box .layer-mask-close {background: url(../images/message_close.png) no-repeat center center;width: 32px;height: 32px;display:block;position:relative;margin: 20px auto;cursor: pointer;border-radius: 100%;background-size: 32px;}
 .layer-mask-wrap { margin: 0 auto; padding: 155px 0 15px; width: 100%; border-radius: 8px; box-sizing: border-box; background-clip: padding-box;background-image: url(../images/bg_bonus.png); background-size: 100% auto; background-repeat: no-repeat; }
-.layer-mask-wrap .register-bonus-money{margin: 20px 0 0;color: #fff;text-align: center;font-size: 24px;font-family: PingFangSC-Semibold;text-shadow: 0 2px 4px rgba(214, 75, 0, 0.5);}
-.layer-mask-wrap .register-bonus-name {font-size:0.7rem; color:#D38005;}
+.layer-mask-wrap .register-bonus-money{margin: 20px 0;color: #fff;text-align: center;font-size: 24px;font-family: PingFangSC-Semibold;text-shadow: 0 2px 4px rgba(214, 75, 0, 0.5);}
+.layer-mask-wrap .register-bonus-name {font-size:0.7rem; color:#fff; text-align: center;}
 .layer-mask-wrap .command { margin-top: 15px;}
 .layer-mask-wrap .command .command-btn { font-size: 18px; background-color: #E03135; border: 1px solid #E03135; display: inline-block; height: 54px; line-height: 54px; width: 200px; color: #FFF;}
 .layer-mask-wrap .command .command-btn:hover { opacity: .8;}
 .layer-mask { position: absolute; left: 0px; top: 0px; opacity: 0.15; z-index: 9998; width: 100%; height: 100%; background-color: rgb(0, 0, 0); filter: alpha(opacity=60) !important; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)" !important; -webkit-opacity: 0.6 !important; -khtml-opacity: 0.6 !important; -moz-opacity: 0.6 !important; -ms-opacity: 0.6 !important; -o-opacity: 0.6 !important; opacity: 0.6 !important; display: none;}
 .coupons-scroll {max-height:190px; overflow: scroll;margin: 12px 0 15px; }
 .coupons-list-box { margin: 0 15px;}
-.coupons-list-box .coupons-item { display: -webkit-box; display: -webkit-flex; display: flex;margin:0 auto 10px; padding:12px 0 10px;height: 66px;background: #fff; color: #333;box-sizing: border-box; overflow:hidden; border-radius: 3px;}
+.coupons-list-box .coupons-item { display: -webkit-box; display: -webkit-flex; display: flex;margin:0 auto 10px; padding:12px 0 10px; min-height: 66px;background: #fff; color: #353535;box-sizing: border-box; overflow:hidden; border-radius: 3px;}
 .coupons-list-box .coupons-item:last-child{ margin-bottom: 0; }
-.coupons-list-box .coupons-item .list-left { position: relative; width: 82px; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; flex-direction: column; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; box-sizing: border-box; text-align: center;}
+.coupons-list-box .coupons-item .list-left { position: relative; width: 82px; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; flex-direction: column; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; box-sizing: border-box; text-align: center; align-items: center; justify-content: center;}
 .coupons-list-box .coupons-item .list-left:before { height: 100%; content: ''; border-right: 1px dashed #e3e5e9; position: absolute; right: -1px; transform: scaleX(.5); -webkit-transform: scaleX(.5);z-index: 10; }
 .coupons-item .list-left .coupon-price {font-family: font_helvetica; font-size: 12px; color: #f44; line-height: 20px;}
 .coupons-item .list-left .coupon-price span { font-size: 20px; }
-.coupons-item .list-left .coupon-condition { font-size: 10px; color: #ccc; white-space: nowrap;line-height: 12px;}
-.coupons-item .list-right { position: relative;display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column;flex-direction: column; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; margin-left:15px; }
+.coupons-item .list-left .coupon-condition { padding-top: .5em; font-size: 10px; color: #ccc; white-space: nowrap;line-height: 12px;}
+.coupons-item .list-right { position: relative;display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column;flex-direction: column; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; margin-left:15px; padding-right: 10px;}
 .coupons-item .list-right:before,.coupons-item .list-right:after { content: ""; height: 8px; width:8px; background: #fb2c00; border-radius: 0.5rem; position: absolute; left:-19px; }
 .coupons-item .list-right:after { bottom:-15px;}
 .coupons-item .list-right:before { top: -17px; }
-.coupons-item .list-right .coupon-name{ margin: 2px 0 10px; font-size: 14px; text-align: left; color: #333; font-family: PingFangSC-Medium;line-height: 14px;}
-.coupons-item .list-right .coupon-time {font-size: 10px; color: #ccc; white-space: nowrap;    display: -webkit-box;display: -webkit-flex;display: flex;-webkit-box-align: center;-webkit-align-items: center;align-items: center;}
+.coupons-item .list-right .coupon-name{ margin: 2px 0 10px; font-size: 14px; text-align: left; color: #353535; font-family: PingFangSC-Medium;line-height: 14px;}
+.coupons-item .list-right .coupon-time {font-size: 10px; color: #ccc; white-space: normal; display: -webkit-box;display: -webkit-flex;display: flex;-webkit-box-align: center;-webkit-align-items: center;align-items: center; word-break: break-all; word-wrap: break-word; word-break: normal; line-height: 1.4;}
 .layer-mask-wrap .coupons-btn {display: block; margin: 0 auto; background-image: -webkit-linear-gradient(top, #ffe625 0%, #ffc910 100%); background-image: linear-gradient(180deg, #ffe625 0%, #ffc910 100%); border-radius: 100px; font-family: PingFangSC-Semibold; font-size: 16px; color: #ff300b; max-width: 265px; width: 265px; height: 42px; line-height: 42px; text-align: center;}
 /*红包推广样式*/
 .fixed-bonus-layer{position: fixed;top: 0;left: 0;right: 0;bottom: 0;z-index:1000;background: linear-gradient(to bottom,#38185e,#831b3b); max-width: 640px; min-width: 320px; margin: auto;}
@@ -35,7 +35,7 @@
 .fixed-bonus-layer .fixed-con { position: absolute; top: 20%; bottom: 12%; left: 10%; display: -webkit-box; display: -webkit-flex; display: flex; flex-direction: column; width: 80%; align-items: center;}
 .fixed-bonus-layer .fixed-con .bonus-top { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; text-align: center;}
 .fixed-bonus-layer .fixed-con .bonus-top p { font-size: .7rem; line-height: 1.6; color: #fff7d8;}
-.fixed-bonus-layer .fixed-con .bonus-top .shop-name { font-size: .9rem;}
+.fixed-bonus-layer .fixed-con .bonus-top .shop-name { font-size: .9rem;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;max-width: 250px;}
 .fixed-bonus-layer .fixed-con .bonus-top .bonus-amount { font-size:0.8rem; font-weight: 700; color: #ffcb10; line-height: 1.4;}
 .fixed-bonus-layer .fixed-con .bonus-top .bonus-amount em{ font-size: 1.8rem;}
 .fixed-img-con .btn-receive { width: 8rem; height: 1.8rem; margin: 0 auto; font-size: .8rem; font-weight: 700; line-height: 1.8rem; color: #913f00; text-align: center; background: #ffcb10; border-radius: 2rem; box-shadow: 0 4px #ffbc02;}
@@ -71,8 +71,9 @@
 .coupon-market-msg .condition { margin-left: 10px; line-height: 20px; padding-top: 13px;}
 .coupon-market-msg .condition p { font-size: .55rem; }
 .coupon-market-msg .condition .type { color: #74d2d4; }
-.coupon-market-msg .coupon-range,.coupon-market-msg .coupon-amount,.coupon-market-msg .coupon-time { font-size: .65rem; line-height:1.1rem;}
-.coupon-market-msg .coupon-range a{ font-size: 0.65rem; color: #999; }
+.coupon-market-msg .coupon-range,.coupon-market-msg .coupon-amount,.coupon-market-msg .coupon-time { font-size: .6rem; line-height:20px;}
+.coupon-market-msg .coupon-time{ font-size:0.55rem; }
+.coupon-market-msg .coupon-range a{ font-size:.6rem; color: #999; }
 .coupon-market-msg .coupon-icon { position: absolute; left: 0px; top: 0px; display: block; overflow: hidden; width: 48px; height: 48px; background: url(../images/coupon-icon.png) no-repeat; background-size: 48px; }
 .coupon-market-type {width:4rem; text-align: center; background: #74d2d4; position: relative;display: flex; align-items:center; cursor: pointer;}
 .coupon-market-msg:after{ content: ''; width:0.07rem;height: 100%; background:url(../images/semi-circle.png) left top; background-repeat: repeat-y; background-size: 0.07rem auto; position: absolute; right:-0.07rem; top: 0; bottom: 0; z-index: 1;}
@@ -87,3 +88,16 @@
 .coupon-market-msg .coupon-stamp{position: absolute; right: 5px; bottom: 6%; width:50px; height:50px; background:url(../images/user-bonus-icon.png); background-repeat: no-repeat; background-size:195px auto;}
 .coupon-box-received .coupon-stamp{ background-position:-55px; 0; }
 .coupon-box-receive .coupon-stamp{ background-position: 0 0; }
+
+/*限品类*/
+.bonus-category { max-height: calc(100vh - 22rem); padding-left: 3em; font-size: .6rem; overflow-y: auto;}
+.bonus-category ul { overflow: hidden;}
+.bonus-category ul li { float: left; margin: .25em 0 .25em 1em; background: #f7f7f7; border-radius: 30px;}
+.bonus-category ul li a { display: block; padding: 0 .2em 0 .8em; font-size: .6rem; color: #666;}
+.bonus-category ul li a:after { content: ''; display: inline-block; width: 0; height: 0; margin-left: .5em; vertical-align: middle; border-style: solid; border-width: .4em .6em; border-color: transparent; border-left-color: #bbb;}
+
+/*限商品*/
+.bonus-goods { height: 1.5rem; padding-left: 3.5em; font-size: .6rem; overflow-x: auto;}
+.bonus-goods ul { overflow-x: auto; overflow-y: hidden; display: -webkit-box; display: -webkit-flex; display: -moz-box; display: -ms-flexbox; display: flex; -webkit-flex-wrap: nowrap; -ms-flex-wrap: nowrap; flex-wrap: nowrap; -webkit-overflow-scrolling: touch;}
+.bonus-goods ul li { float: left; margin: .25em 0 .25em .5em; background: #f7f7f7; border-radius: 30px;}
+.bonus-goods ul li a, .bonus-goods ul li img { display: block; width: 1.5rem; height: 1.5rem;}

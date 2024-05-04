@@ -25,7 +25,7 @@ class Admin extends Authenticatable
 
     public function adminRole()
     {
-        return $this->belongsTo('App\Models\AdminRole', 'role_id', 'role_id');
+        return $this->belongsTo(AdminRole::class, 'role_id', 'role_id');
     }
 
     public function getList($condition = [], $column = '')

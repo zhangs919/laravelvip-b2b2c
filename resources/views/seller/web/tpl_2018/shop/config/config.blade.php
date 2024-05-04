@@ -1,16 +1,26 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d2eace91/css/jquery-ui.css" rel="stylesheet">
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.6"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ShopConfigModel" class="form-horizontal" name="ShopConfigModel" action="/shop/config/index?group={{ $group }}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="{{ $group }}">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -100,12 +110,31 @@
 
 {{--自定义css样式--}}
 @section('style_css')
+    <script type="text/javascript">
+        // 
+    </script>
+    <!-- 验证规则 -->
+{{--    <script id="client_rules" type="text">
 
+[{"id": "shopconfigmodel-take_enable", "name": "ShopConfigModel[take_enable]", "attribute": "take_enable", "rules": {"string":true,"messages":{"string":"是否启用接单模式必须是一条字符串。"}}},{"id": "shopconfigmodel-trade_enable", "name": "ShopConfigModel[trade_enable]", "attribute": "trade_enable", "rules": {"string":true,"messages":{"string":"是否启用自动打印订单必须是一条字符串。"}}},{"id": "shopconfigmodel-trade_mode", "name": "ShopConfigModel[trade_mode]", "attribute": "trade_mode", "rules": {"string":true,"messages":{"string":"打印模式必须是一条字符串。"}}},{"id": "shopconfigmodel-order_notice_enable", "name": "ShopConfigModel[order_notice_enable]", "attribute": "order_notice_enable", "rules": {"string":true,"messages":{"string":"语音提醒是否开启必须是一条字符串。"}}},{"id": "shopconfigmodel-order_refresh", "name": "ShopConfigModel[order_refresh]", "attribute": "order_refresh", "rules": {"string":true,"messages":{"string":"订单列表自动刷新必须是一条字符串。"}}},{"id": "shopconfigmodel-notice_count", "name": "ShopConfigModel[notice_count]", "attribute": "notice_count", "rules": {"string":true,"messages":{"string":"声音提醒频率必须是一条字符串。"}}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script>--}}
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/jquery-ui.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
 @stop
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
+
     {!! $script_render !!}
+
 @stop
 
 {{--outside body script--}}

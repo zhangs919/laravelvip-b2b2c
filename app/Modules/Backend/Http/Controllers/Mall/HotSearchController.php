@@ -1,11 +1,9 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
-use App\Models\Category;
 use App\Modules\Base\Http\Controllers\Backend;
-use App\Repositories\DefaultSearchRepository;
 use App\Repositories\HotSearchRepository;
 use Illuminate\Http\Request;
 
@@ -21,11 +19,11 @@ class HotSearchController extends Backend
 
     protected $hotSearch;
 
-    public function __construct()
+    public function __construct(HotSearchRepository $hotSearch)
     {
         parent::__construct();
 
-        $this->hotSearch = new HotSearchRepository();
+        $this->hotSearch = $hotSearch;
     }
 
 

@@ -25,7 +25,7 @@
                     <div class="tipsBox">
                         <div class="myGrade">
                             <h3>我的等级信息</h3>
-                            <p>当前等级：{{ $user_rank_info['rank_name'] }}</p>
+                            <p>当前等级：{{ $user_rank['rank_name'] }}</p>
                             <p>
 						<span>
 							我的成长值：
@@ -34,8 +34,8 @@
 
                                 <span>
 							再积累
-							<font class="second-color">{{ $user_rank_info['less_exppoints'] }}</font>
-							成长值即可升级至 {{ $user_rank_info['downrank_name'] }}
+							<font class="second-color">{{ $info['rank_next_distance'] }}</font>
+							成长值即可升级至 {{ $info['rank_next'] }}
 						</span>
 
                             </p>
@@ -44,20 +44,20 @@
                             <h3>我的账户信息</h3>
                             <p>
                                 个人信息：未完善，请
-                                <a href="/user/profile" target="_self" class="btn-link">尽快完善</a>
+                                <a href="/user/profile.html" target="_self" class="btn-link">尽快完善</a>
                             </p>
                             <p>
                                 实名认证：未完善，请
-                                <a href="/user/profile" target="_self" class="btn-link">尽快完善</a>
+                                <a href="/user/profile.html" target="_self" class="btn-link">尽快完善</a>
                             </p>
                             <p>
-                                @if(!empty($user_info->mobile_validated))
-                                    <span>手机：{{ hide_tel($user_info->mobile) }}</span>
+                                @if(!empty($info['user_info']['mobile_validated']))
+                                    <span>手机：{{ hide_tel($info['user_info']['mobile']) }}</span>
                                 @endif
-                                @if(!empty($user_info->surplus_password))
-                                    <span>支付密码：已开启<a href="/user/security/edit-surplus-password" target="_self" class="btn-link">修改密码</a></span>
+                                @if(!empty($info['user_info']['surplus_password']))
+                                    <span>支付密码：已开启<a href="/user/security/edit-surplus-password.html" target="_self" class="btn-link">修改密码</a></span>
                                 @else
-                                    <span>支付密码：<a href="/user/security/edit-surplus-password" target="_self" class="btn-link">立即开启</a></span>
+                                    <span>支付密码：<a href="/user/security/edit-surplus-password.html" target="_self" class="btn-link">立即开启</a></span>
                                 @endif
                             </p>
                         </div>
@@ -68,33 +68,33 @@
                         <div class="imgHeaderBox">
                             <a href="" class="headerImg">
 
-                                <img src="{{ get_image_url(sysconf('default_user_portrait')) }}">
+                                <img src="{{ get_image_url($info['user_info']['headimg'],'headimg') }}">
 
                             </a>
                             <div class="updateInfo">
                                 <div class="opacityBox"></div>
-                                <a href="/user/profile" class="realBox">修改资料</a>
+                                <a href="/user/profile.html" class="realBox">修改资料</a>
                             </div>
                         </div>
                         <p class="name">
                             <a href="">
 
                                 <!---->
-                                {{ $user_info->user_name }}
+                                {{ $info['user_info']['user_name'] }}
                                 <!---->
 
                             </a>
                         </p>
                         <p class="VIP">
-                            <a href="/user/growth-value.html" target="_blank" class="imgVip imgVip{{ $user_rank_info['level'] }}">
-                                <img src="{{ get_image_url($user_rank_info['rank_img']) }}" />
+                            <a href="/user/growth-value.html" target="_blank" class="imgVip imgVip{{ $user_rank['level'] }}">
+                                <img src="{{ get_image_url($user_rank['rank_img']) }}" />
                             </a>
-                            <a href="/user/growth-value.html" target="_blank" class="txtExplain">{{ $user_rank_info['rank_name'] }}</a>
+                            <a href="/user/growth-value.html" target="_blank" class="txtExplain">{{ $user_rank['rank_name'] }}</a>
                         </p>
                         <a href="/user/security.html" class="safeText">账户安全</a>
-                        <span class="safeGrade">低</span>
+                        <span class="safeGrade">{{ $info['safe_info']['safe_grade_format'] }}</span>
                         <div class="progressBar">
-                            <span class="progress progress{{ $user_info->security_level ?? 1 }}"></span>
+                            <span class="progress progress{{ $info['safe_info']['safe_grade'] }}"></span>
                         </div>
                         <p class="safe-grade-info">
                             {{--邮箱绑定--}}
@@ -147,6 +147,14 @@
                                 </span>
                             @endif
                         </p>
+
+                        <!--会员专享权益 start-->
+                        <div class="user-super-vipbox">
+                            <span class="user-super-word">已开通0个店铺会员权益</span>
+                            <span class="user-super-word" style="display: none;">PLUS尊享店铺会员权益</span>
+                            <a class="user-super-word-btn" href="/user/rights-card/index.html">去逛逛</a>
+                        </div>
+                        <!--会员专享权益 end-->
                     </div>
                 </div>
 
@@ -169,7 +177,7 @@
                                     <!-- <a href="javascript:show_surplus(26)">
                                         <span id="surplus_div">显示余额</span>
                                     </a> -->
-                                    <a href="/user/capital-account.html">￥0.00</a>
+                                    <a href="/user/capital-account.html">{{ $info['user_money_format'] }}</a>
                                 </p>
                             </li>
                             <li class="second">
@@ -183,7 +191,7 @@
                                 </div>
                                 <p>
 
-                                    <a href="/user/growth-value.html">{{ $user_info->rank_point }}</a>
+                                    <a href="/user/growth-value.html">{{ $user_info->rank_point ?? 0 }}</a>
                                 </p>
                             </li>
                             <li class="third">
@@ -196,41 +204,25 @@
                                     </a>
                                 </div>
                                 <p>
-                                    <a href="/user/bonus.html">2张</a>
+                                    <a href="/user/bonus.html">{{ $bonus_count }}张</a>
                                 </p>
                             </li>
                         </ul>
                     </div>
                     <div class="pending">
                         <ul>
-                            <li class="first">
-                                <a href="/user/order/list?type=unpayed" target="_self">
-                                    待付款
-                                    <font class="second-color">0</font>
+							@foreach($order_counts_data as $key=>$item)
+                            <li @if($key == 0) class="first" @endif>
+                                <a href="/user/order/list?order_status={{ $item['key'] }}" target="_self">
+									{{ $item['label'] }}
+                                    <font class="second-color">{{ $item['value'] }}</font>
                                 </a>
                             </li>
+							@endforeach
                             <li>
-                                <a href="/user/order/list?order_status=unshipped" target="_self">
-                                    待发货
-                                    <font class="second-color">0</font>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/user/order/list?order_status=shipped" target="_self">
-                                    待收货
-                                    <font class="second-color">0</font>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/user/order/list?evaluate_status=unevaluate" target="_self">
-                                    待评价
-                                    <font class="second-color">0</font>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/user/order/list?order_status=backing" target="_self">
+                                <a href="/user/back.html" target="_self">
                                     退款
-                                    <font class="second-color">0</font>
+                                    <font class="second-color">{{ $order_counts['backing'] }}</font>
                                 </a>
                             </li>
                         </ul>
@@ -320,7 +312,7 @@
                                     <li>
 
                                         <a href="{{ route('pc_show_goods', ['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}" target="_blank" class="img">
-                                            <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" alt="{{ $v['goods_name'] }}" />
+                                            <img src="{{ $v['goods_image'] }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" alt="{{ $v['goods_name'] }}" />
                                         </a>
                                         <p class="price">￥{{ $v['goods_price'] }}</p>
                                     </li>
@@ -399,4 +391,59 @@
             <!-- 我的足迹 end-->
         </div></div>
 
-@endsection
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d2eace91/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/user_center.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function() {
+        })
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+    </script>
+@stop

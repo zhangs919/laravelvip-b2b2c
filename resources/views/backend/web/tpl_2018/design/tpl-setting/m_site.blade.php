@@ -28,16 +28,22 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/index.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/design.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
+{{--    <link href="http://{{ config('lrw.mobile_domain') }}/css/dianpu.css" rel="stylesheet">--}}
 
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/color-style.css?v=1.2" id="site_style"/>
     @endif
     <!--整站改色 _end-->
     <!-- GPS获取坐标 -->
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_web_key') }}"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_web_key') }}"></script>
     <script src="/assets/d2eace91/js/geolocation/amap.js?v=1.2"></script>
 
 
@@ -130,6 +136,7 @@
                 <div class="page-operation-btns">
                     <a class="page-btn page-preview-btn SZY-TPL-BACKUP" href="javascript:void(0);">模板备份</a>
                     <a class="page-btn page-preview-btn SZY-TPL-USE" data-id="0" href="javascript:void(0);">使用备份</a>
+                    <a class="page-btn page-preview-btn SZY-TPL-PREVIEW" href="javascript:void(0);">预览 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-RELEASE" href="javascript:void(0);"> 发布 </a>
                 </div>
                 <div class="other-more">
@@ -176,6 +183,13 @@
                                     <img src="/assets/d2eace91/images/design/icon/0/m_banner.png">
                                 </a>
                                 <a href="javascript:void(0);" class="panelModuleTitle" title="轮播广告">轮播广告</a>
+                            </li>
+
+                            <li class="drag" id="0" data-code="m_hots_pot" style="z-index: 3">
+                                <a href="javascript:;" class="panelModuleIcon">
+                                    <img src="/assets/d2eace91/images/design/icon/0/m_hots_pot.png" class="mCS_img_loaded">
+                                </a>
+                                <a href="javascript:;" class="panelModuleTitle" title="热区模板">热区模板</a>
                             </li>
 
                             <li class="drag" id="0" data-code="m_ad_s1" style="z-index: 3">
@@ -412,6 +426,13 @@
                                 <a href="javascript:void(0);" class="panelModuleTitle" title="拼团活动">拼团活动</a>
                             </li>
 
+                            <li class="drag" id="0" data-code="m_bonus_s1" style="z-index: 3">
+                                <a href="javascript:;" class="panelModuleIcon">
+                                    <img src="/assets/d2eace91/images/design/icon/0/m_bonus_s1.png">
+                                </a>
+                                <a href="javascript:;" class="panelModuleTitle" title="红包版式一">红包版式一</a>
+                            </li>
+
                         </ul>
                     </fieldset>
                 </div>
@@ -428,7 +449,7 @@
                 <div class="special-top"></div>
                 <div class="special-item ">
                     <header class="header bg-color">
-                        <a href="javascript:void(0)" class="content-selector SZY-TPL-SETTING" data-url='/system/config/index.html?group=mobile_setting_header' data-modal="1" data-title='头部设置'>
+                        <a href="javascript:void(0)" class="content-selector SZY-TPL-SETTING" data-url='/system/config/index?group=mobile_setting_header' data-modal="1" data-title='头部设置'>
                             <i class="fa fa-edit"></i>
                             编辑
                         </a>
@@ -494,7 +515,7 @@
                         <a>模板助手</a>
                     </li>
 
-                    @if(!empty($tpl_backup_theme))
+                    @if(!empty($theme_list))
                         <li class="mobiTemColumn">
                             <a>主题</a>
                         </li>
@@ -507,10 +528,8 @@
                         <table id="mobile_helper">
                             <thead class="template_set_top">
                             <tr height="40">
-                                <td class="w30">
-                                </td>
-                                <td><span class="columnNameTextHead">模块名称</span></td>
-                                <td>是否显示</td>
+                                <td>模块名称</td>
+                                <td>是否开启</td>
                                 <td>操作</td>
                             </tr>
                             </thead>
@@ -534,8 +553,8 @@
                     </div>
                     <div class="template_select design_right_child" style="display: none">
 
-                        @if(!empty($tpl_backup_theme))
-                            @foreach($tpl_backup_theme as $theme)
+                        @if(!empty($theme_list))
+                            @foreach($theme_list as $theme)
                                 <li class="SZY-THEME-TPL" data-id="{{ $theme['back_id'] }}">
                                 <span class="template_select_bg">
                                     <img src="{{ $theme['img'] }}">

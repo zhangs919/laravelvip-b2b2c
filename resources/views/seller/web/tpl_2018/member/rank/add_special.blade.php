@@ -15,12 +15,12 @@
 @section('content')
 
     <form id="ShopRankModel" class="form-horizontal" name="ShopRankModel" action="/member/rank/add?is_special=1" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 等级ID -->
             <input type="hidden" id="shoprankmodel-rank_id" class="form-control" name="ShopRankModel[rank_id]" value="{{ $info->rank_id ?? '' }}">
             <!-- 店铺ID -->
-            <input type="hidden" id="shoprankmodel-shop_id" class="form-control" name="ShopRankModel[shop_id]" value="{{ $shop_info->shop_id }}">
+            <input type="hidden" id="shoprankmodel-shop_id" class="form-control" name="ShopRankModel[shop_id]" value="{{ $shop->shop_id }}">
             <!-- 特殊会员等级 -->
             <div class="simple-form-field" >
                 <div class="form-group">

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 
 use App\Models\Admin;
@@ -26,14 +26,15 @@ class AdminController extends Backend
 
     protected $admin;
 
-    public function __construct(Tree $tree, AdminRepository $adminRepository)
+    public function __construct(
+        Tree $tree
+        , AdminRepository $adminRepository
+    )
     {
         parent::__construct();
 
         $this->tree = $tree;
         $this->admin = $adminRepository;
-
-//        $this->setLayoutBlock(['title' => $this->title]);
     }
 
 
@@ -82,7 +83,7 @@ class AdminController extends Backend
             'sortorder' => 'desc'
         ];
         list($list, $total) = $this->admin->getList($condition);
-//        dd($list);
+
         $pageHtml = pagination($total);
 
         $compact = compact('title', 'list', 'total', 'pageHtml');
@@ -156,6 +157,7 @@ class AdminController extends Backend
             $valid_time = strtotime($post['valid_time_format']);
             $post['valid_time'] = $valid_time;
             $post['password'] = bcrypt($post['password']);
+            $post['auth_key'] = md5($post['user_name']); // 存入auth_key 方便验证权限
             $ret = $this->admin->store($post);
             $msg = '管理员添加';
         }
@@ -211,16 +213,16 @@ class AdminController extends Backend
     }
 
     /**
-     * 设置权限
+     * 管理员授权
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function authSet(Request $request)
     {
-        $title = '设置权限';
+        $title = '管理员授权';
 
-        $fixed_title = '管理员设置 - 设置权限';
+        $fixed_title = '管理员设置 - 管理员授权';
         $action_span = [
             [
                 'url' => 'list',
@@ -234,45 +236,62 @@ class AdminController extends Backend
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
-        $admin_id = $request->get('id');
+        $id = $request->get('id');
 
-        $nodes = AdminNode::get()->toArray();
+        $nodes = AdminNode::where('is_show', 1)->get()->toArray();
         $nodes = $this->tree->list_to_tree($nodes, 'id', 'parent_node_id');
-        $admin_info = $this->admin->getById($admin_id);
-        $role_id = $admin_info->role_id; // 权限id
-        $auth_info = AdminRole::where('role_id', $role_id)->select(['role_id', 'role_name', 'auth_codes'])->first();
+        $admin_info = $this->admin->getById($id);
+
+        $auth_key = $admin_info->auth_key; // 验证权限的key 管理员新增时 随机生成 并保存
+
+        // 解析管理员账号额外的权限
+        $admin_auth_codes = unserialize(backend_decrypt($admin_info->auth_codes, $auth_key));
+
+        if (empty($admin_auth_codes)) {
+            $admin_auth_codes = [];
+        }
+        if (empty($admin_info->adminRole)) {
+        	abort(404, '管理角色不存在');
+		}
+        $auth_info = AdminRole::where('role_id', $admin_info->adminRole->role_id)->select(['role_id', 'role_name', 'auth_codes'])->first();
 
         //解析已有权限
-//        $auth_codes = unserialize(backend_decrypt($auth_info->auth_codes, MD5_KEY.md5($auth_info->role_name)));
         $auth_codes = unserialize(backend_decrypt($auth_info->auth_codes, MD5_KEY));
+
         if (empty($auth_codes)) {
             $auth_codes = [];
         }
-
-        return view('system.admin.auth_set', compact('title', 'nodes', 'role_id', 'auth_codes'));
+        return view('system.admin.auth_set', compact('title', 'nodes', 'admin_auth_codes', 'id', 'auth_codes'));
     }
 
+    /**
+     * 管理员授权保存数据
+     *
+     * @param Request $request
+     * @return array
+     */
     public function authSetSave(Request $request)
     {
+        $id = $request->get('id'); // 管理员id
 
-
-        $role_id = $request->get('id'); // 权限id
-        $auth_info = AdminRole::where('role_id', $role_id)->select(['role_id', 'role_name', 'auth_codes'])->first();
+        $admin_info = $this->admin->getById($id);
+        if (empty($admin_info)) {
+            return result(-1, null, INVALID_PARAM);
+        }
 
         $permission = $request->post('auth_codes');
-//        $update['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY.md5($auth_info->role_name));
-        $update['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY);
+        $update['auth_codes'] = backend_encrypt(serialize($permission), $admin_info->auth_key);
 
-        $ret = AdminRole::where('role_id', $role_id)->update($update);
+        $ret = Admin::where('user_id', $id)->update($update);
         if ($ret === false) {
             // Log
-            admin_log('权限设置失败。ID：'.$role_id);
+            admin_log('管理员额外权限设置失败。管理员ID：' . $id);
             // 失败
-            return result(-1, '', '权限设置失败！');
+            return result(-1, '', '设置失败！');
         }
         // Log
-        admin_log('权限设置成功。ID：'.$role_id);
-        return result(0, '', '权限设置成功！');
+        admin_log('管理员额外权限设置成功。管理员ID：' . $id);
+        return result(0, '', '设置成功！');
     }
 
     /**

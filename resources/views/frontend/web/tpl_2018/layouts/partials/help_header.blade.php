@@ -8,7 +8,7 @@
         <div class="search">
             <form class="search-form" method="POST" name="" id="" action="/help/default/search" onSubmit="">
                 <input type='hidden' name='type' id="searchtype" value="">
-                {{ csrf_field() }}
+                @csrf
                 <div class="search-info">
                     <div class="search-type-box">
                         <ul class="search-type">

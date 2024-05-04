@@ -1,7 +1,11 @@
 @charset "utf-8"; 
 /*区别于其他页面头部、底部的展示*/
-.header-box, .header, .w1210{ width: 990px;}
+.header-box, .header, .w1210{ width: 990px; min-width: 990px;}
 .header .search{ float: right;}
+.header .search-spe{width: 460px;}
+.header .search-spe .search-form .search-info .search-box-input{width: 289px;}
+.header .search-spe .search-results{width: 386px}
+.header .search-spe .search-results ul.history-results {width: 182px;}
 .footer-info{ margin-top: 0px;}
 .footer-info .info-text{ width: 990px;}
 

@@ -50,26 +50,4 @@
     </tr>
     </tfoot>
 </table>
-<script type='text/javascript'>
-    $(document).ready(function() {
-        $(".question_sort").editable({
-            type: "text",
-            url: "/goods/questions/edit-question-info",
-            pk: 1,
-            ajaxOptions: {
-                type: "post"
-            },
-            params: function(params) {
-                params.id = $(this).data("id");
-                params.title = "sort";
-                return params;
-            },
-            success: function(response, newValue) {
-                var response = eval("(" + response + ")");
-                if (response.code == -1) {
-                    return response.message;
-                }
-            }
-        });
-    });
-</script>
+

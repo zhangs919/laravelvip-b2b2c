@@ -21,12 +21,15 @@ class ShopSetController extends Seller
     protected $shopConfigField;
 
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        ,ShopConfigFieldRepository $shopConfigField
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
-        $this->shopConfigField = new ShopConfigFieldRepository();
+        $this->shop = $shop;
+        $this->shopConfigField = $shopConfigField;
 
         $this->set_menu_select('shop', 'shop-set');
 
@@ -55,7 +58,6 @@ class ShopSetController extends Seller
 
 
         if ($request->method() == 'POST') {
-//            dd($request->post());
             $shopModel = $request->post()['ShopModel'];
             $opening_hour = $request->post()['opening_hour'];
             $shopModel['opening_hour'] = serialize($opening_hour);
@@ -78,7 +80,8 @@ class ShopSetController extends Seller
 
         $model = $this->shop->getShopInfo($shop_id);
         $region_name = get_region_names_by_region_code($model['region_code']);
-        $qrcode = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gsFV8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyczUwLUZFN1pkWjIxMDAwMHcwM3AAAgRz299bAwQAAAAA';
+
+		$qrcode = $this->shop->getShopQrCode($shop_id);
 
         $compact = compact('title', 'model', 'region_name', 'qrcode');
 

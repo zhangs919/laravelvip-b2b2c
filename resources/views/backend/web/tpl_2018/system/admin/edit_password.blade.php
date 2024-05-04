@@ -1,6 +1,6 @@
 <div id="{{ $uuid }}">
     <form id="ValidateModel" class="form-horizontal" name="ValidateModel" action="/system/admin/edit-password" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix" style="padding-bottom:60px;">
             <!-- 原始密码 -->
             <div class="simple-form-field" >

@@ -24,6 +24,7 @@ namespace App\Repositories;
 
 
 use App\Models\UserMessage;
+use Illuminate\Support\Facades\DB;
 
 /**
  * 会员消息/店铺消息模型
@@ -43,4 +44,40 @@ class UserMessageRepository
     }
 
 
+    /**
+     * 获取消息列表
+     *
+     * @param int $type 消息类型 1-会员消息 2-店铺消息
+     * @param int $user_id 会员id
+     * @param int $status 消息是否已读 0-未读 1-已读
+     * @return int
+     */
+    public function getMessageCount($type,$user_id = 0, $status = 0)
+    {
+        // 列表
+        $where[] = ['receiver', $user_id];
+        $where[] = ['type', $type];
+        $where[] = ['status', $status];
+
+        return DB::table('user_message')
+            ->where($where)
+            ->join('message', 'user_message.msg_id','=','message.msg_id','left')
+            ->select(['user_message.*','message.*'])
+            ->count();
+    }
+
+    /**
+     * 设置消息已读
+     *
+     * @param $msg_id
+     * @param $user_id
+     * @return mixed
+     */
+    public function setRead($msg_id, $user_id)
+    {
+        if (!is_array($msg_id)) {
+            $msg_id = [$msg_id];
+        }
+        return $this->model->whereIn('msg_id', $msg_id)->where([['receiver', $user_id]])->update(['read_time'=>time(),'status'=>1]);
+    }
 }

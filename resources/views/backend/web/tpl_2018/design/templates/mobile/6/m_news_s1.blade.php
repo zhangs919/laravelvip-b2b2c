@@ -14,7 +14,7 @@
                 @endif
 
                 @if(!empty($data['1-1']))
-                    <a class="tit" href="{{ route('mobile_show_news', ['article_id'=>$data['1-1'][0]['article_id']]) }}">{{ $data['1-1'][0]['title'] }}</a>
+                    <a class="tit" href="/news/{{ $data['1-1'][0]['article_id'] }}.html">{{ $data['1-1'][0]['title'] }}</a>
                 @else
                     <a class="tit" href="javascript:void(0)">文章名称</a>
                 @endif

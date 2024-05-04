@@ -1,6 +1,6 @@
 <div class="table-content m-t-10 clearfix">
     <form id="{{ $uuid }}" class="form-horizontal" name="Region" action="/system/region/add?parent_code={{ $parent_code }}" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <!-- 隐藏域 -->
         <input type="hidden" id="region-region_id" class="form-control" name="region_id" value="{{ $info->region_id ?? ''}}">
         <!-- 区域名称 -->

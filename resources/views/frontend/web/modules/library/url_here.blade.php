@@ -1,42 +1,49 @@
-@if(request()->routeIs('pc_goods_list') || request()->routeIs('pc_show_goods'))
+@if(request()->routeIs('pc_goods_list') || request()->routeIs('pc_show_goods') || request()->routeIs('pc_show_lib_goods'))
 {{--商品列表 分类面包屑--}}
 <div class="breadcrumb clearfix">
     <a href="/" class="index">首页</a>
+    <span class="crumbs-arrow">&gt;</span>
 
 
-    @foreach($navigate_cat as $k=>$cat_val)
-        <span class="crumbs-arrow">&gt;</span>
-        @if($cat_val['has_child'] == 1)
-        <div class="crumbs-nav crumbs-nav0">
-            <a class="crumbs-title" href="{{ route('pc_goods_list',['cat_id'=>$cat_val['cat_id']]) }}" title="{{ $cat_val['cat_name'] }}">
-                {{ $cat_val['cat_name'] }}
-                <i class="icon"></i>
-            </a>
+    @if(empty($navigate_cat))
+        <span class="last">{{ $goods['goods_name'] ?? '' }}</span>
+    @else
+        @foreach($navigate_cat as $k=>$cat_val)
+            @if($cat_val['has_child'] == 1)
+            <div class="crumbs-nav crumbs-nav0">
+                <a class="crumbs-title" href="{{ route('pc_goods_list',['filter_str'=>$cat_val['cat_id']]) }}" title="{{ $cat_val['cat_name'] }}">
+                    {{ $cat_val['cat_name'] }}
+                    <i class="icon"></i>
+                </a>
 
-            <div class="crumbs-drop">
-                <ul class="crumbs-drop-list">
+				@if(!empty($goods_category))
+                <div class="crumbs-drop">
+                    <ul class="crumbs-drop-list">
 
-                    @foreach($goods_category as $v)
-                        @if($v->parent_id == $cat_val['parent_id'] && $v->cat_id != $cat_val['cat_id'])
-                        <li>
-                            <a href="{{ route('pc_goods_list',['cat_id'=>$v->cat_id]) }}" title="{{ $v->cat_name }}">{{ $v->cat_name }}</a>
-                        </li>
-                        @endif
-                    @endforeach
+                        @foreach($goods_category as $v)
+                            @if($v['parent_id'] == $cat_val['parent_id'] && $v['cat_id'] != $cat_val['cat_id'])
+                            <li>
+                                <a href="{{ route('pc_goods_list',['filter_str'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                            </li>
+                            @endif
+                        @endforeach
 
-                </ul>
+                    </ul>
+                </div>
+				@endif
+
             </div>
-
-        </div>
-        @else
-            @if($cat_val['type'] == 0)
-                <a class="last" href="{{ route('pc_goods_list',['cat_id'=>$cat_val['cat_id']]) }}" title="{{ $cat_val['cat_name'] }}"> {{ $cat_val['cat_name'] }} </a>
-            @elseif($cat_val['type'] == 1)
-                <span class="last">{{ $cat_val['cat_name'] }}</span>
+            @else
+				@if(isset($cat_val['type']))
+					@if($cat_val['type'] == 0)
+						<a class="last" href="{{ route('pc_goods_list',['filter_str'=>$cat_val['cat_id']]) }}" title="{{ $cat_val['cat_name'] }}"> {{ $cat_val['cat_name'] }} </a>
+					@elseif($cat_val['type'] == 1)
+						<span class="last">{{ $cat_val['cat_name'] }}</span>
+					@endif
+				@endif
             @endif
-        @endif
-    @endforeach
-
+        @endforeach
+    @endif
     {{--<div class="crumbs-nav">
         <span class="crumbs-search">
             <form id="15304479456NJQ5k" class="current-search-form" method="get" action="/list">

@@ -20,7 +20,7 @@
 // | Description:友情链接管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -39,11 +39,11 @@ class LinksController extends Backend
     protected $flinks;
 
 
-    public function __construct()
+    public function __construct(LinksRepository $flinks)
     {
         parent::__construct();
 
-        $this->flinks = new LinksRepository();
+        $this->flinks = $flinks;
 
     }
 

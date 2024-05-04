@@ -26,8 +26,8 @@ li { list-style: none; }
 html, body { height: 100%; }
 html { font-size: 14px; color:#666}
 a.react, label.react { display: block; color: inherit; height: 100%; }
-space { display: inline-block; width: 12px; }
-.single-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.space { display: inline-block; width: 12px; }
+.single-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;color: #666; }
 /*css初始值*/
 body {margin:0px;font-family: "微软雅黑", "宋体", Arial, Helvetica, sans-serif;font-size: 12px;line-height: 180%;color: #666; min-width:320px;}
 html, body, div, p, ul, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, form, input, select, button, textarea, iframe, table, th, td {margin: 0;padding: 0;list-style-type: none;}
@@ -70,6 +70,8 @@ ins { text-decoration: none }
 .blank-div{ height:10px; background:#f3f5f7; width:100%; clear:both;}
 .menu1,.menu2,.menu3,.menu4{background:url(../images/goods/pub_goods.png) no-repeat;background-size: auto 200px;}
 .h-left a,#show_more{background:url(../images/top.png) no-repeat;background-size: auto 230px;}
+.swiper-pagination-bullet{ width:6px !important; height:6px !important;transition: all .2s;}
+.swiper-pagination-bullet-active{ width: 13px !important; border-radius: 7px !important;}
 /*头部弹出菜单*/
 .goods_nav{ width:27%; float:right; right:10px; overflow:hidden; position:fixed; z-index:9999999; top:26px;}
 .hid{ display:none;}
@@ -131,19 +133,23 @@ position: relative;}
 .footer-nav ul li {position: relative;-webkit-box-flex: 1;box-flex: 1;height: 45px;text-align: center;margin: 0px; width:100%;}
 .footer-nav ul li a { text-align: center;font-size: 12px;color: #333;display: block;height: 45px;position: relative;
 margin: auto;}
-.footer-nav ul li i {display: block;width: 25px;height: 25px;margin: auto; background-size:contain;}
+.footer-nav ul li i {display: block;width: 25px;height: 25px;margin: auto; background-size:contain; position: relative;}
 .footer-nav ul li span {display: block;width: 100%;height: 20px;line-height: 20px;}
 .footer-nav ul li.current span{ color:#f23030;}
-.cart-num { position: absolute; top: 2px; color: #fff; text-align: center; font-weight: normal; font-size: 10px; width: 12px; height: 12px; line-height: 12px; background: #fa4862; border-radius: 50%; }
+.cart-num { position: absolute; top:0px; left:100%; color: #fff; text-align: center; font-weight: normal; font-size: 10px; width: 12px; height: 12px; line-height: 12px; background: #fa4862; border-radius: 50%; }
 .footer-nav ul li.cur .cart-num { display: none; }
 /*app底部菜单样式*/
-.footer-nav ul li .app-index-icon{ background:url(../../../images/design/mobiletab_home_normal.png); background-size:25px;}
+.footer-nav ul li .app-index-icon{ background:url(../../../images/design/mobile/tab_home_normal.png); background-size:25px;}
 .footer-nav ul li.current .app-index-icon{ background:url(../../../images/design/mobile/tab_home_selected.png); background-size:25px;}
 .footer-nav ul li .app-category-icon{ background:url(../../../images/design/mobile/tab_category_normal.png); background-size:25px;}
 .footer-nav ul li .app-bill-icon{ background:url(../../../images/design/mobile/tab_bought_list_normal.png); background-size:25px;}
-.footer-nav ul li .app-cart-icon{ background:url(../../../images/design/mobile/tab_cart_normal.png); background-size:25px;}
+.footer-nav ul li .app-cart-icon{ background:url(../../../images/design/mobile/tab_cart_normal.png); background-size:25px; position: relative;}
 .footer-nav ul li .app-user-icon{ background:url(../../../images/design/mobile/tab_user_normal.png); background-size:25px;}
 
+/*多业态底部*/
+.footer-nav ul li a.multiple-formats-nav { width: 35px; margin-top: 6px;}
+.footer-nav ul li a.multiple-formats-nav i{ display: none;}
+.footer-nav ul li a.multiple-formats-nav span{ width: 35px; line-height: 35px; border-radius: 100%; height: 34px; font-size: 0.5rem; color: #fff;}
 
 /*操作提示弹出层*/
 .f_mask_bg{background-color: #000;opacity: 0.4;height: 100%;width: 100%; position: absolute;top: 0;left: 0;z-index: 111;display: none; z-index:99}
@@ -220,3 +226,13 @@ element.style {
 .shop-footer ul li.disabled a span .loader-img>div {width:15px !important; height:15px !important; border:0.08rem solid #999; border-radius: 99%; border-color:#999; border-bottom-color: transparent;display: inline-block;-webkit-animation:gif 0.6s infinite linear;animation:gif 0.6s infinite linear !important;clip:rect(0 auto 12px 0); vertical-align:top;}
 @keyframes gif{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@-webkit-keyframes gif{0%{-webkit-transform:rotate(0deg)}to{-webkit-transform:rotate(1turn)}}                 
                     
+.seamless-rolling ul{overflow-x: auto;overflow-y: hidden;display: -webkit-box;display: -webkit-flex;display: -moz-box;display: -ms-flexbox;display: flex;-webkit-flex-wrap: nowrap;-ms-flex-wrap: nowrap;flex-wrap: nowrap;-webkit-overflow-scrolling: touch;}
+.seamless-rolling ul li {margin: 0px;-webkit-box-flex: 0;-webkit-flex: 0 0 30%;-moz-box-flex: 0;flex: 0 0 30%;width: 30%;float: none !important;}
+.goods-loading-box ul li .price span del.original-price,.goods-floor ul li.goods-col02 .price span del.original-price,.goods-floor-layout ul .goods-item .goods-item-inner .goods-info .goods-price .price-info del.original-price{ font-size: 10px;color: #999; }
+/*满减样式*/
+.goods-floor-layout ul .goods-item .goods-item-inner .goods-info .goods-name h3.has-fullcut,.sale-goods-list .bd ul li .goods-name a.has-fullcut,.seamless-rolling .goods-name a.has-fullcut,.goods-floor ul li .goods-name a.has-fullcut,.goods-loading-box ul li .goods-name a.has-fullcut{height: 20px; word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.sale-goods-list .bd ul li .goods-name a.has-fullcut,.seamless-rolling .goods-name a.has-fullcut,.goods-floor ul li .goods-name a.has-fullcut,.goods-loading-box ul li .goods-name a.has-fullcut{ height: .9rem; }
+.fullcut-tip-wrap { display: block; max-width: 100%; height: 15px; padding-top: 1px; overflow: hidden;}
+.fullcut-tip { position: relative; float: left; display: flex; height: 30px; max-width: 200%; padding-right: .2rem; font-size: 20px; font-weight: normal; overflow: hidden; border-radius: .2rem; box-sizing: border-box; transform: scale(.5); transform-origin: 0 0;}
+.fullcut-tip span { padding: 0 .2rem; line-height: 30px; color: #fff; white-space: nowrap; vertical-align: middle; border-radius: .2rem 0 0 .2rem;}
+.fullcut-tip em { padding-left: .2rem; line-height: 28px; white-space: nowrap; text-overflow: ellipsis; vertical-align: middle; overflow: hidden; border: 1px solid; border-left: none; border-radius: 0 .2rem .2rem 0;}

@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-seo_index_title", "name": "SystemConfigModel[seo_index_title]", "attribute": "seo_index_title", "rules": {"string":true,"messages":{"string":"title必须是一条字符串。"}}},{"id": "systemconfigmodel-seo_index_keywords", "name": "SystemConfigModel[seo_index_keywords]", "attribute": "seo_index_keywords", "rules": {"string":true,"messages":{"string":"keywords必须是一条字符串。"}}},{"id": "systemconfigmodel-seo_index_discription", "name": "SystemConfigModel[seo_index_discription]", "attribute": "seo_index_discription", "rules": {"string":true,"messages":{"string":"description必须是一条字符串。"}}},{"id": "systemconfigmodel-seo_index_image", "name": "SystemConfigModel[seo_index_image]", "attribute": "seo_index_image", "rules": {"string":true,"messages":{"string":"分享推广图必须是一条字符串。"}}},]

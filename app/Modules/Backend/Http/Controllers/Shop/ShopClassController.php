@@ -1,9 +1,8 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Shop;
+namespace App\Modules\Backend\Http\Controllers\Shop;
 
 
-use App\Models\ShopClass;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\ShopClassRepository;
 use App\Repositories\ToolsRepository;
@@ -22,12 +21,15 @@ class ShopClassController extends Backend
 
     protected $tools;
 
-    public function __construct()
+    public function __construct(
+        ShopClassRepository $shopClass
+        ,ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->shopClass = new ShopClassRepository();
-        $this->tools = new ToolsRepository();
+        $this->shopClass = $shopClass;
+        $this->tools = $tools;
 
     }
 

@@ -123,6 +123,8 @@ trait BaseRepository
     public function update($id, $input)
     {
         $this->model = $this->getById($id);
+        // 清除缓存
+        !empty($input['code']) && cache()->pull('sysconf_'.$input['code']);
 
         return $this->save($this->model, $input);
     }
@@ -147,6 +149,17 @@ trait BaseRepository
     {
         $info = $this->model->getByField($field, $value);
         return $info;
+    }
+
+    /**
+     * 根据id获取指定字段值
+     * @param int $id 主键id
+     * @param string $field 字段名称
+     * @return mixed
+     */
+    public function getFieldById($id, $field)
+    {
+        return $this->model->getFieldById($id, $field);
     }
 
     /**
@@ -302,6 +315,21 @@ trait BaseRepository
     public function changeState($id, $statusField, $primaryKey = null)
     {
         $ret = $this->model->changeState($id, $statusField, $primaryKey);
+        return $ret;
+    }
+
+    /**
+     * 改变状态(反转)
+     * @rewritable
+     *
+     * @param $id
+     * @param $statusField
+     * @param null $primaryKey
+     * @return mixed
+     */
+    public function changeStateReverse($id, $statusField, $primaryKey = null)
+    {
+        $ret = $this->model->changeStateReverse($id, $statusField, $primaryKey);
         return $ret;
     }
 

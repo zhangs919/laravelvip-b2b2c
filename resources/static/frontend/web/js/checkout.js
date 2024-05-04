@@ -10,6 +10,7 @@ if ($(".confirm-pay").size() > 0) {
 }
 
 $(function() {
+	
 
 	var postscript_word_count = 255;
 
@@ -50,10 +51,13 @@ $(function() {
 		$('.bg').show();
 		var address_id = $(this).data('address-id');
 		var active_address_id = $(".address-list").find(".address-box").filter(".active").data("address-id");
-
+		//是否为跨境订单
+		var is_cross_border=$('#is_has_cross_border_goods').val();
+			
 		$.get('/user/address/edit.html', {
 			address_id: address_id,
-			checkout: 1
+			checkout: 1,
+			is_cross_border:is_cross_border
 		}, function(result) {
 			if (result.code == 0) {
 				$('#edit-address-div').html(result.data);
@@ -379,7 +383,7 @@ $(function() {
 		if ($(this).hasClass('disabled') == false) {
 			$(this).addClass('tab-item-selected').siblings().removeClass('tab-item-selected');
 			var invoice_type = $(this).data('invoice-type');
-			$('.form-horizontal').hide();
+			$("form[id^='invoice_type_']").hide();  
 			$("#invoice_type_" + invoice_type).show();
 		}
 	})
@@ -425,9 +429,21 @@ $(function() {
 		$('.order-cashback').hide();
 		$('.bg').hide();
 	})
+	
+	// 满减送弹窗关闭事件
+	$("body").on('click', '.full-reduction .close', function() {
+		$('.full-reduction').hide();
+		$('.bg').hide();
+	})
 
 	// 结算页面提交
 	$("body").on('click', '.gopay', function() {
+		// 判断配送方式是否选中
+		// var checkShiped = $('.postage-out-box .postage-box').filter('.active').length;
+		// if (0 == checkShiped) {
+		// 	$.msg('请选择配送方式');
+		// 	return;
+		// }
 
 		var target = $(this);
 
@@ -604,7 +620,11 @@ $(function() {
 					}, function() {
 						$.go('/checkout.html');
 					});
-				} else {
+				} else if(result.code == 115){
+					$.msg(result.message, {
+						time: 5000
+					});
+				} else{
 					$("#" + result.data).addClass('bgcolor');
 					$.msg(result.message, {
 						time: 5000
@@ -663,7 +683,7 @@ $(function() {
 		resetSubmitPosition();
 	});
 
-	if ($(".address-list").find(".active").data("address-position") == ",") {
+	if ($(".address-list").find(".active").data("address-position") == "," && $(".address-list").find(".active").data("region_code_mode") == 0) {
 		$.alert("为了更快速、更精确的将商品送达您的手中，请编辑您选择的收货地址，并在地图中精确定位您收货位置", function() {
 			$(".address-list").find(".active").find(".address-edit").click();
 		});
@@ -716,8 +736,11 @@ function setBestTime(send_time_id, send_time) {
 
 // 调用发货地址添加地址显示层
 function showAddressHtml() {
+	//是否为跨境订单
+	var is_cross_border=$('#is_has_cross_border_goods').val();
 	$.get('/user/address/add.html', {
-		checkout: 1
+		checkout: 1,
+		is_cross_border:is_cross_border
 	}, function(result) {
 		if (result.code == 0) {
 			$('#edit-address-div').html(result.data);
@@ -829,6 +852,7 @@ function changePayment(data) {
 	var balance_enable = $("#balance_enable").is(":checked");
 	var balance = $("#balance").val();
 	var integral = $("#integral").val();
+	var integral_amount = $('#integral_amount').val();
 	var pay_code = $(".pay_code:checked").val();
 
 	if (!data) {
@@ -870,6 +894,7 @@ function changePayment(data) {
 
 	request = $.post("/checkout/change-payment", {
 		integral: integral,
+		integral_amount: integral_amount,
 		integral_enable: integral_enable ? 1 : 0,
 		balance: balance_enable ? balance : 0,
 		balance_enable: balance_enable ? 1 : 0,
@@ -881,6 +906,7 @@ function changePayment(data) {
 		var user_info = result.user_info;
 		var order = result.order;
 		var shop_orders = result.shop_orders;
+		var pickup_id = result.pickup_id;
 		if (result.code == 0) {
 			if (data.refresh) {
 				$('#pay_bank').html(result.pay_bank_html);
@@ -890,7 +916,7 @@ function changePayment(data) {
 			setCheckAddress(result.check_address);
 
 			// 渲染支付信息
-			renderPayment(user_info, order, shop_orders, balance_enable, integral_enable, result.pay_list);
+			renderPayment(user_info, order, shop_orders, balance_enable, integral_enable, result.pay_list, pickup_id);
 
 			if (result.message != null && $.trim(result.message).length > 0) {
 				$.msg(result.message);
@@ -909,7 +935,7 @@ function changePayment(data) {
 	}
 }
 
-function renderPayment(user_info, order, shop_orders, balance_enable, integral_enable, pay_list) {
+function renderPayment(user_info, order, shop_orders, balance_enable, integral_enable, pay_list, pickup_id) {
 	$("#balance").val(order.balance);
 
 	$(".pay_code[value='" + order.pay_code + "']").prop("checked", true);
@@ -949,6 +975,8 @@ function renderPayment(user_info, order, shop_orders, balance_enable, integral_e
 	$(".SZY-ORDER-AMOUNT").html(order.order_amount_format);
 	// 红包总金额
 	$(".SZY-ORDER-BONUS-AMOUNT").html(order.total_bonus_amount_format);
+
+	$(".SZY-ORDER-INTEGRAL").html("-" + order.integral_amount_format);
 	// 储值卡总金额
 	if (order.shop_store_card_amount > 0) {
 		$(".SZY-ORDER-STORE-CARD").show();
@@ -956,11 +984,24 @@ function renderPayment(user_info, order, shop_orders, balance_enable, integral_e
 	} else {
 		$(".SZY-ORDER-STORE-CARD").hide();
 	}
+	// 积分抵扣
+	if (order.integral_amount > 0) {
+		$(".SZY-ORDER-INTEGRAL").removeClass('hide');
+	} else {
+		$(".SZY-ORDER-INTEGRAL").addClass('hide');
+	}
+	$(".SZY-ORDER-INTEGRAL-AMOUNT").html(order.integral_amount_format);
 	// 货到付款加价
-	if (order.is_cod == 1 && parseInt(order.cash_more) > 0) {
+	if (order.is_cod == 1 && parseFloat(order.cash_more) > 0) {
 		$(".SZY-ORDER-CASH-MORE-AMOUNT").show();
 	} else {
 		$(".SZY-ORDER-CASH-MORE-AMOUNT").hide();
+	}
+	// 额外配送费
+	if (pickup_id > 0) {
+		$(".SZY-ORDER-SHIPPING-FEE-AMOUNT").hide();
+	} else {
+		$(".SZY-ORDER-SHIPPING-FEE-AMOUNT").show();
 	}
 	// 总运费
 	$(".SZY-SHIPPING-FEE-AMOUNT").html(order.shipping_fee_format);
@@ -1026,6 +1067,12 @@ function renderPayment(user_info, order, shop_orders, balance_enable, integral_e
 		$(".SZY-BALANCE-INFO").css("display", "inline-block");
 	} else {
 		$(".SZY-BALANCE-INFO").css("display", "none");
+	}
+	
+	if (pickup_id > 0) {
+		$(".SZY-SHOP-OTHER-SHIPPING-FEE").hide();
+	} else {
+		$(".SZY-SHOP-OTHER-SHIPPING-FEE").show();
 	}
 
 	// 计算提交按钮的位置

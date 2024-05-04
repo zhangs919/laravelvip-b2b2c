@@ -2,7 +2,8 @@
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
 
     <!-- 内容开始 -->
-    <div class="w1210 custom-box">
+    {{--<div class="w1210 custom-box">--}}
+    <div class="custom-box">
         <div class="custom">
 
             @if($tpl_name != '' && $is_design)

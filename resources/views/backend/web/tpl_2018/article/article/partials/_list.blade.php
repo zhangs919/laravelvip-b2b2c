@@ -52,7 +52,7 @@
                 <span data-action="set-is-recommend?id={{ $v->article_id }}" class="ico-switch" data-value="[0,1]" data-label="[&quot;\u5426&quot;,&quot;\u662f&quot;]" data-class="[&quot;fa fa-toggle-off&quot;,&quot;fa fa-toggle-on&quot;]"><i class="fa fa-toggle-off"></i>否</span>
             @endif
         </td>
-        <td>@if($v->shop_id == 0)平台自营@else 店铺名称 @endif</td>
+        <td>@if($v->shop_id == 0)平台自营@else {{ $v->shop_name ?? '' }} @endif</td>
         <td class="text-c">
             <font class="f14">
                 <a href="javascript:void(0);" class="article-sort editable editable-click" data-article_id="{{ $v->article_id }}">{{ $v->sort }}</a>

@@ -33,7 +33,7 @@
                     @if(!empty($v['comment_images']))
                         <ul class="goods-comment-picture" id="gallery">
 
-                            @foreach($v['comment-images'] as $image)
+                            @foreach($v['comment_images'] as $image)
                                 <dd>
                                     <ul class="upload-control">
 

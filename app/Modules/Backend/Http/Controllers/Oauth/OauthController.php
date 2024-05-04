@@ -1,16 +1,13 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Oauth;
+namespace App\Modules\Backend\Http\Controllers\Oauth;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
-use App\Repositories\PaymentRepository;
-use App\Repositories\ToolsRepository;
 use Illuminate\Http\Request;
 
 class OauthController extends Backend
 {
-//    private $title;
 
 
 

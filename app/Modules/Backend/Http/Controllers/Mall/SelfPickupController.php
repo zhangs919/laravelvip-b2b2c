@@ -20,7 +20,7 @@
 // | Description:自提点管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -35,11 +35,11 @@ class SelfPickupController extends Backend
     protected $selfPickup;
 
 
-    public function __construct()
+    public function __construct(SelfPickupRepository $selfPickup)
     {
         parent::__construct();
 
-        $this->selfPickup = new SelfPickupRepository();
+        $this->selfPickup = $selfPickup;
 
     }
 

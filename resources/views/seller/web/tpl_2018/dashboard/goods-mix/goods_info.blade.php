@@ -8,7 +8,7 @@
     <td>{{ $goods_price }}</td>
 
     <td>
-        @if($price_mode == 1)
+        @if(count(explode(',', $sku_ids)) > 1)
             <a class="btn btn-warning btn-sm show-sku" data-goods-id="{{ $goods_info->goods_id }}">设置参与套餐规格</a>
         @else
             <p>---</p>

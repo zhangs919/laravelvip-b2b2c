@@ -1,17 +1,17 @@
 <div class="cart-panel-main">
     <div class="cart-panel-content">
 
-        @if(count($cart_list) > 0)
+        @if(!empty($cart_goods_list))
         <!-- 有商品的展示形式 _start -->
         <div class="cart-list">
 
-            @foreach($cart_list as $v)
+            @foreach($cart_goods_list as $v)
             <!-- 如果商品已失效，给下面的div追加class "invalid" -->
             <div class="cart-item ">
                 <div class="item-goods">
                     <span class="p-img">
                         <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}">
-                        <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
+                        <img src="{{ $v['goods_image'] }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220"
                              width="50" height="50" alt="{{ $v['goods_name'] }}">
                         </a>
                     </span>
@@ -63,7 +63,7 @@
         </div>
         <div class="sum">
             共计：
-            <strong class="total second-color">￥{{ $cart_price_info['total_fee'] }}</strong>
+            <strong class="total second-color">￥{{ $cart_price_info['select_goods_amount'] }}</strong>
         </div>
         <a class="btn bg-color" href="/cart.html" target="_blank">去购物车结算</a>
     </div>

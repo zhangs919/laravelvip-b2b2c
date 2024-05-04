@@ -1,18 +1,23 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/css/index.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
     <!-- 卖家中心首页样式 -->
-    <link rel="stylesheet" href="/css/index.css?v=4.0"/>
     <!-- 图表 -->
-    <script src="/js/chart.js?v=20190110"></script>
-    <script src="/js/chart-data.js?v=20190110"></script>
+    @if(!empty($pay_info)){{--店铺续费--}}
     <div class="alert renew-box hide">
         <div class="renew-box-text">
             <!-- <a href="#" class="close" data-dismiss="alert"> &times; </a> -->
-
-
             <p>
                 <strong>
                     欢迎使用
@@ -25,11 +30,29 @@
                 <a class="major-label m-l-5 m-r-5" href="/shop/shop-info/renew-add">添加续签申请</a>
                 线下联系平台方管理员进行缴纳费用！
             </p>
-
-
         </div>
         <a class="renew-box-btn" href="/shop/shop-info/renew-add">立即续费</a>
     </div>
+    @else{{--开店缴费--}}
+    <div class="alert renew-box hide">
+        <div class="renew-box-text">
+            <!-- <a href="#" class="close" data-dismiss="alert"> &times; </a> -->
+            <p>
+                <strong>
+                    欢迎使用
+                    <span class="major-label m-l-5 m-r-5 site_name"></span>
+                    商城系统，您的店铺还未缴费，将影响您店铺的正常运营，建议尽快进行续费！
+                </strong>
+            </p>
+            <p>
+                续费流程：前往店主用户中心->服务中心->查看入驻进度->
+                <a class="major-label m-l-5 m-r-5" href="http://{{ config('lrw.frontend_domain') }}/shop/apply/result.html" target="_blank">开店缴费</a>
+                进行线上缴费，或联系平台方管理员进行缴纳费用！
+            </p>
+        </div>
+        <a class="renew-box-btn" href="/shop/shop-info/renew-add">立即续费</a>
+    </div>
+    @endif
 @stop
 
 {{--content--}}
@@ -39,7 +62,7 @@
         <div class="col-sm-9">
             <div class="shop-panel panel-region">
                 <div class="shop-basic-logo">
-                    <img src="{{ get_image_url($shop_info->shop_logo, 'shop_logo') }}" />
+                    <img src="{{ get_image_url($shop_info['shop']['shop_logo'], 'shop_logo') }}" />
                     <div class="edit-mask">
                         <a href="/shop/shop-set/edit">
                             <i class="fa fa-edit"></i>
@@ -48,9 +71,9 @@
                     </div>
                 </div>
                 <div class="shop-basic-info">
-                    <span class="name">{{ $shop_info->shop_name ?? '' }}</span>
+                    <span class="name">{{ $shop_info['shop']['shop_name'] ?? '' }}</span>
 
-                    <img class="m-r-20" src="http://image.laravelvip.com/images/shop/shop-credit/2018/06/30/15303660397766.gif" height="16" />
+                    <img class="m-r-20" src="{{ get_image_url($shop_info['credit']['credit_img']) }}" title="{{ $shop_info['credit']['credit_name'] }}" height="16" />
 
 
                     <span class="code-box popover-por">
@@ -63,84 +86,46 @@
 							<div class="arrow"></div>
 							<div class="popover-inner">
 								<p>扫一扫，手机预览</p>
-								<img class="qr-images" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=">
-								<a class="btn-link" href="/shop/download-qrcode?shop_id=1">下载店铺二维码</a>
+								<img class="qr-images" src="{{ $shop_info['shop']['qrcode'] }}">
+								<a class="btn-link" href="/shop/download-qrcode?shop_id={{ $shop_info['shop']['shop_id'] }}">下载店铺二维码</a>
+							</div>
+						</div>
+					</span>
+                    <span class="code-box popover-por">
+						<span class="code">
+							<i class="fa fa-qrcode"></i>
+							小程序码预览
+						</span>
+						<div class="popover-box top-left">
+							<div class="popover-tip"></div>
+							<div class="arrow"></div>
+							<div class="popover-inner">
+								<p>扫一扫，手机预览</p>
+								<img class="qr-images" src="http://images.mall.laravelvip.com/minprogram/1e962205154300e48456a963a13cda2fc.png">
+								<a class="btn-link" href="/site/download-file?file=http://images.mall.laravelvip.com/minprogram/1e962205154300e48456a963a13cda2fc.png">下载小程序码</a>
 							</div>
 						</div>
 					</span>
                     <div class="shop-renzheng">
 
-						<span class="g-renzheng on">
+                        @foreach($contract_list as $v)
+						<span class="g-renzheng @if($v['is_joined']){{ 'on' }}@endif">
 							<i class="iconss iconss-shoprenzheng"></i>
-							7天无理由退换货
+							{{ $v['contract_name'] }}
 							<div class="shop-badge-tip">
 								<div class="ui-popover">
 									<div class="ui-popover-inner">
-										<span class="g-approve-msg">卖家就该商品退货服务向买家作出承诺，自商品签收之日起至卖家承诺保障时间内，商品符合卖家约定状态的情况下，如买家对购买的商品不满意可无理由申请退货。</span>
+										<span class="g-approve-msg">{!! $v['contract_desc'] !!}</span>
 
+                                        @if(!$v['is_joined'])
+                                            <a class="g-approve-link" target="_blank" href="/shop/contract/list">立即加入</a>
+                                        @endif
 									</div>
 									<div class="arrow"></div>
 								</div>
 							</div>
 						</span>
-
-                        <span class="g-renzheng on">
-							<i class="iconss iconss-shoprenzheng"></i>
-							品质承诺
-							<div class="shop-badge-tip">
-								<div class="ui-popover">
-									<div class="ui-popover-inner">
-										<span class="g-approve-msg">卖家就该商品品质向买家作出承诺，承诺商品为正品。</span>
-
-									</div>
-									<div class="arrow"></div>
-								</div>
-							</div>
-						</span>
-
-                        <span class="g-renzheng on">
-							<i class="iconss iconss-shoprenzheng"></i>
-							破损补寄
-							<div class="shop-badge-tip">
-								<div class="ui-popover">
-									<div class="ui-popover-inner">
-										<span class="g-approve-msg">卖家就该商品签收状态作出承诺，自商品签收之日起至卖家承诺保障时间内，如发现商品在运输途中出现破损，买家可申请破损部分商品补寄。</span>
-
-									</div>
-									<div class="arrow"></div>
-								</div>
-							</div>
-						</span>
-
-                        <span class="g-renzheng on">
-							<i class="iconss iconss-shoprenzheng"></i>
-							退货承诺
-							<div class="shop-badge-tip">
-								<div class="ui-popover">
-									<div class="ui-popover-inner">
-										<span class="g-approve-msg">卖家就该商品退货服务向买家作出承诺，自商品签收之日起至卖家承诺保障时间内，商品符合卖家约定状态的情况下，如买家对购买的商品不满意可无理由申请退货。</span>
-
-									</div>
-									<div class="arrow"></div>
-								</div>
-							</div>
-						</span>
-
-                        <span class="g-renzheng ">
-							<i class="iconss iconss-shoprenzheng"></i>
-							海外直邮
-							<div class="shop-badge-tip">
-								<div class="ui-popover">
-									<div class="ui-popover-inner">
-										<span class="g-approve-msg">提供商品海外直邮服务，明显标识吸引海淘买家；向买家承诺相应违约金，增强买家购买信心，提升浏览转化和下单转化率。</span>
-
-										<a class="g-approve-link" target="_blank" href="/shop/contract/list.html">立即加入</a>
-
-									</div>
-									<div class="arrow"></div>
-								</div>
-							</div>
-						</span>
+                        @endforeach
 
                     </div>
                 </div>
@@ -148,7 +133,7 @@
             </div>
             <div class="colour-item-box panel-region">
                 <div class="colour-item blue">
-                    <a href="/goods/list/index.html?status=2">
+                    <a href="/goods/list/index?status=2">
                         <span class="name">出售中的商品</span>
                         <div class="number">
                             <em id="onsale_goods_count">&nbsp;</em>
@@ -161,7 +146,7 @@
                     </a>
                 </div>
                 <div class="colour-item yellow">
-                    <a href="/goods/list/index.html?status=1">
+                    <a href="/goods/list/index?status=1">
                         <span class="name">仓库中的商品</span>
                         <div class="number">
                             <em id="offsale_goods_count">&nbsp;</em>
@@ -174,7 +159,7 @@
                     </a>
                 </div>
                 <div class="colour-item green">
-                    <a href="/goods/list/index.html?status=3">
+                    <a href="/goods/list/index?status=3">
                         <span class="name">等待审核的商品</span>
                         <div class="number">
                             <em id="wait_audit_goods_count">&nbsp;</em>
@@ -187,7 +172,7 @@
                     </a>
                 </div>
                 <div class="colour-item red">
-                    <a href="/goods/list/index.html?status=5">
+                    <a href="/goods/list/index?status=5">
                         <span class="name">违规下架的商品</span>
                         <div class="number">
                             <em id="illegal_goods_count">&nbsp;</em>
@@ -335,22 +320,22 @@
                 <div class="module-body shop-body hide">
                     <p>
                         <span>用户名：</span>
-                        <font>{{ $seller->user_name }}</font>
+                        <font>{{ $user_info['user_name'] }}</font>
                     </p>
 
                     <p>
                         <span>店铺有效期：</span>
-                        <font>截止至 {{ $shop_info->end_time }}</font>
+                        <font>截止至 {{ format_time($shop_info['shop']['end_time'], 'Y-m-d H:i:s') }}</font>
                     </p>
 
 
                     <p>
                         <span>上次登录IP：</span>
-                        <font title="{{ $seller->last_ip }}（云南省昆明市）">{{ $seller->last_ip }}（云南省昆明市）</font>
+                        <font title="{{ $user_info['last_ip'] }}">{{ $user_info['last_ip'] }}</font>
                     </p>
                     <p>
                         <span>上次登录时间：</span>
-                        <font>{{ $seller->last_login }}</font>
+                        <font>{{ $user_info['last_login'] }}</font>
                     </p>
 
                 </div>
@@ -367,7 +352,17 @@
                 </div>
             </div>
 
-
+            <div class="module-box panel-region message-item-box">
+                <div class="module-head">
+                    <div>站点信息</div>
+                </div>
+                <div class="module-body">
+                    <p>电话：400-000-0000</p>
+                    <p>邮件：lrw@laravelvip.com</p>
+                    <p>QQ：410284576</p>
+                    <p>旺旺：410284576</p>
+                </div>
+            </div>
 
             <div class="module-box panel-region">
                 <div class="module-head">
@@ -379,9 +374,18 @@
                 <div class="module-body news-panel">
                     <ul>
                         <!---->
-                        <li class="text-c m-t-20 m-b-20">
-                            <font>暂无信息内容...</font>
-                        </li>
+                        @if(!empty($system_message_list))
+                            @foreach($system_message_list as $v)
+                                <li>
+                                    <span class="m-r-10">{{ format_time(strtotime($v['add_time']), 'm月d日')  }}</span>
+                                    <a href="{{ route('pc_show_article', ['article_id'=>$v['article_id']]) }}" target="_blank" class="link" title="{{ $v['title'] }}">{{ $v['title'] }}</a>
+                                </li>
+                            @endforeach
+                        @else
+                            <li class="text-c m-t-20 m-b-20">
+                                <font>暂无信息内容...</font>
+                            </li>
+                        @endif
                         <!---->
                     </ul>
                 </div>
@@ -397,60 +401,18 @@
                     <ul>
                         <!---->
 
-
-
-                        <li>
-                            <span class="m-r-10">1月12日</span>
-                            <a href="javascript:void(0);" data-msg-id="2585" class="link" title="亲爱的店主，您店铺订单号为：20190111041623494830的订单，买家已取消订单，您无需处理该订单。">亲爱的店主，您店铺订单号为：20190111...</a>
-                        </li>
-
-
-
-
-                        <li>
-                            <span class="m-r-10">1月12日</span>
-                            <a href="javascript:void(0);" data-msg-id="2583" class="link" title="亲爱的店主，您店铺订单号为：20190111041551376120的订单，买家已取消订单，您无需处理该订单。">亲爱的店主，您店铺订单号为：20190111...</a>
-                        </li>
-
-
-
-
-                        <li>
-                            <span class="m-r-10">1月11日</span>
-                            <a href="javascript:void(0);" data-msg-id="2571" class="link" title="亲爱的店主，您店铺商品ID为250的商品由于违规，已被平台方强制下架，请尽快修改。">亲爱的店主，您店铺商品ID为250的商品由于...</a>
-                        </li>
-
-
-
-
-                        <li>
-                            <span class="m-r-10">1月11日</span>
-                            <a href="javascript:void(0);" data-msg-id="2562" class="link" title="亲爱的店主，您店铺订单号为：20190111044146573490的订单，买家已成功付款，请及时发货。">亲爱的店主，您店铺订单号为：20190111...</a>
-                        </li>
-
-
-
-
-                        <li>
-                            <span class="m-r-10">1月11日</span>
-                            <a href="javascript:void(0);" data-msg-id="2556" class="link" title="亲爱的店主，您店铺订单号为：20190111041647156790的订单，买家已成功付款，请及时发货。">亲爱的店主，您店铺订单号为：20190111...</a>
-                        </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        @if(!empty($internal_message_list))
+                            @foreach($internal_message_list as $v)
+                                <li>
+                                    <span class="m-r-10">{{ format_time($v['send_time'], 'm月d日')  }}</span>
+                                    <a href="javascript:void(0);" data-msg-id="{{ $v['msg_id'] }}" class="link" title="{{ $v['content'] }}">{{ $v['content'] }}</a>
+                                </li>
+                            @endforeach
+                        @else
+                            <li class="text-c m-t-20 m-b-20">
+                                <font>暂无信息内容...</font>
+                            </li>
+                        @endif
 
                         <!---->
                     </ul>
@@ -461,7 +423,7 @@
                     <div>
                         客户等级分析
                         <span>
-							<a class="c-blue  pull-right" href="/member/rank/list.html">设置VIP等级</a>
+							<a class="c-blue  pull-right" href="/member/rank/list">设置VIP等级</a>
 						</span>
                     </div>
                 </div>
@@ -481,9 +443,31 @@
 
 @stop
 
-{{--extra html block--}}
+{{--extra html page元素同级下面--}}
 @section('extra_html')
-
+    <div class="clear"></div>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -497,10 +481,20 @@
 
 @stop
 
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/js/chart.js"></script>
+    <script src="/js/chart-data.js"></script>
+    <script src="/assets/d2eace91/js/echarts/echarts-all.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <div class="clear"></div>
-    <script type="text/javascript">
+
+
+
+    <script>
         $('#shopshow').click(function() {
             if ($(this).hasClass('fa-eye')) {
                 $(this).removeClass('fa-eye').addClass('fa-eye-slash');
@@ -512,8 +506,7 @@
                 $(this).attr("title","点此隐藏店铺信息");
             }
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             radialIndicator.defaults.barColor = {
                 100: '#F47171',
@@ -525,24 +518,20 @@
             radialIndicator.defaults.minValue = 0;
             radialIndicator.defaults.maxValue = 500;
             radialIndicator.defaults.format = '#.##分';
-
             $('#container1').radialIndicator({
-                initValue: 475
+                initValue: 500
             });
             $('#container2').radialIndicator({
-                initValue: 492
+                initValue: 500
             });
             $('#container3').radialIndicator({
-                initValue: 492
+                initValue: 500
             });
             $('#container4').radialIndicator({
-                initValue: 486.33333333333
+                initValue: 500
             });
         });
-    </script>
-    <!-- ECharts单文件引入 -->
-    <script src="/assets/d2eace91/js/echarts/echarts-all.js?v=20190110"></script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             // 基于准备好的dom，初始化echarts图表
             var myChart = echarts.init(document.getElementById('sales_div'));
@@ -556,7 +545,8 @@
                 xAxis : [
                     {
                         type : 'category',
-                        data : ["01\u670803\u65e5","01\u670804\u65e5","01\u670805\u65e5","01\u670806\u65e5","01\u670807\u65e5","01\u670808\u65e5","01\u670809\u65e5","01\u670810\u65e5","01\u670811\u65e5","01\u670812\u65e5"],
+                        // data : ["10\u670812\u65e5","10\u670813\u65e5","10\u670814\u65e5","10\u670815\u65e5","10\u670816\u65e5","10\u670817\u65e5","10\u670818\u65e5","10\u670819\u65e5","10\u670820\u65e5","10\u670821\u65e5"],
+                        data : {!! json_encode($sell_x) !!},
                         axisLine: {  // 控制x轴线的样式
                             lineStyle: {
                                 type: 'solid',
@@ -575,9 +565,7 @@
                                 width:'1' }
                         },
                         axisLabel: {
-
                             formatter: '{value} 元'
-
                         }
                     }
                 ],
@@ -585,16 +573,15 @@
                     {
                         "name":"订单金额",
                         "type":"bar",
-                        "data":[0,0,0,0,0,0,0,0,300,0],
+                        // "data":[0,0,0,0,0,0,0,0,0,0],
+                        "data":{!! json_encode($sell_y) !!},
                     }
                 ]
             };
-
             // 为echarts对象加载数据
             myChart.setOption(option);
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             // 基于准备好的dom，初始化echarts图表
             var myChart = echarts.init(document.getElementById('customer_div'));
@@ -612,7 +599,8 @@
                     formatter: function (name) {
                         return (name.length > 7 ? (name.slice(0,7)+"...") : name );
                     },
-                    data:["\u666e\u901a\u4f1a\u5458\uff08VIP1\uff09","\u7279\u6b8a\u4f1a\u5458","\u94bb\u77f3\u4f1a\u5458"]
+                    // data:["\u666e\u901a\u4f1a\u5458VIP1","\u9ad8\u7ea7\u4f1a\u5458(VIP2)","VIP\u4f1a\u5458(VIP3)","\u81f3\u5c0aVIP\u4f1a\u5458"]
+                    data:{!! json_encode($customer_text) !!}
                 },
                 calculable: true,
                 series : [
@@ -629,7 +617,6 @@
                                     show: false
                                 }
                             },
-
                             emphasis: {
                                 label: {
                                     show: true,
@@ -641,16 +628,15 @@
                                 }
                             }
                         },
-                        data:[{"name":"\u666e\u901a\u4f1a\u5458\uff08VIP1\uff09","value":"3"},{"name":"\u7279\u6b8a\u4f1a\u5458","value":"0"},{"name":"\u94bb\u77f3\u4f1a\u5458","value":"3"}]
+                        // data:[{"name":"\u666e\u901a\u4f1a\u5458VIP1","value":"2"},{"name":"\u9ad8\u7ea7\u4f1a\u5458(VIP2)","value":"0"},{"name":"VIP\u4f1a\u5458(VIP3)","value":"0"},{"name":"\u81f3\u5c0aVIP\u4f1a\u5458","value":"0"}]
+                        data:{!! json_encode($customer_data) !!}
                     }
                 ]
             };
-
             // 为echarts对象加载数据
             myChart.setOption(option);
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             $.ajax({
                 url: '/index/index/get-data',
@@ -658,24 +644,24 @@
                 success: function(data) {
                     // 出售中的商品
                     $("#onsale_goods_count").html(data.onsale_goods_count);
-//				if(data.onsale_goods_count == 0) {
-//					$("#onsale_goods_count").parent().removeClass("number");
-//				}
+//                if(data.onsale_goods_count == 0) {
+//                    $("#onsale_goods_count").parent().removeClass("number");
+//                }
                     // 仓库中的商品
                     $("#offsale_goods_count").html(data.offsale_goods_count);
-//				if(data.offsale_goods_count == 0) {
-//					$("#offsale_goods_count").parent().removeClass("number");
-//				}
+//                if(data.offsale_goods_count == 0) {
+//                    $("#offsale_goods_count").parent().removeClass("number");
+//                }
                     // 等待审核的商品
                     $("#wait_audit_goods_count").html(data.wait_audit_goods_count);
-//				if(data.wait_audit_goods_count == 0) {
-//					$("#wait_audit_goods_count").parent().removeClass("number");
-//				}
+//                if(data.wait_audit_goods_count == 0) {
+//                    $("#wait_audit_goods_count").parent().removeClass("number");
+//                }
                     // 违规下架的商品
                     $("#illegal_goods_count").html(data.illegal_goods_count);
-//				if(data.illegal_goods_count == 0) {
-//					$("#illegal_goods_count").parent().removeClass("number");
-//				}
+//                if(data.illegal_goods_count == 0) {
+//                    $("#illegal_goods_count").parent().removeClass("number");
+//                }
                     // 待付款订单
                     $("#unpayed_order_count").html(data.unpayed_order_count);
                     if(data.unpayed_order_count == 0) {
@@ -727,11 +713,9 @@
                 }
             });
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             $("[data-toggle='popover']").popover();
-
             // 查看详情
             $("body").on("click", ".link", function() {
                 var msg_id = $(this).data("msg-id");
@@ -748,8 +732,7 @@
                 });
             });
         });
-    </script>
-    <script type="text/javascript">
+        //
         $().ready(function() {
             //店铺指引页面 弹窗
             $.ajax({
@@ -760,7 +743,7 @@
                         $.open({
                             title: "店铺指引",
                             ajax: {
-                                url: '/index/index/seller-guide',
+                                url: '/index/index/seller-guide.html',
                             },
                             width: "1080px",
                             height: "540px",
@@ -781,10 +764,8 @@
                 }
             });
         });
-
-
-
     </script>
+
 @stop
 
 {{--outside body script--}}

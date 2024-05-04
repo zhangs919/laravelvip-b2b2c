@@ -1,11 +1,10 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\SystemConfigRepository;
-use Illuminate\Contracts\Logging\Log;
 use Illuminate\Http\Request;
 
 class SystemController extends Backend
@@ -147,13 +146,11 @@ class SystemController extends Backend
 
         if ($ret === false) {
             // fail
-            // todo Log
             admin_log($msg.'配置信息失败。ID：'.$ret->id);
             flash('error', $msg.'失败');
             return redirect('/system/system/index');
         }
         // success
-        // todo Log
         admin_log($msg.'配置信息成功。ID：'.$ret->id);
         flash('success', $msg.'成功');
         return redirect('/system/system/index');

@@ -251,7 +251,7 @@
 			failure_limit: 100,
 			skip_invisible: false,
 			effect: 'fadeIn',
-			data_attribute: ($("meta[name='is_webp']").length > 0 && $("meta[name='is_webp']").attr('content') == 'yes') ? "original-webp" : "original",
+			data_attribute: ($("meta[name='is_webp']").length > 0 && $("meta[name='is_webp']").attr('content') == 'yes' && iswebp()) ? "original-webp" : "original",
 		},
 		setting: function(settings) {
 			$.imgloading.settings = $.extend(true, {}, $.imgloading.settings, settings);
@@ -280,4 +280,12 @@
 			});
 		}
 	};
+
+	function iswebp() {
+		try {
+			return(document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0);
+		} catch (err) {
+			return false;
+		}
+	}
 })(jQuery, window);

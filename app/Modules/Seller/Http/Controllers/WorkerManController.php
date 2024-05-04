@@ -7,11 +7,6 @@ use Workerman\Worker;
 
 class WorkerManController extends Controller
 {
-
-
-//    protected $redirectTo = '/main';
-//    protected $username;
-
     public function __construct()
     {
 

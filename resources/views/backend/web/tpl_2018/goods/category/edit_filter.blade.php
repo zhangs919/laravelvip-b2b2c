@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix form-horizontal">
         <form id="CategoryModel" class="form-horizontal" name="CategoryModel" action="/goods/category/edit-filter?id={{ $info->cat_id }}" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <!-- 添加属性 -->
             <div class="simple-form-field" >
                 <div class="form-group">

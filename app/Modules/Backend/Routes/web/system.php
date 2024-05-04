@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
 
     Route::group(['prefix' => 'system'], function () {
@@ -43,6 +43,10 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
         // ClearData 清测试数据控制器
         Route::any('clear-data/index', 'System\ClearDataController@index')->name('system-clear-data'); // index
 
+        // 清理缓存
+        Route::any('cache/clear', 'System\CacheController@clear')->name('system-clear-cache'); // 清理缓存
+        Route::any('cache/depth-clear', 'System\CacheController@depthClear')->name('system-depth-clear-cache'); // 深度清理缓存
+
         // Admin 管理员设置控制器
         Route::group(['prefix' => 'admin'], function () {
             Route::get('list', 'System\AdminController@lists')->name('system-admin-list'); // 管理员列表
@@ -63,6 +67,41 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::get('delete', 'System\AdminController@delete')->name('system-admin-delete'); // delete
 
 
+        });
+
+        // 数据库管理
+        Route::group(['prefix' => 'backup'], function () {
+            Route::get('list', 'System\BackupController@lists')->name('system-backup-list'); // lists
+            Route::get('delete', 'System\BackupController@delete')->name('system-backup-delete'); // delete
+            Route::get('store', 'System\BackupController@store')->name('system-backup-store'); // store
+            Route::get('optimize', 'System\BackupController@optimize')->name('system-backup-optimize'); // optimize
+//            Route::get('recover', 'System\BackupController@recover')->name('system-backup-recover'); // recover
+            Route::get('download', 'System\BackupController@download')->name('system-backup-download'); // download
+
+        });
+
+        // 系统菜单
+        Route::group(['prefix' => 'menu'], function () {
+            Route::get('list', 'System\MenuController@lists')->name('system-menu-list'); // lists
+            Route::get('add', 'System\MenuController@add')->name('system-menu-manage'); // add
+            Route::get('edit', 'System\MenuController@edit')->name('system-menu-manage'); // edit
+            Route::post('add', 'System\MenuController@saveData')->name('system-menu-manage'); // saveData
+            Route::post('edit', 'System\MenuController@saveData')->name('system-menu-manage'); // saveData
+            Route::get('set-is-show', 'System\MenuController@setIsShow')->name('system-menu-manage'); // setIsShow
+            Route::post('edit-info', 'System\MenuController@editInfo')->name('system-menu-manage'); // editInfo
+            Route::post('delete', 'System\MenuController@delete')->name('system-menu-delete'); // delete
+        });
+
+        // 权限节点
+        Route::group(['prefix' => 'node'], function () {
+            Route::get('list', 'System\NodeController@lists')->name('system-node-list'); // lists
+            Route::get('add', 'System\NodeController@add')->name('system-node-manage'); // add
+            Route::get('edit', 'System\NodeController@edit')->name('system-node-manage'); // edit
+            Route::post('add', 'System\NodeController@saveData')->name('system-node-manage'); // saveData
+            Route::post('edit', 'System\NodeController@saveData')->name('system-node-manage'); // saveData
+            Route::get('set-is-show', 'System\NodeController@setIsShow')->name('system-node-manage'); // setIsShow
+            Route::post('edit-info', 'System\NodeController@editInfo')->name('system-node-manage'); // editInfo
+            Route::post('delete', 'System\NodeController@delete')->name('system-node-delete'); // delete
         });
 
         // Role 角色控制器
@@ -116,6 +155,28 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::get('seo-edit', 'System\SeoCategoryController@seoEdit'); // seoEdit
             Route::post('seo-save', 'System\SeoCategoryController@seoSave'); // saveData
 
+        });
+
+        // SubSite 站点管理控制器
+        Route::group(['prefix' => 'subsite'], function () {
+            Route::get('list', 'System\SubSiteController@lists')->name('system-site-list'); // lists
+            Route::get('add', 'System\SubSiteController@add')->name('system-site-manage'); // 创建/编辑
+            Route::get('edit', 'System\SubSiteController@edit')->name('system-site-manage'); // edit
+            Route::post('add', 'System\SubSiteController@saveData')->name('system-site-manage'); // saveData
+            Route::post('edit', 'System\SubSiteController@saveData')->name('system-site-manage'); // saveData
+            Route::get('client-validate', 'System\SubSiteController@clientValidate')->name('system-site-manage'); // clientValidate
+            Route::post('delete', 'System\SubSiteController@delete')->name('system-site-manage'); // delete
+        });
+
+        // SiteAdmin 站点管理员控制器
+        Route::group(['prefix' => 'subsite-admin'], function () {
+//            Route::get('list', 'System\SubSiteAdminController@lists')->name('system-site-list'); // lists
+//            Route::get('add', 'System\SubSiteAdminController@add')->name('system-site-manage'); // 创建/编辑
+//            Route::get('edit', 'System\SubSiteAdminController@edit')->name('system-site-manage'); // edit
+//            Route::post('add', 'System\SubSiteAdminController@saveData')->name('system-site-manage'); // saveData
+//            Route::post('edit', 'System\SubSiteAdminController@saveData')->name('system-site-manage'); // saveData
+//            Route::get('client-validate', 'System\SubSiteAdminController@clientValidate')->name('system-site-manage'); // clientValidate
+//            Route::post('delete', 'System\SubSiteAdminController@delete')->name('system-site-manage'); // delete
         });
 
     });

@@ -30,16 +30,33 @@ class Shop extends BaseModel
         'shipping_time', // json
         'multi_store_number','multi_store_allow_number',
 
+        'is_cross_border', // 新增
+
         'wx_barcode',
 
         // todo 不太确定的字段 暂时用着
-        'collect_num', 'is_own_shop', 'user_name',
+        'collect_num', 'user_name',
 
         'back_id', // 模板备份id
+        'm_back_id', // 模板备份id
+        'app_back_id', // 模板备份id
     ];
 
     protected $primaryKey = 'shop_id';
 
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','user_id');
+    }
+
+    /**
+     * 一对多关联 商品表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function goods()
+    {
+        return $this->hasMany(Goods::class,'shop_id','shop_id');
+    }
 
     /**
      * 一对多关联 积分商品表
@@ -380,4 +397,24 @@ class Shop extends BaseModel
     {
         return $this->hasMany(GoodsTag::class, 'shop_id', 'shop_id');
     }
+
+    /**
+     * 一对多关联 店铺订单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderInfo()
+    {
+        return $this->hasMany(OrderInfo::class,'shop_id', 'shop_id');
+    }
+
+    /**
+     * 一对多关联 关注表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function collect()
+    {
+        return $this->hasMany(Collect::class,'shop_id','shop_id');
+    }
+
 }

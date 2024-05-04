@@ -24,7 +24,7 @@ class Attribute extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function attrValue()
+    public function attr_value()
     {
         return $this->hasMany(AttrValue::class, 'attr_id');
     }

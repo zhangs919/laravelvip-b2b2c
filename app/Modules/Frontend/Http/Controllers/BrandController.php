@@ -31,11 +31,11 @@ class BrandController extends Frontend
 
     protected $brand;
 
-    public function __construct()
+    public function __construct(BrandRepository $brand)
     {
         parent::__construct();
 
-        $this->brand = new BrandRepository();
+        $this->brand = $brand;
 
     }
 

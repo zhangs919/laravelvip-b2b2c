@@ -48,56 +48,102 @@
             </div>
         </div>
         <a class="scroll-to-top"><i class="fa fa-chevron-up"></i></a>
-
-
-        <script type="text/javascript">
-            var tablelist = null;
-            $().ready(function() {
-                tablelist = $("#table_list").tablelist({
-                    callback: function() {
-                        $.loading.stop();
-                        if ($(".con-right").height() != $(".con-left").height()) {
-                            $(".con-left").height($(".con-right").height());
-                        }
-                    }
-                });
-
-                var cur_page = 1;
-                var page_count = "{{ $page_count }}";
-
-                if (cur_page >= page_count) {
-                    $(".message-more").html("已经没有更多的消息了");
-                    $(".message-more").removeClass("message-more");
-                }
-
-                $("body").on("click", ".message-more", function() {
-                    $.loading.start();
-
-                    // 页数累计
-                    cur_page++;
-
-                    $.get("/user/message/internal.html", {
-                        page: {
-                            cur_page: cur_page
-                        }
-                    }, function(result) {
-                        if (result.code == 0) {
-                            $("#table_list").find("ul").append(result.data);
-
-                            if (result.count == 0 || cur_page >= page_count) {
-                                $(".message-more").html("已经没有更多的消息了");
-                                $(".message-more").removeClass("message-more");
-                            }
-                        }
-                    }, "JSON").always(function() {
-                        $.loading.stop();
-                        if ($(".con-right").height() != $(".con-left").height()) {
-                            $(".con-left").height($(".con-right").height());
-                        }
-                    });
-                });
-            });
-        </script>
+        
     </div>
 
-@endsection
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d2eace91/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        var tablelist = null;
+        $().ready(function() {
+            tablelist = $("#table_list").tablelist({
+                callback: function() {
+                    $.loading.stop();
+                    if ($(".con-right").height() != $(".con-left").height()) {
+                        $(".con-left").height($(".con-right").height());
+                    }
+                }
+            });
+            var cur_page = 1;
+            var page_count = "4";
+            if (cur_page >= page_count) {
+                $(".message-more").html("已经没有更多的消息了");
+                $(".message-more").removeClass("message-more");
+            }
+            $("body").on("click", ".message-more", function() {
+                $.loading.start();
+                // 页数累计
+                cur_page++;
+                $.get("/user/message/internal.html", {
+                    page: {
+                        cur_page: cur_page
+                    }
+                }, function(result) {
+                    if (result.code == 0) {
+                        $("#table_list").find("ul").append(result.data);
+                        if (result.count == 0 || cur_page >= page_count) {
+                            $(".message-more").html("已经没有更多的消息了");
+                            $(".message-more").removeClass("message-more");
+                        }
+                    }
+                }, "JSON").always(function() {
+                    $.loading.stop();
+                    if ($(".con-right").height() != $(".con-left").height()) {
+                        $(".con-left").height($(".con-right").height());
+                    }
+                });
+            });
+        });
+        // 
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        // 
+        $().ready(function() {
+        })
+        // 
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        // 
+    </script>
+@stop

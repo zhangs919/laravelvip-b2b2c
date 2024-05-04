@@ -23,22 +23,26 @@
 @section('content')
 
     <div class="row card-box">
-        <div class="col-lg-12 col-sm-12" }="">
+        <div class="col-lg-12 col-sm-12">
             <div class="alert alert-warning animated fadeIn">
                 <p class="m-b-5">
                     <strong>系统检测到您有影响商城运营的基本配置信息尚未配置：</strong>
                 </p>
 
+                @if(empty(sysconf('sms_sign_name')))
                 <span class="m-r-30">
 					短信配置尚未配置，
 					<a class="alert-href" target="_blank" href="/system/sms/sms-config">前往配置</a>
 				</span>
+                @endif
 
 
+                @if(empty(sysconf('smtp_host')))
                 <span class="m-r-30">
 					邮件配置尚未配置，
 					<a class="alert-href" target="_blank" href="/system/config/index?group=smtp">前往配置</a>
 				</span>
+                @endif
 
 
                 <span class="m-r-30">
@@ -47,10 +51,12 @@
 				</span>
 
 
+                @if(empty(sysconf('alioss_enable')))
                 <span>
 					阿里OSS尚未配置，
 					<a class="alert-href" target="_blank" href="/system/config/index?group=alioss">前往配置</a>
 				</span>
+                @endif
 
             </div>
         </div>
@@ -327,9 +333,13 @@
                                 <span class="dt">MySQL版本：</span>
                                 <span class="dd">{{ $system_info['mysql_version'] }}</span>
                             </li>
+{{--                            <li>--}}
+{{--                                <span class="dt">GD版本：</span>--}}
+{{--                                <span class="dd">{{ $system_info['gd_version'] }}--}}{{--bundled (2.1.0 compatible)--}}{{--</span>--}}
+{{--                            </li>--}}
                             <li>
-                                <span class="dt">GD版本：</span>
-                                <span class="dd">{{ $system_info['gd_version'] }}{{--bundled (2.1.0 compatible)--}}</span>
+                                <span class="dt">Laravel版本：</span>
+                                <span class="dd">{{ app()->version() }}</span>
                             </li>
                             <li>
                                 <span class="dt">时区设置：</span>
@@ -348,6 +358,7 @@
                                 <span class="dd">
 									{{ $system_info['version'] }}&nbsp;&nbsp;
 									<span id="update"></span>
+                                    <a id="update-log" class="btn btn-sm btn-primary" href="javascript:;">更新日志</a>
 								</span>
                             </li>
                             <li>
@@ -377,16 +388,16 @@
             <div class="pull-right">
                 <div class="sub-title">相关后台切换地址</div>
                 <ul class="backend-block">
-                    <li class="current"><a class="blue-bg"  target="_blank" href="http://backend.b2b2c.yunmall.laravelvip.com">平台方后台</a></li>
+                    <li class="current"><a class="blue-bg"  target="_blank" href="http://{{ config('lrw.backend_domain') }}">平台方后台</a></li>
                     <!---->
-                    <li><a class="green-bg"  target="_blank" href="http://seller.b2b2c.yunmall.laravelvip.com">店铺后台</a></li>
-                    <li><a class="yellow-bg"  target="_blank" href="http://store.b2b2c.yunmall.laravelvip.com">网点后台</a></li>
+                    <li><a class="green-bg"  target="_blank" href="http://{{ config('lrw.seller_domain') }}">店铺后台</a></li>
+                    <li><a class="yellow-bg"  target="_blank" href="http://{{ config('lrw.store_domain') }}">网点后台</a></li>
                 </ul>
             </div>
         </div>
         <a class="close-reveal-modal"></a>
     </div>
-    <a class="reveal-modal-show-btn c-fff"><i class="fa fa-desktop"></i></br>后台入口</a>
+    <a class="reveal-modal-show-btn c-fff"><i class="fa fa-desktop"></i><br/>后台入口</a>
     <script type="text/javascript">
         $().ready(function() {
             /* 判断是否启用弹框 */
@@ -419,6 +430,15 @@
                     bottom:'0px',right:'0'}
                 );
             });
+            $("#update-log").click(function () {
+                $.open({
+                    title: "更新日志",
+                    shadeClose: true,
+                    type:1,
+                    content: "<div style='padding:15px; font-size:14px;line-height:28px;'>{!! $system_info['latest_version_str'] !!}</div>",
+                });
+
+            })
         });
     </script>
 
@@ -489,9 +509,9 @@
 
         });
     </script>
-    <script src=/js/welcome.js?v=20180418"></script>
+    <script src=/js/welcome.js"></script>
     <!-- ECharts单文件引入 -->
-    <script src="/assets/d2eace91/js/echarts/echarts-all.js?v=20180418"></script>
+    <script src="/assets/d2eace91/js/echarts/echarts-all.js"></script>
     <script type="text/javascript">
         $().ready(function() {
             // 基于准备好的dom，初始化echarts图表
@@ -532,7 +552,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: ["04\u670813\u65e5","04\u670814\u65e5","04\u670815\u65e5","04\u670816\u65e5","04\u670817\u65e5","04\u670818\u65e5","04\u670819\u65e5","04\u670820\u65e5","04\u670821\u65e5","04\u670822\u65e5"]
+                    data: {!! json_encode($recent_ten_days['x']) !!}
                 },
                 //Y轴数据
                 yAxis: {
@@ -543,7 +563,7 @@
                     name: '会员增长',
                     type: 'line',
                     stack: '',
-                    data: [0,"1",0,"5","2",0,0,0,0,0]
+                    data: {!! json_encode($recent_ten_days['y']) !!}
                 }]
             };
 

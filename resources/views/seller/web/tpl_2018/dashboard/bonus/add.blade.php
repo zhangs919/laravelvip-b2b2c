@@ -1,8 +1,20 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
+
 @stop
 
 {{--content--}}

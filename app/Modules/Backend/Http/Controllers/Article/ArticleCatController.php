@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Article;
+namespace App\Modules\Backend\Http\Controllers\Article;
 
 
 use App\Http\Requests\ArticleCatRequest;

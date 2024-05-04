@@ -20,7 +20,7 @@
 // | Description: 操作日志
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 
 use App\Models\ShopLog;
@@ -36,14 +36,14 @@ class LogController extends Seller
         ['url' => 'shop/log/list', 'text' => '列表'],
     ];
 
-    protected $shop_log;
+    protected $shopLog;
 
 
-    public function __construct()
+    public function __construct(ShopLogRepository $shopLog)
     {
         parent::__construct();
 
-        $this->shop_log = new ShopLogRepository();
+        $this->shopLog = $shopLog;
 
         $this->set_menu_select('account', 'shop-log-list');
     }
@@ -85,7 +85,7 @@ class LogController extends Seller
             'sortname' => 'created_at',
             'sortorder' => 'desc'
         ];
-        list($list, $total) = $this->shop_log->getList($condition);
+        list($list, $total) = $this->shopLog->getList($condition);
 
         $pageHtml = pagination($total);
 
@@ -100,7 +100,7 @@ class LogController extends Seller
     public function delete(Request $request)
     {
         $id = $request->post('id');
-        $ret = $this->shop_log->del($id);
+        $ret = $this->shopLog->del($id);
         if ($ret === false) {
             // Log
             shop_log('操作日志删除失败。ID：'.$id);
@@ -115,7 +115,7 @@ class LogController extends Seller
     public function batchDelete(Request $request)
     {
         $ids = $request->post('ids');
-        $ret = $this->shop_log->batchDel($ids);
+        $ret = $this->shopLog->batchDel($ids);
 
         $ids = implode(',', $ids);
         if ($ret === false) {

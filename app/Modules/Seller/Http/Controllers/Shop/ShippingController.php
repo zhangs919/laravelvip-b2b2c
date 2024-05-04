@@ -20,12 +20,11 @@
 // | Description: 配送方式
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ShippingRepository;
 use App\Repositories\ShopConfigFieldRepository;
-use App\Repositories\ShopConfigRepository;
 use App\Repositories\ShopShippingRepository;
 use Illuminate\Http\Request;
 
@@ -48,19 +47,23 @@ class ShippingController extends Seller
         ['url' => 'shop/shipping/print', 'text' => '打印预览'],
     ];
 
-//    protected $shipping;
+    protected $shipping;
 
     protected $shopShipping;
 
     protected $shopConfigField;
 
-    public function __construct()
+    public function __construct(
+        ShippingRepository $shipping
+        ,ShopShippingRepository $shopShipping
+        ,ShopConfigFieldRepository $shopConfigField
+    )
     {
         parent::__construct();
 
-//        $this->shipping = new ShippingRepository();
-        $this->shopShipping = new ShopShippingRepository();
-        $this->shopConfigField = new ShopConfigFieldRepository();
+        $this->shipping = $shipping;
+        $this->shopShipping = $shopShipping;
+        $this->shopConfigField = $shopConfigField;
 
         $this->set_menu_select('shop', 'shop-express-list');
     }

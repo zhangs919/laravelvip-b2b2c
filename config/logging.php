@@ -32,7 +32,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily'],
         ],
 
         'single' => [
@@ -64,6 +64,20 @@ return [
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => 'debug',
+        ],
+
+        'api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api/api.log'),
+            'level' => 'debug',
+            'days' => 7,
+        ],
+
+        'job' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/job/job.log'),
+            'level' => 'debug',
+            'days' => 7,
         ],
     ],
 

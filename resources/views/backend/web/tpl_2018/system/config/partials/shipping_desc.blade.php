@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-shipping_1", "name": "SystemConfigModel[shipping_1]", "attribute": "shipping_1", "rules": {"string":true,"messages":{"string":"1分必须是一条字符串。"}}},{"id": "systemconfigmodel-shipping_2", "name": "SystemConfigModel[shipping_2]", "attribute": "shipping_2", "rules": {"string":true,"messages":{"string":"2分必须是一条字符串。"}}},{"id": "systemconfigmodel-shipping_3", "name": "SystemConfigModel[shipping_3]", "attribute": "shipping_3", "rules": {"string":true,"messages":{"string":"3分必须是一条字符串。"}}},{"id": "systemconfigmodel-shipping_4", "name": "SystemConfigModel[shipping_4]", "attribute": "shipping_4", "rules": {"string":true,"messages":{"string":"4分必须是一条字符串。"}}},{"id": "systemconfigmodel-shipping_5", "name": "SystemConfigModel[shipping_5]", "attribute": "shipping_5", "rules": {"string":true,"messages":{"string":"5分必须是一条字符串。"}}},]

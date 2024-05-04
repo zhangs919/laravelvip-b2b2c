@@ -1,15 +1,16 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\User;
+namespace App\Modules\Backend\Http\Controllers\User;
 
 use App\Exports\UsersExport;
-use App\Imports\UsersImport;
+use App\Models\User;
 use App\Models\UserRank;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\UserAddressRepository;
 use App\Repositories\UserRealRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Backend
@@ -32,13 +33,17 @@ class UserController extends Backend
 
     protected $userAddress;
 
-    public function __construct()
+    public function __construct(
+        UserRepository $user
+        ,UserRealRepository $userReal
+        ,UserAddressRepository $userAddress
+    )
     {
         parent::__construct();
 
-        $this->user = new UserRepository();
-        $this->userReal = new UserRealRepository();
-        $this->userAddress = new UserAddressRepository();
+        $this->user = $user;
+        $this->userReal = $userReal;
+        $this->userAddress = $userAddress;
     }
 
     /**
@@ -218,7 +223,7 @@ class UserController extends Backend
         if ($post['birthday'] == 0) {
             unset($post['birthday']);
         }
-        $post['address_code'] = $request->post('receive_address');
+        $post['address_now'] = $request->post('receive_address');
 
         if (!empty($post['user_id'])) {
             // 编辑
@@ -275,7 +280,18 @@ class UserController extends Backend
         if ($request->method() == 'POST') {
             $post = $request->post('UserRealModel');
 
-            $ret = $this->userReal->update($post['real_id'], $post);
+            DB::beginTransaction();
+            try {
+                $this->userReal->update($post['real_id'], $post);
+                if ($post['status'] == 1) { // 通过实名认证 修改会员认证状态
+                    User::where('user_id', $id)->update(['is_real'=>1]);
+                }
+                DB::commit();
+                $ret = true;
+            } catch (\Exception $e) {
+                DB::rollBack();
+                $ret = false;
+            }
 
             if ($ret === false) {
                 // fail
@@ -480,7 +496,7 @@ class UserController extends Backend
     public function updateUserRank(Request $request)
     {
 
-        return result(0, null, '操作成功！');
+        return result(0, null, OPERATE_SUCCESS);
     }
 
     /**
@@ -490,7 +506,7 @@ class UserController extends Backend
      */
     public function export()
     {
-        $filename = '乐融沃B2B2C商城演示站_会员列表-'.date('Ymdhis').'.xls';
+        $filename = sysconf('site_name').'_会员列表-'.date('Ymdhis').'.xls';
 
         return Excel::download(new UsersExport(), $filename);
     }

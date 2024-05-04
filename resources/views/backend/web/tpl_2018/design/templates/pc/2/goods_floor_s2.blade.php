@@ -1,11 +1,17 @@
 <!-- 默认缓载图片 -->
 <!-- 前台首页楼层模板 -->
 <!-- 判断url链接 -->
+{{--背景颜色--}}
+@php
+	$bg_color = !empty($data['99-1'][0]['bgcolor']) ? $data['99-1'][0]['bgcolor'] : '#8ed515';
+@endphp
+
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
 
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
-    <div class="w1210 floor-list">
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif" data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
         <div class="floor">
             <div class="floor-con2 floor-title">
 
@@ -18,7 +24,7 @@
                             <input type="hidden" value="{{ $v['short_name'] }}" class="SZY-SHORT-NAME">
                         @endforeach
                     @else
-                        <i class="color-mark" style='background-color: {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }}; '></i>
+                        <i class="color-mark" style='background-color: {{ $bg_color }}; '></i>
                         <a href="javascript:void(0);">添加楼层标题</a>
                     @endif
 
@@ -34,7 +40,7 @@
 
                         @if(!empty($data['6-1']))
                             @foreach($data['6-1'] as $v)
-                                <a class="hot-word" target="" href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                <a class="hot-word" target="" href="{{ $v['link'] }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                             @endforeach
                         @else
                             @for($i=1; $i <= 3; $i++)
@@ -50,7 +56,7 @@
 
 
                     </div>
-                    <div class="floor-con" style='border-color: {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }} '>
+                    <div class="floor-con" style='border-color: {{ $bg_color }} '>
                         <div class="big-banner-con">
                             <div class="big-banner">
 

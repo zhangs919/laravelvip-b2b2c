@@ -29,12 +29,12 @@
         resizeType: 1,
         width: '760px',
         height: '350px',
-        filterMode: true,
         allowImageUpload: true,
         allowFlashUpload: false,
         allowMediaUpload: false,
         allowFileManager: true,
         syncType: "form",
+        filterMode: false, // 是否过滤Html标签 不过滤
         afterCreate: function() {
             var self = this;
             self.sync();

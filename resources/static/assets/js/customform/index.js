@@ -1,16 +1,5 @@
+// 开启缓载
 $.loading.start();
-$(function () {
-	// 环载结束
-    $.loading.stop();
-    
-    // 回到顶部
-    setTimeout(function() {
-    	$('html, body').animate({
-    		scrollTop:0
-    	}, 'fast');
-    }, 300);
-});
-
 /**
  * data-unique 是拖拽中心模板 与 右侧窗口表单name值想对应 data-type 节点类型, 比如input, page_title等
  * v_unique 代表校验规则
@@ -296,7 +285,7 @@ var forms = {
         '</div>' +
         '<div class="help-block help-block-t" data-unique="description" data-type="text"></div>' +
         '</div>',
-        json: '{"type":"dividing_line","title":"","description":"","line_width":"1px","line_shape":"dashed","line_color":"#ccc"}',
+        json: '{"type":"dividing_line","title":"","description":"","line_width":"1px","line_shape":"dashed","line_color":"#cccccc"}',
     },
     // 静态地图
     static_map: {
@@ -475,76 +464,491 @@ var o_validate_content = $(validate_content_selector);
 var o_editor_description = $('#editor-description');
 // 地图正向地理编码对象
 var o_geocoder = null;
-
-// -------- 地址初始化 --------- //
-AMap.plugin('AMap.Geocoder', function() {
-	o_geocoder = new AMap.Geocoder();
-})
-// -------- 显示地址正向解析成为经纬度--------- //
 var place_delay = null;
-$('#place').keyup(function() {
-	clearTimeout(place_delay);
-	var self = $(this);
-	place_delay = setTimeout(function() {
-		var val = $.trim(self.val());
-		if (val != '') {
-			// 
-			mapDecodePlace(val);
-		}
-	}, 300);
-});
-
-// -------- 背景设置 --------- //
-$('#bodybg_type').change(function() {
-	var self = $(this);
-	var val = self.val();
-	var o_bg_img_container = $('#bg_img_container');
-	var o_bg_color_container = $('#bg_color_container');
-	var o_bg_img_helper = $('#bg_img_helper');
-	
-	// 背景图
-	if (val == 0) {
-		o_bg_img_container.show();
-		o_bg_img_helper.show();
-		o_bg_color_container.hide();
-	// 背景色
-	} else {
-		o_bg_img_container.hide();
-		o_bg_img_helper.hide();
-		o_bg_color_container.show();
-	}
-});
 
 // 地图根路径
 var map_base_path = 'https://restapi.amap.com/v3/staticmap';
 var o_map_scale = $('#map_scale');
-// 初始化地图的拖拽条
-o_map_scale.slider({
-    range: "max",
-    min: 3,
-    max: 17,
-    value: 12,
-    tooltip: 'show',
-    slide: function (event, ui) {
-        var zoom = ui.value;
-        // 改变缩放的数值
-        $('#map_scale_ipt').val(zoom);
-        // 改变对应地图[因为可能多个]的缩放度
-        var index = getCurrentIndex();
-        var o_tpl = getObjById(index);
-        // 获取token
-        var token = o_tpl.data('token');
-        if (!token) {
-            return false;
+
+var space = 0;
+var $fbox = null;
+var $release = null;
+$(function () {
+	// 环载结束
+    $.loading.stop();
+    
+    // 回到顶部
+    setTimeout(function() {
+    	$('html, body').animate({
+    		scrollTop:0
+    	}, 'fast');
+    }, 300);
+    // -------- 地址初始化 --------- //
+    AMap.plugin('AMap.Geocoder', function() {
+    	o_geocoder = new AMap.Geocoder();
+    })
+    
+    // -------- 背景设置 --------- //
+    $('#bodybg_type').change(function() {
+    	var self = $(this);
+    	var val = self.val();
+    	var o_bg_img_container = $('#bg_img_container');
+    	var o_bg_color_container = $('#bg_color_container');
+    	var o_bg_img_helper = $('#bg_img_helper');
+    	
+    	// 背景图
+    	if (val == 0) {
+    		o_bg_img_container.show();
+    		o_bg_img_helper.show();
+    		o_bg_color_container.hide();
+    	// 背景色
+    	} else {
+    		o_bg_img_container.hide();
+    		o_bg_img_helper.hide();
+    		o_bg_color_container.show();
+    	}
+    });
+    
+    // -------- 显示地址正向解析成为经纬度--------- //
+    $('#place').keyup(function() {
+    	clearTimeout(place_delay);
+    	var self = $(this);
+    	place_delay = setTimeout(function() {
+    		var val = $.trim(self.val());
+    		if (val != '') {
+    			// 
+    			mapDecodePlace(val);
+    		}
+    	}, 300);
+    });
+    
+    // 初始化地图的拖拽条
+    o_map_scale.slider({
+        range: "max",
+        min: 3,
+        max: 17,
+        value: 12,
+        tooltip: 'show',
+        slide: function (event, ui) {
+            var zoom = ui.value;
+            // 改变缩放的数值
+            $('#map_scale_ipt').val(zoom);
+            // 改变对应地图[因为可能多个]的缩放度
+            var index = getCurrentIndex();
+            var o_tpl = getObjById(index);
+            // 获取token
+            var token = o_tpl.data('token');
+            if (!token) {
+                return false;
+            }
+            // 得到地图组件对象
+            var o_map = getMapObj(token);
+            // 设置缩放值
+            o_map.setZoom(zoom);
         }
-        // 得到地图组件对象
-        var o_map = getMapObj(token);
-        // 设置缩放值
-        o_map.setZoom(zoom);
-    }
+    });
+    // 排列方式
+    $('.switch').bootstrapSwitch();
+    
+    // 预览
+    $('#btn_preview').click(function () {
+    	if (!validateHeader())
+    	{
+    		return false;
+    	}
+    	if (!validateForm())
+    	{
+    		return false;
+    	}
+        var form = $('#to_preview');
+        form.find('#form_datas').val(JSON.stringify(form_datas));
+        form.find('#global_datas').val(JSON.stringify(global_form_datas));
+        form.submit();
+    });
+
+    // 提交
+    $('#btn_submit').click(function () {
+    	if (!validateHeader())
+    	{
+    		return false;
+    	}
+    	if (!validateForm())
+    	{
+    		return false;
+    	}
+        var form = $('#to_submit');
+        var path = form.attr('action');
+        $.loading.start();
+        $.post(path, {
+            form_datas: JSON.stringify(form_datas),
+            global_datas: JSON.stringify(global_form_datas)
+        }, function (res) {
+            if (res.code == 0) {
+                $.msg(res.message, {
+                    time: 1500
+                }, function () {
+                    $.go('/dashboard/custom-form/list.html');
+                });
+            } else {
+                $.msg(res.message);
+            }
+        }, 'JSON').always(function () {
+            $.loading.stop();
+        });
+    });
+    
+	// ************** 全局样式设定 ************** //
+	// 左侧导航滚动条
+	o_accordion_group.mCustomScrollbar();
+	
+	// 悬浮显示上下步骤按钮
+	window.onscroll = function () {
+	    $(window).scroll(function () {
+	        var scrollTop = $(document).scrollTop();
+	        var height = $(".module-content").height();
+	        var wHeight = $(window).height();
+	        if (scrollTop > (height - wHeight)) {
+	            $(".left-sidebar").addClass("fixed");
+	        } else {
+	            $(".left-sidebar").removeClass("fixed");
+	        }
+	    });
+	};
+	// ************** 左边编辑设置框的定位js************** //
+	// 与上间距
+	space = o_doc.offset().top;
+	// 点击自定义区域内容
+	o_center_form.on('click', li_wrapper_selector, function (e) {
+		// 如果是按钮点击则不触发此效果
+		var target = $(e.target);
+		if (target.hasClass('decor-btn'))
+		{
+			return;
+		}
+	    var self = $(this);
+	    // 添加高亮效果
+	    // 由于模板标题和顶部内容没有在一个区域内
+	    removeAllFocus();
+	    self.addClass('focus');
+	    
+	    // ************** 效果部分 ************** //
+	    var pageY = e.pageY; // 获取鼠标点击位置
+	    var height = pageY - space; // 需定位内容的位置调整
+	    var top = height - 150;
+	    if (top < 0) {
+	        o_tips.css("top", 0 + 'px');
+	    } else {
+	        o_tips.css("top", (height) - 150 + 'px');
+	    }
+	    o_jt.css("top", (height) + 'px').addClass("show");
+	    o_tips.addClass("show");
+
+	    // ************** tips内容部分 ************** //
+	    // 获取类型
+	    var type = self.data('type');
+	    // 根据id取得内容
+	    var id = self.attr('id');
+	    var index = self.index();
+	    // 如果两次点击的内容是一个，则不做其他操作
+	    var current_index = getCurrentIndex();
+	    // 唯一类型 page_header page_title page_desc 其索引也是其type
+	    if (inArray(type, global_types)) {
+	        index = type;
+	    }
+	    // current_index 有可能是 '' 而 index有可能是0 那么 0 == "" -> true
+	    if ('' !== current_index && index == current_index) { return; }
+		
+	    // 设置当前选中标识
+	    setCurrentIndex(index);
+	    // 设置右侧的表单数据
+	    setFormEditor(type, id);
+	});
+	// 点击右侧tips的关闭按钮
+	o_tips_close.click(function () {
+	    o_jt.removeClass("show");
+	    o_tips.removeClass("show");
+	});
+	// ************** 左侧区域拖拽 ************** //
+	$('li', ul_tool_selector).draggable({
+	    // 如果设置为 "invalid"，还原仅在 draggable 未放置在 droppable 上时发生
+		// 要将helper元素置为body下
+		appendTo: "body",
+	    revert: "invalid",
+	    zIndex: 10000,
+	    // 如果设置为 "clone"，元素将被克隆，且克隆将被拖拽
+	    helper: "clone",
+	    // 允许 draggable 放置在指定的 sortable 上。如果使用了该选项，一个 draggable 可被放置在一个 sortable
+	    // 列表上，然后成为列表的一部分。注意：helper 选项必须设置为 "clone"，以便更好地工作。必须包含
+	    // 可排序小部件$(form_custom_class).sortable
+	    connectToSortable: dropzone_selector,
+	}).disableSelection().click(function () {
+	    // 直接将内容添加进去
+	    // 获取类型
+	    var self = $(this);
+	    var type = self.data('type');
+	    // 插入到最后一位
+	    var index = o_dropzone.find('.drop-field').size();
+	    // item不存在
+	    changeDomJson(null, type, index)
+	    // 批量更新内容
+	    batchMainSetting();
+	    // 初始化组件
+	    initComponents(type);
+	    // 移除空提示样式
+	    clickRemoveEmptyNotice();
+	});
+
+	// ************** 自定义表单区域 ************** //
+
+	// 自定义表单区域排序
+	o_dropzone.sortable({
+	    // 如果定义了该选项，项目只能在水平或垂直方向上被拖拽。可能的值："x", "y"。
+	    axis: 'y',
+	    cursor: "move",
+	    // 调试方式
+	// revert: 100000,
+	    // 鼠标按下后直到排序开始的时间，以毫秒计。该选项可以防止点击在某个元素上时不必要的拖拽。
+	    delay: 100
+	}).disableSelection();
+
+	// 自定义表单区域拖拽排序事件
+	o_dropzone.on({
+	    // 在排序期间触发该事件
+	    sortstart: function (event, ui) {
+	    	// 判断是否有节点，如果没有节点则去除empty样式
+			// 移除空提示样式
+			removeEmptyNotice();
+	       
+			// item 表示当前被拖拽的元素
+	        if (!ui.item.hasClass('drop-field')) {
+	            return
+	        }
+	        // 显示黄色占位图
+	        ui.placeholder.css('visibility', 'visible')
+	        // 移除此样式，方式样式的干扰
+	        ui.helper.removeClass('ui-draggable-handle');
+	    },
+	    // 当一个 sortable 项目移动到一个 sortable 列表时触发该事件
+	    // 站位视图展现
+	    sortover: function (event, ui) {
+	        // 标记内容
+	        if (ui.helper.hasClass('drop-field')) {
+	            return
+	        }
+	        // ******** 设置拖拽后空白占位图 ******** //
+	        // 获取元素类型, 并获取其对应的包裹节点内容
+	        var type = getUiType(ui);
+	        var wrapper = forms.wrapper;
+	        var o_wrapper = $(wrapper);
+
+	        // placeholder 要应用的 class 名称，否则为白色空白
+	        var height = o_wrapper.css('height');
+	        ui.placeholder.addClass('drop-field').css({
+	            height: height,
+	            width: '100%',
+	            // 显示placeholder的黄色占位图
+	            visibility: 'visible'
+	        });
+	        // 去除/设置被拖拽中wrapper的样式
+	        o_wrapper.css({
+	            width: ui.placeholder.css('width'),
+	            height: height,
+	            border: 'none',
+	            'box-shadow': 'none'
+	        });
+	        // helper是正在被拖拽的元素
+	        var helper = ui.helper;
+	        // 高度限定60px
+	        helper.css('height', 60);
+	        // helper.append(o_wrapper);
+	    },
+	    // dom发生改变的时候记录原始索引位置， 更改form_datas的位置内容
+	    sortchange: function (event, ui) {
+	        var item = ui.item;
+	        // 混合ID
+	        var mixed_id = item.attr('id');
+	        if (typeof mixed_id !== "undefined")
+	    	{
+	        	 // 最纯净的ID 也是原索引
+	            var old_index = getPureID(mixed_id);
+	            // 记录
+	            DOM_INDEX = old_index;
+	    	} else {
+	    		DOM_INDEX = false;
+	    	}
+	    },
+	    sortout: function() {
+	    	// 加延迟是为了让占位的li影响节点长度的判断
+	    	setTimeout(function() {
+	    		// 添加空样式提示内容
+	    		addEmptyNotice();
+	    	}, 300);
+	    },
+	    // 当用户停止排序且 DOM 位置改变时触发该事件。
+	    sortupdate: function (event, ui) {
+	        // 清除自带的style样式
+	        var item = ui.item;
+	        item.removeClass('moduleL');
+	        item.removeAttr('style');
+	        // 更改json节点内容
+	        var index = item.index();
+	        var self = $(this);
+	        var type = getUiType(ui);
+	        if (DOM_INDEX !== false) {
+	            // 移除原来的节点
+	            delDomJson(DOM_INDEX);
+	        }
+	        // 在新的位置增加节点
+	        changeDomJson(item, type, index)
+	        // 批量更新内容
+	        batchMainSetting();
+	        // 初始化组件
+	        initComponents(type);
+	        DOM_INDEX = false;
+	        // 清除当前表单的选中样式，将当前标识清空
+	        removeFocus();
+	        // 当前拖拽组件进行高亮显示
+	        item.trigger('click');
+	    }
+	});
+
+	// 点击操作中的上移下移等按钮
+	o_dropzone
+	// 节点上移
+	    .on('click', up_field_selector, function () {
+	        var self = $(this);
+	        upField(self);
+	        // 聚焦节点自动点击
+	        removeFocus();
+	    }).on('click', down_field_selector, function () {
+	    // 节点下移
+	    var self = $(this);
+	    downField(self);
+	    // 聚焦节点自动点击
+	    removeFocus();
+	}).on('click', hide_field_selector, function () {
+	    // 隐藏元素
+	    alert('hidden')
+	}).on('click', del_field_selector, function () {
+	    // 移除元素
+	    var self = $(this);
+	    // 得到外层的li
+	    var o_li_wrapper = getClosestWrapper(self);
+	    // 得到索引值
+	    var index = o_li_wrapper.index();
+	    // 删除当前的li元素节点
+	    delField(self);
+	    // 批量设置id和action
+	    batchMainSetting();
+	    // 删除存储数据的数组内容
+	    delFormData(index);
+	    // 删除对应组件
+	    var type = o_li_wrapper.data('type');
+	    var token = o_li_wrapper.data('token');
+	    // 删除当前标识，防止移除组件后再添加的时候，组件的数据未更改问题
+	    setCurrentIndex("");
+	    // 移除组件内容
+	    removeComponents(type, token);
+	    // 当前组件是focus状态，则隐藏右侧的tips
+	    var is_focus = self.closest('.drop-field').hasClass('focus');
+	    if (is_focus)
+	    {
+	    	hideTips();
+	    }
+	    
+	    // 添加空样式提示内容
+		addEmptyNotice();
+	});
+
+	// 表单区域按钮保存
+	o_form_btn.click(function () {
+		// 开启环载
+		$.loading.start();
+	    var select_index = getCurrentIndex();
+	    // 没有选中任何内容
+	    if (select_index === "") {
+	        return false;
+	    }
+	    // 标记是全局还是自定义
+	    saveFormSerialize(select_index);
+	    // 结束环载
+	    $.loading.stop();
+	    // 提示信息
+	    $.msg('保存成功');
+	});
+
+
+	// ----------- 多选/单选 选项管理 ----------- //
+	// 添加多选选项
+	o_save_form.on('click', '.checkbox-add', function () {
+	    var o_checkbox_item = getComponentItemObj(TYPE_CHECKBOX);
+	    o_checkbox_list.append(o_checkbox_item);
+	}).on('click', '.checkbox_item_list .del', function () {
+		// 移除多列表条目
+	    var self = $(this);
+	    // 不能少于一个
+	    var childs = self.closest('.image-choice').children('.image-choice-box');
+	    if (childs.length == 1)
+	    {
+	    	return false;
+	    }
+	    self.closest('.image-choice-box').remove();
+	}).on('click', '[name="radio_list"]', function () {
+	    // 默认选中
+	    var self = $(this);
+	    var index = self.closest('.image-choice-box').index();
+	    self.attr('data-default', index);
+	}).on('click', '.radio-add', function () {
+	    // 添加单选选项
+	    var o_radio_item = getComponentItemObj(TYPE_RADIO);
+	    o_radio_list.append(o_radio_item);
+	}).on('click', '.radio_item_list .del', function () {
+		// 移除单选列表条目
+	    var self = $(this);
+	    // 不能少于一个
+	    var childs = self.closest('.image-choice').children('.image-choice-box');
+	    if (childs.length == 1)
+	    {
+	    	return false;
+	    }
+	    self.closest('.image-choice-box').remove();
+	});
+	// 单选列表可以拖拽
+	o_radio_list.sortable({
+	    axis: 'y',
+	    cursor: "move",
+	    delay: 100
+	}).disableSelection();
+	// 多选列表可以拖拽
+	o_checkbox_list.sortable({
+	    axis: 'y',
+	    cursor: "move",
+	    delay: 100
+	}).disableSelection();
+	$fbox = $('.module-topBar').find('.f-box');
+	$release = $('.SZY-TPL-RELEASE');
+	// 发布按钮
+	$release.click(function() {
+		publish(2, $(this));
+	});
+	$fbox.on('click', '.publish', function() {
+		// 发布表单, 生成地址
+		publish(1, $(this));
+	})
+	.on('click', '.copy', function(){
+		// 头部复制网址
+		var $self = $(this);
+		var $input = $self.prev('input');
+		copy($self, $input);
+	});
+
+	// 提示成功弹窗中的复制网址
+	$('.form-success-wrap').on('click', '.copy', function() {
+		var $self = $(this);
+		var $input = $self.prev('input');
+		copy($self, $input);
+	});
 });
-// 排列方式
-$('.switch').bootstrapSwitch();
 
 // // 初始化编辑器内容
 // var E = window.wangEditor
@@ -565,54 +969,6 @@ $('.switch').bootstrapSwitch();
 // o_editor_description.val(html);
 // };
 // editor.create();
-
-// 预览
-$('#btn_preview').click(function () {
-	if (!validateHeader())
-	{
-		return false;
-	}
-	if (!validateForm())
-	{
-		return false;
-	}
-    var form = $('#to_preview');
-    form.find('#form_datas').val(JSON.stringify(form_datas));
-    form.find('#global_datas').val(JSON.stringify(global_form_datas));
-    form.submit();
-});
-
-// 提交
-$('#btn_submit').click(function () {
-	if (!validateHeader())
-	{
-		return false;
-	}
-	if (!validateForm())
-	{
-		return false;
-	}
-    var form = $('#to_submit');
-    var path = form.attr('action');
-    $.loading.start();
-    $.post(path, {
-        form_datas: JSON.stringify(form_datas),
-        global_datas: JSON.stringify(global_form_datas)
-    }, function (res) {
-        if (res.code == 0) {
-            $.msg(res.message, {
-                time: 1500
-            }, function () {
-                $.go('/dashboard/custom-form/list.html');
-            });
-        } else {
-            $.msg(res.message);
-        }
-    }, 'JSON').always(function () {
-        $.loading.stop();
-    });
-    ;
-});
 
 /**
  * 头部数据校验
@@ -677,337 +1033,6 @@ function validateForm()
 	}
 	return true;
 }
-
-// ************** 全局样式设定 ************** //
-// 左侧导航滚动条
-o_accordion_group.mCustomScrollbar();
-
-// 悬浮显示上下步骤按钮
-window.onscroll = function () {
-    $(window).scroll(function () {
-        var scrollTop = $(document).scrollTop();
-        var height = $(".module-content").height();
-        var wHeight = $(window).height();
-        if (scrollTop > (height - wHeight)) {
-            $(".left-sidebar").addClass("fixed");
-        } else {
-            $(".left-sidebar").removeClass("fixed");
-        }
-    });
-
-};
-// ************** 左边编辑设置框的定位js************** //
-// 与上间距
-var space = o_doc.offset().top;
-// 点击自定义区域内容
-o_center_form.on('click', li_wrapper_selector, function (e) {
-	// 如果是按钮点击则不触发此效果
-	var target = $(e.target);
-	if (target.hasClass('decor-btn'))
-	{
-		return;
-	}
-    var self = $(this);
-    // 添加高亮效果
-    // 由于模板标题和顶部内容没有在一个区域内
-    removeAllFocus();
-    self.addClass('focus');
-    
-    // ************** 效果部分 ************** //
-    var pageY = e.pageY; // 获取鼠标点击位置
-    var height = pageY - space; // 需定位内容的位置调整
-    var top = height - 150;
-    if (top < 0) {
-        o_tips.css("top", 0 + 'px');
-    } else {
-        o_tips.css("top", (height) - 150 + 'px');
-    }
-    o_jt.css("top", (height) + 'px').addClass("show");
-    o_tips.addClass("show");
-
-    // ************** tips内容部分 ************** //
-    // 获取类型
-    var type = self.data('type');
-    // 根据id取得内容
-    var id = self.attr('id');
-    var index = self.index();
-    // 如果两次点击的内容是一个，则不做其他操作
-    var current_index = getCurrentIndex();
-    // 唯一类型 page_header page_title page_desc 其索引也是其type
-    if (inArray(type, global_types)) {
-        index = type;
-    }
-    // current_index 有可能是 '' 而 index有可能是0 那么 0 == "" -> true
-    if ('' !== current_index && index == current_index) { return; }
-	
-    // 设置当前选中标识
-    setCurrentIndex(index);
-    // 设置右侧的表单数据
-    setFormEditor(type, id);
-});
-// 点击右侧tips的关闭按钮
-o_tips_close.click(function () {
-    o_jt.removeClass("show");
-    o_tips.removeClass("show");
-});
-
-// ************** 左侧区域拖拽 ************** //
-$('li', ul_tool_selector).draggable({
-    // 如果设置为 "invalid"，还原仅在 draggable 未放置在 droppable 上时发生
-	// 要将helper元素置为body下
-	appendTo: "body",
-    revert: "invalid",
-    zIndex: 10000,
-    // 如果设置为 "clone"，元素将被克隆，且克隆将被拖拽
-    helper: "clone",
-    // 允许 draggable 放置在指定的 sortable 上。如果使用了该选项，一个 draggable 可被放置在一个 sortable
-    // 列表上，然后成为列表的一部分。注意：helper 选项必须设置为 "clone"，以便更好地工作。必须包含
-    // 可排序小部件$(form_custom_class).sortable
-    connectToSortable: dropzone_selector,
-}).disableSelection().click(function () {
-    // 直接将内容添加进去
-    // 获取类型
-    var self = $(this);
-    var type = self.data('type');
-    // 插入到最后一位
-    var index = o_dropzone.find('.drop-field').size();
-    // item不存在
-    changeDomJson(null, type, index)
-    // 批量更新内容
-    batchMainSetting();
-    // 初始化组件
-    initComponents(type);
-    // 移除空提示样式
-    clickRemoveEmptyNotice();
-});
-
-// ************** 自定义表单区域 ************** //
-
-// 自定义表单区域排序
-o_dropzone.sortable({
-    // 如果定义了该选项，项目只能在水平或垂直方向上被拖拽。可能的值："x", "y"。
-    axis: 'y',
-    cursor: "move",
-    // 调试方式
-// revert: 100000,
-    // 鼠标按下后直到排序开始的时间，以毫秒计。该选项可以防止点击在某个元素上时不必要的拖拽。
-    delay: 100
-}).disableSelection();
-
-// 自定义表单区域拖拽排序事件
-o_dropzone.on({
-    // 在排序期间触发该事件
-    sortstart: function (event, ui) {
-    	// 判断是否有节点，如果没有节点则去除empty样式
-		// 移除空提示样式
-		removeEmptyNotice();
-       
-		// item 表示当前被拖拽的元素
-        if (!ui.item.hasClass('drop-field')) {
-            return
-        }
-        // 显示黄色占位图
-        ui.placeholder.css('visibility', 'visible')
-        // 移除此样式，方式样式的干扰
-        ui.helper.removeClass('ui-draggable-handle');
-    },
-    // 当一个 sortable 项目移动到一个 sortable 列表时触发该事件
-    // 站位视图展现
-    sortover: function (event, ui) {
-        // 标记内容
-        if (ui.helper.hasClass('drop-field')) {
-            return
-        }
-        // ******** 设置拖拽后空白占位图 ******** //
-        // 获取元素类型, 并获取其对应的包裹节点内容
-        var type = getUiType(ui);
-        var wrapper = forms.wrapper;
-        var o_wrapper = $(wrapper);
-
-        // placeholder 要应用的 class 名称，否则为白色空白
-        var height = o_wrapper.css('height');
-        ui.placeholder.addClass('drop-field').css({
-            height: height,
-            width: '100%',
-            // 显示placeholder的黄色占位图
-            visibility: 'visible'
-        });
-        // 去除/设置被拖拽中wrapper的样式
-        o_wrapper.css({
-            width: ui.placeholder.css('width'),
-            height: height,
-            border: 'none',
-            'box-shadow': 'none'
-        });
-        // helper是正在被拖拽的元素
-        var helper = ui.helper;
-        // 高度限定60px
-        helper.css('height', 60);
-        // helper.append(o_wrapper);
-    },
-    // dom发生改变的时候记录原始索引位置， 更改form_datas的位置内容
-    sortchange: function (event, ui) {
-        var item = ui.item;
-        // 混合ID
-        var mixed_id = item.attr('id');
-        if (typeof mixed_id !== "undefined")
-    	{
-        	 // 最纯净的ID 也是原索引
-            var old_index = getPureID(mixed_id);
-            // 记录
-            DOM_INDEX = old_index;
-    	} else {
-    		DOM_INDEX = false;
-    	}
-    },
-    sortout: function() {
-    	// 加延迟是为了让占位的li影响节点长度的判断
-    	setTimeout(function() {
-    		// 添加空样式提示内容
-    		addEmptyNotice();
-    	}, 300);
-    },
-    // 当用户停止排序且 DOM 位置改变时触发该事件。
-    sortupdate: function (event, ui) {
-        // 清除自带的style样式
-        var item = ui.item;
-        item.removeClass('moduleL');
-        item.removeAttr('style');
-        // 更改json节点内容
-        var index = item.index();
-        var self = $(this);
-        var type = getUiType(ui);
-        if (DOM_INDEX !== false) {
-            // 移除原来的节点
-            delDomJson(DOM_INDEX);
-        }
-        // 在新的位置增加节点
-        changeDomJson(item, type, index)
-        // 批量更新内容
-        batchMainSetting();
-        // 初始化组件
-        initComponents(type);
-        DOM_INDEX = false;
-        // 清除当前表单的选中样式，将当前标识清空
-        removeFocus();
-        // 当前拖拽组件进行高亮显示
-        item.trigger('click');
-    }
-});
-
-// 点击操作中的上移下移等按钮
-o_dropzone
-// 节点上移
-    .on('click', up_field_selector, function () {
-        var self = $(this);
-        upField(self);
-        // 聚焦节点自动点击
-        removeFocus();
-    }).on('click', down_field_selector, function () {
-    // 节点下移
-    var self = $(this);
-    downField(self);
-    // 聚焦节点自动点击
-    removeFocus();
-}).on('click', hide_field_selector, function () {
-    // 隐藏元素
-    alert('hidden')
-}).on('click', del_field_selector, function () {
-    // 移除元素
-    var self = $(this);
-    // 得到外层的li
-    var o_li_wrapper = getClosestWrapper(self);
-    // 得到索引值
-    var index = o_li_wrapper.index();
-    // 删除当前的li元素节点
-    delField(self);
-    // 批量设置id和action
-    batchMainSetting();
-    // 删除存储数据的数组内容
-    delFormData(index);
-    // 删除对应组件
-    var type = o_li_wrapper.data('type');
-    var token = o_li_wrapper.data('token');
-    // 删除当前标识，防止移除组件后再添加的时候，组件的数据未更改问题
-    setCurrentIndex("");
-    // 移除组件内容
-    removeComponents(type, token);
-    // 当前组件是focus状态，则隐藏右侧的tips
-    var is_focus = self.closest('.drop-field').hasClass('focus');
-    if (is_focus)
-    {
-    	hideTips();
-    }
-    
-    // 添加空样式提示内容
-	addEmptyNotice();
-});
-
-// 表单区域按钮保存
-o_form_btn.click(function () {
-	// 开启环载
-	$.loading.start();
-    var select_index = getCurrentIndex();
-    // 没有选中任何内容
-    if (select_index === "") {
-        return false;
-    }
-    // 标记是全局还是自定义
-    saveFormSerialize(select_index);
-    // 结束环载
-    $.loading.stop();
-    // 提示信息
-    $.msg('保存成功');
-});
-
-
-// ----------- 多选/单选 选项管理 ----------- //
-// 添加多选选项
-o_save_form.on('click', '.checkbox-add', function () {
-    var o_checkbox_item = getComponentItemObj(TYPE_CHECKBOX);
-    o_checkbox_list.append(o_checkbox_item);
-}).on('click', '.checkbox_item_list .del', function () {
-	// 移除多列表条目
-    var self = $(this);
-    // 不能少于一个
-    var childs = self.closest('.image-choice').children('.image-choice-box');
-    if (childs.length == 1)
-    {
-    	return false;
-    }
-    self.closest('.image-choice-box').remove();
-}).on('click', '[name="radio_list"]', function () {
-    // 默认选中
-    var self = $(this);
-    var index = self.closest('.image-choice-box').index();
-    self.attr('data-default', index);
-}).on('click', '.radio-add', function () {
-    // 添加单选选项
-    var o_radio_item = getComponentItemObj(TYPE_RADIO);
-    o_radio_list.append(o_radio_item);
-}).on('click', '.radio_item_list .del', function () {
-	// 移除单选列表条目
-    var self = $(this);
-    // 不能少于一个
-    var childs = self.closest('.image-choice').children('.image-choice-box');
-    if (childs.length == 1)
-    {
-    	return false;
-    }
-    self.closest('.image-choice-box').remove();
-});
-// 单选列表可以拖拽
-o_radio_list.sortable({
-    axis: 'y',
-    cursor: "move",
-    delay: 100
-}).disableSelection();
-// 多选列表可以拖拽
-o_checkbox_list.sortable({
-    axis: 'y',
-    cursor: "move",
-    delay: 100
-}).disableSelection();
 
 // ************** 方法区域 ************** //
 /**
@@ -1977,9 +2002,9 @@ function setEditorData(key) {
                 	$('#bodybg_type').val(val).trigger('change');
                 	// 设置颜色
                 	if(val == 1) {
-                		$('#bg_color_picker').colorpicker({
-                            color: setting_datas['bodybg']
-                        });
+                		// $('#bg_color_picker').colorpicker({
+                        // color: setting_datas['bodybg']
+                        // });
                 	}
                 }
                 // 设置tips的标题内容
@@ -2049,9 +2074,10 @@ function setEditorData(key) {
                 }
                 // 分割线颜色
                 if ('line_color' === name) {
-                	$('#color-picker').colorpicker({
-                        color: val
-                    });
+                	// 初始化写入颜色
+                	 o_tpl.val(val);
+                	// 初始化颜色选择器
+                	setPalette(o_tpl);
                 }
                 // 横纵向
                 if (name === 'layout') {
@@ -2894,29 +2920,6 @@ function publish(type, obj)
 	}
    
 }
-var $fbox = $('.module-topBar').find('.f-box');
-var $release = $('.SZY-TPL-RELEASE');
-// 发布按钮
-$release.click(function() {
-	publish(2, $(this));
-});
-$fbox.on('click', '.publish', function() {
-	// 发布表单, 生成地址
-	publish(1, $(this));
-})
-.on('click', '.copy', function(){
-	// 头部复制网址
-	var $self = $(this);
-	var $input = $self.prev('input');
-	copy($self, $input);
-});
-
-// 提示成功弹窗中的复制网址
-$('.form-success-wrap').on('click', '.copy', function() {
-	var $self = $(this);
-	var $input = $self.prev('input');
-	copy($self, $input);
-});
 
 // 清除运行时缓存 - 以便于让表单的去除头、底部的内容生效
 function clearRuntimeCache() {

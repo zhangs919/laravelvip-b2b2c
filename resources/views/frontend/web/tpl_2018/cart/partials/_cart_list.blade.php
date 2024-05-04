@@ -1,12 +1,12 @@
 <div class="content">
-    @if(count($shop_cart_list) > 0)
+    @if(!empty($cart['shop_list']))
         <div class="cart-filter-bar">
             <div class="switch-cart" id="cart_num">
                 <!-- 购物车数量 -->
 
                 <span class="color">
                             我的购物车
-                            <em class="color">{{ $cart_price_info['goods_number'] }}</em>
+                            <em class="color">{{ $cart['goods_number'] }}</em>
                         </span>
 
 
@@ -48,65 +48,51 @@
             <div id="cart_list">
                 <!-- 各个店铺下的信息 -->
 
-                @foreach($shop_cart_list as $shop_id=>$cart_list)
-                    <div id="cart_shop_{{ $shop_id }}" class="order-body">
+                @foreach($cart['shop_list'] as $item)
+                    <div id="cart_shop_{{ $item['shop_info']['shop_id'] }}" class="order-body">
 
                         <div class="shop">
                             <div class="shop-info">
-                                <div class="cart-checkbox shop-checkbox " data-shop-id="{{ $shop_id }}">
+                                <div class="cart-checkbox shop-checkbox " data-shop-id="{{ $item['shop_info']['shop_id'] }}">
                                     <!-- <input type="checkbox" name="" value=""> -->
                                     <label for="">勾选此店铺下所有商品</label>
                                 </div>
                                 &nbsp;&nbsp;
-
                                 <span class="shop-icon">
                                         <img src="/images/shop-type/shop-icon1.png" />
                                     </span>
                                 <span class="shop-name">店铺：</span>
-                                <a href='{{ route('pc_shop_home', ['shop_id'=>$shop_id]) }}' target="_blank" title="{{ $cart_list[0]['shop']['shop_name'] }}" class="shop-info-name">{{ $cart_list[0]['shop']['shop_name'] }}</a>
+                                <a href='{{ route('pc_shop_home', ['shop_id'=>$item['shop_info']['shop_id']]) }}' target="_blank" title="{{ $item['shop_info']['shop_name'] }}" class="shop-info-name">{{ $item['shop_info']['shop_name'] }}</a>
                                 <!-- 客服 -->
                                 <span class="shop-customer">
-
-
-
-
-
-
                                         <!-- s等于1时带文字，等于2时不带文字 -->
                                         <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&groupid=0&charset=utf-8">
                                             <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
                                             <span></span>
                                         </a>
-
-
                                     </span>
                                 <!-- 促销活动红包 -->
 
                                 <span class="start-price SHOP-DELIVERY-1"  style="display: none;" >
-                                        <i>起送价：49.00</i>
-                                        （尚未达到起送价，再去挑选一下店铺心仪的商品吧！）
-                                        <a href="{{ route('pc_shop_home', ['shop_id'=>$shop_id]) }}" target='_blank' title="去{{ $cart_list[0]['shop']['shop_name'] }}店铺">去店铺 &gt;</a>
-                                    </span>
-
-
+                                    <i>起送价：{{ $item['shop_info']['start_price'] }}</i>
+                                    （尚未达到起送价，再去挑选一下店铺心仪的商品吧！）
+                                    <a href="{{ route('pc_shop_home', ['shop_id'=>$item['shop_info']['shop_id']]) }}" target='_blank' title="去{{ $item['shop_info']['shop_name'] }}店铺">去店铺 &gt;</a>
+                                </span>
                             </div>
                         </div>
                         <div class="order-content">
                             <div class="item-list">
                                 <div class="bundle bundle-last">
                                     <!-- 购物车中商品列表 -->
-                                    @foreach($cart_list as $v)
+                                    @foreach($item['goods_list'] as $v)
                                         <div class="item-holder" id="cartid{{ $v['cart_id'] }}">
 
-
-
-
                                             <div class="item-body ">
-                                                <ul class="item-content clearfix goods_{{ $v['cart_id'] }}_{{ $v['goods']['sku_id'] }}">
+                                                <ul class="item-content clearfix goods_{{ $v['cart_id'] }}_{{ $v['sku_id'] }}">
 
                                                     <li class="td td-chk">
                                                         <div class="td-inner">
-                                                            <div class="cart-checkbox goods-checkbox @if($v['select'] == 1) select @endif" data-shop-id="{{ $v['shop']['shop_id'] }}">
+                                                            <div class="cart-checkbox goods-checkbox @if($v['select'] == 1) select @endif" data-shop-id="{{ $v['shop_id'] }}">
 
 
                                                                 <input type="checkbox" name="checkbox" value="{{ $v['cart_id'] }}" @if($v['select'] == 1) checked="checked" @endif>
@@ -117,32 +103,39 @@
                                                     <li class="td td-item">
                                                         <div class="td-inner">
                                                             <div class="item-pic">
-                                                                <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods']['goods_id']]) }}" target="_blank" class="">
-                                                                    <img src="{{ get_image_url($v['goods']['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="itempic">
+                                                                <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}" target="_blank" class="">
+                                                                    <img src="{{ $v['goods_image'] }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="itempic">
                                                                 </a>
                                                             </div>
                                                             <div class="item-info">
                                                                 <div class="item-basic-info">
-                                                                    <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods']['goods_id']]) }}" target="_blank" title="{{ $v['goods']['goods_name'] }}" class="item-title">
+                                                                    <a href="{{ route('pc_show_goods',['goods_id'=>$v['goods_id']]) }}" target="_blank" title="{{ $v['goods_name'] }}" class="item-title">
 
 
-                                                                        {{ $v['goods']['goods_name'] }}
+                                                                        {{ $v['goods_name'] }}
                                                                     </a>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </li>
                                                     <li class="td td-info">
+                                                        @if(!empty($v['spec_names']))
+                                                            <div class="item-props">
+                                                                @foreach($v['spec_names'] as $spec_name)
+                                                                    <p class="sku-line">{!! $spec_name !!}</p>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
                                                     </li>
                                                     <li class="td td-price">
                                                         <div class="td-inner">
                                                             <div class="item-price">
                                                                 <div class="price-content">
                                                                     <div class="price-line">
-                                                                        <em class="price-original">￥{{ $v['goods']['market_price'] }}</em>
+                                                                        <em class="price-original">￥{{ $v['market_price'] }}</em>
                                                                     </div>
                                                                     <div class="price-line price-line1">
-                                                                        <em class="price-now">￥{{ $v['goods']['goods_price'] }}</em>
+                                                                        <em class="price-now">￥{{ $v['goods_price'] }}</em>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -155,8 +148,8 @@
                                                                     <!--   -->
                                                                     <span class="amount-widget amount">
                                                                         <input type="text" class="amount-input" value="{{ $v['goods_number'] }}"
-                                                                               data-cart-id="{{ $v['cart_id'] }}" data-goods-number="{{ $v['goods_number'] }}" data-sku-id="{{ $v['goods']['sku_id'] }}"
-                                                                               id="number{{ $v['cart_id'] }}" data-amount-min="1" data-amount-max="{{ $v['goods']['goods_number'] }}" maxlength="8" title="请输入购买量">
+                                                                               data-cart-id="{{ $v['cart_id'] }}" data-goods-number="{{ $v['goods_number'] }}" data-sku-id="{{ $v['sku_id'] }}"
+                                                                               id="number{{ $v['cart_id'] }}" data-amount-min="1" data-amount-max="{{ $v['sku_number'] }}" maxlength="8" title="请输入购买量">
                                                                         <span class="amount-btn">
                                                                             <span class="amount-plus">
                                                                                 <i>+</i>
@@ -182,7 +175,7 @@
                                                     </li>
                                                     <li class="td td-sum">
                                                         <div class="td-inner">
-                                                            <em class="number second-color">￥{{ $v['goods_total'] }}</em>
+                                                            <em class="number second-color">￥{{ $v['goods_amount'] }}</em>
                                                         </div>
                                                     </li>
                                                     <li class="td td-op">
@@ -232,12 +225,12 @@
                     <!-- 购物车金额 -->
                     <div class="amount-sum">
                         <span class="txt">已选商品</span>
-                        <em class="second-color SZY-CART-SELECT-GOODS-NUMBER">{{ $cart_price_info['goods_number'] }}</em>
+                        <em class="second-color SZY-CART-SELECT-GOODS-NUMBER">{{ $cart['select_goods_number'] }}</em>
                         <span class="txt">件</span>
                     </div>
                     <div class="price-sum">
                         <span class="txt">合计（不含运费）:</span>
-                        <strong class="price second-color SZY-CART-SELECT-GOODS-AMOUNT">￥{{ $cart_price_info['total_fee'] }}</strong>
+                        <strong class="price second-color SZY-CART-SELECT-GOODS-AMOUNT">{{ $cart['select_goods_amount_format'] }}</strong>
                     </div>
                     <div class="btn-area">
                         <a href="javascript:void(0)" class="submit-btn SZY-CART-SUBMIT">

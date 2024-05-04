@@ -56,7 +56,6 @@
             var value = $(target).val();
 
             $(this).imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
                 host: "{{ get_oss_host() }}",
                 size: size,
                 values: value.split("|"),

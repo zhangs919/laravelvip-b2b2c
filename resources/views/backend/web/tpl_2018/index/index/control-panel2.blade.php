@@ -27,7 +27,7 @@
                 <div class="col-md-7 left-info">
                     <div class="user-box m-r-15">
                         <a class="user-img">
-                            <img src="http://{{ env('BACKEND_DOMAIN') }}/images/default/admin.jpg">
+                            <img src="http://{{ config('lrw.backend_domain') }}/images/default/admin.jpg">
                         </a>
                         <a class="c-blue" href="javascript:;">老板</a>
                     </div>
@@ -275,7 +275,7 @@
             <!--第一步-->
             <div class="table-content" id="div_1">
                 <div class="scroll-info" style="height:220px;">
-                    <p>1、为商城绑定独立域名之前，请确保域名已经完整备案，以免绑定后影响系统正常访问！！</p>
+                    <p>1、为商城绑定独立域名之前，请确保域名已经完成备案，以免绑定后影响系统正常访问！！</p>
                     <p>2、请对您的域名进行CNAME解析，解析方式如下<a class="c-red" href="http://help.laravelvip.com/info/137.html" target="_blank">（猛戳这里！！！）</a>：</p>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“www(或者其他前缀，例如：shop、mall、index等)”做CNAME解析跳转到“www.laravelvip.com”<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“backend”做CNAME解析跳转到“backend.laravelvip.com”<br>

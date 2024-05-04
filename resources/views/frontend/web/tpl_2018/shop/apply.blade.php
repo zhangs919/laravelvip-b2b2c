@@ -72,9 +72,16 @@
         <span class="arrow-left"></span>
         <span class="arrow-right"></span>
         <p class="join-button">
-
-            <a class="btn btn-primary btn-larger" href="/shop/apply/agreement.html">立即入驻</a>
-
+            @if($progress == 5){{--开店成功--}}
+            <a class="btn btn-primary btn-larger" href="{{ route('seller_home') }}" target="_blank">进入卖家中心</a>
+            @elseif(in_array($progress, [1,2,3,4]))
+            <a class="btn btn-primary btn-larger" href="/shop/apply/progress.html">
+                <i class="search"></i>
+                查看入驻进度
+            </a>
+            @else
+                <a class="btn btn-primary btn-larger" href="/shop/apply/agreement.html">立即入驻</a>
+            @endif
         </p>
     </div>
 </div>
@@ -82,9 +89,6 @@
 <!--问题帮助及信息公告-->
 <div class="index-center">
     <div class="wrapper">
-
-
-
         @foreach($pc_shop_guest_list_asc as $v)
         <div class="info-box">
             <div class="title">
@@ -94,14 +98,6 @@
             <a class="btn btn-primary btn-larger" href="/article/{{ $v['article_id'] }}.html" target="_blank">查询</a>
         </div>
         @endforeach
-
-
-
-
-
-
-
-
         <div class="info-box">
             <div class="title">
                 <p>我的入驻进度？</p>
@@ -116,15 +112,11 @@
             </div>
             <div class="mess-list">
                 <ul>
-
-
                     @foreach($info_notice_list as $v)
                     <li>
                         <a href="/article/{{ $v['article_id'] }}.html" target="_blank">{{ $v['title'] }}</a>
                     </li>
                     @endforeach
-
-
                 </ul>
             </div>
         </div>

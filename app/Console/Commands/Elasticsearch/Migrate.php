@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands\Elasticsearch;
 
 use Illuminate\Console\Command;
@@ -20,9 +19,6 @@ class Migrate extends Command
         $this->es = app('es');
         // 索引类数组，先留空
         $indices = [Indices\ArticleIndex::class];
-
-//        $this->es->indices()->delete(['index' => 'articles']);
-
         // 遍历索引类数组
         foreach ($indices as $indexClass) {
             // 调用类数组的 getAliasName() 方法来获取索引别名
@@ -49,6 +45,7 @@ class Migrate extends Command
         }
     }
 
+    // 创建新索引
     protected function createIndex($aliasName, $indexClass)
     {
         // 调用 create() 方法创建索引
@@ -59,10 +56,10 @@ class Migrate extends Command
                 // 调用索引类的 getSettings() 方法获取索引设置
                 'settings' => $indexClass::getSettings(),
                 'mappings' => [
-                    '_doc' => [
+//                    '_doc' => [
                         // 调用索引类的 getProperties() 方法获取索引字段
-                        'properties' => $indexClass::getProperties(),
-                    ],
+                    'properties' => $indexClass::getProperties(),
+//                    ],
                 ],
                 'aliases'  => [
                     // 同时创建别名
@@ -85,11 +82,11 @@ class Migrate extends Command
         // 更新索引字段
         $this->es->indices()->putMapping([
             'index' => $aliasName,
-            'type'  => '_doc',
+//            'type'  => '_doc',
             'body'  => [
-                '_doc' => [
-                    'properties' => $indexClass::getProperties(),
-                ],
+//                '_doc' => [
+                'properties' => $indexClass::getProperties(),
+//                ],
             ],
         ]);
         // 重新打开索引
@@ -117,9 +114,9 @@ class Migrate extends Command
             'body'  => [
                 'settings' => $indexClass::getSettings(),
                 'mappings' => [
-                    '_doc' => [
-                        'properties' => $indexClass::getProperties(),
-                    ],
+//                    '_doc' => [
+                    'properties' => $indexClass::getProperties(),
+//                    ],
                 ],
             ],
         ]);

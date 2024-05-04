@@ -52,7 +52,7 @@
                     </font>
                 </td>
                 <td class="handle">
-                    <a href="edit?nav_page=m_news&amp;id={{ $v->id }}&amp;nav_position={{ $v->nav_position }}">编辑</a>
+                    <a href="edit?nav_page={{ $v->nav_page }}&amp;id={{ $v->id }}&amp;nav_position={{ $v->nav_position }}">编辑</a>
                     <span>|</span>
                     <a href="javascript:void(0);" object_id="{{ $v->id }}" class="del border-none">删除</a>
                 </td>

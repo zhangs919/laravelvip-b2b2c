@@ -8,7 +8,7 @@
 @section('content')
 
     <!-- 正文，由view提供 -->
-    <div class="con-right fr"><script src="/assets/d2eace91/js/datetime/dateselector.js?v=20180528"></script>
+    <div class="con-right fr">
         <div class="con-right-text">
             <div class="tabmenu">
                 <div class="user-status">
@@ -34,7 +34,7 @@
             <div class="content-info">
                 <div id="con_profile_1">
                     <form id="UserModel" class="form-horizontal" name="UserModel" action="/user/profile/edit-base" method="post">
-                        {{ csrf_field() }}
+                        @csrf
                         <div class="form-group form-group-spe">
                             <label class="input-left">
                                 <span>当前头像：</span>
@@ -135,7 +135,7 @@
                             <label class="input-left">
                                 <span>现居住地：</span>
                             </label>
-                            <input type="hidden" id="address_code" name="address_code" value="{{ $user_info->address_code ?? '' }}">
+                            <input type="hidden" id="address_code" name="address_code">
                             <div class="form-control-box">
                                 <span id="address_now" class="select">
                                     <!--<span class="select">
@@ -192,7 +192,7 @@
 
 
                     <form id="UserRealModel" class="form-horizontal" name="UserRealModel" action="/user/profile/edit-real" method="post" enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                        @csrf
                         <!-- 真实姓名 -->
                         <div class="form-group form-group-spe" >
                             <label for="userrealmodel-real_name" class="input-left">
@@ -231,7 +231,7 @@
                         <div class="form-group form-group-spe" >
                             <label for="userrealmodel-card_pic1" class="input-left">
                                 <span class="spark">*</span>
-                                <span>身份证正面照：</span>
+                                <span>身份证人像面照片：</span>
                             </label>
                             <div class="form-control-box">
 
@@ -261,7 +261,7 @@
                         <div class="form-group form-group-spe" >
                             <label for="userrealmodel-card_pic2" class="input-left">
                                 <span class="spark">*</span>
-                                <span>身份证背面照：</span>
+                                <span>身份证国徽面照片：</span>
                             </label>
                             <div class="form-control-box">
 
@@ -291,7 +291,7 @@
                         <div class="form-group form-group-spe" >
                             <label for="userrealmodel-card_pic3" class="input-left">
                                 <span class="spark">*</span>
-                                <span>本人手持身份证正面照：</span>
+                                <span>本人手持身份证人像面照片：</span>
                             </label>
                             <div class="form-control-box">
 
@@ -388,101 +388,129 @@
                 </div>
             </div>
         </div>
-        <script src="/js/cropbox.js?v=20180528"></script>
-        <script src="/assets/d2eace91/js/jquery.region.js?v=20180528"></script>
         <script type="text/javascript">
-            $(window).load(function() {
-                var options = {
-                    thumbBox: '.thumbBox',
-                    imgSrc: ""
-                }
-                var cropper = $('.img-b').cropbox(options);
-                $('#upload-file').on('change', function() {
-                    $(".thumbBox").css("background-image","url('')");
-                    var f = document.getElementById("upload-file").files;
-                    if (f[0].size < "2097152") {
-                        $("#default_img").remove();
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                            options.imgSrc = e.target.result;
-                            cropper = $('.img-b').cropbox(options);
-                            $(".img-b .thumbBox").css("border", "1px solid rgb(102, 102, 102)");
-                            $(".img-b .thumbBox").css("box-shadow", "0 0 0 1000px rgba(0, 0, 0, 0.5)");
-                        }
-                        reader.readAsDataURL(this.files[0]);
-                        $(".submit").show();
-                    } else {
-                        $.msg("上传图片过大");
-                    }
-                })
-                $('#btnZoomIn').on('click', function() {
-                    $(".thumbBox").css("background-image","url('')");
-                    cropper.zoomIn();
-                })
-                $("#upload").on("click", function() {
-                    if ($("#load_img").val() == "") {
-                        $.msg("请先对头像进行裁剪");
-                    } else {
-                        var img = $("#load_img").val()
-                        $.post('/user/profile/up-load', {
-                            "load_img": img
-                        }, function(result) {
-                            $("#headimg").attr("src", result.url);
-                            $("#load_img").val("");
-                            $.msg(result.message);
-                        },"json");
-                    }
-                })
-                $('#btnCrop').on('click', function() {
-                    var img = cropper.getDataURL();
-                    $('.cropped').html('');
-                    $("#load_img").val(img);
-                    $(".thumbBox").css("background-image","url("+img+")");
-                    $("#context_img").css("background-image","url('')");
-                    $('#img1').attr("src", img);
-                    $('#img5').attr("src", img);
-                    $("#upload").show();
-                })
-                $('#btnZoomOut').on('click', function() {
-                    $(".thumbBox").css("background-image","url('')");
-                    cropper.zoomOut();
-                })
-            });
+            //
         </script>
         <script type='text/javascript'>
+            //
+        </script>
+        <script>
+            //
+        </script>
+
+        <!-- 图片预览 -->
+        <!-- 表单验证 -->
+        <script type="text/javascript">
+            //
+        </script>
+        <script type="text/javascript">
+            //
+        </script>
+    </div>
+
+@stop
+
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d2eace91/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/js/datetime/dateselector.js"></script>
+    <script src="/js/cropbox.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js"></script>
+    <script src="/assets/d2eace91/js/pic/imgPreview.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $(window).load(function() {
+            var options = {
+                thumbBox: '.thumbBox',
+                imgSrc: ""
+            }
+            var cropper = $('.img-b').cropbox(options);
+            $('#upload-file').on('change', function() {
+                $(".thumbBox").css("background-image","url('')");
+                var f = document.getElementById("upload-file").files;
+                if (f[0].size < "4194304") {
+                    $("#default_img").remove();
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        options.imgSrc = e.target.result;
+                        cropper = $('.img-b').cropbox(options);
+                        $(".img-b .thumbBox").css("border", "1px solid rgb(102, 102, 102)");
+                        $(".img-b .thumbBox").css("box-shadow", "0 0 0 1000px rgba(0, 0, 0, 0.5)");
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                    $(".submit").show();
+                } else {
+                    $.msg("上传图片过大");
+                }
+            })
+            $('#btnZoomIn').on('click', function() {
+                $(".thumbBox").css("background-image","url('')");
+                cropper.zoomIn();
+            })
+            $("#upload").on("click", function() {
+                if ($("#load_img").val() == "") {
+                    $.msg("请先对头像进行裁剪");
+                } else {
+                    var img = $("#load_img").val()
+                    $.post('/user/profile/up-load', {
+                        "load_img": img
+                    }, function(result) {
+                        $("#headimg").attr("src", result.url);
+                        $("#load_img").val("");
+                        $.msg(result.message);
+                    },"json");
+                }
+            })
+            $('#btnCrop').on('click', function() {
+                var img = cropper.getDataURL();
+                $('.cropped').html('');
+                $("#load_img").val(img);
+                $(".thumbBox").css("background-image","url("+img+")");
+                $("#context_img").css("background-image","url('')");
+                $('#img1').attr("src", img);
+                $('#img5').attr("src", img);
+                $("#upload").show();
+            })
+            $('#btnZoomOut').on('click', function() {
+                $(".thumbBox").css("background-image","url('')");
+                cropper.zoomOut();
+            })
+        });
+        //
+        $(function() {
             $("#address_now").regionselector({
-                value: '{{ $user_info->address_code ?? "" }}',
+                value: '{{ $user_info->address_now ?? "" }}',
                 select_class: "select",
                 change: function(value, names, is_last) {
                     $("#address_code").val(value);
                 }
             });
-        </script>
-        <script>
-            $(function() {
-                $.dateselector({
-                    defaulttime: "{{ $user_info->birthday->format('Y-m-d') }}",
-                    sel_unix: "#birthday"
-                });
+            $.dateselector({
+                defaulttime: "{{ $user_info->birthday ?? '' }}",
+                sel_unix: "#birthday"
             });
-        </script>
-
-        <!-- 图片预览 -->
-        <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180528"></script>
-        <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180528"></script>
-        <script src="/assets/d2eace91/js/jquery.widget.js?v=20180528"></script>
-        <!-- 表单验证 -->
-        <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180528"></script>
-        <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180528"></script>
-        <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180528"></script>
-        <script type="text/javascript">
+        });
+        //
+        $(function(){
             $(".szy-imagegroup").each(function() {
                 var id = $(this).data("id");
                 var size = $(this).data("size");
-
                 var target = $("#" + id);
                 var value = $(target).val() ? $(target).val() : "";
-
                 $(this).imagegroup({
                     host: "{{ get_oss_host() }}",
                     size: size,
@@ -507,33 +535,67 @@
                     }
                 });
             });
-        </script>
-        <script type="text/javascript">
-            $().ready(function() {
-                var validator = $("#UserModel").validate();
-                // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
-                $.validator.addRules([{"id": "usermodel-nickname", "name": "UserModel[nickname]", "attribute": "nickname", "rules": {"required":true,"messages":{"required":"昵称不能为空。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"required":true,"messages":{"required":"用户名不能为空。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"username":{"pattern":/^[a-zA-Z0-9_\u4e00-\u9fa5]{4,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/^\d+$/,"not":true,"skipOnEmpty":1},"messages":{"username":"用户名只能由4-20个字，支持汉字、字母、数字、下划线“_”构成的组合","match":"用户名不能为纯数字"}}},{"id": "usermodel-sex", "name": "UserModel[sex]", "attribute": "sex", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"性别必须是整数。"}}},{"id": "usermodel-birthday", "name": "UserModel[birthday]", "attribute": "birthday", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"出生日期必须是整数。"}}},{"id": "usermodel-rank_point", "name": "UserModel[rank_point]", "attribute": "rank_point", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"成长值必须是整数。"}}},{"id": "usermodel-address_id", "name": "UserModel[address_id]", "attribute": "address_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"默认收货地址必须是整数。"}}},{"id": "usermodel-rank_id", "name": "UserModel[rank_id]", "attribute": "rank_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户等级必须是整数。"}}},{"id": "usermodel-mobile_validated", "name": "UserModel[mobile_validated]", "attribute": "mobile_validated", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否已验证手机必须是整数。"}}},{"id": "usermodel-email_validated", "name": "UserModel[email_validated]", "attribute": "email_validated", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否已验证邮箱必须是整数。"}}},{"id": "usermodel-reg_time", "name": "UserModel[reg_time]", "attribute": "reg_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"注册时间必须是整数。"}}},{"id": "usermodel-last_time", "name": "UserModel[last_time]", "attribute": "last_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"最近登录时间必须是整数。"}}},{"id": "usermodel-visit_count", "name": "UserModel[visit_count]", "attribute": "visit_count", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"访问次数必须是整数。"}}},{"id": "usermodel-status", "name": "UserModel[status]", "attribute": "status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户状态必须是整数。"}}},{"id": "usermodel-type", "name": "UserModel[type]", "attribute": "type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户类型必须是整数。"}}},{"id": "usermodel-is_seller", "name": "UserModel[is_seller]", "attribute": "is_seller", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否为卖家必须是整数。"}}},{"id": "usermodel-is_real", "name": "UserModel[is_real]", "attribute": "is_real", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否通过实名认证必须是整数。"}}},{"id": "usermodel-shopping_status", "name": "UserModel[shopping_status]", "attribute": "shopping_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许购物必须是整数。"}}},{"id": "usermodel-comment_status", "name": "UserModel[comment_status]", "attribute": "comment_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许评论必须是整数。"}}},{"id": "usermodel-user_money", "name": "UserModel[user_money]", "attribute": "user_money", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"可提现余额必须是一个数字。"}}},{"id": "usermodel-user_money_limit", "name": "UserModel[user_money_limit]", "attribute": "user_money_limit", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"不可提现余额必须是一个数字。"}}},{"id": "usermodel-frozen_money", "name": "UserModel[frozen_money]", "attribute": "frozen_money", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"冻结金额必须是一个数字。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"邮箱地址必须是一条字符串。","maxlength":"邮箱地址只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-address_now", "name": "UserModel[address_now]", "attribute": "address_now", "rules": {"string":true,"messages":{"string":"现居住地址必须是一条字符串。","maxlength":"现居住地址只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"string":true,"messages":{"string":"用户名必须是一条字符串。","minlength":"用户名应该包含至少4个字符。","maxlength":"用户名只能包含至多20个字符。"},"minlength":4,"maxlength":20}},{"id": "usermodel-nickname", "name": "UserModel[nickname]", "attribute": "nickname", "rules": {"string":true,"messages":{"string":"昵称必须是一条字符串。","minlength":"昵称应该包含至少1个字。","maxlength":"昵称只能包含至多20个字符。"},"minlength":1,"maxlength":20}},{"id": "usermodel-nickname", "name": "UserModel[nickname]", "attribute": "nickname", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"nickname","params":[]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"password":{"pattern":/^[^\u4e00-\u9fa5\·]{6,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/\s+/,"not":true,"skipOnEmpty":1},"messages":{"password":"登录密码长度为6-20个字符，建议由字母、数字和符号两种以上。","match":"登录密码不能包含空格。"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"string":true,"messages":{"string":"登录密码必须是一条字符串。","minlength":"登录密码应该包含至少6个字符。","maxlength":"登录密码只能包含至多20个字符。"},"minlength":6,"maxlength":20}},{"id": "usermodel-surplus_password", "name": "UserModel[surplus_password]", "attribute": "surplus_password", "rules": {"string":true,"messages":{"string":"余额支付密码必须是一条字符串。","minlength":"余额支付密码应该包含至少6个字符。","maxlength":"余额支付密码只能包含至多20个字符。"},"minlength":6,"maxlength":20}},{"id": "usermodel-password_reset_token", "name": "UserModel[password_reset_token]", "attribute": "password_reset_token", "rules": {"string":true,"messages":{"string":"重置密码令牌必须是一条字符串。","maxlength":"重置密码令牌只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-detail_address", "name": "UserModel[detail_address]", "attribute": "detail_address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-headimg", "name": "UserModel[headimg]", "attribute": "headimg", "rules": {"string":true,"messages":{"string":"头像必须是一条字符串。","maxlength":"头像只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-auth_key", "name": "UserModel[auth_key]", "attribute": "auth_key", "rules": {"string":true,"messages":{"string":"授权码必须是一条字符串。","maxlength":"授权码只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-user_remark", "name": "UserModel[user_remark]", "attribute": "user_remark", "rules": {"string":true,"messages":{"string":"会员备注必须是一条字符串。","maxlength":"会员备注只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-salt", "name": "UserModel[salt]", "attribute": "salt", "rules": {"string":true,"messages":{"string":"混淆码必须是一条字符串。","maxlength":"混淆码只能包含至多10个字符。"},"maxlength":10}},{"id": "usermodel-reg_ip", "name": "UserModel[reg_ip]", "attribute": "reg_ip", "rules": {"string":true,"messages":{"string":"注册IP地址必须是一条字符串。","maxlength":"注册IP地址只能包含至多40个字符。"},"maxlength":40}},{"id": "usermodel-last_ip", "name": "UserModel[last_ip]", "attribute": "last_ip", "rules": {"string":true,"messages":{"string":"最近登录IP地址必须是一条字符串。","maxlength":"最近登录IP地址只能包含至多40个字符。"},"maxlength":40}},{"id": "usermodel-pay_point", "name": "UserModel[pay_point]", "attribute": "pay_point", "rules": {"string":true,"messages":{"string":"消费积分必须是一条字符串。"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^(13[0-9]{1}[0-9]{8}|15[0-9]{1}[0-9]{8}|18[0-9]{1}[0-9]{8}|17[0-9]{1}[0-9]{8}|14[0-9]{1}[0-9]{8}|199[0-9]{8}|198[0-9]{8}|166[0-9]{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"邮箱地址不是有效的邮箱地址。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"user_name","params":["UserModel[user_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"mobile","params":["UserModel[user_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"email","params":["UserModel[user_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-sex", "name": "UserModel[sex]", "attribute": "sex", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"性别是无效的。"}}},{"id": "usermodel-reg_from", "name": "UserModel[reg_from]", "attribute": "reg_from", "rules": {"in":{"range":["0","1","2","3","4","5"]},"messages":{"in":"注册来源是无效的。"}}},{"id": "usermodel-status", "name": "UserModel[status]", "attribute": "status", "rules": {"in":{"range":["0","1","2","3"]},"messages":{"in":"用户状态是无效的。"}}},{"id": "usermodel-shopping_status", "name": "UserModel[shopping_status]", "attribute": "shopping_status", "rules": {"in":{"range":["0","1"]},"messages":{"in":"是否允许购物是无效的。"}}},{"id": "usermodel-comment_status", "name": "UserModel[comment_status]", "attribute": "comment_status", "rules": {"in":{"range":["0","1"]},"messages":{"in":"是否允许评论是无效的。"}}},{"id": "usermodel-type", "name": "UserModel[type]", "attribute": "type", "rules": {"in":{"range":["0","1"]},"messages":{"in":"用户类型是无效的。"}}},{"id": "usermodel-is_seller", "name": "UserModel[is_seller]", "attribute": "is_seller", "rules": {"in":{"range":["0","1"]},"messages":{"in":"是否为卖家是无效的。"}}},{"id": "usermodel-is_real", "name": "UserModel[is_real]", "attribute": "is_real", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"是否通过实名认证是无效的。"}}},]);
-                $("#btn_submit").click(function() {
-                    if (!validator.form()) {
-                        return;
-                    }
-                    //加载提示
-                    $.loading.start();
-                    $("#UserModel").submit();
-                });
-                var validator_real = $("#UserRealModel").validate();
-                // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
-                $.validator.addRules([{"id": "userrealmodel-real_name", "name": "UserRealModel[real_name]", "attribute": "real_name", "rules": {"required":true,"messages":{"required":"真实姓名不能为空。"}}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"required":true,"messages":{"required":"身份证号码不能为空。"}}},{"id": "userrealmodel-card_pic1", "name": "UserRealModel[card_pic1]", "attribute": "card_pic1", "rules": {"required":true,"messages":{"required":"身份证正面照不能为空。"}}},{"id": "userrealmodel-card_pic2", "name": "UserRealModel[card_pic2]", "attribute": "card_pic2", "rules": {"required":true,"messages":{"required":"身份证背面照不能为空。"}}},{"id": "userrealmodel-card_pic3", "name": "UserRealModel[card_pic3]", "attribute": "card_pic3", "rules": {"required":true,"messages":{"required":"本人手持身份证正面照不能为空。"}}},{"id": "userrealmodel-user_id", "name": "UserRealModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户基本信息ID必须是整数。"}}},{"id": "userrealmodel-status", "name": "UserRealModel[status]", "attribute": "status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否通过实名认证必须是整数。"}}},{"id": "userrealmodel-add_time", "name": "UserRealModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Add Time必须是整数。"}}},{"id": "userrealmodel-real_name", "name": "UserRealModel[real_name]", "attribute": "real_name", "rules": {"string":true,"messages":{"string":"真实姓名必须是一条字符串。","maxlength":"真实姓名只能包含至多60个字符。"},"maxlength":60}},{"id": "userrealmodel-address_now", "name": "UserRealModel[address_now]", "attribute": "address_now", "rules": {"string":true,"messages":{"string":"现居住地址必须是一条字符串。","maxlength":"现居住地址只能包含至多60个字符。"},"maxlength":60}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"string":true,"messages":{"string":"身份证号码必须是一条字符串。","maxlength":"身份证号码只能包含至多18个字符。"},"maxlength":18}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"match":{"pattern":/^[0-9]{14}[X|x]$|[0-9]{17}[X|x]$|[0-9]{18}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"身份证号码是无效的。"}}},{"id": "userrealmodel-status", "name": "UserRealModel[status]", "attribute": "status", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"是否通过实名认证是无效的。"}}},]);
-                $("#btn_submit_real").click(function() {
-                    if (!validator_real.form()) {
-                        return;
-                    }
-                    //加载提示
-                    $.loading.start();
-                    $("#UserModel").submit();
-                });
+        });
+        //
+        $().ready(function() {
+            var validator = $("#UserModel").validate();
+            // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+            $.validator.addRules([{"id": "usermodel-nickname", "name": "UserModel[nickname]", "attribute": "nickname", "rules": {"required":true,"messages":{"required":"昵称不能为空。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"required":true,"messages":{"required":"用户名不能为空。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"username":{"pattern":/^[a-zA-Z0-9_\u4e00-\u9fa5]{1,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/^\d+$/,"not":true,"skipOnEmpty":1},"messages":{"username":"用户名只能由1-20个字，支持汉字、字母、数字、下划线“_”构成的组合","match":"用户名不能为纯数字"}}},{"id": "usermodel-sex", "name": "UserModel[sex]", "attribute": "sex", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"性别必须是整数。"}}},{"id": "usermodel-birthday", "name": "UserModel[birthday]", "attribute": "birthday", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"出生日期必须是整数。"}}},{"id": "usermodel-rank_point", "name": "UserModel[rank_point]", "attribute": "rank_point", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"成长值必须是整数。"}}},{"id": "usermodel-address_id", "name": "UserModel[address_id]", "attribute": "address_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"默认收货地址必须是整数。"}}},{"id": "usermodel-rank_id", "name": "UserModel[rank_id]", "attribute": "rank_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户等级必须是整数。"}}},{"id": "usermodel-mobile_validated", "name": "UserModel[mobile_validated]", "attribute": "mobile_validated", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否已验证手机必须是整数。"}}},{"id": "usermodel-email_validated", "name": "UserModel[email_validated]", "attribute": "email_validated", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否已验证邮箱必须是整数。"}}},{"id": "usermodel-reg_time", "name": "UserModel[reg_time]", "attribute": "reg_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"注册时间必须是整数。"}}},{"id": "usermodel-last_time", "name": "UserModel[last_time]", "attribute": "last_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"最近登录时间必须是整数。"}}},{"id": "usermodel-visit_count", "name": "UserModel[visit_count]", "attribute": "visit_count", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"访问次数必须是整数。"}}},{"id": "usermodel-status", "name": "UserModel[status]", "attribute": "status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户状态必须是整数。"}}},{"id": "usermodel-type", "name": "UserModel[type]", "attribute": "type", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户类型必须是整数。"}}},{"id": "usermodel-is_seller", "name": "UserModel[is_seller]", "attribute": "is_seller", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否为卖家必须是整数。"}}},{"id": "usermodel-is_real", "name": "UserModel[is_real]", "attribute": "is_real", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否通过实名认证必须是整数。"}}},{"id": "usermodel-shopping_status", "name": "UserModel[shopping_status]", "attribute": "shopping_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许购物必须是整数。"}}},{"id": "usermodel-comment_status", "name": "UserModel[comment_status]", "attribute": "comment_status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许评论必须是整数。"}}},{"id": "usermodel-user_money", "name": "UserModel[user_money]", "attribute": "user_money", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"可提现余额必须是一个数字。"}}},{"id": "usermodel-user_money_limit", "name": "UserModel[user_money_limit]", "attribute": "user_money_limit", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"不可提现余额必须是一个数字。"}}},{"id": "usermodel-frozen_money", "name": "UserModel[frozen_money]", "attribute": "frozen_money", "rules": {"number":{"pattern":"/^\\s*[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\s*$/"},"messages":{"number":"冻结金额必须是一个数字。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"邮箱地址必须是一条字符串。","maxlength":"邮箱地址只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-address_now", "name": "UserModel[address_now]", "attribute": "address_now", "rules": {"string":true,"messages":{"string":"现居住地址必须是一条字符串。","maxlength":"现居住地址只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"string":true,"messages":{"string":"用户名必须是一条字符串。","minlength":"用户名应该包含至少1个字符。","maxlength":"用户名只能包含至多20个字符。"},"minlength":1,"maxlength":20}},{"id": "usermodel-nickname", "name": "UserModel[nickname]", "attribute": "nickname", "rules": {"string":true,"messages":{"string":"昵称必须是一条字符串。","minlength":"昵称应该包含至少1个字。","maxlength":"昵称只能包含至多20个字符。"},"minlength":1,"maxlength":20}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"password":{"pattern":/^[^\u4e00-\u9fa5\·]{6,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/\s+/,"not":true,"skipOnEmpty":1},"messages":{"password":"登录密码长度为6-20个字符，建议由字母、数字和符号两种以上。","match":"登录密码不能包含空格。"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"string":true,"messages":{"string":"登录密码必须是一条字符串。","minlength":"登录密码应该包含至少6个字符。","maxlength":"登录密码只能包含至多20个字符。"},"minlength":6,"maxlength":20}},{"id": "usermodel-surplus_password", "name": "UserModel[surplus_password]", "attribute": "surplus_password", "rules": {"string":true,"messages":{"string":"余额支付密码必须是一条字符串。","minlength":"余额支付密码应该包含至少6个字符。","maxlength":"余额支付密码只能包含至多20个字符。"},"minlength":6,"maxlength":20}},{"id": "usermodel-password_reset_token", "name": "UserModel[password_reset_token]", "attribute": "password_reset_token", "rules": {"string":true,"messages":{"string":"重置密码令牌必须是一条字符串。","maxlength":"重置密码令牌只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-detail_address", "name": "UserModel[detail_address]", "attribute": "detail_address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","maxlength":"详细地址只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-headimg", "name": "UserModel[headimg]", "attribute": "headimg", "rules": {"string":true,"messages":{"string":"头像必须是一条字符串。","maxlength":"头像只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-auth_key", "name": "UserModel[auth_key]", "attribute": "auth_key", "rules": {"string":true,"messages":{"string":"授权码必须是一条字符串。","maxlength":"授权码只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-user_remark", "name": "UserModel[user_remark]", "attribute": "user_remark", "rules": {"string":true,"messages":{"string":"会员备注必须是一条字符串。","maxlength":"会员备注只能包含至多255个字符。"},"maxlength":255}},{"id": "usermodel-salt", "name": "UserModel[salt]", "attribute": "salt", "rules": {"string":true,"messages":{"string":"混淆码必须是一条字符串。","maxlength":"混淆码只能包含至多10个字符。"},"maxlength":10}},{"id": "usermodel-reg_ip", "name": "UserModel[reg_ip]", "attribute": "reg_ip", "rules": {"string":true,"messages":{"string":"注册IP地址必须是一条字符串。","maxlength":"注册IP地址只能包含至多40个字符。"},"maxlength":40}},{"id": "usermodel-last_ip", "name": "UserModel[last_ip]", "attribute": "last_ip", "rules": {"string":true,"messages":{"string":"最近登录IP地址必须是一条字符串。","maxlength":"最近登录IP地址只能包含至多40个字符。"},"maxlength":40}},{"id": "usermodel-pay_point", "name": "UserModel[pay_point]", "attribute": "pay_point", "rules": {"string":true,"messages":{"string":"消费积分必须是一条字符串。"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166|191|167)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"邮箱地址不是有效的邮箱地址。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"user_name","params":["UserModel[user_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"mobile","params":["UserModel[user_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"ajax":{"url":"/user/profile/client-validate","model":"YXBwXG1vZHVsZXNcdXNlclxtb2RlbHNcVXNlck1vZGVs","attribute":"email","params":["UserModel[user_id]"]},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-sex", "name": "UserModel[sex]", "attribute": "sex", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"性别是无效的。"}}},{"id": "usermodel-reg_from", "name": "UserModel[reg_from]", "attribute": "reg_from", "rules": {"in":{"range":["0","1","2","3","4","5","6","7","8"]},"messages":{"in":"注册来源是无效的。"}}},{"id": "usermodel-status", "name": "UserModel[status]", "attribute": "status", "rules": {"in":{"range":["0","1","2","3"]},"messages":{"in":"用户状态是无效的。"}}},{"id": "usermodel-shopping_status", "name": "UserModel[shopping_status]", "attribute": "shopping_status", "rules": {"in":{"range":["0","1"]},"messages":{"in":"是否允许购物是无效的。"}}},{"id": "usermodel-comment_status", "name": "UserModel[comment_status]", "attribute": "comment_status", "rules": {"in":{"range":["0","1"]},"messages":{"in":"是否允许评论是无效的。"}}},{"id": "usermodel-type", "name": "UserModel[type]", "attribute": "type", "rules": {"in":{"range":["0","1"]},"messages":{"in":"用户类型是无效的。"}}},{"id": "usermodel-is_seller", "name": "UserModel[is_seller]", "attribute": "is_seller", "rules": {"in":{"range":["0","1"]},"messages":{"in":"是否为卖家是无效的。"}}},{"id": "usermodel-is_real", "name": "UserModel[is_real]", "attribute": "is_real", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"是否通过实名认证是无效的。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"string":true,"messages":{"string":"用户名必须是一条字符串。","match":"用户名中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "usermodel-nickname", "name": "UserModel[nickname]", "attribute": "nickname", "rules": {"string":true,"messages":{"string":"昵称必须是一条字符串。","match":"昵称中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "usermodel-detail_address", "name": "UserModel[detail_address]", "attribute": "detail_address", "rules": {"string":true,"messages":{"string":"详细地址必须是一条字符串。","match":"详细地址中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "usermodel-company_name", "name": "UserModel[company_name]", "attribute": "company_name", "rules": {"string":true,"messages":{"string":"Company Name必须是一条字符串。","match":"Company Name中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "usermodel-company_address", "name": "UserModel[company_address]", "attribute": "company_address", "rules": {"string":true,"messages":{"string":"Company Address必须是一条字符串。","match":"Company Address中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "usermodel-purpose_type", "name": "UserModel[purpose_type]", "attribute": "purpose_type", "rules": {"string":true,"messages":{"string":"Purpose Type必须是一条字符串。","match":"Purpose Type中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "usermodel-user_remark", "name": "UserModel[user_remark]", "attribute": "user_remark", "rules": {"string":true,"messages":{"string":"会员备注必须是一条字符串。","match":"会员备注中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},]);
+            $("#btn_submit").click(function() {
+                if (!validator.form()) {
+                    return;
+                }
+                //加载提示
+                $.loading.start();
+                $("#UserModel").submit();
             });
-        </script>
-    </div>
-
-@endsection
+            var validator_real = $("#UserRealModel").validate();
+            // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
+            $.validator.addRules([{"id": "userrealmodel-real_name", "name": "UserRealModel[real_name]", "attribute": "real_name", "rules": {"required":true,"messages":{"required":"真实姓名不能为空。"}}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"required":true,"messages":{"required":"身份证号码不能为空。"}}},{"id": "userrealmodel-card_pic1", "name": "UserRealModel[card_pic1]", "attribute": "card_pic1", "rules": {"required":true,"messages":{"required":"身份证人像面照片不能为空。"}}},{"id": "userrealmodel-card_pic2", "name": "UserRealModel[card_pic2]", "attribute": "card_pic2", "rules": {"required":true,"messages":{"required":"身份证国徽面照片不能为空。"}}},{"id": "userrealmodel-card_pic3", "name": "UserRealModel[card_pic3]", "attribute": "card_pic3", "rules": {"required":true,"messages":{"required":"本人手持身份证人像面照片不能为空。"}}},{"id": "userrealmodel-user_id", "name": "UserRealModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"用户基本信息ID必须是整数。"}}},{"id": "userrealmodel-status", "name": "UserRealModel[status]", "attribute": "status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否通过实名认证必须是整数。"}}},{"id": "userrealmodel-add_time", "name": "UserRealModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Add Time必须是整数。"}}},{"id": "userrealmodel-real_name", "name": "UserRealModel[real_name]", "attribute": "real_name", "rules": {"string":true,"messages":{"string":"真实姓名必须是一条字符串。","maxlength":"真实姓名只能包含至多60个字符。","match":"真实姓名中含有非法字符"},"maxlength":60,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "userrealmodel-address_now", "name": "UserRealModel[address_now]", "attribute": "address_now", "rules": {"string":true,"messages":{"string":"现居住地址必须是一条字符串。","maxlength":"现居住地址只能包含至多60个字符。","match":"现居住地址中含有非法字符"},"maxlength":60,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"string":true,"messages":{"string":"身份证号码必须是一条字符串。","maxlength":"身份证号码只能包含至多18个字符。","match":"身份证号码中含有非法字符"},"maxlength":18,"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"match":{"pattern":/^[0-9]{14}[X|x]$|[0-9]{17}[X|x]$|[0-9]{18}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"身份证号码是无效的。"}}},{"id": "userrealmodel-status", "name": "UserRealModel[status]", "attribute": "status", "rules": {"in":{"range":["0","1","2"]},"messages":{"in":"是否通过实名认证是无效的。"}}},{"id": "userrealmodel-real_name", "name": "UserRealModel[real_name]", "attribute": "real_name", "rules": {"string":true,"messages":{"string":"真实姓名必须是一条字符串。","match":"真实姓名中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},{"id": "userrealmodel-id_code", "name": "UserRealModel[id_code]", "attribute": "id_code", "rules": {"string":true,"messages":{"string":"身份证号码必须是一条字符串。","match":"身份证号码中含有非法字符"},"match":{"pattern":/<|>|<script|<img|<svg|alert|prompt|cookie|@eval|@ini_set|@set_time_limit|\$_SERVER|@set_magic_quotes_runtime/,"not":true}}},]);
+            $("#btn_submit_real").click(function() {
+                if (!validator_real.form()) {
+                    return;
+                }
+                //加载提示
+                $.loading.start();
+                $("#UserModel").submit();
+            });
+        });
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function() {
+        })
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+    </script>
+@stop

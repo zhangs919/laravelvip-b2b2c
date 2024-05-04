@@ -7,7 +7,7 @@
 @section('content')
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group=trade" method="post" enctype="multipart/form-data" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="trade">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">

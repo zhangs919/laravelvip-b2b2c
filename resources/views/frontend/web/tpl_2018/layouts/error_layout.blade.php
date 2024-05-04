@@ -11,8 +11,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="Keywords" content="乐融沃-云商城-测试站点" />
-    <meta name="Description" content="乐融沃-云商城-测试站点-专业的综合网上购物商城，销售超数万品牌、4020万种商品，囊括家电、手机、服装、电脑、图书、母婴、个护、食品、旅游等13大品类。所售商品为正品行货、全国联保、机打发票。提供专业配送、售后服务，为您提供愉悦的购物体验！" />
+    <meta name="Keywords" content="{{ sysconf('site_name') }}" />
+    <meta name="Description" content="" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
     <meta name="format-detection" content="telephone=no">
     <!-- 网站头像 -->
@@ -38,6 +38,9 @@
 
         })
     </script>
+
+    {{-- 国家默哀日期 --}}
+    {!! $national_memorial_day_html ?? '' !!}
 </head>
 <body class="pace-done">
 <div id="bg" class="bg" style="display: none;"></div>
@@ -357,7 +360,7 @@
 <div class="error-content">
     <div class="w990">
         <div class="error">
-            <div class="error-l"></div>
+            {{--<div class="error-l"></div>--}}
             <div class="error-r">
                 <div class="error-title">
                     <p class="color" style="text-align: left; font-size: 24px;">系统提示</p>
@@ -365,13 +368,17 @@
                 <p class="error-line"></p>
                 <div class="error-box">
 
-
-                    <p class="color" style="text-align: left; font-size: 16px;">@if($exception->getMessage() != ''){{ $exception->getMessage()}}@else页面未找到。@endif</p>
+{{--					@if($exception->getStatusCode() == 430)--}}
+{{--                    	<p class="color" style="text-align: left; font-size: 16px;">@if($exception->getMessage() != ''){!! $exception->getMessage() !!}@else页面未找到。@endif</p>--}}
+{{--					@else--}}
+{{--						<p class="color" style="text-align: left; font-size: 16px;">@if($exception->getMessage() != '' && env('APP_DEBUG') === true){!! $exception->getMessage() !!}@else页面未找到。@endif</p>--}}
+{{--					@endif--}}
+					<p class="color" style="text-align: left; font-size: 16px;">@if($exception->getMessage() != '' && env('APP_DEBUG') === true){!! $exception->getMessage() !!}@else页面未找到。@endif</p>
 
                     <p class="error-btn">
                         您可以
 
-                        <a href="@if(null !== $exception->getPrevious()){{ $exception->getPrevious() }}@else/@endif" class="color">返回上一页</a>
+                        <a href="@if(null !== url()->previous()){{ url()->previous() }}@else/@endif" class="color">返回上一页</a>
 
                         或者
                         <a href="/" class="color">返回首页</a>

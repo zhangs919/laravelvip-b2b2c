@@ -1,0 +1,66 @@
+@charset "utf-8";
+/* 自定义样式 */
+/*左侧菜单样式优化 */
+
+
+
+
+
+/*自定义右侧导航栏样式*/
+i.fa.fa-times-circle {
+    /*font-size: 16px;*/
+}
+.help-header {
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.helper-icon{
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    /*box-shadow: inset 0px 0px 3px 0 #5a86b9!important;*/
+    /*font-size: 14px;*/
+}
+.helper-wrap{
+    width: 120px;
+    /*font-size: 14px;*/
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    color: #ccc!important;
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    /*transition: all 0.4s ease;*/
+}
+.helper-wrap .panel{
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    color: #ccc!important;
+    /*transition: all 0.4s ease;*/
+}
+.helper-wrap .panel-default>.panel-heading{
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+}
+.helper-wrap .panel-body ul li{
+    border-bottom: 1px solid #4361ba!important;
+}
+.helper-wrap .panel-title a {
+    color: #28ACFE;
+    /*font-size: 14px;*/
+}
+.helper-wrap .panel-body ul li a{
+    color: #fff;
+}
+.helper-wrap .panel-body ul li:hover, .helper-wrap .panel-body ul li.selected {
+    background-color: rgba(26, 23, 94, 0.8)!important;
+    border-color: rgba(26, 23, 94, 0.8)!important;
+}
+.helper-wrap .panel-body ul li.selected a {
+    color: #fff;
+}
+#collapseTwo li.active{
+    background: rgba(26, 23, 94, 0.8)!important;
+    border-color: rgba(26, 23, 94, 0.8)!important;
+}
+/*自定义右侧导航栏样式*/

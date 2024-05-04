@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools\FileManager;
+namespace App\Services\FileManager;
 
 use Carbon\Carbon;
 use App\Exceptions\UploadException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -19,12 +19,15 @@ class ShopConfigFieldController extends Backend
 
     protected $shopConfigField;
 
-    public function __construct()
+    public function __construct(
+        ShopConfigRepository $shopConfig
+        ,ShopConfigFieldRepository $shopConfigField
+    )
     {
         parent::__construct();
 
-        $this->shopConfig = new ShopConfigRepository();
-        $this->shopConfigField = new ShopConfigFieldRepository();
+        $this->shopConfig = $shopConfig;
+        $this->shopConfigField = $shopConfigField;
 
     }
 
@@ -129,6 +132,14 @@ class ShopConfigFieldController extends Backend
         return $this->add($request);
     }
 
+    /**
+     * 保存数据
+     * 新增配置项数据时，同时对已有店铺的配置项进行新增。
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function saveData(Request $request)
     {
         $post = $request->post('ConfigModel');
@@ -138,7 +149,6 @@ class ShopConfigFieldController extends Backend
             $this->validate($request, [
                 'ConfigModel.code' => 'required|max:40',
             ]);
-//            dd($post);
             $ret = $this->shopConfigField->update((int)$post['id'], $post);
             $msg = '编辑';
         }else {
@@ -147,20 +157,17 @@ class ShopConfigFieldController extends Backend
             $this->validate($request, [
                 'ConfigModel.code' => 'required|unique:shop_config_field,code|max:40',
             ]);
-            $ret = $this->shopConfigField->store($post);
+            $ret = $this->shopConfigField->add($post);
             $msg = '添加';
         }
 
-
         if ($ret === false) {
             // fail
-            // todo Log
             admin_log($msg.'店铺配置信息失败。ID：'.$ret->id);
             flash('error', $msg.'失败');
             return redirect('/system/shop-config-field/index');
         }
         // success
-        // todo Log
         admin_log($msg.'店铺配置信息成功。ID：'.$ret->id);
         flash('success', $msg.'成功');
         return redirect('/system/shop-config-field/index');

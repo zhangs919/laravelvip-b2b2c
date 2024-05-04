@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Models\LibCategory;
 use App\Modules\Base\Http\Controllers\Backend;
@@ -12,16 +12,19 @@ class LibCategoryController extends Backend
 {
 
     private $links = [
-        ['url' => 'goods/category/list', 'text' => '管理'],
-        ['url' => 'goods/category/add', 'text' => '添加'],
-        ['url' => 'goods/category/edit', 'text' => '编辑']
+        ['url' => 'goods/lib-category/list', 'text' => '管理'],
+        ['url' => 'goods/lib-category/add', 'text' => '添加'],
+        ['url' => 'goods/lib-category/edit', 'text' => '编辑']
     ];
 
     protected $libCategory;
 
     protected $tools;
 
-    public function __construct(LibCategoryRepository $libCategoryRepository, ToolsRepository $toolsRepository)
+    public function __construct(
+        LibCategoryRepository $libCategoryRepository
+        , ToolsRepository $toolsRepository
+    )
     {
         parent::__construct();
 
@@ -107,12 +110,12 @@ class LibCategoryController extends Backend
             $title = '编辑';
             $this->sublink($this->links, 'edit', '', '', 'add');
 
-            if ($info->parent_id > 0) {
-                $where[] = ['parent_id', $info->parent_id];
-                $parent_list = LibCategory::where($where)->get();
-            } else {
-                $parent_list = [];
-            }
+//            if ($info->parent_id > 0) {
+//                $where[] = ['parent_id', $info->parent_id];
+//                $parent_list = LibCategory::where($where)->get();
+//            } else {
+//                $parent_list = [];
+//            }
 
         }
 
@@ -146,7 +149,7 @@ class LibCategoryController extends Backend
     public function saveData(Request $request)
     {
         $post = $request->post('LibCategory');
-//        dd($post);
+
         if (!empty($post['cat_id'])) {
             // 编辑
             $ret = $this->libCategory->update($post['cat_id'], $post);
@@ -157,10 +160,10 @@ class LibCategoryController extends Backend
 
         if ($ret === false) {
             // fail
-            return result(-1, null, '操作失败');
+            return result(-1, null, OPERATE_FAIL);
         }
         // success
-        return result(0, null, '操作成功');
+        return result(0, null, OPERATE_SUCCESS);
     }
 
     public function setShow(Request $request)

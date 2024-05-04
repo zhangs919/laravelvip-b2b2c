@@ -25,7 +25,6 @@ namespace App\Repositories;
 
 use App\Models\Collect;
 use App\Models\Goods;
-use App\Models\GoodsSku;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 
@@ -62,10 +61,11 @@ class CollectRepository
         if ($collectType == 0) {
             // 商品收藏
             $query->leftJoin('goods as g', 'g.goods_id','=','c.goods_id');
+        } else {
+            // 店铺收藏
+            $query->leftJoin('shop as s', 's.shop_id','=','c.shop_id');
         }
 
-        // 店铺收藏
-        $query->leftJoin('shop as s', 's.shop_id','=','c.shop_id');
 
         $total = $query->count();
         $list = $query

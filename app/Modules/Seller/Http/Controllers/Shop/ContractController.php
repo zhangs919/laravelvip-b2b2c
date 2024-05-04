@@ -35,12 +35,15 @@ class ContractController extends Seller
     protected $contract;
     protected $shopContract;
 
-    public function __construct()
+    public function __construct(
+        ContractRepository $contract
+        ,ShopContractRepository $shopContract
+    )
     {
         parent::__construct();
 
-        $this->contract = new ContractRepository();
-        $this->shopContract = new ShopContractRepository();
+        $this->contract = $contract;
+        $this->shopContract = $shopContract;
 
         $this->set_menu_select('shop', 'contract');
     }

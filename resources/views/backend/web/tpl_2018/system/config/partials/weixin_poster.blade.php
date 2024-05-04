@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-weixin_poster", "name": "SystemConfigModel[weixin_poster]", "attribute": "weixin_poster", "rules": {"string":true,"messages":{"string":"默认海报背景必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_poster", "name": "SystemConfigModel[weixin_poster]", "attribute": "weixin_poster", "rules": {"required":true,"messages":{"required":"默认海报背景不能为空。"}}},{"id": "systemconfigmodel-weixin_poster_size", "name": "SystemConfigModel[weixin_poster_size]", "attribute": "weixin_poster_size", "rules": {"string":true,"messages":{"string":"二维码尺寸必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_poster_size", "name": "SystemConfigModel[weixin_poster_size]", "attribute": "weixin_poster_size", "rules": {"required":true,"messages":{"required":"二维码尺寸不能为空。"}}},{"id": "systemconfigmodel-weixin_x_coor", "name": "SystemConfigModel[weixin_x_coor]", "attribute": "weixin_x_coor", "rules": {"string":true,"messages":{"string":"X坐标必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_x_coor", "name": "SystemConfigModel[weixin_x_coor]", "attribute": "weixin_x_coor", "rules": {"required":true,"messages":{"required":"X坐标不能为空。"}}},{"id": "systemconfigmodel-weixin_y_coor", "name": "SystemConfigModel[weixin_y_coor]", "attribute": "weixin_y_coor", "rules": {"string":true,"messages":{"string":"Y坐标必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_y_coor", "name": "SystemConfigModel[weixin_y_coor]", "attribute": "weixin_y_coor", "rules": {"required":true,"messages":{"required":"Y坐标不能为空。"}}},{"id": "systemconfigmodel-weixin_poster_msg", "name": "SystemConfigModel[weixin_poster_msg]", "attribute": "weixin_poster_msg", "rules": {"string":true,"messages":{"string":"生成海报提示语必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_poster_msg", "name": "SystemConfigModel[weixin_poster_msg]", "attribute": "weixin_poster_msg", "rules": {"required":true,"messages":{"required":"生成海报提示语不能为空。"}}},]

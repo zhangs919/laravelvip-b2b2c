@@ -1,0 +1,140 @@
+/*可以在这里添加你自己的css*/
+img {
+    max-width: 100%;
+    /*图片自适应宽度*/
+}
+
+/*修复字母不按照单词换行问题*/
+.view {
+    /*word-break: break-all;*/
+    /* padding: 16px 16px; */
+}
+
+.vote_area {
+    display: block;
+}
+
+.vote_iframe {
+    background-color: transparent;
+    border: 0 none;
+    height: 100%;
+}
+
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.6;
+    background: #FFF;
+    height: 100%;
+}
+
+* {
+    -webkit-max-logical-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
+    word-wrap: break-word !important;
+}
+
+body {
+    -webkit-touch-callout: none;
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    padding: 15px !important;
+    font-size: 16px;
+    overflow-x: hidden;
+    font-family: '微软雅黑', 'Microsoft YaHei', Arial, sans-serif;
+    background-color: #FFF;
+    line-height: inherit;
+    height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 16px #c1c1c1;
+}
+
+::-webkit-input-placeholder {
+    color: #ddd;
+}
+
+img {
+    height: auto !important;
+}
+
+.edui-editor-bottombar {
+    display: none;
+}
+
+#edui1_imagescale {
+    display: none !important;
+}
+
+/*去除点击图片后出现的拉伸边框*/
+
+/*增加引用样式*/
+blockquote {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 3px solid #DBDBDB;
+}
+
+.newTitlePosition {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 9999;
+    padding: 1px 3px;
+    border: 1px solid #000000;
+    background-color: #ffffff;
+    font-size: 12px;
+    color: #000000;
+}
+
+h1 {
+    font-size: 32px;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 24px;
+    margin: 0.75em 0;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 0.83em 0;
+}
+
+h4 {
+    font-size: 16px;
+    margin: 1.12em 0;
+}
+
+h5 {
+    font-size: 13px;
+    margin: 1.5em 0;
+}
+
+h6 {
+    font-size: 12px;
+    margin: 1.67em 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b,
+strong {
+    font-weight: bolder;
+}

@@ -1,4 +1,4 @@
-@extends('layouts.design_layout_v3')
+@extends('layouts.design_layout')
 
 @section('header_js')
 
@@ -24,29 +24,32 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
     <!-- -->
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/topic_activity.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/topic_activity.css?v=1.6"/>
+
+    <link href="http://{{ config('lrw.frontend_domain') }}/css/template.css" rel="stylesheet">
+
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
     <link rel="stylesheet" href="/assets/d2eace91/css/design/tplsetting.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/design.css?v=1.6"/>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/common.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/tabs.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/bubbleup.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jquery.hiSlider.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index_tab.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=20180418"></script>
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/nav.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/common.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/index.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/tabs.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/bubbleup.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/jquery.hiSlider.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/index_tab.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/jump.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/nav.js?v=20180418"></script>
     <!-- 背景设置 -->
 
 
@@ -54,7 +57,7 @@
     <div class="module-topBar">
 
         <div class="module-topBar-inner">
-            <a class="topBar-logo"> <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/website/backend_logo_0.png" /></a>
+            <a class="topBar-logo"> <img src="{{ get_image_url(sysconf('backend_logo')) }}" /></a>
             <div class="page-title">
                 <label>首页</label>
                 <span></span>
@@ -84,6 +87,7 @@
 
                     <a class="page-btn page-preview-btn SZY-TPL-BACKUP" href="javascript:void(0);">模板备份</a>
                     <a class="page-btn page-preview-btn SZY-TPL-USE" data-id="3" href="javascript:void(0);">使用备份</a>
+                    <a class="page-btn page-preview-btn SZY-TPL-PREVIEW" href="javascript:void(0);">预览 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-RELEASE" href="javascript:void(0);">发布 </a>
                 </div>
                 <div class="other-more">
@@ -210,6 +214,13 @@
                                         <img src="/assets/d2eace91/images/design/icon/0/ad_one_column.png">
                                     </a>
                                     <a class="panelModuleTitle" href="javascript:void(0);" title="一栏广告">一栏广告</a>
+                                </li>
+
+                                <li class="drag" id="0" data-code="hots_pot">
+                                    <a class="panelModuleIcon" href="javascript:void(0);">
+                                        <img src="/assets/d2eace91/images/design/icon/0/hots_pot.png" class="mCS_img_loaded">
+                                    </a>
+                                    <a class="panelModuleTitle" href="javascript:void(0);" title="热区模板">热区模板</a>
                                 </li>
 
                                 <li class="drag" id="0" data-code="ad_five_column">

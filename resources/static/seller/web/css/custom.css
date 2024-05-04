@@ -1,0 +1,413 @@
+@charset "utf-8";
+/* 自定义样式 */
+/*左侧菜单样式优化 date：2019.10.29 */
+/*.seller-nav {
+    background: #141f3b;
+    !*兼容 Safari 浏览器*!
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
+    !*bottom: 38px;*!
+}
+.seller-nav::-webkit-scrollbar {
+    !*滚动条整体样式*!
+    width : 8px;  !*高宽分别对应横竖滚动条的尺寸*!
+    height: 1px;
+}
+.seller-nav::-webkit-scrollbar-thumb {
+    !*滚动条里面小方块*!
+    border-radius: 10px;
+    box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background   : #aeaeae;
+}
+.seller-nav::-webkit-scrollbar-track {
+    !*滚动条里面轨道*!
+    box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background   : #ededed;
+}*/
+
+/*解决菜单超出y轴时，避免展示不完全问题*/
+.seller-nav {
+    /*overflow: scroll;*/
+    /*bottom: 40px;*/
+}
+/*解决菜单超出y轴时，避免展示不完全问题*/
+
+.seller-nav .seller-nav-list > ul > li {
+    /*height: 82px;*/
+    /*float: left;*/
+    /*width: 100%;*/
+    border-top-right-radius: 8px;
+    /*text-align: center;*/
+    border-bottom-right-radius: 8px;
+}
+.seller-nav .seller-nav-list > ul > li:hover {
+    box-shadow: inset -1px 0 1px 0 rgb(255, 255, 255);
+}
+.seller-nav .seller-nav-list > ul > li.active, .seller-nav .seller-nav-list > ul > li.active:hover {
+    background: #182337;
+    box-shadow: inset -2px 0px 2px 0 rgb(255 255 255);
+}
+.seller-nav .seller-nav-list > ul > li > a {
+    /*margin-left: 15px;*/
+    /*padding-left: 0;*/
+}
+
+.seller-nav .seller-nav-list > ul > li > a i {
+    /*background: none!important;*/
+    /*margin-top: 10px;*/
+    /*font-size: 30px;*/
+    /*float: left;*/
+    /*margin-left: 3px;*/
+}
+/*将第四个菜单 图库图标 margin-left改为0*/
+.seller-nav .seller-nav-list > ul > li:nth-child(4) > a i {
+    /*margin-left: 0;*/
+}
+.seller-nav .seller-nav-list > ul > li > a em{
+    /*float: left;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*margin-top: 50px;*/
+}
+/*左侧菜单样式优化 date：2019.10.29 */
+
+/*优化左侧菜单样式 date：2019.10.31*/
+/*.seller-nav .seller-nav-list > ul > li:hover {
+    background: rgba(70, 99, 191,0.5);
+}
+.seller-nav .seller-nav-list > ul > li.active, .seller-nav .seller-nav-list > ul > li.active:hover {
+    background: rgb(70, 99, 191);
+    box-shadow: 0 0 10px rgba(70, 99, 191,1);
+}
+.user-info{
+    background: rgb(70, 99, 191);
+}*/
+/*优化左侧菜单样式 date：2019.10.31*/
+
+
+/*左侧系统菜单优化样式 date：2019.11.11*/
+.seller-logo a {
+    background: url("../images/menu/right-logo-bg.png") round;
+    border: none;
+}
+.seller-logo a img {
+    width: 40px;
+    height: 40px;
+}
+.user-info {
+    background: #182337;
+    border-top-right-radius: 5px;
+    box-shadow: inset -2px 1px 3px 0 rgb(255, 255, 255);
+}
+.second-sidebar{
+    background: #1c2840;
+    border-right: 1px solid #1c2840;
+    text-align: center;
+}
+.left-menu li a {
+    color: #fff;
+}
+.second-sidebar-title {
+    padding-left: 0;
+    border-bottom: 1px solid #3a4261;
+    color: #fff;
+    background: #1c2840;
+    font-size: 15px;
+}
+.left-menu li {
+    transition: all 0.2s ease-in-out;
+}
+.left-menu li.selected {
+    box-shadow: 1px 1px 3px 0px #697081;
+}
+.left-menu li.selected a {
+    color: #fff;
+    background: #141f3b;
+}
+.left-menu li:hover {
+    background: #1a2539;
+    box-shadow: 1px 1px 3px 0px #697081;
+}
+.left-menu li:hover a {
+    color: #fff;
+}
+
+.menu-icon-bg {
+    position: absolute;
+    right: 20px;
+    width: 50px;
+    top: 6px;
+    z-index: 99;
+}
+.menu-icon {
+    width: 18px;
+    position: absolute;
+    float: left;
+    left: 35px;
+    margin-top: 22px;
+    z-index: 100;
+}
+/*左侧系统菜单优化样式 date：2019.11.11*/
+
+.sys-ver {
+    margin-top: -10px;
+}
+.sys-ver p {
+    text-align: center;
+    width: 600px;
+    color: #CCD0D9;
+    display: block;
+    margin: 0 auto;
+    font-weight: 200;
+    font-size: 13px;
+}
+
+.application-list h3 {
+    border-bottom: 3px solid #337ab7;
+    padding: 6px 0;
+    width: 100px;
+    text-align: center;
+    border-radius: 25px;
+}
+.application-logo { float: left; width: 40px; height: 40px; border-radius: 4px; }
+.application-logo i { width: 40px; height: 40px; display: block; background: url(/assets/d2eace91/images/common/application_img.png?v=5) no-repeat 0 0; vertical-align: bottom; }
+.application-name { font-size: 14px; height: 24px; line-height: 24px; vertical-align: bottom; color: #333; font-weight: bold; margin-left: 50px; }
+
+.application-logo i.mjlife { background-position: 0px 0px; }
+.application-logo i.contract { background-position: -41px 0px; }
+.application-logo i.emagazine { background-position: -82px 0px; }
+.application-logo i.conference { background-position: 0px -41px; }
+.application-logo i.tts { background-position: 0px -82px; }
+
+
+
+
+
+
+
+
+.seller-center {
+    padding-bottom: 0;
+}
+
+
+
+/*以下样式 平台方后台也可使用*/
+.notice-nav {
+    background: none;
+}
+
+.notice-nav a {
+    border-left: 0;
+}
+
+/*右下角消息通知样式*/
+#message-box .notice-nav a.notice-nav-message {
+    background: url(../images/common/right-bottom-alert-msg-bg.png) no-repeat round;
+}
+
+.notice-nav a {
+    color: #fff !important;
+}
+
+/*页面顶部explanation 文字说明样式*/
+.style-seller .explanation {
+    background: url(../images/common/explanation-bg.jpg);
+    background-size: cover;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #12203d;
+}
+
+.style-seller .explanation li span {
+    color: #fff;
+}
+
+
+
+
+/*右下角提醒*/
+#message-container {
+    font-family: "思源黑体";
+}
+
+.message-pop-box.up {
+    z-index: 80;
+}
+
+.message-pop-box.down {
+    z-index: -1;
+}
+
+#message-container .message-pop-box {
+    background: url("/assets/d2eace91/images/common/msg_bg.png") no-repeat;
+    background-size: cover;
+
+    /*原始尺寸*/
+    /*width: 846px;*/
+    /*height: 474px;*/
+
+    /* 0.5倍 */
+    /*width: 423px;*/
+    /*height: 237px;*/
+
+    width: 507.6px;
+    height: 284.4px;
+    bottom: 40px;
+
+    /* 0.7倍 */
+    /*width: 592px;*/
+    /*height: 332px;*/
+
+    box-shadow: none;
+    border-radius: 0;
+}
+
+#message-container .message-pop-box .close {
+    background: url(/assets/d2eace91/images/common/msg_close_btn.png) no-repeat;
+    background-size: cover;
+    width: 12px;
+    height: 12px;
+    position: relative;
+    top: 33px;
+    right: 67px;
+    opacity: 0.6;
+}
+
+#message-container .message-pop-box .close:hover {
+    opacity: 1;
+}
+
+#message-container .message-pop-box .message-data {
+    top: 30%;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    color: #fff;
+}
+
+#message-container .message-pop-box .message-data .message-text-title {
+    font-size: 20px;
+    color: #f0f1f6;
+}
+
+#message-container .message-pop-box .message-data .message-text-content {
+    font-size: 16px;
+    color: #c9bc4a;
+    margin: 5px auto;
+}
+
+#message-container .message-pop-box .msg-operate-btn {
+    top: 40%;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#message-container .message-pop-box .msg-operate-btn .message-btn {
+    position: relative;
+    background: url(/assets/d2eace91/images/common/msg_operate_btn.png) no-repeat;
+    background-size: cover;
+    padding: 30px 72px;
+    opacity: .8;
+}
+
+#message-container .message-pop-box .msg-operate-btn .message-btn:hover {
+    opacity: 1;
+}
+
+/*空数据*/
+.update-message .no-data-page {
+    margin: 0 auto;
+}
+
+.update-message .no-data-page .icon {
+    width: 50px;
+    height: 50px;
+}
+
+.update-message .no-data-page .icon i {
+    font-size: 36px;
+    margin: 7px auto;
+}
+
+.update-message .no-data-page h5 {
+    color: #f1d935;
+}
+
+.update-message .no-data-page p {
+    color: #fff;
+}
+
+.update-message .no-data-page .icon {
+    background: #4461ba;
+}
+
+.update-message .no-data-page .icon i {
+    color: #fff;
+}
+
+
+
+
+/*自定义右侧导航栏样式*/
+i.fa.fa-times-circle {
+    /*font-size: 16px;*/
+}
+.help-header {
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.helper-icon{
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    /*box-shadow: inset 0px 0px 3px 0 #5a86b9!important;*/
+    /*font-size: 14px;*/
+}
+.helper-wrap{
+    width: 120px;
+    /*font-size: 14px;*/
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    color: #ccc!important;
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    /*transition: all 0.4s ease;*/
+}
+.helper-wrap .panel{
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+    color: #ccc!important;
+    /*transition: all 0.4s ease;*/
+}
+.helper-wrap .panel-default>.panel-heading{
+    background-color: rgba(27, 68, 140, 0.8)!important;
+    border-color: rgba(27, 68, 140, 0.8)!important;
+}
+.helper-wrap .panel-body ul li{
+    border-bottom: 1px solid #4361ba!important;
+}
+.helper-wrap .panel-title a {
+    color: #28ACFE;
+    /*font-size: 14px;*/
+}
+.helper-wrap .panel-body ul li a{
+    color: #fff;
+}
+.helper-wrap .panel-body ul li:hover, .helper-wrap .panel-body ul li.selected {
+    background-color: rgba(26, 23, 94, 0.8)!important;
+    border-color: rgba(26, 23, 94, 0.8)!important;
+}
+.helper-wrap .panel-body ul li.selected a {
+    color: #fff;
+}
+#collapseTwo li.active{
+    background: rgba(26, 23, 94, 0.8)!important;
+    border-color: rgba(26, 23, 94, 0.8)!important;
+}
+/*自定义右侧导航栏样式*/

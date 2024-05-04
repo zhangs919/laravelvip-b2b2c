@@ -1,4 +1,4 @@
-@extends('layouts.design_layout_v3')
+@extends('layouts.design_layout')
 
 @section('header_js')
 
@@ -24,18 +24,18 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
 
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/index.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/template.css?v=20180702"/>
 
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v={{ time() }}" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
@@ -123,6 +123,7 @@
                     <a class="page-btn page-preview-btn" id="show_nav" href="javascript:void(0);"> 隐藏导航 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-BACKUP" href="javascript:void(0);">模板备份</a>
                     <a class="page-btn page-preview-btn SZY-TPL-USE" data-id="0" href="javascript:void(0);">使用备份</a>
+                    <a class="page-btn page-preview-btn SZY-TPL-PREVIEW" href="javascript:void(0);">预览 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-RELEASE" href="javascript:void(0);">发布 </a>
                 </div>
                 <div class="other-more">
@@ -131,7 +132,7 @@
                         <span class="top-dropdown-bg"></span>
                         <ul>
                             <li>
-                                <a class="other-help" target="_blank" href="http://help.68mall.com/"><i></i>帮助中心</a>
+                                <a class="other-help" target="_blank" href="http://help.laravelvip.com/"><i></i>帮助中心</a>
                             </li>
                             <li>
                                 <a class="other-exit"><i></i>退出设计</a>
@@ -149,14 +150,14 @@
         <!-- 顶部导航模块_start -->
         <div class="SZY-TPL-HEADER m-t-5">
             <!--页面css/js-->
-            <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/index.css?v=1.6"/>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index.js?v=1.2"></script>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/tabs.js?v=1.2"></script>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/bubbleup.js?v=1.2"></script>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jquery.hiSlider.js?v=1.2"></script>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/index_tab.js?v=1.2"></script>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=1.2"></script>
-            <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/nav.js?v=1.2"></script>
+            <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/index.js?v=1.2"></script>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/tabs.js?v=1.2"></script>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/bubbleup.js?v=1.2"></script>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/jquery.hiSlider.js?v=1.2"></script>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/index_tab.js?v=1.2"></script>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/jump.js?v=1.2"></script>
+            <script src="http://{{ config('lrw.frontend_domain') }}/js/nav.js?v=1.2"></script>
 
             <!-- 分类导航设置  _start -->
             <!-- 分类导航设置  _end -->
@@ -188,13 +189,13 @@
 
 
                             @foreach($navigation as $v)
-                                <li class="@if($v->nav_layout == 1) fl @else fr @endif">
-                                    <a class="nav " href="javascript:void(0)"  title="{{ $v->nav_name }}">{{ $v->nav_name }}</a>
+                                <li class="@if($v['nav_layout'] == 1) fl @else fr @endif">
+                                    <a class="nav " href="javascript:void(0)"  title="{{ $v['nav_name'] }}">{{ $v['nav_name'] }}</a>
                                     <!-- 导航小标签 _start -->
 
-                                    @if(!empty($v->nav_icon))
+                                    @if(!empty($v['nav_icon']))
                                         <span class="nav-icon">
-                                            <img src="{{ get_image_url($v->nav_icon) }}" />
+                                            <img src="{{ get_image_url($v['nav_icon']) }}" />
                                         </span>
                                     @endif
 
@@ -261,7 +262,7 @@
                                         @foreach($item->nav_relate_cat_right as $v)
                                             <dl class="fore1">
                                                 <dt>
-                                                    <a  href="{{ route('pc_goods_list', ['cat_id' => $v->cat_id]) }}" target="_blank"  title="{{ $v->cat_name }}">
+                                                    <a  href="{{ route('pc_goods_list', ['filter_str' => $v->cat_id]) }}" target="_blank"  title="{{ $v->cat_name }}">
                                                         <em>{{ $v->cat_name }}</em>
                                                         <i>&gt;</i>
                                                     </a>
@@ -270,7 +271,7 @@
 
                                                     @if(!empty($v->child))
                                                         @foreach($v->child as $child)
-                                                            <a href="{{ route('pc_goods_list', ['cat_id' => $child->cat_id]) }}" target="_blank"  title="{{ $child->cat_name }}">{{ $child->cat_name }}</a>
+                                                            <a href="{{ route('pc_goods_list', ['filter_str' => $child->cat_id]) }}" target="_blank"  title="{{ $child->cat_name }}">{{ $child->cat_name }}</a>
                                                         @endforeach
                                                     @endif
 
@@ -448,7 +449,9 @@
                     <li><a href="javascript:void(0);" data-key='5'>导航模板</a></li>
 
 
-
+                    <li>
+                        <a href="javascript:void(0);" data-key='8'>营销模板</a>
+                    </li>
 
 
 
@@ -475,6 +478,13 @@
                                         <img src="/assets/d2eace91/images/design/icon/0/ad_one_column.png">
                                     </a>
                                     <a class="panelModuleTitle" href="javascript:void(0);" title="一栏广告">一栏广告</a>
+                                </li>
+
+                                <li class="drag" id="0" data-code="hots_pot">
+                                    <a class="panelModuleIcon" href="javascript:void(0);">
+                                        <img src="/assets/d2eace91/images/design/icon/0/hots_pot.png" class="mCS_img_loaded">
+                                    </a>
+                                    <a class="panelModuleTitle" href="javascript:void(0);" title="热区模板">热区模板</a>
                                 </li>
 
                                 <li class="drag" id="0" data-code="ad_five_column">
@@ -868,7 +878,14 @@
                     <div class="panelItemContainer">
                         <!--模板列表-->
                         <div class="panelItemContent">
-
+                            <ul>
+                                <li class="drag" id="0" data-code="bonus_s1">
+                                    <a class="panelModuleIcon" href="javascript:void(0);">
+                                        <img src="/assets/d2eace91/images/design/icon/0/bonus_s1.png">
+                                    </a>
+                                    <a class="panelModuleTitle" href="javascript:void(0);" title="红包版式一">红包版式一</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

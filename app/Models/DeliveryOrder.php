@@ -33,9 +33,43 @@ class DeliveryOrder extends BaseModel
     protected $table = 'delivery_order';
 
     protected $fillable = [
-        'delivery_sn', 'order_id', 'user_id', 'shipping_id', 'shipping_code', 'shipping_name', 'shipping_type', 'sender_id',
-        'sender_id', 'name', 'tel', 'express_sn', 'delivery_status', 'add_time', 'send_time', 'icode', 'is_show', 'is_arrived', 'exception_reason'
+        'delivery_sn', 'order_id', 'user_id', 'shipping_id', 'shipping_code', 'shipping_name', 'shipping_type',
+        'delivery_charge',
+        'sender_id',
+        'region_code', 'name','address', 'tel',
+        'express_sn', 'delivery_status', 'add_time', 'send_time',
+        'icode', 'is_show', 'is_arrived', 'exception_reason'
     ];
 
     protected $primaryKey = 'delivery_id';
+
+    /**
+     * 一对多关联 发货单商品表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deliveryGoods()
+    {
+        return $this->hasMany(DeliveryGoods::class, 'delivery_id', 'delivery_id');
+    }
+
+    public function orderInfo()
+    {
+        return $this->belongsTo(OrderInfo::class, 'order_id','order_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id','user_id');
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id', 'sender_id');
+    }
+
+    public function shipping()
+    {
+        return $this->belongsTo(Shipping::class,'shipping_id','shipping_id');
+    }
 }

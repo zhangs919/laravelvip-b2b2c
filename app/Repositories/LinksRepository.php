@@ -37,4 +37,24 @@ class LinksRepository
         $this->model = new Links();
     }
 
+    public function getFlinksList()
+    {
+        $cache_id = CACHE_KEY_FLINK_LIST[0];
+        if ($data = cache()->get($cache_id)) {
+            return $data;
+        }
+
+        $condition = [
+            'where' => [
+                ['is_show',1]
+            ],
+            'sortname' => 'links_sort',
+            'sortorder' => 'asc',
+        ];
+        $data = $this->model->getList($condition);
+        cache()->put($cache_id, $data, CACHE_KEY_FLINK_LIST[1]);
+
+        return $data;
+    }
+
 }

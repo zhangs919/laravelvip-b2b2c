@@ -22,6 +22,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
+
 /**
  * 商品标签模型
  *
@@ -53,7 +55,7 @@ class GoodsTag extends BaseModel
      */
     public function getTagImageAttribute()
     {
-        return str_contains($this->attributes['tag_image'], 'superscript') ? '/assets/d2eace91'.$this->attributes['tag_image'] : get_image_url($this->attributes['tag_image']);
+        return Str::contains($this->attributes['tag_image'], 'superscript') ? '/assets/d2eace91'.$this->attributes['tag_image'] : get_image_url($this->attributes['tag_image']);
     }
 
 

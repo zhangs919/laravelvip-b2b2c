@@ -72,51 +72,110 @@
                             <a href="/user/security/edit-password.html" class="btn btn-specil">修改密码</a>
                         </div>
                     </div>
-                    <div class="safe-list">
-                        <div class="fore1">
-                            <s class="safe-bg2"></s>
-                            <strong>手机验证</strong>
-                            <b class="icon-id01"></b>
+
+                    @if(empty($user_info->mobile))
+                        <div class="safe-list">
+                            <div class="fore1">
+                                <s class="safe-bg1"></s>
+                                <strong>手机验证</strong>
+                                <b class="icon-id01d"></b>
+                            </div>
+                            <div class="fore2">
+                        <span>
+                             您绑定的手机：
+                            <font class="color">{{ hide_tel($user_info->mobile) }}</font>
+                            ，该手机可用于账号登录，快速找回登录密码、支付密码，接收账户余额变动提醒等。 					</span>
+                            </div>
+                            <div class="fore3">
+                                <a href="/user/security/edit-mobile.html" class="btn ">绑定手机</a>
+                            </div>
                         </div>
-                        <div class="fore2">
+                    @else
+                        <div class="safe-list">
+                            <div class="fore1">
+                                <s class="safe-bg2"></s>
+                                <strong>手机验证</strong>
+                                <b class="icon-id01"></b>
+                            </div>
+                            <div class="fore2">
 					<span>
 						 您绑定的手机：
 						<font class="color">{{ hide_tel($user_info->mobile) }}</font>
 						，该手机可用于账号登录，快速找回登录密码、支付密码，接收账户余额变动提醒等。 					</span>
+                            </div>
+                            <div class="fore3">
+                                <a href="/user/security/edit-mobile.html" class="btn btn-specil">修改手机</a>
+                            </div>
                         </div>
-                        <div class="fore3">
-                            <a href="/user/security/edit-mobile.html" class="btn btn-specil">修改手机</a>
+                    @endif
+
+                    @if(empty($user_info->email))
+                        <div class="safe-list">
+                            <div class="fore1">
+                                <s class="safe-bg1"></s>
+                                <strong>邮箱验证</strong>
+                                <b class="icon-id01d"></b>
+                            </div>
+                            <div class="fore2">
+                        <span>
+                             绑定后，可用于账号登录，快速找回登录密码、支付密码，接收账户余额变动提醒等。 					</span>
+                            </div>
+                            <div class="fore3">
+                                <a href="/user/security/edit-email.html" class="btn ">绑定邮箱</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="safe-list">
-                        <div class="fore1">
-                            <s class="safe-bg1"></s>
-                            <strong>邮箱验证</strong>
-                            <b class="icon-id01d"></b>
-                        </div>
-                        <div class="fore2">
+                    @else
+                        <div class="safe-list">
+                            <div class="fore1">
+                                <s class="safe-bg2"></s>
+                                <strong>邮箱验证</strong>
+                                <!-- 未开启标签样式 注意：如果已开启标签样式为“icon-id02” _star -->
+                                <b class="icon-id01"></b>
+                                <!-- 未开启标签样式  _end -->
+                            </div>
+                            <div class="fore2">
 					<span>
 						 绑定后，可用于账号登录，快速找回登录密码、支付密码，接收账户余额变动提醒等。 					</span>
+                            </div>
+                            <div class="fore3">
+                                <a href="/user/security/edit-email.html" class="btn btn-specil">修改邮箱</a>
+                            </div>
                         </div>
-                        <div class="fore3">
-                            <a href="/user/security/edit-email.html" class="btn ">绑定邮箱</a>
+                    @endif
+
+                    @if(empty($user_info->surplus_password))
+                        <div class="safe-list">
+                            <div class="fore1">
+                                <s class="safe-bg1"></s>
+                                <strong>支付密码</strong>
+                                <!-- 未开启标签样式 注意：如果已开启标签样式为“icon-id02” _star -->
+                                <b class="icon-id02d"></b>
+                                <!-- 未开启标签样式  _end -->
+                            </div>
+                            <div class="fore2">
+                                <span>启用支付密码后，可保障您账户余额的支付安全,在使用账户资产时，需通过支付密码进行支付认证。</span>
+                            </div>
+                            <div class="fore3">
+                                <a href="/user/security/edit-surplus-password.html" class="btn">开启支付密码</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="safe-list">
-                        <div class="fore1">
-                            <s class="safe-bg1"></s>
-                            <strong>支付密码</strong>
-                            <!-- 未开启标签样式 注意：如果已开启标签样式为“icon-id02” _star -->
-                            <b class="icon-id02d"></b>
-                            <!-- 未开启标签样式  _end -->
+                    @else
+                        <div class="safe-list">
+                            <div class="fore1">
+                                <s class="safe-bg2"></s>
+                                <strong>支付密码</strong>
+                                <!-- 未开启标签样式 注意：如果已开启标签样式为“icon-id02” _star -->
+                                <b class="icon-id02"></b>
+                                <!-- 未开启标签样式  _end -->
+                            </div>
+                            <div class="fore2">
+                                <span>启用支付密码后，可保障您账户余额的支付安全,在使用账户资产时，需通过支付密码进行支付认证。</span>
+                            </div>
+                            <div class="fore3">
+                                <a id="btn" class="btn btn-specil">管理支付密码</a>
+                            </div>
                         </div>
-                        <div class="fore2">
-                            <span>启用支付密码后，可保障您账户余额的支付安全,在使用账户资产时，需通过支付密码进行支付认证。</span>
-                        </div>
-                        <div class="fore3">
-                            <a href="/user/security/edit-surplus-password.html" class="btn">开启支付密码</a>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -145,4 +204,64 @@
         <!-- 管理支付密码弹框 _end -->
     </div>
 
-@endsection
+@stop
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d2eace91/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $("#btn").click(function() {
+            var modal = $.modal({
+                title: '管理支付密码',
+                content: $('#modal-box').html(),
+            });
+        });
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function() {
+        })
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+    </script>
+@stop

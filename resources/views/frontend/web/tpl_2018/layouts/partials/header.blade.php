@@ -7,13 +7,6 @@
 
             </a>
 
-
-
-
-
-
-
-
             @if(!empty(sysconf('mall_logo_right_ad_image')) && !request()->routeIs('pc_cart_list'))
             <!-- logo右侧小广告 _start -->
             <a href="{{ sysconf('mall_logo_right_ad_url') }}" class="logo-right">
@@ -21,7 +14,6 @@
             </a>
             <!-- logo右侧小广告 _end -->
             @endif
-
 
         </div>
         <div class="search SZY-SEARCH-BOX">
@@ -41,7 +33,7 @@
                     </div>
                     <div class="search-box">
                         <div class="search-box-con">
-                            <input type="text" class="keyword search-box-input SZY-SEARCH-BOX-KEYWORD" name="keyword" tabindex="9" autocomplete="off" data-searchwords="" placeholder="" value="" />
+                            <input type="text" class="keyword search-box-input SZY-SEARCH-BOX-KEYWORD" name="keyword" tabindex="9" autocomplete="off" data-searchwords="" placeholder="" value="{{ $keyword ?? '' }}" />
                         </div>
                     </div>
                     <input type='hidden' id="searchtype" name='type' value="0" class="searchtype" />
@@ -126,7 +118,7 @@
         </div>
 
 
-        @if(!empty(sysconf('mall_search_right_ad_image')) && !request()->routeIs('pc_cart_list'))
+        @if(!empty($show_mall_search_right_ad))
         <!-- 搜索框右侧小广告 _start -->
 
         <div class="header-right">
@@ -141,23 +133,23 @@
 </div>
 
 <script type="text/javascript">
-    //解决因为缓存导致获取分类ID不正确问题，需在ready之前执行
-    $(".SZY-DEFAULT-SEARCH").data("cat_id", "{{ $cat_id ?? '' }}");
-    $().ready(function() {
-        $(".SZY-SEARCH-BOX-KEYWORD").val("{{ request('keyword', '') }}");
-        $(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "{{ request('search_type', 0) }}");
-        //
+    {{--//解决因为缓存导致获取分类ID不正确问题，需在ready之前执行--}}
+    {{--$(".SZY-DEFAULT-SEARCH").data("cat_id", "{{ $cat_id ?? '' }}");--}}
+    {{--$().ready(function() {--}}
+        {{--$(".SZY-SEARCH-BOX-KEYWORD").val("{{ request('keyword', '') }}");--}}
+        {{--$(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "{{ request('search_type', 0) }}");--}}
+        {{--//--}}
 
-        $(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {
-            if ($(".search-li.curr").attr('num') == 0) {
-                var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");
-                var keywords = $(keyword_obj).val();
-                if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {
-                    keywords = $(keyword_obj).data("searchwords");
-                }
-                $(keyword_obj).val(keywords);
-            }
-            $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();
-        });
-    });
+        {{--$(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {--}}
+            {{--if ($(".search-li.curr").attr('num') == 0) {--}}
+                {{--var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");--}}
+                {{--var keywords = $(keyword_obj).val();--}}
+                {{--if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {--}}
+                    {{--keywords = $(keyword_obj).data("searchwords");--}}
+                {{--}--}}
+                {{--$(keyword_obj).val(keywords);--}}
+            {{--}--}}
+            {{--$(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();--}}
+        {{--});--}}
+    {{--});--}}
 </script>

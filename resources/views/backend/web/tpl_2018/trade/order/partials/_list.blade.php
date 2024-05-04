@@ -7,7 +7,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -258,7 +258,7 @@
             </tr>
             </tbody>
 
-            @if(!$list->isEmpty())
+            @if(!empty($list))
                 <!--以下为循环内容-->
                 <tbody class="order ">
                 @foreach($list as $v)
@@ -268,226 +268,249 @@
                 <!--订单编号-->
                 <tr class="order-hd">
                     <td class="tcheck">
-                        <input name="order_id_box" type="checkbox" class="table-list-checkbox checkBox cur-p m-r-5" value="{{ $v->order_id }}" />
+                        <input name="order_id_box" type="checkbox" class="table-list-checkbox checkBox cur-p m-r-5" value="{{ $v['order_id'] }}" />
                         </input>
                     </td>
                     <td colspan="9">
                         <div class="basic-info">
-                            <span class="order-num">订单编号：{{ $v->order_sn }}</span>
-                            <span class="deal-time">下单时间：{{ format_time($v->add_time) }}</span>
+                            <span class="order-num">订单编号：{{ $v['order_sn'] }}</span>
+                            <span class="deal-time">下单时间：{{ $v['created_at'] }}</span>
 
-                            <span class="order-source">订单来源：{{ format_order_from($v->order_from) }}</span>
-                            <span class="order-source" title="{{ $v->shop_name }}">店铺：{{ $v->shop_name }}</span>
+                            <span class="order-source">订单来源：{{ format_order_from($v['order_from']) }}</span>
+                            <span class="order-source" title="{{ $v['shop_name'] }}">店铺：{{ $v['shop_name'] }}</span>
                         </div>
                     </td>
                 </tr>
                 <!--订单内容-->
-                @foreach($v->order_goods as $og)
+                @foreach($v['goods_list'] as $gKey=>$goods)
                 <tr class="order-item">
                     <td class="item" colspan="2">
                         <div class="pic-info">
-                            <a href="{{ route('pc_show_goods', ['goods_id' => $og->goods_id]) }}" class="goods-thumb" title="查看商品详情" target="_blank">
-                                <img src="{{ get_image_url($og->goods->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" alt="查看商品详情" />
+                            <a href="{{ route('pc_show_goods', ['goods_id' => $goods['goods_id']]) }}" class="goods-thumb" title="查看商品详情" target="_blank">
+                                <img src="{{ get_image_url($goods['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" alt="查看商品详情" />
                             </a>
                         </div>
                         <div class="txt-info">
                             <div class="desc">
-                                <a href="{{ route('pc_show_goods', ['goods_id' => $og->goods_id]) }}" class="goods-name" target="_blank" title="{{ $og->goods_name }}">
+                                <a href="{{ route('pc_show_goods', ['goods_id' => $goods['goods_id']]) }}" class="goods-name" target="_blank" title="{{ $goods['goods_name'] }}">
 
 
-                                    {{ $og->goods_name }}
+                                    {{ $goods['goods_name'] }}
                                 </a>
                                 <!-- <a href="http://www.b2b2c.yunmall.laravelvip.com/725" class="snap">【交易快照】</a> -->
                             </div>
                             <!---->
                             <div class="props">
-                                <span>颜色：金色</span>
-                                <span>容量：8G</span>
-
+                                @if(!empty($goods['spec_info']))
+                                    @foreach(explode(' ', $goods['spec_info']) as $spec)
+                                        <span>{{ $spec }}</span>
+                                    @endforeach
+                                @endif
                             </div>
 
+                            @if($goods['third_id'] > 0)
+                                <a class="product-label info m-r-10" href="https://item.taobao.com/item.htm?id={{ $goods['third_id'] }}" target="_blank">云产品库</a>
+                            @endif
 
                             <div class="icon m-t-3">
-
+                                @if(!empty($goods['saleservice']))
+                                    @foreach($goods['saleservice'] as $service)
+                                        <a href="javascript:;" target="_blank" title="【{{ $service['contract_name'] }}】{{ $service['contract_desc'] }}">
+                                            <img src="{{ get_image_url($service['contract_image']) }}">
+                                        </a>
+                                    @endforeach
+                                @endif
                             </div>
+
                         </div>
                     </td>
 
                     <!--单价-->
 
                     <td class="price">
-                        <div class="price m-b-3">￥{{ $og->goods_price }}</div>
+                        <div class="price m-b-3">￥{{ $goods['goods_price'] }}</div>
 
-                        <!-- -->
-
-
-
-                        {{--todo 判断是否是限时活动或满减送 是就显示 否则隐藏--}}
-                        <div class="goods-active discount">
-                            <a>限时折扣</a>
-                        </div>
-
-                        {{--todo 判断是否是限时活动或满减送 是就显示 否则隐藏--}}
-                        <div class="goods-active fullsubtraction">
-                            <a>满减送</a>
-                        </div>
-
-
+                        {{--商品活动标识--}}
+                        @if($goods['goods_type'] > 0)
+                            <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">
+                                <a>{{ format_order_goods_type($goods['goods_type']) }}</a>
+                            </div>
+                        @endif
 
                     </td>
 
 
                     <!--数量-->
-                    <td class="num text-c">{{ $og->goods_number }}</td>
+                    <td class="num text-c">{{ $goods['goods_number'] }}</td>
                     <!--售后-->
 
                     <td class="text-c">
                         <div class="ng-binding">
 
+                            @if($goods['back_id'] > 0)
+                                <a href="/trade/refund/info?id={{ $goods['back_id'] }}" class="refund">
+                                    <i class="fa fa-clock-o"></i>
+                                    {{ $goods['goods_back_format'] }}
+                                </a>
+                            @endif
+                            {{--<a href="/trade/refund/info?id=19" class="refund">
+                                <i class="fa fa-clock-o"></i>
+                                换货中
+                            </a>--}}
 
+                            {{--<a href="/trade/refund/info?id=17" class="refund">
+                                <i class="fa fa-clock-o"></i>
+                                退款退货中
+                            </a>
+
+                            <a href="/trade/refund/info?id=18" class="refund">
+                                <i class="fa fa-clock-o"></i>
+                                退款中
+                            </a>--}}
 
                         </div>
                     </td>
 
 
                     <!-- 共用start -->
-                    <!--买家信息-->
-                    <td class="contact" sumrows="1" rowspan="{{ count($v->order_goods) }}">
-                        <div class="ng-binding popover-box buyer">
-                                    <span class="text-c">
-                                        <a class="nickname">{{ $v->user_nickname }}</a>
+                    @if($gKey == 0)
+                        <!--买家信息-->
+                        <td class="contact" sumrows="1" rowspan="{{ count($v['goods_list']) }}">
+                            <div class="ng-binding popover-box buyer">
+                                        <span class="text-c">
+                                            <a class="nickname">{{ $v['nickname'] }}</a>
 
-                                        <div class="popover-info" style="left: auto; right: -280px">
-                                            <i class="fa fa-caret-left"></i>
-                                            <ul>
-                                                <li>
-                                                    <h3>
-                                                        <i class="fa fa-user"></i>
-                                                        联系信息
-                                                    </h3>
-                                                </li>
-                                                <li>
-                                                    <div class="dt">
-                                                        <span>姓名：</span>
-                                                    </div>
-                                                    <div class="dd">{{ $v->consignee_name }}</div>
-                                                </li>
-                                                <li>
-                                                    <div class="dt">
-                                                        <span>电话：</span>
-                                                    </div>
-                                                    <div class="dd">{{ $v->consignee_mobile }}</div>
-                                                </li>
-                                                <li>
-                                                    <div class="dt">
-                                                        <span>地址：</span>
-                                                    </div>
-                                                    <div class="dd">{{ $v->consignee_address }} </div>
-                                                </li>
-                                                <li>
-                                                    <div class="dt">
-                                                        <span>留言：</span>
-                                                    </div>
-                                                    <div class="dd">{{ $v->order_message }}</div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                            <div class="popover-info" style="left: auto; right: -280px">
+                                                <i class="fa fa-caret-left"></i>
+                                                <ul>
+                                                    <li>
+                                                        <h3>
+                                                            <i class="fa fa-user"></i>
+                                                            联系信息
+                                                        </h3>
+                                                    </li>
+                                                    <li>
+                                                        <div class="dt">
+                                                            <span>姓名：</span>
+                                                        </div>
+                                                        <div class="dd">{{ $v['consignee'] }}</div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="dt">
+                                                            <span>电话：</span>
+                                                        </div>
+                                                        <div class="dd">{{ $v['mobile'] }}</div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="dt">
+                                                            <span>地址：</span>
+                                                        </div>
+                                                        <div class="dd">{{ $v['region_name'] }} {{ $v['address'] }} </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="dt">
+                                                            <span>留言：</span>
+                                                        </div>
+                                                        <div class="dd">{!! $v['postscript'] !!}</div>
+                                                    </li>
+                                                </ul>
+                                            </div>
 
-                                    </span>
-                                    <span class="text-c">
+                                        </span>
+                                        <span class="text-c">
 
-                                        <a class="btn btn-warning c-fff btn-xs " href="/trade/order/list?uid={{ $v->user_id }}&from=user">查看所有订单</a>
+                                            <a class="btn btn-warning c-fff btn-xs " href="/trade/order/list?uid={{ $v['user_id'] }}&from=user">查看所有订单</a>
 
-                                    </span>
+                                        </span>
 
-                                    <span class="tool text-c">
-                                        <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=zlww26837&site=cntaobao&s=1&groupid=0&charset=utf-8">
-                                            <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=zlww26837&site=cntaobao&s=1&charset=utf-8" alt="淘宝旺旺" title="" />
-                                        </a>
-                                    </span>
+                                        <span class="tool text-c">
+                                            <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=xxxxxx&site=cntaobao&s=1&groupid=0&charset=utf-8">
+                                                <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=xxxxxx&site=cntaobao&s=1&charset=utf-8" alt="淘宝旺旺" title="" />
+                                            </a>
+                                        </span>
 
-                        </div>
-                    </td>
-                    <!--交易状态-->
-                    <td class="trade-status" sumrows="1" rowspan="{{ count($v->order_goods) }}">
-                        <div class="ng-binding pos-r">
-                                    <span class="text-c pos-r">
+                            </div>
+                        </td>
+                        <!--交易状态-->
+                        <td class="trade-status" sumrows="1" rowspan="{{ count($v['goods_list']) }}">
+                            <div class="ng-binding pos-r">
+                                        <span class="text-c pos-r">
 
-                                        <font class="c-red">买家已付款，等待卖家发货</font>
-                                        <!-- -->
+                                            <font class="{{ str_replace([0,1,2,3,4],['c-red','c-green','c-999','c-999','c-999'], $v['order_status']) }}">{{ $v['order_status_format'] }}</font>
 
-                                    </span>
-                            <span class="text-c">{{ format_order_from($v->order_from) }}</span>
-
-
-                            <span class="text-c">{{ format_order_pickup($v->pickup) }}</span>
-
-                        </div>
-                    </td>
-                    <!--查看物流现在点击跳转到订单详情页面，直接定位到物流模块-->
-                    <!--实收款-->
-
-                    <td class="order-price" sumrows="1" rowspan="{{ count($v->order_goods) }}">
-                        <div class="ng-binding">
-
-                            <span class="text-c"> 总金额：￥{{ $v->order_amount }} </span>
-
-                            <span class="text-c">{{ format_pay_type($v->pay_type) }}</span>
-
-                            <span class="text-c">
-                                @if($v->shipping_fee > 0)
-                                    ( 含快递：￥{{ $v->shipping_fee }} )
-                                @else
-                                    （<font class="c-orange">免邮</font>）
-                                @endif
-                            </span>
+                                        </span>
+                                <span class="text-c">{{ $v['order_from_format'] }}</span>
 
 
-                        </div>
-                    </td>
+                                <span class="text-c">{{ $v['shipping_type'] }}</span>
 
-                    <!--评价-->
+                            </div>
+                        </td>
+                        <!--查看物流现在点击跳转到订单详情页面，直接定位到物流模块-->
+                        <!--实收款-->
 
-                    <td class="remark" sumrows="1" rowspan="{{ count($v->order_goods) }}">
-                        <div class="ng-binding">
-                            <span class="text-c"></span>
-                        </div>
-                    </td>
+                        <td class="order-price" sumrows="1" rowspan="{{ count($v['goods_list']) }}">
+                            <div class="ng-binding">
 
-                    <!--操作-->
-                    <td class="handle" sumrows="1" rowspan="{{ count($v->order_goods) }}">
-                        <div class="ng-binding">
-                                    <span class="text-c">
-                                        <a href="info?id={{ $v->order_id }}">订单详情</a>
-                                    </span>
-                        </div>
-                        <div class="ng-binding">
-                                    <span class="text-c">
-                                        <a href="javascript:void(0);" id="remark" data-id="{{ $v->order_id }}">备注</a>
-                                    </span>
-                        </div>
+                                <span class="text-c"> 总金额：￥{{ $v['order_amount'] }} </span>
 
-                        <div class="ng-binding">
-                                    <span class="text-c">
-                                        <a id="order_print_{{ $v->order_id }}" href="javascript:order_print('{{ $v->order_id }}')">打印订单</a>
-                                    </span>
-                        </div>
+                                <span class="text-c">{{ $v['pay_name'] }}</span>
 
-                    </td>
+                                <span class="text-c">
+                                    @if($v['shipping_fee'] > 0)
+                                        ( 含快递：￥{{ $v['shipping_fee'] }} )
+                                    @else
+                                        （<font class="c-orange">免邮</font>）
+                                    @endif
+                                </span>
+
+
+                            </div>
+                        </td>
+
+                        <!--评价-->
+
+                        <td class="remark" sumrows="1" rowspan="{{ count($v['goods_list']) }}">
+                            <div class="ng-binding">
+                                <span class="text-c"></span>
+                            </div>
+                        </td>
+
+                        <!--操作-->
+                        <td class="handle" sumrows="1" rowspan="{{ count($v['goods_list']) }}">
+                            <div class="ng-binding">
+                                        <span class="text-c">
+                                            <a href="info?id={{ $v['order_id'] }}">订单详情</a>
+                                        </span>
+                            </div>
+                            <div class="ng-binding">
+                                        <span class="text-c">
+                                            <a href="javascript:void(0);" id="remark" data-id="{{ $v['order_id'] }}">备注</a>
+                                        </span>
+                            </div>
+
+                            <div class="ng-binding">
+                                        <span class="text-c">
+                                            <a id="order_print_{{ $v['order_id'] }}" href="javascript:order_print('{{ $v['order_id'] }}')">打印订单</a>
+                                        </span>
+                            </div>
+
+                        </td>
+                    @endif
                     <!-- 共用end -->
                 </tr>
                 <!-- 商品自带赠品 -->
                 @endforeach
 
-                @if(!$v->order_remark->isEmpty())
+                @if(!empty($v['mall_remark']))
                     <tr class="order-item">
                         <td colspan="10" class="userLabel">
                             <p class="m-l-10">
 
-                                @foreach($v->order_remark as $or)
-                                    <span class="m-r-20">备注人：{{ $or->admin_name }}</span>
-                                    <span class="m-r-20">备注时间：{{ $or->created_at }}</span>
-                                    <span class="m-r-20" title="我的订单">备注内容：{!! $or->content !!}</span>
+                                @foreach($v['mall_remark'] as $or)
+                                    <span class="m-r-20">备注人：{{ $or['user_name'] }}</span>
+                                    <span class="m-r-20">备注时间：{{ format_time($or['add_time']) }}</span>
+                                    <span class="m-r-20" title="我的订单">备注内容：{!! $or['remark'] !!}</span>
                                     <br>
                                 @endforeach
 

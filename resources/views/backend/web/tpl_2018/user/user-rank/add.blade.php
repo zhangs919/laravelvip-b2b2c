@@ -16,7 +16,7 @@
 @section('content')
 
     <form id="UserRankModel" class="form-horizontal" name="UserRankModel" action="/user/user-rank/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <div class="simple-form-field">
                 <div class="form-group">
@@ -180,7 +180,6 @@
             var value = $(target).val();
 
             $(this).imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: size,
                 values: value.split("|"),

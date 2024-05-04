@@ -13,25 +13,22 @@
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}">
-        <script src="/assets/d2eace91/js/jquery-1.9.1.min.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/jquery-ui.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/scrollBar/jquery.mCustomScrollbar.js?v=20190121"></script>
-    <script src="/assets/d2eace91/bootstrap/switch/js/bootstrap-switch.min.js?v=20190121"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20190315"/>
-    <!-- -->
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/fonts/css/font-awesome.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/scrollBar/jquery.mCustomScrollbar.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/jquery-ui.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/customform/design.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/design/tplsetting.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/switch/css/bootstrap-switch.min.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/evol-colorpicker/css/evol.colorpicker.min.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/animate.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/loading/loaders.css?v=20190315"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/customform/edit.css?v=20190315"/>
+    <!-- ================== BEGIN BASE  ================== -->
+    <!-- ================== END BASE  ================== -->
+    <link href="/assets/d2eace91/css/jquery-ui.css" rel="stylesheet">
+    <link href="/assets/d2eace91/fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/scrollBar/jquery.mCustomScrollbar.css" rel="stylesheet">
+    <link href="/assets/d2eace91/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/app.common.min.css" rel="stylesheet">
+    <link href="/assets/d2eace91/bootstrap/switch/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="/assets/d2eace91/js/colour/css/spectrum.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/customform/design.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/design/tplsetting.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/customform/edit.css" rel="stylesheet">
+    <script src="/assets/d2eace91/js/jquery.js"></script>
+    <script src="/assets/d2eace91/js/szy.head.js"></script>
 </head>
 <!--接收所修改的背景颜色及背景图片-->
 <body class="bg-fixed" style="@if(@$form_info['global_data']['page_header']['bodybg_type'] == 1) background: {{ @$form_info['global_data']['page_header']['bodybg'] }}@else background-image: url('{{ @$form_info['global_data']['page_header']['bodybg'] }}');@endif" >
@@ -245,37 +242,17 @@
         <!--此处为表单设置背景颜色-->
         <div class="center-form">
             <div class="top-images drop-field" id="fpage_header" data-unique="header" data-type="page_header">
-
                 <!--   -->
                 <img src="{{ $form_info['global_data']['page_header']['header'] ?? '/assets/d2eace91/images/customform/design/top-default.jpg' }}" style="width: 100%;">
-
             </div>
             <div class="center-content">
                 <!--不可删不可移可编辑-->
-
-
-
-
                 <div class="form-title drop-field" id="fpage_title" data-unique="title" data-type="page_title">
-
                     {{ $form_info['global_data']['page_title']['title'] ?? '模板标题' }}
-
                 </div>
-
-
-
-
                 <div class="form-desc drop-field" id="fpage_desc" data-unique="description" data-type="page_desc">
-
                     {!! $form_info['global_data']['page_desc']['description'] ?? '模板描述' !!}
-
                 </div>
-
-
-
-
-
-
                 <!--可删可移可编辑-->
                 @if(empty($form_info['form_data']))
                     <ul id="dropzone" class="ui-sortable empty-field">
@@ -285,18 +262,10 @@
                         @foreach($form_info['form_data'] as $k=>$form)
                             <li class="drop-field ui-draggable ui-draggable-handle" data-type="{{ $form['type'] }}" id="f{{ $k }}">
                                 <div class="type-content">
-
                                     {{--根据type switch 判断展示不同的元素--}}
                                     {{--引入万能表单元素--}}
                                     @include('components.custom-form.form_items')
-
                                     <div class="operateEdit">
-
-
-
-
-
-
                                         <a class="decor-btn upMove-btn hide">
                                             <div class="selector-box">
                                                 <div class="arrow"></div>
@@ -304,11 +273,6 @@
                                                 上移
                                             </div>
                                         </a>
-
-
-
-
-
                                         <a class="decor-btn downMove-btn ">
                                             <div class="selector-box">
                                                 <div class="arrow"></div>
@@ -325,7 +289,6 @@
                                             </div>
                                         </a>
                                          -->
-
                                         <a class="decor-btn deletes-btn">
                                             <div class="selector-box">
                                                 <div class="arrow"></div>
@@ -369,8 +332,8 @@
                                     <div class="col-sm-8">
                                         <div class="form-control-box">
                                             <select class="form-control" id="bodybg_type" name="bodybg_type" data-type="input">
-                                                <option value="1">底色</option>
-                                                <option value="0">背景图片</option>
+                                                <option value="1" @if($form_info['global_data']['page_header']['bodybg_type'] == 1)selected="selected"@endif>底色</option>
+                                                <option value="0" @if($form_info['global_data']['page_header']['bodybg_type'] == 0)selected="selected"@endif>背景图片</option>
                                             </select>
                                         </div>
                                     </div>
@@ -381,20 +344,14 @@
                                         <div class="form-control-box p-t-10">
                                             <!-- 背景图 container -->
                                             <div id="bg_img_container" class="szy-imagegroup" data-id="bg_img" data-size="1" style="display: none;"></div>
-                                            <input class="form-control" id="bg_img" name="bg_img" type="hidden" value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036304510013.jpg?k=1552578436654">
+                                            <input class="form-control" id="bg_img" name="bg_img" type="hidden" value="{{ $form_info['global_data']['page_header']['bodybg'] }}">
                                             <div class="help-block help-block-t" id="bg_img_helper">建议上传尺寸 1920*1080像素</div>
                                             <!-- 背景色 container -->
                                             <div id="bg_color_container">
                                                 <!-- 线色 -->
                                                 <div class="color-picker">
-                                                    <input class="form-control m-r-20" id="bg_color_picker" type="text" value="#ffffff" name="bg_color">
-                                                    <script>
-                                                        $(function () {
-                                                            $('#bg_color_picker').colorpicker({
-                                                                color: "#ffffff"
-                                                            });
-                                                        });
-                                                    </script>
+                                                    <input class="color-input-value form-control w120 m-r-5" onblur="setPalette(this)" type="text">
+                                                    <input type='text' id="bg_color_picker" class='form-control colorpicker w100' name="bg_color" value="{{ $form_info['global_data']['page_header']['bodybg'] }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -413,13 +370,6 @@
                                             背景颜色
                                             <div class="color-picker">
                                                 <input class="form-control m-r-20" id="form_color_picker" type="text" value="#ffffff" name="formbg" data-type="input">
-                                                <script>
-                                                    $(function () {
-                                                        $('#form_color_picker').colorpicker({
-                                                            color: "#ffffff"
-                                                        });
-                                                    });
-                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -435,7 +385,7 @@
                                     <div class="col-sm-8">
                                         <div class="form-control-box">
                                             <div id="imagegroup_container" data-id="header_img" class="szy-imagegroup" data-size="1"></div>
-                                            <input class="form-control" data-type="input" id="header_img" name="header" type="hidden" value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036304513677.jpg?k=1552578445692">
+                                            <input class="form-control" data-type="input" id="header_img" name="header" type="hidden" value="{{ $form_info['global_data']['page_header']['header'] }}">
                                             <div class="help-block help-block-t">建议上传尺寸 800*300像素</div>
                                         </div>
                                     </div>
@@ -873,14 +823,8 @@
                                         <div class="form-control-box">
                                             <!-- 线色 -->
                                             <div class="color-picker">
-                                                <input class="form-control m-r-20" id="color-picker" type="text" value="#5367ce" name="line_color" data-type="input">
-                                                <script>
-                                                    $(function () {
-                                                        $('#color-picker').colorpicker({
-                                                            color: "#ccc"
-                                                        });
-                                                    });
-                                                </script>
+                                                <input class="color-input-value form-control w120 m-r-5" onblur="setPalette(this)" type="text" name="line_color" data-type="input">
+                                                <input type='text' id="color-picker" class='form-control colorpicker w100'>
                                             </div>
                                         </div>
                                     </div>
@@ -1112,31 +1056,42 @@
         </div>
     </div>
 </script>
+<script type="text/javascript">
+	window._AMapSecurityConfig = {
+		securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+	};
+</script>
 <script src="//webapi.amap.com/maps?v=1.4.9&key={{ sysconf('amap_js_key') }}"></script>
-<!-- 表单验证 -->
-<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/validate/messages_zh.js?v=20190121"></script>
-
-<script src="/assets/d2eace91/js/layer/layer.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/jquery.method.js?v=20190121"></script>
-
-<script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20190121"></script>
-
-<script src="/assets/d2eace91/js/jquery-ui.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/wangEditor.min.js?v=20190121"></script>
-<script src="/assets/d2eace91/bootstrap/evol-colorpicker/js/evol.colorpicker.js?v=20190121"></script>
-<!-- AJAX上传+图片预览 -->
-<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/pic/imgPreview.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/jquery.widget.js?v=20190121"></script>
-<!-- 日期选择器 -->
-<script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190121"></script>
-<script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190121"></script>
 <!-- 地址 -->
-<script src="/assets/d2eace91/js/jquery.region.js?v=20190121"></script>
-
-
+<script type="text/javascript">
+    //
+</script>
+<!-- 编辑器 -->
+<!-- 创建KindEditor的脚本 必须设置editor_id属性-->
+<script type="text/javascript">
+    //
+</script>    <!-- /编辑器 -->
+<!-- 表单功能 顺序必须不能变 -->
+<script type="text/javascript">
+    //
+</script>
+<script src="/assets/d2eace91/min/js/app.common.min.js"></script>
+<script src="/assets/d2eace91/min/js/core.min.js"></script>
+<script src="/assets/d2eace91/js/jquery-ui.js"></script>
+<script src="/assets/d2eace91/bootstrap/switch/js/bootstrap-switch.min.js"></script>
+<script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/assets/d2eace91/js/colour/js/spectrum.js"></script>
+<script src="/assets/d2eace91/js/colour/js/docs.js"></script>
+<script src="/assets/d2eace91/min/js/validate.min.js"></script>
+<script src="/assets/d2eace91/min/js/upload.min.js"></script>
+<script src="/assets/d2eace91/js/wangEditor.min.js"></script>
+<script src="/assets/d2eace91/js/jquery.region.js"></script>
+<script src="/assets/d2eace91/js/customform/index.js"></script>
+<script src="/assets/d2eace91/js/customform/edit.js"></script>
+<script src="/assets/d2eace91/js/jquery.base64.js"></script>
+<script src="/assets/d2eace91/js/editor/kindeditor-all.min.js"></script>
+<script src="/assets/d2eace91/js/editor/lang/zh_CN.js"></script>
 <script>
     var home_url = '{{ route('pc_home') }}';
     <!-- 图片地址 -->
@@ -1147,19 +1102,10 @@
     var video_min_duration = '0';
     var video_max_duration = '90';
     var default_img = '/assets/d2eace91/images/customform/design/top-default.jpg';
-</script>
-<!-- 编辑器 -->
-<script src="/assets/d2eace91/js/editor/kindeditor-all.min.js?v=20190121"></script>
-<script src="/assets/d2eace91/js/editor/lang/zh_CN.js?v=20190121"></script>
-<!-- 创建KindEditor的脚本 必须设置editor_id属性-->
-
-
-<script type="text/javascript">
+    //
     KindEditor.ready(function(K) {
-
         var extraFileUploadParams = [];
-        extraFileUploadParams['ISHUOCHA_CN_USER_PHPSESSID'] = '98q6nfol0f6imsi3cskch91nbe';
-
+        extraFileUploadParams['LARAVELVIP_COM_USER_PHPSESSID'] = 'geqenqj1useqq3pi083nguuvia';
         window.editor = K.create('#ueditor', {
             width: '100%',
             minWidth: '250',
@@ -1176,6 +1122,7 @@
             syncType: "form",
             // 设置粘贴类型，0:禁止粘贴, 1:纯文本粘贴, 2:HTML粘贴
             pasteType: 2,
+            filterMode: '1737' == 15688 ? false : true,
             afterCreate: function() {
                 var self = this;
                 self.sync();
@@ -1190,15 +1137,9 @@
             }
         });
     });
-</script>	<!-- /编辑器 -->
-<!-- 表单功能 顺序必须不能变 -->
-<script src="/assets/d2eace91/js/customform/index.js?v=20190121"></script>
-<script>
-
-
+    //
     var form_datas = {!! json_encode($form_info['form_data']) !!};
     <!-- -->
-
     var global_form_datas = {!! json_encode($form_info['global_data']) !!};
     <!-- -->
     $(function() {
@@ -1206,7 +1147,7 @@
         initComponents('static_map');
         // ----- /地图数据回显与管理 ----- //
     });
+    //
 </script>
-<script src="/assets/d2eace91/js/customform/edit.js?v=20190121"></script>
 </body>
 </html>

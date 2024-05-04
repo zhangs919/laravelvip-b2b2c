@@ -22,7 +22,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ShopFieldValueModel" class="form-horizontal" name="ShopFieldValueModel" action="/shop/shop/shop-auth-info?id={{ $info->shop_id }}&amp;shop_type={{ $info->shop_type }}&amp;is_supply={{ $info->is_supply }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
 
 
             <div class="simple-form-field" >

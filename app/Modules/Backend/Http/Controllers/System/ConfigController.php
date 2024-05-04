@@ -2,11 +2,12 @@
 
 namespace App\Modules\Backend\Http\Controllers\System;
 
-use App\Http\Requests\SystemConfigRequest;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\SystemConfigRepository;
+use App\Repositories\ToolsRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ConfigController extends Backend
 {
@@ -55,13 +56,47 @@ class ConfigController extends Backend
         ['url' => 'system/config/index?group=recommend_reg', 'text' => '推荐注册设置'],
     ];
 
+    private $desc_links = [
+        ['url' => 'system/config/index?group=desc_conform', 'text' => '宝贝与描述相符'],
+        ['url' => 'system/config/index?group=service_desc', 'text' => '卖家的服务态度'],
+        ['url' => 'system/config/index?group=send_desc', 'text' => '卖家的发货速度'],
+        ['url' => 'system/config/index?group=shipping_desc', 'text' => '物流公司的服务'],
+        ['url' => 'system/config/index?group=mark_set', 'text' => '评分设置'],
+    ];
+
+//    private $group_buy_slide_links = [
+//        ['url' => 'dashboard/group-buy/list', 'text' => '团购列表'],
+//        ['url' => 'dashboard/activity-category/list', 'text' => '团购分类'],
+//        ['url' => 'dashboard/group-buy/slide-config', 'text' => '幻灯片管理'],
+//    ];
+
+    private $app_push_links = [
+        ['url' => 'app/push-message/index', 'text' => '消息推送'],
+        ['url' => 'system/config/index?group=app_push', 'text' => '推送设置'],
+    ];
+
+    private $seller_app_push_links = [
+        ['url' => 'app/seller-push-message/index', 'text' => '消息推送'],
+        ['url' => 'system/config/index?group=seller_app_push', 'text' => '推送设置'],
+    ];
+
+    private $store_app_push_links = [
+        ['url' => 'app/store-push-message/index', 'text' => '消息推送'],
+        ['url' => 'system/config/index?group=store_app_push', 'text' => '推送设置'],
+    ];
 
     protected $systemConfig;
+    protected $tools;
 
-    public function __construct(SystemConfigRepository $systemConfig)
+    public function __construct(
+        SystemConfigRepository $systemConfig
+        ,ToolsRepository $toolsRepository
+    )
     {
         parent::__construct();
+
         $this->systemConfig = $systemConfig;
+        $this->tools = $toolsRepository;
     }
 
     public function index(Request $request)
@@ -71,7 +106,6 @@ class ConfigController extends Backend
         $title = $fixed_title = $group_info['title'];
         $uuid = make_uuid();
         $script_render = view('system.config.partials.'.$group, compact('uuid'))->render();
-//        dd($group);
         if ($request->ajax()) {
             $render = view('system.config.ajax_config', compact('uuid', 'group', 'group_info', 'script_render'))->render();
             return result(0, $render);
@@ -110,6 +144,31 @@ class ConfigController extends Backend
             case in_array($group, ['distrib', 'recommend_reg']):
                 $this->sublink($this->distrib_links, $group, 'group');
                 break;
+
+            // 店铺评分
+            case in_array($group, ['desc_conform', 'service_desc', 'send_desc','shipping_desc','mark_set']):
+                $this->sublink($this->desc_links, $group, 'group');
+                break;
+
+            // 团购幻灯片管理
+//            case in_array($group, ['group_buy_slide']):
+//                $this->sublink($this->group_buy_slide_links, $group);
+//                break;
+
+            // 平台-推送设置
+            case in_array($group, ['app_push']):
+                $this->sublink($this->app_push_links, $group, 'group');
+                break;
+
+            // 商家-推送设置
+            case in_array($group, ['seller_app_push']):
+                $this->sublink($this->seller_app_push_links, $group, 'group');
+                break;
+
+            // 网点-推送设置
+            case in_array($group, ['store_app_push']):
+                $this->sublink($this->store_app_push_links, $group, 'group');
+                break;
         }
 
         $blocks = [
@@ -128,17 +187,17 @@ class ConfigController extends Backend
             'evaluate',// 购物流程
 //            'user',// 会员设置
             'distrib',// 分销设置
+            'desc_conform', // 店铺评分-宝贝与描述相符
+            'group_buy_slide', // 营销中心-团购幻灯片设置
         ];
         if (in_array($group, $special_groups)) {
             $template = $group;
             $group_info = $this->systemConfig->getSpecialConfigsByGroup($group, 'code');
         }
-//        dd($group_info);
         $introduce_box = '';
         if ($group == 'sms') {
             $introduce_box = view('system.config.introduce-box.'.$group, compact('uuid'))->render();
         }
-
         return view('system.config.'.$template, compact('title', 'group', 'group_info', 'script_render', 'introduce_box'));
     }
 
@@ -146,7 +205,7 @@ class ConfigController extends Backend
      * 更新配置设置信息
      *
      * @param Request $request
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @return mixed
      */
     public function updateConfig(Request $request)
     {
@@ -154,12 +213,47 @@ class ConfigController extends Backend
         // backend/gallery/ 2019/01/19/ 15479117075520.jpg
 
         $group = $request->post('group', '');
-        $backUrl = $request->input('back_url');
+        $backUrl = $request->input('back_url', $request->fullUrl());
+
         $updateInfo = $request->post('SystemConfigModel');
 
         if ($group == 'integral_mall_index_set') {
-            // todo 积分商城首页设置 图片上传待处理保存
+            foreach ($updateInfo as $k=>$v) {
+                if (Str::contains($k,'integral_slide_img')) {
+                    if (!empty($v)) {
+                        $filename = $request->post('filename', 'name');
+                        $storePath = 'system/config/integral_mall_index_set';
+                        $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
 
+                        if (isset($uploadRes['error'])) {
+                            // 上传出错
+                            return result(-1, '', $uploadRes['error']);
+                        }
+                        $updateInfo[$k] = $uploadRes['data'][0]['path'];
+                    } else { // 否则不更新空项
+                        unset($updateInfo[$k]);
+                    }
+                }
+            }
+        } elseif ($group == 'group_buy_slide') {
+            foreach ($updateInfo as $k=>$v) {
+                if (Str::contains($k,'group_buy_slide_img')) {
+                    if (!empty($v)) {
+                        $filename = $request->post('filename', 'name');
+                        $storePath = 'system/config/group_buy_slide';
+                        $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
+
+                        if (isset($uploadRes['error'])) {
+                            // 上传出错
+                            return result(-1, '', $uploadRes['error']);
+                        }
+                        $updateInfo[$k] = $uploadRes['data'][0]['path'];
+                    } else { // 否则不更新空项
+                        unset($updateInfo[$k]);
+                    }
+
+                }
+            }
         }
 
         $result = $this->systemConfig->update_sysconf($updateInfo);
@@ -167,7 +261,7 @@ class ConfigController extends Backend
             // ajax post请求
             // 如果开启了PC自定义改色 则修改样式文件
             if (@$updateInfo['custom_style_enable'] == 1) {
-                $style_path = public_path('frontend/css/custom/site-color-style-0.css');
+                $style_path = public_path('frontend/web/css/custom/site-color-style-0.css');
                 foreach ($updateInfo as $k=>$v) {
                     if ($v == '') {
                         break;
@@ -181,7 +275,7 @@ class ConfigController extends Backend
 
             // 如果开启了Mobile自定义改色 则修改样式文件
             if (@$updateInfo['custom_style_enable_m_site'] == 1) {
-                $style_path = public_path('mobile/css/custom/m_site-color-style-0.css');
+                $style_path = public_path('frontend/web_mobile/css/custom/m_site-color-style-0.css');
                 foreach ($updateInfo as $k=>$v) {
                     if ($v == '') {
                         break;
@@ -206,7 +300,6 @@ class ConfigController extends Backend
 
         if ($result['code'] == -1) {
             // fail
-            // todo 记录失败日志
             admin_log('配置设置失败，配置分组：'.$group);
 
             flash('error', $result['message']);

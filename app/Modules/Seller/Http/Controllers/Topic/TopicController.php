@@ -20,18 +20,15 @@
 // | Description:
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Topic;
+namespace App\Modules\Seller\Http\Controllers\Topic;
 
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\TopicRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TopicController extends Seller
 {
-//    private $title;
-
     private $links = [
         ['url' => 'topic/topic/list', 'text' => '专题活动列表'],
         ['url' => 'topic/topic/add', 'text' => '专题活动添加'],
@@ -41,14 +38,34 @@ class TopicController extends Seller
 
     protected $topic;
 
-    public function __construct()
+    public function __construct(TopicRepository $topic)
     {
         parent::__construct();
 
-        $this->topic = new TopicRepository();
+        $this->topic = $topic;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
 
+    }
+
+    public function bgSetting(Request $request/*$page, $topic_id*/)
+    {
+        $page_id = make_uuid();
+        $page = $request->get('page');
+        $topic_id = $request->get('topic_id');
+        $info = $this->topic->getById($topic_id);
+
+        if ($request->method() == 'POST') {
+            $post = $request->post('TopicModel');
+            $ret = $this->topic->update($topic_id, $post);
+            if ($ret === false) {
+                return result(-1, '', '设置失败');
+            }
+            return result(0, '', '设置成功');
+        }
+
+        $render = view('topic.topic._bg-setting', compact('page_id', 'info', 'topic_id', 'page'))->render();
+        return result(0, $render);
     }
 
 

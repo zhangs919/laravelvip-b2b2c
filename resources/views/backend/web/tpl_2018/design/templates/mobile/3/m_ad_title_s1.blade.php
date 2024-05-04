@@ -3,7 +3,7 @@
 
     <!--内容区域 start-->
 
-    <h2 class="title" style="background-color: {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '' }};">
+    <h2 class="title" style="background-color: {{ $data['99-1'][0]['bgcolor'] ?? '' }};">
 
         @if($tpl_name != '' && $is_design)
             <a title="编辑" href="javascript:void(0)" class="title-selector content-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="4" data-width="650" data-title_open_colorpicker="1" data-length="30">

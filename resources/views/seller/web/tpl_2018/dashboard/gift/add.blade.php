@@ -10,7 +10,7 @@
 @section('content')
 
     <form id="GiftModel" class="form-horizontal" name="GiftModel" action="/dashboard/gift/add" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix gift-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->

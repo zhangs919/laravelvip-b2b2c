@@ -1,26 +1,26 @@
 @charset "utf-8";
-body{ background:#f3f5f7;}
+body{ background:#f8f8f8;}
 body .con-bg,body.con-bg{ background:#fff;}
 /*登录*/
 .m-t-20 { margin-top:20px !important}
 .login-radio{height:50px;line-height:50px;background:#fff;}
 .login-radio ul {width: 100%;height:51px;line-height:50px;}
-.login-radio ul li {float: left;height:50px;line-height:50px; width:50%; text-align:center; font-size:0.8rem; color:#222;}
+.login-radio ul li {float: left;height:50px;line-height:50px; width:50%; text-align:center; font-size:0.8rem; color:#353535;}
 .login-radio ul li.active {border-bottom:1px solid;}
 .btn-submit,a.btn-submit{ display:block; width:100%; margin-top:10px;height:40px; line-height:40px;border:0px; border-radius:4px; color:#fff; font-size:0.8rem; text-align:center;}
 .btn-submit.disable,a.btn-submit.disable{background:#e5e5e5 !important; color:#999 !important; }
 .ng-foot{width:94%; margin:20px auto 0;display: -webkit-box;display: -webkit-flex;display: flex;}
 .ng-foot-logo{ text-align:center;}
 .ng-foot .ng-cookie-area{font-size: 14px;text-align: right;color: #999; vertical-align: middle; width: 35%; float:right; cursor: pointer;}
-.ng-foot .remember-info {display: block; -webkit-box-flex: 1;-webkit-flex: 1;flex: 1;text-align: center;color: #333;-webkit-transform: translateZ(0);transform: translateZ(0);float: left;line-height:22px;}
+.ng-foot .remember-info {display: block; -webkit-box-flex: 1;-webkit-flex: 1;flex: 1;text-align: center;color: #353535;-webkit-transform: translateZ(0);transform: translateZ(0);float: left;line-height:22px;}
 .ng-foot .remember-info input[type="checkbox"],.ng-foot .remember-info span{ display:inline-block;}
-.ng-foot .remember-info input[type="checkbox"]{width: 20px;height: 20px;background:url(../images/flow/cart_icon_con.png) no-repeat 0px 1px;background-size: 50px auto; margin:1px 0px 0px 2px;border:none;}
+.ng-foot .remember-info input[type="checkbox"]{width: 20px;height: 20px;background:url(../images/flow/cart_icon_con.png) no-repeat 0px 0px;background-size: 55px auto; margin:1px 0px 0px 2px;border:none;}
 .ng-foot .remember-info input[type="checkbox"]:after{ content:none;}
-.ng-foot .remember-info input[type="checkbox"]:checked{ background:url(../images/flow/cart_icon_con.png) no-repeat 0px 1px;background-size: 50px auto;background-position: -25px 0px;}
+.ng-foot .remember-info input[type="checkbox"]:checked{background-position: -27px 0px;}
 .ng-foot .remember-info input[type="checkbox"]:checked:after{ content:none}
 .ng-foot .remember-info span{ margin-left:5px;}
 .ng-foot .remember-info a,.ng-foot .ng-cookie-area a{color: #4B89DC;font-size:0.65rem; }
-.ng-foot a {color: #333;line-height:22px;-webkit-transform: translateZ(0);transform: translateZ(0);    font-family: PingFang-SC-Regular;display: block; -webkit-box-flex: 1;-webkit-flex: 1;flex: 1;text-align: center;}
+.ng-foot a {color: #353535;line-height:22px;-webkit-transform: translateZ(0);transform: translateZ(0);    font-family: PingFang-SC-Regular;display: block; -webkit-box-flex: 1;-webkit-flex: 1;flex: 1;text-align: center;}
 .ng-foot-logo a{display: block; -webkit-box-flex: 1;-webkit-flex: 1;flex: 1;text-align: center;}
 .ng-foot-icon {width:22px;height:22px;overflow: hidden;background-image: url(../images/iconBg.png);   background-repeat: no-repeat; background-size: 100% auto; display: inline-block; vertical-align: middle;}
 .icon-clock {background-position: 0 0;}
@@ -34,9 +34,10 @@ input[type="checkbox"]:checked:after{content: '';position: absolute;left: 0.14re
 .bg-no{ background:none !important}
 .login-top{background: url(../images/login_top_bg.png) no-repeat;background-size: cover;}
 .login-top .header{ background:none; border-bottom:none;}
+.login-top .header:after{ content: none; }
 .login-top .header-left{ width:auto;}
 .login-top .header-left a{background: url(../images/top1.png) no-repeat;background-size: auto 230px;background-position: 12px 12px; display:inline-block; display:none;}
-.login-top .header-left a:last-child{background: url(../images/index_icon.png) no-repeat center center;display: inline-block;background-size:25px; width:50px;background-position: 20px 12px;}
+.login-top .header-left a:last-child{background: url(../images/index_icon.png) no-repeat center center;display: inline-block;background-size:25px; width:50px;height:50px;background-position: 20px 12px;}
 .login-top .header-middle{ color:#fff; width:auto;}
 .login-top .header-right a.text {color: #fff; font-size:0.7rem;letter-spacing:1px;}
 .login-top .login-img{height:70px;text-align: center;}
@@ -50,9 +51,9 @@ a.footer-register{text-align: center;display: block;color: #f23030;line-height: 
 .register-content .form-group dl dt{ width:110px;}
 .register-content .form-group dl dd{ padding-left:110px;}
 .middle-content .agree-deal{ width:94%; color:#999; margin:0.5rem auto 1.5rem;}
-.middle-content .agree-deal .agree-checkbox{width: 20px;height: 20px;background:url(../images/flow/cart_icon_con.png) no-repeat 0px 1px;background-size: 50px auto; margin:5px 5px 0px 2px;float: left; border:none;}
+.middle-content .agree-deal .agree-checkbox{width: 20px;height: 20px;background:url(../images/flow/cart_icon_con.png) no-repeat 0px 0px;background-size: 55px auto; margin:5px 5px 0px 2px;float: left; border:none;}
 .middle-content .agree-deal input[type="checkbox"]:after{ content:none;}
-.middle-content .agree-deal .agree-checkbox:checked{ background:url(../images/flow/cart_icon_con.png) no-repeat 0px 1px;background-size: 50px auto;background-position: -25px 0px;}
+.middle-content .agree-deal .agree-checkbox:checked{ background:url(../images/flow/cart_icon_con.png) no-repeat 0px 1px;background-size: 55px auto;background-position: -27px 0px;}
 .middle-content .agree-deal input[type="checkbox"]:checked:after{ content:none;}
 .middle-content .agree-deal span{float:left;line-height:30px; font-size:0.65rem;}
 .middle-content .agree-deal span a{ font-size:0.65rem; color:#999;}
@@ -83,9 +84,9 @@ width: 100%;height: 100%;position: fixed;top: 0;right: 0;-webkit-transform: tran
 #bind_select .bind-select-top{width:94%; margin:1rem auto 0;}
 #bind_select .bind-select-top .wellcome-pic{ width:3.5rem; height:3.5rem; margin:0 auto 0.5rem;}
 #bind_select .bind-select-top .wellcome-pic img{ width:100%; height:auto; border-radius:50%;}
-#bind_select .bind-select-top p{ color:#222; font-size:14px;}
+#bind_select .bind-select-top p{ color:#353535; font-size:14px;}
 #bind_select .bind-select-top p span{ color:#999;}
-#bind_select .bind-select-top p span:nth-child(2){ font-size:16px; color:#222;}
+#bind_select .bind-select-top p span:nth-child(2){ font-size:16px; color:#353535;}
 #bind_select .no-account,#bind_select .have-account{ width:94%;margin:1rem auto 0;}
 #bind_select .no-account .no-account-btn,#bind_select .have-account .have-account-btn{display: block;width: 100%;margin-top: 10px;height: 40px;line-height: 40px;background: #f23030;border: 0px;border-radius: 4px;color: #fff;font-size: 0.8rem;text-align: center;letter-spacing:1px;}
 #bind_select .no-account .no-account-btn{ background:none; border:1px solid #f23030; color:#f23030; box-sizing:border-box;}
@@ -98,7 +99,7 @@ width: 100%;height: 100%;position: fixed;top: 0;right: 0;-webkit-transform: tran
 .register-success{ width:100%; margin:0 auto; text-align:center;}
 .register-success .register-success-icon{margin:35px 0 10px 0;height:60px;text-align: center;}
 .register-success .register-success-icon i{ color:#f23030; line-height:60px; font-size:80px;}
-.register-success .register-success-tip{display: block;text-align: center;height:40px;font-size:16px;line-height:40px;color: #222;}
+.register-success .register-success-tip{display: block;text-align: center;height:40px;font-size:16px;line-height:40px;color: #353535;}
 .register-success .register-success-btn{ margin-top:40px;}
 .register-success .register-success-btn  a.btn{display: inline-block;width:44%;height:40px; line-height:40px;padding: 0;margin: 0 auto;font-size:16px;text-align: center;color: #fff; background:#f23030;border: none;border-radius:3px;}
 .register-success .register-success-btn  a.btn:first-child{margin-right:2%;background: #FF9301;}
@@ -106,21 +107,21 @@ width: 100%;height: 100%;position: fixed;top: 0;right: 0;-webkit-transform: tran
 .qrcode-login-con{ position:relative;width:100%; height:auto;}
 .qrcode-login-con .qrcode-login-pic{ width:100%; height:auto;padding:50px 30px 30px;box-sizing:border-box; }
 .qrcode-login-con .qrcode-login-pic img{ display:block;width:100%;}
-.qrcode-login-con .qrcode-login-des{ height:30px; line-height:30px; text-align:center; font-size:0.8rem; color:#222;}
+.qrcode-login-con .qrcode-login-des{ height:30px; line-height:30px; text-align:center; font-size:0.8rem; color:#353535;}
 .qrcode-login-con .qrcode-login-bottom{ padding:0 15px;}
 .qrcode-login-con .qrcode-login-bottom .btn{margin-top:20px; display:block;line-height:45px;width: 100%;text-align: center;font-size: 18px;border-radius: 4px; color:#fff;}
-.qrcode-login-con .qrcode-login-bottom .btn:last-child{ color:#222;position:relative; background:#fff;}
+.qrcode-login-con .qrcode-login-bottom .btn:last-child{ color:#353535;position:relative; background:#fff;}
 .qrcode-login-con .qrcode-login-bottom .btn:last-child:after{content: '';position: absolute;top: 0;left: 0;border: 1px solid #ddd;border-radius:8px;transform: scale(.5,.5);-webkit-transform: scale(.5,.5);transform-origin: left top;-webkit-transform-origin: left top;box-sizing: border-box;height:200%;width: 200%;z-index: 1;}
 .qrcode-login-con i{ display:block; margin:4.5rem auto 1rem;height:75px; width:75px; background:url(../images/qrcode-login-error.png); background-size:contain;}
-.qrcode-login-con .error-des{line-height:25px; text-align:center; font-size:0.8rem; color:#222;}
+.qrcode-login-con .error-des{line-height:25px; text-align:center; font-size:0.8rem; color:#353535;}
 a.rescan-btn{ text-align:center;display:block; margin:3rem 15px 10px; position:relative;height:45px; color:#f23030;line-height:45px;font-size: 18px;}
 .rescan-btn:after{content: '';position: absolute;top: 0;left: 0;border: 1px solid #f23030;border-radius:8px;transform: scale(.5,.5);-webkit-transform: scale(.5,.5);transform-origin: left top;-webkit-transform-origin: left top;box-sizing: border-box;height:200%;width: 200%;z-index: 1;}
 /*登录主推微信修改*/
 .weixin-login-con{ height:100%; background:#fff;}
 .weixin-login-con .weixin-login-text{ margin:0px auto; text-align:center; padding-top:1.5rem;}
-.weixin-login-con .weixin-login-text span{ display:block; line-height:25px; color:#222; font-size:0.75rem;}
+.weixin-login-con .weixin-login-text span{ display:block; line-height:25px; color:#353535; font-size:0.75rem;}
 .weixin-login-con .weixin-login-logo{ margin:1.5rem auto; text-align:center;}
-.weixin-login-con .weixin-login-logo img{ width:auto; height:3.5rem;}
+.weixin-login-con .weixin-login-logo img{ width:auto; height:auto; max-width: calc(100vw / 4); max-height: calc(100vw / 2);}
 .weixin-login-con .weixin-login-bottom{width: 94%;margin: 0 auto;padding: 5px 0}
 .weixin-login-con .weixin-login-bottom a.btn-submit {display: block;margin:0 auto; width:90%;height: 40px;line-height: 40px;background:#00BE00;border: 0px;border-radius:40px;color: #fff;font-size: 0.8rem;text-align: center;}
 .weixin-login-con .weixin-login-bottom a.btn-submit i{ display:inline-block; height: 40px; width:26px; margin-right:10px; background: url(../images/btn_weixin_gray.png) center center; background-size: 26px; background-repeat: no-repeat; vertical-align: middle;}
@@ -130,7 +131,7 @@ a.rescan-btn{ text-align:center;display:block; margin:3rem 15px 10px; position:r
 -webkit-transition: -webkit-transform .3s;transition: -webkit-transform .3s;transition: transform .3s;transition: transform .3s, -webkit-transform .3s;}
 .other-login-layer.show{-webkit-transform: translate(0, 0);transform: translate(0, 0);}
 .other-login-layer .other-login-list{background-color: #FFFFFF;}
-.other-login-layer .other-login-item {position: relative;padding: 10px 0;text-align: center;font-size: 18px; color:#222}
+.other-login-layer .other-login-item {position: relative;padding: 10px 0;text-align: center;font-size: 18px; color:#353535}
 .other-login-layer .other-login-item em{display: inline-block;width:25px;height:25px; margin-right:10px; vertical-align:middle;}
 .other-login-layer .other-login-item em.phone{background-image: url(../images/phone_other_login.png); background-size:contain;}
 .other-login-layer .other-login-item em.qq{background-image: url(../images/qq_other_login.png); background-size:contain;}

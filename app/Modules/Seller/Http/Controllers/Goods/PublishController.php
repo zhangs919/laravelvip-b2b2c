@@ -25,11 +25,9 @@ namespace App\Modules\Seller\Http\Controllers\Goods;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\BrandCategory;
-use App\Models\CatAttribute;
 use App\Models\Category;
 use App\Models\Freight;
 use App\Models\GoodsCat;
-use App\Models\GoodsImage;
 use App\Models\GoodsSpec;
 use App\Models\GoodsUnit;
 use App\Modules\Base\Http\Controllers\Seller;
@@ -47,7 +45,7 @@ use App\Repositories\ShopCategoryRepository;
 use App\Repositories\ShopContractRepository;
 use App\Repositories\SpecAliasRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class PublishController extends Seller
 {
@@ -85,28 +83,37 @@ class PublishController extends Seller
 
     protected $goodsSku;
 
-    public function __construct(CategoryRepository $categoryRepository,
-                                AttributeRepository $attributeRepository,
-                                AttrValueRepository $attrValueRepository,
-                                GoodsRepository $goodsRepository,
-                                GoodsImageRepository $goodsImageRepository,
-                                FreightRepository $freightRepository)
+    public function __construct(
+        ShopCategoryRepository $shopCategory
+        ,CategoryRepository $categoryRepository
+        ,AttributeRepository $attributeRepository
+        ,AttrValueRepository $attrValueRepository
+        ,GoodsRepository $goodsRepository
+        ,GoodsImageRepository $goodsImageRepository
+        ,FreightRepository $freightRepository
+        ,ShopContractRepository $shopContract
+        ,GoodsLayoutRepository $goodsLayout
+        ,GoodsAttrRepository $goodsAttr
+        ,GoodsSpecRepository $goodsSpec
+        ,SpecAliasRepository $specAlias
+        ,GoodsSkuRepository $goodsSku
+    )
     {
         parent::__construct();
 
-        $this->shopCategory = new ShopCategoryRepository();
+        $this->shopCategory = $shopCategory;
         $this->category = $categoryRepository;
         $this->attribute = $attributeRepository;
         $this->attrValue = $attrValueRepository;
         $this->goods = $goodsRepository;
         $this->goodsImage = $goodsImageRepository;
         $this->freight = $freightRepository;
-        $this->shopContract = new ShopContractRepository();
-        $this->goodsLayout = new GoodsLayoutRepository();
-        $this->goodsAttr = new GoodsAttrRepository();
-        $this->goodsSpec = new GoodsSpecRepository();
-        $this->specAlias = new SpecAliasRepository();
-        $this->goodsSku = new GoodsSkuRepository();
+        $this->shopContract = $shopContract;
+        $this->goodsLayout = $goodsLayout;
+        $this->goodsAttr = $goodsAttr;
+        $this->goodsSpec = $goodsSpec;
+        $this->specAlias = $specAlias;
+        $this->goodsSku = $goodsSku;
 
         $this->set_menu_select('goods', 'goods-publish');
     }
@@ -207,8 +214,8 @@ class PublishController extends Seller
             'goods_status' => 1,
             'shop_id' => $shop_id,
             'cat_id' => $cat_id,
-            'mobile_desc' => null,
-            'other_attrs' => null,
+            'mobile_desc' => [],
+            'other_attrs' => [],
         ];
 
         // 获取分类名称 cat_names 如：个护化妆 > 美发护发 > 护发
@@ -228,7 +235,7 @@ class PublishController extends Seller
         // 分类列表
         $cat_list = $this->category->getFormatCategory();
 
-        $other_cat_ids = null;
+        $other_cat_ids = [];
 
         // 属性值列表
         $attr_values = $this->attrValue->getAttrValueList($cat_id);
@@ -299,16 +306,16 @@ class PublishController extends Seller
         // 获取商品单位
         $goods_unit_list = [];
         $goods_unit_list[""] = '--请选择--';
-        $units = GoodsUnit::where('shop_id', seller_shop_info()->shop_id)->orderBy('unit_id', 'asc')->get();
+        $units = GoodsUnit::where('shop_id', $shop_id)->orderBy('unit_id', 'asc')->get();
         if (!empty($units)) {
             foreach ($units as $item) {
                 $goods_unit_list[$item->unit_id] = $item->unit_name;
             }
         }
 
-        $edit_items = explode(',',shopconf('goods_edit_items'));
+        $edit_items = explode(',',shopconf('goods_edit_items',false,$shop_id));
 
-        $shop_freight_fee = !empty(shopconf('freight_fee')) ? shopconf('freight_fee') : '0.00'; // 店铺统一运费
+        $shop_freight_fee = !empty(shopconf('freight_fee',false,$shop_id)) ? shopconf('freight_fee',false,$shop_id) : '0.00'; // 店铺统一运费
 
         $is_supply = seller_shop_info()->is_supply;
 
@@ -316,7 +323,7 @@ class PublishController extends Seller
 
         $edit_enable = 1;
 
-        $compact = compact('goods_mode', 'cat_names', 'attr_list', 'spec_list', 'cat_list', 'other_cat_ids','attr_values','spec_values',
+        $compact = compact('goods_mode', 'cat_names', 'attr_list', 'spec_list', 'other_cat_ids','attr_values','spec_values',
             'goods_image','date_list','hour_list','minute_list','cat_id','top_layouts','bottom_layouts','packing_layouts','service_layouts',
             'freight_list','shop_cat_list','contract_list','brand_list','goods_unit_list','edit_items','shop_freight_fee','is_supply',
             'wholesale_enable','edit_enable');
@@ -418,16 +425,13 @@ class PublishController extends Seller
         $shop_id = seller_shop_info()->shop_id;
         $goods_id = $request->get('id', 0); // 商品id 如果为0 则是新增商品 否则是编辑商品
         $postData = json_decode($request->post('data'), true);
-//        $GoodsModel = $postData['GoodsModel'];
 
-//        dd($postData);
         if ($goods_id){
             // 编辑商品
             $ret = $this->goods->modifyGoods($postData, $goods_id);
         } else {
             $ret = $this->goods->addGoods($postData, $shop_id);
         }
-//        dd($ret);
         if ($ret === false) {
             return result(-1, '', '保存失败');
         }
@@ -627,9 +631,9 @@ class PublishController extends Seller
         $ret = $this->goodsImage->addGoodsImage($goodsImages, $goods_id);
 
         if ($ret === false) {
-            return result(-1, '', '操作失败！');
+            return result(-1, '', OPERATE_FAIL);
         }
-        return result(0, '', '操作成功！');
+        return result(0, '', OPERATE_SUCCESS);
     }
 
     /**
@@ -671,7 +675,7 @@ class PublishController extends Seller
         if ($request->method() == 'POST') {
 
             // success
-            return result(0, '', '操作成功');
+            return result(0, '', OPERATE_SUCCESS);
         }
 
 
@@ -857,10 +861,18 @@ class PublishController extends Seller
 
         // 商品规格
         $goods_specs = $this->goodsSpec->getGoodsSpecs($goods_id);
-//        dd($goods_specs);
+
         // 选中商品规格
-        $goods_checked_specs = array_collapse(array_values($goods_specs));
-//        dd($spec_list);
+        $goods_checked_specs = Arr::collapse(array_values($goods_specs));
+
+        $checked_attr_ids = implode(',', array_keys($goods_specs));
+        $checked_attr_vids = [];
+        foreach (array_column($goods_specs, 'attr_values') as $v) {
+            $checked_attr_vids = array_merge($checked_attr_vids, array_column($v, 'attr_vid'));
+        }
+        $checked_attr_vids = implode(',', $checked_attr_vids);
+//        dd($checked_attr_vids);
+
         // 商品规格描述
         $goods_specs_desc = $this->goodsSpec->getGoodsSpecsDesc($goods_id);
 
@@ -927,16 +939,16 @@ class PublishController extends Seller
         // 获取商品单位
         $goods_unit_list = [];
         $goods_unit_list[""] = '--请选择--';
-        $units = GoodsUnit::where('shop_id', seller_shop_info()->shop_id)->orderBy('unit_id', 'asc')->get();
+        $units = GoodsUnit::where('shop_id', $shop_id)->orderBy('unit_id', 'asc')->get();
         if (!empty($units)) {
             foreach ($units as $item) {
                 $goods_unit_list[$item->unit_id] = $item->unit_name;
             }
         }
 
-        $edit_items = explode(',',shopconf('goods_edit_items'));
+        $edit_items = explode(',',shopconf('goods_edit_items',false,$shop_id));
 
-        $shop_freight_fee = !empty(shopconf('freight_fee')) ? shopconf('freight_fee') : '0.00'; // 店铺统一运费
+        $shop_freight_fee = !empty(shopconf('freight_fee',false,$shop_id)) ? shopconf('freight_fee',false,$shop_id) : '0.00'; // 店铺统一运费
 
         $is_supply = seller_shop_info()->is_supply;
 
@@ -950,65 +962,63 @@ class PublishController extends Seller
         $scid = $request->get('sc_id',0);
         $step_price = null; // todo
         $cat_edit = 1; // 是否允许编辑分类
-
-        $goods_info = $model;
-        $compact = compact('title','goods_info', 'cat_names', 'attr_list', 'spec_list', 'cat_list', 'other_cat_ids','attr_values','spec_values',
-            'goods_attrs','goods_specs','goods_checked_specs','goods_specs_desc','goods_other_specs','spec_alias','goods_sku_list',
-            'goods_image','date_list','hour_list','minute_list','cat_id','top_layouts','bottom_layouts','packing_layouts','service_layouts',
-            'freight_list','shop_cat_list','contract_list','brand_list','goods_unit_list','edit_items','shop_freight_fee','is_supply',
-            'wholesale_enable','edit_enable', 'third_goods_url', 'third_id', 'scid', 'step_price', 'cat_edit');
+        $app_prefix_data = [
+            'model' => $model,
+            'cat_names' => $cat_names,
+            'attr_list' => $attr_list,
+            'spec_list' => $spec_list,
+            'cat_list' => $cat_list,
+            'other_cat_ids' => $other_cat_ids,
+            'attr_values' => $attr_values,
+            'app_attrs_data' => $app_attrs_data,
+            'spec_values' => $spec_values,
+            'goods_attrs' => $goods_attrs,
+            'app_goods_attrs' => $app_goods_attrs,
+            'goods_specs' => $goods_specs,
+            'goods_checked_specs' => $goods_checked_specs,
+            'goods_specs_desc' => $goods_specs_desc,
+            'goods_other_specs' => $goods_other_specs,
+            'spec_alias' => $spec_alias,
+            'goods_sku_list' => $goods_sku_list,
+            'goods_image' => $goods_image,
+            'date_list' => $date_list,
+            'hour_list' => $hour_list,
+            'minute_list' => $minute_list,
+            'cat_id' => $cat_id,
+            'top_layouts' => $top_layouts,
+            'bottom_layouts' => $bottom_layouts,
+            'packing_layouts' => $packing_layouts,
+            'service_layouts' => $service_layouts,
+            'freight_list' => $freight_list,
+            'shop_cat_list' => $shop_cat_list,
+            'contract_list' => $contract_list,
+            'brand_list' => $brand_list,
+            'goods_unit_list' => $goods_unit_list,
+            'edit_items' => $edit_items,
+            'shop_freight_fee' => $shop_freight_fee,
+            'is_supply' => $is_supply,
+            'wholesale_enable' => $wholesale_enable,
+            'edit_enable' => $edit_enable,
+            'back_url' => $back_url,
+            'third_goods_url' => $third_goods_url,
+            'third_id' => $third_id,
+            'scid' => $scid,
+            'step_price' => $step_price,
+            'cat_edit' => $cat_edit
+        ];
+        $compact_data = $app_prefix_data;
+        $compact_data['title'] = $title;
+        $compact_data['checked_attr_ids'] = $checked_attr_ids;
+        $compact_data['checked_attr_vids'] = $checked_attr_vids;
 
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_extra_data' => [],
-            'app_prefix_data' => [
-                'model' => $model,
-                'cat_names' => $cat_names,
-                'attr_list' => $attr_list,
-                'spec_list' => $spec_list,
-                'cat_list' => $cat_list,
-                'other_cat_ids' => $other_cat_ids,
-                'attr_values' => $attr_values,
-                'app_attrs_data' => $app_attrs_data,
-                'spec_values' => $spec_values,
-                'goods_attrs' => $goods_attrs,
-                'app_goods_attrs' => $app_goods_attrs,
-                'goods_specs' => $goods_specs,
-                'goods_checked_specs' => $goods_checked_specs,
-                'goods_specs_desc' => $goods_specs_desc,
-                'goods_other_specs' => $goods_other_specs,
-                'spec_alias' => $spec_alias,
-                'goods_sku_list' => $goods_sku_list,
-                'goods_image' => $goods_image,
-                'date_list' => $date_list,
-                'hour_list' => $hour_list,
-                'minute_list' => $minute_list,
-                'cat_id' => null,
-                'top_layouts' => $top_layouts,
-                'bottom_layouts' => $bottom_layouts,
-                'packing_layouts' => $packing_layouts,
-                'service_layouts' => $service_layouts,
-                'freight_list' => $freight_list,
-                'shop_cat_list' => $shop_cat_list,
-                'contract_list' => $contract_list,
-                'brand_list' => $brand_list,
-                'goods_unit_list' => $goods_unit_list,
-                'edit_items' => $edit_items,
-                'shop_freight_fee' => $shop_freight_fee,
-                'is_supply' => $is_supply,
-                'wholesale_enable' => $wholesale_enable,
-                'edit_enable' => $edit_enable,
-                'back_url' => $back_url,
-                'third_goods_url' => $third_goods_url,
-                'third_id' => $third_id,
-                'scid' => $scid,
-                'step_price' => $step_price,
-                'cat_edit' => $cat_edit
-            ],
+            'app_prefix_data' => $app_prefix_data,
             'app_context_data' => $this->getAppContext(),
             'app_suffix_data' => [],
             'web_data' => $webData,
-            'compact_data' => $compact,
+            'compact_data' => $compact_data,
             'tpl_view' => 'goods.publish.edit'
         ];
         $this->setData($data); // 设置数据
@@ -1032,7 +1042,7 @@ class PublishController extends Seller
 
             if ($ret === false) {
                 // fail
-                return result(-1, '', '操作失败');
+                return result(-1, '', OPERATE_FAIL);
             }
             $attr_id = $spec_id = $ret->attr_id;
             $spec_name = $ret->attr_name;
@@ -1047,7 +1057,7 @@ class PublishController extends Seller
             $postRender = view('goods.publish.add_spec_post', compact('attr_id', 'spec_id', 'spec_name', 'attr_values'))->render();
             // success
             $extra = ['attr_id'=>$attr_id, 'attr_name'=>$ret->attr_name];
-            return result(0, $postRender, '操作成功', $extra);
+            return result(0, $postRender, OPERATE_SUCCESS, $extra);
         }
 
         $render = view('goods.publish.add_spec', compact('uuid'))->render();
@@ -1071,7 +1081,7 @@ class PublishController extends Seller
         }
         if ($ret === false) {
             // Log
-//            shop_log($msg.'失败。ID：'.$ids);
+            shop_log($msg.'失败。ID：'.$ids);
             return result(-1, null, '删除失败');
         }
 
@@ -1097,7 +1107,7 @@ class PublishController extends Seller
         }
         if ($ret === false) {
             // Log
-//            shop_log($msg.'失败。ID：'.$ids);
+            shop_log($msg.'失败。ID：'.$ids);
             return result(-1, null, '商品还原失败');
         }
         // Log
@@ -1125,7 +1135,7 @@ class PublishController extends Seller
 
         if ($ret === false) {
             // Log
-//            shop_log($msg.'失败。ID：'.$ids);
+            shop_log($msg.'失败。ID：'.$ids);
             return result(-1, null, $msg.'失败');
         }
 
@@ -1221,4 +1231,39 @@ class PublishController extends Seller
         return [$cat_arr, $count];
     }
 
+
+    /**************************** 批量操作 ****************************/
+
+    /**
+     * 商品（批量）上架
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function onsale(Request $request)
+    {
+        $ids = $request->post('ids');
+
+        $ret = $this->goods->batchUpdate('goods_id', explode(',', $ids), ['goods_status'=>1]);
+        if ($ret === false) {
+            return result(-1, null, OPERATE_FAIL);
+        }
+        return result(0, null, OPERATE_SUCCESS);
+    }
+
+    /**
+     * 商品（批量）下架
+     * @param Request $request
+     * @return array
+     */
+    public function offsale(Request $request)
+    {
+        $ids = $request->post('ids');
+
+        $ret = $this->goods->batchUpdate('goods_id', explode(',', $ids), ['goods_status'=>0]);
+        if ($ret === false) {
+            return result(-1, null, '商品下架失败！');
+        }
+        return result(0, null, '商品下架成功！');
+    }
 }

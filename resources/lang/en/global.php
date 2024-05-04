@@ -15,4 +15,7 @@ return [
     'user_name' => 'user_name',
     'mobile' => 'mobile',
     'email' => 'email',
+    'brand_name'        => 'brand_name',
+    'type_name'         => 'type_name',
+    'rank_name'         => 'rank_name',
 ];

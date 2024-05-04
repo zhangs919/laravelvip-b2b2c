@@ -23,6 +23,8 @@
         <td class="handle">
             <a href="javascript:void(0);" data-id="{{ $v->id }}" class="border-none config-printer">配置打印机</a>
             <span>|</span>
+            <a href="set?id={{ $v->id }}" target="_blank">模版设置</a>
+            <span>|</span>
             <a href="edit?id={{ $v->id }}">编辑</a>
             <span>|</span>
             <a href="javascript:void(0);" object_id="{{ $v->id }}" class="del border-none">删除</a>

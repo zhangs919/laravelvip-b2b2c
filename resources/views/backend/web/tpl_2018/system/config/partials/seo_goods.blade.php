@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-seo_goods_title", "name": "SystemConfigModel[seo_goods_title]", "attribute": "seo_goods_title", "rules": {"string":true,"messages":{"string":"title必须是一条字符串。"}}},{"id": "systemconfigmodel-seo_goods_title", "name": "SystemConfigModel[seo_goods_title]", "attribute": "seo_goods_title", "rules": {"required":true,"messages":{"required":"title不能为空。"}}},{"id": "systemconfigmodel-seo_goods_keywords", "name": "SystemConfigModel[seo_goods_keywords]", "attribute": "seo_goods_keywords", "rules": {"string":true,"messages":{"string":"keywords必须是一条字符串。"}}},{"id": "systemconfigmodel-seo_goods_keywords", "name": "SystemConfigModel[seo_goods_keywords]", "attribute": "seo_goods_keywords", "rules": {"required":true,"messages":{"required":"keywords不能为空。"}}},{"id": "systemconfigmodel-seo_goods_discription", "name": "SystemConfigModel[seo_goods_discription]", "attribute": "seo_goods_discription", "rules": {"string":true,"messages":{"string":"description必须是一条字符串。"}}},{"id": "systemconfigmodel-seo_goods_discription", "name": "SystemConfigModel[seo_goods_discription]", "attribute": "seo_goods_discription", "rules": {"required":true,"messages":{"required":"description不能为空。"}}},]

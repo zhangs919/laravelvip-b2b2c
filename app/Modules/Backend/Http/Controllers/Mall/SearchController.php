@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Models\Category;
@@ -20,11 +20,11 @@ class SearchController extends Backend
 
     protected $defaultSearch;
 
-    public function __construct()
+    public function __construct(DefaultSearchRepository $defaultSearch)
     {
         parent::__construct();
 
-        $this->defaultSearch = new DefaultSearchRepository();
+        $this->defaultSearch = $defaultSearch;
     }
 
 

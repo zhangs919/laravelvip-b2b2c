@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 
-
 use App\Models\ShopConfig;
 use App\Models\ShopConfigField;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +52,7 @@ class ShopConfigFieldRepository
     {
         $condition[] = ['group', $group];
         $condition[] = ['status', 1];
+        $condition[] = ['shop_id', seller_shop_info()->shop_id];
 //            $condition[] = ['anchor', $anchor];
         $list = DB::table('shop_config')
             ->join('shop_config_field', 'shop_config.shop_config_id', '=', 'shop_config_field.id')
@@ -136,7 +136,7 @@ class ShopConfigFieldRepository
         return $tab_list;
     }
 
-    public function getConfigList($group)
+    public function getConfigList($group, $shop_id)
     {
         $group_info = get_shop_config_group($group);
         if ($group_info === false) {
@@ -148,10 +148,12 @@ class ShopConfigFieldRepository
                 $condition[] = ['group', $group];
                 $condition[] = ['status', 1];
                 $condition[] = ['anchor', $anchor];
+                $condition[] = ['shop_id', $shop_id];
                 $list = DB::table('shop_config')
                     ->join('shop_config_field', 'shop_config.shop_config_id', '=', 'shop_config_field.id')
                     ->select('shop_config.value', 'shop_config_field.*')
                     ->where($condition)
+                    ->orderBy('shop_config_id', 'asc')
                     ->orderBy('sort', 'asc')
                     ->get();
 //                dd($list);
@@ -161,14 +163,16 @@ class ShopConfigFieldRepository
                     'config_list' => $this->format_config($list)
                 ];
             }
-        }else {
+        } else {
             $condition[] = ['group', $group];
             $condition[] = ['status', 1];
 //            $condition[] = ['anchor', $anchor];
+            $condition[] = ['shop_id', seller_shop_info()->shop_id];
             $list = DB::table('shop_config')
                 ->join('shop_config_field', 'shop_config.shop_config_id', '=', 'shop_config_field.id')
                 ->select('shop_config.value', 'shop_config_field.*')
                 ->where($condition)
+                ->orderBy('shop_config_id', 'asc')
                 ->orderBy('sort', 'asc')
                 ->get();
 //            dd($list);
@@ -188,15 +192,15 @@ class ShopConfigFieldRepository
 //            $vo = (array)$vo;
 
             // 如果表单类型是 单选、多选、下拉、联动等类型
-            if($vo->type == 'radio' || $vo->type == 'checkbox'
-                || $vo->type == 'select' || $vo->type == 'linkage' || $vo->type == 'linkages' || $vo->type == 'switch'){
+            if ($vo->type == 'radio' || $vo->type == 'checkbox'
+                || $vo->type == 'select' || $vo->type == 'linkage' || $vo->type == 'linkages' || $vo->type == 'switch') {
 //                dd(preg_split('/\s+/', $vo['options']));
 //                $options = preg_split('/\s+/', $vo['options']);
                 if (!empty($vo->options)) {
                     $options = explode("\r\n", $vo->options);
                     $optionsData = [];
-                    foreach ($options as $option){
-                        $optionsValue = explode('::',$option);
+                    foreach ($options as $option) {
+                        $optionsValue = explode('::', $option);
                         $optionsData[$optionsValue[0]] = $optionsValue[1];
                     }
                     $vo->options = $optionsData;
@@ -205,10 +209,12 @@ class ShopConfigFieldRepository
 
             // 如果表单类型是 多选类型 则将value值转换为数组
             // TODO 此处有bug
-            if($vo->type == 'checkbox') {
-//                        $vo['value'] = explode(':', $vo['value']);
-                $vo->value = explode(',', $vo->value);
-//                        dump($vo['value']);die;
+            if ($vo->type == 'checkbox') {
+                if ($vo->value == '0' || !empty($vo->value)) {
+                    $vo->value = explode(',', $vo->value);
+                } else {
+                    $vo->value = [];
+                }
             }
 
             //如果是图片组类型 将value以|分隔
@@ -229,11 +235,22 @@ class ShopConfigFieldRepository
         return $new_array;
     }
 
-    /*public function create($data)
+    public function add($data)
     {
-        $ret = $this->model->create($data);
-        return $ret;
-    }*/
+        DB::beginTransaction();
+        try {
+            $ret = $this->store($data);
+            // 批量插入店铺配置表
+            (new ShopConfigRepository())->batchAdd($ret);
+            DB::commit();
+            return $ret;
+        } catch (\Exception $e) {
+            DB::rollback();//事务回滚
+            echo $e->getMessage();
+            echo $e->getCode();
+            return $e->getMessage();
+        }
+    }
 
     /*public function updates($condition, $data)
     {
@@ -244,7 +261,6 @@ class ShopConfigFieldRepository
         }
         return true;
     }*/
-
 
 
     /**

@@ -16,8 +16,8 @@
 // | 如需使用，请移步官网购买正版授权。
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
-// | Date:2018-11-17
-// | Description:
+// | Date:2020-01-13
+// | Description:店铺动态评价
 // +----------------------------------------------------------------------
 
 namespace App\Models;
@@ -33,9 +33,41 @@ class ShopComment extends BaseModel
     protected $table = 'shop_comment';
 
     protected $fillable = [
-        'shop_comment_status','shop_is_delete','shop_is_show','user_id','shop_id',
-        'order_id','shop_service','shop_speed','logistics_speed','shop_comment_add_time'
+        'user_id','shop_id','order_id',
+        'shop_service','shop_speed','logistics_speed','shop_comment_add_time',
+        'shop_comment_status','shop_is_delete','shop_is_show'
     ];
 
     protected $primaryKey = 'shop_comment_id';
+
+    /**
+     * 关联商家表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class,'shop_id','shop_id');
+    }
+
+    /**
+     * 关联会员表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','user_id');
+    }
+
+    /**
+     * 关联订单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderInfo()
+    {
+        return $this->belongsTo(OrderInfo::class,'order_id','order_id');
+    }
+
 }

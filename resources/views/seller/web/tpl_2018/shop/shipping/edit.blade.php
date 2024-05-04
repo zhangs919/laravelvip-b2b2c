@@ -1,14 +1,19 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link rel="stylesheet" href="/assets/d2eace91/css/jquery-ui.css"/>
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link rel="stylesheet" href="/css/waybill.css"/>
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20181020"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/base.css?v=20181020"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/jquery-ui.css?v=20181020"/>
-    <link rel="stylesheet" href="/css/waybill.css?v=20181020"/>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180919"></script>
-    <script src="/js/jquery-ui.js?v=20180919"></script>
+
 @stop
 
 {{--content--}}
@@ -16,7 +21,7 @@
 
     <div class="table-content m-t-30">
         <form id="ShopShipping" class="form-horizontal" name="ShopShipping" action="/shop/shipping/edit?id={{ $info->id }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="shopshipping-id" class="form-control" name="ShopShipping[id]" value="{{ $info->id }}">
             <div class="simple-form-field ">
@@ -209,7 +214,13 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "shopshipping-shop_id", "name": "ShopShipping[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺编号必须是整数。"}}},{"id": "shopshipping-shipping_id", "name": "ShopShipping[shipping_id]", "attribute": "shipping_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"快递公司编号必须是整数。"}}},{"id": "shopshipping-is_default", "name": "ShopShipping[is_default]", "attribute": "is_default", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否为默认快递公司必须是整数。"}}},{"id": "shopshipping-is_open", "name": "ShopShipping[is_open]", "attribute": "is_open", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺是否开启此快递必须是整数。"}}},{"id": "shopshipping-img_width", "name": "ShopShipping[img_width]", "attribute": "img_width", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"背景图片宽度必须是整数。"}}},{"id": "shopshipping-img_height", "name": "ShopShipping[img_height]", "attribute": "img_height", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"背景图片高度必须是整数。"}}},{"id": "shopshipping-offset_top", "name": "ShopShipping[offset_top]", "attribute": "offset_top", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"上偏移量必须是整数。"}}},{"id": "shopshipping-offset_left", "name": "ShopShipping[offset_left]", "attribute": "offset_left", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"左偏移量必须是整数。"}}},{"id": "shopshipping-config_lable", "name": "ShopShipping[config_lable]", "attribute": "config_lable", "rules": {"string":true,"messages":{"string":"配置标签必须是一条字符串。"}}},{"id": "shopshipping-shipping_sort", "name": "ShopShipping[shipping_sort]", "attribute": "shipping_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "shopshipping-img_path", "name": "ShopShipping[img_path]", "attribute": "img_path", "rules": {"string":true,"messages":{"string":"模板图片必须是一条字符串。","maxlength":"模板图片只能包含至多255个字符。"},"maxlength":255}},{"id": "shopshipping-shipping_sort", "name": "ShopShipping[shipping_sort]", "attribute": "shipping_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},]
+</script>
+    <script type="text/javascript">
+        // 
+    </script>
 @stop
 
 
@@ -223,35 +234,38 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+    <script src="/assets/d2eace91/js/jquery-ui.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[{"id": "shopshipping-shop_id", "name": "ShopShipping[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺编号必须是整数。"}}},{"id": "shopshipping-shipping_id", "name": "ShopShipping[shipping_id]", "attribute": "shipping_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"快递公司编号必须是整数。"}}},{"id": "shopshipping-is_default", "name": "ShopShipping[is_default]", "attribute": "is_default", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否为默认快递公司必须是整数。"}}},{"id": "shopshipping-is_open", "name": "ShopShipping[is_open]", "attribute": "is_open", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺是否开启此快递必须是整数。"}}},{"id": "shopshipping-img_width", "name": "ShopShipping[img_width]", "attribute": "img_width", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"背景图片宽度必须是整数。"}}},{"id": "shopshipping-img_height", "name": "ShopShipping[img_height]", "attribute": "img_height", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"背景图片高度必须是整数。"}}},{"id": "shopshipping-offset_top", "name": "ShopShipping[offset_top]", "attribute": "offset_top", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"上偏移量必须是整数。"}}},{"id": "shopshipping-offset_left", "name": "ShopShipping[offset_left]", "attribute": "offset_left", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"左偏移量必须是整数。"}}},{"id": "shopshipping-config_lable", "name": "ShopShipping[config_lable]", "attribute": "config_lable", "rules": {"string":true,"messages":{"string":"配置标签必须是一条字符串。"}}},{"id": "shopshipping-img_path", "name": "ShopShipping[img_path]", "attribute": "img_path", "rules": {"string":true,"messages":{"string":"模板图片必须是一条字符串。","maxlength":"模板图片只能包含至多255个字符。"},"maxlength":255}},]
-</script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
+            //悬浮显示上下步骤按钮
+            window.onscroll = function() {
+                $(window).scroll(function() {
+                    var scrollTop = $(document).scrollTop();
+                    var height = $(".page").height();
+                    var wHeight = $(window).height();
+                    if (scrollTop > (height - wHeight)) {
+                        $(".bottom-btn").removeClass("bottom-btn-fixed");
+                    } else {
+                        $(".bottom-btn").addClass("bottom-btn-fixed");
+                    }
+                });
+            };
             var validator = $("#ShopShipping").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
             $.validator.addRules($("#client_rules").html());
-
             $('#btn_submit').click(function() {
-
                 if (!validator.form()) {
                     return;
                 }
-
                 var data = $("#ShopShipping").serializeJson();
-
                 var config_lable = "";
                 $("input[type=checkbox][name='xzbox'][checked]").each(function() {
                     var item_text = $(this).attr('data-waybill-text');
@@ -262,14 +276,11 @@
                     var height = $('#height_' + item_name).val();
                     config_lable += item_name + "," + item_text + "," + width + "," + height + "," + left + "," + top + "||,||";
                 });
-
                 data.ShopShipping.config_lable = config_lable;
-
                 // 开始加载
                 $.loading.start();
-
                 $.post('/shop/shipping/edit', {
-                    id: '{{ $info->id }}',
+                    id: '6896',
                     data: data,
                 }, function(result) {
                     if (result.code == 0) {
@@ -282,9 +293,7 @@
                 }, 'json').always(function() {
                     $.loading.stop();
                 });
-
             });
-
             var draggable_event = {
                 stop: function(event, ui) {
                     var item_name = ui.helper.attr('data-item-name');
@@ -324,13 +333,11 @@
                     $('#' + item_name).attr("checked", false);
                 }
             });
-
             // 初始化拖动事件
             $(".express-center > div").each(function() {
                 $(this).draggable(draggable_event);
                 $(this).resizable(resizeable_event);
             });
-
             // 关闭按钮时间
             $('.close-btn').on('click', function() {
                 var cancel_name = $(this).attr('id');
@@ -338,7 +345,6 @@
                 $('#div_' + div_id).remove();
                 $('#' + div_id).attr("checked", false);
             });
-
             $("#imagegroup_container").imagegroup({
                 host: "{{ get_oss_host() }}",
                 size: 1,

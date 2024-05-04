@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30">
         <form id="Shop" class="form-horizontal" name="Shop" action="/goods/lib-goods/import" method="post">
-            {{ csrf_field() }}
+            @csrf
             <div class="simple-form-field">
                 <div class="form-group">
                     <label for="shoprankmodel-is_special" class="col-sm-4 control-label">

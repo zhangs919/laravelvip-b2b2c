@@ -1,6 +1,16 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
 
@@ -18,7 +28,7 @@
 
 @stop
 
-{{--extra html block--}}
+{{--extra html page元素同级下面--}}
 @section('extra_html')
 
 @stop
@@ -29,6 +39,15 @@
 
 @stop
 
+{{--自定义css样式--}}
+@section('style_css')
+
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+
+@stop
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')

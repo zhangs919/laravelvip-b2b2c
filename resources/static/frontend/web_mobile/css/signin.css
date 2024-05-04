@@ -1,0 +1,118 @@
+.sign-box { padding-bottom: 1rem;min-height:calc(100vh - 50px);background: #f2f2f2 url(../images/sign-bg.jpg) no-repeat; background-size:100% auto; background-repeat: no-repeat; box-sizing: border-box;}
+.sign-top { min-height: 10rem; position: relative; display: flex; align-items: center; padding: 0 1.5rem; }
+.sign-top .everyday-gift { position: absolute; bottom: 1.2rem; left: 0; right: 0; margin: auto; font-size: .6rem; color: #fff; text-align: center; }
+.sign-top .sign-record { display: flex; justify-content: space-between; align-items: center; width: 100%;}
+.sign-top .sign-record .calendar-left,.sign-top .sign-record .calendar-right { position: relative; width: 3rem; }
+.sign-top .sign-record .calendar-left img,.sign-top .sign-record .calendar-right img { width: 100%; }
+.sign-top .sign-record .calendar-left p,.sign-top .sign-record .calendar-right p { font-size: .55rem; color: #666; position: absolute;top: 1.9rem; left: 0; right: 0; margin: auto; text-align: center;}
+.sign-top .sign-record .calendar-left p span,.sign-top .sign-record .calendar-right p span { margin-right: .1rem; font-family: Helvetica; color: #fe5f5f; font-size: .7rem; }
+.sign-top .sign-record .calendar-middle { border: .25rem solid rgba(255,255,255,.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.sign-top .sign-record .calendar-middle .sign-btn { display: flex; align-items: center; width: 1.6rem; height: 1.6rem; border: .3rem solid rgba(255,255,255,.25); background: #fedf22; border-radius: 50%; text-align: center; color: #fff; font-size: .75rem; padding: .6rem;}
+.sign-top .sign-record .calendar-middle.unsigned{-webkit-animation: breath .8s ease-in-out infinite;animation: breath .8s ease-in-out infinite;}
+.sign-top .sign-rule { position: absolute; top: .3rem; left: 0; border-radius: 25px 0 0 25px; padding: 0 .5rem; color: #fff; font-size: .5rem; display: flex; align-items: center;}
+.sign-top .sign-rule .iconfont { font-size: .7rem; margin-right: .1rem; }
+.sign-top .sign-remind { position: absolute; top: .3rem; right: 0; border-radius: 25px 0 0 25px; padding: 0 .5rem; color: #fff; font-size: .5rem; display: flex; align-items: center; }
+.sign-top .sign-remind .fa { position: relative; margin-left: .15rem; border: .06rem solid #fff; border-radius: 25px; width: .9rem; height: .45rem; display: flex; align-items: center;}
+.sign-top .sign-remind .fa i { position: absolute; left: .1rem; width: .3rem; height: .3rem; overflow: hidden; border-radius: 50%; background: #fff; display: block;  }
+.sign-top .sign-remind .fa.active { background: #fff; }
+.sign-top .sign-remind .fa.active i { width: .35rem; height: .35rem; right: .1rem; left: auto; background: #f56456; }
+@-webkit-keyframes breath {
+0% {
+-webkit-transform:scale(.96);
+transform:scale(.96)
+}
+30% {
+-webkit-transform:scale(1.02);
+transform:scale(1.02)
+}
+to {
+	-webkit-transform: scale(.96);
+	transform: scale(.96)
+}
+}
+
+/*日历*/
+.calendar { position: relative; }
+.calendar-container { position: absolute; left: 0; right: 0; top: 0; }
+.jqx-widget { color: #999; }
+/*.jqx-icon-arrow-right, .jqx-icon-arrow-left { display: none; }*/
+.calendar-box { background: #fff; border-radius: .5rem; margin: -.6rem auto 0; font-family: PingFang SC,Arial,Helvetica,STHeiti STXihei,Microsoft YaHei,Tohoma,sans-serif; z-index: 1000; border: none; }
+.calendar-box .jqx-calendar-title-header { background: #fff; }
+.calendar-box .jqx-widget-content { border: none; padding:.3rem .4rem .6rem;}
+.jqx-calendar td { position: relative; line-height: 1.6rem; font-size: .6rem; height: auto !important; background-color: #fff;border: 0;}
+.jqx-calendar td.jqx-calendar-cell-today:before { content: '今天'; position: absolute; bottom: -.9rem;left: 0; right: 0; margin: auto; border-radius: 50%; z-index: 10; color: #f56456; font-size: .5rem; }
+.jqx-calendar td.jqx-calendar-cell-specialDate { background: url(../images/sign-special.png) no-repeat center; background-size: 1rem; color: #fff !important; border-radius: 100%; padding: 0; margin: .25rem auto 0; }
+.jqx-calendar td.jqx-calendar-cell-today {  margin: .25rem auto 0; }
+.jqx-calendar td#calendarColumnHeaderViewjqxcalendar { padding-top: .5rem; }
+.calendar-box .jqx-widget-content>div { height: auto !important; line-height: 1.6rem; }
+.calendar-box .jqx-calendar-title-header td { line-height: 2rem; }
+.calendar-box .jqx-calendar-title-header td:nth-child(2n){pointer-events: none;}
+.jqx-icon-arrow-right, .jqx-icon-arrow-right-hover, .jqx-icon-arrow-right-selected,.jqx-icon-arrow-left, .jqx-icon-arrow-left-hover, .jqx-icon-arrow-left-selected { background-size: .85rem; }
+.calendar-box .jqx-calendar-title-header #leftNavigationArrowViewjqxcalendar { padding-left: .5rem; }
+.calendar-box .jqx-calendar-title-header #rightNavigationArrowViewjqxcalendar { padding-right: .5rem; }
+.jqx-icon-arrow-left, .jqx-icon-arrow-left-hover, .jqx-icon-arrow-left-selected{ float:right !important; position:relative;right:-20px;}
+.jqx-icon-arrow-right, .jqx-icon-arrow-right-hover, .jqx-icon-arrow-right-selected{ float:left !important; position: relative;left:-20px;}
+/*已签到的日期*/
+/*
+.jqx-calendar-cell-today { position: relative; background-color: transparent; border-radius: 50%; color: #fff !important; opacity: 1; border: none; z-index: 10; }
+.jqx-calendar-cell-today:before { content: ''; position: absolute; left: 0; right: 0; top: 0; bottom: 0;margin: auto; background: #f56456; width: 1.2rem; height: 1.2rem; border-radius: 50%; overflow: hidden; z-index: -1; color: #fff; }
+*/
+
+.jqx-calendar-title-content { color: #333; font-size: .7rem;}
+.jqx-calendar-cell-othermonth { opacity: 0 !important; }
+.jqx-fill-state-disabled { opacity: 1; color: #666; }
+.jqx-calendar-cell-selected-invalid { background: transparent !important; border: none !important; color: #000 !important; opacity: .55 !important; }
+
+/*连续签到*/
+.continuity-group { background: #fff;width: 90%;margin: .5rem auto;box-sizing: border-box;border-radius: .5rem;}
+.continuity-group .continuity-group-item { padding: 15px; }
+.continuity-title{font-size: .55rem;line-height: 20px;color: #666;margin-bottom: 11px; }
+
+.continuity-list li {display: flex; flex-direction: column; background: linear-gradient(to bottom, #ffc287, #ffaf8f) ; border-radius: .3rem; color: #fff; width: 4.3rem; margin-right: .5rem; padding: .3rem .5rem; }
+.continuity-list li p { font-size: .55rem; }
+.continuity-list li p.gift { margin: .3rem 0 0; }
+.continuity-list li p.gift span { font-size: .8rem; margin-right: .2rem; margin-left: .1rem; }
+.continuity-list li p.gift-more { font-size: .7rem; }
+.continuity-list li p.state { font-size: .5rem; position: absolute; right: 0; top: 0; background: #f9834a; padding: 0 .3rem; border-radius: 0 .3rem 0 0; line-height: .9rem;}
+.continuity-list li .iconfont { margin: .1rem 0; font-size: 1.1rem; }
+.continuity-list li img { position: absolute; bottom: -.3rem; left: 0; right: -.5rem; margin: auto; }
+.continuity-list li.not-received-item .iconfont { font-size: 1.5rem; margin-top: .5rem; }
+.continuity-list li.received-item { background: rgba(255,190,137,.4); }
+
+/*签到成功弹层*/
+.sign-layer { display: none; position: fixed; left: 0; right: 0; top: 50%!important; margin: auto; text-align: center; -webkit-transform: translateY(-50%); z-index: 1001; }
+.sign-layer .success-content { position: relative; background: #fff; border-radius: .5rem; width: 80%;max-width: 512px; margin: auto;padding: 2rem 0;}
+.sign-layer .success-content .reward-list { display: flex; justify-content: center; margin-top: 1.2rem;}
+.sign-layer .success-content .reward-list li { width: 28%; margin-right: .5rem;font-size: .55rem; display: flex; flex-direction: column; color: #dda304; align-items: center; box-shadow: 0 0 8px #ebebeb; border-radius: .2rem; padding: .7rem 0;}
+.sign-layer .success-content .reward-list li a { background: linear-gradient(to right, #ff7d01, #ff9501); color: #fff; font-size: .5rem; border-radius: 25px; line-height: 1rem; padding: 0 .6rem; margin-top: .3rem; }
+.sign-layer .success-content .reward-list li:last-child { margin-right: 0; }
+.sign-layer .success-content .reward-list li .reward-pic { width: 41%; }
+.sign-layer .success-content .reward-list li .reward-pic img { width: 100%; }
+.sign-layer .success-content .pic { width: 10rem; margin: auto; text-align: center; position: absolute; left: 0; right: 0; top: -2rem; }
+.sign-layer .success-content .pic img { width: 100%; }
+.sign-layer .success-content p { font-size: .7rem; font-weight: bold; color: #333; }
+.sign-layer .success-content p.desc { color: #666; font-size: .55rem; font-weight: normal;}
+.sign-layer .success-content p.reward { display: flex; align-items: center; font-weight: normal; font-size: .6rem; margin-top: .2rem; }
+.sign-layer .success-content p.reward span { width: .2rem; height: .2rem; margin-right: .4rem; display: inline-block; border-radius: 50%; background: #fe7c26; }
+.sign-layer .close-btn { border-radius: 50%; border: 1px solid #fff; width: 1.2rem; height: 1.2rem; display: flex; align-items: center; justify-content: center; margin: 1rem auto 0;}
+.sign-layer .close-btn .iconfont { color: #fff; font-size: .5rem; }
+.layer-mask { display: none; position: fixed; left: 0; right: 0; top: 0;max-width: 640px; margin: auto; bottom: 0; background: rgba(0,0,0,.8); z-index: 1000; }
+
+/*签到规则弹层*/
+.sign-rule-layer { display: none; position: fixed; left: 0; right: 0; top: 50%!important; margin: auto; text-align: center; -webkit-transform: translateY(-50%); z-index: 1001; }
+.sign-rule-layer .rule-content { max-height: 16rem; background: #fff; border-radius: .5rem; width: 80%; margin: auto;}
+.sign-rule-layer .rule-content .title { font-size: .8rem; line-height: 2.2rem; font-weight: bold; color: #333;position: fixed; background: #fff; left: 10%; right: 10%; border-radius: .5rem .5rem 0 0;}
+.sign-rule-layer .rule-content ul { margin-top: 2.2rem; padding: .8rem; font-size: .65rem; line-height: 1.1rem; color: #333; text-align: left;}
+.sign-rule-layer .rule-content ul li { padding-bottom: .2rem;}
+.sign-rule-layer .rule-content ul i { margin-right: .2rem; font-size: .8rem; color: #ff5c4e; vertical-align: middle;}
+.sign-rule-layer .close-rule-layer { border-radius: 50%; border: 1px solid #fff; width: 1.2rem; height: 1.2rem; display: flex; align-items: center; justify-content: center; margin: 1rem auto 0;}
+.sign-rule-layer .close-rule-layer .iconfont { color: #fff; font-size: .5rem; }
+
+/*连签奖励弹层*/
+.sign-layer .success-content .continuity-list li p { color: #fff; font-weight: normal; }
+.sign-layer .continuity-list { padding: .2rem; margin: .5rem auto 0; }
+.sign-layer .continuity-list li { width: 4.5rem; }
+.sign-layer .continuity-list li p { font-size: .6rem; }
+
+/*签到礼物*/
+.jqx-calendar-cell-gift:after { content: ''; position: absolute;left: 0; right: 0; margin: auto; background: url(../images/gift-icon.png) no-repeat center #fff; background-size: .8rem;width: .8rem; height: 1.6rem; }

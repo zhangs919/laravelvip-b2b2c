@@ -20,8 +20,9 @@
 // | Description: 打印设置
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
+use App\Models\PrintSpec;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\PrintSpecRepository;
 use Illuminate\Http\Request;
@@ -44,11 +45,11 @@ class PrintSpecController extends Seller
 
     protected $printSpec;
 
-    public function __construct()
+    public function __construct(PrintSpecRepository $printSpec)
     {
         parent::__construct();
 
-        $this->printSpec = new PrintSpecRepository();
+        $this->printSpec = $printSpec;
 
         $this->set_menu_select('shop', 'shop-print-spec');
     }
@@ -91,7 +92,7 @@ class PrintSpecController extends Seller
         list($list, $total) = $this->printSpec->getList($condition);
 
         $pageHtml = pagination($total);
-        
+
         $compact = compact('title', 'list', 'total', 'pageHtml');
         if ($request->ajax()) {
             $render = view('shop.print-spec.partials._list', $compact)->render();
@@ -227,6 +228,84 @@ class PrintSpecController extends Seller
         }
 
         return result(0, null, '打印机配置成功！');
+    }
+
+    public function set(Request $request)
+    {
+        $id = $request->get('id');
+        // 获取数据
+
+        $model = PrintSpec::where([
+            ['shop_id', seller_shop_info()->shop_id],
+            ['id',$id]
+        ])->first();
+        if (empty($model)) {
+            abort(404, INVALID_PARAM);
+        }
+        $model = $model->toArray();
+        $data = $model['tpl_data'] ?: '{}';
+        $spec_list = PrintSpec::where('shop_id', seller_shop_info()->shop_id)->get()->toArray();
+
+        $mall_wx_qrcode = get_image_url(sysconf('mall_wx_qrcode'));
+        $shop_wechat = '';
+        $shop_qrcode = 'http://images.xxxx.com/15164/gqrcode/shop/C4/qrcode_11.png';
+        $logo = get_image_url(sysconf('mall_logo'));
+        $store_logo = get_image_url($this->seller_info->shop->shop_logo);
+
+        $compact = compact('model','data','spec_list','mall_wx_qrcode',
+        'shop_wechat','shop_qrcode','logo','store_logo');
+
+        if ($request->method() == 'POST') {
+            $post = $request->input();
+            $id = $post['id'];
+            unset($post['id'],$post['_csrf']);
+            $ret = $this->printSpec->update($id, ['tpl_data'=>$post]);
+            if ($ret === false) {
+                return result(-1,null,'设置打印模版失败！');
+            }
+
+            return result(0,null, '设置打印模版成功！');
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'model'=>$model,
+                'data'=>$data,
+                'spec_list'=>$spec_list,
+                'mall_wx_qrcode'=>$mall_wx_qrcode,
+                'shop_wechat'=>$shop_wechat,
+                'shop_qrcode'=>$shop_qrcode,
+                'logo'=>$logo,
+                'store_logo'=>$store_logo
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'shop.print-spec.set'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+
+    }
+
+
+    public function selectSpec(Request $request)
+    {
+        $mall_wx_qrcode = get_image_url(sysconf('mall_wx_qrcode'));
+        $shop_wechat = '';
+        $shop_qrcode = 'http://images.xxxx.com/15164/gqrcode/shop/C4/qrcode_11.png';
+        $logo = get_image_url(sysconf('mall_logo'));
+        $store_logo = get_image_url($this->seller_info->shop->shop_logo);
+
+        $compact = compact('mall_wx_qrcode',
+            'shop_wechat','shop_qrcode','logo','store_logo');
+
+        $render = view('shop.print-spec.select_spec', $compact)->render();
+
+        return result(0, $render);
     }
 
     public function delete(Request $request)

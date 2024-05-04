@@ -20,7 +20,7 @@
 // | Description:商城模块路由
 // +----------------------------------------------------------------------
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
 
     // Shop Module
@@ -56,6 +56,11 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::post('delete', 'Shop\ShopController@delete')->name('shop-third-delete'); // delete
             Route::get('export', 'Shop\ShopController@export')->name('shop-third-export'); // export
 
+            Route::any('apply-edit', 'Shop\ShopController@applyEdit')->name('shop-third-apply-manage'); // applyEdit
+            Route::get('audit', 'Shop\ShopController@audit')->name('shop-third-apply-manage'); // audit
+            Route::post('batch-pass', 'Shop\ShopController@batchPass')->name('shop-third-apply-manage'); // audit
+
+
             Route::get('pay-list', 'Shop\ShopController@payList'); // 付款信息列表
             Route::get('pay-add', 'Shop\ShopController@payAdd'); // payAdd
             Route::post('pay-add', 'Shop\ShopController@savePayData'); // paySaveData
@@ -87,6 +92,21 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::post('delete', 'Shop\SelfShopController@delete')->name('shop-self-delete'); // delete
             Route::get('export', 'Shop\SelfShopController@export')->name('shop-self-export'); // export
 
+
+        });
+
+        // 推荐开店 Route
+        Route::group(['prefix' => 'recommend-shop'], function () {
+            Route::get('list', 'Shop\RecommendShopController@lists')->name('shop-recommend-list'); // lists
+            Route::any('remark', 'Shop\SelfShopController@remark')->name('shop-recommend-remark'); // remark
+            Route::post('delete', 'Shop\SelfShopController@delete')->name('shop-recommend-delete'); // delete
+
+        });
+
+        // 预上线店铺留言 Route
+        Route::group(['prefix' => 'recommend-msg'], function () {
+            Route::get('list', 'Shop\RecommendMsgController@lists')->name('shop-recommend-msg-list'); // lists
+            Route::post('delete', 'Shop\RecommendMsgController@delete')->name('shop-recommend-msg-delete'); // delete
 
         });
 

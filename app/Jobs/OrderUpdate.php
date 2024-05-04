@@ -51,28 +51,24 @@ class OrderUpdate implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('Hello，Queue');
-
-
+//        Log::info('Hello，Queue');
 
         // 通过事务执行 sql
-        DB::transaction(function () {
-            $goods_buy_quantity = $this->param;
-            foreach ($goods_buy_quantity as $goods_id => $quantity) {
-
-                // todo 减少商品库存并增加销量
-                $ret = Goods::where('goods_id', $goods_id)->increment('sale_num');
-                $ret2 = Goods::where('goods_id', $goods_id)->decrement('goods_number');
-                if (!$ret || $ret2) {
-                    break;
+        try {
+            DB::transaction(function () {
+                $goods_buy_quantity = $this->param;
+                foreach ($goods_buy_quantity as $goods_id => $quantity) {
+                    // 减少商品库存并增加销量
+                    Goods::where('goods_id', $goods_id)->increment('sale_num',$quantity);
+                    Goods::where('goods_id', $goods_id)->decrement('goods_number',$quantity);
                 }
-            }
-            if (!$ret) {
-                throw new \Exception('变更商品库存与销量失败');
-            } else {
                 return true;
-            }
-        });
+            });
+        } catch (\Exception $e) {
+//            $e->getMessage(); //变更商品库存与销量失败
+            return false;
+        }
+
     }
 
     /**

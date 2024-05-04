@@ -9,7 +9,6 @@
                         <li class="active">
                             <a href="javascript:void(0)" class="goods-status" data-goods-status="1">出售中</a>
                         </li>
-
                         <li>
                             <a href="javascript:void(0)" class="is-selected">
                                 已选择（
@@ -20,24 +19,47 @@
                     </ul>
                 </div>
                 <div class="search-condition">
-                    <div class="pull-left">
-
-                        <select id="cat_id" class="form-control chosen-select m-l-2">
-                            <option value="0">--按分类选择商品--</option>
-                            @foreach($category_list as $v)
-                                <option value="{{ $v['cat_id'] }}">{!! $v['title_show'] !!}</option>
-                            @endforeach
-                        </select>
-
-
+                    <div class="search-condition-box">
+                        <div class="search-condition-field">
+                            <span class="search-condition-label">选择分类：</span>
+                            <div class="search-condition-wrap">
+                                <select id="cat_ids" class="form-control chosen-select m-l-2" multiple="multiple" size="4" placeholder="--按分类选择商品--">
+                                    <option value="0"></option>
+                                    @foreach($category_list as $v)
+                                        <option value="{{ $v['cat_id'] }}">{!! $v['title_show'] !!}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="search-condition-field">
+                            <span class="search-condition-label">选择活动：</span>
+                            <div class="search-condition-wrap">
+                                <select id="activity_type" class="form-control chosen-select m-l-2" multiple="multiple" size="4" placeholder="--按活动选择--">
+                                    <option value="3">团购</option>
+                                    <option value="2">预售</option>
+                                    <option value="6">拼团</option>
+                                    <option value="8">砍价</option>
+                                    <option value="11">限时折扣</option>
+                                    <option value="14">直播</option>
+                                    <option value="15">限购</option>
+                                    <option value="17">打包一口价</option>
+                                    <option value="12">满减送</option>
+                                    <option value="is_virtual">虚拟商品</option>
+                                </select>
+                            </div>
+                        </div>
                         <select id="brand_id" class="form-control chosen-select m-l-2">
                             <option value="">--按品牌选择商品--</option>
                             @foreach($brand_list as $v)
                                 <option value="{{ $v->brand_id }}">{{ $v->brand_name }}</option>
                             @endforeach
                         </select>
-
-                        <input type="text" name="keyword" class="form-control large m-l-2" placeholder="商品名称/条形码">
+                        <input type="text" name="keyword" class="form-control w150 m-l-2 m-r-2" placeholder="商品名称/条形码">
+                        <select id="is_stock" class="form-control chosen-select m-l-2">
+                            <option value="">--按库存选择--</option>
+                            <option value="0">无库存</option>
+                            <option value="1">有库存</option>
+                        </select>
                         <input type="button" class="btn btn-primary m-l-2 m-r-2 btn-submit" value="搜索商品">
                         <span class="text-explode m-r-2">|</span>
                         <input type="button" class="btn btn-default m-r-2 selectall-page" value="本页全选">
@@ -46,22 +68,22 @@
                         <input type="button" class="btn btn-default m-r-2 selectall" value="一键全选">
                         <span class="text-explode m-r-2">|</span>
                         <label class="input-label">
-                        <input class="checkBox" type="checkbox" id="select_show" />
-                        不看已选择商品
+                            <input class="checkBox" type="checkbox" id="select_show" />
+                            不看已选择商品
                         </label>
-                        -->
+                         -->
                     </div>
                     <div class="clear"></div>
                 </div>
 
                 {{--引入列表--}}
                 @include('goods.default.partials._picker_goods_list')
-
+                
+                
             </div>
         </div>
     </div>
 </div>
-<script src="/assets/d2eace91/js/jquery.json-2.4.js?v=20180027"></script>
 <script id="btn_checked_template" type="text">
 <a data-selected="true" href="javascript:void(0);" class="btn btn-xs btn-default btn-goodspicker">
 <i class="fa fa-check"></i>
@@ -75,6 +97,10 @@
 </a>
 </script>
 <script type="text/javascript">
+    // 
+</script><script src="/assets/d2eace91/js/jquery.json-2.4.js"></script>
+<script>
+
     $().ready(function() {
 
         try {
@@ -94,7 +120,7 @@
             url: "/goods/default/picker",
             method: "POST",
             page_id: "#{{ $pagination_id }}",
-            // 提交数据前处理数据
+// 提交数据前处理数据
             dataCallback: function(data) {
                 if ($.goodspicker(container)) {
                     var goodspicker = $.goodspicker(container);
@@ -123,6 +149,7 @@
                     }
                     data.brand_id = $(container).find("#brand_id").val();
                     data.cat_id = $(container).find("#cat_id").val();
+                    data.cat_ids = $(container).find("#cat_ids").val();
                     if($(container).find("#shop_id").length > 0){
                         data.shop_id = $(container).find("#shop_id").val();
                     }
@@ -131,14 +158,24 @@
                     data.is_supply = goodspicker.data.is_supply;
 //审核
                     data.goods_audit = goodspicker.data.goods_audit;
+//多门店是否显示店铺商品
+                    data.show_seller_goods=goodspicker.data.show_seller_goods;
+
+                    data.tag_id = $(container).find("#tag_id").val();
+                    data.activity_type = $(container).find("#activity_type").val();
+                    data.is_stock = $(container).find("#is_stock").val();
                 }
                 data.is_sku = "0";
                 return data;
             },
             callback: function(result) {
-                if (result.data.values) {
-                    goodspicker.values = result.data.values;
-                    goodspicker.refreshSelectedData();
+                if(result.code == 0){
+                    if (result.data.values) {
+                        goodspicker.values = result.data.values;
+                        goodspicker.refreshSelectedData();
+                    }
+                }else{
+                    $.msg(result.message);
                 }
             }
         });
@@ -200,5 +237,18 @@
             var container = $(".goods-picker-container");
             $(container).hide();
         });
+
+        $('#shop_id').change(function(){
+            var shop_id = $(this).val();
+            $.get('/goods/default/goods-tag-list',{
+                shop_id: shop_id
+            },function(result){
+                if(result.code == 0){
+                    $('#goods_tag_span').html(result.data);
+                }
+            },'json');
+        });
     });
+
+    // 
 </script>

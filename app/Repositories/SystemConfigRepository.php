@@ -17,9 +17,9 @@ class SystemConfigRepository
         $this->model = new SystemConfig();
     }
 
-    public function detail($condition)
+    public function detail($condition, $field = '*')
     {
-        $data = $this->model->where($condition)->firstOrFail();
+        $data = $this->model->select($field)->where($condition)->firstOrFail();
         return $data;
     }
 
@@ -67,8 +67,36 @@ class SystemConfigRepository
             foreach ($list as $key=>$item) {
                 $item = $item[0];
 
+                // 如果表单类型是 单选、多选、下拉、联动等类型
+                if($item->type == 'radio' || $item->type == 'checkbox'
+                    || $item->type == 'select' || $item->type == 'linkage'
+                    || $item->type == 'linkages' || $item->type == 'switch'){
+//                dd(preg_split('/\s+/', $vo['options']));
+//                $options = preg_split('/\s+/', $vo['options']);
+                    $options = explode("\r\n", $item->options);
+
+                    $optionsData = [];
+                    foreach ($options as $option){
+                        $optionsValue = explode('::',$option);
+                        $optionsData[$optionsValue[0]] = $optionsValue[1];
+                    }
+
+
+                    $item->options = $optionsData;
+                }
+
                 if($item->type == 'checkbox') {
-                    $item->value = explode(',', $item->value);
+                    if ($item->value == '0' || !empty($item->value)) {
+                        $item->value = explode(',', $item->value);
+                    } else {
+                        $item->value = [];
+                    }
+//                    $item->value = explode(',', $item->value);
+                }
+
+                // json 序列化
+                if ($item->type == 'array') {
+                    $item->value = !empty($item->value) ? json_decode($item->value, true) : '';
                 }
 
                 // 特殊值处理
@@ -204,9 +232,14 @@ class SystemConfigRepository
             // 如果表单类型是 多选类型 则将value值转换为数组
             // TODO 此处有bug
             if($vo['type'] == 'checkbox') {
+                if ($vo['value'] == '0' || !empty($vo['value'])) {
+                    $config_list[$key]['value'] = explode(',', $vo['value']);
+                } else {
+                    $config_list[$key]['value'] = [];
+                }
+
 //                        $vo['value'] = explode(':', $vo['value']);
-                $config_list[$key]['value'] = explode(',', $vo['value']);
-//                        dump($vo['value']);die;
+//                $config_list[$key]['value'] = explode(',', $vo['value']);
             }
 
             //如果是图片组类型 将value以|分隔
@@ -352,6 +385,11 @@ class SystemConfigRepository
             if ($config_info->type == 'checkbox' && is_array($vo)) {
                 $vo = implode(',', $vo);
             }
+
+            if ($config_info->type == 'array' && is_array($vo)) { // 数组对象 json 序列化
+                $vo = json_encode($vo);
+            }
+
 //            if ($config_info->type == 'imagegroup' &&  is_array($config_info->value)) {
 //                $vo = implode('|', $vo);
 //            }

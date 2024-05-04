@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,9 +12,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-//        $this->call(TemplateTableSeeder::class);
-//        $this->call(TemplateSelectorTableSeeder::class);
-//        $this->call(AdminsTableSeeder::class);
+        if (!Storage::disk('local')->exists('seeder/install.lock')) {
+            $this->call([
+                InstallSeeder::class, // 安装配置数据
+            ]);
+        }
     }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.design_layout_v3')
+@extends('layouts.design_layout')
 
 @section('header_js')
 
@@ -25,11 +25,11 @@
     <script src="/assets/d2eace91/js/design/jquery-hdscroll.js?v=20180418"></script>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/public.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/design.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/topic_activity.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/topic_activity.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/topic_activity.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/topic_activity.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/index.css?v=1.6"/>
-
+    {{--<link href="http://{{ config('lrw.mobile_domain') }}/css/dianpu.css" rel="stylesheet">--}}
 
 
 
@@ -39,7 +39,7 @@
 
         <div class="module-topBar-inner">
             <a class="topBar-logo">
-                <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/website/backend_logo_0.png">
+                <img src="{{ get_image_url(sysconf('backend_logo')) }}" />
             </a>
             <div class="page-title">
                 <label>首页</label>
@@ -74,6 +74,7 @@
                 <div class="page-operation-btns">
                     <a class="page-btn page-preview-btn SZY-TPL-BACKUP" href="javascript:void(0);">模板备份</a>
                     <a class="page-btn page-preview-btn SZY-TPL-USE" data-id="6" href="javascript:void(0);">使用备份</a>
+                    <a class="page-btn page-preview-btn SZY-TPL-PREVIEW" href="javascript:void(0);">预览 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-RELEASE" href="javascript:void(0);"> 发布 </a>
                 </div>
                 <div class="other-more">
@@ -84,7 +85,7 @@
                         <span class="top-dropdown-bg"></span>
                         <ul>
                             <li>
-                                <a class="other-help" target="_blank" href="http://help.68mall.com/">
+                                <a class="other-help" target="_blank" href="#">
                                     <i></i>
                                     帮助中心
                                 </a>
@@ -119,6 +120,13 @@
                                     <img src="/assets/d2eace91/images/design/icon/0/m_banner.png">
                                 </a>
                                 <a href="javascript:void(0);" class="panelModuleTitle" title="轮播广告">轮播广告</a>
+                            </li>
+
+                            <li class="drag" id="0" data-code="m_hots_pot" style="z-index: 3">
+                                <a href="javascript:;" class="panelModuleIcon">
+                                    <img src="/assets/d2eace91/images/design/icon/0/m_hots_pot.png" class="mCS_img_loaded">
+                                </a>
+                                <a href="javascript:;" class="panelModuleTitle" title="热区模板">热区模板</a>
                             </li>
 
                             <li class="drag" id="0" data-code="m_ad_s1" style="z-index: 3">
@@ -447,7 +455,7 @@
                         <a>模板助手</a>
                     </li>
 
-                    @if(!empty($tpl_backup_theme))
+                    @if(!empty($theme_list))
                         <li class="mobiTemColumn">
                             <a>主题</a>
                         </li>
@@ -461,7 +469,7 @@
                             <thead class="template_set_top">
                             <tr height="40">
                                 <td>模块名称</td>
-                                <td>是否显示</td>
+                                <td>是否开启</td>
                                 <td>操作</td>
                             </tr>
                             </thead>
@@ -472,8 +480,8 @@
                     </div>
                     <div class="template_select design_right_child" style="display: none">
 
-                        @if(!empty($tpl_backup_theme))
-                            @foreach($tpl_backup_theme as $theme)
+                        @if(!empty($theme_list))
+                            @foreach($theme_list as $theme)
                                 <li class="SZY-THEME-TPL" data-id="{{ $theme['back_id'] }}">
                                 <span class="template_select_bg">
                                     <img src="{{ $theme['img'] }}">

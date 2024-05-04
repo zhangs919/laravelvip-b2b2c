@@ -20,10 +20,13 @@
 // | Description: 积分兑换商品
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
 use App\Modules\Base\Http\Controllers\Seller;
+use App\Repositories\BonusRepository;
 use App\Repositories\IntegralGoodsRepository;
+use App\Repositories\IntegralOrderInfoRepository;
+use App\Repositories\ShopConfigFieldRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -43,17 +46,30 @@ class IntegralMallController extends Seller
         ['url' => 'dashboard/integral-mall/integral-mall-set', 'text' => '积分商城设置'],
     ];
 
-    protected $integralGoods;
+    protected $shopConfigField;
 
-    public function __construct()
+    protected $integralGoods;
+    protected $integralOrderInfo;
+    protected $bonus;
+
+    public function __construct(
+        ShopConfigFieldRepository $shopConfigField
+        , IntegralGoodsRepository $integralGoods
+        , IntegralOrderInfoRepository $integralOrderInfo
+        , BonusRepository $bonus
+    )
     {
         parent::__construct();
 
-        $this->integralGoods = new IntegralGoodsRepository();
+        $this->shopConfigField = $shopConfigField;
+        $this->integralGoods = $integralGoods;
+        $this->integralOrderInfo = $integralOrderInfo;
+        $this->bonus = $bonus;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
 
+    /*********************** 核销 ********************/
     /**
      * 核销
      *
@@ -63,7 +79,7 @@ class IntegralMallController extends Seller
     public function revision(Request $request)
     {
         $title = '核销';
-        $fixed_title = '营销中心 - '.$title;
+        $fixed_title = '营销中心 - ' . $title;
         $this->sublink($this->links, 'revision');
 
         $action_span = [];
@@ -91,14 +107,16 @@ class IntegralMallController extends Seller
     public function doRevision(Request $request)
     {
         $order_id = $request->post('order_id');
-        // 执行核销操作 如果是待发货 自动进行商家发货及买家收货操作，完成订单，并核销，将订单核销状态改为已核销
+        $ret = $this->integralOrderInfo->doRevision($order_id);
+        if (!$ret) {
+            return result(-1, null, '核销失败');
+        }
 
         return result(0, null, '核销成功！');
     }
 
     /**
-     * 核销
-     * 根据订单编号获取订单信息
+     * 核销-获取订单信息
      *
      * @param Request $request
      * @return array
@@ -108,20 +126,60 @@ class IntegralMallController extends Seller
     {
         $order_sn = $request->get('order_sn');
 
-        // 根据订单编号查询订单信息
-        $order_info = [1]; // todo 查询订单信息
-        $render = view('dashboard.integral-mall.get_order', compact('order_info'))->render();
+        // 获取数据
+        $condition = [
+            ['order_sn', $order_sn],
+        ];
+        $order_info = $this->integralOrderInfo->getFrontendOrderInfo($condition);
 
-        return result(0, $render);
+        $auto_revision = 0; // 核销状态 默认0 0-无法核销 1-未核销 2-无法核销
+        if (!empty($order_info)) {
+            if (get_order_operate_state('shop_delivery', $order_info)) {
+                // 待发货 未核销
+                $auto_revision = 1;
+            } elseif (get_order_operate_state('buyer_confirm_receipt', $order_info)) {
+                // 待收货 已核销
+                $auto_revision = 2;
+            }
+        }
+        $compact = compact('auto_revision', 'order_info');
+        $tpl_view = 'dashboard.integral-mall.get_order';
+        if ($request->ajax()) {
+            $render = view($tpl_view, $compact)->render();
+            return result(0, $render);
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'auto_revision' => $auto_revision,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => $tpl_view
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
+
+    /*********************** 积分兑换商品 ********************/
 
     public function integralGoodsList(Request $request)
     {
         $title = '积分兑换商品';
-        $fixed_title = '营销中心 - '.$title;
+        $fixed_title = '营销中心 - ' . $title;
         $this->sublink($this->links, 'integral-goods-list');
 
         $action_span = [
+            [
+                'id' => '',
+                'url' => '/dashboard/center/index',
+                'icon' => 'fa-reply',
+                'text' => '返回营销中心'
+            ],
             [
                 'url' => 'add-integral-goods',
                 'icon' => 'fa-plus',
@@ -164,7 +222,7 @@ class IntegralMallController extends Seller
         list($list, $total) = $this->integralGoods->getList($condition);
 
         $pageHtml = pagination($total);
-        
+
         $compact = compact('title', 'list', 'total', 'pageHtml');
         if ($request->ajax()) {
             $render = view('dashboard.integral-mall.partials._integral_goods_list', $compact)->render();
@@ -189,7 +247,7 @@ class IntegralMallController extends Seller
             $title = '编辑积分兑换商品';
         }
 
-        $fixed_title = '营销中心 - '.$title;
+        $fixed_title = '营销中心 - ' . $title;
 
         $action_span = [
             [
@@ -235,7 +293,7 @@ class IntegralMallController extends Seller
             // 编辑
             $ret = $this->integralGoods->update($post['goods_id'], $post);
             $msg = '编辑';
-        }else {
+        } else {
             // 添加
             $post['shop_id'] = seller_shop_info()->shop_id;
             $ret = $this->integralGoods->store($post);
@@ -244,11 +302,11 @@ class IntegralMallController extends Seller
 
         if ($ret === false) {
             // fail
-            flash('error', $msg.'失败');
+            flash('error', $msg . '失败');
             return redirect('/dashboard/integral-mall/integral-goods-list');
         }
         // success
-        flash('success', $msg.'成功');
+        flash('success', $msg . '成功');
         return redirect('/dashboard/integral-mall/integral-goods-list');
     }
 
@@ -257,7 +315,7 @@ class IntegralMallController extends Seller
         $id = $request->get('id');
         $ret = $this->integralGoods->changeState($id, 'goods_status');
         if ($ret === false) {
-            return result(-1, null, '操作失败');
+            return result(-1, null, OPERATE_FAIL);
         }
         return result(0, $ret, 1);
     }
@@ -292,13 +350,249 @@ class IntegralMallController extends Seller
         }
         if ($ret === false) {
             // Log
-            shop_log('积分兑换商品删除失败。ID：'.$id);
+            shop_log('积分兑换商品删除失败。ID：' . $id);
             return result(-1, null, '删除失败');
         }
         // Log
-        shop_log('积分兑换商品删除成功。ID：'.$id);
+        shop_log('积分兑换商品删除成功。ID：' . $id);
         return result(0, null, '删除成功');
     }
 
+
+    /*********************** 积分兑换列表 ********************/
+    public function integralOrderList(Request $request)
+    {
+        $title = '积分兑换列表';
+        $fixed_title = '营销中心 - ' . $title;
+        $this->sublink($this->links, 'integral-order-list');
+
+        $action_span = [
+            [
+                'id' => '',
+                'url' => '/dashboard/center/index',
+                'icon' => 'fa-reply',
+                'text' => '返回营销中心'
+            ],
+        ];
+
+        $explain_panel = [];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+
+        // 获取数据
+        $uid = $request->get('uid', ''); // 查看某个会员的所有订单
+        $from = $request->get('from', '');
+        $params = $request->all();
+        $params['order_status'] = $request->get('order_status', '');
+
+        $where = [];
+        // 搜索条件 name 商品名称/订单编号/买家账号
+        $search_arr = ['name', 'order_status', 'add_time_begin', 'add_time_end'];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+                if ($v == 'name') { // todo
+//                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                } elseif ($v == 'add_time_begin' || $v == 'add_time_end') {
+
+                } else {
+                    $where[] = [$v, $params[$v]];
+                }
+            }
+        }
+
+        if (!empty($uid)) {
+            $where[] = ['user_id', $uid];
+        }
+
+        $where[] = ['shop_id', seller_shop_info()->shop_id]; // 店铺id
+
+        // 列表
+        $condition = [
+            'with' => ['integralOrderGoods'],
+            'where' => $where,
+            'sortname' => 'order_id',
+            'sortorder' => 'asc'
+        ];
+
+        list($list, $total) = $this->integralOrderInfo->getOrderList($condition);
+        $pageHtml = pagination($total);
+        $page = frontend_pagination($total, true);
+
+        $order_count = $this->integralOrderInfo->getOrderCounts(0, seller_shop_info()->shop_id);
+        $order_status_list = $this->integralOrderInfo->getOrderStatusList();
+
+        $compact = compact('title', 'list', 'pageHtml', 'params', 'order_count', 'order_status_list');
+
+        if ($request->ajax()) {
+            $render = view('dashboard.integral-mall.partials._integral_order_list', $compact)->render();
+            return result(0, $render);
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'list' => $list,
+                'page' => $page,
+                'order_count' => $order_count,
+                'order_status_list' => $order_status_list,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.integral-mall.integral_order_list'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+
+    /*********************** 积分兑换红包 ********************/
+    public function integralBonusList(Request $request)
+    {
+        $title = '积分兑换红包';
+        $fixed_title = '营销中心 - ' . $title;
+        $this->sublink($this->links, 'integral-bonus-list');
+
+        $action_span = [
+            [
+                'id' => '',
+                'url' => '/dashboard/center/index',
+                'icon' => 'fa-reply',
+                'text' => '返回营销中心'
+            ],
+            [
+                'url' => 'add-integral-bonus',
+                'icon' => 'fa-plus',
+                'text' => '添加积分兑换红包'
+            ],
+        ];
+
+        $explain_panel = [];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+
+        // 获取数据
+        $params = $request->all();
+
+        $where = [];
+        $where[] = ['bonus_type', 10]; // 红包类型 10-积分兑换红包
+        $where[] = ['shop_id', seller_shop_info()->shop_id];
+        $where[] = ['is_delete', 0]; // 未删除状态
+        // 搜索条件
+        $search_arr = ['keywords', 'start_time', 'end_time', 'is_enable'];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+
+                if ($v == 'keywords') {
+                    $where[] = ['bonus_name', 'like', "%{$params[$v]}%"];
+                } else {
+                    $where[] = [$v, $params[$v]];
+                }
+            }
+        }
+        // 列表
+        list($list, $total) = $this->bonus->getBonusList($where);
+
+        $pageHtml = pagination($total);
+        $page = frontend_pagination($total, true);
+        $bonus_types = null;
+
+        $compact = compact('title', 'list', 'pageHtml', 'bonus_types');
+
+        if ($request->ajax()) {
+            $render = view('dashboard.integral-mall.partials._integral_bonus_list', $compact)->render();
+            return result(0, $render);
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'list' => $list,
+                'page' => $page,
+                'bonus_types' => $bonus_types,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.integral-mall.integral_bonus_list'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+
+    /*********************** 积分商城设置 ********************/
+
+    /**
+     * 积分商城设置
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function integralMallSet(Request $request)
+    {
+        $title = '积分商城设置';
+        $fixed_title = '营销中心 - ' . $title;
+        $this->sublink($this->links, 'integral-mall-set');
+
+
+        $action_span = [
+            [
+                'id' => '',
+                'url' => '/dashboard/center/index',
+                'icon' => 'fa-reply',
+                'text' => '返回营销中心'
+            ],
+        ];
+
+        $explain_panel = [];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+
+        // 获取数据
+        $group = 'integral_mall_set'; // 当前配置分组
+        $model = $this->shopConfigField->getSpecialConfigsByGroup($group, 'code', true);
+        $back_url = $request->fullUrl();
+
+        $compact = compact('title', 'model', 'back_url');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'model' => $model,
+                'back_url' => $back_url,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.integral-mall.integral_mall_set'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
 
 }

@@ -2,8 +2,10 @@
 
 namespace App\Modules\Seller\Http\Controllers\Shop;
 
+use App\Models\ShopBindClass;
 use App\Models\ShopFieldValue;
 use App\Modules\Base\Http\Controllers\Seller;
+use App\Repositories\ShopPaymentRepository;
 use App\Repositories\ShopRepository;
 use Illuminate\Http\Request;
 
@@ -17,13 +19,18 @@ class ShopInfoController extends Seller
     ];
 
     protected $shop;
+    protected $shopPayment;
 
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        , ShopPaymentRepository  $shopPayment
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
+        $this->shop = $shop;
+        $this->shopPayment = $shopPayment;
 
         $this->set_menu_select('shop', 'shop-info');
 
@@ -50,7 +57,15 @@ class ShopInfoController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
+
+
+
+        // 获取数据
         $info = $this->shop->getById($shop_id);
+        if (empty($info)) {
+            abort(404, INVALID_PARAM);
+        }
+        $shop_info = $info->toArray();
         $shop_field_value = ShopFieldValue::where('shop_id', $shop_id)->first();
         // 身份证正面
         if (empty($shop_field_value->card_side_a)) {
@@ -64,12 +79,53 @@ class ShopInfoController extends Seller
         if (empty($shop_field_value->hand_card)) {
             $shop_field_value->hand_card = get_idcard_demo_image()[2];
         }
+        $special_aptitude = explode('|', $shop_field_value->special_aptitude);
+		// 店铺绑定分类 todo 暂时这样 后期再优化成：家用电器 > 厨卫大电，食品酒水 > 水果生鲜
+		$cat_name = '';
+		$cat_name_arr = [];
+		$bind_cls = ShopBindClass::where('shop_id', $shop_id)->with('shopClass')->get()->toArray();
+		if (!empty($bind_cls)) {
+			foreach ($bind_cls as $item) {
+				$cat_name_arr[] = $item['shop_class']['cls_name'];
+			}
+			$cat_name = implode('，', $cat_name_arr);
+		}
 
-        $compact = compact('title', 'info', 'shop_field_value');
-//        dd($shop_field_value);
+        $model = [
+            'real_name' => $shop_field_value->real_name,
+            'card_no' => $shop_field_value->card_no,
+            'special_aptitude' => $special_aptitude,
+            'special_aptitude1' => @$special_aptitude[0],
+            'special_aptitude2' => @$special_aptitude[1],
+            'hand_card' => $shop_field_value->hand_card,
+            'card_side_a' => $shop_field_value->card_side_a,
+            'card_side_b' => $shop_field_value->card_side_b,
+            'address' => $shop_field_value->address,
+            'cat_name' => $cat_name
+        ];
+        $user_info = $info->user->toArray();
+        $insure_fee = $shop_info['insure_fee'];
+		$shop_qrcode = $this->shop->getShopQrCode($shop_id);
 
+        $compact = compact('title', 'shop_info','model','user_info','insure_fee', 'shop_qrcode');
 
-        return view('shop.shop-info.shop_info', $compact);
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'shop_info' => $shop_info,
+                'model' => $model,
+                'user_info' => $user_info,
+                'insure_fee' => $insure_fee,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'shop.shop-info.shop_info'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     public function renewList(Request $request)
@@ -102,14 +158,13 @@ class ShopInfoController extends Seller
         // 搜索条件
 
         // 列表
-        /*$condition = [
+        $condition = [
             'where' => $where,
-            'sortname' => 'nav_id',
+            'sortname' => 'pay_id',
             'sortorder' => 'desc'
-        ];*/
-        list($list, $total) = [[], 0]; //$this->shopNavigation->getList($condition);
+        ];
+        list($list, $total) = $this->shopPayment->getList($condition);
         $pageHtml = pagination($total);
-
         $compact = compact('title', 'list', 'total', 'pageHtml');
         if ($request->ajax()) {
             $render = view('shop.shop-info.partials._renew_list', $compact)->render();
@@ -147,5 +202,38 @@ class ShopInfoController extends Seller
         $compact = compact('title');
 
         return view('shop.shop-info.renew_add', $compact);
+    }
+
+    public function renewSaveData(Request $request)
+    {
+        $post = $request->post('ShopPaymentModel');
+
+        // 添加
+        $post['shop_id'] = seller_shop_info()->shop_id;
+        $post['apply_time'] = time();
+        $ret = $this->shopPayment->store($post);
+
+        if ($ret === false) {
+            // fail
+            flash('error', '添加失败');
+            return redirect('/shop/shop-info/renew-list');
+        }
+        // success
+        flash('success', '添加成功');
+        return redirect('/shop/shop-info/renew-list');
+    }
+
+    public function delete(Request $request)
+    {
+        $id = $request->post('id');
+        $ret = $this->shopPayment->del($id);
+        if ($ret === false) {
+            // Log
+            shop_log('取消续签失败。ID：'.$id);
+            return result(-1, '', '操作失败');
+        }
+        // Log
+        shop_log('取消续签成功。ID：'.$id);
+        return result(0, '', '操作成功');
     }
 }

@@ -40,4 +40,9 @@ class ActivityCategory extends BaseModel
     ];
 
     protected $primaryKey = 'id';
+
+    public function goodsActivity()
+    {
+        return $this->hasMany(GoodsActivity::class, 'cat_id', 'id');
+    }
 }

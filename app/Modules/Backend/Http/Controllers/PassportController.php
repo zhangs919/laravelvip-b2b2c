@@ -5,7 +5,6 @@ namespace App\Modules\Backend\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class PassportController extends Controller
@@ -23,9 +22,14 @@ class PassportController extends Controller
 //        $this->username = config('admin.global.username');
     }
 
+    public function findPassword(Request $request)
+    {
+
+        return view('passport.find_password');
+    }
+
     public function showLoginForm(Request $request)
     {
-//        dd(session()->flash('user_name'));
         if ($request->ajax()) {
             $uid = make_uuid();
             $render = view('passport.ajax_login', compact('uid'))->render();
@@ -49,15 +53,19 @@ class PassportController extends Controller
         return view('passport.login', compact('login_bg'));
     }
 
-//    protected function redirectPath()
-//    {
-//        return '/main';
-//    }
+    /**
+     * 登录成功回调跳转地址
+     */
+    protected function redirectPath()
+    {
+        return '/';
+    }
 
     /**
      * 重写登陆验证方法
      *
      * @param Request $request
+     * @throws \Illuminate\Validation\ValidationException
      */
     protected function validateLogin(Request $request)
     {
@@ -80,8 +88,8 @@ class PassportController extends Controller
     {
         return $this->guard()->attempt(
             [
-                'user_name' => Input::get('AdminLoginModel.user_name'),
-                'password' => Input::get('AdminLoginModel.password'),
+                'user_name' => $request->input('AdminLoginModel.user_name'),
+                'password' => $request->input('AdminLoginModel.password'),
             ]
             , $request->filled('remember')
         );

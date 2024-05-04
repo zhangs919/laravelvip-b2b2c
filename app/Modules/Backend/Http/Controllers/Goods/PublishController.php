@@ -1,11 +1,10 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\GoodsRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PublishController extends Backend
 {
@@ -14,11 +13,11 @@ class PublishController extends Backend
 
     protected $goods;
 
-    public function __construct()
+    public function __construct(GoodsRepository $goods)
     {
         parent::__construct();
 
-        $this->goods = new GoodsRepository();
+        $this->goods = $goods;
 
 
     }
@@ -192,6 +191,7 @@ class PublishController extends Backend
                     'goods_reason' => $reason
                 ];
             }
+            $update['audit_time'] = time();
 
             $ret = $this->goods->batchUpdate('goods_id', $ids, $update);
             if ($ret === false) {

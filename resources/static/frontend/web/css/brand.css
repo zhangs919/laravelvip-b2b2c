@@ -19,8 +19,8 @@
 .sort-menu { width: 120px; height: 600px; z-index: 4; overflow: hidden;}
 .sort-menu dd { float: left; width: 120px; height: 100%; overflow: hidden;}
 .sort-menu dd ul { position: absolute; top: 0px;}
-.sort-menu dd ul li { right: 0; width: 100px;}
-.sort-menu dd ul li a { display: block; width: 110px; padding: 9px 5px; border-bottom: 1px solid #857866; border-left: 1px solid #7B6E5D; background: #5B503C; text-align: center; text-decoration: none; color: #FFFEFD;}
+.sort-menu dd ul li { right: 0; }
+.sort-menu dd ul li a { display: block; width: 110px; padding: 9px 5px; border-bottom: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.75); text-align: center; text-decoration: none; color: #FFFEFD;}
 .sort-menu dd ul li:hover a, .sort-menu dd ul li.on a { background: #F60; text-decoration: none; color: #FFF;}
 .sort-menu dd ul li a img { display: block; display: none; margin: 0 auto;}
 
@@ -181,6 +181,12 @@
 .list-grid .item-tag { width: 40px; height: 22px; text-align: center; position: relative; color: #fff; z-index: 2;}
 .list-grid .item-tag span { display: block; width: 40px; height: 22px; line-height: 22px; text-align: center; font-size: 12px;}
 .list-grid .item-tag i { position: absolute; display: block; border-style: solid; border-width: 9px 20px; left: 0; top: 22px;}
+.list-grid .item-tag.best,.goodsList .item-tag.best { background: #03A31C !important;}
+.list-grid .item-tag.hot,.goodsList .item-tag.hot{ background: #F23030 !important;}
+.list-grid .item-tag.new,.goodsList .item-tag.new{ background: #F4B70F !important;}
+.list-grid .item-tag.best i,.goodsList .item-tag.best i{border-color: #03A31C transparent transparent;}
+.list-grid .item-tag.hot i,.goodsList .item-tag.hot i {border-color: #F23030 transparent transparent;}
+.list-grid .item-tag.new i,.goodsList .item-tag.new i {border-color: #F4B70F transparent transparent;}
 .list-grid .item-pic, .list-grid .item-pic img { width: 220px; height: 220px;}
 .list-grid .shop-over { width: 220px; height: 220px; position: absolute; left: 4px; top: 4px; background: url(../images/soldout.png) no-repeat center center;}
 .list-grid .item-info { padding: 0 6px;}

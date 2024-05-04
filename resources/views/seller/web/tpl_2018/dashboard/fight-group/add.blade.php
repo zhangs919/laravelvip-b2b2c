@@ -10,7 +10,7 @@
 @section('content')
 
     <form id="FightGroupModel" class="form-horizontal" name="FightGroupModel" action="/dashboard/fight-group/add" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix fight-group-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->
@@ -402,7 +402,7 @@
             });
 
             $("#act_img_container").imagegroup({
-                host: 'http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/',
+                host: '{{ get_oss_host() }}',
                 size: 1,
                 values: [''],
                 callback: function(data) {

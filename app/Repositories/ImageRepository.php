@@ -11,8 +11,8 @@ class ImageRepository
     protected $model;
 
 
-    public function __construct(Image $image)
+    public function __construct()
     {
-        $this->model = $image;
+        $this->model = new Image();
     }
 }

@@ -1,9 +1,14 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 
 @stop
 
@@ -13,7 +18,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ArticleModel" class="form-horizontal" name="ArticleModel" action="/article/article/edit?id={{ $info->article_id }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="articlemodel-article_id" class="form-control" name="ArticleModel[article_id]" value="{{ $info->article_id }}">
 
@@ -30,11 +35,11 @@
 
                             <select name="ArticleModel[cat_id]" class="form-control chosen-select" style="display: none;">
 
-                                <option value="0" selected="true">-- 请选择分类 --</option>
+                                <option value="" selected="true">-- 请选择分类 --</option>
 
                                 @if(!empty($cat_list))
                                     @foreach($cat_list as $v)
-                                        <option value="{{ $v['cat_id'] }}" @if($info->cat_id == $v['cat_id']) selected="true" @else @if(!$v['active']) disabled="true" @endif @endif>{{ $v['title_show'] }}</option>
+                                        <option value="{{ $v['cat_id'] }}" @if($info->cat_id == $v['cat_id']) selected="true" @else @if(!$v['active']) disabled="true" @endif @endif>{!! $v['title_show'] !!}</option>
                                     @endforeach
                                 @endif
 
@@ -393,7 +398,21 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!--添加相关商品-->
+    <div class="modal fade" id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModalLabel" aria-hidden="true"></div>
+    <script id="client_rules" type="text">
+[{"id": "articlemodel-cat_id", "name": "ArticleModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"文章分类不能为空。"}}},{"id": "articlemodel-content", "name": "ArticleModel[content]", "attribute": "content", "rules": {"required":true,"messages":{"required":"文章内容不能为空。"}}},{"id": "articlemodel-title", "name": "ArticleModel[title]", "attribute": "title", "rules": {"required":true,"messages":{"required":"文章标题不能为空。"}}},{"id": "articlemodel-sort", "name": "ArticleModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "articlemodel-article_id", "name": "ArticleModel[article_id]", "attribute": "article_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"文章ID必须是整数。"}}},{"id": "articlemodel-cat_id", "name": "ArticleModel[cat_id]", "attribute": "cat_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"文章分类必须是整数。"}}},{"id": "articlemodel-is_comment", "name": "ArticleModel[is_comment]", "attribute": "is_comment", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许评论必须是整数。"}}},{"id": "articlemodel-click_number", "name": "ArticleModel[click_number]", "attribute": "click_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"点击量必须是整数。"}}},{"id": "articlemodel-is_show", "name": "ArticleModel[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否显示必须是整数。"}}},{"id": "articlemodel-user_id", "name": "ArticleModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"发布人ID必须是整数。"}}},{"id": "articlemodel-status", "name": "ArticleModel[status]", "attribute": "status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"审核状态必须是整数。"}}},{"id": "articlemodel-shop_id", "name": "ArticleModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Shop Id必须是整数。"}}},{"id": "articlemodel-is_recommend", "name": "ArticleModel[is_recommend]", "attribute": "is_recommend", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否推荐必须是整数。"}}},{"id": "articlemodel-content", "name": "ArticleModel[content]", "attribute": "content", "rules": {"string":true,"messages":{"string":"文章内容必须是一条字符串。"}}},{"id": "articlemodel-goods_ids", "name": "ArticleModel[goods_ids]", "attribute": "goods_ids", "rules": {"string":true,"messages":{"string":"Goods Ids必须是一条字符串。"}}},{"id": "articlemodel-source", "name": "ArticleModel[source]", "attribute": "source", "rules": {"string":true,"messages":{"string":"来源必须是一条字符串。"}}},{"id": "articlemodel-extend_cat", "name": "ArticleModel[extend_cat]", "attribute": "extend_cat", "rules": {"string":true,"messages":{"string":"附加分类必须是一条字符串。"}}},{"id": "articlemodel-link", "name": "ArticleModel[link]", "attribute": "link", "rules": {"url":{"pattern":/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(?::\d{1,5})?(?:$|[?\/#])/i,"enableIDN":false,"skipOnEmpty":1},"messages":{"url":"转向连接不是一条有效的URL。"}}},{"id": "articlemodel-title", "name": "ArticleModel[title]", "attribute": "title", "rules": {"string":true,"messages":{"string":"文章标题必须是一条字符串。","maxlength":"文章标题只能包含至多30个字符。"},"maxlength":30}},{"id": "articlemodel-keywords", "name": "ArticleModel[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"关键字必须是一条字符串。","maxlength":"关键字只能包含至多50个字符。"},"maxlength":50}},{"id": "articlemodel-summary", "name": "ArticleModel[summary]", "attribute": "summary", "rules": {"string":true,"messages":{"string":"文章摘要必须是一条字符串。","maxlength":"文章摘要只能包含至多100个字符。"},"maxlength":100}},{"id": "articlemodel-article_thumb", "name": "ArticleModel[article_thumb]", "attribute": "article_thumb", "rules": {"string":true,"messages":{"string":"文章缩略图必须是一条字符串。","maxlength":"文章缩略图只能包含至多255个字符。"},"maxlength":255}},{"id": "articlemodel-sort", "name": "ArticleModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于9999。"},"min":0,"max":9999}},]
+</script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- AJAX上传+图片预览 -->
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -407,31 +426,22 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js"></script>
+    <script src="/assets/d2eace91/js/pic/imgPreview.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js"></script>
+    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!--添加相关商品-->
-
-    <div class="modal fade" id="goodsModal" tabindex="-1" role="dialog" aria-labelledby="goodsModalLabel" aria-hidden="true"></div>
-
-    <!-- 时间插件引入 start -->
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.css?v=20180702"/> <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20180710"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20180710"></script>
-    <!-- 时间插件引入 end -->
-
-    <a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
-
-
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180710"></script>
-
-    <!-- 验证规则 -->
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180710"></script>
-    <script id="client_rules" type="text">
-[{"id": "articlemodel-cat_id", "name": "ArticleModel[cat_id]", "attribute": "cat_id", "rules": {"required":true,"messages":{"required":"文章分类不能为空。"}}},{"id": "articlemodel-title", "name": "ArticleModel[title]", "attribute": "title", "rules": {"required":true,"messages":{"required":"文章标题不能为空。"}}},{"id": "articlemodel-sort", "name": "ArticleModel[sort]", "attribute": "sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "articlemodel-article_id", "name": "ArticleModel[article_id]", "attribute": "article_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"文章ID必须是整数。"}}},{"id": "articlemodel-cat_id", "name": "ArticleModel[cat_id]", "attribute": "cat_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"文章分类必须是整数。"}}},{"id": "articlemodel-is_comment", "name": "ArticleModel[is_comment]", "attribute": "is_comment", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否允许评论必须是整数。"}}},{"id": "articlemodel-click_number", "name": "ArticleModel[click_number]", "attribute": "click_number", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"点击量必须是整数。"}}},{"id": "articlemodel-is_show", "name": "ArticleModel[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否显示必须是整数。"}}},{"id": "articlemodel-user_id", "name": "ArticleModel[user_id]", "attribute": "user_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"发布人ID必须是整数。"}}},{"id": "articlemodel-status", "name": "ArticleModel[status]", "attribute": "status", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"审核状态必须是整数。"}}},{"id": "articlemodel-shop_id", "name": "ArticleModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Shop Id必须是整数。"}}},{"id": "articlemodel-is_recommend", "name": "ArticleModel[is_recommend]", "attribute": "is_recommend", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否推荐必须是整数。"}}},{"id": "articlemodel-content", "name": "ArticleModel[content]", "attribute": "content", "rules": {"string":true,"messages":{"string":"文章内容必须是一条字符串。"}}},{"id": "articlemodel-goods_ids", "name": "ArticleModel[goods_ids]", "attribute": "goods_ids", "rules": {"string":true,"messages":{"string":"Goods Ids必须是一条字符串。"}}},{"id": "articlemodel-source", "name": "ArticleModel[source]", "attribute": "source", "rules": {"string":true,"messages":{"string":"来源必须是一条字符串。"}}},{"id": "articlemodel-extend_cat", "name": "ArticleModel[extend_cat]", "attribute": "extend_cat", "rules": {"string":true,"messages":{"string":"附加分类必须是一条字符串。"}}},{"id": "articlemodel-link", "name": "ArticleModel[link]", "attribute": "link", "rules": {"url":{"pattern":/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(?::\d{1,5})?(?:$|[?\/#])/i,"enableIDN":false,"skipOnEmpty":1},"messages":{"url":"转向连接不是一条有效的URL。"}}},{"id": "articlemodel-title", "name": "ArticleModel[title]", "attribute": "title", "rules": {"string":true,"messages":{"string":"文章标题必须是一条字符串。","maxlength":"文章标题只能包含至多30个字符。"},"maxlength":30}},{"id": "articlemodel-keywords", "name": "ArticleModel[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"关键字必须是一条字符串。","maxlength":"关键字只能包含至多50个字符。"},"maxlength":50}},{"id": "articlemodel-summary", "name": "ArticleModel[summary]", "attribute": "summary", "rules": {"string":true,"messages":{"string":"文章摘要必须是一条字符串。","maxlength":"文章摘要只能包含至多100个字符。"},"maxlength":100}},{"id": "articlemodel-article_thumb", "name": "ArticleModel[article_thumb]", "attribute": "article_thumb", "rules": {"string":true,"messages":{"string":"文章缩略图必须是一条字符串。","maxlength":"文章缩略图只能包含至多255个字符。"},"maxlength":255}},{"id": "articlemodel-sort", "name": "ArticleModel[sort]", "attribute": "sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于9999。"},"min":0,"max":9999}},]
-</script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             //悬浮显示上下步骤按钮
             window.onscroll = function() {
@@ -445,7 +455,6 @@
                         $(".bottom-btn").addClass("bottom-btn-fixed");
                     }
                 });
-
             };
             var validator = $("#ArticleModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -457,11 +466,8 @@
                 //加载提示
                 $.loading.start();
                 $("#ArticleModel").submit();
-
             });
-
             $("#imagegroup_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#articlemodel-article_thumb').val().split("|"),
@@ -485,9 +491,7 @@
                     $('#articlemodel-article_thumb').val(values);
                 }
             });
-
         });
-
         /*
          * 删除关联商品
          */
@@ -516,13 +520,10 @@
                 });
                 $.loading.stop();
             });
-
         }
-
         /**
          * 添加关联商品
          */
-
         function add_art_goods(goods_ids) {
             $.loading.start();
             var url = "add-art-goods";
@@ -541,11 +542,9 @@
                 }
             });
         }
-
         function open_add_goods() {
             $.loading.start();
             var url = "add-goods";
-
             if ($("#goods_ids").val() != '') {
                 goods_ids = $("#goods_ids").val().split(",");
             }
@@ -565,40 +564,32 @@
                 },
             });
         }
-    </script>
-    <script type="text/javascript">
-        $('.form_datetime').datetimepicker({
-            language: 'zh-CN',
-            weekStart: 1,
-            todayBtn: 1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0,
-            showMeridian: 1,
-            format: 'yyyy-mm-dd hh:ii:ss',
+        //
+        $(function(){
+            $('.form_datetime').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                format: 'yyyy-mm-dd hh:ii:ss',
+            });
         });
-    </script>
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/editor/kindeditor-all.min.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/editor/lang/zh_CN.js?v=20180710"></script>
-
-    <script type="text/javascript">
+        //
         KindEditor.ready(function(K) {
-
             var extraFileUploadParams = [];
-            extraFileUploadParams['B2B2C_YUNMALL_68MALL_COM_USER_PHPSESSID'] = 'gbk6o8g34ns1bvlf9msvn6un2r';
-
+            extraFileUploadParams['LARAVELVIP_COM_USER_PHPSESSID'] = 'sjup9snh4q21f3um4bdc08vj1v';
             window.editor = K.create('#content', {
                 width: '100%',
+                minWidth: '650',
                 height: '450px',
-                items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', '|', 'selectall', 'clearhtml', 'quickformat', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'table', 'hr', 'emoticons', 'link', 'unlink', '|', 'about'],
+                items: ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', '|', 'quickformat', '|', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'flash', 'media', 'table', 'hr', 'emoticons', 'link', 'unlink', '|', 'about'],
                 themesPath: "/assets/d2eace91/js/editor/themes/",
                 cssPath: "/assets/d2eace91/js/editor/themes/default/default.css",
-                uploadJson: "/site/upload-image",
+                uploadJson: "/site/upload-image.html",
                 extraFileUploadParams: extraFileUploadParams,
                 allowImageUpload: true,
                 allowFlashUpload: false,

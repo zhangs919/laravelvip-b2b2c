@@ -12,7 +12,7 @@
 
                     @foreach($navigation as $v)
                         <li>
-                            <a class=""  href="{{ $v->nav_link ?? 'javascript:void(0)' }}" target="_blank"  title="{{ $v->nav_name }} ">{{ $v->nav_name }} </a>
+                            <a class=""  href="{{ $v['nav_link'] ?? 'javascript:void(0)' }}" target="_blank"  title="{{ $v['nav_name'] }} ">{{ $v['nav_name'] }} </a>
                         </li>
                     @endforeach
 

@@ -1,8 +1,13 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
+
 @stop
 
 {{--content--}}
@@ -54,7 +59,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -99,9 +104,31 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
         var tablelist;
         $().ready(function() {
             tablelist = $("#table_list").tablelist({
@@ -120,30 +147,25 @@
             // 删除记录
             $("body").on('click', '.del', function() {
                 var id = $(this).data("id");
-
                 if (id === undefined) {
                     var ids = tablelist.checkedValues();
-
                     if (ids.length == 0) {
                         $.msg("您没有选择任何待处理的数据！");
                         return;
                     }
-
                     id = ids.join(",");
                 }
-
                 if (id) {
                     $.confirm("您确定要删除选择的详情版式吗？", function() {
-
                         $.loading.start();
-
                         $.post("delete", {
                             id: id
                         }, function(result) {
-                            if (result.code == 0) {
-                                tablelist.load();
-                            }
-                            $.msg(result.message);
+                            $.msg(result.message, function(){
+                                if (result.code == 0) {
+                                    tablelist.load();
+                                }
+                            });
                         }, "JSON").always(function() {
                             $.loading.stop();
                         });

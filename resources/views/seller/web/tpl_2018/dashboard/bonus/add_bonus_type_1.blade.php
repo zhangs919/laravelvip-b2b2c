@@ -1,31 +1,27 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=2.0" rel="stylesheet">
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <!-- 时间插件引入 start -->
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.css?v=20190327"/>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190319"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190319"></script>
-    <!-- 时间插件引入 end -->
-    <!-- 图片弹窗  star-->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190319"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20190319"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190319"></script>
-    <!-- 图片弹窗  end-->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190319"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20190319"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20190319"></script>
 
-    <!-- 购后送红包 -->
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20190327"/>
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="Bonus" class="form-horizontal" name="Bonus" action="/dashboard/bonus/add?bonus_type=1" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" id="bonus-bonus_id" class="form-control" name="Bonus[bonus_id]">
 
         <input type="hidden" id="bonus-bonus_type" class="form-control" name="Bonus[bonus_type]" value="1">
@@ -345,6 +341,18 @@
 {{--自定义css样式--}}
 @section('style_css')
 
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/validate/jquery.metadata.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=202003261806"></script>
 @stop
 
 {{--footer script page元素同级下面--}}

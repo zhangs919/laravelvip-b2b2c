@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\ImageDirRepository;
@@ -18,7 +18,10 @@ class ImageDirController extends Backend
 
     protected $image;
 
-    public function __construct(ImageDirRepository $imageDirRepository, ImageRepository $imageRepository)
+    public function __construct(
+        ImageDirRepository $imageDirRepository
+        , ImageRepository $imageRepository
+    )
     {
         parent::__construct();
 

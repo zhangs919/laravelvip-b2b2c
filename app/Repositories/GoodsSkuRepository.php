@@ -74,6 +74,39 @@ class GoodsSkuRepository
         return $resData;
     }
 
+    public function getCartGoodsSkuInfo($skuId)
+    {
+
+        $info = $this->getById($skuId,['sku_id','goods_id','spec_ids','spec_names','goods_price',
+            'cost_price','sku_image','goods_number']);
+        if (empty($info)) {
+            return null;
+        }
+        // 默认sku
+        $spec_ids = !empty($info->spec_ids) ? explode('|', $info->spec_ids) : null;
+
+        $where[] = ['goods_id', $info->goods_id];
+        if (!empty($spec_ids)) {
+            $where[] = ['spec_id', $info->spec_ids];
+        } else {
+            $where[] = ['spec_id', 0];
+        }
+        $goods_images = GoodsImage::where($where)->orderBy('is_default', 'desc')->orderBy('sort', 'asc')->get();
+
+        // 商品图片相册
+        $goods_images = array_column($goods_images->toArray(), 'path');
+        $sku_image = current($goods_images);
+
+        $info = $info->toArray();
+        $info['spec_ids'] = !empty($info['spec_ids']) ? explode('|', $info['spec_ids']) : [];
+        $info['cart_step'] = 1;
+        $info['sku_image'] = get_image_url($sku_image);
+        $info['sku_image_thumb'] = $info['sku_image']."?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220";
+        $info['original_price'] = 0.00;
+
+        return $info;
+    }
+
     /**
      * 商品详情 获取商品SKU信息
      *
@@ -85,53 +118,62 @@ class GoodsSkuRepository
     public function getGoodsSkuInfo($skuId, $goods_info, $shop_info)
     {
         if (empty($skuId)) {
-            return null;
+            return [];
         }
         $info = $this->getById($skuId);
 
         // 默认sku
-        $spec_ids = !empty($info->spec_ids) ? explode('|', $info->spec_ids) : null;
+//        $spec_ids = !empty($info->spec_ids) ? explode('|', $info->spec_ids) : null;
 
-        $where[] = ['goods_id', $goods_info->goods_id];
-        if (!empty($spec_ids)) {
-            $where[] = ['spec_id', $info->spec_ids];
-        } else {
-            $where[] = ['spec_id', 0];
-        }
-        $goods_images = GoodsImage::where($where)->orderBy('is_default', 'desc')->orderBy('sort', 'asc')->get();
+//        $where[] = ['goods_id', $goods_info->goods_id];
+//        if (!empty($spec_ids)) {
+//            $where[] = ['spec_id', $info->spec_ids];
+//        } else {
+//            $where[] = ['spec_id', 0];
+//        }
+//        $goods_images = GoodsImage::where($where)->orderBy('is_default', 'desc')->orderBy('sort', 'asc')->get();
 
         // 商品图片相册
-        $goods_images = array_column($goods_images->toArray(), 'path');
-        $goods_images_list = [];
-        foreach ($goods_images as $image) {
-            $goods_images_list[] = [
+        $sku_images = [];
+        foreach ($info->sku_images as $image) {
+            $sku_images[] = [
                 get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
                 get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
                 get_image_url($image)
             ];
         }
-        $sku_image = $goods_images[0];
-        $sku_images = $goods_images_list;
+//        $goods_images = array_column($goods_images->toArray(), 'path');
+//        $goods_images_list = [];
+//        foreach ($goods_images as $image) {
+//            $goods_images_list[] = [
+//                get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
+//                get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
+//                get_image_url($image)
+//            ];
+//        }
+//        $sku_image = current($goods_images);
+//        $sku_images = $goods_images_list;
 
         $spec_attr_value = '';
-        $sku_name = $goods_info->goods_name; // 商品SKU名称
+//        $sku_name = $goods_info->goods_name; // 商品SKU名称
         if (!empty($info->spec_vids)) {
             $spec_vids = explode('|', $info->spec_vids);
             $spec_attr_value = AttrValue::whereIn('attr_vid', $spec_vids)->pluck('attr_vname')->toArray();
             $spec_attr_value = implode(' ', $spec_attr_value);
-            $sku_name = $sku_name.' '.$spec_attr_value;
+//            $sku_name = $sku_name.' '.$spec_attr_value;
         }
+
         $sku = [
             'sku_id' => $info->sku_id,
             'goods_id' => $info->goods_id,
-            'sku_name' => $sku_name,
-            'sku_image' => $sku_image,
+            'sku_name' => $info->sku_name,
+            'sku_image' => $info->sku_image,
             'goods_price' => $info->goods_price,
             'original_price' => '', // todo
             'market_price' => $info->market_price,
             'goods_number' => $info->goods_number,
             'original_number' => '', // todo
-            'spec_ids' => explode('|', $info->spec_ids),
+            'spec_ids' => !empty($info->spec_ids) ? explode('|', $info->spec_ids) : null,
             'is_enable' => $info->checked,
             'goods_image' => $goods_info->goods_image,
             'shop_id' => $goods_info->shop_id,
@@ -158,7 +200,7 @@ class GoodsSkuRepository
             'purchase_num' => 0, // todo
             'activity' => null, // todo
             'order_activity' => false, // todo
-            'original_price_format' => "￥122.00",
+            'original_price_format' => "￥".$goods_info->goods_price,
             'goods_price_format' => '￥'.$goods_info->goods_price,
             'price_show' => [
                 'code' => 1 // todo

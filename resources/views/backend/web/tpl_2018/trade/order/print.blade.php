@@ -1,3 +1,5 @@
+<title>打印订单</title>
+
 <!-- 加载CSS -->
 <link rel="stylesheet" href="/assets/d2eace91/bootstrap/css/bootstrap.min.css?v=20180927"/>
 <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=20180927"/>
@@ -46,354 +48,343 @@
         </div>
         <div class="orderprint" style="padding: 0mm">
             <div id="printContent">
-                <link rel="stylesheet" href="/assets/d2eace91/bootstrap/css/bootstrap.min.css?v=20180927"/>
-                <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=20180927"/>
-                <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180927"/> 			<div class="print-panel" style="width: auto; padding: 5mm 8mm 3mm 8mm; min-height: 291mm; height: auto;">
-                    <div class="top pos-r">
-                        <table>
+                <link rel="stylesheet" href="/assets/d2eace91/bootstrap/css/bootstrap.min.css?v=20181020"/>
+                <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=20181020"/>
+                <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20181020"/>
+
+                @foreach($order_list as $v)
+                    <div class="print-panel" style="width: 190mm; padding: 5mm 8mm 3mm 8mm; min-height: 134mm; height: auto;">
+                        <div class="top pos-r">
+                            <table>
+                                <tr>
+                                    <td style="width: 220px; height: 60px;">
+                                        <img class="print-logo mallLogo" src="{{ $logo }}"
+                                             style="max-height: 60px; max-width: 220px;" />
+                                    </td>
+                                    <td class="text-c w300" style="color: #000;">
+                                        <h3>
+                                            <div class="print-trim-div title">{{ $print_title }}</div>
+                                        </h3>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="top-right-box" style="position: absolute; top: 0px; right: 0px;">
+
+                                <img src="/assets/d2eace91/images/common/seal-state-express.png">
+
+                                <img class="orderQRCode" src="{{ $shop_qrcode }}" width="90" height="90">
+                            </div>
+                            <div class="store-box" style="margin: 10px 0; overflow: hidden;">
+                                <div class="store-logo" style="float: left; display: inline-block;margin-right: 20px;">
+                                    <img class="storeLogo store-logo-img" src="{{ $store_logo }}" style="max-width: 200px; max-height: 60px;">
+                                </div>
+                                <div class="store-info" style="float: left;">
+                                    <div class="print-model-text">
+                                        <ul>
+                                            <li class="storeName" style="display: block; color: #000;">
+                                                <div class="print-trim-div" data-id="storeName">
+                                                    <span>店铺名称：</span>
+                                                    {{ $v['shop_name'] }}
+                                                </div>
+                                            </li>
+                                            <li class="storeNickname" style="display: block; color: #000;">
+                                                <div class="print-trim-div" data-id="storeNickname">
+                                                    <span>店主昵称：</span>
+                                                    {{ $v['shop_nickname'] }}
+                                                </div>
+                                            </li>
+                                            <li class="storeTel" style="display: block; color: #000;">
+                                                <div class="print-trim-div" data-id="storeTel">
+                                                    <span>店铺联系电话：</span>
+                                                    {{ $v['s_mobile'] }}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!--堂内点餐桌号-->
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="print-model-text average3" style="margin: 15px auto 15px;">
+                            <ul style="overflow: hidden;">
+                                <li class="orderCode" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="orderCode">
+                                        <span>订单编号：</span>
+                                        {{ $v['order_sn'] }}
+                                    </div>
+                                </li>
+                                <li class="orderCode" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="orderTime">
+                                        <span>订购时间：</span>
+                                        {{ format_time($v['add_time']) }}
+                                    </div>
+                                </li>
+                                <li class="payTime" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="payTime">
+                                        <span>付款时间：</span>
+                                        {{ format_time($v['pay_time']) }}
+                                    </div>
+                                </li>
+                                <li class="nickname" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="nickname">
+                                        <span>买家昵称：</span>
+                                        {{ $v['nickname'] }}
+                                    </div>
+                                </li>
+
+                                <li class="consigneeName" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="consigneeName">
+                                        <span>收货人姓名：</span>
+                                        {{ $v['consignee'] }}
+                                    </div>
+                                </li>
+                                <li class="consigneeTel" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="consigneeTel">
+                                        <span>收货人电话：</span>
+                                        {{ $v['tel'] }}
+                                    </div>
+                                </li>
+
+                                <li class="orderUserCode" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="orderUserCode">
+                                        <span>下单会员账户：</span>
+                                        {{ $v['user_name'] }}
+                                    </div>
+                                </li>
+
+                                <li class="orderUserTel" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="orderUserTel">
+                                        <span>下单会员手机号：</span>
+                                        {{ $v['user_mobile'] }}
+                                    </div>
+                                </li>
+
+
+                                <li class="payMethod" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="payMethod">
+                                        <span>支付方式：</span>
+                                        {{ $v['pay_name'] }}
+                                    </div>
+                                </li>
+                                <li class="storeUserRank" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="storeUserRank">
+                                        <span>店铺会员等级：</span>
+                                        {{ $v['rank_name'] }}
+                                    </div>
+                                </li>
+                                <li class="ascriptionStore" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="ascriptionStore">
+                                        <span>购买者隶属店铺名称：</span>
+                                        {{ $v['u_shop_name'] }}
+                                    </div>
+                                </li>
+
+                                <li class="deliveryTime" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="deliveryTime">
+                                        <span>送货时间：</span>
+                                        {{ $v['best_time'] }}
+                                    </div>
+                                </li>
+
+
+                                <li class="orderAddress" style="width: 100%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="orderAddress">
+                                        <span>收货地址：</span>
+                                        {{ $v['consignee_address'] }}
+                                    </div>
+                                </li>
+
+
+                                <li class="deliverCode" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="deliverCode">
+                                        <span>发货单号：</span>
+                                        20180413124664904
+                                    </div>
+                                </li>
+                                <!--li class="goodsTotalNum" style="width: 33%; display: inline-block; float: left; color: #000">
+                                    <div class="print-trim-div" data-id="goodsTotalNum">
+                                        <span>商品数量：</span>
+                                        1
+                                    </div>
+                                </li-->
+                            </ul>
+                            <ul class="invoiceInfo" data-id="invoiceInfo">
+                                <!--   -->
+                                <!--   -->
+                            </ul>
+                        </div>
+
+                        <!--商品信息 start-->
+                        <table class="table table-bordered" style="border-color: #000; color: #000;">
+                            <thead>
                             <tr>
-                                <td style="width: 220px; height: 60px;">
-                                    <img class="print-logo mallLogo" src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/system/config/mall/mall_logo_0.jpg" style="max-height: 60px; max-width: 220px;" />
-                                </td>
-                                <td class="text-c w300" style="color: #000;">
-                                    <h3>
-                                        <div class="print-trim-div title">购物清单</div>
-                                    </h3>
+                                <th class="libraryCode w90 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="libraryCode">库位码</div>
+                                </th>
+                                <th class="goodsCode w70 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsCode">编号</div>
+                                </th>
+                                <th class="goodsName w300 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsName">商品名称</div>
+                                </th>
+                                <th class="goodsSpec w150 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsSpec">商品规格</div>
+                                </th>
+                                <th class="goodsBarCode w150 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsBarCode">商品条形码</div>
+                                </th>
+                                <th class="goodsNum w50 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsNum">数量</div>
+                                </th>
+                                <th class="goodsPrice w70 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsPrice">单价</div>
+                                </th>
+                                <th class="goodsSubtotal w70 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; font-weight: 200">
+                                    <div class="print-trim-div" data-id="goodsSubtotal">小计</div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($v['goods_list'] as $goods)
+                                <tr>
+                                    <td class="libraryCode w90 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">{{ $goods['goods_stockcode'] }}</div>
+                                    </td>
+                                    <td class="goodsCode w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">{{ $goods['goods_id'] }}</div>
+                                    </td>
+                                    <td class="goodsName w300 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">{{ $goods['goods_name'] }}</div>
+                                    </td>
+                                    <td class="goodsSpec w150 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">{{ $goods['spec_info'] }}</div>
+                                    </td>
+                                    <td class="goodsBarCode w150 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">{{ $goods['goods_barcode'] }}</div>
+                                    </td>
+                                    <td class="goodsNum w50 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">{{ $goods['goods_number'] }}</div>
+                                    </td>
+                                    <td class="goodsPrice w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
+                                        <div class="print-trim-div">￥{{ $goods['goods_price'] }}</div>
+                                    </td>
+                                    <td class="goodsSubtotal w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000">
+                                        <div class="print-trim-div">￥{{ $goods['goods_price_all'] }}</div>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            <tr>
+                                <td colspan="8" class="text-r" style="color: #000; height: 40px; padding: 4px; border-color: #000; border-top: 1px solid #000;">
+                                    <!---->
+                                    <div class="goodsTotalPrice pull-right m-l-20">
+                                        <div class="print-trim-div" data-id="goodsTotalPrice">商品总金额：￥{{ $v['final_amount'] }}</div>
+                                    </div>
+                                    <!---->
+                                    <!---->
+                                    <div class="goodsTotalNum pull-right">
+                                        <div class="print-trim-div" data-id="goodsTotalNum">商品总数量：{{ $v['goods_number'] }}</div>
+                                    </div>
+                                    <!---->
                                 </td>
                             </tr>
+                            </tbody>
                         </table>
-                        <div class="top-right-box" style="position: absolute; top: 0px; right: 0px;">
+                        <div class="paymentDetails address-info text-r m-b-20">
+                            <div class="print-trim-div" data-id="paymentDetails">
+                                <p class="m-b-5" style="color: #000;">
+                                    <span>商品总金额：￥4.9</span>
+                                    <em class="operator">+</em>
+                                    <span>运费：￥0.00</span>
 
-                            <img src="/assets/d2eace91/images/common/seal-state-express.png">
+                                    <em class="operator">-</em>
+                                    <span>店铺红包：￥0.00</span>
+                                    <em class="operator">-</em>
+                                    <span>平台红包：￥0.00</span>
 
-                            <img class="orderQRCode" src="http://images.68mall.com/15164/oqrcode/9B/qrcode_250.png" width="90" height="90">
-                        </div>
-                        <div class="store-box" style="margin: 10px 0; overflow: hidden;">
-                            <div class="store-logo" style="float: left; display: inline-block; margin-right: 20px;">
-                                <img class="storeLogo store-logo-img" src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2018/09/13/15368324048313.jpg" style="max-width: 200px; max-height: 60px;">
+
+                                    <em class="operator">-</em>
+                                    <span>卖家优惠：￥0.00</span>
+
+                                    <em class="operator">=</em>
+                                    <span>
+								<strong>订单总金额：￥4.90</strong>
+							</span>
+                                </p>
                             </div>
-                            <div class="store-info" style="float: left;">
-                                <div class="print-model-text">
-                                    <ul>
-                                        <li class="storeName" style="display: block; color: #000;">
-                                            <div class="print-trim-div" data-id="storeName">
-                                                <span>店铺名称：</span>
-                                                东和MRO平台
-                                            </div>
-                                        </li>
-                                        <li class="storeNickname" style="display: block; color: #000;">
-                                            <div class="print-trim-div" data-id="storeNickname">
-                                                <span>店主昵称：</span>
-                                                121
-                                            </div>
-                                        </li>
-                                        <li class="storeTel" style="display: block; color: #000;">
-                                            <div class="print-trim-div" data-id="storeTel">
-                                                <span>店铺联系电话：</span>
-                                                15732672087
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+                        </div>
+                        <div class="paymentSummary address-info text-r m-b-20">
+                            <div class="print-trim-div" data-id="paymentSummary">
+
+                                <p style="color: #000;">
+                                    <span>在线支付：￥0.00</span>
+                                    <em class="operator">+</em>
+                                    <span>余额支付：￥4.90</span>
+
+                                    <em class="operator">=</em>
+                                    <span style="color: #C00;">
+								<strong>实付款金额：￥4.9</strong>
+							</span>
+                                </p>
+
+                                <!--p class="m-b-5" style="color: #000;">
+                                    <span>
+                                        <strong>订单总积分：0</strong>
+                                    </span>
+                                </p-->
                             </div>
-                            <!--堂内点餐桌号-->
+                        </div>
+                        <!--商品信息 end-->
+                        <div class="print-model-text">
+                            <ul>
+                                <!-- li class="storeAddress" style="display: block; color: #000;">
+                                    <div class="print-trim-div" data-id="storeAddress">
+                                        <span>店铺发货地址：</span>
+                                        河北省-秦皇岛市-海港区鲜农乐食品专营店
+                                    </div>
+                                </li-->
+                                <li class="sellerRemarks" style="display: block; color: #000;">
+                                    <div class="print-trim-div" data-id="sellerRemarks">
+                                        <span>商家备注：</span>
+                                        {!! $v['shop_remark'] ?? '无' !!}
+                                    </div>
+                                </li>
+                                <li class="printTime" style="display: block; color: #000;">
+                                    <div class="print-trim-div" data-id="printTime">
+                                        <span>打印时间：</span>
+                                        {{ format_time(time()) }}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <textarea class="printRemark form-control print-remark-edit" placeholder="请输入备注信息" rows="3" style="resize: none; display: none"></textarea>
+                        <p class="print-remark" style="display: none; cursor: pointer;" title="点击重新编辑"></p>
+                        <div class="print-model-text">
+                            <ul>
+                                <li class="auditSignature h80" style="display: block; color: #000;">
+                                    <div class="print-trim-div" data-id="auditSignature">
+                                        <span>审核签字：</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
 
+                        <div class="print-model-text average3 w500" style="margin: 15px auto;">
+                            <ul>
+                                <li class="storeQRCode text-c" style="text-align: center; float: left; display: inline-block; color: #000; width: 33%">
+                                    <div class="print-trim-div" data-id="storeQRCode">店铺二维码</div>
+                                    <img class="m-t-5" src="{{ $shop_qrcode }}" width="90" height="90">
+                                </li>
+                                <li class="mallWeChat text-c" style="text-align: center; float: left; display: inline-block; color: #000; width: 33%">
+                                    <div class="print-trim-div" data-id="mallWeChat">商城微信公众号</div>
+                                    <img class="m-t-5" src="{{ $mall_wx_qrcode }}" width="90" height="90">
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="print-model-text average3" style="margin: 15px auto 15px;">
-                        <ul style="overflow: hidden;">
-                            <li class="orderCode" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="orderCode">
-                                    <span>订单编号：</span>
-                                    20180923145505238740
-                                </div>
-                            </li>
-                            <li class="orderCode" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="orderTime">
-                                    <span>订购时间：</span>
-                                    2018-09-23 22:55:05
-                                </div>
-                            </li>
-                            <li class="payTime" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="payTime">
-                                    <span>付款时间：</span>
-                                    2018-09-23 22:55:05 							</div>
-                            </li>
-                            <li class="nickname" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="nickname">
-                                    <span>买家昵称：</span>
-                                    666
-                                </div>
-                            </li>
-
-                            <li class="consigneeName" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="consigneeName">
-                                    <span>收货人姓名：</span>
-                                    张杰
-                                </div>
-                            </li>
-                            <li class="consigneeTel" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="consigneeTel">
-                                    <span>收货人电话：</span>
-                                    18955156042
-                                </div>
-                            </li>
-
-                            <li class="orderUserCode" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="orderUserCode">
-                                    <span>下单会员账户：</span>
-                                    SZY157FTPJ8849
-                                </div>
-                            </li>
-
-                            <li class="orderUserTel" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="orderUserTel">
-                                    <span>下单会员手机号：</span>
-                                    15703378849
-                                </div>
-                            </li>
-
-
-                            <li class="payMethod" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="payMethod">
-                                    <span>支付方式：</span>
-                                    余额支付
-                                </div>
-                            </li>
-                            <li class="storeUserRank" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="storeUserRank">
-                                    <span>店铺会员等级：</span>
-                                    VIP会员(VIP3)
-                                </div>
-                            </li>
-                            <li class="ascriptionStore" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="ascriptionStore">
-                                    <span>购买者隶属店铺名称：</span>
-                                    美的
-                                </div>
-                            </li>
-
-                            <li class="deliveryTime" style="width: 33%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="deliveryTime">
-                                    <span>送货时间：</span>
-                                    无
-                                </div>
-                            </li>
-
-
-                            <li class="orderAddress" style="width: 100%; display: inline-block; float: left; color: #000">
-                                <div class="print-trim-div" data-id="orderAddress">
-                                    <span>收货地址：</span>
-                                    北京市-北京市-西城区 &nbsp; 北京市西城区金融街街道太平桥大街98-20号中海凯旋 							</div>
-                            </li>
-
-
-                        </ul>
-                        <ul class="invoiceInfo" data-id="invoiceInfo">
-                            <!--   -->
-                            <!--   -->
-                        </ul>
-                    </div>
-
-                    <!--商品信息 start-->
-                    <table class="table table-bordered" style="border-color: #000; color: #000;">
-                        <thead>
-                        <tr>
-                            <th class="libraryCode w90 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="libraryCode">库位码</div>
-                            </th>
-                            <th class="goodsCode w70 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsCode">编号</div>
-                            </th>
-                            <th class="goodsName w300 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsName">商品名称</div>
-                            </th>
-                            <th class="goodsSpec w150 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsSpec">商品规格</div>
-                            </th>
-                            <th class="goodsBarCode w150 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsBarCode">商品条形码</div>
-                            </th>
-                            <th class="goodsNum w50 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsNum">数量</div>
-                            </th>
-                            <th class="goodsPrice w70 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; border-right: 1px solid #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsPrice">单价</div>
-                            </th>
-                            <th class="goodsSubtotal w70 text-c" style="color: #000; background: #fff; padding: 4px; border-color: #000; font-weight: 200">
-                                <div class="print-trim-div" data-id="goodsSubtotal">小计</div>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="libraryCode w90 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div"></div>
-                            </td>
-                            <td class="goodsCode w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">125</div>
-                            </td>
-                            <td class="goodsName w300 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">荷美尔Hormel 经典一口香热狗肠 250g</div>
-                            </td>
-                            <td class="goodsSpec w150 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">颜色：金色|容量：8G</div>
-                            </td>
-                            <td class="goodsBarCode w150 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div"></div>
-                            </td>
-                            <td class="goodsNum w50 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">2</div>
-                            </td>
-                            <td class="goodsPrice w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">￥1.00</div>
-                            </td>
-                            <td class="goodsSubtotal w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000">
-                                <div class="print-trim-div">￥2</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="libraryCode w90 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div"></div>
-                            </td>
-                            <td class="goodsCode w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">108</div>
-                            </td>
-                            <td class="goodsName w300 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">硝苯地平</div>
-                            </td>
-                            <td class="goodsSpec w150 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">鸡：kg|尺码：XS</div>
-                            </td>
-                            <td class="goodsBarCode w150 text-l" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div"></div>
-                            </td>
-                            <td class="goodsNum w50 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">1</div>
-                            </td>
-                            <td class="goodsPrice w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000; border-right: 1px solid #000;">
-                                <div class="print-trim-div">￥222.00</div>
-                            </td>
-                            <td class="goodsSubtotal w70 text-c" style="color: #000; padding: 4px; border-color: #000; border-top: 1px solid #000">
-                                <div class="print-trim-div">￥222</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="8" class="text-r" style="color: #000; height: 40px; padding: 4px; border-color: #000; border-top: 1px solid #000;">
-                                <!---->
-                                <div class="goodsTotalPrice pull-right m-l-20">
-                                    <div class="print-trim-div" data-id="goodsTotalPrice">商品总金额：￥224.00</div>
-                                </div>
-                                <!---->
-                                <!---->
-                                <div class="goodsTotalNum pull-right">
-                                    <div class="print-trim-div" data-id="goodsTotalNum">商品总数量：3</div>
-                                </div>
-                                <!---->
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="paymentDetails address-info text-r m-b-20">
-                        <div class="print-trim-div" data-id="paymentDetails">
-                            <p class="m-b-5" style="color: #000;">
-                                <span>商品总金额：￥224.00</span>
-                                <em class="operator">+</em>
-                                <span>运费：￥6.00</span>
-
-                                <em class="operator">-</em>
-                                <span>店铺红包：￥0.00</span>
-                                <em class="operator">-</em>
-                                <span>平台红包：￥0.00</span>
-
-
-                                <em class="operator">-</em>
-                                <span>卖家优惠：￥0.00</span>
-
-                                <em class="operator">=</em>
-                                <span>
-								<strong>订单总金额：￥230.00</strong>
-							</span>
-                            </p>
-                            <p style="color: #000;">
-                                <span>订单总金额：￥230.00</span>
-                                <em class="operator">-</em>
-                                <span>余额：￥230.00</span>
-                                <em class="operator">=</em>
-                                <span class="order-amount">
-								<strong>待付款金额：￥0.00</strong>
-							</span>
-                            </p>
-                            <!--p class="m-b-5" style="color: #000;">
-                                <span>
-                                    <strong>订单总积分：0</strong>
-                                </span>
-                            </p-->
-                        </div>
-                    </div>
-                    <div class="paymentSummary address-info text-r m-b-20">
-                        <div class="print-trim-div" data-id="paymentSummary">
-
-                            <p style="color: #000;">
-                                <span>在线支付：￥0.00</span>
-                                <em class="operator">+</em>
-                                <span>余额支付：￥230.00</span>
-                                <em class="operator">=</em>
-                                <span style="color: #C00;">
-								<strong>实付款金额：￥230</strong>
-							</span>
-                            </p>
-                        </div>
-                    </div>
-                    <!--商品信息 end-->
-                    <div class="print-model-text">
-                        <ul>
-                            <li class="storeAddress" style="display: block; color: #000;">
-                                <div class="print-trim-div" data-id="storeAddress">
-                                    <span>店铺发货地址：</span>
-
-                                </div>
-                            </li>
-                            <li class="sellerRemarks" style="display: block; color: #000;">
-                                <div class="print-trim-div" data-id="sellerRemarks">
-                                    <span>商家备注：</span>
-                                    无
-                                </div>
-                            </li>
-                            <li class="printTime" style="display: block; color: #000;">
-                                <div class="print-trim-div" data-id="printTime">
-                                    <span>打印时间：</span>
-                                    2018-09-28 20:53:30
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <textarea class="printRemark form-control print-remark-edit" placeholder="请输入备注信息" rows="3" style="resize: none; display: none"></textarea>
-                    <p class="print-remark" style="display: none; cursor: pointer;" title="点击重新编辑"></p>
-                    <div class="print-model-text">
-                        <ul>
-                            <li class="auditSignature h80" style="display: block; color: #000;">
-                                <div class="print-trim-div" data-id="auditSignature">
-                                    <span>审核签字：</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="print-model-text average3 w500" style="margin: 15px auto;">
-                        <ul>
-                            <li class="storeQRCode text-c" style="text-align: center; float: left; display: inline-block; color: #000; width: 33%">
-                                <div class="print-trim-div" data-id="storeQRCode">店铺二维码</div>
-                                <img class="m-t-5" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" width="90" height="90">
-                            </li>
-                            <li class="mallWeChat text-c" style="text-align: center; float: left; display: inline-block; color: #000; width: 33%">
-                                <div class="print-trim-div" data-id="mallWeChat">商城微信公众号</div>
-                                <img class="m-t-5" src="http://images.68mall.com/system/config/mall/mall_wx_qrcode.jpg" width="90" height="90">
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                @endforeach
 
             </div>
         </div>

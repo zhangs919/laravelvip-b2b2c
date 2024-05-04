@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="form1" class="form-horizontal" name="LibCategory" action="/goods/lib-category/add" method="POST" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="libcategory-cat_id" class="form-control" name="LibCategory[cat_id]" value="{{ $info->cat_id ?? '' }}">
             <!-- 分类名称 -->

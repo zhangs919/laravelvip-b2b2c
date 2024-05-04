@@ -198,7 +198,7 @@ $(function() {
 		$.loading.start();
 		$.ajax({
 			type: 'get',
-			//async: false, // 同步请求
+			// async: false, // 同步请求
 			url: 'setting',
 			dataType: 'json',
 			data: {
@@ -223,6 +223,37 @@ $(function() {
 	});
 
 	/**
+	 * 页面预览
+	 */
+
+	$('.SZY-TPL-PREVIEW').click(function() {
+		$.loading.start();
+		$.ajax({
+			type: 'get',
+			// async: false, // 同步请求
+			url: 'preview',
+			dataType: 'json',
+			data: {
+				page: page,
+				topic_id: topic_id,
+				is_preview: 1
+			},
+			success: function(result) {
+				if (result.code == 0 && result.url != null) {
+					// window.open(result.url,'_blank','
+					// left=20,top=100,width='+ (screen.availWidth - 50)
+					// +',height='+ (screen.availHeight-120)
+					// +',scrollbars,resizable=yes,toolbar=no');
+					window.open(result.url);
+				} else {
+					$.msg(result.message);
+				}
+			}
+		}).always(function() {
+			$.loading.stop();
+		});
+	});
+	/**
 	 * 整站改色模块
 	 */
 	$('.SZY-SITE-STYLE').click(function() {
@@ -237,6 +268,28 @@ $(function() {
 				trigger: $(this),
 				ajax: {
 					url: '/system/config/index?group=site_style',
+				},
+
+			});
+		}
+	});
+
+	/**
+	 * 整站改色模块
+	 */
+	$('.SZY-SHOP-STYLE').click(function() {
+		var group = $(this).data('group');
+		$.loading.start();
+		modal = $.modal($(this));
+		if (modal) {
+			modal.show();
+			$.loading.stop();
+		} else {
+			modal = $.modal({
+				title: '自定义风格',
+				trigger: $(this),
+				ajax: {
+					url: '/shop/config/index?group=' + group,
 				},
 
 			});
@@ -344,11 +397,11 @@ function savesortHelper() {
 			tpl: arr,
 		},
 		success: function(result) {
-			var $item = $('<div></div>');
+			var item = $('<div></div>');
 			$.each(arr, function(i, v) {
-				$item.append($('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + v.uid));
+				item.append($('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + v.uid));
 			});
-			$('.SZY-TEMPLATE-MAIN-CONTAINER').html($item);
+			$('.SZY-TEMPLATE-MAIN-CONTAINER').html(item);
 		}
 	});
 }
@@ -561,10 +614,6 @@ function refreshTpl(page, uid) {
 			// $.loading.start();
 		},
 		success: function(tpls) {
-			if (uid == undefined || uid == '') {
-				$('.SZY-TEMPLATE-NAV-CONTAINER').html('');
-				$('.SZY-TEMPLATE-MAIN-CONTAINER').html('');
-			}
 			$.each(tpls, function(index, value) {
 				var $el = $(value.file);
 				var is_valid_class = '';
@@ -572,22 +621,21 @@ function refreshTpl(page, uid) {
 				if (value.is_valid > 0) {
 					is_valid_class = 'fa fa-check-circle-o';
 					is_eye_valid_class = 'hide-btn';
+					is_eye_text = '隐藏';
 				} else {
 					is_valid_class = 'fa fa-times-circle-o';
 					is_eye_valid_class = 'show-btn';
+					is_eye_text = '显示';
 				}
 				if (value.type == NAV_CAT_TPL) {
 					var $handle = $('<div class="operateEdit"></div>');
 					$handle.append($('<a class="decor-btn sort-tpls upMove-btn"  data-uid="' + value.uid + '" data-sort="up" data-uid="' + value.uid + '" data-sort="up"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>'));
 					$handle.append($('<a class="decor-btn sort-tpls downMove-btn"  data-uid="' + value.uid + '" data-sort="down"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-down"></i>下移</div></a>'));
-					$handle.append($('<a class="decor-btn is-valid-tpls hide-btn"  data-uid="' + value.uid + '"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>隐藏</div></a>'));
+					$handle.append($('<a class="decor-btn is-valid-tpls ' + is_eye_valid_class + '"  data-uid="' + value.uid + '"><div class="selector-box"><div class="arrow"></div><i class="' + is_valid_class + '"></i>' + is_eye_text + '</div></a>'));
 					$handle.append($('<a class="decor-btn del-tpls deletes-btn"  data-uid="' + value.uid + '"><div class="selector-box"><div class="arrow"></div><i class="fa fa-trash-o"></i>删除</div></a>'));
 					$el.append($handle);
-					if (uid == undefined || uid == '') {
-						$('.SZY-TEMPLATE-NAV-CONTAINER').append($el);
-					} else {
-						$('.SZY-TEMPLATE-NAV-CONTAINER').find("#" + value.uid).replaceWith($el);
-					}
+					$('.SZY-TEMPLATE-NAV-CONTAINER').find("#" + value.uid).replaceWith($el);
+					
 				} else {
 					var $handle = $('<div class="operateEdit"></div>');
 					$handle.append($('<a class="decor-btn upMove-btn"><div class="selector-box"><div class="arrow"></div><i class="fa fa-arrow-circle-o-up"></i>上移</div></a>').click(function() {
@@ -603,11 +651,8 @@ function refreshTpl(page, uid) {
 						delTpls(value.uid);
 					}));
 					$el.append($handle);
-					if (uid == undefined || uid == '') {
-						$('.SZY-TEMPLATE-MAIN-CONTAINER').append($el);
-					} else {
-						$('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + value.uid).replaceWith($el);
-					}
+					
+					$('.SZY-TEMPLATE-MAIN-CONTAINER').find("#" + value.uid).replaceWith($el);
 				}
 			});
 

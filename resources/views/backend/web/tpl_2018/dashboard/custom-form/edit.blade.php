@@ -381,7 +381,7 @@
                                         <div class="form-control-box p-t-10">
                                             <!-- 背景图 container -->
                                             <div id="bg_img_container" class="szy-imagegroup" data-id="bg_img" data-size="1" style="display: none;"></div>
-                                            <input class="form-control" id="bg_img" name="bg_img" type="hidden" value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036304510013.jpg?k=1552578436654">
+                                            <input class="form-control" id="bg_img" name="bg_img" type="hidden" value="http://xxxx/demo/shop/1/gallery/2017/08/25/15036304510013.jpg?k=1552578436654">
                                             <div class="help-block help-block-t" id="bg_img_helper">建议上传尺寸 1920*1080像素</div>
                                             <!-- 背景色 container -->
                                             <div id="bg_color_container">
@@ -435,7 +435,7 @@
                                     <div class="col-sm-8">
                                         <div class="form-control-box">
                                             <div id="imagegroup_container" data-id="header_img" class="szy-imagegroup" data-size="1"></div>
-                                            <input class="form-control" data-type="input" id="header_img" name="header" type="hidden" value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036304513677.jpg?k=1552578445692">
+                                            <input class="form-control" data-type="input" id="header_img" name="header" type="hidden" value="http://xxxx/demo/shop/1/gallery/2017/08/25/15036304513677.jpg?k=1552578445692">
                                             <div class="help-block help-block-t">建议上传尺寸 800*300像素</div>
                                         </div>
                                     </div>
@@ -1112,6 +1112,11 @@
         </div>
     </div>
 </script>
+<script type="text/javascript">
+	window._AMapSecurityConfig = {
+		securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+	};
+</script>
 <script src="//webapi.amap.com/maps?v=1.4.9&key={{ sysconf('amap_js_key') }}"></script>
 <!-- 表单验证 -->
 <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190121"></script>
@@ -1158,7 +1163,7 @@
     KindEditor.ready(function(K) {
 
         var extraFileUploadParams = [];
-        extraFileUploadParams['ISHUOCHA_CN_USER_PHPSESSID'] = '98q6nfol0f6imsi3cskch91nbe';
+        extraFileUploadParams['LRW_USER_PHPSESSID'] = '98q6nfol0f6imsi3cskch91nbe';
 
         window.editor = K.create('#ueditor', {
             width: '100%',

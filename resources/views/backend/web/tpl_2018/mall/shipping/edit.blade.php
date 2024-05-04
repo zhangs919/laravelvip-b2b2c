@@ -21,7 +21,7 @@
 
     <div class="table-content m-t-30">
         <form id="Shipping" class="form-horizontal" name="Shipping" action="/mall/shipping/edit?id={{ $info->shipping_id }}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="shipping-shipping_id" class="form-control" name="Shipping[shipping_id]" value="{{ $info->shipping_id }}">
             <div class="simple-form-field ">
@@ -115,7 +115,7 @@
                                  data-id="shipping-img_path" data-size="1" data-mode="0">
                             </div>
                             {{--<div id="imagegroup_container">
-                                <ul class="image-group"><li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg" data-url="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg"><img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg?k=1518663807788" data-value="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg" data-url="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg"></a></li><li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li></ul>
+                                <ul class="image-group"><li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="http://xxxx/demo/backend/1/images/2017/08/25/15036311263121.jpg" data-url="http://xxx.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg"><img src="http://xxx.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg?k=1518663807788" data-value="http://xxxx.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg" data-url="http://xxxx.oss-cn-beijing.aliyuncs.com/demo/backend/1/images/2017/08/25/15036311263121.jpg"></a></li><li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li></ul>
                             </div>--}}
                             <input type="hidden" id="shipping-img_path" class="form-control" name="Shipping[img_path]" value="{{ $info->img_path }}">
 
@@ -199,7 +199,7 @@
         </form>
 
     </div>
-    
+
 @stop
 
 {{--script page元素内--}}
@@ -370,7 +370,7 @@
             });
         });
     </script>
-    
+
 @stop
 
 {{--outside body script--}}

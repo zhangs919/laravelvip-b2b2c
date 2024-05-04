@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Modules\Backend\Http\Controllers\Design;
+namespace App\Modules\Backend\Http\Controllers\Design;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\NavQuickServiceRepository;
@@ -17,12 +17,11 @@ class NavQuickServiceController extends Backend
 
     protected $navQuickService;
 
-    public function __construct(NavQuickServiceRepository $navQuickServiceRepository)
+    public function __construct(NavQuickServiceRepository $navQuickService)
     {
 
         parent::__construct();
-        setcookie('theme_style', "true"); // todo 设置theme_style 改变整体样式
-        $this->navQuickService = $navQuickServiceRepository;
+        $this->navQuickService = $navQuickService;
     }
 
     /**

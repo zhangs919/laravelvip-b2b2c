@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="NavAdModel" class="form-horizontal" name="NavAdModel" action="{{ $form_action }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="navadmodel-id" class="form-control" name="NavAdModel[id]" value="{{ $info->id ?? ''}}">
             <!-- 广告名称 -->
@@ -211,7 +211,6 @@
             });
 
             $("#imagegroup_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#navadmodel-ad_image').val().split("|"),

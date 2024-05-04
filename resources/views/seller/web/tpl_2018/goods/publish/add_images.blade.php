@@ -1,9 +1,17 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.6"/>
 @stop
 
 {{--content--}}
@@ -38,9 +46,7 @@
             </li>
         </ul>
         <script type="text/javascript">
-            $().ready(function(){
-                $("#step_3").addClass("current");
-            });
+            //
         </script>
         @endif
 
@@ -122,7 +128,18 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+    </script>
+    <script type="text/javascript">
+        // 
+    </script>
+    <script id="goods_images_list" type="text">
+        {!! json_encode($goods_images) !!}
+    </script>
+    <script type="text/javascript">
+        // 
+    </script>
 @stop
 
 
@@ -136,17 +153,18 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- AJAX上传 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180418"></script>
-    <!-- 图片上传、图片空间 -->
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180418"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-
-    </script>
-    <script type="text/javascript">
+    <script>
+        $().ready(function(){
+            $("#step_3").addClass("current");
+        });
+        // 
         $().ready(function() {
             window.onscroll = function() {
                 $(window).scroll(function() {
@@ -159,26 +177,18 @@
                         $(".goods-next").addClass("goods-btn-fixed");
                     }
                 });
-
             };
-
             $("#btn_view").click(function() {
                 $.go("{{ route('pc_show_goods', ['goods_id'=>$model['goods_id']]) }}", "_blank");
             });
         });
-    </script>
-    <script id="goods_images_list" type="text">
-    {!! json_encode($goods_images) !!}
-    </script>
-    <script type="text/javascript">
+        // 
         $().ready(function() {
-
             var imagegroups = [];
-
             var images = $.parseJSON($("#goods_images_list").text());
-
+            // 
             @foreach($spec_list as $v)
-            imagegroups["spec_{{ $v['spec_id'] }}"] = $("#goods_images_container_{{ $v['spec_id'] }}").imagegroup({
+                imagegroups["spec_{{ $v['spec_id'] }}"] = $("#goods_images_container_{{ $v['spec_id'] }}").imagegroup({
                 size: 5,
                 mode: 1,
                 host: "{{ get_oss_host() }}",
@@ -186,25 +196,19 @@
                 gallery: true,
             });
             @endforeach
-
+            // 
             // 提交
             $("#btn_submit").click(function() {
                 var goods_images = {};
-
                 $(".goods-images-container").each(function() {
                     var spec_id = $(this).data("spec_id");
                     var imagegroup = imagegroups["spec_" + spec_id];
-
                     if (!goods_images[spec_id]) {
                         goods_images[spec_id] = [];
                     }
-
                     var index = 0;
-
                     for (var i = 0; i < imagegroup.values.length; i++) {
-
                         var path = imagegroup.values[i];
-
                         if (path && path != "") {
                             goods_images[spec_id].push({
                                 path: path,
@@ -215,29 +219,22 @@
                         }
                     }
                 });
-
                 var data = {
                     goods_images: goods_images
                 };
-
                 // 加载
                 $.loading.start();
-
-                $.post('/goods/publish/edit-images?id={{ $model['goods_id'] }}', data, function(result) {
+                @if($is_publish)
+                $.post('/goods/publish/add-images?id={{ $model['goods_id'] }}', data, function(result) {
                     // 加载
                     $.loading.stop();
-
                     if (result.code == 0) {
                         $.msg(result.message, {
                             time: 2000
                         }, function() {
                             // 加载
                             $.loading.start();
-                            @if(!$is_publish)
-                            $.go('');
-                            @else
                             $.go('/goods/publish/success?id={{ $model['goods_id'] }}');
-                            @endif
                         });
                     } else {
                         $.msg(result.message, {
@@ -245,9 +242,29 @@
                         });
                     }
                 }, 'json');
+                @else
+                $.post('/goods/publish/edit-images?id={{ $model['goods_id'] }}', data, function(result) {
+                    // 加载
+                    $.loading.stop();
+                    if (result.code == 0) {
+                        $.msg(result.message, {
+                            time: 2000
+                        }, function() {
+                            // 加载
+                            $.loading.start();
+                            $.go('/goods/publish/edit-images?id={{ $model['goods_id'] }}');
+                        });
+                    } else {
+                        $.msg(result.message, {
+                            time: 5000
+                        });
+                    }
+                }, 'json');
+                @endif
             });
         });
     </script>
+    
 @stop
 
 {{--outside body script--}}

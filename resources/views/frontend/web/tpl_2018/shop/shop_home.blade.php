@@ -1,7 +1,8 @@
 @extends('layouts.shop_layout')
 
-@section('header_js')
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190121"></script>
+@section('header_css')
+{{--    <link href="/css/shop_index.css" rel="stylesheet">--}}
+{{--    <link href="/css/template.css?v=3" rel="stylesheet">--}}
 @stop
 
 @section('style_js')
@@ -26,11 +27,11 @@
 
 
 
-        @if(!$webStatic){{--静态页面关闭时 显示--}}
-            <script type="text/javascript">
-                $.templateloading();
-            </script>
-        @endif
+{{--        @if(!$webStatic)--}}{{--静态页面关闭时 显示--}}
+{{--            <script type="text/javascript">--}}
+{{--                $.templateloading();--}}
+{{--            </script>--}}
+{{--        @endif--}}
 
 
 

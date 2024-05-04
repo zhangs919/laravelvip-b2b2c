@@ -10,7 +10,7 @@
 @section('content')
 
     <form id="YlyPrinterModel" class="form-horizontal" name="YlyPrinterModel" action="/shop/yly-printer/add" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 编号  -->
             <input type="hidden" id="ylyprintermodel-id" class="form-control" name="YlyPrinterModel[id]" value="{{ $info->id ?? '' }}">

@@ -22,11 +22,11 @@
     <div class="progress-box" style="margin-top:-135px;">
         <div class="loading-img" id="loading"><img src="/assets/d2eace91/images/common/loading_32_32.gif">数据正在采集中</div>
         <p class="f12 m-b-10"></p>
-        <p>正在从淘宝店铺中下载商品详情，请稍后 ...</p>
+        <p>正在从{{ $platform_name }}店铺中下载商品详情，请稍后 ...</p>
         <div class="progress progress-striped active m-t-10 m-b-10">
             <div class="progress-bar progress-bar-success" style="width: 0%;" id="speed">0%</div>
         </div>
-        <p class="f12">共<strong id="total_num">1</strong>条商品，已下载<strong id="finish_num">0</strong>条，剩余<strong id="surplus_num">0</strong>条待下载</p>
+        <p class="f12">共<strong id="total_num">{{ count($third_goods_id) }}</strong>条商品，已下载<strong id="finish_num">0</strong>条，剩余<strong id="surplus_num">0</strong>条待下载</p>
     </div>
 
     <!--将body去掉了右侧的滚动条，如果js写了或不需要去掉可将此样式删除-->
@@ -61,7 +61,8 @@
 @section('footer_script')
 
     <script>
-        var goods_ids = ["577454871963"];
+        var goods_ids = "{{ json_encode($third_goods_id) }}";
+
         //console.info(goods_ids);
         ajaxCollect();
 

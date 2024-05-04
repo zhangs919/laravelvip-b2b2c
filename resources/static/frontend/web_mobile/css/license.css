@@ -1,0 +1,35 @@
+@charset "utf-8"; 
+/*公共样式*/
+body{ width: 100%; overflow-x: hidden;}
+html, body, ul, ol, li, dl, dt, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset { margin: 0; padding: 0;}
+img { border: none; }
+.w990 { width: 100%; margin: 0px auto}
+
+.box-mod { width: 96%; padding: 20px 2%; margin: 0 auto;}
+.box-mod .box-hd h2 { font-family: 'MicroSoft YaHei'; font-size: 18px; color: #424242; text-align: center;}
+.box-mod .box-hd p { margin-top: 5px; color: #A9A9A9;}
+.box-mod .box-hd p a { text-decoration: none; color: #439BC5;}
+.box-mod .box-item { border: 1px solid #EAEAEA; padding: 10px 15px; margin-top: 20px; color: #424242; text-align: center; overflow: hidden;}
+.box-mod .box-item img { max-width: 100%; max-height: 100%;}
+
+.bomb-box-mod { width: 98%; background-color: #E2EEFF; border: 1px solid #A9CCFF; padding: 1%;}
+.bomb-box { width: 96%; font-size: 12px; padding: 5px 2%; background-color: #fff;}
+.bomb-box h5 { color: #999; margin: 3px 0; font-size: 16px;  border-bottom: 1px dotted #C3C3C2; height: 40px; line-height: 40px; font-weight: normal;}
+.bomb-box .content{ text-align: center;}
+.bomb-box .content h3 { font-size: 18px; color: #353535; margin: 10px 0; font-weight: normal;}
+.bomb-box .content p { text-align: left; color: #666;}
+.bomb-box .content .check { border: 1px solid #d7d7d7; padding: 10px; font-size: 14px; line-height: 30px; margin: 15px 0;}
+.form-horizontal .form-group { clear: both }
+.form-horizontal .form-group-spe{ margin: 10px 0px 20px; border: none;}
+.form-horizontal .form-group .form-control-box{ position: relative; display: inline-block;line-height: 30px;}
+
+.form-horizontal .form-group input[type="text"]{ line-height: 20px; height: 20px; padding: 5px; border-radius: 2px; border: 1px solid #ccc; box-shadow: 0 1px 2px 0 #f0f0f0 inset; background: #fff; vertical-align: middle;}
+.form-horizontal .form-group input[type="text"].input-small{ width: 60px;}
+.form-group dl dt{ width: 100%; height: auto;}
+.form-group dl dd{ padding: 0px;}
+.form-group dl dd .captcha{ position: static;}
+
+.form-horizontal .form-group .form-control-error{ color: #E31939; vertical-align: middle; margin-top: 5px; display: block;}
+.form-horizontal .form-group .form-control-error i{ width: 16px; height: 16px; background: url(../images/user-icon.png) no-repeat; background-position: -30px -134px; margin-right: 5px; vertical-align: middle; display: inline-block;}
+
+.form-group dl dd input.btn{font-family: "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif; display: inline-block; padding: 0 10px; height: 32px; line-height: 30px; color: #666; min-width: 80px; cursor: pointer; text-align: center; font-size: 14px; font-weight: 400; box-sizing: border-box; vertical-align: middle; -webkit-appearance: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; outline:0; text-decoration: none; background-image: none; background-color: #f6f6f6; border: 1px solid #ccc; border-radius:2px;}

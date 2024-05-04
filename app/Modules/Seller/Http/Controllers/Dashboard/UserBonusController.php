@@ -17,24 +17,16 @@
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
 // | Date:2019-4-5
-// | Description:
+// | Description:用户红包管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
-use App\Models\Activity;
-use App\Models\Goods;
-use App\Models\Shop;
+use App\Models\ShopRank;
 use App\Modules\Base\Http\Controllers\Seller;
-use App\Repositories\ActivityCategoryRepository;
-use App\Repositories\ActivityRepository;
-use App\Repositories\BonusRepository;
-use App\Repositories\BrandRepository;
-use App\Repositories\CategoryRepository;
-use App\Repositories\GoodsRepository;
 use App\Repositories\UserBonusRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
  * 用户红包管理
@@ -46,16 +38,20 @@ class UserBonusController extends Seller
 {
 
     private $links = [
-        ['url' => 'dashboard/bonus/list', 'text' => '已发放用户红包列表'],
+        ['url' => 'dashboard/bonus/list', 'text' => '红包列表'],
+        ['url' => 'dashboard/bonus/add', 'text' => '派发红包'],
     ];
 
     protected $userBonus;
+    protected $user;
 
-    public function __construct()
+    public function __construct(UserBonusRepository $userBonus,
+                                UserRepository $user)
     {
         parent::__construct();
 
-        $this->userBonus = new UserBonusRepository();
+        $this->userBonus = $userBonus;
+        $this->user = $user;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -64,11 +60,11 @@ class UserBonusController extends Seller
     public function lists(Request $request)
     {
         $title = '用户红包列表';
-        $fixed_title = '营销中心 - '.$title;
+        $fixed_title = '营销中心 - ' . $title;
 
         $this->sublink($this->links, 'list');
 
-        $bonus_id = $request->get('bonus_id',0);
+        $bonus_id = $request->get('bonus_id', 0);
 
         $action_span = [
             [
@@ -96,7 +92,7 @@ class UserBonusController extends Seller
             $where[] = ['bonus_id', $bonus_id];
         }
         // 搜索条件
-        $search_arr = ['keywords','bonus_status','receive_status','bonus_type'];
+        $search_arr = ['keywords', 'bonus_status', 'receive_status', 'bonus_type'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
 
@@ -148,6 +144,125 @@ class UserBonusController extends Seller
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+    /**
+     * 派发红包
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function add(Request $request)
+    {
+        $title = '派发红包';
+        $fixed_title = '营销中心 - ' . $title;
+
+        $this->sublink($this->links, 'add');
+
+        $bonus_id = $request->get('bonus_id', 0);
+
+        $action_span = [
+            [
+                'id' => '',
+                'url' => '/dashboard/bonus/list',
+                'icon' => 'fa-reply',
+                'text' => '返回红包列表'
+            ],
+            [
+                'id' => '',
+                'url' => '/dashboard/user-bonus/list',
+                'icon' => 'fa-th',
+                'text' => '已发放列表'
+            ],
+        ];
+
+        $explain_panel = [];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+        // 获取数据
+        $shop_rank_list = ['' => '--全部--'];
+        $shop_ranks = ShopRank::where([['shop_id', $this->shop_id]])->pluck('rank_name', 'rank_id')->toArray();
+        if (!empty($shop_ranks)) {
+            foreach ($shop_ranks as $key => $value) {
+                $shop_rank_list[$key] = $value;
+            }
+        }
+
+        $compact = compact('title', 'shop_rank_list', 'bonus_id');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'shop_rank_list' => $shop_rank_list,
+                'bonus_id' => $bonus_id,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.user-bonus.add'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+    /**
+     * 派发红包 保存数据
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function addSave(Request $request)
+    {
+        $key = $request->get('key');
+        $post = $request->post();
+        try {
+            $this->userBonus->sendUserBonus($key, $this->shop_id, $post);
+            shop_log('派发红包。红包ID：' . $post['bonus_id']);
+            return result(0, null, '派发红包成功');
+        } catch (\Exception $e) {
+            return result(-1, null, '派发红包失败');
+        }
+    }
+
+
+    /**
+     * 搜索会员
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function searchUser(Request $request)
+    {
+        $keyword = $request->get('keyword', '');
+
+        // 获取会员列表
+        // TODO 后期优化 获取店铺会员
+        $where = [];
+        // 根据关键词搜索 根据 会员账号/手机号码/邮箱模糊搜索
+        $multiLike = '';
+        if ($keyword != '') {
+            $multiLike = "(concat(IFNULL(user_name,''),IFNULL(mobile,''),IFNULL(email,'')) like '%".$keyword."%')";
+        }
+        $condition = [
+            'where' => $where,
+            'multi_like' => $multiLike,
+            'sortname' => 'user_id',
+            'sortorder' => 'desc',
+            'field' => ['user_id', 'user_name', 'mobile', 'email']
+        ];
+        list($user_list, $total) = $this->user->getList($condition);
+
+        $data = $user_list->toArray();
+
+        return result(0, $data);
     }
 
 }

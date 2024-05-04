@@ -1,5 +1,5 @@
 <form id="{{ $uuid }}" class="form-horizontal" action="add" method="POST">
-    {{ csrf_field() }}
+    @csrf
     <div class="table-content m-t-10 clearfix">
         <!-- 相册名称 -->
         <div class="simple-form-field" >

@@ -16,7 +16,7 @@
 
     <!-- 表单 -->
     <form id="UserShopRank" class="form-horizontal" name="UserShopRank" action="/user/shop/add" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 隐藏域 -->
             <input type="hidden" id="usershoprank-rank_id" class="form-control" name="UserShopRank[rank_id]" value="{{ $info->rank_id ?? '' }}">

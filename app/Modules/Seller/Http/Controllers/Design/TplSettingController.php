@@ -4,13 +4,15 @@ namespace App\Modules\Seller\Http\Controllers\Design;
 
 use App\Models\Article;
 use App\Models\ArticleCat;
+use App\Models\Bonus;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Goods;
 use App\Models\Shop;
-use App\Models\Template;
+use App\Models\ShopCategory;
 use App\Models\TemplateCat;
 use App\Models\TemplateItem;
+use App\Models\Topic;
 use App\Models\TplBackup;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\LinkTypeRepository;
@@ -24,6 +26,7 @@ use App\Repositories\TemplateItemRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\TemplateSelectorRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class TplSettingController extends Seller
@@ -40,20 +43,31 @@ class TplSettingController extends Seller
     protected $shopCategory; // 店铺内分类
     protected $linkType; // 链接类型
 
-    public function __construct()
+    public function __construct(
+        TemplateRepository $template
+        ,TemplateSelectorRepository $selector
+        ,TemplateItemRepository $templateItem
+        ,TemplateCatRepository $templateCat
+        ,NavBannerRepository $navBanner
+        ,NavigationRepository $navigation
+        ,NavQuickServiceRepository $navQuickService
+        ,ShopRepository $shop
+        ,ShopCategoryRepository $shopCategory
+        ,LinkTypeRepository $linkType
+    )
     {
         parent::__construct();
 
-        $this->template = new TemplateRepository();
-        $this->selector = new TemplateSelectorRepository();
-        $this->templateItem = new TemplateItemRepository();
-        $this->templateCat = new TemplateCatRepository();
-        $this->navBanner = new NavBannerRepository();
-        $this->navigation = new NavigationRepository();
-        $this->navQuickService = new NavQuickServiceRepository();
-        $this->shop = new ShopRepository();
-        $this->shopCategory = new ShopCategoryRepository();
-        $this->linkType = new LinkTypeRepository();
+        $this->template = $template;
+        $this->selector = $selector;
+        $this->templateItem = $templateItem;
+        $this->templateCat = $templateCat;
+        $this->navBanner = $navBanner;
+        $this->navigation = $navigation;
+        $this->navQuickService = $navQuickService;
+        $this->shop = $shop;
+        $this->shopCategory = $shopCategory;
+        $this->linkType = $linkType;
 
     }
 
@@ -65,7 +79,21 @@ class TplSettingController extends Seller
         $shop_id = seller_shop_info()->shop_id;
         $navigation_limit = 13; // 数据数量
 
-        $shop_info = $this->shop->getById($shop_id);
+        // 获取数据
+
+        // 店铺信息
+        $shop_info = $this->shop->shopInfo($shop_id);
+		$shop_info['shop']['qrcode'] = $this->shop->getShopQrCode($shop_id);
+
+        $region_name = get_region_names_by_region_code($shop_info['shop']['region_code'], ' ');
+
+        // 开店时长
+        $duration_time = calc_shop_duration($shop_info['shop']['open_time'],$shop_info['shop']['end_time']);
+
+        // 是否收藏店铺
+        $is_collect = false;
+
+        $collect_count = $shop_info['shop']['collect_num'];
 
         // 获取店铺导航
         $shop_navigation = $this->template->getShopNavigationData($shop_id, $navigation_limit);
@@ -81,6 +109,7 @@ class TplSettingController extends Seller
         list($shop_category_list, $total) = $this->shopCategory->getList($condition, '', true);
 
         // 从 template_item 表中获取模板数据
+        $where = [];
         $where[] = ['page', $page];
         $where[] = ['shop_id', $shop_id]; // 店铺id
         if ($topic_id > 0) {
@@ -88,14 +117,15 @@ class TplSettingController extends Seller
         }
         $condition = [
             // data,shop_id,page,sort,ext_info,tpl_title,is_valid,site_id,code,file //这些字段从模板表取 tpl_name,icon,type
-            'field' => ['uid', 'data', 'shop_id', 'page', 'sort', 'ext_info', 'tpl_title', 'is_valid', 'site_id', 'code', 'file'],
+            'field' => ['uid', 'data', 'shop_id', 'page', 'sort', 'ext_info', 'tpl_title', 'is_valid', 'site_id','topic_id', 'code', 'file'],
             'where' => $where,
             'limit' => 0, // 查询全部
             'sortname' => 'sort',
             'sortorder' => 'asc'
         ];
+//        dd($condition);
         list($templateItems, $itemCount) = $this->templateItem->getList($condition);
-
+//dd($templateItems);
         foreach ($templateItems as &$item)
         {
 //            $tplItem = $this->templateItem->detail(['uid'=>$item->uid, 'page'=>$page]);
@@ -109,12 +139,14 @@ class TplSettingController extends Seller
             $item->tpl_name = $tplInfo->tpl_name;
             $item->icon = $tplInfo->icon;
             $item->type = $tplInfo->type;
-
+//            dd($item->toArray());
+//            dd(unserialize($item->data));
 
         }
-        $jsonData = $templateItems;
-
+        $jsonData = json_encode($templateItems, true);
         $webStatic = 0;
+//        dd($jsonData);
+
 
         switch ($page) {
             case 'shop':
@@ -133,13 +165,14 @@ class TplSettingController extends Seller
                 // 测试数据
 //                $jsonData = '';
 
+
                 // 当前激活的模板备份id 如果是主题 则选中主题风格
-                $back_id = $shop_info->back_id; // 模板备份id
-                if ($back_id > 0) {
-                    $tpl_backup_info = TplBackup::where('back_id', $back_id)->first();
+                $m_back_id = $shop_info['shop']['m_back_id']; // 模板备份id
+                if ($m_back_id > 0) {
+                    $tpl_backup_info = TplBackup::where('back_id', $m_back_id)->first();
                     if (!empty($tpl_backup_info) && $tpl_backup_info->is_theme == 1) {
-                        $theme_id = $back_id;
-                        view()->share('theme_id', $theme_id);
+                        $m_theme_id = $m_back_id;
+                        view()->share('m_theme_id', $m_theme_id);
                         view()->share('theme_img', $tpl_backup_info->img);
                     }
                 }
@@ -156,6 +189,17 @@ class TplSettingController extends Seller
                 // 测试数据
 //                 $jsonData = '';
 
+                // 当前激活的模板备份id 如果是主题 则选中主题风格
+                $app_back_id = $shop_info['shop']['app_back_id']; // 模板备份id
+                if ($app_back_id > 0) {
+                    $tpl_backup_info = TplBackup::where('back_id', $app_back_id)->first();
+                    if (!empty($tpl_backup_info) && $tpl_backup_info->is_theme == 1) {
+                        $app_theme_id = $app_back_id;
+                        view()->share('app_theme_id', $app_theme_id);
+                        view()->share('theme_img', $tpl_backup_info->img);
+                    }
+                }
+
                 break;
 
             case 'topic':
@@ -163,6 +207,10 @@ class TplSettingController extends Seller
                 $sTitle = '专题活动';
                 // 测试数据
 //                 $jsonData = '';
+                $topic = Topic::where('topic_id', $topic_id)->first();
+
+                // 判断首页静态页面开启状态 todo 此处还需完善
+                $webStatic = 1;
 
                 break;
             case 'm_topic':
@@ -170,6 +218,10 @@ class TplSettingController extends Seller
                 $sTitle = '微专题活动';
                 // 测试数据
 //                 $jsonData = '';
+                $topic = Topic::where('topic_id', $topic_id)->first();
+
+                // 判断首页静态页面开启状态 todo 此处还需完善
+                $webStatic = 1;
 
                 $jsonDataEmpty = '[]'; // 空数据
                 break;
@@ -195,17 +247,53 @@ class TplSettingController extends Seller
         $tpl_backup_theme_where[] = ['page', $page];
         $tpl_backup_theme_where[] = ['topic_id', $topic_id];
         $tpl_backup_theme_where[] = ['is_theme', 1]; // 主题模板
-        $tpl_backup_theme = TplBackup::where($tpl_backup_theme_where)->orderBy('back_id', 'asc')->get()->toArray();
+        $theme_list = TplBackup::where($tpl_backup_theme_where)->orderBy('back_id', 'asc')->get()->toArray();
 
 
         $title = sysconf('site_name').'-'.$sTitle.'装修设置';
         $is_design = true; // 是否装修模式
 
+        $shop_header_style = shopconf('shop_header_style', false, $shop_id);
 
+        $topic = !empty($topic) ? $topic->toArray() : [];
+        $tpl_list = []; // todo 后期完善
+        $tpls = []; // todo 后期完善 jsonData
+        $shop_navigation = $shop_navigation->toArray();
 
-        $compact = compact('shop_info', 'page', 'topic_id', 'title', 'jsonData', 'shop_navigation', 'shop_category_list', 'tpl_backup_theme', 'is_design', 'webStatic');
+        $compact = compact('title', 'shop_info', 'region_name','duration_time','is_collect','collect_count','tpl_list',
+            'shop_navigation','topic','tpls','page','shop_id','is_design','shop_header_style','theme_list',
+            'webStatic','shop_category_list', 'topic_id','jsonData'
+        );
 
-        return view('design.tpl-setting.'.$page, $compact);
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'title' => $sTitle,
+                'shop_info' => $shop_info,
+                'region_name' => $region_name,
+                'duration_time' => $duration_time,
+                'is_collect' => $is_collect,
+                'collect_count' => $collect_count,
+                'tpl_list' => $tpl_list,
+                'shop_navigation' => $shop_navigation,
+                'topic' => $topic, // 专题详情
+                'tpls' => $tpls,
+                'page' => $page,
+                'shop_id' => $shop_id,
+                'is_design' => $is_design,
+                'shop_header_style' => $shop_header_style,
+                'theme_list' => $theme_list,
+
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'design.tpl-setting.'.$page
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
     /**
@@ -227,12 +315,15 @@ class TplSettingController extends Seller
         $tplInfo = $this->template->detail(['code'=>$code]);
 
         // PC端-1/手机端-2/APP端-3
-        if (str_contains($page, 'm_')) {
+        if (Str::contains($page, 'm_')) {
             $tpl_client = 2;
             $tpl_dir = 'mobile';
-        } elseif ($page == 'app') {
-            $tpl_client = 3;
-            $tpl_dir = 'app';
+//        } elseif ($page == 'app') {
+        } elseif (Str::contains($page, 'app')) {
+            //            $tpl_client = 3;
+//            $tpl_dir = 'app';
+            $tpl_client = 2;
+            $tpl_dir = 'mobile';
         } else {
             $tpl_client = 1;
             $tpl_dir = 'pc';
@@ -274,8 +365,7 @@ class TplSettingController extends Seller
                 'sortname' => 'sort',
                 'sortorder' => 'asc'
             ];
-            $nQSRep = new NavQuickServiceRepository();
-            list($quickService, $total) = $nQSRep->getList($nQSCondition);
+            list($quickService, $total) = $this->navQuickService->getList($nQSCondition);
             view()->share('quickService', $quickService);
         }
 
@@ -291,7 +381,7 @@ class TplSettingController extends Seller
             'type' => 1,
             'is_design' => true, // 是否设计模式
         ];
-
+        // bouns_s1
         $render = view('backend::design.templates.'.$tpl_dir.'.'.$tplInfo['type'].'.'.$code, $params)->render();
         return result(0, $render, '添加成功', ['uid' => $ret->uid]);
     }
@@ -419,7 +509,7 @@ class TplSettingController extends Seller
                     $datum['cat_name'] = $articleCatInfo->cat_name;
                 } elseif ($type == 6) {
                     // 商品分类 分类名称
-                    $datum['cat_name'] = Category::where('cat_id', $datum['cat_id'])->value('cat_name');
+                    $datum['cat_name'] = ShopCategory::where([['cat_id', $datum['cat_id']], ['is_show', 1], ['shop_id', $this->shop_id]])->value('cat_name');
                 } elseif ($type == 2) {
                     // 商品 商品名称相关信息
                     $goodsInfo = Goods::where('goods_id', $datum['goods_id'])->first();
@@ -432,10 +522,22 @@ class TplSettingController extends Seller
                     $datum['brand_name'] = $brandInfo->brand_name;
                     $datum['brand_logo'] = $brandInfo->brand_logo;
                 } elseif ($type == 9) {
-                    // 店铺 店铺名称相关信息 todo
+                    // 店铺 店铺名称相关信息
                     $shopInfo = Shop::where('shop_id', $datum['shop_id'])->first();
-                    $datum['store_name'] = '店铺名称';
-                    $datum['store_logo'] = 'http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2018/05/21/15268766191604.jpg';
+                    $datum['store_name'] = $shopInfo->store_name ?? '';
+                    $datum['store_logo'] = !empty($shopInfo->shop_logo) ? get_image_url($shopInfo->shop_logo) : '';
+                } elseif ($type == 11) {
+                    // 红包 红包名称相关信息
+                    $bonusInfo = Bonus::where('bonus_id', $datum['bonus_id'])->first();
+                    $datum['bonus_name'] = $bonusInfo->bonus_name;
+                    $datum['bonus_amount'] = $bonusInfo->bonus_amount;
+                    $datum['min_goods_amount'] = $bonusInfo->min_goods_amount;
+                    $datum['start_time'] = format_time(strtotime($bonusInfo->start_time), 'Y-m-d');
+                    $datum['end_time'] = format_time(strtotime($bonusInfo->end_time), 'Y-m-d');
+                    $datum['shop_id'] = $bonusInfo->shop_id;
+                } elseif ($type == 14) {
+                    // 热点区
+
                 }
 
 
@@ -486,6 +588,7 @@ class TplSettingController extends Seller
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
+//        dd($selectorInfo);
         $render = view('backend::design.selectors.'.$selectorInfo['code'], $params)->render();
 
         return result(0, $render);
@@ -494,7 +597,7 @@ class TplSettingController extends Seller
 
     /**
      * 改变链接类型
-     * 
+     *
      * @param Request $request
      * @return mixed
      * @throws \Throwable
@@ -507,6 +610,23 @@ class TplSettingController extends Seller
         $render = view('backend::design.tpl-setting.partials._link_list', compact('link_type', 'link', 'link_data'))->render();
 
         return result(0, $render);
+    }
+
+    public function linkGoodsPicker(Request $request)
+    {
+        $page_id = make_uuid();
+        $id = $request->get('id');
+        $goods_id = $request->get('goods_id');
+
+        $goods_name = '';
+        if ($goods_id) {
+            $goods_name = Goods::where('goods_id', $goods_id)->value('goods_name');
+        }
+
+        $compact = compact('page_id','id','goods_id', 'goods_name');
+        $render = view('backend::design.tpl-setting.partials._link_goods_picker', $compact)->render();
+
+        return result(0,$render);
     }
 
     public function setting(Request $request)
@@ -559,7 +679,7 @@ class TplSettingController extends Seller
         } elseif ($page == 'm_shop') {
             $url = route('mobile_shop_home', ['shop_id'=>$shop_id]);
         } elseif ($page == 'topic') {
-            $url = route('show_topic', ['topic_id'=>$topic_id]);
+            $url = route('pc_show_topic', ['topic_id'=>$topic_id]);
         } elseif ($page == 'm_topic') {
             $url = route('mobile_show_topic', ['topic_id'=>$topic_id]);
         } else {
@@ -568,9 +688,12 @@ class TplSettingController extends Seller
 
         $extra = [
             // 微商城首页二维码
-            'qrcode' => '/design/tpl-setting/qrcode.html?id='.$shop_id, // todo 'http://images.68mall.com/14719/gqrcode/site/qrcode_CD4B99D2C262AF1AA6E32E4861F3580B.png',
+            'qrcode' => '/design/tpl-setting/qrcode.html?id='.$shop_id, // todo 'http://images.xxxx.com/14719/gqrcode/site/qrcode_CD4B99D2C262AF1AA6E32E4861F3580B.png',
             'url' => $url // 设置成功 跳转url地址
         ];
+        if (empty($extra['url'])) {
+            unset($extra['url']);
+        }
         return result(0, null, '保存成功', $extra);
     }
 
@@ -616,12 +739,21 @@ class TplSettingController extends Seller
 
         $url = '';
 
-        if ($group == 'site_style') {
-            if (sysconf('custom_style_enable') == 1) {
-//                $url = 'http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/css/custom/site-color-style-0.css';
-                $url = __HTTP__.env('FRONTEND_DOMAIN').'/css/custom/site-color-style-0.css';
+//        if ($group == 'site_style') {
+//            if (sysconf('custom_style_enable') == 1) {
+////                $url = 'http://xxx.oss-cn-beijing.aliyuncs.com/images/123/css/custom/site-color-style-0.css';
+//                $url = __HTTP__.config('lrw.frontend_domain').'/css/custom/site-color-style-0.css';
+//            } else {
+//                $url = __HTTP__.config('lrw.frontend_domain').'/css/color-style.css';
+//            }
+//        }
+
+        if ($group == 'm_shop_style') {
+            if (shopconf('custom_style_enable_m_shop') == 1) {
+//                http://xxx.oss-cn-beijing.aliyuncs.com/images/123/css/custom/m_shop-color-style-1.css?csv=67&v=20190422
+                $url = request()->getScheme().'://'.config('lrw.mobile_domain').'/css/custom/m_shop-color-style-'.seller_shop_info()->shop_id.'.css?csv=67&v='.date('Ymd');
             } else {
-                $url = __HTTP__.env('FRONTEND_DOMAIN').'/css/color-style.css';
+                $url = request()->getScheme().'://'.config('lrw.mobile_domain').'/css/color-style.css';
             }
         }
 
@@ -783,13 +915,15 @@ class TplSettingController extends Seller
      */
     public function setStatic(Request $request)
     {
+        $shop_id = seller_shop_info()->shop_id;
+
         $code = $request->post('code'); // site-PC首页 m_site-微信端首页 shop-店铺首页 m_shop-微信端店铺首页
         if ($code == 'shop') {
-            $ret = shopconf('shop_web_static', shopconf('shop_web_static') == 1 ? 0 : 1, seller_shop_info()->shop_id);
-            $web_static = shopconf('shop_web_static',false,seller_shop_info()->shop_id);
+            $ret = shopconf('shop_web_static', shopconf('shop_web_static',false,$shop_id) == 1 ? '0' : 1, $shop_id);
+            $web_static = shopconf('shop_web_static',false,$shop_id);
         } elseif ($code == 'm_shop') {
-            $ret = shopconf('m_shop_web_static', shopconf('m_shop_web_static') == 1 ? 0 : 1, seller_shop_info()->shop_id);
-            $web_static = shopconf('m_shop_web_static',false,seller_shop_info()->shop_id);
+            $ret = shopconf('m_shop_web_static', shopconf('m_shop_web_static',false,$shop_id) == 1 ? '0' : 1, $shop_id);
+            $web_static = shopconf('m_shop_web_static',false,$shop_id);
         } else {
             $ret = false;
             $web_static = 0;
@@ -818,5 +952,44 @@ class TplSettingController extends Seller
 
         return result(0, $render);
 
+    }
+
+    /**
+     * 装修预览
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function preview(Request $request)
+    {
+        $shop_id = seller_shop_info()->shop_id;
+        $page = $request->get('page'); // m_shop app_shop shop
+        $topic_id = $request->get('topic_id', 0);
+        $is_preview = $request->get('is_preview', 0);
+        $comstore_group_id = $request->get('comstore_group_id', 0);
+
+        $url = "";
+        $extra = [];
+        if ($page == 'shop') {
+            $url = route('pc_shop_preview')."?shop_id={$shop_id}";
+        } elseif ($page == 'm_shop') {
+            $url = route('mobile_shop_preview')."?shop_id={$shop_id}";
+        } elseif ($page == 'app_shop') {
+            $url = route('pc_shop_preview')."?shop_id={$shop_id}";
+            $extra['qrcode'] = ""; // todo 生成qrcode
+        } elseif ($page == 'topic') {
+            $url = route('pc_topic_preview')."?topic_id={$topic_id}";
+        } elseif ($page == 'm_topic') {
+            $url = route('mobile_topic_preview')."?topic_id={$topic_id}";
+        } elseif ($page == 'app_topic') {
+            $url = route('pc_topic_preview')."?topic_id={$topic_id}";
+            $extra['qrcode'] = "";
+        }
+
+//        $qrcode = "http://images.xxxx.com/1737/gqrcode/site/qrcode_1AF88A6693AD1544F10A087A642D895C.png";
+//        $url = "https://m.xxxx.com/mn7axs7/shop/index/preview.html?shop_id={$shop_id}";
+
+        $extra['url'] = $url;
+        return result(0, null, '', $extra);
     }
 }

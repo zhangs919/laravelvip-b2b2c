@@ -16,7 +16,7 @@
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group=region" method="post" enctype="multipart/form-data" novalidate="novalidate">
 
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="region">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -363,7 +363,7 @@
                 var value = $(target).val() ;
                 var options = $(this).data("options") ? $(this).data("options") : [];
                 $(this).imagegroup({
-                    host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                    host: "{{ get_oss_host() }}",
                     size: size,
                     mode: mode,
                     labels: labels,
@@ -403,7 +403,7 @@
                 var options = $(this).data("options") ? $(this).data("options") : [];
 
                 $(this).videogroup({
-                    host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
+                    host: "{{ get_oss_host() }}",
                     size: size,
                     mode: mode,
                     labels: labels,

@@ -4,13 +4,19 @@ namespace App\Repositories;
 
 use App\Models\Collect;
 use App\Models\Goods;
+use App\Models\Qcode;
+use App\Models\SelfPickup;
 use App\Models\Shop;
+use App\Models\ShopApply;
 use App\Models\ShopBindClass;
 use App\Models\ShopFieldValue;
+use App\Models\ShopPayment;
 use App\Models\TplBackup;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Services\WechatSDKService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShopRepository
@@ -18,37 +24,35 @@ class ShopRepository
     use BaseRepository;
 
     protected $model;
-
-    protected $goodsRep;
-
-    protected $userRep;
-
-    protected $activityRep;
-
-    protected $freightRep;
+    protected $goods;
+    protected $user;
+    protected $activity;
+    protected $freight;
+    protected $customer;
+    protected $tools;
+    protected $imageDir;
+    protected $videoDir;
+    protected $shopConfig;
+    protected $shopCredit;
 
     public function __construct()
     {
         $this->model = new Shop();
-        $this->goodsRep = new GoodsRepository();
-        $this->userRep = new UserRepository();
-        $this->activityRep = new ActivityRepository();
-        $this->freightRep = new FreightRepository();
-
-
+        $this->goods = new GoodsRepository();
+        $this->user = new UserRepository();
+        $this->activity = new ActivityRepository();
+        $this->freight = new FreightRepository();
+        $this->customer = new CustomerRepository();
+        $this->tools = new ToolsRepository();
+        $this->imageDir = new ImageDirRepository();
+        $this->videoDir = new VideoDirRepository();
+        $this->shopConfig = new ShopConfigRepository();
+        $this->shopCredit = new ShopCreditRepository();
     }
 
-    /**
-     * 获取店铺信息
-     * 返回数据经过处理
-     *
-     * @param $shop_id
-     * @return mixed
-     */
-    public function getShopInfo($shop_id)
+    public function getShopOpeningHour($opening_hour)
     {
-        $info = $this->getById($shop_id);
-        $opening_hour = unserialize($info->opening_hour);
+//        $opening_hour = unserialize($shop->opening_hour);
         if (!empty($opening_hour)) {
             $begin_hour = $opening_hour['begin_hour'];
             $begin_minute = $opening_hour['begin_minute'];
@@ -66,9 +70,60 @@ class ShopRepository
         } else {
             $opening_hour = [];
         }
+        return $opening_hour;
+    }
 
-        $info->opening_hour = $opening_hour;
+    /**
+     * 验证店铺是否在营业中
+     *
+     * @param object $info 店铺信息
+     * @return bool
+     */
+    public function shopIsOpening($opening_hour)
+    {
+        $currentWeek = date('w'); // 0-星期日 1-星期一 ...
+        $currentTime = date('H:i');
+        $timeFlag = false;
+		if (empty($opening_hour)) {
+			return false;
+		}
+        foreach ($opening_hour['time_arr'] as $item) {
+            $beginTime = $item['begin_hour'].":".$item['begin_minute'];
+            $endTime = $item['end_hour'].":".$item['end_minute'];
+            if ($currentTime > $beginTime && $currentTime < $endTime) {
+                $timeFlag = true;
+            }
+        }
+        if (!empty($opening_hour['week'])) {
+            $weekFlag = false;
+            if (in_array($currentWeek, $opening_hour['week']) && $timeFlag) {
+                $weekFlag = true;
+            }
+            if ($weekFlag && $timeFlag) {
+                return true;
+            }
+        } else {
+            return $timeFlag;
+        }
+        return $timeFlag;
+    }
 
+    /**
+     * 获取店铺信息
+     * 返回数据经过处理
+     *
+     * @param $shop_id
+     * @return mixed
+     */
+    public function getShopInfo($shop_id)
+    {
+        $info = Shop::where('shop_id', $shop_id)->withCount(['collect'])->first();
+        if (empty($info)) {
+            return null;
+        }
+        $info->opening_hour = unserialize($info->opening_hour);
+        $info->opening_hour = $this->getShopOpeningHour($info->opening_hour);
+        $info->is_opening = $this->shopIsOpening($info->opening_hour);
         if (empty($info->shipping_time)) {
             $shipping_time = [
                 'begin_hour' => 0,
@@ -80,7 +135,26 @@ class ShopRepository
             $shipping_time = unserialize($info->shipping_time);
         }
         $info->shipping_time = $shipping_time;
+        $info->is_own_shop = $info->shop_type == 0 ? 1 : 0; // 是否自营店铺
 
+        $info->shop_url = '/shop/'.$shop_id.'.html';
+        /*$info->customer = [
+            '__PHP_Incomplete_Class_Name' => 'common\models\Customer',
+            'clientRuleCache' => 'cache'
+        ];*/
+        $info->customer = $this->customer->getCustomerMain($shop_id);
+        $info->aliim_enable = shopconf('aliim_enable', false, $shop_id); // 店铺是否开启阿里云旺客服
+
+//        $info->system_aliim_enable = sysconf('aliim_enable'); // 平台是否开启阿里云旺客服
+
+        $pickup_list = SelfPickup::where([['is_show',1],['is_delete',0],['shop_id', $shop_id]])->get()->toArray();
+        $info->delivery_enable = !empty($pickup_list) ? 1 : 0;
+        $info->pickup_list = $pickup_list;
+        $info->collect_num = $info->collect_count;
+        $info->user_name = $info->user->user_name;
+        $info->shop_type_fmt = str_replace([1, 2], ['个人店铺', '企业店铺'], $info->shop_type);
+
+        $info = $info->toArray();
         return $info;
     }
 
@@ -100,18 +174,18 @@ class ShopRepository
             $shop_result = DB::table('shop')->where('user_id',$shopInsert['user_id'])->first();
 
             if (!empty($shop_result)) {
-                return false;
+                throw new \Exception('店铺已经存在！');
             }
 
             if (empty($shop_result)) {
                 // 插入店铺表（shop)
                 $shop_result = $this->store($shopInsert);
                 if (!$shop_result) {
-                    return false;
+                    throw new \Exception('店铺数据插入失败！');
                 }
 
                 // 更新会员is_seller为1
-                DB::table('user')->where('user_id', $shopInsert['user_id'])->update(['is_seller'=>1]);
+                DB::table('user')->where('user_id', $shopInsert['user_id'])->update(['is_seller'=>1,'shop_id'=>$shop_result->shop_id]);
             }
 
             // 检查店铺认证信息是否存在
@@ -123,16 +197,15 @@ class ShopRepository
                 if ($shopFieldValueInsertData) {
                     // 上传企业营业执照和法人代表证件照片
                     foreach ($shopFieldValueInsert as $key=>$item) {
-                        if (str_contains($key, 'check-') && !empty($item)) {
+                        if (Str::contains($key, 'check-') && !empty($item)) {
                             $filename = request()->post($key, 'name');
                             $field = str_replace('check-', '', $key);
                             $file = request()->file()['ShopFieldValueModel'][$field];
                             $storePath = 'shop/'.$shop_result->shop_id.'/field'; //
 
-                            $tools = new ToolsRepository();
-                            $uploadRes = $tools->upfile($file, request(), $storePath);
+                            $uploadRes = $this->tools->upfile($file, request(), $storePath);
                             if (isset($uploadRes['error'])) {
-                                return false;
+                                throw new \Exception($uploadRes['error']);
                             }
                             $shopFieldValueInsertData[$field] = $uploadRes['path'];
                         }
@@ -145,21 +218,12 @@ class ShopRepository
                 $shopFieldValueModel->save();
             }
 
-            // 添加店铺相册
-            $imageDirRep = new ImageDirRepository();
-            $imageDirRep->createDefaultDirs($shop_result->shop_id, 0, 'shop');
-
-            // 添加店铺视频文件夹
-            $videoDirRep = new VideoDirRepository();
-            $videoDirRep->createDefaultDirs($shop_result->shop_id, 0, 'shop');
-
-            // 添加店铺配置信息
-            $shopConfigRep = new ShopConfigRepository();
-            $shopConfigRep->createShopConfigData($shop_result->shop_id);
-
             // 添加店铺所属分类表
-            if (!empty($shopInsert['cat_ids'])) {
-                foreach ($shopInsert['cat_ids'] as $item) {
+            if (!empty($shopUpdate['cat_ids'])) {
+                foreach ($shopUpdate['cat_ids'] as $item) {
+                    // 删除该店铺所有店铺所属分类
+                    ShopBindClass::where('shop_id', $shop_result->shop_id)->delete();
+                    // 插入数据
                     $shopBindClassInsert = [
                         'shop_id' => $shop_result->shop_id,
                         'cls_id' => $item
@@ -169,6 +233,17 @@ class ShopRepository
                     $shopBindClass->save();
                 }
             }
+
+            // 添加店铺相册
+            $this->imageDir->createDefaultDirs($shop_result->shop_id, 0, 'shop');
+
+            // 添加店铺视频文件夹
+            $this->videoDir->createDefaultDirs($shop_result->shop_id, 0, 'shop');
+
+            // 添加店铺配置信息
+            $this->shopConfig->createShopConfigData($shop_result->shop_id);
+
+
 
             // 添加店铺手机端首页外卖风格模板 tpl_backup
             $tplBackupInsert = TplBackup::where('back_id', 1)
@@ -190,7 +265,7 @@ class ShopRepository
             DB::rollback();//事务回滚
             echo $e->getMessage();
             echo $e->getCode();
-            return false;
+            return $e->getMessage();
         }
     }
 
@@ -300,20 +375,22 @@ class ShopRepository
 
             // 特殊表删除
             // 店铺关联商品信息彻底删除
-            $this->goodsRep->foreverDeleteGoods($shop_id);
+            $this->goods->foreverDeleteGoods($shop_id);
 
             // 店铺活动
-            $this->activityRep->deleteActivity($shop_id);
+            $this->activity->deleteActivity($shop_id);
 
             // 运费模板
-            $this->freightRep->deleteFreight($shop_id);
+            $this->freight->deleteFreight($shop_id);
 
             // 店铺收藏
             Collect::where([['shop_id', $shop_id], ['collect_type', 1]])->delete();
 
-            // 店主管理员账号和网点管理员账号(包括会员认证信息)
-            $user_ids = User::where('shop_id', $shop_id)->select(['user_id'])->pluck('user_id')->toArray();
-            $this->userRep->deleteUser($user_ids);
+            // xx 店主管理员账号和网点管理员账号(包括会员认证信息)
+//            $user_ids = User::where('shop_id', $shop_id)->select(['user_id'])->pluck('user_id')->toArray();
+//            $this->user->deleteUser($user_ids);
+            // 将店主管理员账号和网点管理员账号设置为普通会员
+            User::where('shop_id', $shop_id)->update(['is_seller'=>0,'shop_id'=>0,'store_id'=>0,'multi_store_id'=>0]);
 
             DB::commit();
             return true;
@@ -333,7 +410,7 @@ class ShopRepository
      */
     public function generateShopQrCode($shop_id)
     {
-        $url = route('mobile_shop_home', ['shop_id' => $shop_id]);
+        $url = route('pc_shop_home', ['shop_id' => $shop_id]);
 
         $qrCode = QrCode::errorCorrection('L')
             ->format('png')
@@ -371,7 +448,7 @@ class ShopRepository
      */
     public function shopInfo($shopId)
     {
-        $shop = $this->getShopInfo($shopId)->toArray();
+        $shop = $this->getShopInfo($shopId);
 
         // 卖家会员账号信息
         $user = User::where('user_id', $shop['user_id'])
@@ -389,8 +466,7 @@ class ShopRepository
         }
 
         // 店铺信誉
-        $shopCredit = new ShopCreditRepository();
-        $credit = $shopCredit->getCreditInfoByScore($shop['credit']);
+        $credit = $this->shopCredit->getCreditInfoByScore($shop['credit']);
 
         // 会员收货地址
         $address = UserAddress::where('user_id', $shop['user_id'])
@@ -404,12 +480,10 @@ class ShopRepository
         }
 
         // 店铺主客服信息
-        $customer = new CustomerRepository();
-        $customer_main = $customer->getCustomerMain($shopId);
+        $customer_main = $this->customer->getCustomerMain($shopId);
 
         // 是否开启阿里云旺客服
         $aliim_enable = shopconf('aliim_enable',false,$shopId);
-
         $shop_info = [
             'shop' => $shop,
             'user' => !empty($user) ? $user->toArray() : null,
@@ -445,15 +519,77 @@ class ShopRepository
      * 3
      * 4平台审核通过,等待支付开店款项
      * 5开店成功
+     * 6尚未缴费成功
      *
-     * @param int $userId 会员id
+     * @param int $user_id 会员id
      * @return int
      */
-    public function checkShopApplyProcess($userId)
+    public function checkShopApplyProcess($user_id)
     {
         // 检查会员是否已经开店成功
 
+        // 会员申请入驻信息
+        $applyInfo = ShopApply::where('user_id', $user_id)->first();
+        // 店铺信息
+        $shop = Shop::where('user_id', $user_id)->first();
 
-        return 2;
+
+        //0未申请开店
+        if (empty($applyInfo) && empty($shop)) {
+            return 0;
+        }
+
+        if ($shop->shop_type == 0) { // 自营店铺 开店成功
+            return 5;
+        }
+
+        //2开店申请已提交,等待平台审核通过
+        if ($applyInfo->audit_status == 0) {
+            return 2;
+        }
+
+        // 检查店铺开店款项支付状态
+        $pay_info = ShopPayment::where('shop_id', $shop->shop_id)->orderBy('apply_time','desc')->first(); // 店铺开通/续费信息
+        $pay_info = !empty($pay_info) ? $pay_info->toArray() : null;
+        if ($applyInfo->audit_status == 1 && $shop->shop_audit == 1 && empty($pay_info)) {
+            // 无待支付记录
+            //4平台审核通过,等待支付开店款项
+            return 4;
+        }
+
+        if ($applyInfo->audit_status == 1 && $shop->shop_audit == 1 && !empty($pay_info)) {
+            if ($pay_info['pay_status'] == 1) {
+                // 支付完成
+                // 5开店成功
+                return 5;
+            } else {
+                // 等待支付
+                // 6尚未缴费成功
+                return 6;
+            }
+        }
+
     }
+
+	/**
+	 * 获取店铺首页二维码
+	 *
+	 * @param $shop_id
+	 * @return string
+	 * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+	 * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+	 * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+	 * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+	 */
+	public function getShopQrCode($shop_id)
+	{
+		$wechatSDKService = new WechatSDKService($shop_id);
+		$sceneValue = Qcode::getSceneValue($shop_id, 2); // 场景值 具体的url 如商品详情页url
+		$response = $wechatSDKService->getQRCode($sceneValue, 3, 6 * 24 * 3600); // 临时二维码 6天 最长30天
+		$qrcode = '';
+		if (!empty($response['ticket'])) {
+			$qrcode = $wechatSDKService->getQRUrl($response['ticket']);
+		}
+		return $qrcode;
+	}
 }

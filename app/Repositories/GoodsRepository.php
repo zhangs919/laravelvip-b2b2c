@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 
+use App\Imports\UploadSetSkuMemberImport;
 use App\Models\Attribute;
 use App\Models\AttrValue;
 use App\Models\Brand;
@@ -18,10 +19,13 @@ use App\Models\GoodsHistory;
 use App\Models\GoodsImage;
 use App\Models\GoodsSku;
 use App\Models\GoodsSpec;
+use App\Models\Qcode;
 use App\Models\Shop;
 use App\Models\SpecAlias;
+use App\Services\WechatSDKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class GoodsRepository
@@ -32,15 +36,17 @@ class GoodsRepository
 
     protected $goodsSku;
 
-    protected $categoryRep;
+    protected $category;
 
-    protected $goodsHistoryRep;
+    protected $goodsHistory;
 
     protected $shopQuestions;
 
     protected $goodsAttr;
 
     protected $goodsSpec;
+
+    protected $goodsCat;
 
     protected $specAlias;
 
@@ -49,15 +55,15 @@ class GoodsRepository
     public function __construct()
     {
         $this->model = new Goods();
-        $this->goodsSku = new GoodsSku();
-        $this->categoryRep = new CategoryRepository();
-        $this->goodsHistoryRep = new GoodsHistoryRepository();
+        $this->goodsSku = new GoodsSkuRepository();
+        $this->category = new CategoryRepository();
+        $this->goodsHistory = new GoodsHistoryRepository();
         $this->shopQuestions = new ShopQuestionsRepository();
         $this->collect = new CollectRepository();
-
-        $this->goodsAttr = new GoodsAttr();
-        $this->goodsSpec = new GoodsSpec();
-        $this->specAlias = new SpecAlias();
+        $this->goodsAttr = new GoodsAttrRepository();
+        $this->goodsSpec = new GoodsSpecRepository();
+        $this->goodsCat = new GoodsCatRepository();
+        $this->specAlias = new SpecAliasRepository();
     }
 
     /******************************* 后端逻辑代码 *******************************/
@@ -90,11 +96,12 @@ class GoodsRepository
     /**
      * 商家后台 新增商品
      *
+     *
      * @param $postData
      * @param int $shopId
      * @return User|bool
      */
-    public function addGoods($postData, $shopId = 0)
+    public function addGoods($postData, $shopId = 0, $isCollect = false)
     {
         $goodsInsert = $postData['GoodsModel'];
 
@@ -103,24 +110,54 @@ class GoodsRepository
 
             // 1. 插入商品表
             $goodsInsert['shop_id'] = $shopId; // 店铺id
-            $cat_arr = $this->categoryRep->getCatIds($goodsInsert['cat_id']);
+            $cat_arr = $this->category->getCatIds($goodsInsert['cat_id']);
             $goodsInsert['cat_id1'] = $cat_arr['cat_id1'];
             $goodsInsert['cat_id2'] = $cat_arr['cat_id2'];
             $goodsInsert['cat_id3'] = $cat_arr['cat_id3'];
             $goodsInsert['goods_unit'] = !empty($goodsInsert['goods_unit']) ? $goodsInsert['goods_unit'] : 0;
-            $goodsInsert['shop_cat_ids'] = $postData['shop_cat_ids']; //!empty($postData['shop_cat_ids']) ? implode(',',$postData['shop_cat_ids']) : null; // todo
+            $goodsInsert['shop_cat_ids'] = $postData['shop_cat_ids'] ?? null; //!empty($postData['shop_cat_ids']) ? implode(',',$postData['shop_cat_ids']) : null; // todo
 //            $goodsInsert['other_cat_ids'] = !empty($postData['other_cat_ids']) ? implode(',',$postData['other_cat_ids']) : null; // todo 暂时不确定什么意思
-            $goodsInsert['contract_ids'] = serialize($goodsInsert['contract_ids']);
-            $goodsInsert['mobile_desc'] = serialize($goodsInsert['mobile_desc']);
-            $goodsInsert['other_attrs'] = serialize($postData['other_attrs']);  // 店铺自定义属性
+			if (empty($goodsInsert['contract_ids'])) {
+				$goodsInsert['contract_ids'] = [];
+			}
+			$goodsInsert['contract_ids'] = json_encode($goodsInsert['contract_ids']);
+
+			if (empty($goodsInsert['mobile_desc'])) {
+				$goodsInsert['mobile_desc'] = [];
+			}
+			$goodsInsert['mobile_desc'] = json_encode($goodsInsert['mobile_desc']);
+
+			// 店铺自定义属性
+			if (empty($goodsInsert['other_attrs'])) {
+				$goodsInsert['other_attrs'] = [];
+			}
+			$goodsInsert['other_attrs'] = json_encode($goodsInsert['other_attrs']);
             $goodsInsert['add_time'] = time();
+
+            // 商品审核
+            if ($shopId) {
+                $shop = Shop::where('shop_id', $shopId)->first();
+                if (empty($shop)) {
+                    throw new \Exception('店铺id无效');
+                }
+                if ($shop->shop_type == 0) { // 自营店铺
+                    if (sysconf('audit_self_shop_goods') == 0) {
+                        $goodsInsert['goods_audit'] = 1;
+                    }
+                } else { // 个人店铺/企业店铺
+                    if (sysconf('audit_other_shop_goods') == 0) {
+                        $goodsInsert['goods_audit'] = 1;
+                    }
+                }
+            }
 
             $goodsRet = $this->store($goodsInsert);
 
             // 4. 插入商品规格表 goods_spec
             if (!empty($postData['goods_specs'])) {
+                $goodsSpecInsert = [];
                 foreach ($postData['goods_specs'] as $gsKey=>$item) {
-                    $goodsSpecInsert = [
+                    $goodsSpecInsert[] = [
                         'goods_id' => $goodsRet->goods_id,
                         'attr_id' => $item['attr_id'],
                         'attr_vid' => $item['attr_vid'],
@@ -130,110 +167,46 @@ class GoodsRepository
                         'is_checked' => 1,
                         'spec_sort' => $gsKey
                     ];
-                    $goodsSpec = new GoodsSpec();
-                    $goodsSpec->fill($goodsSpecInsert);
-                    $goodsSpec->save();
                 }
+                $this->goodsSpec->addAll($goodsSpecInsert);
             }
 
             // 2. 插入商品SKU表
-            if (empty($postData['sku_list'])) {
-                // 如果没有设置规格 则新增一条商品SKU信息
-                $goodsSkuInsert = [
-                    'goods_id' => $goodsRet->goods_id,
-                    'market_price' => $goodsInsert['market_price'],
-                    'goods_price' => $goodsInsert['goods_price'],
-                    'goods_number' => $goodsInsert['goods_number'],
-                    'warn_number' => $goodsInsert['warn_number'],
-                    'goods_sn' => $goodsInsert['goods_sn'],
-                    'goods_barcode' => $goodsInsert['goods_barcode'],
-                    'goods_stockcode' => $goodsInsert['goods_stockcode'],
-                    'is_spu' => 1 // 无规格商品 是SPU商品
-                ];
-                $goodsSku = new GoodsSku();
-                $goodsSku->fill($goodsSkuInsert);
-                $goodsSku->save();
-            } else {
-                // 如果设置了规格 在商品SKU表中新增所有规格的SKU信息
-                foreach ($postData['sku_list'] as $skuKey=>$item) {
-
-                    $item['goods_id'] = $goodsRet->goods_id;
-                    // 商品规格id 和规格名称处理
-                    $spec_ids = [];
-                    $attr_vids = [];
-                    $spec_names = [];
-                    foreach ($item['specs'] as $s) {
-                        $spec_ids[] = GoodsSpec::where([['goods_id', $goodsRet->goods_id], ['attr_vid', $s['attr_vid']]])->value('spec_id');
-                        $attr_vids[] = $s['attr_vid'];
-                        $attr_name = Attribute::where('attr_id', $s['attr_id'])->value('attr_name');
-                        $attr_vname = $s['attr_vname'];
-                        $spec_names[] = $attr_name.':'.$attr_vname;
-                    }
-                    $item['spec_ids'] = implode('|', $spec_ids);
-                    $item['spec_vids'] = implode('|', $attr_vids);
-                    $item['spec_names'] = implode(' ', $spec_names); // 规格键值对名称 attr_name 多个以空格分隔 格式：网络:4G 内存:32G 颜色:金色
-                    if (empty($item['warn_number'])) {
-                        $item['warn_number'] = 0;
-                    }
-
-                    $item['is_spu'] = 0; // 商品有规格 不是SPU商品
-
-                    $goodsSku = new GoodsSku();
-                    $goodsSku->fill($item);
-                    $goodsSku->save();
-                }
+            if (!$isCollect) { // 商品采集时 不执行以下逻辑
+                $this->createGoodsSku($postData['sku_list'], $goodsRet);
             }
 
             // 设置默认sku_id
             $default_sku_id = GoodsSku::where([['goods_id',$goodsRet->goods_id],['checked',1]])->select(['sku_id','goods_id'])->orderBy('sku_id', 'asc')->value('sku_id');
             // 更新商品表 sku_id 为goods_sku 第一个
-            Goods::where('goods_id', $goodsRet->goods_id)->update(['sku_id'=>$default_sku_id]);
+            Goods::where('goods_id', $goodsRet->goods_id)->update(['sku_id'=>$default_sku_id, 'sku_open' => !empty($postData['sku_list']) ? 1 : 0]);
 
 
             // 3. 插入商品属性表 goods_attr
-            if (!empty($postData['goods_attrs'])) {
-                foreach ($postData['goods_attrs'] as $item) {
-                    $item['goods_id'] = $goodsRet->goods_id;
-                    $attr_info =  Attribute::where('attr_id', $item['attr_id'])->first();
-                    $attr_vid = is_string($item['attr_vid']) ? [$item['attr_vid']] : $item['attr_vid']; // 如果是字符串 则放入数组中
-                    if (empty($attr_vid)) {
-                        continue;
-                    }
-
-                    // TODO attr_vname值获取异常 后面解决
-                    $attr_vname = AttrValue::where('attr_id', $item['attr_id'])->whereIn('attr_vid', $attr_vid)->orderBy('attr_vsort', 'asc')->pluck('attr_vname')->toArray();
-                    $item['attr_name'] = $attr_info->attr_name;
-                    $item['attr_vid'] = serialize($attr_vid);
-                    $item['attr_vname'] = serialize($attr_vname);
-                    $goodsAttr = new GoodsAttr();
-                    $goodsAttr->fill($item);
-                    $goodsAttr->save();
-                }
+            if (!$isCollect) { // 商品采集时 不执行以下逻辑
+                $this->createGoodsAttrs($postData['goods_attrs'], $goodsRet);
             }
-
 
 
             // 5. 插入商品规格别名表 spec_alias
             if (!empty($postData['spec_alias'])) {
-                foreach ($postData['spec_alias'] as $item) {
+                foreach ($postData['spec_alias'] as &$item) {
                     $item['goods_id'] = $goodsRet->goods_id;
-                    $specAlias = new SpecAlias();
-                    $specAlias->fill($item);
-                    $specAlias->save();
                 }
+                $this->specAlias->addAll($postData['spec_alias']);
             }
 
             // 6. 插入商品扩展分类表 goods_cat
             if (!empty($postData['other_cat_ids'])) {
+                $other_cat = [];
                 foreach ($postData['other_cat_ids'] as $item) {
-                    $other_cat['goods_id'] = $goodsRet->goods_id;
-                    $other_cat['cat_id'] = $item;
-                    $goodsCat = new GoodsCat();
-                    $goodsCat->fill($other_cat);
-                    $goodsCat->save();
+                    $other_cat[] = [
+                        'goods_id' =>$goodsRet->goods_id,
+                        'cat_id' =>$item
+                    ];
                 }
+                $this->goodsCat->addAll($other_cat);
             }
-
 
             DB::commit();
             return $goodsRet;
@@ -246,6 +219,86 @@ class GoodsRepository
     }
 
     /**
+     * 创建商品sku数据
+     *
+     * @param $sku_list
+     * @param $goodsRet
+     */
+    public function createGoodsSku($sku_list, $goodsRet)
+    {
+        if (empty($sku_list)) {
+            // 如果没有设置规格 则新增一条商品SKU信息
+            $goodsSkuInsert = [
+                'goods_id' => $goodsRet->goods_id,
+                'market_price' => $goodsRet['market_price'] ?? 0,
+                'goods_price' => $goodsRet['goods_price'],
+                'goods_number' => $goodsRet['goods_number'] ?? 0,
+                'warn_number' => $goodsRet['warn_number'] ?? 0,
+                'goods_sn' => $goodsRet['goods_sn'] ?? '',
+                'goods_barcode' => $goodsRet['goods_barcode'] ?? '',
+                'goods_stockcode' => $goodsRet['goods_stockcode'] ?? '',
+                'is_spu' => 1, // 无规格商品 是SPU商品
+                'sku_name' => $goodsRet->goods_name
+            ];
+            $this->goodsSku->store($goodsSkuInsert);
+        } else {
+            // 如果设置了规格 在商品SKU表中新增所有规格的SKU信息
+            foreach ($sku_list as $skuKey=>&$item) {
+
+                $item['goods_id'] = $goodsRet->goods_id;
+                // 商品规格id 和规格名称处理
+                $spec_ids = [];
+                $attr_vids = [];
+                $spec_names = [];
+                foreach ($item['specs'] as $s) {
+                    $spec_ids[] = GoodsSpec::where([['goods_id', $goodsRet->goods_id], ['attr_vid', $s['attr_vid']]])->value('spec_id');
+                    $attr_vids[] = $s['attr_vid'];
+                    $attr_name = Attribute::where('attr_id', $s['attr_id'])->value('attr_name');
+                    $attr_vname = $s['attr_vname'];
+                    $spec_names[] = $attr_name.':'.$attr_vname;
+                }
+                $item['spec_ids'] = implode('|', $spec_ids);
+                $item['spec_vids'] = implode('|', $attr_vids);
+                $item['spec_names'] = implode(' ', $spec_names); // 规格键值对名称 attr_name 多个以空格分隔 格式：网络:4G 内存:32G 颜色:金色
+                if (empty($item['warn_number'])) {
+                    $item['warn_number'] = 0;
+                }
+
+                $item['is_spu'] = 0; // 商品有规格 不是SPU商品
+                $item['sku_name'] = $goodsRet->goods_name.$item['spec_names'];
+                unset($item['specs']);
+            }
+            $this->goodsSku->addAll($sku_list);
+        }
+    }
+
+    /**
+     * 创建商品属性数据
+     *
+     * @param $goods_attrs
+     * @param $goodsRet
+     */
+    public function createGoodsAttrs($goods_attrs, $goodsRet)
+    {
+        if (!empty($goods_attrs)) {
+            foreach ($goods_attrs as $item) {
+                $item['goods_id'] = $goodsRet->goods_id;
+                $attr_info =  Attribute::where('attr_id', $item['attr_id'])->first();
+                $attr_vid = (is_string($item['attr_vid']) || is_int($item['attr_vid'])) ? [$item['attr_vid']] : $item['attr_vid']; // 如果是字符串 则放入数组中
+                if (empty($attr_vid)) {
+                    continue;
+                }
+
+                // TODO attr_vname值获取异常 后面解决
+                $attr_vname = AttrValue::where('attr_id', $item['attr_id'])->whereIn('attr_vid', $attr_vid)->orderBy('attr_vsort', 'asc')->pluck('attr_vname')->toArray();
+                $item['attr_name'] = $attr_info->attr_name;
+                $item['attr_vid'] = serialize($attr_vid);
+                $item['attr_vname'] = serialize($attr_vname);
+                $this->goodsAttr->store($item);
+            }
+        }
+    }
+    /**
      * 商家后台 修改商品
      *
      * @param $postData
@@ -255,12 +308,13 @@ class GoodsRepository
     public function modifyGoods($postData, $goods_id)
     {
         $goodsUpdate = $postData['GoodsModel'];
+        $goodsInfo = $this->model->getById($goods_id);
 
         DB::beginTransaction();
         try {
 
             // 1. 更新商品表
-            $cat_arr = $this->categoryRep->getCatIds($goodsUpdate['cat_id']);
+            $cat_arr = $this->category->getCatIds($goodsUpdate['cat_id']);
             $goodsUpdate['cat_id1'] = $cat_arr['cat_id1'];
             $goodsUpdate['cat_id2'] = $cat_arr['cat_id2'];
             $goodsUpdate['cat_id3'] = $cat_arr['cat_id3'];
@@ -269,12 +323,32 @@ class GoodsRepository
             $goodsUpdate['shop_cat_ids'] = $postData['shop_cat_ids']; // todo
 //            $goodsUpdate['other_cat_ids'] = implode(',',$postData['other_cat_ids']); // todo
 
-            $goodsUpdate['contract_ids'] = serialize($goodsUpdate['contract_ids']);
-            $goodsUpdate['mobile_desc'] = serialize($goodsUpdate['mobile_desc']);
-            $goodsUpdate['other_attrs'] = serialize($postData['other_attrs']);  // 店铺自定义属性
+
+			if (empty($goodsUpdate['contract_ids'])) {
+				$goodsUpdate['contract_ids'] = [];
+			}
+			$goodsUpdate['contract_ids'] = json_encode($goodsUpdate['contract_ids']);
+
+			if (empty($goodsUpdate['mobile_desc'])) {
+				$goodsUpdate['mobile_desc'] = [];
+			}
+			$goodsUpdate['mobile_desc'] = json_encode($goodsUpdate['mobile_desc']);
+
+			// 店铺自定义属性
+			if (empty($goodsUpdate['other_attrs'])) {
+				$goodsUpdate['other_attrs'] = [];
+			}
+			$goodsUpdate['other_attrs'] = json_encode($goodsUpdate['other_attrs']);
+
             $goodsUpdate['last_time'] = time();
             if ($goodsUpdate['goods_freight_type'] == 0) {
                 $goodsUpdate['freight_id'] = 0;
+            }
+
+            if ($goodsUpdate['goods_status'] == 1 && $goodsInfo['goods_audit'] == 2) {
+                // 设置为待平台审核
+                $goodsUpdate['goods_audit'] = 0;
+                $goodsUpdate['goods_reason'] = '';
             }
 
             $goodsRet = $this->update($goods_id, $goodsUpdate);
@@ -313,9 +387,7 @@ class GoodsRepository
                             'is_checked' => 1,
                             'spec_sort' => $gsKey
                         ];
-                        $goodsSpec = new GoodsSpec();
-                        $goodsSpec->fill($goodsSpecInsert);
-                        $goodsSpec->save();
+                        $this->goodsSpec->store($goodsSpecInsert);
                     }
                 }
             }
@@ -358,19 +430,21 @@ class GoodsRepository
 
                     if (count($isExist) > 0) {
                         // 已经存在 更新
+                        $item['sku_name'] = $goodsUpdate['goods_name'].$item['spec_names'];
                         GoodsSku::where($goodsSkuCondition)->update($item);
                     } else {
                         // 不存在 新增
-                        $goodsSku = new GoodsSku();
-                        $goodsSku->fill($item);
-                        $goodsSku->save();
+                        $item['sku_name'] = $goodsUpdate['goods_name'].$item['spec_names'];
+                        $this->goodsSku->store($item);
                     }
                 }
+            } else {
+                GoodsSku::where('goods_id', $goods_id)->where('spec_ids', '=', null)->update(['sku_name' => $goodsUpdate['goods_name']]);
             }
 
             $default_sku_id = GoodsSku::where([['goods_id',$goods_id],['checked',1]])->select(['sku_id','goods_id'])->orderBy('sku_id', 'asc')->value('sku_id');
             // 更新商品表 sku_id 为goods_sku 第一个
-            Goods::where('goods_id', $goods_id)->update(['sku_id'=>$default_sku_id]);
+            Goods::where('goods_id', $goods_id)->update(['sku_id'=>$default_sku_id, 'sku_open' => !empty($postData['sku_list']) ? 1 : 0]);
 
 
             // 3. 插入商品属性表 goods_attr
@@ -411,9 +485,7 @@ class GoodsRepository
                     $item['attr_name'] = $attr_info->attr_name;
                     $item['attr_vid'] = serialize($attr_vid);
                     $item['attr_vname'] = serialize($attr_vname);
-                    $goodsAttr = new GoodsAttr();
-                    $goodsAttr->fill($item);
-                    $goodsAttr->save();
+                    $this->goodsAttr->store($item);
                 }
             }
 
@@ -424,26 +496,26 @@ class GoodsRepository
                 // 删除原有的商品规格别名
                 SpecAlias::where([['goods_id',$goods_id]])->delete();
 
-                foreach ($postData['spec_alias'] as $item) {
+                foreach ($postData['spec_alias'] as &$item) {
                     $item['goods_id'] = $goods_id;
-                    $specAlias = new SpecAlias();
-                    $specAlias->fill($item);
-                    $specAlias->save();
                 }
+                $this->specAlias->addAll($postData['spec_alias']);
             }
 
             // 6. 插入商品扩展分类表 goods_cat
             if (!empty($postData['other_cat_ids'])) {
                 // 删除原有的商品扩展分类
                 GoodsCat::where([['goods_id',$goods_id]])->delete();
-
+                $other_cat = [];
                 foreach ($postData['other_cat_ids'] as $item) {
-                    $other_cat['goods_id'] = $goods_id;
-                    $other_cat['cat_id'] = $item;
-                    $goodsCat = new GoodsCat();
-                    $goodsCat->fill($other_cat);
-                    $goodsCat->save();
+                    $other_cat[] = [
+                        'goods_id' =>$goods_id,
+                        'cat_id' =>$item,
+						'created_at' => format_time(time()),
+						'updated_at' => format_time(time()),
+                    ];
                 }
+                $this->goodsCat->addAll($other_cat);
             }
 
 
@@ -451,8 +523,8 @@ class GoodsRepository
             return $goodsRet;
         }catch (\Exception $e){
             DB::rollback();//事务回滚
-//            echo $e->getMessage();
-//            echo $e->getCode();
+            echo $e->getMessage();
+            echo $e->getCode();
             return false;
         }
     }
@@ -507,18 +579,18 @@ class GoodsRepository
                     // 规格图片 有规格
 
 
-                    $selected_spec_ids = explode('|', $item->spec_ids);
-                    $selected_spec_id = $selected_spec_ids[0];
+//                    $selected_spec_ids = explode('|', $item->spec_ids);
+//                    $selected_spec_id = $selected_spec_ids[0];
 
-                    $sku_images = $this->getGoodsImages($item->goods_id, $selected_spec_id);
-                    $sku_image = '';
-                    if (!$sku_images->isEmpty()) {
-                        $sku_image = $sku_images[0]['path'];
-                    }
-                    $item->sku_image = $sku_image;
+//                    $sku_images = $this->getGoodsImages($item->goods_id, $selected_spec_id);
+//                    $sku_image = '';
+//                    if (!$sku_images->isEmpty()) {
+//                        $sku_image = $sku_images[0]['path'];
+//                    }
+//                    $item->sku_image = $sku_image;
                 } else {
                     // 无规格 获取商品默认主图
-                    $item->sku_image = GoodsImage::where('goods_id',$goods_id)->orderBy('is_default', 'asc')->value('path');
+//                    $item->sku_image = GoodsImage::where('goods_id',$goods_id)->orderBy('is_default', 'asc')->value('path');
                 }
             }
         }
@@ -651,11 +723,12 @@ class GoodsRepository
      */
     public function getGoodsModelInfo($goods_id)
     {
-        $field = ['mobile_price','cost_price','market_price','invoice_type','is_repair','user_discount','stock_mode','top_layout_id','bottom_layout_id','warn_number','goods_number','goods_sort','freight_id','pricing_mode','sales_model','goods_status','goods_id','goods_name','cat_id','cat_id1','cat_id2','cat_id3','shop_id','sku_open','sku_id','goods_subname','goods_price','give_integral','goods_sn','goods_barcode','goods_image',
-            'goods_images', // 不确定是否有用 存储的是图片信息序列化
-            'goods_video','brand_id','pc_desc','mobile_desc','packing_layout_id','service_layout_id','click_count','keywords','goods_info','comment_num','sale_num','collect_num','goods_audit','goods_reason','is_delete','is_virtual','is_best','is_new','is_hot','is_promote','contract_ids','supplier_id','goods_freight_type','goods_freight_fee','goods_stockcode','goods_volume','goods_weight','goods_remark','add_time','last_time','audit_time','edit_items','act_id','goods_moq','lib_goods_id','other_attrs','filter_attr_ids','filter_attr_vids','button_name','button_url','goods_unit','order_act_id','goods_mode','ext_info','remark',
-            'shop_cat_ids'
-            ];
+//        $field = ['mobile_price','cost_price','market_price','invoice_type','is_repair','user_discount','stock_mode','top_layout_id','bottom_layout_id','warn_number','goods_number','goods_sort','freight_id','pricing_mode','sales_model','goods_status','goods_id','goods_name','cat_id','cat_id1','cat_id2','cat_id3','shop_id','sku_open','sku_id','goods_subname','goods_price','give_integral','goods_sn','goods_barcode','goods_image',
+//            'goods_images', // 不确定是否有用 存储的是图片信息序列化
+//            'goods_video','brand_id','pc_desc','mobile_desc','packing_layout_id','service_layout_id','click_count','keywords','goods_info','comment_num','sale_num','collect_num','goods_audit','goods_reason','is_delete','is_virtual','is_best','is_new','is_hot','is_promote','contract_ids','supplier_id','goods_freight_type','goods_freight_fee','goods_stockcode','goods_volume','goods_weight','goods_remark','add_time','last_time','audit_time','edit_items','act_id','goods_moq','lib_goods_id','other_attrs','filter_attr_ids','filter_attr_vids','button_name','button_url','goods_unit','order_act_id','goods_mode','ext_info','remark',
+//            'shop_cat_ids','erp_goods_id','is_cross_border',
+//            ];
+        $field = "*";
         $info = $this->getById($goods_id, $field);
 
         return $info->toArray();
@@ -854,7 +927,7 @@ class GoodsRepository
                 'condition' => $cat_id_arr
             ];
         }
-        $data = $this->goodsHistoryRep->getList($condition);
+        $data = $this->goodsHistory->getList($condition);
         return $data;
     }
 
@@ -895,15 +968,73 @@ class GoodsRepository
         if (!empty($data)) {
             foreach ($data as $item) {
                 $spec_ids_str = $item->spec_ids;
+                $spec_vids_str = $item->spec_vids;
                 $spec_names_str = $item->spec_names;
 
                 if (!empty($spec_ids_str)) {
                     $resData[$spec_ids_str] = [
                         'sku_id' => $item->sku_id,
                         'spec_ids' => $spec_ids_str,
+                        'spec_vids' => $spec_vids_str,
                         'goods_price' => $item->goods_price,
                         'goods_number' => $item->goods_number,
                         'spec_names' => $spec_names_str,
+                    ];
+                } else {
+                    $resData[""] = [
+                        'sku_id' => $item->sku_id,
+                        'spec_ids' => "",
+                        'spec_vids' => "",
+                        'goods_price' => $item->goods_price,
+                        'goods_number' => $item->goods_number,
+                        'spec_names' => null
+                    ];
+                }
+            }
+        }
+        return $resData;
+    }
+
+    public function getCartSkuList($goods_id)
+    {
+        $where[] = ['goods_id',$goods_id];
+        $where[] = ['checked',1];
+        $condition = [
+            'where' => $where,
+            'limit'=>0,
+        ];
+        list($data, $total) = $this->goodsSku->getList($condition);
+        $resData = [];
+        if (!empty($data)) {
+            foreach ($data as $item) {
+                $spec_ids_str = $item->spec_ids;
+                $spec_names_str = $item->spec_names;
+
+                if (!empty($spec_ids_str)) {
+                    $where = [];
+                    $where[] = ['goods_id', $item->goods_id];
+                    if (!empty($spec_ids_str)) {
+                        $where[] = ['spec_id', $item->spec_ids];
+                    } else {
+                        $where[] = ['spec_id', 0];
+                    }
+                    $goods_images = GoodsImage::where($where)->orderBy('is_default', 'desc')->orderBy('sort', 'asc')->get();
+
+                    // 商品图片相册
+                    $goods_images = array_column($goods_images->toArray(), 'path');
+                    $sku_image = current($goods_images);
+
+                    $resData[$spec_ids_str] = [
+                        'sku_id' => $item->sku_id,
+                        'spec_ids' => $spec_ids_str,
+                        'spec_names' => $spec_names_str,
+                        'goods_price' => $item->goods_price,
+                        'cost_price' => $item->cost_price,
+                        'original_price' => '0.00',
+                        'sku_image' => get_image_url($sku_image), // $item->sku_image todo 后期保存到sku表
+                        'cart_step' => 1,
+                        'goods_number' => $item->goods_number,
+                        'sku_image_thumb' => get_image_url($sku_image).'?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220',
                     ];
                 } else {
                     $resData[""] = [
@@ -931,9 +1062,12 @@ class GoodsRepository
         $cat_id = $goods_info->cat_id;
 
         $where[] = ['goods_id',$goods_id];
+        $where[] = ['is_checked',1];
         $condition = [
             'where' => $where,
             'limit'=>0,
+            'sortname' => 'spec_sort',
+            'sortorder'=>'asc'
         ];
         list($data, $total) = $this->goodsSpec->getList($condition, 'attr_id');
         if (empty($data)) {
@@ -945,21 +1079,29 @@ class GoodsRepository
             $attr_name = Attribute::where('attr_id', $attr_id)->value('attr_name');
 
             $attr_values = [];
-            foreach ($item as $av) {
+            foreach ($item as $avKey=>$av) {
                 $spec_image = '';
                 if ($i == 0) {
                     // 规格缩略图
                     $spec_image = GoodsImage::where([['goods_id', $goods_id], ['spec_id', $av->spec_id]])->orderBy('sort', 'asc')->pluck('path')->toArray();
+//                    dd(GoodsImage::where([['goods_id', $goods_id], ['spec_id', $av->spec_id]])->get());
                     $spec_image = !empty($spec_image) ? $spec_image[0] : '';
+                }
+                $selected = false;
+                if ($avKey == 0) {
+                    $selected = true;
                 }
 
                 $attr_values[] = [
+                    'attr_id' => $attr_id,
                     'spec_id' => $av->spec_id,
                     'spec_image' => $spec_image,
                     'attr_vid' => $av->attr_vid,
                     'attr_value' => $av->attr_value,
                     'attr_desc' => $av->attr_desc,
-//                    'is_invalid' => 0
+//                    'is_invalid' => 0,
+                    'selected' => $selected,
+                    'disabled' => false,
                 ];
             }
             $resData[] = [
@@ -968,6 +1110,7 @@ class GoodsRepository
                 'attr_sort' => $i,
                 'attr_name' => $attr_name,
                 'is_default' => $i == 0 ? 1 : 0,
+                'spec_show_type' => 1, // 规格展示方式 默认1 1-文字 2-图片 3-颜色
                 'attr_values' => $attr_values
             ];
             $i++;
@@ -1054,6 +1197,24 @@ class GoodsRepository
      */
     public function getShopQuestions($shop_id, $limit = 5)
     {
+//        cache_data(CACHE_KEY_SHOP_QUESTIONS, function ($v) use ($shop_id, $limit) {
+//            $where = [];
+//            $where[] = ['shop_id', $shop_id];
+//            // 列表
+//            $condition = [
+//                'where' => $where,
+//                'limit' => $limit,
+//                'sortname' => 'sort',
+//                'sortorder' => 'asc',
+//                'field' => ['questions_id','shop_id','question','answer','sort']
+//            ];
+//            list($list, $total) = $this->shopQuestions->getList($condition);
+//            return $list;
+//        }, []);
+        $cache_id = CACHE_KEY_SHOP_QUESTIONS[0].'_'.$shop_id;
+        if ($list = cache()->get($cache_id)) {
+            return $list;
+        }
         $where = [];
         $where[] = ['shop_id', $shop_id];
         // 列表
@@ -1065,7 +1226,9 @@ class GoodsRepository
             'field' => ['questions_id','shop_id','question','answer','sort']
         ];
         list($list, $total) = $this->shopQuestions->getList($condition);
-        return $list->toArray();
+        cache()->put($cache_id, $list, CACHE_KEY_SHOP_QUESTIONS[1]);
+
+        return $list;
     }
 
     /**
@@ -1076,7 +1239,6 @@ class GoodsRepository
      */
     public function generateGoodsQrCode($good_id)
     {
-        // todo 如何获取手机端商品详情url
         if (!is_mobile()) {
             $url = route('pc_show_goods', ['goods_id'=>$good_id]);
         } else {
@@ -1134,14 +1296,16 @@ class GoodsRepository
         }
         $brand_list = BrandCategory::where($brand_where)->get()->toArray();
 
+
+        $brand_items = [];
+        $selected_brand_items = [];
         if (!empty($brand_list)) {
-            $brand_items = [];
-            $selected_brand_items = [];
+
             foreach ($brand_list as $v) {
                 $brand_info = Brand::where('brand_id', $v['brand_id'])->first();
                 $selected_brand_ids = !empty($brand_id) && $brand_id != '{0}' ? explode('_', $brand_id) : [];
                 if (in_array($v['brand_id'], $selected_brand_ids)) {
-                    $selected_brand_items[] = [
+                    $selected_brand_items[$v['brand_id']] = [
                         'name' => $brand_info->brand_name,
                         'value' => $v['brand_id'],
                         'letter' => $brand_info->brand_letter,
@@ -1150,7 +1314,7 @@ class GoodsRepository
                         'selected' => 1
                     ];
                 } else {
-                    $brand_items[] = [
+                    $brand_items[$v['brand_id']] = [
                         'name' => $brand_info->brand_name,
                         'value' => $v['brand_id'],
                         'letter' => $brand_info->brand_letter,
@@ -1189,7 +1353,9 @@ class GoodsRepository
         $price_min = (isset($price_min) && !empty($price_min)) ? $price_min : 0;
         $price_max = (isset($price_max) && !empty($price_max)) ? $price_max : 0;
         $price_range = null;
-        if (!empty($goodsPriceData) && $goodsPriceData['price_max'] > 0) {
+        if ($price_min && $price_max) {
+            $price_range = price_range($price_min, $price_max);
+        } elseif (!empty($goodsPriceData) && $goodsPriceData['price_max'] > 0) {
             $price_range = price_range($goodsPriceData['price_min'], $goodsPriceData['price_max'], $goodsPriceData['price_str']);
         }
 
@@ -1409,6 +1575,136 @@ class GoodsRepository
         return [$filter, $filter_condition];
     }
 
+	/**
+	 * 获取筛选条件数据
+	 * 店铺商品
+	 *
+	 * @param $params
+	 * @param $source 页面来源 默认0 0-店铺商品列表 1-店铺商品搜索
+	 * @param $goodsPriceData
+	 * @return array
+	 */
+	public function shopGoodsFilterData($params, $source = 0)
+	{
+		// 初始化请求参数
+		/*
+		 *  $go = $request->get('go',1);//当前页
+			$sort = $request->get('sort',4); // 排序方式 综合/销量/新品/评论/价格/人气
+			$order = $request->get('order','ASC'); // 排序类型 ASC-顺序 DESC-倒序
+			$is_stock = $request->get('is_stock',1);
+			$is_free = $request->get('is_free',0); // 包邮
+			$is_cash = $request->get('is_cash',0); // 是否货到付款
+			$keyword = $request->get('keyword',''); // 关键词
+		    $region = $request->get('region',0);
+		*/
+
+		$params['source'] = $source; // 页面来源 默认0 0-店铺商品列表 1-店铺商品搜索
+
+		extract($params);
+		$cat_id = isset($cat_id) ? $cat_id : 0;
+		$region_code = !empty($region) ? str_replace('_', ',', $region) : null;
+
+		// 排序
+		$sorts = [];
+		$sort = isset($sort) ? $sort : 0;
+		$order = isset($order) ? $order : 4;
+		foreach (get_shop_goods_sort_array() as $v) {
+			if ($sort == $v['value'] && $order == 'ASC') {
+				$v['order'] = $order;
+				$v['selected'] = 1;
+				$v['url'] = build_shop_goods_uri($params, ['sort'=>$v['value'],'order'=>'DESC']);
+
+				// 拼接查询条件
+
+			} elseif ($sort == $v['value'] && $order == 'DESC') {
+				$v['order'] = $order;
+				$v['selected'] = 1;
+				$v['url'] = build_shop_goods_uri($params, ['sort'=>$v['value'],'order'=>'ASC']);
+
+			} else {
+				$v['selected'] = 0;
+				$v['url'] = build_shop_goods_uri($params, ['sort'=>$v['value'],'order'=>$v['order']]);
+			}
+
+			// 综合排序
+			if ($sort == 0 && $v['value'] == 0) {
+				$v['order'] = 0;
+				$v['selected'] = 1;
+			}
+
+			$sorts[] = $v;
+		}
+
+		// 其他筛选
+		$is_free = isset($is_free) && $is_free == 1 ? 1 : 0;
+		$is_cash = isset($is_cash) && $is_cash == 1 ? 1 : 0;
+		$is_stock = isset($is_stock) && $is_stock == 1 ? 1 : 0;
+		$others = [
+			[
+				'name' => '包邮',
+				'value' => $is_free,
+				'selected' => $is_free,
+				'url' => build_shop_goods_uri($params,['is_free'=>!$is_free])
+			],
+			[
+				'name' => '支持货到付款',
+				'value' => $is_cash,
+				'selected' => $is_cash,
+				'url' => build_shop_goods_uri($params,['is_cash'=>!$is_cash])
+			],
+			[
+				'name' => '仅显示有货',
+				'value' => $is_stock,
+				'selected' => $is_stock,
+				'url' => build_shop_goods_uri($params,['is_stock'=>!$is_stock])
+			]
+		];
+
+		// 配送至
+		$region = [
+			'name' => '配送至',
+			'value' => $region_code,
+			'url' => build_shop_goods_uri($params,['region'=>'{0}', 'go' => '{0}'])
+		];
+
+		// 商品列表显示模式
+		$style = !isset($style) ? 'grid' : $style;
+		$styles = [
+			[
+				'name' => '大图模式',
+				'value' => 'grid',
+				'url' => build_shop_goods_uri($params, ['style'=>'grid']),
+				'selected' => isset($style) && $style == 'grid' ? 1 : 0,
+			],
+			[
+				'name' => '列表模式',
+				'value' => 'list',
+				'url' => build_shop_goods_uri($params, ['style'=>'list']),
+				'selected' => isset($style) && $style == 'list' ? 1 : 0,
+			],
+		];
+
+		// 分页
+		$page = [
+			'name' => '分页',
+			'param' => 'go',
+			'value' => $go ?? '1',
+			'url' => build_goods_uri($params,['go'=>'{0}']),
+			'items' => null // todo
+		];
+
+		$filter = [
+			'sorts' => $sorts,
+			'others' => $others,
+			'styles' => $styles,
+			'region' => $region,
+			'page' => $page, // 顶部简洁分页（只有上一页/下一页）
+			'url' => '/list-'.$cat_id.'.html'
+		];
+
+		return $filter;
+	}
+
     /**
      * 拼接商品列表筛选条件 查询条件
      *
@@ -1445,7 +1741,7 @@ class GoodsRepository
             $where[] = ['goods_price', '<', $price_max];
         }
         if (!empty($price_min) && $price_min != '{0}' && !empty($price_max) && $price_max != '{0}') {
-            $whereBetween[] = ['goods_price', [$price_min, $price_max]];
+            $whereBetween['goods_price'] = [$price_min, $price_max];
         }
 
         // 显示有货 库存大于0
@@ -1482,7 +1778,7 @@ class GoodsRepository
 
         // 关键词搜索 keyword
         if (isset($keyword) && $keyword != '' && $keyword != '{0}') {
-            $where[] = ['goods_name','like', "{$keyword}"];
+            $where[] = ['goods_name','like', "%{$keyword}%"];
         }
 
         // 配送至 todo
@@ -1493,6 +1789,88 @@ class GoodsRepository
 
         return [$where, $whereBetween, $whereIn];
     }
+
+	/**
+	 * 拼接店铺内商品列表筛选条件 查询条件
+	 *
+	 * @param $params
+	 * @return array
+	 */
+	public function splice_shop_goods_list_condition($params)
+	{
+		extract($params);
+		/*$go = $request->get('go',1);//当前页
+	   $sort = $request->get('sort',4); // 排序方式 综合/销量/新品/评论/价格/人气
+	   $is_stock = $request->get('is_stock',1);
+	   $brand_id = $request->get('brand_id',0);
+	   $is_free = $request->get('is_free',0); // 包邮
+	   $cat_id = $request->get('cat_id',0); // 店铺内商品分类id
+	   $is_cash = $request->get('is_cash',0); // 是否货到付款
+	   $order = $request->get('order','ASC'); // 排序类型 ASC-顺序 DESC-倒序*/
+		$where = [];
+		$whereBetween = [];
+		$whereIn = [];
+
+		$where[] = ['goods_status',1]; // 商品状态 已发布
+		$where[] = ['goods_audit',1]; // 审核通过
+
+		// 价格
+		if (!empty($price_min) && $price_min != '{0}' && empty($price_max)) {
+			$where[] = ['goods_price', '>', $price_min];
+		}
+		if (empty($price_min) && !empty($price_max) && $price_max != '{0}') {
+			$where[] = ['goods_price', '<', $price_max];
+		}
+		if (!empty($price_min) && $price_min != '{0}' && !empty($price_max) && $price_max != '{0}') {
+			$whereBetween['goods_price'] = [$price_min, $price_max];
+		}
+
+		// 显示有货 库存大于0
+		if (isset($is_stock) && $is_stock != '{0}') {
+			$where[] = ['goods_number', '>', 0];
+		}
+		// 品牌
+		if (!empty($brand_id) && $brand_id != '{0}') {
+			$whereIn['brand_id'] = is_string(explode('_', $brand_id)) ? [$brand_id] : explode('_', $brand_id);
+		}
+
+		// 属性
+
+		// 包邮
+		if (isset($is_free) && $is_free != '{0}') {
+			$where[] = ['goods_freight_fee', 0];
+		}
+
+		// 店铺内商品分类id
+		$whereRaw = [];
+		if (isset($cat_id) && $cat_id != '{0}') {
+			$whereRaw = [
+				'field' => 'instr(`shop_cat_ids`, ?)',
+				'condition' => [$cat_id]
+			];
+//			$cat_id_arr = get_cat_grandson($cat_id); // 获取该分类下的所有分类id
+//			$whereIn['cat_id'] = $cat_id_arr;
+		}
+
+		// 货到付款 todo
+		if (isset($is_cash) && $is_cash != '{0}') {
+//            $where[] = ['is_cash', $is_cash];
+		}
+
+
+		// 关键词搜索 keyword
+		if (isset($keyword) && $keyword != '' && $keyword != '{0}') {
+			$where[] = ['goods_name','like', "%{$keyword}%"];
+		}
+
+		// 配送至 todo
+		if (isset($region) && $region != '{0}') {
+//            $region_code = str_replace('_', ',', $region['region']);
+
+		}
+
+		return [$where, $whereBetween, $whereIn, $whereRaw];
+	}
 
     /**
      * 获取商品收藏量
@@ -1525,38 +1903,46 @@ class GoodsRepository
             $goods_info->sku_id = $sku_id; // 重新赋值 sku_id
             $sku_info = GoodsSku::where('sku_id', $sku_id)->first();
             // 默认sku
-            $spec_ids = !empty($sku_info->spec_ids) ? explode('|', $sku_info->spec_ids) : null;
+//            $spec_ids = !empty($sku_info->spec_ids) ? explode('|', $sku_info->spec_ids) : null;
 
-            $where = [];
-            $where[] = ['goods_id', $goods_info->goods_id];
-            if (!empty($spec_ids)) {
-                $where[] = ['spec_id', $sku_info->spec_ids];
-            } else {
-                $where[] = ['spec_id', 0];
-            }
-            $goods_images = GoodsImage::where($where)->orderBy('is_default', 'desc')->orderBy('sort', 'asc')->get();
+//            $where = [];
+//            $where[] = ['goods_id', $goods_info->goods_id];
+//            if (!empty($spec_ids)) {
+//                $where[] = ['spec_id', $sku_info->spec_ids];
+//            } else {
+//                $where[] = ['spec_id', 0];
+//            }
+//            $goods_images = GoodsImage::where($where)->orderBy('is_default', 'desc')->orderBy('sort', 'asc')->get();
 
             // 商品图片相册
-            $goods_images = array_column($goods_images->toArray(), 'path');
-            $goods_images_list = [];
-            foreach ($goods_images as $image) {
-                $goods_images_list[] = [
-                    get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
-                    get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
-                    get_image_url($image)
-                ];
-            }
-            $sku_image = $goods_images[0];
-            $sku_images = $goods_images_list;
+//            $sku_images = [];
+//            foreach ($sku_info->sku_images as $image) {
+//                $sku_images[] = [
+//                    get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
+//                    get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
+//                    get_image_url($image)
+//                ];
+//            }
+//            $goods_images = array_column($goods_images->toArray(), 'path');
+//            $goods_images_list = [];
+//            foreach ($goods_images as $image) {
+//                $goods_images_list[] = [
+//                    get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
+//                    get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
+//                    get_image_url($image)
+//                ];
+//            }
+//            $sku_image = $goods_images[0];
+//            $sku_images = $goods_images_list;
 
             $spec_attr_value = '';
-            $sku_name = $goods_info->goods_name; // 商品SKU名称
-            if (!empty($sku_info->spec_vids)) {
-                $spec_vids = explode('|', $sku_info->spec_vids);
-                $spec_attr_value = AttrValue::whereIn('attr_vid', $spec_vids)->pluck('attr_vname')->toArray();
-                $spec_attr_value = implode(' ', $spec_attr_value);
-                $sku_name = $sku_name.' '.$spec_attr_value;
-            }
+//            $sku_name = $goods_info->goods_name; // 商品SKU名称
+//            if (!empty($sku_info->spec_vids)) {
+//                $spec_vids = explode('|', $sku_info->spec_vids);
+//                $spec_attr_value = AttrValue::whereIn('attr_vid', $spec_vids)->pluck('attr_vname')->toArray();
+//                $spec_attr_value = implode(' ', $spec_attr_value);
+//                $sku_name = $sku_name.' '.$spec_attr_value;
+//            }
 
             // 获取规格
             $goods_info->spec_info = str_replace('|',' ', $sku_info->spec_names);
@@ -1568,8 +1954,8 @@ class GoodsRepository
             $goods_info->sku_sn = $sku_info->sku_sn;
             $goods_info->goods_price = $sku_info->goods_price;
             $goods_info->market_price = $sku_info->market_price;
-            $goods_info->sku_image = $sku_image;
-            $goods_info->sku_name = $sku_name;
+            $goods_info->sku_image = $sku_info->sku_image;
+            $goods_info->sku_name = $sku_info->sku_name;
         }
 
         // 获取店铺名称
@@ -1599,4 +1985,66 @@ class GoodsRepository
 
         return $goods_info;
     }
+
+    public function uploadSetSkuMemberImport($filename)
+    {
+        $data = Excel::toArray(new UploadSetSkuMemberImport(), $filename);
+        $data = array_first($data);
+        if (count($data) <= 1) { // 除去第一行，判断是否有大于1条数据
+            return 0;
+        }
+        $result = [];
+        foreach ($data as $k=>$row) {
+
+            if ($k == 0 || empty($row[1])) continue; // 跳出第一个循环
+
+            $result[] = [
+                'goods_name' => $row[1],
+                'goods_barcode' => $row[2],
+                'member_type' => $row[3],
+                'level_1' => $row[4],
+                'level_2' => $row[5],
+                'level_3' => $row[6],
+                'level_4' => $row[7],
+            ];
+        }
+
+        // 判断文件优惠类型是否一致
+        $fileCutTypeSame = true;
+        if (!$fileCutTypeSame) {
+            return arr_result(-1, null, '文件优惠类型不一致');
+        }
+
+        // 验证通过 TODO 开始批量导入商品
+        $importRet = true;
+        if (!$importRet) {
+            return arr_result(-1, null, '数据保存失败');
+        }
+
+        return arr_result(0, null, '成功');
+    }
+
+	/**
+	 * 获取商品详情二维码
+	 *
+	 * @param $goods_id
+	 * @return string
+	 * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+	 * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+	 * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+	 * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+	 */
+	public function getGoodsQrCode($goods_id)
+	{
+		$sceneValue = Qcode::getSceneValue($goods_id); // 场景值 具体的url 如商品详情页url
+		$wechatSDKService = new WechatSDKService();
+		$response = $wechatSDKService->getQRCode($sceneValue, 3, 6 * 24 * 3600); // 临时二维码 6天 最长30天
+		$res = '';
+		if (!empty($response['ticket'])) {
+			$res = $wechatSDKService->getQRUrl($response['ticket']);
+		}
+
+		return $res;
+	}
+
 }

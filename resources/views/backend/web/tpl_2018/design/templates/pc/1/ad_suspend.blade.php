@@ -54,21 +54,21 @@
     @endif
 
     {{--悬浮广告倒计时--}}
-    @if(!empty($data['99-1']))
-        @foreach($data['99-1'] as $v)
-            @if($v['timer'] > 0)
-                <script type="text/javascript">
-                    var timer = '{{ $v['timer'] }}';
-                    timer = parseInt(timer);
-                    setTimeout(function(){
-                        sessionStorage.fixed_ad_layer_{{ time() }} = true;
-                        $('.fixed-suspend-layer').hide();
-                    },timer*1000);
+    {{--@if(!empty($data['99-1']))--}}
+        {{--@foreach($data['99-1'] as $v)--}}
+            {{--@if($v['timer'] > 0)--}}
+                {{--<script type="text/javascript">--}}
+                    {{--var timer = '{{ $v['timer'] }}';--}}
+                    {{--timer = parseInt(timer);--}}
+                    {{--setTimeout(function(){--}}
+                        {{--sessionStorage.fixed_ad_layer_{{ time() }} = true;--}}
+                        {{--$('.fixed-suspend-layer').hide();--}}
+                    {{--},timer*1000);--}}
 
-                </script>
-            @endif
-        @endforeach
-    @endif
+                {{--</script>--}}
+            {{--@endif--}}
+        {{--@endforeach--}}
+    {{--@endif--}}
 @endif
 
 

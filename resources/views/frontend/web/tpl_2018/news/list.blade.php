@@ -1,5 +1,10 @@
 @extends('layouts.news_layout')
 
+@section('header_css')
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/template.css" rel="stylesheet">
+    <link href="/css/news.css" rel="stylesheet">
+@stop
 
 @section('content')
 
@@ -67,35 +72,71 @@
     </div>
 
     <script type="text/javascript">
-        var tablelist;
-        $().ready(function() {
-            var data =  $("#articleSearchForm").serializeJson();
-            data.go = '{0}';
-            var params = '';
-            $.each(data, function(i, v) {
-                if(v != ''){
-                    params = params + '&' + i + '=' + v;
-                }
-            });
-            var page_url = location.href;
-
-            page_url = page_url.split('?')[0];
-            if (page_url.indexOf("?") == -1) {
-                params = params.replace(/&/, "?");
-            }
-            page_url = page_url + params;
-
-            tablelist = $("#table_list").tablelist({
-                // 支持保存查询条件
-                params: $("#articleSearchForm").serializeJson(),
-                page_mode: 1,
-                go: function(page){
-                    page_url = page_url.replace('{0}', page);
-                    $.go(page_url);
-                }
-
-            });
-        });
+       //
     </script>
 
-@endsection
+@stop
+
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/news.js"></script>
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $('#articleSearchForm').find('.search-btn').click(function(){
+            if($(this).hasClass('disabled')){
+                return false;
+            }
+            if($.trim($('#articleSearchForm').find("input[name='keyword']").val())==''){
+                $.msg("请输入关键字");
+                $('#articleSearchForm').find("input[name='keyword']").focus();
+                return false;
+            }
+            $('#articleSearchForm').submit();
+        });
+        //
+        $().ready(function(){
+            //图片缓载
+            $.imgloading.loading();
+        });
+        //
+    </script>
+@stop

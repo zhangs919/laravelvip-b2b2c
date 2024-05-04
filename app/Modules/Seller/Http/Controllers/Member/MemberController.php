@@ -8,7 +8,6 @@ use App\Models\UserRank;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\MemberRepository;
 use App\Repositories\UserAddressRepository;
-use App\User;
 use Illuminate\Http\Request;
 
 class MemberController extends Seller
@@ -35,13 +34,16 @@ class MemberController extends Seller
 
     protected $userAddress;
 
-    public function __construct()
+    public function __construct(
+        MemberRepository $member
+        ,UserAddressRepository $userAddress
+    )
     {
         parent::__construct();
 
-        $this->member = new MemberRepository();
+        $this->member = $member;
 
-        $this->userAddress = new UserAddressRepository();
+        $this->userAddress = $userAddress;
 
         $this->set_menu_select('member', 'member-list');
 
@@ -362,5 +364,42 @@ class MemberController extends Seller
             return result(0, $render);
         }
         return view('member.member.user_address', $compact);
+    }
+
+    public function addToErp()
+    {
+
+        return result(0, null, '添加到erp成功');
+    }
+
+    /**
+     * 编辑会员备注信息
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Throwable
+     */
+    public function editDesc(Request $request)
+    {
+        $id = $request->get('id');
+        $uuid = make_uuid();
+
+        $info = $this->member->getByField('user_id', $id);
+        view()->share('info', $info);
+        $render = view('member.member.edit_desc', compact('uuid', 'info'))->render();
+
+        if ($request->method() == 'POST') {
+            $post = $request->post();
+            $update = [
+                'member_remark' => $post['user_remark']
+            ];
+            $ret = Member::where('user_id', $post['user_id'])->update($update);
+            if ($ret === false) {
+                return result(-1, '', '会员备注设置失败！');
+            }
+            return result(0, '', '会员备注设置成功！');
+        }
+
+        return result(0, $render);
     }
 }

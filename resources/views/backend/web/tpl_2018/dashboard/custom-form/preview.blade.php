@@ -81,6 +81,11 @@
         </div>
     </div>
 </div> -->
+<script type="text/javascript">
+	window._AMapSecurityConfig = {
+		securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+	};
+</script>
 <script src="//webapi.amap.com/maps?v=1.4.9&key={{ sysconf('amap_js_key') }}"></script>
 <!-- 日期选择器 -->
 <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190121"></script>

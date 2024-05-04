@@ -19,37 +19,15 @@
                 <ul>
 
 
-                    <li class="finish finish-01">
-                        <i>1</i>
-                        <span>
-						<a href="/cart.html">我的购物车</a>
+                    @foreach($steps as $step)
+                        <li class="finish @if($step['selected']){{ 'finish-0'.$step['step'] }}@endif">
+                            <i>{{ $step['step'] }}</i>
+                            <span>
+						<a href="{{ $step['url'] ?? 'javascript:;' }}">{{ $step['name'] }}</a>
 					</span>
-                        <b></b>
-                    </li>
-
-                    <li class="finish finish-02">
-                        <i>2</i>
-                        <span>
-						<a href="/checkout.html">确认订单</a>
-					</span>
-                        <b></b>
-                    </li>
-
-                    <li class="finish ">
-                        <i>3</i>
-                        <span>
-						<a href="">付款</a>
-					</span>
-                        <b></b>
-                    </li>
-
-                    <li class="finish ">
-                        <i>4</i>
-                        <span>
-						<a href="">支付成功</a>
-					</span>
-                        <b></b>
-                    </li>
+                            <b></b>
+                        </li>
+                    @endforeach
 
 
                 </ul>
@@ -58,7 +36,95 @@
     </div>
 
     <div class="content-bg">
-        <div class="content-main w990"><div class="payment-fail">
+        <div class="content-main w990">
+
+            @if($order['is_pay']){{--支付成功--}}
+                <div class="payment-success">
+                    <div class="payment-success-con">
+                        <i></i>
+                        <div class="payment-success-msg">
+                            <h3 class="color">
+                                感谢您，购买成功！
+                            </h3>
+                            <p>
+                                共计支付
+                                <a href="" class="color">{{ $order['order_amount_format'] }}</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="payment-success-order">
+                        <p>购买商品已在处理中，我们将尽快为您发货！</p>
+                        <p class="warn">
+                            <span class="color">重要提醒：</span>
+                            该商城不会以订单异常、系统升级等为由，要求您点击任何链接进行退款、重新付款、额外付款操作。请认准该网站唯一官方电话 400-078-5269 。
+                        </p>
+                        <div class="success-order-list">
+                            <ul>
+                                @foreach($order_list as $item)
+                                    <li class="first">
+                                        <span class="transaction">
+                                            购买单号：
+                                            <font class="color">
+                                                <a href="/user/order/info.html?id={{ $item['order_id'] }}" target="_blank" title="点击查看订单" class="color">{{ $item['order_sn'] }}</a>
+                                            </font>
+                                        </span>
+                                        <span class="payable">
+                                            {{ $item['pay_name'] }}：
+                                            <font class="color">￥{{ $item['order_amount_format'] }}</font>
+                                        </span>
+                                        <span class="delivery">
+                                            由
+                                            <font>
+                                                <a href="/shop/{{ $item['shop_id'] }}.html" target="_blank" title="点击进入店铺" class="color">{{ $item['shop_name'] }}</a>
+                                            </font>
+                                            发货
+                                        </span>
+                                        <span class="pay-btn">
+                                            <a href="/user/order/info.html?id={{ $item['order_id'] }}" class="color">查看详情</a>
+                                        </span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="go-shop">
+                            <a href="/" class="go-shop-btn bg-color">继续购物</a>
+                        </div>
+                    </div>
+                </div>
+
+                @if($order['cash_back_amount'] > 0){{--todo 订单返现--}}
+                    <!-- 订单返现信息弹框 -->
+                    <div class="full-reduction" style="display: block">
+                        <h3>订单返现</h3>
+                        <div class="content-info">
+                            <i class="iconfont close">&#xe6f8;</i>
+                            <div style="margin-top: -20px;">
+                                <p class="warning">
+                        <span>
+                            恭喜您获得
+                        </span>
+                                </p>
+                                <div class="prompt">
+                                    <p class="order-info">
+                                        <span>20191220021254776970</span>
+                                        <span>吃子之心零食店，</span>
+                                        <span>
+                                返现：
+                                <em>27.8</em>
+                                元
+                            </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        //
+                    </script>
+                @endif
+
+            @else{{--支付失败--}}
+            <div class="payment-fail">
                 <div class="payment-fail-con">
                     <i></i>
                     <div class="payment-fail-msg">
@@ -77,54 +143,32 @@
                     <p>以下交易单尚未支付成功，请您尽快完成支付！</p>
                     <div class="fail-order-list">
                         <ul>
+                            @foreach($order_list as $item)
                             <li class="first">
 					<span class="transaction">
 						交易单号：
 						<font class="color">
-							<a href="/user/order/info.html?id=369" target="_blank" title="点击查看订单" class="color">20181003093704768950</a>
+							<a href="/user/order/info.html?id={{ $item['order_id'] }}" target="_blank" title="点击查看订单" class="color">{{ $item['order_sn'] }}</a>
 						</font>
 					</span>
                                 <span class="payable">
 						应付金额：
-						<font class="color">￥1200.00</font>
+						<font class="color">{{ $item['order_amount_format'] }}</font>
 					</span>
 
                                 <span class="delivery">
 						由
 						<font>
-							<a href="/shop/14.html" target="_blank" title="点击进入店铺" class="color">安化电商技术服务旗舰店</a>
+							<a href="/shop/{{ $item['shop_id'] }}.html" target="_blank" title="点击进入店铺" class="color">{{ $item['shop_name'] }}</a>
 						</font>
 						发货
 					</span>
 
                                 <span class="pay-btn hide" style="display: none">
-						<a href="/checkout/pay.html?id=369" class="submit-btn">点击付款</a>
+						<a href="/checkout/pay.html?id={{ $item['order_id'] }}" class="submit-btn">点击付款</a>
 					</span>
                             </li>
-                            <li class="first">
-					<span class="transaction">
-						交易单号：
-						<font class="color">
-							<a href="/user/order/info.html?id=368" target="_blank" title="点击查看订单" class="color">20181003085428239440</a>
-						</font>
-					</span>
-                                <span class="payable">
-						应付金额：
-						<font class="color">￥680.00</font>
-					</span>
-
-                                <span class="delivery">
-						由
-						<font>
-							<a href="/shop/40.html" target="_blank" title="点击进入店铺" class="color">安化县亦神芙蓉茶业有限公司</a>
-						</font>
-						发货
-					</span>
-
-                                <span class="pay-btn hide" style="display: none">
-						<a href="/checkout/pay.html?id=368" class="submit-btn">点击付款</a>
-					</span>
-                            </li>
+                            @endforeach
 
                         </ul>
                         <!-- 添加内容start -->
@@ -133,12 +177,12 @@
                                 <p class="first">
 						<span>
 							应付款金额：
-							<span class="SZY-ORDER-AMOUNT">￥1880</span>
+							<span class="SZY-ORDER-AMOUNT">{{ $order['order_amount_format'] }}</span>
 						</span>
                                 </p>
                             </div>
                             <div class="fail-order-summary-btn">
-                                <a href="/checkout/pay.html?id=369,368" class="submit-btn bg-color">点击付款</a>
+                                <a href="/checkout/pay.html?id={{ implode(',',$order['order_id']) }}" class="submit-btn bg-color">点击付款</a>
                             </div>
                         </div>
                         <!-- 添加内容end -->
@@ -159,11 +203,15 @@
                         </li>
                         <li>
                             <h3>网上银行已扣款，交易单仍显示“未付款”</h3>
-                            <p>可能由于银行的数据没有即时传输，请不要担心，请稍后刷新页面查看。如较长时间仍显示未付款，可联系客服（023xxxxxxx）为您解决。</p>
+                            <p>可能由于银行的数据没有即时传输，请不要担心，请稍后刷新页面查看。如较长时间仍显示未付款，可联系客服（{{ sysconf('mall_phone') }}）为您解决。</p>
                         </li>
                     </ul>
                 </div>
             </div>
+            @endif
+
+
+
         </div>
     </div>
 
@@ -179,8 +227,8 @@
             <p class="prompt">完成付款后请根据您的情况点击下面的按钮</p>
             <p class="btns">
 
-                <a href="/checkout/result.html?key=" class="pay_result">已完成付款</a>
-                <a href="/checkout/result.html?key=" class="m-l-10 pay_result">付款遇到问题</a>
+                <a href="/checkout/result.html?key={{ $key }}" class="pay_result">已完成付款</a>
+                <a href="/checkout/result.html?key={{ $key }}" class="m-l-10 pay_result">付款遇到问题</a>
 
             </p>
             <!-- <p class="back">
@@ -189,45 +237,55 @@
         </div>
     </div>
 
-    <!-- 订单返现信息弹框 -->
-    <!-- 	<div class="order-cashback">
-            <div class="content-info">
-                <i class="iconfont close">&#xe6f8;</i>
-                <p class="warning">
-                    <i class="warning-img"></i>
-                    <span>恭喜您获得<em>10.00</em>元返现</span>
-                </p>
-                <div class="prompt">
-                    <p class="title">备注</p>
-                    <p class="order-info">
-                        <span>20180806064306358800</span>，
-                        注意：店铺名称限制显示字数 16 个
-                        <span>美廉美超市</span>，
-                        <span>返现：<em>2.00</em>元</span>
-                    </p>
-                    <p class="order-info">
-                        <span>20180806064306358800</span>，
-                        <span>美廉美超市美廉美超市美廉美超市</span>，
-                        <span>返现：<em>10.00</em>元</span>
-                    </p>
-                </div>
-            </div>
-        </div> -->
 
 @stop
 
 
-@section('outside_body_script')
+{{--底部js--}}
+@section('footer_js')
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
-    <script src="/js/checkout.js?v=20180919"></script>
-    <script src="/js/common.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/szy.cart.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/jquery.region.js?v=20180919"></script>
     <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180919"></script>
     <!-- 鼠标滚轮 -->
-    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js?v=20180919"></script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/js/checkout.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script>
+        $().ready(function () {
+        });
+        //
+        $(document).ready(function () {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function () {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function () {
+            $('.site_to_yikf').click(function () {
+                $(this).parent('form').submit();
+            })
+        });
+        //
+    </script>
 @stop

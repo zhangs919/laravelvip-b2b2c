@@ -8,7 +8,7 @@
                 @foreach($action_span as $vo)
 
                     <span class="action-span">
-                        <a @if(!empty($vo['id']))id="{{ $vo['id'] }}" href="javascript:void(0);" class="btn btn-warning"@else href="{{ $vo['url'] }}" class="btn btn-warning click-loading"@endif>
+                        <a @if(!empty($vo['id']))id="{{ $vo['id'] }}" href="{{ $vo['url'] ?? 'javascript:void(0);' }}" class="btn btn-warning"@else href="{{ $vo['url'] }}" class="btn btn-warning click-loading"@endif>
                             <i class="fa {{ $vo['icon'] }}"></i>
                             {{ $vo['text'] }}
                         </a>

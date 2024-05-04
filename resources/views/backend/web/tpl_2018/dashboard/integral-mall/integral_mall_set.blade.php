@@ -15,7 +15,7 @@
 @section('content')
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group=integral_mall_set" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="integral_mall_set">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -358,8 +358,7 @@
             </div>
 
             <div class="bottom-btn p-b-30">
-                {{--                <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">--}}
-                <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}">
+                <input type="hidden" name="back_url" value="{{ request()->fullUrl() }}">
                 <input type="button" id="btn_submit" value="确认提交" class="btn btn-primary btn-lg" />
             </div>
     	</div>

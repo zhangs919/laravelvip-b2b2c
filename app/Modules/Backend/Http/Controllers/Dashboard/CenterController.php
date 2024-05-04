@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Dashboard;
+namespace App\Modules\Backend\Http\Controllers\Dashboard;
 
 
 use App\Modules\Base\Http\Controllers\Backend;

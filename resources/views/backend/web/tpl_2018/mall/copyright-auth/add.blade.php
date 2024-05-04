@@ -14,7 +14,7 @@
 @section('content')
 
     <form id="CopyrightAuthModel" class="form-horizontal" name="CopyrightAuthModel" action="/mall/copyright-auth/add" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 资质ID  -->
             <input type="hidden" id="copyrightauthmodel-auth_id" class="form-control" name="CopyrightAuthModel[auth_id]" value="{{ $info->auth_id ?? ''}}">
@@ -218,7 +218,6 @@
             var value = $(target).val();
 
             $(this).imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: size,
                 values: value.split("|"),

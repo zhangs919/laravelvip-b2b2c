@@ -59,27 +59,3 @@
     </tr>
     </tfoot>
 </table>
-
-<script type='text/javascript'>
-    $(document).ready(function() {
-        $(".attr_sort").editable({
-            type: "text",
-            url: "/goods/spec/edit-attr-info",
-            pk: 1,
-            ajaxOptions: {
-                type: "post"
-            },
-            params: function(params) {
-                params.id = $(this).data("id");
-                params.title = "attr_sort";
-                return params;
-            },
-            success: function(response, newValue) {
-                var response = eval("(" + response + ")");
-                if (response.code == -1) {
-                    return response.message;
-                }
-            }
-        });
-    });
-</script>

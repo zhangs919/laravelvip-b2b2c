@@ -1111,6 +1111,11 @@
         </div>
     </div>
 </script>
+<script type="text/javascript">
+	window._AMapSecurityConfig = {
+		securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+	};
+</script>
 <script src="//webapi.amap.com/maps?v=1.4.9&key={{ sysconf('amap_js_key') }}"></script>
 <!-- 表单验证 -->
 <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190121"></script>
@@ -1158,7 +1163,7 @@
     KindEditor.ready(function(K) {
 
         var extraFileUploadParams = [];
-        extraFileUploadParams['ISHUOCHA_CN_USER_PHPSESSID'] = 'q5egbkgb65eb4kiok48gahks4q';
+        extraFileUploadParams['LRW_USER_PHPSESSID'] = 'q5egbkgb65eb4kiok48gahks4q';
 
         window.editor = K.create('#ueditor', {
             width: '100%',

@@ -18,7 +18,7 @@
     <!-- 隐藏域 -->
     <div class="table-content m-t-30 clearfix">
         <form id="IntegralGoodsModel" class="form-horizontal" name="IntegralGoodsModel" action="/dashboard/integral-mall/add-integral-goods" method="post" onSubmit="return mobileDesc()">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="integralgoodsmodel-goods_id" class="form-control" name="IntegralGoodsModel[goods_id]" value="{{ $info->goods_id ?? '' }}">
             <!-- 商品名称-->

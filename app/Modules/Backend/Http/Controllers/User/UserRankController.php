@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\User;
+namespace App\Modules\Backend\Http\Controllers\User;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -21,12 +21,15 @@ class UserRankController extends Backend
 
     protected $tools;
 
-    public function __construct()
+    public function __construct(
+        UserRankRepository $userRank
+        ,ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->userRank = new UserRankRepository();
-        $this->tools = new ToolsRepository();
+        $this->userRank = $userRank;
+        $this->tools = $tools;
 
     }
 

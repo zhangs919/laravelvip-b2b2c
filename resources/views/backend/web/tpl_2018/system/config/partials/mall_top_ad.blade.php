@@ -1,20 +1,20 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-mall_top_ad_image", "name": "SystemConfigModel[mall_top_ad_image]", "attribute": "mall_top_ad_image", "rules": {"string":true,"messages":{"string":"商城顶部广告图必须是一条字符串。"}}},{"id": "systemconfigmodel-mall_top_ad_bg_color", "name": "SystemConfigModel[mall_top_ad_bg_color]", "attribute": "mall_top_ad_bg_color", "rules": {"string":true,"messages":{"string":"商城顶部广告图背景色必须是一条字符串。"}}},{"id": "systemconfigmodel-mall_top_ad_url", "name": "SystemConfigModel[mall_top_ad_url]", "attribute": "mall_top_ad_url", "rules": {"string":true,"messages":{"string":"商城顶部广告图链接必须是一条字符串。"}}},{"id": "systemconfigmodel-mall_logo_right_ad_image", "name": "SystemConfigModel[mall_logo_right_ad_image]", "attribute": "mall_logo_right_ad_image", "rules": {"string":true,"messages":{"string":"商城搜索框左侧广告图必须是一条字符串。"}}},{"id": "systemconfigmodel-mall_logo_right_ad_url", "name": "SystemConfigModel[mall_logo_right_ad_url]", "attribute": "mall_logo_right_ad_url", "rules": {"string":true,"messages":{"string":"商城搜索框左侧广告图链接必须是一条字符串。"}}},{"id": "systemconfigmodel-mall_search_right_ad_image", "name": "SystemConfigModel[mall_search_right_ad_image]", "attribute": "mall_search_right_ad_image", "rules": {"string":true,"messages":{"string":"商城搜索框右侧广告图必须是一条字符串。"}}},{"id": "systemconfigmodel-mall_search_right_ad_url", "name": "SystemConfigModel[mall_search_right_ad_url]", "attribute": "mall_search_right_ad_url", "rules": {"string":true,"messages":{"string":"商城搜索框右侧广告图链接必须是一条字符串。"}}},]
 </script>
 
 <!--选色插件-->
-<link rel="stylesheet" href="../../../assets/d2eace91/bootstrap/evol-colorpicker/css/evol.colorpicker.css?v=1.2">
-<script src="../../../assets/d2eace91/js/jquery-ui.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/bootstrap/evol-colorpicker/js/evol.colorpicker.js?v=1.2"></script>
+<link rel="stylesheet" href="/assets/d2eace91/bootstrap/evol-colorpicker/css/evol.colorpicker.css?v=1.2">
+<script src="/assets/d2eace91/js/jquery-ui.js?v=1.2"></script>
+<script src="/assets/d2eace91/bootstrap/evol-colorpicker/js/evol.colorpicker.js?v=1.2"></script>
 <script type="text/javascript">
     $().ready(function() {
         $(".colorpicker").colorpicker();

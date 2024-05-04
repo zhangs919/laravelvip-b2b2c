@@ -20,7 +20,7 @@
 // | Description: 店铺角色管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 use App\Models\ShopNode;
 use App\Modules\Base\Http\Controllers\Seller;
@@ -39,14 +39,17 @@ class RoleController extends Seller
 
     protected $tree;
 
-    protected $shop_role;
+    protected $shopRole;
 
-    public function __construct()
+    public function __construct(
+        Tree $tree
+        ,ShopRoleRepository $shopRole
+    )
     {
         parent::__construct();
 
-        $this->tree = new Tree();
-        $this->shop_role = new ShopRoleRepository();
+        $this->tree = $tree;
+        $this->shopRole = $shopRole;
 
         $this->set_menu_select('account', 'shop-account');
     }
@@ -93,7 +96,7 @@ class RoleController extends Seller
             'sortname' => 'role_id',
             'sortorder' => 'asc'
         ];
-        list($list, $total) = $this->shop_role->getList($condition);
+        list($list, $total) = $this->shopRole->getList($condition);
         $pageHtml = pagination($total);
 
         $compact = compact('title', 'list', 'total', 'pageHtml');
@@ -115,10 +118,9 @@ class RoleController extends Seller
             // 更新操作
             $title = '编辑角色';
             $this->sublink($this->links, 'edit', '', '', 'add');
-            $info = $this->shop_role->getById($id);
+            $info = $this->shopRole->getById($id);
             view()->share('info', $info);
             //解析已有权限
-//            $auth_codes = unserialize(backend_decrypt($info->auth_codes, MD5_KEY.md5($info->role_name)));
             $auth_codes = unserialize(backend_decrypt($info->auth_codes, MD5_KEY));
 
             if (!$auth_codes) {
@@ -163,17 +165,14 @@ class RoleController extends Seller
 
         if (!empty($post['role_id'])) {
             // 编辑
-//            $auth_info = $this->shop_role->getById($post['role_id']);
-//            $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY.md5($auth_info->role_name));
             $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY);
-            $ret = $this->shop_role->update($post['role_id'], $post);
+            $ret = $this->shopRole->update($post['role_id'], $post);
             $msg = '角色编辑';
         }else {
             // 添加
-//            $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY.md5($post['role_name']));
             $post['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY);
             $post['role_type'] = 1; // 角色类型 1店铺管理员 2网点管理员
-            $ret = $this->shop_role->store($post);
+            $ret = $this->shopRole->store($post);
             $msg = '角色添加';
         }
 
@@ -188,7 +187,7 @@ class RoleController extends Seller
     public function delete(Request $request)
     {
         $id = $request->get('id');
-        $ret = $this->shop_role->del($id);
+        $ret = $this->shopRole->del($id);
         if ($ret === false) {
             // Log
             shop_log('角色删除失败。ID：'.$id);

@@ -131,7 +131,7 @@
         }
     </script>
 
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script type="text/javascript">
         //一键导航
         var mapclicked = false;
@@ -148,7 +148,8 @@
                 $.loading.start();
                 var url = location.href.split('#')[0];
                 $.ajax({
-                    url: "/index/information/get-weixinconfig.html",
+                    url: "/site/get-weixinconfig.html",
+                    type:"POST",
                     data: {
                         url: url
                     },
@@ -195,14 +196,9 @@
         });
     </script>
     <!-- 自提点 _end --></div>
-<div class="show-menu-info" id="menu">
-    <ul>
-        <li><a href="/"><span class="index-menu"></span><i>商城首页</i></a></li>
-        <li><a href="/category.html"><span class="category-menu"></span><i>分类</i></a></li>
-        <li><a href="/cart.html"><span class="cart-menu"></span><i>购物车</i></a></li>
-        <li style=" border:0;"><a href="/user.html"><span class="user-menu"></span><i>我的</i></a></li>
-    </ul>
-</div>	<!-- 底部 _end-->
+{{--引入右上角菜单--}}
+@include('layouts.partials.right_top_menu')
+<!-- 底部 _end-->
 <script type="text/javascript">
     $().ready(function() {
         // 缓载图片

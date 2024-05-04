@@ -20,7 +20,7 @@
 // | Description: 发/退货地址库
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Shop;
+namespace App\Modules\Seller\Http\Controllers\Shop;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ShopAddressRepository;
@@ -44,11 +44,11 @@ class ShopAddressController extends Seller
 
     protected $shopAddress;
 
-    public function __construct()
+    public function __construct(ShopAddressRepository $shopAddress)
     {
         parent::__construct();
 
-        $this->shopAddress = new ShopAddressRepository();
+        $this->shopAddress = $shopAddress;
 
         $this->set_menu_select('trade', 'trade-set');
     }
@@ -174,24 +174,28 @@ class ShopAddressController extends Seller
     }
 
     /**
-     * 设置默认打印机
-     * todo 不确定是否有此功能
+     * 设置默认地址
      * @param Request $request
      * @return array
      */
-    public function setIsDefault(Request $request)
+    public function isDefault(Request $request)
     {
         $id = $request->get('id');
         if (!$id) {
-            return  result(-1, null, '参数错误');
+            // fail
+            flash('error', '参数错误');
+            return redirect('/shop/shop-address/list');
         }
 
         $ret = $this->shopAddress->setDefault($id, seller_shop_info()->shop_id);
         if ($ret === false) {
-            return result(-1, null, '设置失败');
+            // fail
+            flash('error', '设置失败！');
+            return redirect('/shop/shop-address/list');
         }
 
-        return result(0, null, '设置成功！');
+        flash('success', '设置成功！');
+        return redirect('/shop/shop-address/list');
     }
 
     public function delete(Request $request)

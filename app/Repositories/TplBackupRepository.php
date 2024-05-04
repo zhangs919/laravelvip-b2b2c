@@ -11,9 +11,9 @@ class TplBackupRepository
 
     protected $model;
 
-    public function __construct(TplBackup $model)
+    public function __construct()
     {
-        $this->model = $model;
+        $this->model = new TplBackup();
     }
 
 

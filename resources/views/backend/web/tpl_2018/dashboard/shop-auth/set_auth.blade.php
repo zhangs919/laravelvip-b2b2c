@@ -17,7 +17,7 @@
 
     <form id="ShopConfig" class="form-horizontal" name="ShopConfig" action="/dashboard/shop-auth/set-auth?shop_id={{ $shop_info->shop_id }}"
           method="post" enctype="multipart/form-data" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
 
         {{--<input type="hidden" id="shopconfig-id" class="form-control" name="ShopConfig[id]" value="4">--}}
 

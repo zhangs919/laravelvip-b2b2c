@@ -24,14 +24,40 @@
     <script type="text/javascript" src="/js/common.js"></script>
 
     <!-- 加载Layer插件 -->
-    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
+    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/skin/default/layer.css?v=3.1.0" id="layuicss-layer">
 
 </head>
 <body>
 
+@if(!empty(session('layerMsg')))
+    <script>
+        var status = '{{ session()->get('layerMsg.status') }}';
+        var msg = '{{ session()->get('layerMsg.msg') }}';
+
+        switch (status) {
+            case 'success':
+                layer.msg(msg);
+                break;
+            case 'error':
+                layer.msg(msg, function () {
+                    // 关闭后的操作
+                });
+                break;
+            case 'info':
+                layer.msg(msg)
+                break;
+            case 'warning':
+                layer.msg(msg, function () {
+                    // 关闭后的操作
+                });
+                break;
+        }
+    </script>
+@endif
+
 <div class="header login-header w990">
     <div class="logo-info">
-        <a href="./" class="logo">
+        <a href="/" class="logo">
             <img src="{{ get_image_url(sysconf('mall_logo')) }}" />
         </a>
         <span class="findpw">欢迎登录</span>
@@ -84,14 +110,18 @@
 
                         <div id="con_login_2" class="form">
                             <form id="form2" action="/login" method="POST">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group item-name">
                                     <!-- 错误项标注 给div另添加一个class值'error' star -->
-                                    <div class="form-control-box">
+                                    <div class="form-control-box ">
                                         <i class="icon"></i>
                                         <input type="text" id="username" name="LoginModel[username]" value="{{ old('LoginModel.username') }}" class="text" tabindex="1" placeholder="已验证手机/邮箱/用户名" autocomplete="off" />
                                     </div>
 
+                                    {{--<span id="username-error" data-error-id="username" class="form-control-error">
+                                        <i class="fa fa-warning"></i>
+                                        {{ $layerMsg->msg }}
+                                    </span>--}}
                                     <!-- 错误项标注 给div另添加一个class值'error' end -->
                                 </div>
                                 <div class="form-group item-password">
@@ -101,11 +131,11 @@
                                     </div>
 
                                 </div>
-                                <div class="form-group form-group-spe captcha" id="o-authcode" style="display: none;">
+                                <div class="form-group form-group-spe captcha" id="o-authcode" @if(!$show_captcha)style="display: none;"@endif>
                                     <div class="form-control-box">
                                         <i class="icon"></i>
                                         <input type="text" id="captcha" name="LoginModel[verifyCode]" class="text" tabindex="3" placeholder="验证码" maxlength="4" />
-                                        <label class="captcha"> <img id="captcha-image" class="captcha-image" name="LoginModel[verifyCode]" src="/site/captcha.html?v=5adc3707d7cc0" alt="点击换图" title="点击换图" style="vertical-align: middle; cursor: pointer;"><script data-captcha-id="captcha-image" type="text">{"refreshUrl":"\/site\/captcha.html?refresh=1","hashKey":"niiCaptcha\/site\/captcha"}</script></label>
+                                        <label class="captcha"> <img id="captcha-image" class="captcha-image" name="LoginModel[verifyCode]" src="/site/captcha.html?v={{ uniqid() }}" alt="点击换图" title="点击换图" style="vertical-align: middle; cursor: pointer;"><script data-captcha-id="captcha-image" type="text">{"refreshUrl":"\/site\/captcha.html?refresh=1","hashKey":"niiCaptcha\/site\/captcha"}</script></label>
                                     </div>
 
                                 </div>
@@ -117,7 +147,7 @@
                                         <span>自动登录</span>
                                     </label>
 
-                                    <a class="forget-password fr" href="http://www.laravelvip.com/user/find-password">忘记密码？</a>
+                                    <a class="forget-password fr" href="/user/find-password.html">忘记密码？</a>
                                 </div>
                                 <div class="login-btn">
                                     <input type="hidden" name="act" value="act_login" />
@@ -125,6 +155,31 @@
                                     <input type="submit" name="submit" class="btn-img btn-entry bg-color" value="立即登录" />
                                 </div>
                                 <div class="item-coagent">
+
+{{--                                    <a href="javascript:void(0);" data-id="github" class="website-login">--}}
+{{--                                        <i class="github"></i>--}}
+{{--                                        github--}}
+{{--                                    </a>--}}
+
+                                    @if(sysconf('open_weixin_login'))
+                                    <a href="javascript:void(0);" data-id="pc_weixin" class="website-login">
+                                        <i class="weixin"></i>
+                                    </a>
+                                    @endif
+
+                                    @if(sysconf('open_qq_login'))
+                                    <a href="javascript:void(0);" data-id="qq" class="website-login">
+                                        <i class="qq"></i>
+                                    </a>
+                                    @endif
+
+
+                                    @if(sysconf('open_weibo_login'))
+                                    <a href="javascript:void(0);" data-id="weibo" class="last website-login">
+                                        <i class="sina"></i>
+                                    </a>
+                                    @endif
+
 
                                 </div>
                                 <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
@@ -137,7 +192,7 @@
 
                         <div id="con_login_1" class="form" style="display: none;">
                             <form id="form1" action="/login" method="POST">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group item-name">
                                     <!-- 错误项标注 给div另添加一个class值'error' star -->
                                     <div class="form-control-box">
@@ -147,11 +202,11 @@
 
                                     <!-- 错误项标注 给div另添加一个class值'error' end -->
                                 </div>
-                                <div class="form-group form-group-spe captcha" id="o-authcode" style="display: none;">
+                                <div class="form-group form-group-spe captcha" id="o-authcode" @if(!$show_captcha)style="display: none;"@endif>
                                     <div class="form-control-box">
                                         <i class="icon"></i>
                                         <input type="text" id="captcha_sms" name="SmsLoginModel[captcha]" class="text" tabindex="2" placeholder="验证码" maxlength="4" />
-                                        <label class="captcha"> <img id="captcha_sms-image" class="captcha-image" name="LoginModel[captcha]" src="/site/captcha.html?v=5adc3707d840b" alt="点击换图" title="点击换图" style="vertical-align: middle; cursor: pointer;"><script data-captcha-id="captcha_sms-image" type="text">{"refreshUrl":"\/site\/captcha.html?refresh=1","hashKey":"niiCaptcha\/site\/captcha"}</script></label>
+                                        <label class="captcha"> <img id="captcha_sms-image" class="captcha-image" name="LoginModel[captcha]" src="/site/captcha.html?v={{ uniqid() }}" alt="点击换图" title="点击换图" style="vertical-align: middle; cursor: pointer;"><script data-captcha-id="captcha_sms-image" type="text">{"refreshUrl":"\/site\/captcha.html?refresh=1","hashKey":"niiCaptcha\/site\/captcha"}</script></label>
                                     </div>
 
                                 </div>
@@ -178,6 +233,32 @@
                                     <input type="submit" name="submit" class="btn-img btn-entry bg-color" value="立即登录" />
                                 </div>
                                 <div class="item-coagent">
+
+
+                                    <a href="javascript:void(0);" data-id="github" class="website-login">
+                                        {{--                                        <i class="github"></i>--}}
+                                        github
+                                    </a>
+
+                                    @if(sysconf('open_weixin_login'))
+                                        <a href="javascript:void(0);" data-id="pc_weixin" class="website-login">
+                                            <i class="weixin"></i>
+                                        </a>
+                                    @endif
+
+                                    @if(sysconf('open_qq_login'))
+                                        <a href="javascript:void(0);" data-id="qq" class="website-login">
+                                            <i class="qq"></i>
+                                        </a>
+                                    @endif
+
+
+                                    @if(sysconf('open_weibo_login'))
+                                        <a href="javascript:void(0);" data-id="weibo" class="last website-login">
+                                            <i class="sina"></i>
+                                        </a>
+                                    @endif
+
 
                                 </div>
                                 <input type="hidden" name="back_url" value="{{ $_SERVER['HTTP_REFERER'] ?? '' }}" />
@@ -241,21 +322,28 @@
                     </div>
                     <!-- 扫码登录成功 end -->
 
+                    <div style="dispaly: none;">
+                        <form id="website_login_form" method="post" action="http://{{ config('lrw.frontend_domain') }}/website/login.html">
+                            <input type="hidden" name="type" value="" />
+                            <input type="hidden" name="back_url" value="{{ $back_url ?? '/' }}" />
+                        </form>
+                    </div>
                 </div>
             </div>
+
             <!-- cookie -->
-            <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180418"></script>
+            <script src="/assets/d2eace91/js/jquery.cookie.js?v=201902541"></script>
             <!-- 验证码脚本 -->
-            <script src="/assets/d2eace91/js/jquery.captcha.js?v=20180418"></script>
+            <script src="/assets/d2eace91/js/jquery.captcha.js?v=201902541"></script>
             <!-- 表单验证 -->
-            <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180418"></script>
+            <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=201902541"></script>
+            <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=201902541"></script>
+            <script src="/assets/d2eace91/js/validate/messages_zh.js?v=201902541"></script>
             <script id="client_rules" type="text/javascript">
                 [{"id": "loginmodel-username", "name": "LoginModel[username]", "attribute": "username", "rules": {"required":true,"messages":{"required":"请输入用户名"}}},{"id": "loginmodel-password", "name": "LoginModel[password]", "attribute": "password", "rules": {"required":true,"messages":{"required":"请输入密码"}}},{"id": "loginmodel-username", "name": "LoginModel[username]", "attribute": "username", "rules": {"string":true,"messages":{"string":"用户名必须是一条字符串。","maxlength":"用户名长度必需在100以内"},"maxlength":50}},{"id": "loginmodel-password", "name": "LoginModel[password]", "attribute": "password", "rules": {"string":true,"messages":{"string":"密码必须是一条字符串。","maxlength":"密码长度必需在32以内"},"maxlength":32}},{"id": "loginmodel-rememberme", "name": "LoginModel[rememberMe]", "attribute": "rememberMe", "rules": {"boolean":{"trueValue":"1","falseValue":"0"},"messages":{"boolean":"记住用户名密码必须要么为\"1\"，要么为\"0\"。"}}},]
             </script>
             <script id="sms_client_rules" type="text/javascript">
-                [{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"required":true,"messages":{"required":"请输入图片验证码"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"captcha":{"hash":427,"hashKey":"niiCaptcha/site/captcha","caseSensitive":false},"messages":{"captcha":"验证码不正确。"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"请输入手机号码"}}},{"id": "smsloginmodel-smscaptcha", "name": "SmsLoginModel[smsCaptcha]", "attribute": "smsCaptcha", "rules": {"required":true,"messages":{"required":"请输入动态密码"}}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^(13[0-9]{1}[0-9]{8}|15[0-9]{1}[0-9]{8}|18[0-9]{1}[0-9]{8}|17[0-9]{1}[0-9]{8}|14[0-9]{1}[0-9]{8}|199[0-9]{8}|198[0-9]{8}|166[0-9]{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入一个有效的手机号码"}}},{"id": "smsloginmodel-rememberme", "name": "SmsLoginModel[rememberMe]", "attribute": "rememberMe", "rules": {"boolean":{"trueValue":"1","falseValue":"0"},"messages":{"boolean":"记住用户名密码必须要么为\"1\"，要么为\"0\"。"}}},]
+                [{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"required":true,"messages":{"required":"请输入图片验证码"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-captcha", "name": "SmsLoginModel[captcha]", "attribute": "captcha", "rules": {"captcha":{"hash":440,"hashKey":"niiCaptcha/site/captcha","caseSensitive":false},"messages":{"captcha":"验证码不正确。"},"when":"function(){return $(\"#captcha_sms\").is(\":visible\") && $(\"#captcha_sms\").size() > 0;}"}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"required":true,"messages":{"required":"请输入手机号码"}}},{"id": "smsloginmodel-smscaptcha", "name": "SmsLoginModel[smsCaptcha]", "attribute": "smsCaptcha", "rules": {"required":true,"messages":{"required":"请输入动态密码"}}},{"id": "smsloginmodel-mobile", "name": "SmsLoginModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166|191|167)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入一个有效的手机号码"}}},{"id": "smsloginmodel-rememberme", "name": "SmsLoginModel[rememberMe]", "attribute": "rememberMe", "rules": {"boolean":{"trueValue":"1","falseValue":"0"},"messages":{"boolean":"记住用户名密码必须要么为\"1\"，要么为\"0\"。"}}},]
             </script>
             <script type="text/javascript">
                 $().ready(function() {
@@ -264,10 +352,13 @@
                         $('.qrcode-target').removeClass('btn-login').addClass('btn-qrcode').attr('title','去手机扫码登录');
                         $('.login-wrap').show();
                         $('.login-mobile').hide();
+                        $.cookie('is_qrcode_login', '0', { expires: 365 });
                     });
+
                     $("body").on('click', '.website-login', function() {
                         var type = $(this).data("id");
-                        $.go("http://www.laravelvip.com"+"/website/login?type="+type);
+                        $("#website_login_form").find("[name='type']").val(type);
+                        $("#website_login_form").submit();
                     })
 
                     var container = $("#{{ $uuid }}");
@@ -360,6 +451,14 @@
                                 mobile: mobile,
                                 captcha: $("#captcha_sms").val()
                             }, function(result){
+                                if (typeof result == 'string') {
+                                    try {
+                                        result=JSON.parse(result);
+                                    } catch(e) {
+                                    }
+                                }
+
+
                                 if(result.code == 0){
                                     // 开始倒计时
                                     countdown(target, "获取手机验证码");
@@ -383,9 +482,17 @@
 
                     });
 
-                    var wait = 60;
+                    //
+                    var wait = null;
+                    //
+
                     function countdown(obj, msg) {
+
                         obj = $(obj);
+
+                        if(wait === null){
+                            wait = 60;
+                        }
 
                         if (wait <= 0) {
                             obj.prop("disabled", false);
@@ -403,11 +510,16 @@
                             }, 1000)
                         }
                     }
+
+                    if(wait !== null){
+                        // 开始倒计时
+                        countdown($(container).find("#btn_send_sms_code"), "获取手机验证码");
+                    }
                 });
             </script>
-            <script src="/assets/d2eace91/js/message/message.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/message/messageWS.js?v=20180418"></script>
-            <script src="/assets/d2eace91/js/jquery.qrcode.min.js?v=20180418"></script>
+            <script src="/assets/d2eace91/js/message/message.js?v=201902541"></script>
+            <script src="/assets/d2eace91/js/message/messageWS.js?v=201902541"></script>
+            <script src="/assets/d2eace91/js/jquery.qrcode.min.js?v=201902541"></script>
             <script type="text/javascript">
 
                 //二维码、PC登录切换
@@ -416,15 +528,15 @@
                         $(this).removeClass('btn-qrcode').addClass('btn-login').attr('title','去电脑登录');
                         REF_QRCodeLogin(1);
                         $('.login-wrap').hide();
-                        $('.login-mobile').eq(0).show();
-                        $.cookie('is_qrcode_login', '1');
+                        $('.login-mobile').eq(0).removeClass("hide").show();
+                        $.cookie('is_qrcode_login', '1',{ expires: 365 });
                         return;
                     }
                     if($(this).hasClass('btn-login')){
                         $(this).removeClass('btn-login').addClass('btn-qrcode').attr('title','去手机扫码登录');
                         $('.login-wrap').show();
                         $('.login-mobile').hide();
-                        $.cookie('is_qrcode_login', '0');
+                        $.cookie('is_qrcode_login', '0',{ expires: 365 });
                     }
                 });
 
@@ -438,8 +550,8 @@
                         if($('.qrcode-target').hasClass('btn-qrcode')){
                             $('.qrcode-target').removeClass('btn-qrcode').addClass('btn-login').attr('title','去电脑登录');
                             $('.login-wrap').hide();
-                            $('.login-mobile').eq(0).show();
-                            $.cookie('is_qrcode_login', '1');
+                            $('.login-mobile').eq(0).removeClass("hide").show();
+                            $.cookie('is_qrcode_login', '1', { expires: 365 });
                         }
                         $('.login-mobile').eq(0).hide();
                         $('.login-mobile').eq(1).show();
@@ -454,7 +566,11 @@
                         },function(result){
                             if(result.code == 0){
                                 $.login.close();
-                                $.login.success(result.back_url);
+                                if(result.back_url){
+                                    $.login.success(result.back_url);
+                                }else{
+                                    $.go();
+                                }
                             }else{
                                 $.msg(result.message);
                             }
@@ -468,6 +584,9 @@
                         record = 0;
                     }
                 }
+
+                var ws = null;
+
                 // @param view 1-有二维码的页面 2-二维码失效页面
                 function REF_QRCodeLogin(view){
                     $.get('/site/get-qrcode-login-key',{ },function(result){
@@ -475,7 +594,7 @@
                         $('.SZY-QRCODE-LOGIN').qrcode({
                             width:150,
                             height:150,
-                            text: 'http://www.laravelvip.com/site/qrcode-login.html?k=' + result.data.key
+                            text: 'http://{{ config('lrw.mobile_domain') }}/site/qrcode-login.html?k=' + result.data.key
                         });
 
                         var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';
@@ -491,13 +610,25 @@
                             $('.login-mobile').eq(0).find('.qrcode-error').show();
                             record = 0;
                         }
-                        //
-                        WS_QRCodeLogin({
-                            user_id : result.data.user_id,
-                            // url: "ws://push.laravelvip.com:7272",
-                            'url': "{{ get_ws_url('7272') }}",
-                            type: "qrcode_login_set"
-                        });
+
+                        // 0 - 正在链接中
+                        // 1 - 已经链接并且可以通讯
+                        // 2 - 连接正在关闭
+                        // 3 - 连接已关闭或者没有链接成功
+                        if(ws == null || ws.readyState == 3){
+                            ws = WS_QRCodeLogin({
+                                user_id : result.data.user_id,
+                                url: "{{ get_ws_url('7272') }}",
+                                type: "qrcode_login_set"
+                            });
+                        }else if(ws.readyState == 1){
+                            ws.send({
+                                user_id : result.data.user_id,
+                                url: "{{ get_ws_url('7272') }}",
+                                type: "qrcode_login_set"
+                            });
+                        }
+
                         // 3分钟后过期
                         setTimeout(function(){
                             if(record == 0){
@@ -509,6 +640,7 @@
                     },'JSON');
                 }
             </script>
+
         </div>
     </div>
 </div>

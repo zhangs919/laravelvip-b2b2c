@@ -1,26 +1,27 @@
 <div id="{{ $uuid }}">
 
-    <div class="explanation m-b-10">
-        <div class="title">
-            <i class="arrow-icon explain-checkZoom cur-p" title=""></i>
-            <i class="fa fa-bullhorn"></i>
-            <h4>温馨提示</h4>
-        </div>
-        <ul class="explain-panel">
-            <li>
-                <span>主体颜色包含商城各个页面的背景或文字颜色，包含项指：首页请登录文字颜色、商品金额颜色、搜索框颜色、左侧导航背景颜色、鼠标经过文字/图标颜色、楼层快捷导航按钮颜色；</span>
-            </li>
-            <li>
-                <span>商品详情页的加入购物车、进入店铺、关注店铺按钮、tab切换颜色；商品列表页收藏按钮颜色、卖光了按钮颜色；店铺街分类文字背景色；团购页面马上抢按钮颜色；用户中心头部导航背景色</span>
-            </li>
+    @if(!empty($group_info['explain']))
+        <div class="explanation m-b-10">
+            <div class="title">
+                <i class="arrow-icon explain-checkZoom cur-p" title=""></i>
+                <i class="fa fa-bullhorn"></i>
+                <h4>温馨提示</h4>
+            </div>
+            <ul class="explain-panel">
+                @foreach($group_info['explain'] as $vo)
+                    <li>
+                        <span>{!! $vo !!}</span>
+                    </li>
+                @endforeach
 
-        </ul>
-    </div>
+            </ul>
+        </div>
+    @endif
 
 
 
     <form id="SystemConfigModel" class="form-horizontal" name="SystemConfigModel" action="/system/config/index?group={{ $group }}" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="{{ $group }}">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">

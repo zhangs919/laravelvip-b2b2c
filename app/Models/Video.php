@@ -44,16 +44,16 @@ class Video extends BaseModel
         //file_name: "15527929444336"
         //frame_rate: 24
         //height: 368
-        //host: "http://ishuocha.oss-cn-beijing.aliyuncs.com/images/"
+        //host: "http://xxx.oss-cn-beijing.aliyuncs.com/images/"
         //name: "1515480321852459"
         //path: "/videos/shop/1/gallery/2019/03/17/15527929444336.mp4"
-        //poster: "http://ishuocha.oss-cn-beijing.aliyuncs.com/images/videos/shop/1/gallery/2019/03/17/15527929444336.mp4!poster.png"
+        //poster: "http://xxx.oss-cn-beijing.aliyuncs.com/images/videos/shop/1/gallery/2019/03/17/15527929444336.mp4!poster.png"
         //sample_rate: "48000"
         //shop_id: 1
         //site_id: 0
         //size: "2521057"
         //sort: 255
-        //url: "http://ishuocha.oss-cn-beijing.aliyuncs.com/images/videos/shop/1/gallery/2019/03/17/15527929444336.mp4"
+        //url: "http://xxx.oss-cn-beijing.aliyuncs.com/images/videos/shop/1/gallery/2019/03/17/15527929444336.mp4"
         //video_bit_rate: "435573"
         //video_codec: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"
         //video_desc: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 640x368 24fps 425.3642578125Kbps"

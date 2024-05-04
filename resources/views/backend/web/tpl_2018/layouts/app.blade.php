@@ -22,6 +22,9 @@
     <link rel="stylesheet" href="/assets/d2eace91/fonts/css/font-awesome.min.css?v=1.2">
     <link rel="stylesheet" href="/assets/d2eace91/css/scrollBar/jquery.mCustomScrollbar.css?v=1.2">
     <link rel="stylesheet" href="/assets/d2eace91/bootstrap/css/bootstrap.min.css?v=1.2">
+    {{--商家后台copy 后期检查样式冲突问题--}}
+{{--    <link href="/assets/d2eace91/css/app.common.min.css?v=3" rel="stylesheet">--}}
+
     <link rel="stylesheet" href="/assets/d2eace91/css/animate.css?v=1.2">
     <link rel="stylesheet" href="/assets/d2eace91/bootstrap/switch/css/bootstrap-switch.min.css?v=1.2">
     <link rel="stylesheet" href="/assets/d2eace91/css/loading/loaders.css?v=1.2">
@@ -34,8 +37,10 @@
     <!-- ================== BEGIN BASE JS ================== -->
     <script src="/assets/d2eace91/js/jquery.js?v=1.2"></script>
     <!-- 加载Layer插件 -->
-    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
+    <script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script><link rel="stylesheet" href="/assets/d2eace91/js/layer/skin/default/layer.css?v=3.1.0" id="layuicss-layer">
     <script src="/assets/d2eace91/js/jquery.method.js?v=1.2"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js?v=202003261806"></script>
+
     <script src="/assets/d2eace91/js/jquery.modal.js?v=1.2"></script>
     <!-- -->
     <script src="/assets/d2eace91/bootstrap/js/bootstrap.merge.min.js?v=1.2"></script>
@@ -110,6 +115,10 @@
     {{--css style--}}
     @section('style')@show
 
+    {{--自定义样式 整体改版--}}
+    <link href="/css/custom.css?v={{ time() }}" rel="stylesheet">
+    {{--自定义样式 整体改版--}}
+
     {{--post 提交 错误提示信息--}}
     @if(count($errors) > 0)
         <script>
@@ -174,6 +183,9 @@
 
     {{--自定义css样式--}}
     @section('style_css')@show
+
+    {{--footer js--}}
+    @section('footer_js')@show
 
     {{--footer script--}}
     @section('footer_script')@show

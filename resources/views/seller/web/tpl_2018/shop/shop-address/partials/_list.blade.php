@@ -21,7 +21,7 @@
             <input type="checkbox" class="checkBox" value="{{ $v->address_id }}" />
         </td>
         <td>{{ $v->consignee }}</td>
-        <td>{{ $v->region_code }}</td>
+        <td>{{ get_region_names_by_region_code($v->region_code,'') }}</td>
         <td>{{ $v->address_detail }}</td>
         <td>{{ $v->mobile }}</td>
         <td>{{ $v->tel }}</td>
@@ -29,12 +29,12 @@
         <td class="handle">
             <a href="edit?id={{ $v->address_id }}">编辑</a>
             <span>|</span>
-            <a href="javascript:void(0);" data-id="{{ $v->address_id }}" data-isdef="{{ $v->is_default }}" class="del border-none disabled">删除</a>
+            <a href="javascript:void(0);" data-id="{{ $v->address_id }}" data-isdef="{{ $v->is_default }}" class="del border-none @if($v->is_default){{ 'disabled' }}@endif">删除</a>
             <div class="w100 pull-right m-t-3">
                 @if($v->is_default){{--默认地址--}}
                     <font class="c-blue">已设为默认地址</font>
                 @else{{--非默认地址--}}
-
+                <a href="is-default?id={{ $v->address_id }}" class="btn-link">默认地址</a>
                 @endif
             </div>
         </td>

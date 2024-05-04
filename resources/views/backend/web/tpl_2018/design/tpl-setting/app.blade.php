@@ -1,4 +1,4 @@
-@extends('layouts.design_layout_v3')
+@extends('layouts.design_layout')
 
 @section('header_js')
 
@@ -27,16 +27,23 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/index.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/design.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
+{{--    <link href="http://{{ config('lrw.mobile_domain') }}/css/dianpu.css" rel="stylesheet">--}}
+
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
         {{-- todo 暂时不确定移动端是否能整站改色 暂时注释掉 --}}
-        {{--<link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>--}}
-        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
+        {{--<link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>--}}
+        <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ env('MOBILE_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!-- GPS获取坐标 -->
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_web_key') }}"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_web_key') }}"></script>
     <script src="/assets/d2eace91/js/geolocation/amap.js?v=20180418"></script>
 
 
@@ -46,7 +53,7 @@
 
         <div class="module-topBar-inner">
             <a class="topBar-logo">
-                <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/system/config/website/backend_logo_0.png" />
+                <img src="{{ get_image_url(sysconf('backend_logo')) }}" />
             </a>
             <div class="page-title">
                 <label>首页</label>
@@ -81,6 +88,7 @@
                 <div class="page-operation-btns">
                     <a class="page-btn page-preview-btn SZY-TPL-BACKUP" href="javascript:void(0);">模板备份</a>
                     <a class="page-btn page-preview-btn SZY-TPL-USE" href="javascript:void(0);">使用备份</a>
+                    <a class="page-btn page-preview-btn SZY-TPL-PREVIEW" href="javascript:void(0);">预览 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-RELEASE" href="javascript:void(0);">发布 </a>
                 </div>
                 <div class="other-more">
@@ -91,7 +99,7 @@
                         <span class="top-dropdown-bg"></span>
                         <ul>
                             <li>
-                                <a class="other-help" target="_blank" href="http://help.68mall.com/">
+                                <a class="other-help" target="_blank" href="#">
                                     <i></i>
                                     帮助中心
                                 </a>
@@ -128,6 +136,13 @@
                                     <img src="/assets/d2eace91/images/design/icon/0/m_banner.png">
                                 </a>
                                 <a href="javascript:void(0);" class="panelModuleTitle" title="轮播广告">轮播广告</a>
+                            </li>
+
+                            <li class="drag" id="0" data-code="m_hots_pot" style="z-index: 3">
+                                <a href="javascript:;" class="panelModuleIcon">
+                                    <img src="/assets/d2eace91/images/design/icon/0/m_hots_pot.png" class="mCS_img_loaded">
+                                </a>
+                                <a href="javascript:;" class="panelModuleTitle" title="热区模板">热区模板</a>
                             </li>
 
                             <li class="drag" id="0" data-code="m_ad_s1" style="z-index: 3">
@@ -302,7 +317,20 @@
 
 
 
+                <div class="panelItemContainer" id="panelItme8">
+                    <fieldset class="panelItemBox">
+                        <legend>营销模板</legend>
+                        <ul class="panelModuleIconContainer">
 
+                            <li class="drag" id="0" data-code="m_bonus_s1" style="z-index: 3">
+                                <a href="javascript:;" class="panelModuleIcon">
+                                    <img src="/assets/d2eace91/images/design/icon/0/m_bonus_s1.png">
+                                </a>
+                                <a href="javascript:;" class="panelModuleTitle" title="红包版式一">红包版式一</a>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
 
 
 
@@ -323,7 +351,7 @@
                 <div class="special-top"></div>
                 <div class="special-item">
                     <header class="header app-bg-color">
-                        <a href="javascript:void(0)" class="content-selector SZY-TPL-SETTING" data-url='/system/config/index.html?group=app_setting_header' data-modal="1" data-title='头部设置'>
+                        <a href="javascript:void(0)" class="content-selector SZY-TPL-SETTING" data-url='/system/config/index?group=app_setting_header' data-modal="1" data-title='头部设置'>
                             <i class="fa fa-edit"></i>
                             编辑
                         </a>
@@ -352,8 +380,10 @@
                     <div style="height: 50px; line-height: 50px;"></div>
                     <div class="SZY-TEMPLATE-MAIN-CONTAINER dropzone"></div>
                     <!--底部菜单 start-->
-                    <div class="SZY-TPL-FOOTER footer-nav-box"><!--底部菜单 start-->
-                        <script src="http://m.b2b2c.yunmall.68mall.com/js/custom_js.js?v=20180418"></script> <link rel="stylesheet" href="http://m.b2b2c.yunmall.68mall.com/css/custom_css.css?v=1.6"/>
+                    <div class="SZY-TPL-FOOTER footer-nav-box">
+						<!--底部菜单 start-->
+                        <script src="http://{{ config('lrw.mobile_domain') }}/js/custom_js.js?v=20180418"></script>
+						<link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/custom_css.css?v=1.6"/>
                         <div style="height: 48px; line-height: 48px; clear: both; display:none;"></div>
                         <div class="footer-nav">
 
@@ -408,9 +438,8 @@
                         <table id="mobile_helper">
                             <thead class="template_set_top">
                             <tr height="40">
-                                <td class="w30"></td>
                                 <td>模块名称</td>
-                                <td>是否显示</td>
+                                <td>是否开启</td>
                                 <td>操作</td>
                             </tr>
                             </thead>

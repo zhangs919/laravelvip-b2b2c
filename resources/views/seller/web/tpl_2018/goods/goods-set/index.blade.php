@@ -1,16 +1,20 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
-{{--css style page元素同级上面--}}
-@section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
 @stop
 
 {{--content--}}
 @section('content')
 
     <form id="ShopConfigModel" class="form-horizontal" name="ShopConfigModel" action="/shop/config/index" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input type="hidden" name="group" value="goods">
         <input type="hidden" name="tabs" value="">
         <div class="table-content m-t-30">
@@ -77,7 +81,16 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <script type="text/javascript">
+        //
+    </script>
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[]
+</script>
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -86,29 +99,76 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/jquery-ui.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+@stop
+
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180710"></script>
-    <!-- AJAX上传+图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180710"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180710"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[]
-</script>
-
-
-
-
-
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
-
+            /*商品添加页面右侧发布助手js*/
+            $('.helper-icon').click(function() {
+                $('.helper-icon').animate({
+                    'right': '-40px'
+                }, 200, function() {
+                    $('.helper-wrap').animate({
+                        'right': '0'
+                    }, 200);
+                });
+            });
+            $('.help-header .fa-times-circle').click(function() {
+                $('.helper-wrap').animate({
+                    'right': '-140px'
+                }, 200, function() {
+                    $('.helper-icon').animate({
+                        'right': '0'
+                    }, 200);
+                });
+            });
+            //生成页面导航助手
+            $("#helper_tool_nav").find("ul").html("");
+            var count = 0;
+            $("[data-anchor]").each(function() {
+                var title = $(this).data("anchor");
+                var element = $($.parseHTML("<li><a href='javascript:void(0);'>" + title + "</a></li>"));
+                $("#helper_tool_nav").find("ul").append(element);
+                var target = this;
+                $(element).click(function() {
+                    $('html, body').animate({
+                        scrollTop: $(target).offset().top - 100
+                    }, 500);
+                    if ($(target).is(":input")) {
+                        $(target).focus();
+                    } else {
+                        $(target).find(":input").first().focus();
+                    }
+                });
+                count++;
+            });
+            $("#helper_tool_nav").find(".count").html(count);
+            $('.helper-icon').click();
+        });
+        //
+        $().ready(function() {
+            $("[data-toggle='popover']").popover();
+            //悬浮显示上下步骤按钮
+            window.onscroll = function() {
+                $(window).scroll(function() {
+                    var scrollTop = $(document).scrollTop();
+                    var height = $(".page").height();
+                    var wHeight = $(window).height();
+                    if (scrollTop > (height - wHeight)) {
+                        $(".bottom-btn").removeClass("bottom-btn-fixed");
+                    } else {
+                        $(".bottom-btn").addClass("bottom-btn-fixed");
+                    }
+                });
+            };
             var validator = $("#ShopConfigModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
             $.validator.addRules($("#client_rules").html());
@@ -122,32 +182,27 @@
                 /**
                  var data = $("#SystemConfigModel").serializeJson();
                  $.post('/system/config/index', data, function(result) {
-				if (result.code == 0) {
-					$.msg(result.message, {
-						icon: 1
-					});
-				} else {
-					$.alert(result.message, {
-						icon: 2
-					});
-				}
-			}, "json");
+                if (result.code == 0) {
+                    $.msg(result.message, {
+                        icon: 1
+                    });
+                } else {
+                    $.alert(result.message, {
+                        icon: 2
+                    });
+                }
+            }, "json");
                  **/
             });
-
             $(".szy-imagegroup").each(function() {
                 var id = $(this).data("id");
                 var size = $(this).data("size");
                 var mode = $(this).data("mode");
                 var labels = $(this).data("labels");
-
                 var target = $("#" + id);
                 var value = $(target).val() ;
-
                 var options = $(this).data("options") ? $(this).data("options") : [];
-
                 $(this).imagegroup({
-                    // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
                     host: "{{ get_oss_host() }}",
                     size: size,
                     mode: mode,

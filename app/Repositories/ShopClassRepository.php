@@ -25,7 +25,7 @@ class ShopClassRepository
     {
         $data = $this->model->getList($condition, $column);
 
-        if (!empty($data[0]) && $toTree) {
+        if (!$data[0]->isEmpty() && $toTree) {
             // 是否转换为树形结构
             $list = [];
             foreach ($data[0] as $key=>$value) {

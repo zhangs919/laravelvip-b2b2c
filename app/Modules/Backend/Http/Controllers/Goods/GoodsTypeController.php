@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Models\GoodsType;
 use App\Modules\Base\Http\Controllers\Backend;
@@ -106,7 +106,7 @@ class GoodsTypeController extends Backend
             'explain_panel' => $explain_panel
         ];
         $this->setLayoutBlock($blocks); // 设置block
-        $this->sublink($this->links, 'add'); // todo
+        $this->sublink($this->links, 'add');
 
         return view('goods.goods-type.add', compact('title'));
     }
@@ -133,11 +133,10 @@ class GoodsTypeController extends Backend
             'explain_panel' => $explain_panel
         ];
         $this->setLayoutBlock($blocks); // 设置block
-        $this->sublink($this->links, 'add'); // todo
+        $this->sublink($this->links, 'add');
 
         $type_id = $request->get('id');
         $info = $this->goodsType->getById($type_id);
-//        dd($info);
         return view('goods.goods-type.add', compact('title', 'info'));
     }
 

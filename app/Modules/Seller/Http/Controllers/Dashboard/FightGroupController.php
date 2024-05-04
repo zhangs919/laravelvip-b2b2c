@@ -20,10 +20,8 @@
 // | Description:
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
-use App\Models\Activity;
-use App\Models\Goods;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ActivityCategoryRepository;
 use App\Repositories\ActivityRepository;
@@ -54,15 +52,21 @@ class FightGroupController extends Seller
     protected $category;
     protected $brand;
 
-    public function __construct()
+    public function __construct(
+        ActivityRepository $activity
+        ,ActivityCategoryRepository $activityCategory
+        ,GoodsRepository $goods
+        ,CategoryRepository $category
+        ,BrandRepository $brand
+    )
     {
         parent::__construct();
 
-        $this->activity = new ActivityRepository();
-        $this->activityCategory = new ActivityCategoryRepository();
-        $this->goods = new GoodsRepository();
-        $this->category = new CategoryRepository();
-        $this->brand = new BrandRepository();
+        $this->activity = $activity;
+        $this->activityCategory = $activityCategory;
+        $this->goods = $goods;
+        $this->category = $category;
+        $this->brand = $brand;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -123,7 +127,7 @@ class FightGroupController extends Seller
             }
         }
         // 列表
-        list($list, $total) = $this->activity->getGoodsMixActivityList($where);
+        list($list, $total) = $this->activity->getFightGroupGoodsActivityList($where);
 
         $pageHtml = pagination($total);
         $page = frontend_pagination($total, true);

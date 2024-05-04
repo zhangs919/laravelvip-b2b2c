@@ -122,12 +122,12 @@ class Buy1Repository
         if (empty($shop_cart_list) || !is_array($shop_cart_list)) return [];
         $goods_buy_quantity = [];
         foreach ($shop_cart_list as $shop_cart) {
-            foreach ($shop_cart as $cart_info) {
+            foreach ($shop_cart['goods_list'] as $cart_info) {
                 // todo 判断是否是组合购买
                 $is_goods_mix = false; // 根据活动类型获取
                 if (!$is_goods_mix) {
                     // 正常商品
-                    @$goods_buy_quantity[$cart_info['goods_id']] += $cart_info['number'];
+                    @$goods_buy_quantity[$cart_info['goods_id']] += $cart_info['goods_number'];
                 } else {
                     // 组合套餐
 
@@ -136,5 +136,95 @@ class Buy1Repository
         }
 
         return $goods_buy_quantity;
+    }
+
+    /**
+     * 获取下单页面发票信息
+     *
+     * @param int $invoice_type
+     * @return array
+     */
+    public function getInvoiceInfo($invoice_type = 0)
+    {
+        $inv_content_list = explode("\n", str_replace("\r", '', sysconf('invoice_contents')));
+        $content_list = [];
+        if (!empty($inv_content_list)) {
+            foreach ($inv_content_list as $key=>$item) {
+                $content_list[] = [
+                    'name' => $item,
+                    'checked' => $key == 0 ? 'checked' : '', // 默认选中第一个
+                    'value' => $key
+                ];
+            }
+        }
+
+        $invoice_info = [
+            [
+                'name' => '不开发票',
+                'selected' => 'selected', // todo 判断选中项
+                'disabled' => '', // todo 判断是否禁用
+                'goods_list' => null
+            ],
+            [
+                'name' => '增值税普通发票',
+                'contents' => [
+                    'inv_title'=>null,
+                    'inv_company'=>null,
+                    'inv_taxpayers'=>null,
+                    'inv_content'=>null,
+                ],
+                'content_list' => $content_list,
+                'selected' => '',
+                'disabled' => 'disabled',
+                'goods_list' => null
+            ],
+            [
+                'name' => '增值税专用发票',
+                'contents' => [
+                    [
+                        'name' => 'inv_company',
+                        'label' => '单位名称',
+                        'value' => null,
+                        'required' => true
+                    ],
+                    [
+                        'name' => 'inv_taxpayers',
+                        'label' => '纳税人识别号',
+                        'value' => null,
+                        'required' => true
+                    ],
+                    [
+                        'name' => 'inv_address',
+                        'label' => '注册地址',
+                        'value' => null,
+                        'required' => true
+                    ],
+                    [
+                        'name' => 'inv_tel',
+                        'label' => '注册电话',
+                        'value' => null,
+                        'required' => true
+                    ],
+                    [
+                        'name' => 'inv_account',
+                        'label' => '开户银行',
+                        'value' => null,
+                        'required' => true
+                    ],
+                    [
+                        'name' => 'inv_bank',
+                        'label' => '银行账户',
+                        'value' => null,
+                        'required' => true
+                    ],
+                ],
+                'content_list' => $content_list,
+                'selected' => '',
+                'disabled' => 'disabled',
+                'goods_list' => null
+            ],
+        ];
+
+        return $invoice_info;
     }
 }

@@ -16,7 +16,7 @@
                     </dt>
                     <dd class="is-opening-38">
 <span class="shop-rank">
-<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/" title="" />
+<img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/" title="" />
 </span>
                         <span class="shop-rank-num">5.00</span>
                         <span class="shop-sold">

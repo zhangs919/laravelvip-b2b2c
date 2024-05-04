@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-weixin_programs_appid", "name": "SystemConfigModel[weixin_programs_appid]", "attribute": "weixin_programs_appid", "rules": {"string":true,"messages":{"string":"小程序appid必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_programs_appid", "name": "SystemConfigModel[weixin_programs_appid]", "attribute": "weixin_programs_appid", "rules": {"required":true,"messages":{"required":"小程序appid不能为空。"}}},{"id": "systemconfigmodel-weixin_programs_secret", "name": "SystemConfigModel[weixin_programs_secret]", "attribute": "weixin_programs_secret", "rules": {"string":true,"messages":{"string":"小程序密钥必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_programs_secret", "name": "SystemConfigModel[weixin_programs_secret]", "attribute": "weixin_programs_secret", "rules": {"required":true,"messages":{"required":"小程序密钥不能为空。"}}},{"id": "systemconfigmodel-weixin_programs_filename", "name": "SystemConfigModel[weixin_programs_filename]", "attribute": "weixin_programs_filename", "rules": {"string":true,"messages":{"string":"业务域名校验文件名字必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_programs_filename", "name": "SystemConfigModel[weixin_programs_filename]", "attribute": "weixin_programs_filename", "rules": {"required":true,"messages":{"required":"业务域名校验文件名字不能为空。"}}},{"id": "systemconfigmodel-weixin_programs_code", "name": "SystemConfigModel[weixin_programs_code]", "attribute": "weixin_programs_code", "rules": {"string":true,"messages":{"string":"校验码必须是一条字符串。"}}},{"id": "systemconfigmodel-weixin_programs_code", "name": "SystemConfigModel[weixin_programs_code]", "attribute": "weixin_programs_code", "rules": {"required":true,"messages":{"required":"校验码不能为空。"}}},]

@@ -10,7 +10,7 @@
                         <dt>
                             <div class="picture">
                                 <a href="javascript:void(0);" class="preview" ref="{{ get_image_url($v->path) }}" title="点击查看大图">
-                                    <img src="http://images.68mall.com/system/config/default_image/default_goods_image_0.gif" class="IMG-{{ $v->img_id }} lazy" data-original="{{ get_image_url($v->path) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320">
+                                    <img src="{{ get_image_url(sysconf('default_goods_image')) }}" class="IMG-{{ $v->img_id }} lazy" data-original="{{ get_image_url($v->path) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320">
                                 </a>
                             </div>
                             <input type="checkbox" class="checkbox" value="{{ $v->img_id }}">
@@ -70,7 +70,7 @@
     <script type="text/javascript">
         $().ready(function() {
             $("img").one("error", function() {
-                $(this).attr("src", "http://images.68mall.com/system/config/default_image/default_goods_image_0.gif")
+                $(this).attr("src", "{{ get_image_url(sysconf('default_goods_image')) }}")
             });
         });
     </script>

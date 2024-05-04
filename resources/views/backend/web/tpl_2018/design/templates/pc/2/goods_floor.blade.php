@@ -1,12 +1,19 @@
 <!-- 默认缓载图片 -->
 <!-- 前台首页楼层模板 -->
+{{--背景颜色--}}
+@php
+	$bg_color = !empty($data['99-1'][0]['bgcolor']) ? $data['99-1'][0]['bgcolor'] : '#8ed515';
+@endphp
+
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_name='{{ $tpl_name }}' data-is_valid='{{ $is_valid }}'>
 
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
 
-    <div class="w1210 floor-list">
-        <div class="floor" color='{{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }}'>
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif"
+         data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
+        <div class="floor" color='{{ $bg_color }}'>
             <div class="floor-layout">
                 <div class="floor-con floor-con1">
                     <div class="floor-title">
@@ -43,7 +50,7 @@
                                 </a>
                                 @endif
 
-                                <h3 @if($i == 1) style='border-color: {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }} {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }} #fff; color: {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }};' @endif>{{ $ext_info['cat'][$i] ?? '添加商品'}}</h3>
+                                <h3 @if($i == 1) style='border-color: {{ $bg_color }} {{ $bg_color }} #fff; color: {{ $bg_color }};' @endif>{{ $ext_info['cat'][$i] ?? '添加商品'}}</h3>
 
                             </li>
                             @endfor
@@ -52,7 +59,7 @@
 
                     </div>
                     <div class="floor-content">
-                        <div class="floor-left" style='border-top: 1px {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }} solid;'>
+                        <div class="floor-left" style='border-top: 1px {{ $bg_color }} solid;'>
                             <div class="floor-banner floor-focus SZY-FLOOR-FOCUS">
 
                                 @if($tpl_name != '' && $is_design)
@@ -99,7 +106,7 @@
                                 @if(!empty($data['6-1']))
                                     @foreach($data['6-1'] as $v)
                                         <li>
-                                            <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
+                                            <a href="{{ $v['link'] }}" title="{{ $v['cat_name'] }}">{{ $v['cat_name'] }}</a>
                                         </li>
                                     @endforeach
                                 @else
@@ -117,10 +124,10 @@
 
 
                             @for($i=1; $i <= 4; $i++)
-                                <div class="floor-tabs-panel @if($i > 1) floor-tabs-hide @endif" style='border-top: 1px {{ @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '#8ed515' }} solid;'>
+                                <div class="floor-tabs-panel @if($i > 1) floor-tabs-hide @endif" style='border-top: 1px {{ $bg_color }} solid;'>
 
                                     @for($gi = 0; $gi < 8; $gi++)
-                                        @if(@$data['2-'.$i][$gi] != null)
+                                        @if(!empty($data['2-'.$i][$gi]))
                                             <div class="item">
                                                 <div class="wrap">
                                                     <a target="_blank" href="{{ route('pc_show_goods',['goods_id'=>$data['2-'.$i][$gi]['goods_id']]) }}" title="{{ $data['2-'.$i][$gi]['goods_name'] }}" style="">
@@ -182,57 +189,57 @@
 
 
 <script type="text/javascript">
-    $(function() {
-        var $floor_focus = $("#{{ $uid }}").find(".SZY-FLOOR-FOCUS");
-        var sWidth = $floor_focus.width();
-        var len = $floor_focus.find("ul li").length; //获取焦点图个数
-        var index = 0;
-        var picTimer;
-        //以下代码添加数字按钮和按钮后的半透明条，还有上一页、下一页两个按钮
-        var btn = "<div class='focus-btn'>";
+    {{--$(function() {--}}
+        {{--var $floor_focus = $("#{{ $uid }}").find(".SZY-FLOOR-FOCUS");--}}
+        {{--var sWidth = $floor_focus.width();--}}
+        {{--var len = $floor_focus.find("ul li").length; //获取焦点图个数--}}
+        {{--var index = 0;--}}
+        {{--var picTimer;--}}
+        {{--//以下代码添加数字按钮和按钮后的半透明条，还有上一页、下一页两个按钮--}}
+        {{--var btn = "<div class='focus-btn'>";--}}
 
-        for (var i = 0; i < len; i++) {
-            btn += "<span></span>";
-        }
-        btn += "</div>";
-        $floor_focus.append(btn);
-        $floor_focus.find(".btnBg").css("opacity", 0.5);
+        {{--for (var i = 0; i < len; i++) {--}}
+            {{--btn += "<span></span>";--}}
+        {{--}--}}
+        {{--btn += "</div>";--}}
+        {{--$floor_focus.append(btn);--}}
+        {{--$floor_focus.find(".btnBg").css("opacity", 0.5);--}}
 
-        //为小按钮添加鼠标滑入事件，以显示相应的内容
-        $floor_focus.find(".focus-btn span").css("opacity", 0.3).mouseover(function() {
-            index = $floor_focus.find(".focus-btn span").index(this);
-            showPics(index);
-        }).eq(0).trigger("mouseover");
+        {{--//为小按钮添加鼠标滑入事件，以显示相应的内容--}}
+        {{--$floor_focus.find(".focus-btn span").css("opacity", 0.3).mouseover(function() {--}}
+            {{--index = $floor_focus.find(".focus-btn span").index(this);--}}
+            {{--showPics(index);--}}
+        {{--}).eq(0).trigger("mouseover");--}}
 
-        //本例为左右滚动，即所有li元素都是在同一排向左浮动，所以这里需要计算出外围ul元素的宽度
-        $floor_focus.find("ul").css("width", sWidth * (len));
+        {{--//本例为左右滚动，即所有li元素都是在同一排向左浮动，所以这里需要计算出外围ul元素的宽度--}}
+        {{--$floor_focus.find("ul").css("width", sWidth * (len));--}}
 
-        //鼠标滑上焦点图时停止自动播放，滑出时开始自动播放
-        $floor_focus.hover(function() {
-            clearInterval(picTimer);
-        }, function() {
-            picTimer = setInterval(function() {
-                showPics(index);
-                index++;
-                if (index == len) {
-                    index = 0;
-                }
-            }, 3000); //此4000代表自动播放的间隔，单位：毫秒
-        }).trigger("mouseleave");
+        {{--//鼠标滑上焦点图时停止自动播放，滑出时开始自动播放--}}
+        {{--$floor_focus.hover(function() {--}}
+            {{--clearInterval(picTimer);--}}
+        {{--}, function() {--}}
+            {{--picTimer = setInterval(function() {--}}
+                {{--showPics(index);--}}
+                {{--index++;--}}
+                {{--if (index == len) {--}}
+                    {{--index = 0;--}}
+                {{--}--}}
+            {{--}, 3000); //此4000代表自动播放的间隔，单位：毫秒--}}
+        {{--}).trigger("mouseleave");--}}
 
-        //显示图片函数，根据接收的index值显示相应的内容
-        function showPics(index) { //普通切换
-            var nowLeft = -index * sWidth; //根据index值计算ul元素的left值
-            $floor_focus.find("ul").stop(true, false).animate({
-                "left": nowLeft
-            }, 300);
-            $floor_focus.find(".focus-btn span").stop(true, false).animate({
-                "opacity": "0.3"
-            }, 300).eq(index).stop(true, false).animate({
-                "opacity": "0.7"
-            }, 300); //为当前的按钮切换到选中的效果
-        }
-    });
+        {{--//显示图片函数，根据接收的index值显示相应的内容--}}
+        {{--function showPics(index) { //普通切换--}}
+            {{--var nowLeft = -index * sWidth; //根据index值计算ul元素的left值--}}
+            {{--$floor_focus.find("ul").stop(true, false).animate({--}}
+                {{--"left": nowLeft--}}
+            {{--}, 300);--}}
+            {{--$floor_focus.find(".focus-btn span").stop(true, false).animate({--}}
+                {{--"opacity": "0.3"--}}
+            {{--}, 300).eq(index).stop(true, false).animate({--}}
+                {{--"opacity": "0.7"--}}
+            {{--}, 300); //为当前的按钮切换到选中的效果--}}
+        {{--}--}}
+    {{--});--}}
 </script>
 <script type="text/javascript">
     //首页楼层Tab标签卡滑门切换

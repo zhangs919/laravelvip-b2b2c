@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+//use App\Http\Middleware\UserApiAuthMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -14,14 +15,15 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        // \App\Http\Middleware\TrustHosts::class,
+        \App\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\TrustProxies::class,
 
         \App\Http\Middleware\Template::class, // PC、Mobile自动判断模板渲染
-
     ];
 
     /**
@@ -40,9 +42,15 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+//        'api' => [
+//            'throttle:60,1',
+//            'bindings',
+//        ],
         'api' => [
-            'throttle:60,1',
-            'bindings',
+            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            // 访问频率控制
+//            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
 
@@ -54,16 +62,43 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+//        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+//        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+//        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+//        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+//        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+//        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+//        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+//        'auth.admin' => \App\Http\Middleware\AdminAuthMiddleware::class,
+//        'auth.seller' => \App\Http\Middleware\SellerAuthMiddleware::class,
+//        'auth.store' => \App\Http\Middleware\StoreAuthMiddleware::class,
+//        'auth.user' => \App\Http\Middleware\UserAuthMiddleware::class,
+////        'auth.api' => UserApiAuthMiddleware::class, // 前端接口api
+    ];
+
+    protected $middlewareAliases = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+
+//		'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+//		'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+
+
+        // 新增自定义中间件
         'auth.admin' => \App\Http\Middleware\AdminAuthMiddleware::class,
         'auth.seller' => \App\Http\Middleware\SellerAuthMiddleware::class,
         'auth.store' => \App\Http\Middleware\StoreAuthMiddleware::class,
         'auth.user' => \App\Http\Middleware\UserAuthMiddleware::class,
-    ];
+//        'auth.sanctum' => UserApiAuthMiddleware::class, // 前端接口api
+	];
 }

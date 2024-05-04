@@ -5,7 +5,8 @@
 
     <!-- 楼层 _star -->
     <!-- 楼层颜色 -->
-    <div class="w1210 floor-list">
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif" data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
         <div class="floor">
             <h2 class="floor-title3 floor-title">
 
@@ -88,14 +89,14 @@
 
                         @if(!empty($data['6-1']))
                             @foreach($data['6-1'] as $v)
-                                <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" target="" class="floor-goods-category">{{ $v['cat_name'] }}</a>
+                                <a href="{{ $v['link'] }}" target="" class="floor-goods-category">{{ $v['cat_name'] }}</a>
                             @endforeach
                         @else
                             @for($i=1; $i <= 15; $i++)
                                 <a href="javascript:void(0)" class="floor-goods-category">商品分类</a>
                             @endfor
                         @endif
-                        
+
                         @if($tpl_name != '' && $is_design)
                             <a class="selector category-selector SZY-TPL-SELECTOR" title="编辑" data-uid="{{ $uid }}" data-cat_id="1" data-type="6" data-number="15">
                                 <i class="fa fa-edit"></i>

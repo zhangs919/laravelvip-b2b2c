@@ -8,6 +8,7 @@ use App\Models\CatAttribute;
 use App\Models\Category;
 use App\Models\GoodsAttr;
 use App\Models\GoodsSpec;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class AttributeRepository
@@ -16,13 +17,13 @@ class AttributeRepository
 
     protected $model;
 
-    protected $attr_value;
+    protected $attrValue;
 
 
     public function __construct()
     {
         $this->model = new Attribute();
-        $this->attr_value = new AttrValue();
+        $this->attrValue = new AttrValue();
     }
 
     public function getAttrInfo($attr_id)
@@ -76,16 +77,16 @@ class AttributeRepository
 
                     if (intval($item['is_delete'])) {
                         // 删除
-                        $this->attr_value->del($item['attr_vid']);
+                        $this->attrValue->del($item['attr_vid']);
                     }else {
                         if (intval($item['attr_vid'])) {
                             // 更新
-                            $this->attr_value->where('attr_vid', $item['attr_vid'])->update($item);
+                            $this->attrValue->where('attr_vid', $item['attr_vid'])->update($item);
                         } else {
                             // 新增
-                            $this->attr_value->addAll($item);
-//                            $this->attr_value->fill($item);
-//                            $this->attr_value->save();
+                            $this->attrValue->addAll($item);
+//                            $this->attrValue->fill($item);
+//                            $this->attrValue->save();
                         }
                     }
                 }
@@ -123,7 +124,7 @@ class AttributeRepository
                     $catAttribute = CatAttribute::where('attr_id', $id)->select(['cat_id'])->get()->groupBy('cat_id');
                     $catAttributeCount = $catAttribute->count();
                     if ($catAttributeCount > 0) {
-                        $cat_id = array_first($catAttribute->toArray())[0]['cat_id'];
+                        $cat_id = Arr::first($catAttribute->toArray())[0]['cat_id'];
                         $cat_name = Category::where('cat_id', $cat_id)->value('cat_name');
 
                         return arr_result(-1, null, '属性#'.$id.'已经被分类#'.$cat_id.'【'.$cat_name.'】引用，无法删除');

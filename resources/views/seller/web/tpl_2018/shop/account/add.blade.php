@@ -1,6 +1,15 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
 
@@ -11,7 +20,7 @@
 
     <div class="table-content m-t-30">
         <form id="UserModel" class="form-horizontal" name="UserModel" action="/shop/account/add" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 用户ID -->
             <input type="hidden" id="usermodel-user_id" class="form-control" name="UserModel[user_id]" value="{{ $info->user_id ?? '' }}">
             <!-- 登录名 -->
@@ -195,7 +204,18 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+        @if(!isset($info->user_id))
+            [{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"required":true,"messages":{"required":"登录名不能为空。"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"required":true,"messages":{"required":"密码不能为空。"}}},{"id": "usermodel-role_id", "name": "UserModel[role_id]", "attribute": "role_id", "rules": {"required":true,"messages":{"required":"角色不能为空。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"username":{"pattern":/^[a-zA-Z0-9_\u4e00-\u9fa5]{4,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/^\d+$/,"not":true,"skipOnEmpty":1},"messages":{"username":"登录名只能由4-20个字，支持汉字、字母、数字、下划线“_”构成的组合","match":"登录名不能为纯数字"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"password":{"pattern":/^[^\u4e00-\u9fa5\·]{6,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/\s+/,"not":true,"skipOnEmpty":1},"messages":{"password":"密码长度为6-20个字符，建议由字母、数字和符号两种以上。","match":"密码不能包含空格。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"E-mail必须是一条字符串。","maxlength":"E-mail只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"E-mail不是有效的邮箱地址。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"user_name","params":[],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"mobile","params":[],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"email","params":[],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-role_id", "name": "UserModel[role_id]", "attribute": "role_id", "rules": {"compare":{"operator":">","type":"number","compareValue":"0","skipOnEmpty":1},"messages":{"compare":"角色不能为空"}}},]
+        @else
+            [{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"username":{"pattern":/^[a-zA-Z0-9_\u4e00-\u9fa5]{4,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/^\d+$/,"not":true,"skipOnEmpty":1},"messages":{"username":"登录名只能由4-20个字，支持汉字、字母、数字、下划线“_”构成的组合","match":"登录名不能为纯数字"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"password":{"pattern":/^[^\u4e00-\u9fa5\·]{6,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/\s+/,"not":true,"skipOnEmpty":1},"messages":{"password":"密码长度为6-20个字符，建议由字母、数字和符号两种以上。","match":"密码不能包含空格。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"E-mail必须是一条字符串。","maxlength":"E-mail只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"E-mail不是有效的邮箱地址。"}}},{"id": "usermodel-role_id", "name": "UserModel[role_id]", "attribute": "role_id", "rules": {"compare":{"operator":">","type":"number","compareValue":"0","skipOnEmpty":1},"messages":{"compare":"角色不能为空"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"mobile","params":["UserModel[user_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"email","params":["UserModel[user_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
+        @endif
+    </script>
+    <script type="text/javascript">
+        // 
+    </script>
+    <a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
 @stop
 
 
@@ -209,21 +229,14 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180919"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-        @if(!isset($info->user_id))
-            [{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"required":true,"messages":{"required":"登录名不能为空。"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"required":true,"messages":{"required":"密码不能为空。"}}},{"id": "usermodel-role_id", "name": "UserModel[role_id]", "attribute": "role_id", "rules": {"required":true,"messages":{"required":"角色不能为空。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"username":{"pattern":/^[a-zA-Z0-9_\u4e00-\u9fa5]{4,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/^\d+$/,"not":true,"skipOnEmpty":1},"messages":{"username":"登录名只能由4-20个字，支持汉字、字母、数字、下划线“_”构成的组合","match":"登录名不能为纯数字"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"password":{"pattern":/^[^\u4e00-\u9fa5\·]{6,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/\s+/,"not":true,"skipOnEmpty":1},"messages":{"password":"密码长度为6-20个字符，建议由字母、数字和符号两种以上。","match":"密码不能包含空格。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"E-mail必须是一条字符串。","maxlength":"E-mail只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"E-mail不是有效的邮箱地址。"}}},{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"user_name","params":[],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"mobile","params":[],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"email","params":[],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-role_id", "name": "UserModel[role_id]", "attribute": "role_id", "rules": {"compare":{"operator":">","type":"number","compareValue":"0","skipOnEmpty":1},"messages":{"compare":"角色不能为空"}}},]
-        @else
-            [{"id": "usermodel-user_name", "name": "UserModel[user_name]", "attribute": "user_name", "rules": {"username":{"pattern":/^[a-zA-Z0-9_\u4e00-\u9fa5]{4,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/^\d+$/,"not":true,"skipOnEmpty":1},"messages":{"username":"登录名只能由4-20个字，支持汉字、字母、数字、下划线“_”构成的组合","match":"登录名不能为纯数字"}}},{"id": "usermodel-password", "name": "UserModel[password]", "attribute": "password", "rules": {"password":{"pattern":/^[^\u4e00-\u9fa5\·]{6,20}$/,"not":false,"skipOnEmpty":1},"match":{"pattern":/\s+/,"not":true,"skipOnEmpty":1},"messages":{"password":"密码长度为6-20个字符，建议由字母、数字和符号两种以上。","match":"密码不能包含空格。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"string":true,"messages":{"string":"E-mail必须是一条字符串。","maxlength":"E-mail只能包含至多60个字符。"},"maxlength":60}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"match":{"pattern":/^((13|15|18|17|14)\d{9}|(199|198|166)\d{8})$/,"not":false,"skipOnEmpty":1},"messages":{"match":"手机号码是无效的。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"email":{"pattern":/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/,"fullPattern":/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/,"allowName":false,"enableIDN":false,"skipOnEmpty":1},"messages":{"email":"E-mail不是有效的邮箱地址。"}}},{"id": "usermodel-role_id", "name": "UserModel[role_id]", "attribute": "role_id", "rules": {"compare":{"operator":">","type":"number","compareValue":"0","skipOnEmpty":1},"messages":{"compare":"角色不能为空"}}},{"id": "usermodel-mobile", "name": "UserModel[mobile]", "attribute": "mobile", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"mobile","params":["UserModel[user_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},{"id": "usermodel-email", "name": "UserModel[email]", "attribute": "email", "rules": {"ajax":{"url":"/shop/account/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcVXNlck1vZGVs","attribute":"email","params":["UserModel[user_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
-        @endif
-    </script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             var validator = $("#UserModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -236,7 +249,6 @@
                 $.loading.start();
                 $("#UserModel").submit();
             });
-
             // 重新加载角色列表
             $("#btn_reload_role_list").click(function() {
                 $.loading.start();
@@ -260,6 +272,7 @@
             });
         });
     </script>
+
 @stop
 
 {{--outside body script--}}

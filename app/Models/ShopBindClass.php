@@ -37,4 +37,14 @@ class ShopBindClass extends BaseModel
     ];
 
     protected $primaryKey = 'bind_cls_id';
+
+	/**
+	 * 店铺经营类目
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function shopClass()
+	{
+		return $this->belongsTo(ShopClass::class,'cls_id','cls_id');
+	}
 }

@@ -18,26 +18,13 @@
             <div class="content-info">
                 <div class="order-step">
                     <!--完成步骤为dl添加current样式，完成操作内容后会显示完成时间-->
-                    <dl class="current step-first">
-                        <dt>拍下商品</dt>
-                        <dd class="step-bg"></dd>
-                        <dd class="date" title="下单时间">{{ format_time($order_info['add_time'], 'Y-m-d H:i:s') }}</dd>
-                    </dl>
-                    <dl class="current">
-                        <dt>商家发货</dt>
-                        <dd class="step-bg"></dd>
-                        <dd class="date" title="商家发货时间">{{ format_time($order_info['shipping_time'], 'Y-m-d H:i:s') }}</dd>
-                    </dl>
-                    <dl class="current">
-                        <dt>买家付款</dt>
-                        <dd class="step-bg"></dd>
-                        <dd class="date" title="买家付款时间">{{ format_time($order_info['pay_time'], 'Y-m-d H:i:s') }}</dd>
-                    </dl>
-                    <dl class="current">
-                        <dt>买家评价</dt>
-                        <dd class="step-bg"></dd>
-                        <dd class="date" title="完成时间">{{ format_time($order_info['confirm_time'], 'Y-m-d H:i:s') }}</dd>
-                    </dl>
+                    @foreach($order_schedules as $key=>$schedule)
+                        <dl class="@if($schedule['status']){{ 'current' }}@endif @if($key == 0){{ 'step-first' }}@endif">
+                            <dt>{{ $schedule['title'] }}</dt>
+                            <dd class="step-bg"></dd>
+                            <dd class="date" title="{{ $schedule['title_sub'] ?? '' }}">{{ format_time($schedule['time']) }}</dd>
+                        </dl>
+                    @endforeach
 
                 </div>
                 <div class="trade-details">
@@ -59,13 +46,13 @@
                                     <li class="table-list">
                                         <div class="trade-imfor-dt">买家留言：</div>
                                         <div class="trade-imfor-dd message-detail">
-                                            <span class="no-content">{!! $order_info['postscript'] !!}</span>
+                                            <span class="no-content">{!! $order_info['postscript'] ?? '无' !!}</span>
                                         </div>
                                     </li>
                                     <li class="table-list">
                                         <div class="trade-imfor-dt">送货时间：</div>
                                         <div class="trade-imfor-dd message-detail">
-                                            <span class="no-content">无</span>
+                                            <span class="no-content">{{ $order_info['best_time'] ?? '无' }}</span>
                                         </div>
                                     </li>
                                     <li class="table-list separate-top">
@@ -79,10 +66,15 @@
                                                     <table class="trade-dropdown-table">
                                                         <tbody>
 
-                                                        <tr>
-                                                            <td class="trade-dropdown-title">成交时间：</td>
-                                                            <td class="trade-dropdown-data">{{ format_time($order_info['add_time'], 'Y-m-d H:i:s') }}</td>
-                                                        </tr>
+                                                        @foreach($order_schedules as $key=>$schedule)
+                                                            @if($schedule['status'])
+                                                                <tr>
+                                                                    <td class="trade-dropdown-title">{{ $schedule['title'] }}：</td>
+                                                                    <td class="trade-dropdown-data">{{ format_time($schedule['time']) }}</td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+
 
 
 
@@ -106,16 +98,29 @@
                                         <div class="trade-imfor-dd imfor-short-dd imfor-customer-dd">
                                             <span title="{{ $order_info['shop_name'] }}" class="btn-link">{{ $order_info['shop_name'] }}</span>
 
-                                            <span class="ww-light">
-											<!-- 旺旺不在线 i 标签的 class="ww-offline" -->
+                                            {{--客服工具 默认0 0无客服 1QQ 2旺旺--}}
+                                            @if($order_info['customer_tool'] == 2)
+                                                <span class="ww-light">
+                                <!-- 旺旺不在线 i 标签的 class="ww-offline" -->
 
-                                                <!-- s等于1时带文字，等于2时不带文字 -->
-                                                <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&groupid=0&charset=utf-8">
-                                                    <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=xxxxxx&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
+                                                    <!-- s等于1时带文字，等于2时不带文字 -->
+                                <a target="_blank" href="http://amos.alicdn.com/getcid.aw?v=2&uid={{ $order_info['customer_account'] }}&site=cntaobao&s=2&groupid=0&charset=utf-8">
+                                    <img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid={{ $order_info['customer_account'] }}&site=cntaobao&s=2&charset=utf-8" alt="淘宝旺旺" title="" />
+                                    <span></span>
+                                </a>
+
+                            </span>
+                                            @elseif($order_info['customer_tool'] == 1)
+                                            <!-- s等于1时带文字，等于2时不带文字 -->
+                                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={{ $order_info['customer_account'] }}&site=qq&menu=yes" class="service-btn">
+                                                    <img border="0" onload="load_qq_customer_image(this, 'http://')" src="http://wpa.qq.com/pa?p=2:{{ $order_info['customer_account'] }}:52" alt="QQ" title="" style="height: 20px;" />
                                                     <span></span>
                                                 </a>
-
-										    </span>
+                                            @else{{--默认 平台客服--}}
+                                            <a href='{{ $order_info['yikf_url'] ?? 'javascript:;' }}' class="ww-light  color" target="_blank" title="点击联系在线客服">
+                                                <i class="iconfont">&#xe6ad;</i>
+                                            </a>
+                                            @endif
                                         </div>
                                         <div class="drop-down-container merchant-detail-panel">
                                             <span class="more-detail">更多</span>
@@ -148,7 +153,11 @@
                                 <dl class="user-status-imfor">
                                     <dt class="imfor-icon">
                                         <!-- 订单完成的图标 -->
-                                        <img src="/images/common/warning.png">
+                                        @if($order_info['order_status'] == 1)
+                                            <img src="/images/common/success.png">
+                                        @else
+                                            <img src="/images/common/warning.png">
+                                        @endif
                                     </dt>
                                     <dd class="imfor-title">
                                         <h3>订单状态：{{ $order_info['order_status_format'] }}</h3>
@@ -156,12 +165,31 @@
                                 </dl>
                                 <ul class="user-status-prompt">
                                     <!-- 待付款 -->
+                                    @if(get_order_operate_state('buyer_payment', $order_info))
+                                        <li>
+                                    <span>
+                                        还有
+                                        <strong class="second-color" id="counter_{{ $order_info['order_id'] }}">00 天 00 小时 00 分 00 秒</strong>
+                                        来付款，超时订单将自动关闭
+                                    </span>
+                                        </li>
+                                    @endif
+
                                     <!-- 待收货 -->
+                                    @if(format_order_status_seller($order_info['order_status'],$order_info['shipping_status'],$order_info['pay_status'], $order_info['order_cancel']) == 'shipped' && $order_info['countdown'] > 0)
+                                        <li>
+                                            <span>
+                                                还有
+                                                <strong class="second-color" id="counter_{{ $order_info['order_id'] }}"></strong>
+                                                来确认收货，超时订单将自动确认收货
+                                            </span>
+                                        </li>
+                                    @endif
 
                                     {{--todo 如果有物流 判断是否显示--}}
                                     <!-- 物流 -->
-
-                                    <li>
+                                    @if($order_info['shipping_status'] == 1)
+                                    {{--<li>
                                         <span>物流：</span>
                                         <div class="user-status-logistic">
 
@@ -171,39 +199,80 @@
 
                                             <div class="logistic-detail">
                                                 <span>2016-12-04 15:13:19</span>
-                                                <span class="package-detail package-address-detail">快件被快递员13313013072取出，请等待快递员与您联系，电话13313013072。</span>
+                                                <span class="package-detail package-address-detail">快件被快递员13333333333取出，请等待快递员与您联系，电话13333333333。</span>
                                             </div>
                                         </div>
-                                    </li>
-
+                                    </li>--}}
+                                    @endif
 
 
                                     <!-- 交易关闭 -->
-
+                                    @if(in_array($order_info['order_status'], [2,3,4]))
+                                        <li>
+                                            <div class="user-status-logistic">
+                                        <span class="package-detail">
+                                            关闭类型：{{ $order_info['order_status_format'] }}
+                                        </span>
+                                            </div>
+                                            <div class="user-status-logistic">
+                                                <span class="package-detail"> 关闭原因：{{ $order_info['close_reason'] }}</span>
+                                            </div>
+                                        </li>
+                                    @endif
                                 </ul>
 
                                 <dl class="user-status-operate">
 
                                     <!-- 不同的交易状态 -->
+                                    {{--<dt>您可以</dt>--}}
+
+                                    @if(get_order_operate_state('buyer_payment', $order_info))
+                                        <dd>
+                                            <a href="/checkout/pay.html?id={{ $order_info['order_id'] }}" class="on-payment">立即付款</a>
+                                        </dd>
+                                    @endif
+
+                                    {{--todo--}}
+                                    {{--<dd>
+                                        <a class="btn-link to-pay" data-id="6026">找朋友帮忙付</a>
+                                    </dd>--}}
+
+
+                                    @if(get_order_operate_state('buyer_cancel', $order_info))
+                                        <dd>
+                                            <a class="btn-link edit-order" data-id="{{ $order_info['order_id'] }}" data-type="cancel">取消订单</a>
+                                        </dd>
+                                    @endif
+
+                                    {{--确认收货--}}
+                                    @if(get_order_operate_state('buyer_confirm_receipt', $order_info))
+                                        <dd>
+                                            <a href="javascript:void(0);" class="confirm-receipt edit-order" data-id="{{ $order_info['order_id'] }}" data-type="confirm">确认收货</a>
+                                        </dd>
+                                    @endif
+
+                                    {{--延长收货时间--}}
+                                    @if(get_order_operate_state('buyer_delay', $order_info))
+                                        <dd>
+                                            <a href="javascript:void(0);" class="extend-time btn-link edit-order" data-id="{{ $order_info['order_id'] }}" data-type="delay">延长收货时间</a>
+                                        </dd>
+                                    @endif
 
 
 
 
+                                    <!-- 已付款，已收货 -->
+                                    @if(get_order_operate_state('buyer_evaluate', $order_info))
+                                        <dd>
+                                            <a href="/user/evaluate/info.html?order_id={{ $order_info['order_id'] }}" class="evaluate">评价晒单</a>
+                                        </dd>
+                                    @endif
 
-
-
-                                    {{--todo 判断是否显示--}}
-                                    <dt>您可以</dt>
-
+                                    @if($order_info['evaluate_status'] == 1)
                                     <dd>
-                                        <a class="btn-link edit-order" data-id="{{ $order_info['order_id'] }}" data-type="cancel">取消订单</a>
+                                        <a class="evaluate">已评价</a>
                                     </dd>
-
-
-
-
-
-                                    <!-- 已付款，待发货 -->
+                                    @endif
 
 
 
@@ -233,39 +302,28 @@
                             <td class="header-content-detail">
                                 <ul>
                                     <li class="bought-listform-content ">
-                                        <div class="content-package">
+                                        {{--<div class="content-package">
                                             <span class="package-header"> 待发货商品 </span>
-                                        </div>
+                                        </div>--}}
                                         <table cellspacing="0" cellpadding="0">
                                             <tbody>
 
+                                            {{--todo 以下代码重写--}}
                                             @if(!empty($order_info['delivery_list']))
-                                            @foreach($order_info['delivery_list'] as $og)
+                                            @foreach($order_info['delivery_list'] as $goods)
                                             <tr>
                                                 <td class="header-item">
                                                     <div class="item-container clearfix">
                                                         <div class="item-img">
-                                                            <a class="pic s50" href="{{ route('pc_show_goods', ['goods_id' => $og->goods_id]) }}" title="查看宝贝详情" target="_blank">
-                                                                <img src="{{ get_image_url($og->goods->goods_image) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80">
+                                                            <a class="pic s50" href="{{ route('pc_show_goods', ['goods_id' => $goods['goods_id']]) }}" title="查看宝贝详情" target="_blank">
+                                                                <img src="{{ get_image_url($goods['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80">
                                                             </a>
                                                         </div>
                                                         <div class="item-meta">
-                                                            <a class="item-link" href="{{ route('pc_show_goods', ['goods_id' => $og->goods_id]) }}" title="查看宝贝详情" target="_blank">
+                                                            <a class="item-link" href="{{ route('pc_show_goods', ['goods_id' => $goods['goods_id']]) }}" title="查看宝贝详情" target="_blank">
 
                                                                 {{ $og->goods_name }}
                                                             </a>
-
-
-
-
-
-
-
-
-
-
-
-
                                                             <span class="icon-lists">
 																<span class="icon-group">
 
@@ -273,19 +331,19 @@
 															</span>
                                                             <div class="item-props">
 																<span class="sku">
-																																		<span>电压：60V</span>
-																																		<span>颜色分类：60V20A 1000W空车</span>
-
+                                                                    @foreach(explode(' ', $goods['spec_info']) as $spec)
+                                                                        <span>{{ $spec }}</span>
+                                                                    @endforeach
 																</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="header-price font-high-light">￥{{ $og->goods_price }}</td>
-                                                <td class="header-count font-high-light">{{ $og->goods_number }}</td>
+                                                <td class="header-price font-high-light">￥{{ $goods['goods_price'] }}</td>
+                                                <td class="header-count font-high-light">{{ $goods['goods_number'] }}</td>
 
                                                 <td class="header-favorable font-high-light">
-                                                    <div class="favorable-hight-light">卖家优惠 ￥0.00</div>
+                                                    <div class="favorable-hight-light">卖家优惠 ￥{{ $goods['discount'] }}</div>
                                                 </td>
 
                                                 <td class="header-status font-high-light">
@@ -310,7 +368,7 @@
                             </td>
                             <!---->
 
-                            <td class="header-content-logistics" rowspan="{{ count($order_info['delivery_list']) }}">
+                            <td class="header-content-logistics" rowspan="@if(!empty($order_info['delivery_list'])){{ count($order_info['delivery_list']) }}@else{{ 0 }}@endif">
                                 @if($order_info['shipping_fee'] > 0)
 
                                     <div class="font-high-light">￥{{ $order_info['shipping_fee'] }}</div>
@@ -330,7 +388,7 @@
                             <td class="header-content-detail">
                                 <ul>
                                     <li class="bought-listform-content ">
-                                        <div class="content-package">
+                                        {{--<div class="content-package">
                                             <span class="package-header"> 包裹1 </span>
                                             <div class="package-message">
                                                 <span class="package-detail">  顺丰快递  </span>
@@ -338,8 +396,8 @@
 												    运单号:<span>456789</span>
                                                     <span class="package-detail package-address-detail">
                                                          2016-12-04 15:13:19
-                                                        <span class="package-more" title="快件被快递员13313013072取出，请等待快递员与您联系，电话13313013072。">
-                                                            <span>快件被快递员13313013072取出，...</span>
+                                                        <span class="package-more" title="快件被快递员13333333333取出，请等待快递员与您联系，电话13333333333。">
+                                                            <span>快件被快递员13333333333取出，...</span>
                                                         </span>
                                                         <span class="drop-down-container">
                                                             <span class="more-detail">更多</span>
@@ -350,7 +408,7 @@
 
                                                                                                                                             <li class="status-current">
                                                                             <span>2016-12-04 15:13:19</span>
-                                                                            <span class="package-address" title="快件被快递员13313013072取出，请等待快递员与您联系，电话13313013072。">快件被快递员13313013072取出，请等待快递员与您联系，电话13313013072。</span>
+                                                                            <span class="package-address" title="快件被快递员13333333333取出，请等待快递员与您联系，电话13333333333。">快件被快递员13333333333取出，请等待快递员与您联系，电话13333333333。</span>
                                                                         </li>
                                                                                                                                             <li class="status-done">
                                                                             <span>2016-12-04 12:59:36</span>
@@ -364,70 +422,71 @@
                                                 </span>
 
                                             </div>
-                                        </div>
+                                        </div>--}}
                                         <table cellspacing="0" cellpadding="0">
                                             <tbody>
 
+                                            @foreach($order_info['goods_list'] as $goods)
                                             <tr>
                                                 <td class="header-item">
                                                     <div class="item-container clearfix">
                                                         <div class="item-img">
-                                                            <a class="pic s50" href="http://www.b2b2c.yunmall.68mall.com/goods-11.html" title="查看宝贝详情" target="_blank">
-                                                                <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036308618249.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80">
+                                                            <a class="pic s50" href="{{ route('pc_show_goods', ['goods_id'=>$goods['goods_id']]) }}" title="查看宝贝详情" target="_blank">
+                                                                <img src="{{ get_image_url($goods['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80">
                                                             </a>
                                                         </div>
                                                         <div class="item-meta">
-                                                            <a class="item-link" href="http://www.b2b2c.yunmall.68mall.com/goods-11.html" title="查看宝贝详情" target="_blank">
-
-
-                                                                高山红富士苹果新鲜脆甜多汁水果批发
+                                                            <a class="item-link" href="{{ route('pc_show_goods', ['goods_id'=>$goods['goods_id']]) }}" title="查看宝贝详情" target="_blank">
+                                                                {{ $goods['goods_name'] }}
                                                             </a>
 
-
-
-                                                            <div class="goods-active group-buy">
-                                                                <a>团购</a>
-                                                            </div>
-
-
-
-
+                                                            {{--商品活动标识--}}
+                                                            @if($goods['goods_type'] > 0)
+                                                                <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">
+                                                                    <a>{{ format_order_goods_type($goods['goods_type']) }}</a>
+                                                                </div>
+                                                            @endif
 
                                                             <span class="icon-lists">
-																<span class="icon-group">
-																																		<a href="javascript:;" title="【破损补寄】卖家就该商品签收状态作出承诺，自商品签收之日起至卖家承诺保障时间内，如发现商品在运输途中出现破损，买家可申请破损部分商品补寄。" data-toggle="tooltip" data-placement="auto bottom">
-																		<img src="http://images.68mall.com/contract/2016/06/07/14653028611314.jpg" />
-																	</a>
-																																		<a href="javascript:;" title="【品质承诺】卖家就该商品品质向买家作出承诺，承诺商品为正品。" data-toggle="tooltip" data-placement="auto bottom">
-																		<img src="http://images.68mall.com/contract/2016/06/07/14653028223253.png" />
-																	</a>
 
-																</span>
+                                                                 @if(!empty($goods['saleservice']))
+                                                                    <span class="item-group">
+                                                                        @foreach($goods['saleservice'] as $service)
+                                                                            <a href="javascript:;" title="【{{ $service['contract_name'] }}】{{ $service['contract_desc'] }}"
+                                                                               data-toggle="tooltip" data-placement="auto bottom">
+                                                                                <img src="{{ get_image_url($service['contract_image']) }}" />
+                                                                            </a>
+                                                                        @endforeach
+                                                                    </span>
+                                                                @endif
+
 															</span>
                                                             <div class="item-props">
 																<span class="sku">
-																																		<span></span>
-
+                                                                    @foreach(explode(' ', $goods['spec_info']) as $spec)
+                                                                        <span>{{ $spec }}</span>
+                                                                    @endforeach
 																</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="header-price font-high-light">￥1.00</td>
-                                                <td class="header-count font-high-light">1</td>
+                                                <td class="header-price font-high-light">￥{{ $goods['goods_price'] }}</td>
+                                                <td class="header-count font-high-light">{{ $goods['goods_number'] }}</td>
                                                 <td class="header-favorable font-high-light">
-                                                    <div class="favorable-hight-light">￥0</div>
+                                                    <div class="favorable-hight-light">￥{{ $goods['goods_price']*$goods['goods_number'] }}</div>
                                                 </td>
                                                 <td class="header-status font-high-light">
                                                     <div class="font-black">
 
 
-                                                        已发货
+                                                        {{ $goods['goods_status_format'] }}
 
 
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @endforeach
 
                                             </tbody>
                                         </table>
@@ -471,10 +530,10 @@
 
 
                                 <em class="operator">-</em>
-                                <span>卖家优惠：￥0.00</span>
+                                <span>卖家优惠：￥{{ $order_info['discount_fee'] }}</span>
 
                                 <em>=</em>
-                                <span class="end second-color">订单总金额：{{ $order_info['order_amount_format'] }}</span>
+                                <span class="end second-color">订单总金额：￥{{ $order_info['order_amount'] }}</span>
                             </div>
 
 
@@ -495,13 +554,13 @@
 
                                     在线支付
 
-                                    ：￥0.00
+                                    ：￥{{ $order_info['money_paid'] }}
                                 </span>
 
                                 <em>+</em>
-                                <span>余额支付：￥19.60</span>
+                                <span>余额支付：￥{{ $order_info['surplus'] }}</span>
                                 <em>=</em>
-                                <span class="end second-color">实付款金额：￥19.6</span>
+                                <span class="end second-color">实付款金额：￥{{ $order_info['order_amount'] }}</span>
 
                             </div>
 
@@ -513,61 +572,141 @@
         </div>
 
         <script>
-            $().ready(function() {
-                $("body").on("click", ".edit-order", function() {
-                    var type = $(this).data("type");
-                    var id = $(this).data("id");
-                    var is_exchange = "";
-                    title = '';
-                    if (type == 'delay') {
-                        title = "延长确认收货时间";
-                    }
-                    if (type == 'confirm') {
-                        title = "确认收货";
-                    }
-                    if (type == 'cancel') {
-                        title = "取消订单";
-                    }
+            //
+        </script>
+    </div>
 
-                    if ($.modal($(this))) {
-                        $.modal($(this)).show();
-                    } else {
-                        $.modal({
-                            // 标题
-                            title: title,
-                            trigger: $(this),
-                            // ajax加载的设置
-                            ajax: {
-                                url: '/user/order/edit-order.html?from=info',
-                                data: {
-                                    type: type,
-                                    id: id,
-                                    is_exchange: is_exchange
-                                }
-                            },
-                        });
-                    }
+@stop
 
-                });
-
-                $("body").on("click", ".to-pay", function() {
-                    var order_id = $(this).data("id");
+{{--底部js--}}
+@section('footer_js')
+    <script src="/js/common.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/assets/d2eace91/js/yii.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.tablelist.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        @if($order_info['countdown'] > 0)
+        $(document).ready(function() {
+            $("#counter_{{ $order_info['order_id'] }}").countdown({
+                // 时间间隔
+                time: "{{ $order_info['countdown']*1000 }}",
+                leadingZero: true,
+                onComplete: function(event) {
+                    $(this).html("已超时！");
+                    // 超时事件，预留
                     $.ajax({
-                        type: 'POST',
-                        url: '/user/order/to-pay.html',
+                        type: 'GET',
+                        url: '/user/order/@if($order_info['pay_status'] == 0){{ 'cancel-sys' }}@else{{ 'confirm-sys' }}@endif',
                         data: {
-                            order_id: order_id,
+                            order_id: '{{ $order_info['order_id'] }}'
                         },
                         dataType: 'json',
-                        success: function(result) {
-                            if (result.code == 0)
+                        success: function(data) {
+                            if (data.code == 0)
                             {
-                                $.go(result.url);
+                                window.location.reload();
                             }
                         }
                     });
+                }
+            });
+        });
+        //
+        @endif
+
+        $().ready(function() {
+            $("body").on("click", ".edit-order", function() {
+                var type = $(this).data("type");
+                var id = $(this).data("id");
+                title = '';
+                if (type == 'delay') {
+                    title = "延长确认收货时间";
+                }
+                if (type == 'confirm') {
+                    title = "确认收货";
+                }
+                if (type == 'cancel') {
+                    title = "取消订单";
+                }
+                if ($.modal($(this))) {
+                    $.modal($(this)).show();
+                } else {
+                    $.modal({
+                        // 标题
+                        title: title,
+                        trigger: $(this),
+                        // ajax加载的设置
+                        ajax: {
+                            url: '/user/order/edit-order?from=info',
+                            data: {
+                                type: type,
+                                id: id
+                            }
+                        },
+                    });
+                }
+            });
+            $("body").on("click", ".to-pay", function() {
+                var order_id = $(this).data("id");
+                $.ajax({
+                    type: 'POST',
+                    url: '/user/order/to-pay.html',
+                    data: {
+                        order_id: order_id,
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.code == 0)
+                        {
+                            $.go(result.url);
+                        }
+                    }
                 });
             });
-        </script></div>
-
-@endsection
+        });
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+        $().ready(function() {
+        })
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+    </script>
+@stop

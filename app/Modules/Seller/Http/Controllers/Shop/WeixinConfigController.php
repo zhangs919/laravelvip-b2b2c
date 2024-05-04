@@ -17,12 +17,15 @@ class WeixinConfigController extends Seller
     protected $shopConfigField;
 
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        ,ShopConfigFieldRepository $shopConfigField
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
-        $this->shopConfigField = new ShopConfigFieldRepository();
+        $this->shop = $shop;
+        $this->shopConfigField = $shopConfigField;
 
         $this->set_menu_select('weixin', 'shop-weixin-config');
 
@@ -58,9 +61,10 @@ class WeixinConfigController extends Seller
 
         $back_url = $request->fullUrl();
         $shop_id = seller_shop_info()->shop_id;
-        $weixin_url = __HTTP__.env('MOBILE_DOMAIN').'/wxapi/index?shop_id='.$shop_id;
-        $weixin_token = 'lrwphp';
-        $compact = compact('title', 'script_render', 'model', 'back_url', 'shop_id', 'weixin_url', 'weixin_token');
+        $weixin_url = request()->getScheme().'://'.config('lrw.mobile_domain').'/wxapi/index?shop_id='.$shop_id;
+        $weixin_token = 'weixin';
+		$shop_qrcode = $this->shop->getShopQrCode($this->shop_id);
+        $compact = compact('title', 'script_render', 'model', 'back_url', 'shop_id', 'weixin_url', 'weixin_token', 'shop_qrcode');
 
         $webData = []; // web端（pc、mobile）数据对象
         $data = [

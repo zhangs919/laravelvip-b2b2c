@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="MessageTemplate" class="form-horizontal" name="MessageTemplate" action="/mall/message-template/sms-test?id={{ $info->id }}" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" class="form-control" name="id" value="{{ $info->id }}">
 

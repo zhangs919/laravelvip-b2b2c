@@ -1,5 +1,5 @@
 <form id="SettingModel" class="form-horizontal" name="SettingModel" action="/goods/yun/ajax-setting.html" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="_csrf" value="9NfznE7eKj8qIt20rpwB0Pd2eZEH2KerdIUnbJUY4P2C5YLqdplIVHsTkv6D73PmmyUP5mXrxdEl9h4h2GKWyw==">
+    @csrf
     <div class="modal-body">
         <div class="table-content clearfix">
 

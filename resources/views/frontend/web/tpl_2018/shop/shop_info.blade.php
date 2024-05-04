@@ -42,7 +42,7 @@
         </div>
     </div>
     <!-- 内容 -->
-    <link rel="stylesheet" href="/assets/d2eace91/js/chosen/chosen.css?v=20180428">
+    <link rel="stylesheet" href="/assets/d2eace91/js/chosen/chosen.css">
     <div class="content">
         <div class="operat-tips">
             <h4>
@@ -60,7 +60,7 @@
         </div>
 
         <form id="ShopApplyModel" class="form-horizontal" name="ShopApplyModel" action="/shop/apply/shop-info.html" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!--店铺信息认证-->
             <div class="item-box">
                 <div class="title">
@@ -71,12 +71,13 @@
                     <input type="hidden" id="shopapplymodel-shop_id" class="form-control" name="ShopApplyModel[shop_id]" value="{{ $shop_info->shop_id }}">
 
                     <!-- 站点 -->{{--todo 如果网站开启了多站点 才显示站点选择--}}
-                    <div class="form-group form-group-spe" >
-                        <label for="shopapplymodel-site_id" class="input-left">
-                            <span class="spark">*</span>
-                            <span>所属站点：</span>
-                        </label>
-                        <div class="form-control-box">
+                    @if(sysconf('site_open'))
+                        <div class="form-group form-group-spe" >
+                            <label for="shopapplymodel-site_id" class="input-left">
+                                <span class="spark">*</span>
+                                <span>所属站点：</span>
+                            </label>
+                            <div class="form-control-box">
 
 
                             <span class="select">
@@ -88,10 +89,11 @@
                             </span>
 
 
-                        </div>
+                            </div>
 
-                        <div class="invalid"></div>
-                    </div>
+                            <div class="invalid"></div>
+                        </div>
+                    @endif
 
 
                     <!-- 店铺所属分类 -->
@@ -112,7 +114,7 @@
                                             @if($cat_list)
                                             @foreach($cat_list as $cat)
 
-                                                <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
+                                                <option value="{{ $cat['cls_id'] }}">{!! $cat['level_show'] !!}{{ $cat['cls_name'] }}</option>
 
                                             @endforeach
                                             @endif
@@ -181,11 +183,7 @@
                     </div>
 
                     <div class="mark">
-                        <p>
-                            待支付总费用：
-                            <font class="amount" id="payment">0.00</font>
-                            元
-                        </p>
+                        <p>待支付总费用：<font class="amount" id="payment">0.00</font>元</p>
                         <p>请先提交至网站管理员进行人工审核，审核通过后，缴纳“待支付费用”，支付成功后即可成功开店</p>
                     </div>
                 </div>
@@ -209,9 +207,7 @@
     <option value="">-- 请选择 --</option>
     @if($cat_list)
     @foreach($cat_list as $cat)
-
-        <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
-
+        <option value="{{ $cat['cls_id'] }}">{!! $cat['level_show'] !!}{{ $cat['cls_name'] }}</option>
     @endforeach
     @endif
 </select>

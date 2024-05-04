@@ -76,43 +76,54 @@ class ShopCategoryRepository
      * 以树形结构的方式返回
      * APP或微信端店铺首页-商品分类异步加载用到
      *
-     * @param $shop_id
+     * @param int $shop_id 店铺id
+     * @param int $cat_id 分类id 查询指定分类的子分类
      * @return array
      */
-    public function getFormatShopCategory($shop_id)
+    public function getFormatShopCategory($shop_id, $cat_id = 0)
     {
-        $res = [];
+        $where = [['is_show',1],['shop_id',$shop_id]];
+        if ($cat_id > 0) {
+            $where[] = ['parent_id', $cat_id];
+
+        }
         $condition = [
-            'where' => [['is_show',1],['shop_id',$shop_id]],
+            'where' => $where,
             'limit' => 0,
             'sortname' => 'cat_sort',
             'sortorder' => 'asc',
         ];
-        list($list, $total) = $this->getList($condition,'',true);
+        list($listData, $total) = $this->model->getList($condition);
+
+
+        // 是否转换为树形结构
+        $listRes = [];
+        foreach ($listData as $key=>$value) {
+//                $value->shop_count = DB::table('shop')->where('cat_id', $value->cls_id)->count();
+            $listRes[$key] = $value->toArray();
+        }
+        $list = $this->tree->list_to_tree($listRes, 'cat_id', 'parent_id');
+//        list($list, $total) = $this->getList($condition,'',true);
+//        $list = $this->model->where($where)->orderBy('cat_sort', 'asc')->get()->toArray();
+//        dd($list);
         if (!empty($list)) {
-            foreach ($list as $v) {
+            foreach ($list as &$v) {
                 $goods_count = Goods::where([['cat_id',$v['cat_id']],['goods_status',1],['goods_audit',1]])->count();
-                $item = [
-                    'cat_id' => $v['cat_id'],
-                    'cat_name' => $v['cat_name'],
-                    'goods_count' => $goods_count,
-                ];
+                $v['goods_count'] = $goods_count;
                 if (!empty($v['_child'])) {
-                    $sub_item = [];
-                    foreach ($v['_child'] as $vv) {
+                    $chr_list = [];
+                    foreach ($v['_child'] as &$vv) {
                         $sub_goods_count = Goods::where([['cat_id',$vv['cat_id']],['goods_status',1],['goods_audit',1]])->count();
-                        $sub_item[$vv['cat_id']] = [
-                            'cat_id' => $vv['cat_id'],
-                            'cat_name' => $vv['cat_name'],
-                            'goods_count' => $sub_goods_count,
-                        ];
+                        $vv['goods_count'] = $sub_goods_count;
+                        unset($vv['_child'], $vv['childs'],$vv['created_at'],$vv['updated_at']);
+                        $chr_list[] = $vv;
                     }
-                    $item['chr_list'] = $sub_item;
+                    $v['chr_list'] = $chr_list;
                 }
-                $res[$v['cat_id']] = $item;
+                unset($v['_child'], $v['childs'],$v['created_at'],$v['updated_at']);
             }
         }
-        return $res;
+        return $list;
     }
 
 }

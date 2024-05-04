@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/store', function (Request $request) {
-    // return $request->store();
-})->middleware('auth:api');
+//Route::get('/store', function (Request $request) {
+//    // return $request->store();
+//})->middleware('auth:api');

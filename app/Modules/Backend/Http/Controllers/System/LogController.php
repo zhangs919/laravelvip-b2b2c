@@ -1,17 +1,18 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 
+use App\Models\Admin;
 use App\Models\AdminLog;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\AdminLogRepository;
+use App\Repositories\SystemConfigRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LogController extends Backend
 {
-//    private $title;
 
     private $links = [
         ['url' => 'system/log/list', 'text' => '列表'],
@@ -19,14 +20,15 @@ class LogController extends Backend
     ];
 
     protected $adminLog;
+    protected $systemConfig;
 
 
-    public function __construct(AdminLogRepository $adminLogRepository)
+    public function __construct(AdminLogRepository $adminLogRepository,SystemConfigRepository $systemConfig)
     {
         parent::__construct();
 
         $this->adminLog = $adminLogRepository;
-//        $this->setLayoutBlock(['title' => $this->title]);
+        $this->systemConfig = $systemConfig;
     }
 
 
@@ -49,7 +51,7 @@ class LogController extends Backend
         $params = $request->all();
         $where = [];
         // 搜索条件
-        $search_arr = ['user_id', 'content'];
+        $search_arr = ['admin_id', 'content'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
 
@@ -70,7 +72,9 @@ class LogController extends Backend
 
         $pageHtml = pagination($total);
 
-        $compact = compact('title', 'list', 'total', 'pageHtml');
+        $admin_list = Admin::all()->toArray();
+
+        $compact = compact('title', 'list', 'total', 'pageHtml','admin_list');
         if ($request->ajax()) {
             $render = view('system.log.partials._list', $compact)->render();
             return result(0, $render);
@@ -80,10 +84,17 @@ class LogController extends Backend
 
     public function set(Request $request)
     {
+        $group = 'log';
+
         $title = '设置';
 
         $fixed_title = '操作日志 - 设置';
         $this->sublink($this->links, 'set');
+
+        $uuid = make_uuid();
+        $script_render = view('system.config.partials.'.$group, compact('uuid'))->render();
+        $group_info = $this->systemConfig->getConfigList($group);
+        $introduce_box = '';
 
         $explain_panel = [
             '操作日志开启与关闭由平台方控制，开启操作日志可以记录管理人员的关键操作，但会轻微加重系统负担'
@@ -94,7 +105,7 @@ class LogController extends Backend
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('system.log.set', compact('title'));
+        return view('system.config.config', compact('title', 'group', 'group_info', 'script_render', 'introduce_box'));
     }
 
     public function delete(Request $request)

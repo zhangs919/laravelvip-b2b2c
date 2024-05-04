@@ -62,7 +62,7 @@ class ClearDataRepository
                     // goods goods_attr goods_cat goods_collect goods_history
                     // goods_image goods_layout goods_sku goods_spec goods_unit
                     // spec_alias
-                    $table = ['goods', 'goods_attr', 'goods_cat', 'goods_collect', 'goods_history',
+                    $table = ['goods', 'goods_activity','goods_attr', 'goods_cat', 'goods_comment', 'goods_history',
                         'goods_image', 'goods_layout', 'goods_sku', 'goods_spec', 'goods_unit',
                         'spec_alias',
                         // 清除装修内容

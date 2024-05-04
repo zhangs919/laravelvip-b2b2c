@@ -51,16 +51,23 @@ class TakeoutController extends Frontend
     protected $cart;
 
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        ,ShopClassRepository $shopClass
+        ,CollectRepository $collect
+        ,ShopCategoryRepository $shopCategory
+        ,GoodsRepository $goods
+        ,CartRepository $cart
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
-        $this->shopClass = new ShopClassRepository();
-        $this->collect = new CollectRepository();
-        $this->shopCategory = new ShopCategoryRepository();
-        $this->goods = new GoodsRepository();
-        $this->cart = new CartRepository();
+        $this->shop = $shop;
+        $this->shopClass = $shopClass;
+        $this->collect = $collect;
+        $this->shopCategory = $shopCategory;
+        $this->goods = $goods;
+        $this->cart = $cart;
 
     }
 
@@ -118,7 +125,7 @@ class TakeoutController extends Frontend
             'sortorder' => 'asc',
         ];
         list($sub_shop_category, $total) = $this->shopCategory->getList($condition);
-//        dd($sub_shop_category);
+
         // 自由购功能是否开启
         $freebuy_enable = 1; // 0-关闭 1-开启
 
@@ -146,19 +153,14 @@ class TakeoutController extends Frontend
         ];
 
         list($goods_list, $goods_total) = $this->goods->getList($condition, '', $this->user_id);
-//        $pageHtml = frontend_pagination($goods_total);
         $goods_list = $goods_list->toArray();
-//        dd($goods_list);
         $pageArr = frontend_pagination($goods_total, true);
-//        $page_count = $pageArr['page_count'];
-//        $cur_page = $pageArr['cur_page'];
         $page_json = json_encode($pageArr);
 
 
         $this->cart->setUserId($this->user_id);
-//            $this->cart->setUniqueId(session()->getId());
         $this->cart->setUniqueId($this->session_id);
-        $cart_list = $this->cart->getCartList(); // 购物车数据
+        $cart_list = $this->cart->getCartGoodsList(); // 购物车数据
         $cart_price_info = $this->cart->getCartPriceInfo($cart_list);
 
         $compact = compact('keyword', 'cat_id', 'parent_id', 'shop_info', 'is_collect',

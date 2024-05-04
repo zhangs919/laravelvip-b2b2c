@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Models\SheetConfig;
@@ -20,12 +20,15 @@ class ShippingController extends Backend
     protected $shipping;
     protected $sheetConfig;
 
-    public function __construct()
+    public function __construct(
+        ShippingRepository $shipping
+        ,SheetConfigRepository $sheetConfig
+    )
     {
         parent::__construct();
 
-        $this->shipping = new ShippingRepository();
-        $this->sheetConfig = new SheetConfigRepository();
+        $this->shipping = $shipping;
+        $this->sheetConfig = $sheetConfig;
     }
 
 

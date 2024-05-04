@@ -18,7 +18,7 @@
                     <a href="javascript:void(0)" title="1" style="background: url({{ get_image_url(sysconf('default_lazyload_mobile')) }}) no-repeat center center; display: block; background-size: 100px;">
                         <li class="pro-goods-item">
                             <div class="pro-goods-img">
-                                <img class="lazy square" src="/assets/d2eace91/images/common/blank.png" data-original="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/system/config/default_image/default_goods_image_0.png?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" data-original-webp="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/system/config/default_image/default_goods_image_0.png?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320/format,webp" />
+                                <img class="lazy square" src="/assets/d2eace91/images/common/blank.png" data-original="{{ get_image_url(sysconf('default_goods_image')) }}?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" data-original-webp="{{ get_image_url(sysconf('default_goods_image')) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320/format,webp" />
                                 <div class="settime" data-end_time="1547884095" data-countdown="604703">
                                     <span>00天00时00分00秒</span>
                                 </div>

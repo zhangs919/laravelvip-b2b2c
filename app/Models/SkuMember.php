@@ -16,7 +16,7 @@
 // | 如需使用，请移步官网购买正版授权。
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
-// | Date:2018-11-09
+// | Date:2019-10-17
 // | Description:
 // +----------------------------------------------------------------------
 
@@ -24,7 +24,6 @@ namespace App\Models;
 
 /**
  * 自定义会员价模型
- * TODO 字段待确定 后期完善
  *
  * Class SkuMember
  * @package App\Models
@@ -34,7 +33,7 @@ class SkuMember extends BaseModel
     protected $table = 'sku_member';
 
     protected $fillable = [
-        'goods_id', 'sku_id', 'shop_id', 'shop_rank_id', 'member_type', 'member_value', 'goods_price'
+        'goods_id', 'sku_id', 'shop_id', 'shop_rank_id','goods_price', 'member_type', 'member_value', 'member_data'
     ];
 
     protected $primaryKey = 'sm_id';

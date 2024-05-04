@@ -22,7 +22,7 @@
 
             <div class="login-tit">
                 还不是卖家？
-                <a href="http://www.b2b2c.yunmall.68mall.com/shop/apply.html" class="regist-link color">
+                <a href="http://{{ env('FRONTEND_DOMAIN') }}/shop/apply.html" class="regist-link color">
                     立即申请
                     <i>></i>
                 </a>
@@ -72,7 +72,7 @@
                             <span>自动登录</span>
                         </label>
 
-                        <a class="forget-password fr" href="http://www.b2b2c.yunmall.68mall.com/user/find-password.html">忘记密码？</a>
+                        <a class="forget-password fr" href="http://{{ env('FRONTEND_DOMAIN') }}/user/find-password.html">忘记密码？</a>
                     </div>
                     <div class="login-btn">
                         <input type="hidden" name="act" value="act_login" />
@@ -171,7 +171,7 @@
                 </div>
                 <div class="login-links">
                     <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                    <a href="http://www.b2b2c.yunmall.68mall.com/register.html" class="register" target="_blank">免费注册</a>
+                    <a href="http://{{ env('FRONTEND_DOMAIN') }}/register.html" class="register" target="_blank">免费注册</a>
                 </div>
             </div>
         </div>
@@ -195,7 +195,7 @@
                 </div>
                 <div class="login-links">
                     <a href="javascript:void(0)" class="forget-pwd">密码登录</a>
-                    <a href="http://www.b2b2c.yunmall.68mall.com/register.html" class="register" target="_blank">免费注册</a>
+                    <a href="http://{{ env('FRONTEND_DOMAIN') }}/register.html" class="register" target="_blank">免费注册</a>
                 </div>
             </div>
         </div>
@@ -227,7 +227,7 @@
         });
         $("body").on('click', '.website-login', function() {
             var type = $(this).data("id");
-            $.go("http://www.b2b2c.yunmall.68mall.com"+"/website/login?type="+type);
+            $.go("http://{{ env('FRONTEND_DOMAIN') }}"+"/website/login?type="+type);
         })
 
         var container = $("#{{ $uuid }}");
@@ -465,7 +465,7 @@
             $('.SZY-QRCODE-LOGIN').qrcode({
                 width:150,
                 height:150,
-                text: 'http://www.b2b2c.yunmall.68mall.com/site/qrcode-login.html?k=' + result.data.key
+                text: 'http://{{ env('FRONTEND_DOMAIN') }}/site/qrcode-login.html?k=' + result.data.key
             });
 
             var is_qrcode_login = $.cookie('is_qrcode_login') ? $.cookie('is_qrcode_login') : '0';

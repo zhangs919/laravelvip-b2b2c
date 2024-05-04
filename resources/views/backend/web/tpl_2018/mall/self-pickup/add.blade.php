@@ -3,7 +3,12 @@
 
 {{--css style page元素同级上面--}}
 @section('style')
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&amp;key={{ sysconf('amap_js_key') }}"></script>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
     <style type="text/css">
         #panel {
@@ -29,7 +34,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="form1" class="form-horizontal" name="SelfPickup" action="/mall/self-pickup/add" method="POST" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="selfpickup-pickup_id" class="form-control" name="SelfPickup[pickup_id]" value="{{ $info->pickup_id ?? '' }}">
             <!-- 自提点名称-->
@@ -206,7 +211,7 @@
 
         </form>
     </div>
-    
+
 @stop
 
 {{--script page元素内--}}
@@ -244,7 +249,7 @@
         KindEditor.ready(function(K) {
 
             var extraFileUploadParams = [];
-            extraFileUploadParams['CP6ZNQ_YUNMALL_68MALL_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
+            extraFileUploadParams['CP6ZNQ_YUNMALL_LARAVELVIP_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
 
             window.editor = K.create('#detail_introduce', {
                 width: '100%',

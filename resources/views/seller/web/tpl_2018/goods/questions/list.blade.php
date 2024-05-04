@@ -1,11 +1,18 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d667b223/js/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
-    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=20180710"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=20180702"/>
 @stop
 
 {{--content--}}
@@ -14,7 +21,7 @@
 
     <!--搜索-->
     <div class="search-term m-b-10">
-        <form id="searchForm" action="/goods/questions/list.html" method="GET">
+        <form id="searchForm" action="/goods/questions/list" method="GET">
             <div class="simple-form-field">
                 <div class="form-group">
                     <label class="control-label">
@@ -38,7 +45,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -83,11 +90,33 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
-
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        // 
+        $().ready(function() {
             var tablelist = $("#table_list").tablelist({
                 params: $("#searchForm").serializeJson()
             });
@@ -99,31 +128,29 @@
                 return false;
             });
         });
-
-        // 删除记录
+        // 删除记录  
         $("body").on('click', '.del', function() {
             var id = $(this).attr("object_id");
-
             $.confirm('您确定删除这条记录吗？', function() {
+                $.loading.start();
                 $.post('/goods/questions/delete', {
                     id: id
                 }, function(result) {
                     if (result.code == 0) {
-                        $.msg(result.message);
-                        $.go('list');
+                        $.msg(result.message, function(){
+                            $.go('list');
+                        });
                     } else {
                         $.msg(result.message, {
                             time: 5000
                         })
                     }
-                }, "json");
+                }, "json").always(function(){
+                    $.loading.stop();
+                });
             })
-
         });
-    </script>
-
-
-    <script type='text/javascript'>
+        // 
         $(document).ready(function() {
             $(".question_sort").editable({
                 type: "text",

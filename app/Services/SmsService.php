@@ -37,43 +37,7 @@ class SmsService
      */
     public function send($mobile, $content = '', $captcha = '')
     {
-        $config = [
-            // HTTP 请求的超时时间（秒）
-            'timeout' => 5.0,
-
-            // 默认发送配置
-            'default' => [
-                // 网关调用策略，默认：顺序调用
-                'strategy' => \Overtrue\EasySms\Strategies\OrderStrategy::class,
-
-                // 默认可用的发送网关
-                'gateways' => [
-//                    'yunpian',
-                    'aliyun',
-//                    'alidayu',
-                ],
-            ],
-            // 可用的网关配置
-            'gateways' => [
-                'errorlog' => [
-                    'file' => '/tmp/easy-sms.log',
-                ],
-                'yunpian' => [
-                    'api_key' => '',
-                ],
-                'aliyun' => [
-                    // 已测试 能成功发送
-                    'access_key_id' => sysconf('aliyunsms_app_key'),
-                    'access_key_secret' => sysconf('aliyunsms_app_secret'),
-                    'sign_name' => sysconf('sms_sign_name'),
-                ],
-                'alidayu' => [
-                    'app_key' => '',
-                    'app_secret' => '',
-                    'sign_name' => '',
-                ],
-            ],
-        ];
+        $config = config('sms');
 
         $easySms = new EasySms($config);
 
@@ -82,17 +46,17 @@ class SmsService
 
         try {
             /*todo 暂时注释 上线后打开注释*/
-            /*$res = $easySms->send($mobile, [
+            $res = $easySms->send($mobile, [
                 'content'  => $content, //'您的验证码为：6379，该验证码 5 分钟内有效，请勿泄漏于他人。',
-                'template' => 'SMS_141615486',
+                'template' => 'SMS_141615486', // 注册：SMS_162522033 登录：SMS_141615486
                 'data' => [
                     'code' => $captcha
                 ],
             ]);
             if ($res[$gateway]['status'] == 'failure') {
                 // 发送失败 返回错误信息
-
-            }*/
+                throw new \Exception('短信发送失败');
+            }
 
 
             /*

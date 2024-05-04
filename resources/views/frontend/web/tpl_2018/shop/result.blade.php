@@ -13,26 +13,26 @@
             <div class="header-extra">
                 <div class="progress">
                     <div class="progress-wrap">
-                        <div class="progress-item ongoing">
+                        <div class="progress-item @if($progress >= 0){{ 'ongoing' }}@else{{ 'tobe' }}@endif">
                             <div class="number">1</div>
                             <div class="progress-desc">开店申请</div>
                         </div>
                     </div>
                     <div class="progress-wrap">
-                        <div class="progress-item  ongoing ">
+                        <div class="progress-item  @if($progress >= 2){{ 'ongoing' }}@else{{ 'tobe' }}@endif ">
                             <div class="number">2</div>
                             <div class="progress-desc">网站审核</div>
                         </div>
                     </div>
                     <div class="progress-wrap">
-                        <div class="progress-item  tobe ">
+                        <div class="progress-item @if($progress >= 4){{ 'ongoing' }}@else{{ 'tobe' }}@endif">
                             <div class="number">3</div>
                             <div class="progress-desc">支付开店款项</div>
                         </div>
                     </div>
 
                     <div class="progress-wrap">
-                        <div class="progress-item  tobe ">
+                        <div class="progress-item  @if($progress == 5){{ 'ongoing' }}@else{{ 'tobe' }}@endif ">
                             <div class="number">√</div>
                             <div class="progress-desc">创建店铺</div>
                         </div>
@@ -79,7 +79,7 @@
 
 
         <!--网站审核成功时显示-->
-        @if($progress == 4)
+        @if($progress == 4 && $type != 6)
         <div class="operat-tips success">
             <h4>
                 <i></i>
@@ -87,7 +87,7 @@
             </h4>
             <p>
                 待支付金额：
-                <font class="amount">0.00</font>
+                <font class="amount">{{ format_price($shop['system_fee']+$shop['insure_fee']) }}</font>
                 元
             </p>
         </div>
@@ -114,7 +114,7 @@
             </ul>
             <div class="text-c">
                 <a href="javascript:void(0);" class="btn btn-primary pay_now">立即支付</a>
-                <input type="hidden" id="shop_amount" value="0.00">
+                <input type="hidden" id="shop_amount" value="{{ format_price($shop['system_fee']+$shop['insure_fee']) }}">
             </div>
         </div>
         @endif
@@ -145,7 +145,47 @@
         @endif
 
         <!--支付失败时显示-->
+        @if($progress == 6 || $type == 6)
+            <div class="operat-tips lose">
+                <h4>
+                    <i></i>
+                    尚未缴费成功！
+                </h4>
+                <p>
+                    待支付金额：
+                    <font class="amount">{{ format_price($shop['system_fee']+$shop['insure_fee']) }}</font>
+                    元
+                </p>
+                <p>未支付成功，店铺无法正常经营，请您尽快完成支付！</p>
+            </div>
 
+            <div class="pay-type">
+                <h2 class="payment-title">支付方式</h2>
+                <ul id="paylist" class="payment-tab">
+
+                @foreach($pay_list as $v)
+                    <!-- 货到付款特殊处理 -->
+                        <li class="clearfix" @if($v['disabled'] == 1)style="display: none;"@endif>
+                            <label>
+                                <input type="radio" id="pac_code_{{ $v['id'] }}" name="pay_code" class="pay_code" value="{{ $v['code'] }}" >
+                                <img src="/assets/d2eace91/images/payment/{{ $v['code'] }}.jpg" alt="" class="pay-img" />
+                            </label>
+                            <div class="pay-tips" style="display: none;">
+                                <div class="pay-tips-name">
+                                    <i></i>
+                                    {{ $v['tips'] }}
+                                </div>
+                            </div>
+                        </li>
+                    @endforeach
+
+                </ul>
+                <div class="text-c">
+                    <a href="javascript:void(0);" class="btn btn-primary pay_now">立即支付</a>
+                    <input type="hidden" id="shop_amount" value="{{ format_price($shop['system_fee']+$shop['insure_fee']) }}">
+                </div>
+            </div>
+        @endif
 
 
     </div>
@@ -175,6 +215,7 @@
                 });
             });
             $("body").on("click", ".pay_now", function() {
+                var target = $(this);
                 $.ajax({
                     url: '/shop/apply/pay.html',
                     type: 'POST',
@@ -204,4 +245,4 @@
         });
     </script>
 
-@endsection
+@stop

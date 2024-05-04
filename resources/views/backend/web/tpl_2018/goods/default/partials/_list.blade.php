@@ -82,7 +82,7 @@
                      -->
                 </div>
                 <div class="store">
-                    个人店铺：
+                    {{ str_replace([0,1,2],['自营店铺','个人店铺','企业店铺'], $v->shop->shop_type) }}：
                     <a class="c-green" title="{{ $v->shop_name }}" href="{{ route('pc_shop_home', ['shop_id'=>$v->shop_id]) }}" target="_blank">{{ $v->shop_name }}</a>
                 </div>
             </div>

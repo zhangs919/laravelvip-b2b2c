@@ -20,7 +20,7 @@
 // | Description:
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Models\Contract;
@@ -42,12 +42,15 @@ class ContractController extends Backend
     protected $contract;
     protected $shopContract;
 
-    public function __construct()
+    public function __construct(
+        ContractRepository $contract
+        ,ShopContractRepository $shopContract
+    )
     {
         parent::__construct();
 
-        $this->contract = new ContractRepository();
-        $this->shopContract = new ShopContractRepository();
+        $this->contract = $contract;
+        $this->shopContract = $shopContract;
 
     }
 

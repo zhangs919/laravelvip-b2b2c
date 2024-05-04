@@ -156,7 +156,7 @@ $(function() {
 				}
 			}
 		}).always(function() {
-			$(target).data("loading", false).html("确认交易");
+			$(target).data("loading", false).html("立即付款");
 		});
 	});
 
@@ -227,6 +227,23 @@ function changePayment(data) {
 	if (!data) {
 		data = {}
 	}
+	
+	/**
+	// 余额优先则优先使用余额支付
+	if(typeof(balance_first) != "undefined" && balance_first == true){
+		// 强制使用余额
+		if(balance_enable == 0){
+			balance_enable = 1;
+			$("#balance_enable").prop("checked", true);
+		}
+		// 有多少使用多少
+		balance = 0;
+	}
+	**/
+	
+	$.loading.start();
+	
+	$(".gopay").data("loading", true).html("请稍等...");
 
 	request = $.post("/checkout/set-payment.html", {
 		key: key,
@@ -254,7 +271,10 @@ function changePayment(data) {
 				$.go();
 			});
 		}
-	}, "json");
+	}, "json").always(function(){
+		$.loading.stop();
+		$(".gopay").data("loading", false).html("立即付款");
+	});
 
 	if (balance_enable) {
 		$(".SZY-BALANCE-INFO").css("display", "inline-block");

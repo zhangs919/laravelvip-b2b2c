@@ -15,7 +15,7 @@
 @section('content')
 
     <form id="LinksModel" class="form-horizontal" name="LinksModel" action="/mall/links/add" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix ">
             <!-- 链接ID  -->
             <input type="hidden" id="linksmodel-links_id" class="form-control" name="LinksModel[links_id]" value="{{ $info->links_id ?? '' }}">

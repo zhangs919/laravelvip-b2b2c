@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Modules\Backend\Http\Controllers\Design;
+namespace App\Modules\Backend\Http\Controllers\Design;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\CategoryRepository;
@@ -23,16 +23,18 @@ class NavWordsController extends Backend
     protected $navCategory;
     protected $category;
 
-    public function __construct(NavWordsRepository $navWordsRepository, NavCategoryRepository $navCategoryRepository)
+    public function __construct(
+        NavWordsRepository $navWords
+        , NavCategoryRepository $navCategory
+        , CategoryRepository $category
+    )
     {
 
         parent::__construct();
 
-//        setcookie('theme_style', "true"); // todo 设置theme_style 改变整体样式
-
-        $this->navWords = $navWordsRepository;
-        $this->navCategory = $navCategoryRepository;
-        $this->category = new CategoryRepository();
+        $this->navWords = $navWords;
+        $this->navCategory = $navCategory;
+        $this->category = $category;
     }
 
     public function lists(Request $request)

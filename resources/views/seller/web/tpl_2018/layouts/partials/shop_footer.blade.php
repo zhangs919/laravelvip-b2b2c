@@ -7,7 +7,7 @@
         </p>
     </div>
 </div>
-
+<a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
 <script>
     /* TODO 设置 Ajax LARAVEL 419 POST error */
     $.ajaxSetup({

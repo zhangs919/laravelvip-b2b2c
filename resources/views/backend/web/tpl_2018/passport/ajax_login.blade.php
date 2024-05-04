@@ -1,6 +1,6 @@
 <div id="{{ $uid }}" class="table-content m-t-10 clearfix" style="min-height:290px">
     <form id="AdminLoginModel" class="backend-form-login" name="AdminLoginModel" action="/login.html" method="post">
-        {{ csrf_field() }}
+        @csrf
         <!-- 用户名 -->
         <div class="simple-form-field" >
             <div class="form-group">

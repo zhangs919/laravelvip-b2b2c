@@ -1,8 +1,9 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Backend;
+use App\Repositories\LibCategoryRepository;
 use Illuminate\Http\Request;
 
 class YunController extends Backend
@@ -13,13 +14,22 @@ class YunController extends Backend
         ['url' => 'goods/collect/show', 'text' => '批量采集'],
     ];
 
+    protected $libCategory;
 
-    public function __construct()
+    public function __construct(LibCategoryRepository $libCategory)
     {
         parent::__construct();
 
+        $this->libCategory = $libCategory;
     }
 
+    /**
+     * 云产品库商品列表
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
+     * @throws \Throwable
+     */
     public function goodsList(Request $request)
     {
         $title = '云产品库采集';
@@ -52,7 +62,21 @@ class YunController extends Backend
             return result(0, $render);
         }
 
-        return view('goods.yun.goods_list', compact('title'));
+        // 云产品库商品分类 todo 需要新建云产品库相关数据表 后期远程从商城官网读取云产品库商品分类数据
+        $yun_category_format = []; // 格式化输出数据 $this->yunCategory->getFormatCategory();
+        $yun_category_format[0] = "选择分类";
+        $yun_category_array = []; //
+
+        // 云产品库品牌库 todo 需要新建云产品库相关数据表 后期远程从商城官网读取云产品库数据
+        $yun_brand_format = []; // // 格式化输出数据
+        $yun_brand_format[0] = "选择品牌";
+        $yun_brand_array = [];
+
+        // 云产品库商品列表 todo 需要新建云产品库相关数据表 后期远程从商城官网读取云产品库数据
+        $yun_goods = [1];
+        $pageHtml = pagination(1);
+
+        return view('goods.yun.goods_list', compact('title', 'yun_category_format','yun_category_array','yun_brand_format', 'yun_brand_array','yun_goods','pageHtml'));
     }
 
     /**
@@ -93,6 +117,13 @@ class YunController extends Backend
         result(-1, '', '上传文件不能为空！');
     }
 
+    /**
+     * 查看我的采集数量
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Throwable
+     */
     public function ajaxCollectInfo(Request $request)
     {
         $render = view('goods.yun.ajax_collect_info')->render();

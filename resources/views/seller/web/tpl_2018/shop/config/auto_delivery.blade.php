@@ -1,9 +1,18 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20181020"/>
+
 @stop
 
 {{--content--}}
@@ -39,6 +48,7 @@
                             <div class="help-block help-block-t hide">店铺运营者对订单点击一键发货后，自动触发无需物流配送方式，无需选择配送方式，成功发货</div>
                             <div class="help-block help-block-t hide">店铺运营者对订单一键发货后，自动触发对接的嗖嗖物流系统的已设置好的物流快递员</div>
                             <div class="help-block help-block-t hide">自动众包：店铺运营者对订单一键发货后，自动触发对接的嗖嗖物流系统的已设置好的众包人员</div>
+                            <div class="help-block help-block-t hide">店铺运营者对订单一键发货后，自动触发对接的嗖嗖物流系统中已设置好的物流跑腿公司</div>
                         </div>
                     </div>
                 </div>
@@ -69,10 +79,17 @@
 
 @stop
 
+{{--自定义css样式--}}
+@section('style_css')
+@stop
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+@stop
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
         var oDtypeBtn = $('.chose-delivery-type .btn');
         var oRadios = oDtypeBtn.find("input[type='radio']");
         // 众包区域对象
@@ -92,38 +109,57 @@
             oRadios.prop('checked', false);
             $(this).prop('checked', true);
         });
-
-        var defaultPrice = $("#defaultPrice");
+        // 众包
         var crowdsourcing = $("#crowdsourcing");
+        // 指派
         var assign = $("#assign");
-        //改变众包类型
-        function changeType(type) {
-            if (type == 0) {
-                defaultPrice.hide();
+        // 关联跑腿公司指派
+        var relation = $('#relation');
+        // 映射与调用方法
+        var mapFuncs = {
+            // 禁用
+            "0" : function() {
                 crowdsourcing.hide();
                 assign.hide();
-            }
-            if (type == 1) {
-                defaultPrice.hide();
+                relation.hide();
+            },
+            // 自动无需物流
+            "1" : function() {
                 crowdsourcing.hide();
                 assign.hide();
-            }
-            if (type == 2) {
-                defaultPrice.show();
+                relation.hide();
+            },
+            // 自动指派
+            "2" : function() {
                 crowdsourcing.hide();
                 assign.show();
-            }
-            if (type == 3) {
+                relation.hide();
+            },
+            // 自动众包
+            "3" : function() {
                 // 当众包范围的时候如果没选中自动选中第一个
                 if (obj_crowd.find('input[name="crowd_type"]:checked').length == 0) {
                     obj_crowd.find('input[name="crowd_type"]').first().prop('checked', true);
                 }
-                defaultPrice.show();
                 crowdsourcing.show();
                 assign.hide();
+                relation.hide();
+            },
+            // 关联跑腿自动指派
+            "4" : function() {
+                crowdsourcing.hide();
+                assign.hide();
+                relation.show();
+            }
+        };
+        //改变众包类型
+        function changeType(type) {
+            // 获取对应类型的操作func
+            var func = mapFuncs[type];
+            if (func) {
+                func();
             }
         }
-
         /**
          * 选择快递员
          */
@@ -132,14 +168,11 @@
             //---------------- 弹出选择相关的信息
             // 加载
             $.loading.start();
-
             var type = _self.data("type");
             var id = _self.data("id");
-
             var title = "选择快递员";
             var width = '800px';
             var height = '550px';
-
             $.open({
                 // 标题
                 type: 1,
@@ -159,8 +192,6 @@
                 $.loading.stop();
             });
         });
-
-        var oDeliveryPrice = $('input[name="delivery_price"');
         // 表单提交: 防止只有一个文本框的时候表单会自动提交的情况
         $('form').submit(submit);
         // 按钮提交
@@ -173,18 +204,11 @@
             var current_type = oRadios.filter(':checked').val();
             // 众包|指派 - 校验运费
             if (current_type == 2 || current_type == 3) {
-                var reg_type = /^(0|\d+|\d+\.\d+)$/;
-                // 获取运费
-                var delivery_price = oDeliveryPrice.val();
-                if (delivery_price == "" || isNaN(delivery_price) || !reg_type.test(delivery_price)) {
-                    $.msg('请输入正确的运费');
-                    return false;
-                }
                 // 当指派的时候
                 if(current_type == 2)
                 {
                     //必须选择指派人
-                    if (delivery_content == '' || deliver_ids == '')
+                    if (delivery_content.val() == '' || deliver_ids.val() == '')
                     {
                         $.msg('请输入选择快递员');
                         return false;
@@ -201,17 +225,16 @@
                         return false;
                     }
                 }
-
             }
             var data = $('form').serialize();
             $.loading.start();
             // 数据提交
-            $.post('/shop/config/auto-delivery', data, function(res) {
+            $.post('/shop/config/auto-delivery.html', data, function(res) {
                 if (res.code == 0) {
                     $.msg(res.message, {
                         time: 1500
                     }, function() {
-                        $.go('/shop/config/auto-delivery');
+                        $.go('/shop/config/auto-delivery.html');
                     });
                 } else {
                     $.msg(res.message);
@@ -219,13 +242,11 @@
             }, 'JSON').always(function() {
                 $.loading.stop();
             });
-
             return false;
         }
         /**
          * 移除快递员并修改deliver_ids
          **/
-
         function _close(deliver_id) {
             // 处理ids
             var deliver_ids_string = $("#deliver_ids").val();
@@ -252,7 +273,6 @@
                     }
                 }
             }
-
             $("#deliver_ids").val(deliver_ids_string);
             $("#postmen_div_" + deliver_id).remove();
             /**

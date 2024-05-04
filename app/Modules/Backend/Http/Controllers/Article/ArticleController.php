@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Article;
+namespace App\Modules\Backend\Http\Controllers\Article;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
@@ -34,7 +34,10 @@ class ArticleController extends Backend
     protected $articleCat;
 
 
-    public function __construct(ArticleRepository $articleRepository, ArticleCatRepository $articleCatRepository)
+    public function __construct(
+        ArticleRepository $articleRepository
+        , ArticleCatRepository $articleCatRepository
+    )
     {
         parent::__construct();
 
@@ -129,10 +132,10 @@ class ArticleController extends Backend
         ];
 
         list($list, $total) = $this->article->getList($condition);
-
         if (!empty($list)) {
             foreach ($list as $item) {
                 $item->cat_name = DB::table('article_cat')->where('cat_id', $item->cat_id)->value('cat_name');
+				$item->shop_name = DB::table('shop')->where('shop_id', $item->shop_id)->value('shop_name');
             }
         }
 
@@ -253,12 +256,18 @@ class ArticleController extends Backend
 
 
 
-        return view('article.article.edit', compact('title', 'cat_model', 'show_cat_type', 'cat_list', 'info'));
+        return view('article.article.edit', compact('title', 'show_cat_type', 'cat_list', 'info'));
     }
 
     public function saveData(Request $request)
     {
         $post = $request->post('ArticleModel');
+
+		if (empty($post['content'])) {
+			// fail
+			flash('error','文章内容不能为空');
+			return redirect('/article/article/list');
+		}
 
         if (!empty($post['article_id'])) {
             // 编辑
@@ -371,11 +380,18 @@ class ArticleController extends Backend
         $pagination_id = $request->get('page')['page_id'];
         $output = $request->get('output');
         $cat_type = $request->get('cat_type', '');
+		$cat_id = $request->get('cat_id', '');
         $selected_ids = $request->get('selected_ids', '');
         $selected_ids = explode(',', $selected_ids);
 
         // 查询条件
         $where[] = ['status', 1];
+        $where[] = ['cat_type', 1];
+        $where[] = ['cat_model', 2];
+        $where[] = ['shop_id', 0]; // 排除店铺文章
+		if ($cat_id) {
+			$where[] = ['cat_id', $cat_id];
+		}
         $whereIn = [];
 
         $tpl = 'picker';
@@ -399,8 +415,14 @@ class ArticleController extends Backend
         list($list, $total) = $this->article->getList($condition);
         $pageHtml = short_pagination($total);
 
-        $render = view('article.article.'.$tpl, compact('page_id', 'pagination_id', 'list', 'pageHtml', 'selected_ids'))->render();
-        return result(0, $render);
+		$cat_type = 1; // 只获取普通分类
+		// 获取分类列表
+		$cat_list = $this->articleCat->getCatListByCatModel(2, true, $cat_type);
+
+		$render = view('article.article.'.$tpl,
+			compact('page_id', 'pagination_id', 'list', 'pageHtml', 'selected_ids','cat_list'))
+			->render();
+		return result(0, $render);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Frontend\Http\Controllers;
 
+use App\Models\Article;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\ArticleCatRepository;
 use App\Repositories\ArticleRepository;
@@ -16,12 +17,15 @@ class ArticleController extends Frontend
 
     protected $class_list;
 
-    public function __construct()
+    public function __construct(
+        ArticleCatRepository $articleCat
+        ,ArticleRepository $article
+    )
     {
         parent::__construct();
 
-        $this->articleCat = new ArticleCatRepository();
-        $this->article = new ArticleRepository();
+        $this->articleCat = $articleCat;
+        $this->article = $article;
 
         // 帮助中心 文章分类
         $this->class_list = $this->articleCat->getHelpCenterClass();
@@ -70,7 +74,6 @@ class ArticleController extends Frontend
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-//        return view('article.default_search', compact('list', 'class_list', 'keyword'));
     }
 
     /**
@@ -84,6 +87,9 @@ class ArticleController extends Frontend
     {
         if (empty($article_id)) { // /help/default/info?article_id=$article_id请求
             $article_id = $request->get('article_id');
+        }
+        if (!$article_id) {
+            abort(404, '文章id无效');
         }
 
         $class_list = $this->article->getHelpCenterArticle();
@@ -110,13 +116,6 @@ class ArticleController extends Frontend
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-
-//        $class_list = $this->article->getHelpCenterArticle();
-//        $article_info = $this->article->getById($article_id);
-//
-//        $this->show_seo('seo_article_info',['name'=>$article_info->title]); // SEO
-//
-//        return view('article.show_help', compact('article_info', 'class_list'));
     }
 
 //    public function showShop(Request $request, $article_id)
@@ -150,6 +149,7 @@ class ArticleController extends Frontend
      */
     public function showArticle(Request $request, $article_id)
     {
+
         $articleCatFields = $this->articleCat->getAppArticleCatFields();
         $articleFields = $this->article->getAppArticleFields();
 
@@ -161,7 +161,14 @@ class ArticleController extends Frontend
             'field' => $articleCatFields
         ];
         list($cat_list, $total) = $this->articleCat->getList($condition, '', true);
-        $article_info = $this->article->getById($article_id, $articleFields)->toArray();
+        $article_info = $this->article->getById($article_id, $articleFields);
+        if (empty($article_info)) {
+            abort(404, '文章id无效');
+        }
+        $article_info = $article_info->toArray();
+
+        Article::where('article_id', $article_id)->increment('click_number', 1); // 统计点击数+1
+
         // 当前文章所属分类信息
         $cat = $this->articleCat->getById($article_info['cat_id'], $articleCatFields);
         // 上一篇、下一篇文章
@@ -190,8 +197,6 @@ class ArticleController extends Frontend
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-
-//        return view('article.show_article', compact('article_info', 'class_list'));
     }
 
     /**
@@ -202,8 +207,9 @@ class ArticleController extends Frontend
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Throwable
      */
-    public function showArticleList(Request $request, $cat_id)
+    public function showArticleList(Request $request, $cat_id = 0)
     {
+        $seo_title = '文章列表';
         $articleCatFields = $this->articleCat->getAppArticleCatFields();
         $articleFields = $this->article->getAppArticleFields();
 
@@ -212,11 +218,21 @@ class ArticleController extends Frontend
         $condition = [
             'where' => [
                 ['status', 1],
-                ['cat_id', $cat_id],
                 ['title', 'like', "%{$keyword}%"],
             ],
             'field' => $articleFields,
         ];
+        $cat = [];
+        if ($cat_id) {
+            $cat_ids = get_article_cat_grandson($cat_id);
+            $condition['in'] = [
+                'field' => 'cat_id',
+                'condition' => $cat_ids
+            ];
+            // 当前文章所属分类信息
+            $cat = $this->articleCat->getById($cat_id, $articleCatFields);
+            $seo_title = $cat['cat_name'];
+        }
         list($list, $total) = $this->article->getList($condition);
         $list = $list->toArray();
         $pageHtml = frontend_pagination($total);
@@ -234,11 +250,8 @@ class ArticleController extends Frontend
             'field' => $articleCatFields
         ];
         list($cat_list, $cat_total) = $this->articleCat->getList($condition, '', true);
-
-        // 当前文章所属分类信息
-        $cat = $this->articleCat->getById($cat_id, $articleCatFields);
-
-        $this->show_seo('seo_article_cat',['name'=>$cat['cat_name']]); // SEO
+        
+        $this->show_seo('seo_article_cat',['name'=>$seo_title]); // SEO
 
         $compact = compact('list','pageHtml','cat_list','cat');
         $webData = []; // web端（pc、mobile）数据对象
@@ -249,7 +262,7 @@ class ArticleController extends Frontend
                 'cat_list' => $cat_list,
                 'cat_id' => $cat_id,
                 'shop_id' => 0,
-                'cat' => $cat->toArray(),
+                'cat' => $cat,
                 'list_title' => "",
                 'url' => 'article'
             ],

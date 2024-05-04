@@ -16,8 +16,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- 网站头像 -->
-    <link rel="icon" type="image/x-icon" href="/oss/images/system/config/website/favicon_0.jpg">
-    <link rel="shortcut icon" type="image/x-icon" href="/oss/images/system/config/website/favicon_0.jpg">
+    <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}">
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
     <link rel="stylesheet" href="/assets/d2eace91/fonts/css/font-awesome.min.css?v=1.3"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/scrollBar/jquery.mCustomScrollbar.css?v=1.3"/>
@@ -135,11 +135,11 @@
     <div class="backend-error-box">
         <div class="error-img-box"></div>
         <div class="error-tit-box">
-            <h5>@if($exception->getMessage() != ''){{ $exception->getMessage()}}@else页面未找到。@endif</h5>
+            <h5>@if($exception->getMessage() != '' && env('APP_DEBUG') === true){{ $exception->getMessage()}}@else页面未找到。@endif</h5>
             <p>抱歉，你访问的页面地址有误，或者该页面已经不存在了，请重新加载或访问其他网页。</p>
         </div>
 
-        <a href="@if(null !== $exception->getPrevious()){{ $exception->getPrevious() }}@else{{ route('welcome') }}@endif" class="back-btn">返回上一页</a>
+        <a href="@if(null !== url()->previous()){{ url()->previous() }}@else{{ route('welcome') }}@endif" class="back-btn">返回上一页</a>
 
     </div>
 

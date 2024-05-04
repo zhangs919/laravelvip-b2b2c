@@ -18,8 +18,8 @@
                     </a>
                 </div>
 
-                <a class="add-cat-btn" data-tip="{{ $v['history_id'] }}" title="加入购物车">加入购物车</a>
-                <a class="del-btn" data-tip="{{ $v['history_id'] }}" title="删除宝贝">删除</a>
+                <a class="add-cat-btn" data-tip="{{ $v['goods_id'] }}" title="加入购物车">加入购物车</a>
+                <a class="del-btn" data-tip="{{ $v['goods_id'] }}" title="删除宝贝">删除</a>
             </div>
             <div class="item-title">
 

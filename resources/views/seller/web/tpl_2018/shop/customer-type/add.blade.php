@@ -1,6 +1,16 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
 
@@ -11,10 +21,10 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="CustomerTypeModel" class="form-horizontal" name="CustomerTypeModel" action="/shop/customer-type/add" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="customertypemodel-type_id" class="form-control" name="CustomerTypeModel[type_id]" value="{{ $info->type_id ?? '' }}">
-            <input type="hidden" id="customertypemodel-shop_id" class="form-control" name="CustomerTypeModel[shop_id]" value="{{ $shop_info->shop_id }}">
+            <input type="hidden" id="customertypemodel-shop_id" class="form-control" name="CustomerTypeModel[shop_id]" value="{{ $shop->shop_id }}">
             <!-- 类型名称 -->
             <div class="simple-form-field" >
                 <div class="form-group">
@@ -139,7 +149,17 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+        @if(!isset($info->type_id))
+            [{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"required":true,"messages":{"required":"客服类型名称不能为空。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "customertypemodel-is_show", "name": "CustomerTypeModel[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否启用必须是整数。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"string":true,"messages":{"string":"客服类型名称必须是一条字符串。","maxlength":"客服类型名称只能包含至多10个字符。"},"maxlength":10}},{"id": "customertypemodel-type_desc", "name": "CustomerTypeModel[type_desc]", "attribute": "type_desc", "rules": {"string":true,"messages":{"string":"客服类型描述必须是一条字符串。","maxlength":"客服类型描述只能包含至多40个字符。"},"maxlength":40}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"ajax":{"url":"/shop/customer-type/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcQ3VzdG9tZXJUeXBlTW9kZWw=","attribute":"type_name","params":["CustomerTypeModel[shop_id]"],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
+        @else
+            [{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"required":true,"messages":{"required":"客服类型名称不能为空。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "customertypemodel-is_show", "name": "CustomerTypeModel[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否启用必须是整数。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"string":true,"messages":{"string":"客服类型名称必须是一条字符串。","maxlength":"客服类型名称只能包含至多10个字符。"},"maxlength":10}},{"id": "customertypemodel-type_desc", "name": "CustomerTypeModel[type_desc]", "attribute": "type_desc", "rules": {"string":true,"messages":{"string":"客服描述必须是一条字符串。","maxlength":"客服描述只能包含至多40个字符。"},"maxlength":40}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"ajax":{"url":"/shop/customer-type/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcQ3VzdG9tZXJUeXBlTW9kZWw=","attribute":"type_name","params":["CustomerTypeModel[type_id]","CustomerTypeModel[shop_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
+        @endif
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -153,23 +173,16 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
-    <!-- 图片预览 -->
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-        @if(!isset($info->type_id))
-            [{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"required":true,"messages":{"required":"客服类型名称不能为空。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "customertypemodel-is_show", "name": "CustomerTypeModel[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否启用必须是整数。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"string":true,"messages":{"string":"客服类型名称必须是一条字符串。","maxlength":"客服类型名称只能包含至多10个字符。"},"maxlength":10}},{"id": "customertypemodel-type_desc", "name": "CustomerTypeModel[type_desc]", "attribute": "type_desc", "rules": {"string":true,"messages":{"string":"客服类型描述必须是一条字符串。","maxlength":"客服类型描述只能包含至多40个字符。"},"maxlength":40}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"ajax":{"url":"/shop/customer-type/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcQ3VzdG9tZXJUeXBlTW9kZWw=","attribute":"type_name","params":["CustomerTypeModel[shop_id]"],"scenario":"create"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
-        @else
-            [{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"required":true,"messages":{"required":"客服类型名称不能为空。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"required":true,"messages":{"required":"排序不能为空。"}}},{"id": "customertypemodel-is_show", "name": "CustomerTypeModel[is_show]", "attribute": "is_show", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"是否启用必须是整数。"}}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。"}}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"string":true,"messages":{"string":"客服类型名称必须是一条字符串。","maxlength":"客服类型名称只能包含至多10个字符。"},"maxlength":10}},{"id": "customertypemodel-type_desc", "name": "CustomerTypeModel[type_desc]", "attribute": "type_desc", "rules": {"string":true,"messages":{"string":"客服描述必须是一条字符串。","maxlength":"客服描述只能包含至多40个字符。"},"maxlength":40}},{"id": "customertypemodel-type_sort", "name": "CustomerTypeModel[type_sort]", "attribute": "type_sort", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"排序必须是整数。","min":"排序必须不小于0。","max":"排序必须不大于255。"},"min":0,"max":255}},{"id": "customertypemodel-type_name", "name": "CustomerTypeModel[type_name]", "attribute": "type_name", "rules": {"ajax":{"url":"/shop/customer-type/client-validate","model":"YXBwXG1vZHVsZXNcc2hvcFxtb2RlbHNcQ3VzdG9tZXJUeXBlTW9kZWw=","attribute":"type_name","params":["CustomerTypeModel[type_id]","CustomerTypeModel[shop_id]"],"scenario":"update"},"messages":{"ajax":"{attribute}\"{value}\"已经被占用了。"}}},]
-        @endif
-    </script>
-    <script type="text/javascript">
+
+    <script>
         $().ready(function() {
             var validator = $("#CustomerTypeModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -181,7 +194,6 @@
                 //加载提示
                 $.loading.start();
                 $("#CustomerTypeModel").submit();
-
             });
         });
     </script>

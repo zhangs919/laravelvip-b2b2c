@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-yunsms_accounts", "name": "SystemConfigModel[yunsms_accounts]", "attribute": "yunsms_accounts", "rules": {"string":true,"messages":{"string":"云短信服务帐号必须是一条字符串。"}}},{"id": "systemconfigmodel-yunsms_accounts", "name": "SystemConfigModel[yunsms_accounts]", "attribute": "yunsms_accounts", "rules": {"required":true,"messages":{"required":"云短信服务帐号不能为空。"}}},{"id": "systemconfigmodel-yunsms_password", "name": "SystemConfigModel[yunsms_password]", "attribute": "yunsms_password", "rules": {"string":true,"messages":{"string":"云短信服务密码必须是一条字符串。"}}},{"id": "systemconfigmodel-yunsms_password", "name": "SystemConfigModel[yunsms_password]", "attribute": "yunsms_password", "rules": {"required":true,"messages":{"required":"云短信服务密码不能为空。"}}},{"id": "systemconfigmodel-yunsms_phones", "name": "SystemConfigModel[yunsms_phones]", "attribute": "yunsms_phones", "rules": {"string":true,"messages":{"string":"平台手机号码必须是一条字符串。"}}},{"id": "systemconfigmodel-yunsms_phones", "name": "SystemConfigModel[yunsms_phones]", "attribute": "yunsms_phones", "rules": {"required":true,"messages":{"required":"平台手机号码不能为空。"}}},{"id": "systemconfigmodel-yunsms_phones", "name": "SystemConfigModel[yunsms_phones]", "attribute": "yunsms_phones", "rules": {"match":{"pattern":/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|14[0-9]{1}[0-9]{8}$|199[0-9]{8}$|198[0-9]{8}$|166[0-9]{8}$/,"not":false,"skipOnEmpty":1},"messages":{"match":"平台手机号码是无效的。"}}},]

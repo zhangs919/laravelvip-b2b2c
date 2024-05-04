@@ -15,7 +15,7 @@
 
     <div class="table-content m-t-30">
         <form id="Shipping" class="form-horizontal" name="Shipping" action="/mall/shipping/add" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="shipping-shipping_id" class="form-control" name="Shipping[shipping_id]" value="{{ $info->shipping_id ?? '' }}">
             <!-- 快递公司名称 -->

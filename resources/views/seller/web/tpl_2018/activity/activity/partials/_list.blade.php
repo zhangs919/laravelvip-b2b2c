@@ -8,18 +8,18 @@
             <input type="hidden" name="act_price" value="￥6.00" />
             <input type="hidden" name="start_time" value="2019-01-11" />
             <input type="hidden" name="end_time" value="2019-01-18" />
-            <input type="hidden" name="goods_image" value="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" />
+            <input type="hidden" name="goods_image" value="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" />
             <dl>
                 <dt>
                     <div class="picture m-b-5">
-                        <a href="http://www.b2b2c.yunmall.68mall.com/goods-250.html" target="_blank">
-                            <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220">
+                        <a href="http://www.test.com/goods-250.html" target="_blank">
+                            <img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220">
                         </a>
                     </div>
                 </dt>
                 <dd class="date">
                     <p class="name">
-                        <a href="http://www.b2b2c.yunmall.68mall.com/goods-250.html">金色喀秋莎1000克/包玉米面条</a>
+                        <a href="http://www.test.com/goods-250.html">金色喀秋莎1000克/包玉米面条</a>
                     </p>
                     <p class="choose">
                         <span class="pull-left">￥6.00</span>

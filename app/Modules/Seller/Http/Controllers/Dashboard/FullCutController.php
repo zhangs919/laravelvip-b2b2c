@@ -20,7 +20,7 @@
 // | Description:满减/送
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
 use App\Models\Activity;
 use App\Models\Bonus;
@@ -54,15 +54,21 @@ class FullCutController extends Seller
     protected $category;
     protected $brand;
 
-    public function __construct()
+    public function __construct(
+        ActivityRepository $activity
+        ,ActivityCategoryRepository $activityCategory
+        ,GoodsRepository $goods
+        ,CategoryRepository $category
+        ,BrandRepository $brand
+    )
     {
         parent::__construct();
 
-        $this->activity = new ActivityRepository();
-        $this->activityCategory = new ActivityCategoryRepository();
-        $this->goods = new GoodsRepository();
-        $this->category = new CategoryRepository();
-        $this->brand = new BrandRepository();
+        $this->activity = $activity;
+        $this->activityCategory = $activityCategory;
+        $this->goods = $goods;
+        $this->category = $category;
+        $this->brand = $brand;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -184,10 +190,10 @@ class FullCutController extends Seller
             // 更新操作
             $model = $this->activity->getById($id, ['sort','act_id','act_name','act_title','act_img','start_time','end_time','purchase_num','shop_id','ext_info']);
             $model = $model->toArray();
-
-            foreach ($model['ext_info']['discount'] as $cash=>$v) {
-                $discount[$cash] = [
-                    'cash' => $cash,
+            $discount_info = (array)$model['ext_info']['discount'];
+            foreach ($discount_info as $k=>$v) {
+                $discount[$k] = [
+                    'cash' => $k,
                     'reduce_cash' => $v['reduce_cash'] ?? null,
                     'freight_free' => $v['freight_free'] ?? null,
                     'point' => null, // todo
@@ -243,7 +249,7 @@ class FullCutController extends Seller
             $app_prefix_data['gift_list'] = $gift_list;
         }
 
-        $compact = compact('title', 'model', 'goods_list', 'start_time', 'end_time', 'discount','use_range_goods','use_range','bonus_list','gift_list');
+        $compact = compact('title', 'model', 'start_time', 'end_time', 'discount','use_range_goods','use_range','bonus_list','gift_list');
 
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
@@ -278,7 +284,6 @@ class FullCutController extends Seller
         $discount = [];
         $bonus_list = null;
         $gift_list = null;
-//        dd($post);
         foreach ($post['cash'] as $k=>$v) {
             if (empty($post['check_item_'.($k+1)])) {
                 return result(-1, '', '优惠方式不能为空！');
@@ -335,8 +340,6 @@ class FullCutController extends Seller
             ];
         }
 
-
-//        dd($postModel);
         if (!empty($postModel['act_id'])) {
             // 编辑
             $ret = $this->activity->modifyActivity($activityData, $goodsActivityData, $goodsData);
@@ -392,6 +395,76 @@ class FullCutController extends Seller
 
         return result(0, $list, '', ['type'=>$type]);
     }
+
+    public function picker(Request $request)
+    {
+        $page_id = make_uuid();
+        $pagination_id = $request->post('page')['page_id'];
+        $output = $request->post('output');
+        $left = $request->post('left');
+        $right = $request->post('right');
+        $goods_status = $request->post('goods_status', 1); // 商品状态
+        $is_sku = $request->post('is_sku', 0); //
+        $is_supply = $request->post('is_supply', null); //
+        $show_store = $request->post('show_store', 0); //
+        $is_enable = $request->post('is_enable', 1); //
+        $goods_audit = $request->post('goods_audit', 1); //
+        $goods_ids = $request->post('goods_ids', []);
+        $sku_ids = $request->post('sku_ids', []);
+
+        // 商品列表
+        $where[] = ['shop_id', seller_shop_info()->shop_id];
+        $where[] = ['goods_status', $goods_status];
+//        $where[] = ['is_sku', $is_sku];
+//        $where[] = ['show_store', $show_store];
+//        $where[] = ['is_enable', $is_enable];
+        $where[] = ['goods_audit', $goods_audit];
+
+        $whereIn = [];
+
+        $tpl = 'picker';
+
+
+
+        $condition = [
+            'where' => $where,
+            'in' => $whereIn,
+            'sortname' => 'goods_id',
+            'sortorder' => 'desc'
+        ];
+        list($list, $total) = $this->goods->getList($condition);
+        $pageHtml = short_pagination($total, 5);
+
+        // 查询商品分类列表（树形）
+        $where = [];
+        $where[] = ['is_show',1];
+        $condition = [
+            'where' => $where,
+            'limit' => 0, // 不分页
+            'sortname' => 'created_at',
+            'sortorder' => 'asc',
+        ];
+        list($category_list, $category_total) = $this->category->getList($condition, '', false, true);
+
+        // 查询品牌
+        $where = [];
+        $where[] = ['is_show',1];
+        $condition = [
+            'where' => $where,
+            'sortname' => 'brand_id',
+            'sortorder' => 'desc',
+            'field' => ['brand_id', 'brand_name']
+        ];
+        list($brand_list, $brand_total) = $this->brand->getList($condition);
+
+        $compact = compact(
+            'page_id', 'pagination_id', 'list', 'pageHtml',
+            'sku_ids', 'goods_ids', 'category_list',
+            'brand_list');
+        $render = view('dashboard.full-cut.'.$tpl, $compact)->render();
+        return result(0, $render);
+    }
+
 
     /**
      * 删除

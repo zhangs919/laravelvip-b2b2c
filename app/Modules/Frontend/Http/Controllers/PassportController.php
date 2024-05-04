@@ -22,17 +22,17 @@
 
 namespace App\Modules\Frontend\Http\Controllers;
 
+use App\Models\User;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\UserRepository;
 use App\Services\ConnectApi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 /**
  * 登录注册
- * todo ok
  *
  * Class PassportController
  * @package App\Modules\Frontend\Http\Controllers
@@ -48,38 +48,50 @@ class PassportController extends Frontend
     protected $userRep;
     protected $connectApi;
 
-    public function __construct()
+    public function __construct(UserRepository $userRep, ConnectApi $connectApi)
     {
-
         parent::__construct();
 
-        $this->userRep = new UserRepository();
-        $this->connectApi = new ConnectApi();
+        $this->userRep = $userRep;
+        $this->connectApi = $connectApi;
 
         $this->middleware('guest:user')->except('logout');
     }
+
 
     /**
      * 登录表单
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return mixed
      * @throws \Throwable
      */
     public function showLoginForm(Request $request)
     {
+        if (is_login()) {
+            return redirect('/');
+        }
         $uuid = make_uuid();
         if ($request->ajax()) {
             $render = view('passport.ajax_login', compact('uuid'))->render();
             return result(0, $render);
         }
-        $seo_title = '登录 - '.sysconf('site_name');
-        return view('passport.login', compact('uuid', 'seo_title'));
+        $seo_title = '登录 - ' . sysconf('site_name');
+
+        $show_captcha = false; // 是否显示验证码
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $show_captcha = true;
+        }
+        $tpl = 'login';
+        if (is_weixin() && $request->get('type') != 'mobile') {
+            $tpl = 'login_weixin';
+        }
+        return view('passport.'.$tpl, compact('uuid', 'seo_title', 'show_captcha'));
     }
 
     protected function redirectPath()
     {
-        $back_url = \request()->post('back_url','/');
+        $back_url = \request()->post('back_url', '/');
         return $back_url;
     }
 
@@ -91,13 +103,24 @@ class PassportController extends Frontend
     protected function validateLogin(Request $request)
     {
 
-        $this->validate($request, [
-            'LoginModel.username' => 'required|string',
-            'LoginModel.password' => 'required|string',
-        ], [
-            'LoginModel.username.required' => '用户名不能为空',
-            'LoginModel.password.required' => '密码不能为空',
-        ]);
+		if ($request->input('SmsLoginModel.mobile')) {
+			$this->validate($request, [
+				'SmsLoginModel.mobile' => 'required|string',
+				'SmsLoginModel.smsCaptcha' => 'required|string',
+			], [
+				'SmsLoginModel.mobile.required' => '手机号不能为空',
+				'SmsLoginModel.smsCaptcha.required' => '验证码不能为空',
+			]);
+		} elseif ($request->input('LoginModel.username')) {
+			$this->validate($request, [
+				'LoginModel.username' => 'required|string',
+				'LoginModel.password' => 'required|string',
+			], [
+				'LoginModel.username.required' => '用户名不能为空',
+				'LoginModel.password.required' => '密码不能为空',
+			]);
+		}
+
     }
 
     /**
@@ -108,22 +131,17 @@ class PassportController extends Frontend
      */
     protected function attemptLogin(Request $request)
     {
-        $loginData = [];
-        if (Input::get('SmsLoginModel.mobile')) { // 动态密码登录
-            $loginData = []; // todo
-        } elseif($username = Input::get('LoginModel.username')) { // 普通登录
-            if (check_is_mobile($username)) { // 手机号登录
-                $username_field = 'mobile';
-            } elseif (check_is_email($username)) { // 邮箱登录
-                $username_field = 'email';
-            } else { // 默认用户名登录
-                $username_field = 'user_name';
-            }
-            $loginData = [$username_field => Input::get('LoginModel.username'), 'password' => Input::get('LoginModel.password')];
+        $res = $this->connectApi->attemptLogin($request);
+        if (isset($res['code']) && $res['code'] == -1) {
+            flash('error', $res['message']);
+            return redirect($res['redirect'])->withInput();
         }
-
+		if ($request->input('SmsLoginModel.mobile')) { // 动态密码登录
+			$back_url = $request->input('back_url');
+			return redirect($back_url);
+		}
         return $this->guard()->attempt(
-            $loginData
+            $res['data']
             , $request->filled('remember')
         );
     }
@@ -131,8 +149,8 @@ class PassportController extends Frontend
     /**
      * The user has been authenticated.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $user
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
@@ -140,11 +158,14 @@ class PassportController extends Frontend
         // 存user到session
         $request->session()->put('user', $user);
 
+        // 登录成功 记录登录日志
+        user_log(is_login(), 1);
+
         // ajax 登录
         $ajax_layout = $request->post('ajax_layout', 0);
         if ($ajax_layout) {
             $back_url = $request->post('back_url', '');
-            return result(0, ['back_url'=>$back_url], '登录成功');
+            return result(0, ['back_url' => $back_url], '登录成功');
         }
     }
 
@@ -172,11 +193,11 @@ class PassportController extends Frontend
      * 注册
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return mixed
      */
     public function showRegisterForm(Request $request)
     {
-        $seo_title = sysconf('site_name').' - 注册';
+        $seo_title = sysconf('site_name') . ' - 注册';
 
         $reg_type = 'mobile';
         if ($request->path() == 'register/email.html') {
@@ -184,76 +205,34 @@ class PassportController extends Frontend
         }
 
         if ($request->method() == 'POST') {
-            $ref_url = route('pc_home'); // 暂时默认跳转回网站首页
 
-            if ($reg_type == 'mobile') {
-                // 手机注册
-                $MobileRegisterModel = $request->input('MobileRegisterModel');
 
-                // 验证图片验证码
-                if (isset($MobileRegisterModel['captcha'])) {
-                    $inputImgCaptcha = $MobileRegisterModel['captcha'];
-                    $imgCaptcha = session('laravelvipcaptcha'); // 图片验证码
-                    if ($inputImgCaptcha != $imgCaptcha) {
-                        flash('error', '验证码不正确。');
-
-                        return redirect('/register.html')->withInput($MobileRegisterModel);
-                    }
-                }
-
-                // todo 验证手机验证码
-
-                // 保存注册信息
-                $ret = $this->userRep->register($MobileRegisterModel, 1);
-                if ($ret['code'] < 0) {
-                    flash('error', '注册信息保存失败。');
-                    return redirect('/register.html')->withInput($MobileRegisterModel);
-                }
-                flash('success', '注册成功。');
-
-                // 登录
-                $this->guard()->attempt(
-                    ['mobile' => Input::get('MobileRegisterModel.mobile'), 'password' => Input::get('MobileRegisterModel.password')]
-                    , $request->filled('remember')
-                );
-                // 存user到session
-                $request->session()->put('user', auth('user')->user());
-                return redirect($ref_url);
-            } elseif ($reg_type == 'email') {
-                // 邮箱注册
-                $EmailRegisterModel = $request->input('EmailRegisterModel');
-
-                // todo 验证手机验证码
-
-                // 保存注册信息
-                $ret = $this->userRep->register($EmailRegisterModel, 1);
-                if ($ret['code'] < 0) {
-                    flash('error', '注册信息保存失败。');
-                    return redirect('/register.html')->withInput($EmailRegisterModel);
-                }
-                flash('success', '注册成功。');
-
-                // 登录
-                $this->guard()->attempt(
-                    ['email' => Input::get('EmailRegisterModel.email'), 'password' => Input::get('EmailRegisterModel.password')]
-                    , $request->filled('remember')
-                );
-                // 存user到session
-                $request->session()->put('user', auth('user')->user());
-                return redirect($ref_url);
+            $res = $this->connectApi->attemptRegister($request, $reg_type);
+            if (isset($res['code']) && $res['code'] == -1) {
+                flash('error', $res['message']);
+                return redirect('/register.html')->withInput($res['register_model']);
             }
-            $remember = $request->input('remember', 0); // 是否同意用户注册协议
 
-            // 注册验证参数
+            // 手动认证登录
+            $this->guard()->attempt(
+                $res['data']
+            );
+			$user = auth('user')->user();
 
-            // 注册保存数据
+            // 存user到session
+            Session::put('user', $user);
+            // 登录成功 记录登录日志
+            user_log(is_login(), 1);
 
-            flash('error', '注册失败');
-            redirect('/');
-//            return result(0, '', '注册成功');
+			if ($reg_type == 'mobile' && is_mobile() || (request()->getHost() == config('lrw.mobile_domain'))) {
+				return view('passport.register', compact('seo_title', 'user'));
+			} else {
+				$ref_url = route('pc_home'); // 暂时默认跳转回网站首页
+            	return redirect($ref_url);
+			}
         }
 
-        return view('passport.register_' . $reg_type, compact('seo_title'));
+        return view('passport.register_' . $reg_type, compact('seo_title', 'reg_type'));
     }
 
     /**
@@ -285,9 +264,16 @@ class PassportController extends Frontend
      */
     public function smsCaptcha(Request $request)
     {
-        $mobile = $request->get('mobile');
-        $captcha = $request->get('captcha');
+        $params = $request->all();
+        $mobile = $request->post('mobile');
+        $captcha = $request->post('captcha');
         $log_type = 1; // 注册会员
+        if (array_has($params,'captcha') && empty($params['captcha'])) {
+            return result(-1, null, '验证码不能为空');
+        }
+        if (!empty($captcha) && $captcha != session('captcha')) {
+            return result(-1, null, '验证码有误');
+        }
 
         // 发送频繁
 //        return result(-1, ['show_captcha'=>1], '每60秒内只能发送一次短信验证码，请稍候重试', ['errors'=>['mobile' => ['每60秒内只能发送一次短信验证码，请稍候重试']]]);
@@ -298,6 +284,20 @@ class PassportController extends Frontend
         return result(0, null, '发送成功');
     }
 
+	public function checkSmsCaptcha(Request $request)
+	{
+		$params = $request->all();
+		$mobile = $request->post('mobile');
+		$sms_captcha = $request->post('sms_captcha');
+
+		// 验证手机验证码
+		if (config('app.env') == 'production' && $sms_captcha != session('sms_captcha')) {
+			return arr_result(-1, null, '验证码输入错误');
+		}
+
+		return result(0, null, '验证成功');
+	}
+
     public function emailCaptcha(Request $request)
     {
 
@@ -307,7 +307,7 @@ class PassportController extends Frontend
         Mail::send(
             'emails.register_tpl', // 邮件模板
             ['content' => $message],
-            function ($message) use($to, $subject) {
+            function ($message) use ($to, $subject) {
                 $message->to($to)->subject($subject);
             }
         );
@@ -328,6 +328,7 @@ class PassportController extends Frontend
      */
     protected function loggedOut(Request $request)
     {
-        return redirect('/login');
+        session()->invalidate();
+        return redirect('/login.html');
     }
 }

@@ -39,129 +39,129 @@
 @endif
 
 <script type="text/javascript">
-    if ($('#{{ $uid }}').find('.goods-category-container-0').length > 0) {
-        var cat_ids = $('#{{ $uid }} .category-container-0').find('input[name="cat_id"]').val();
-        var is_last = '';
-// 判断是否为最后一个楼层
-        if ($('#{{ $uid }}').find('.goods-category-container-0').next('.floor').length > 0) {
-            is_last = 0;
-        }
-        $.get('/site/tpl-data', {
-            cat_ids: cat_ids,
-            tpl_code: 'cat_goods_list',
-            is_last: is_last,
-            uid: '{{ $uid }}'
-        }, function(result) {
-            $('#{{ $uid }}').find('.goods-category-container-0').html(result.data);
-            $.imgloading.loading();
-        }, 'JSON');
-    }
+    {{--if ($('#{{ $uid }}').find('.goods-category-container-0').length > 0) {--}}
+        {{--var cat_ids = $('#{{ $uid }} .category-container-0').find('input[name="cat_id"]').val();--}}
+        {{--var is_last = '';--}}
+{{--// 判断是否为最后一个楼层--}}
+        {{--if ($('#{{ $uid }}').find('.goods-category-container-0').next('.floor').length > 0) {--}}
+            {{--is_last = 0;--}}
+        {{--}--}}
+        {{--$.get('/site/tpl-data', {--}}
+            {{--cat_ids: cat_ids,--}}
+            {{--tpl_code: 'cat_goods_list',--}}
+            {{--is_last: is_last,--}}
+            {{--uid: '{{ $uid }}'--}}
+        {{--}, function(result) {--}}
+            {{--$('#{{ $uid }}').find('.goods-category-container-0').html(result.data);--}}
+            {{--$.imgloading.loading();--}}
+        {{--}, 'JSON');--}}
+    {{--}--}}
 
-    $('#{{ $uid }} .scroll-y-menu li').click(function() {
-        var event = true;
-        if ($(this).hasClass('active')) {
-            event = false;
-        }
-        $(this).addClass('active').siblings().removeClass('active');
-        $('#{{ $uid }} .tab-con').eq($(this).index()).show().siblings('.tab-con').hide();
-        var index = $(this).index();
-        if ($('#{{ $uid }} .category-container-' + index).length > 0 && event) {
-            var cat_ids = $('#{{ $uid }} .category-container-' + index).find('input[name="cat_id"]').val();
-            if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {
-                var is_last = '';
-// 判断是否为最后一个楼层
-                if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {
-                    is_last = 0;
-                }
-                $.get('/site/tpl-data', {
-                    cat_ids: cat_ids,
-                    tpl_code: 'cat_goods_list',
-                    is_last: is_last,
-                    uid: '{{ $uid }}'
-                }, function(result) {
-                    $('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);
-                    $.imgloading.loading();
-                }, 'JSON');
-            }
-        }
-    });
-    $('#{{ $uid }} .tab-menu li').click(function() {
-        var event = true;
-        if ($(this).hasClass('active')) {
-            event = false;
-        }
-        $(this).addClass('active').siblings().removeClass('active');
-        $('#{{ $uid }} .tab-con').eq($(this).index()).show().siblings('.tab-con').hide();
-        var index = $(this).index();
-        if ($('#{{ $uid }} .category-container-' + index).length > 0 && event) {
-            var cat_ids = $('#{{ $uid }} .category-container-' + index).find('input[name="cat_id"]').val();
-            if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {
-                var is_last = '';
-// 判断是否为最后一个楼层
-                if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {
-                    is_last = 0;
-                }
-                $.get('/site/tpl-data', {
-                    cat_ids: cat_ids,
-                    tpl_code: 'cat_goods_list',
-                    is_last: is_last,
-                    uid: '{{ $uid }}',
-                    shop_id: ''
-                }, function(result) {
-                    $('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);
-                    $.imgloading.loading();
-                }, 'JSON');
-            }
-        }
-    });
-    $('#{{ $uid }} .tab-nav-fold li').click(function() {
-        var event = true;
-        if ($(this).hasClass('current')) {
-            event = false;
-        }
-        $(this).addClass('current').siblings().removeClass('current');
-        $('#{{ $uid }} .tab-con').eq($(this).index()).show().siblings('.tab-con').hide();
-        var index = $(this).index();
-        if ($('#{{ $uid }} .category-container-' + index).length > 0 && event) {
-            var cat_ids = $('#{{ $uid }} .category-container-' + index).find('input[name="cat_id"]').val();
-            if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {
-                var is_last = '';
-// 判断是否为最后一个楼层
-                if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {
-                    is_last = 0;
-                }
-                $.get('/site/tpl-data', {
-                    cat_ids: cat_ids,
-                    tpl_code: 'cat_goods_list',
-                    is_last: is_last,
-                    uid: '{{ $uid }}'
-                }, function(result) {
-                    $('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);
-                    $.imgloading.loading();
-                }, 'JSON');
-            }
-        }
-    });
-    $('#{{ $uid }}').find('.tab-category-item').click(function() {
-        var index = $(this).data('index');
-        var cat_id = $(this).data('cat_id');
-        var link = $(this).data('link');
-        if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {
-            var is_last = '';
-            if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {
-                is_last = 0;
-            }
-            $.get('/site/tpl-data', {
-                cat_ids: cat_id,
-                tpl_code: 'cat_goods_list',
-                is_last: is_last,
-                uid: '{{ $uid }}'
-            }, function(result) {
-                $('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);
-                $.imgloading.loading();
-            }, 'JSON');
-        } else {
-            $.go(link);
-        }
-    });
+    {{--$('#{{ $uid }} .scroll-y-menu li').click(function() {--}}
+        {{--var event = true;--}}
+        {{--if ($(this).hasClass('active')) {--}}
+            {{--event = false;--}}
+        {{--}--}}
+        {{--$(this).addClass('active').siblings().removeClass('active');--}}
+        {{--$('#{{ $uid }} .tab-con').eq($(this).index()).show().siblings('.tab-con').hide();--}}
+        {{--var index = $(this).index();--}}
+        {{--if ($('#{{ $uid }} .category-container-' + index).length > 0 && event) {--}}
+            {{--var cat_ids = $('#{{ $uid }} .category-container-' + index).find('input[name="cat_id"]').val();--}}
+            {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {--}}
+                {{--var is_last = '';--}}
+{{--// 判断是否为最后一个楼层--}}
+                {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {--}}
+                    {{--is_last = 0;--}}
+                {{--}--}}
+                {{--$.get('/site/tpl-data', {--}}
+                    {{--cat_ids: cat_ids,--}}
+                    {{--tpl_code: 'cat_goods_list',--}}
+                    {{--is_last: is_last,--}}
+                    {{--uid: '{{ $uid }}'--}}
+                {{--}, function(result) {--}}
+                    {{--$('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);--}}
+                    {{--$.imgloading.loading();--}}
+                {{--}, 'JSON');--}}
+            {{--}--}}
+        {{--}--}}
+    {{--});--}}
+    {{--$('#{{ $uid }} .tab-menu li').click(function() {--}}
+        {{--var event = true;--}}
+        {{--if ($(this).hasClass('active')) {--}}
+            {{--event = false;--}}
+        {{--}--}}
+        {{--$(this).addClass('active').siblings().removeClass('active');--}}
+        {{--$('#{{ $uid }} .tab-con').eq($(this).index()).show().siblings('.tab-con').hide();--}}
+        {{--var index = $(this).index();--}}
+        {{--if ($('#{{ $uid }} .category-container-' + index).length > 0 && event) {--}}
+            {{--var cat_ids = $('#{{ $uid }} .category-container-' + index).find('input[name="cat_id"]').val();--}}
+            {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {--}}
+                {{--var is_last = '';--}}
+{{--// 判断是否为最后一个楼层--}}
+                {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {--}}
+                    {{--is_last = 0;--}}
+                {{--}--}}
+                {{--$.get('/site/tpl-data', {--}}
+                    {{--cat_ids: cat_ids,--}}
+                    {{--tpl_code: 'cat_goods_list',--}}
+                    {{--is_last: is_last,--}}
+                    {{--uid: '{{ $uid }}',--}}
+                    {{--shop_id: ''--}}
+                {{--}, function(result) {--}}
+                    {{--$('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);--}}
+                    {{--$.imgloading.loading();--}}
+                {{--}, 'JSON');--}}
+            {{--}--}}
+        {{--}--}}
+    {{--});--}}
+    {{--$('#{{ $uid }} .tab-nav-fold li').click(function() {--}}
+        {{--var event = true;--}}
+        {{--if ($(this).hasClass('current')) {--}}
+            {{--event = false;--}}
+        {{--}--}}
+        {{--$(this).addClass('current').siblings().removeClass('current');--}}
+        {{--$('#{{ $uid }} .tab-con').eq($(this).index()).show().siblings('.tab-con').hide();--}}
+        {{--var index = $(this).index();--}}
+        {{--if ($('#{{ $uid }} .category-container-' + index).length > 0 && event) {--}}
+            {{--var cat_ids = $('#{{ $uid }} .category-container-' + index).find('input[name="cat_id"]').val();--}}
+            {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {--}}
+                {{--var is_last = '';--}}
+{{--// 判断是否为最后一个楼层--}}
+                {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {--}}
+                    {{--is_last = 0;--}}
+                {{--}--}}
+                {{--$.get('/site/tpl-data', {--}}
+                    {{--cat_ids: cat_ids,--}}
+                    {{--tpl_code: 'cat_goods_list',--}}
+                    {{--is_last: is_last,--}}
+                    {{--uid: '{{ $uid }}'--}}
+                {{--}, function(result) {--}}
+                    {{--$('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);--}}
+                    {{--$.imgloading.loading();--}}
+                {{--}, 'JSON');--}}
+            {{--}--}}
+        {{--}--}}
+    {{--});--}}
+    {{--$('#{{ $uid }}').find('.tab-category-item').click(function() {--}}
+        {{--var index = $(this).data('index');--}}
+        {{--var cat_id = $(this).data('cat_id');--}}
+        {{--var link = $(this).data('link');--}}
+        {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).length > 0) {--}}
+            {{--var is_last = '';--}}
+            {{--if ($('#{{ $uid }}').find('.goods-category-container-' + index).next('.floor').length > 0) {--}}
+                {{--is_last = 0;--}}
+            {{--}--}}
+            {{--$.get('/site/tpl-data', {--}}
+                {{--cat_ids: cat_id,--}}
+                {{--tpl_code: 'cat_goods_list',--}}
+                {{--is_last: is_last,--}}
+                {{--uid: '{{ $uid }}'--}}
+            {{--}, function(result) {--}}
+                {{--$('#{{ $uid }}').find('.goods-category-container-' + index).html(result.data);--}}
+                {{--$.imgloading.loading();--}}
+            {{--}, 'JSON');--}}
+        {{--} else {--}}
+            {{--$.go(link);--}}
+        {{--}--}}
+    {{--});--}}
 </script>

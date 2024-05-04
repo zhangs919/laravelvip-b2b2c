@@ -24,13 +24,13 @@
             <td>14</td>
             <td>
                 <div class="goodsPicBox pull-left m-r-10">
-                    <a href='http://www.cp6znq.yunmall.68mall.com/14.html' target="_blank">
-                        <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036307909621.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="goods-thumb"></img>
+                    <a href='http://xxxx/14.html' target="_blank">
+                        <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036307909621.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="goods-thumb"></img>
                     </a>
                 </div>
                 <div class="ng-binding goods-message">
                     <div class="name">
-                        <a href='http://www.cp6znq.yunmall.68mall.com/goods-14.html' target="_blank" title="越南进口玉芒芒果 大青芒香芒新鲜水果非凯特芒果8斤装包邮代理">越南进口玉芒芒果 大青芒香芒新鲜水果非凯特芒果8斤装包邮代理</a>
+                        <a href='http://xxxx/goods-14.html' target="_blank" title="越南进口玉芒芒果 大青芒香芒新鲜水果非凯特芒果8斤装包邮代理">越南进口玉芒芒果 大青芒香芒新鲜水果非凯特芒果8斤装包邮代理</a>
                     </div>
                     <div class="active">
                         <div class="pull-left">
@@ -64,13 +64,13 @@
             <td>15</td>
             <td>
                 <div class="goodsPicBox pull-left m-r-10">
-                    <a href='http://www.cp6znq.yunmall.68mall.com/15.html' target="_blank">
-                        <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036307704680.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="goods-thumb"></img>
+                    <a href='http://xxxx/15.html' target="_blank">
+                        <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036307704680.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="goods-thumb"></img>
                     </a>
                 </div>
                 <div class="ng-binding goods-message">
                     <div class="name">
-                        <a href='http://www.cp6znq.yunmall.68mall.com/goods-15.html' target="_blank" title="陕西眉县绿心奇异果16颗装 徐香猕猴桃精品 新鲜水果">陕西眉县绿心奇异果16颗装 徐香猕猴桃精品 新鲜水果</a>
+                        <a href='http://xxxx/goods-15.html' target="_blank" title="陕西眉县绿心奇异果16颗装 徐香猕猴桃精品 新鲜水果">陕西眉县绿心奇异果16颗装 徐香猕猴桃精品 新鲜水果</a>
                     </div>
                     <div class="active">
                         <div class="pull-left">
@@ -104,13 +104,13 @@
             <td>17</td>
             <td>
                 <div class="goodsPicBox pull-left m-r-10">
-                    <a href='http://www.cp6znq.yunmall.68mall.com/17.html' target="_blank">
-                        <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036311036909.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="goods-thumb"></img>
+                    <a href='http://xxxx/17.html' target="_blank">
+                        <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036311036909.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" class="goods-thumb"></img>
                     </a>
                 </div>
                 <div class="ng-binding goods-message">
                     <div class="name">
-                        <a href='http://www.cp6znq.yunmall.68mall.com/goods-17.html' target="_blank" title="商品一">商品一</a>
+                        <a href='http://xxxx/goods-17.html' target="_blank" title="商品一">商品一</a>
                     </div>
                     <div class="active">
                         <div class="pull-left">

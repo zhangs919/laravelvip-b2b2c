@@ -1,9 +1,19 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
+
 @stop
 
 {{--content--}}
@@ -84,7 +94,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -114,9 +124,12 @@
 
 @stop
 
-{{--extra html block--}}
+{{--extra html page元素同级下面--}}
 @section('extra_html')
-
+    <a class="totop animation" href="javascript:;"><i class="fa fa-angle-up"></i></a>
+    <script type="text/javascript">
+        //
+    </script>
 @stop
 
 
@@ -130,22 +143,42 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
+        $().ready(function() {
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        //
         $().ready(function() {
             var tablelist = $("#table_list").tablelist();
-
             // 取消记录
             $("body").on('click', '.del', function() {
                 var id = $(this).attr("object_id");
                 var store_id = $(this).data("store_id");
-
                 if (store_id > 0) {
                     $.msg("此帐号为网点管理员，请先删除网点！");
                     return;
                 }
-
                 tablelist.remove({
                     confirm: '您确定删除这个管理员账号吗？',
                     url: 'delete',
@@ -154,7 +187,6 @@
                     }
                 });
             });
-
             // 搜索
             $("#searchForm").submit(function() {
                 tablelist.load({

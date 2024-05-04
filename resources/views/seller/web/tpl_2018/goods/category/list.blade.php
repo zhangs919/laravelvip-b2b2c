@@ -1,14 +1,20 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+    <link href="/assets/d2eace91/js/table/css/jquery.treetable.css" rel="stylesheet">
+    <link href="/assets/d2eace91/js/table/css/jquery.treetable.theme.default.css" rel="stylesheet">
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20180702"/>
-    <link rel="stylesheet" href="/assets/d2eace91/js/table/css/jquery.treetable.css?v=20180702"/>
-    <link rel="stylesheet" href="/assets/d2eace91/js/table/css/jquery.treetable.theme.default.css?v=20180702"/>
-    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=20180710"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=20180702"/>
-    <script src="/assets/d2eace91/js/table/jquery.treetable.js?v=20180710"></script>
 @stop
 
 {{--content--}}
@@ -68,9 +74,15 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="/assets/d2eace91/js/table/jquery.treetable.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
         function expandAll() {
             if ($(this).data("expandAll")) {
                 $(".treetable").treetable("collapseAll");
@@ -80,7 +92,6 @@
                 $(this).data("expandAll", true);
             }
         }
-
         function switch_callback(result, object, value) {
             if (result.code == 0) {
                 var cat_ids = result.cat_ids;
@@ -92,11 +103,9 @@
                 }
             }
         }
-
         $(".treetable").treetable({
             expandable: true,
         });
-
         var tablelist = null;
         $().ready(function() {
             tablelist = $("#table_list").tablelist({
@@ -104,11 +113,8 @@
                     $(".treetable").treetable({
                         expandable: true,
                     });
-
                     $(".treetable").treetable("expandAll");
-
                     var cat_name = $("#cat_name").val();
-
                     if ($.trim(cat_name) != "") {
                         $(".cat_name").each(function() {
                             var html = $(this).html();
@@ -118,25 +124,22 @@
                     }
                 }
             });
-
             $("#btn_submit").click(function() {
                 tablelist.load({
                     'cat_name': $("#cat_name").val()
                 });
                 return false;
             });
-
-            // 删除记录
+            // 删除记录  
             $("body").on('click', '.del', function() {
                 var id = $(this).attr("object_id");
-
                 $.confirm('您确定删除这条记录吗？', function() {
                     $.post('/goods/category/delete', {
                         id: id
                     }, function(result) {
                         if (result.code == 0) {
                             $.msg(result.message);
-                            $.go('/goods/category/list');
+                            $.go('/goods/category/list.html');
                         } else {
                             $.msg(result.message, {
                                 time: 5000
@@ -144,19 +147,15 @@
                         }
                     }, "json");
                 })
-
             });
-
             // 导出
             $("#btn_export").click(function() {
                 var url = "/goods/category/export.html";
                 url += "?cat_name=" + $("#cat_name").val();
-                $.go(url, null, false);
+                $.go(url, "_blank", false);
             });
         });
-    </script>
-
-    <script type="text/javascript">
+        // 
         $().ready(function() {
             $("input[name=cat_name]").focus();
             //条形码扫描触发事件
@@ -166,9 +165,7 @@
                 }
             });
         })
-    </script>
-
-    <script type='text/javascript'>
+        // 
         $(document).ready(function() {
             // 排序
             $(".cat_sort").editable({

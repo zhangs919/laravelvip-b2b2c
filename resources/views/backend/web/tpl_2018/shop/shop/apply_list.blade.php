@@ -72,7 +72,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -193,6 +193,13 @@
                         ids: ids
                     }
                 });
+            });
+
+            $("body").on("mouseover", ".fail-info", function() {
+                $.tips($(this).data("fail-info"), $(this));
+            });
+            $("body").on("mouseout", ".fail-info", function() {
+                $.closeAll("tips");
             });
         });
     </script>

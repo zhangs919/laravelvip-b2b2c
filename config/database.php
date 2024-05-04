@@ -49,7 +49,7 @@ return [
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
+            'prefix' => env('DB_PREFIX', ''),
             'strict' => false, // 不强制 否则groupBy会报错
             'engine' => null,
         ],
@@ -76,6 +76,15 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
+        ],
+
+        'mongodb' => [
+            'driver'   => 'mongodb',
+            'host'     => env('MONGO_DB_HOST', '127.0.0.1'),
+            'port'     => env('MONGO_DB_PORT', 27017),
+            'database' => env('MONGO_DB_DATABASE'),
+            'username' => env('MONGO_DB_USERNAME'),
+            'password' => env('MONGO_DB_PASSWORD'),
         ],
 
     ],
@@ -120,7 +129,9 @@ return [
     // Elasticsearch 配置
     'elasticsearch' => [
         // Elasticsearch 支持多台服务器负载均衡，因此这里是一个数组
-        'host' => explode(',', env('ES_HOSTS')),
+        'hosts' => [
+            env('ELASTICSEARCH_HOST')
+            ]//explode(',', config('lrw.elasticsearch_host')),
     ],
 
 ];

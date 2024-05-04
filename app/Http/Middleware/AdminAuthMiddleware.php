@@ -16,7 +16,6 @@ class AdminAuthMiddleware
      */
     public function handle($request, Closure $next, $guard = null)
     {
-//        dd(Auth::guard($guard));
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return result(99, null, '需要登录');
@@ -25,6 +24,10 @@ class AdminAuthMiddleware
                 return redirect()->guest('login');
             }
         }
+
+        // 通过在路由中指定中间件名称来验证访问权限
+
+
         return $next($request);
     }
 }

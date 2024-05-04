@@ -16,7 +16,8 @@ position: relative; }
 .decor-btn { color: #fff;  background: #4DA2FD; padding: 2px 6px; font-size: 12px; border: 1px solid transparent; margin-left: 5px; visibility: hidden; margin-bottom: 5px; }
 .decor-btn i.fa{ margin-top:-2px;}
 .drop-item:hover .decor-btn { visibility: visible; }
-.drop-item.invalid{background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0%;border: 1px solid rgba(0, 0, 0,0.1);opacity: 0.4;}
+.drop-item.invalid {border: 1px solid rgba(0, 0, 0,0.03); background: rgba(0, 0, 0, 0.03) none repeat scroll 0% 0%;  }
+.drop-item.invalid > div{opacity: 0.4;}
 
 .store-wall-ad{position: relative;}
 .floor-layout .floor-content5{ width: 1210px !important;} 
@@ -28,7 +29,7 @@ position: relative; }
 .right-sidebar .operateEdit {top: 185px; right:0px; }
 
 /*楼层编辑按钮公共*/
-.selector,.title-selector{ position: absolute; top: 0px; left: 0px; font-size:0px; display: block; width: 34px !important; height: 34px !important; visibility: hidden; z-index: 33; background:url(../../images/design/edit_operate_bg.png) no-repeat 0 0;}
+.selector,.title-selector{ position: absolute; top: 0px; left: 0px; font-size:0px; display: block; width: 34px; height: 34px; visibility: hidden; z-index: 33; background:url(../../images/design/edit_operate_bg.png) no-repeat 0 0;}
 .selector:hover,.title-selector:hover{background-position: 0px -34px;}
 .selector.setting-btn,.title-selector.setting-btn{background-position: -374px 0}
 .selector.setting-btn:hover,.title-selector.setting-btn:hover{background-position: -374px -34px;}
@@ -171,8 +172,8 @@ position: relative; }
 .quality-item:hover .title-selector,
 .feed-index h5:hover .title-selector,
 .article-img-box:hover .selector,
-.feed-index .notice .article-list:hover .select
-/*.floor:hover .selector*/{ visibility: visible; }
+.feed-index .notice .article-list:hover .select,
+.coupon-template:hover .selector { visibility: visible; }
 
 /*编辑按钮整合——编辑主导航、编辑分类导航、编辑焦点图*/
 .nav-edit button{ font-size: 12px; color: #fff; background: #4DA2FD; padding: 3px 6px 3px 2px; line-height: 20px; border: none;}
@@ -180,7 +181,7 @@ position: relative; }
 
 
 /*装修内部样式*/
-.operateEdit{ position: absolute; right: 0px; top: -38px; z-index: 100; animation: bounceScale .1s;}
+.operateEdit{ position: absolute; right: 0px; top: -38px; z-index: 100; opacity: 1 !important; background: transparent !important; border: none !important; animation: bounceScale .1s;}
 .operateEdit a{display: inline-block; position: relative; padding: 0px; background:url(../../images/design/edit_operate_bg.png) no-repeat; height: 32px; width: 32px; margin: 0 5px 0 0; cursor: pointer;}
 .operateEdit a i{ display: none;}
 .drop-item .operateEdit a.decor-btn:hover{background:url(../../images/design/edit_operate_bg.png) no-repeat; }

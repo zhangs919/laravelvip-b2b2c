@@ -25,6 +25,7 @@ namespace App\Modules\Seller\Http\Controllers\Shop;
 use App\Models\ShopNode;
 use App\Models\ShopRole;
 use App\Models\Store;
+use App\Models\User;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\UserRepository;
 use App\Services\Tree;
@@ -44,12 +45,15 @@ class AccountController extends Seller
     protected $user;
     protected $tree;
 
-    public function __construct()
+    public function __construct(
+        UserRepository $user
+        ,Tree $tree
+    )
     {
         parent::__construct();
 
-        $this->user = new UserRepository();
-        $this->tree = new Tree();
+        $this->user = $user;
+        $this->tree = $tree;
 
         $this->set_menu_select('account', 'shop-account');
 
@@ -210,7 +214,8 @@ class AccountController extends Seller
         }else {
             // 添加
             $post['shop_id'] = seller_shop_info()->shop_id;
-            $post['is_seller'] = 1; // 默认添加的管理员为店铺管理员
+//            $post['is_seller'] = 0; // 默认添加的管理员为店铺管理员
+            $post['auth_key'] = md5($post['user_name']); // 存入auth_key 方便验证权限
             $ret = $this->user->store($post);
             $msg = '管理员添加';
         }
@@ -305,41 +310,53 @@ class AccountController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        $user_id = $request->get('id');
+        $id = $request->get('id');
 
         $nodes = ShopNode::get()->toArray();
         $nodes = $this->tree->list_to_tree($nodes, 'id', 'parent_node_id');
-        $seller_info = $this->user->getById($user_id);
-        $role_id = $seller_info->role_id; // 权限id
-        $auth_info = ShopRole::where('role_id', $role_id)->select(['role_id', 'role_name', 'auth_codes'])->first();
+        $seller_info = $this->user->getById($id);
+
+        $auth_key = $seller_info->auth_key; // 验证权限的key 管理员新增时 随机生成 并保存
+
+        // 解析管理员账号额外的权限
+        $admin_auth_codes = unserialize(backend_decrypt($seller_info->auth_codes, $auth_key));
+
+        if (empty($admin_auth_codes)) {
+            $admin_auth_codes = [];
+        }
+        $auth_info = ShopRole::where('role_id', $seller_info->shopRole->role_id)->select(['role_id', 'role_name', 'auth_codes'])->first();
 
         //解析已有权限
-//        $auth_codes = unserialize(backend_decrypt($auth_info->auth_codes, MD5_KEY.md5($auth_info->role_name)));
         $auth_codes = unserialize(backend_decrypt($auth_info->auth_codes, MD5_KEY));
+
         if (empty($auth_codes)) {
             $auth_codes = [];
         }
-        return view('shop.account.auth_set', compact('title', 'role_id', 'nodes', 'auth_codes'));
+
+        return view('shop.account.auth_set', compact('title', 'nodes','admin_auth_codes','id', 'auth_codes'));
     }
 
     public function authSetSave(Request $request)
     {
-        $role_id = $request->get('id'); // 权限id
-        $auth_info = ShopRole::where('role_id', $role_id)->select(['role_id', 'role_name', 'auth_codes'])->first();
+        $id = $request->get('id'); // 管理员id
 
-        $permission = $request->post('role_auths');
-//        $update['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY.md5($auth_info->role_name));
-        $update['auth_codes'] = backend_encrypt(serialize($permission),MD5_KEY);
-        $ret = ShopRole::where('role_id', $role_id)->update($update);
+        $seller_info = $this->user->getById($id);
+        if (empty($seller_info)) {
+            flash('error', INVALID_PARAM);
+            return redirect('/shop/account/list');
+        }
+        $permission = $request->post('auth_codes');
+        $update['auth_codes'] = backend_encrypt(serialize($permission), $seller_info->auth_key);
+        $ret = User::where('user_id', $seller_info->user_id)->update($update);
         if ($ret === false) {
             // Log
-            shop_log('权限设置失败。ID：'.$role_id);
+            shop_log('卖家账号额外权限设置失败。卖家账号ID：' . $id);
             // 失败
             flash('error', '权限设置失败！');
             return redirect('/shop/account/list');
         }
         // Log
-        shop_log('权限设置成功。ID：'.$role_id);
+        shop_log('卖家账号额外权限设置成功。卖家账号ID：' . $id);
         flash('error', '权限设置成功！');
         return redirect('/shop/account/list');
     }

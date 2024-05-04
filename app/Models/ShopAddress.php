@@ -22,6 +22,8 @@
 
 namespace App\Models;
 
+use App\Models\Traits\RegionTrait;
+
 /**
  * 发/退货地址库模型
  *
@@ -30,6 +32,8 @@ namespace App\Models;
  */
 class ShopAddress extends BaseModel
 {
+    use RegionTrait;
+
     protected $table = 'shop_address';
 
     protected $fillable = [
@@ -37,4 +41,6 @@ class ShopAddress extends BaseModel
     ];
 
     protected $primaryKey = 'address_id';
+
+    protected $appends = ['region_names'];
 }

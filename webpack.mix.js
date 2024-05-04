@@ -1,5 +1,4 @@
-// const { mix } = require('laravel-mix');
-const { env } = require('minimist')(process.argv.slice(2));
+const {env} = require('minimist')(process.argv.slice(2));
 
 /*
  |--------------------------------------------------------------------------
@@ -11,30 +10,13 @@ const { env } = require('minimist')(process.argv.slice(2));
  | file for the application as well as bundling up all the JS files.
  |
  */
-
-// mix.js('resources/js/app.js', 'public/js')
-// .version();
-
-/*平台后台资源*/
-if (env && env.backend) {
-    require(`${__dirname}/webpack.backend.js`);
+if (env && env.combine) {
+    require(`${__dirname}/webpack.combine.js`);
     return;
 }
 
-/*前端资源*/
-if (env && env.frontend) {
-    require(`${__dirname}/webpack.frontend.js`);
-    return;
-}
-
-/*商家后台资源*/
-if (env && env.seller) {
-    require(`${__dirname}/webpack.seller.js`);
-    return;
-}
-
-/*网点后台资源*/
-if (env && env.store) {
-    require(`${__dirname}/webpack.store.js`);
+/*如果不带任何参数 则执行全部*/
+if (!env) {
+    require(`${__dirname}/webpack.combine.js`);
     return;
 }

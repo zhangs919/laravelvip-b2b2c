@@ -1,6 +1,6 @@
 <div id="{{ $uuid }}" class="table-content m-t-30 clearfix">
     <form id="Attribute" class="form-horizontal" name="Attribute" action="/goods/publish/add-spec" method="POST">
-        {{ csrf_field() }}
+        @csrf
         <!-- 隐藏域 -->
         <input type="hidden" id="attribute-attr_id" class="form-control" name="Attribute[attr_id]">
 

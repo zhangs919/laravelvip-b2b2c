@@ -1,10 +1,10 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-sms_sign_name", "name": "SystemConfigModel[sms_sign_name]", "attribute": "sms_sign_name", "rules": {"string":true,"messages":{"string":"短信签名必须是一条字符串。"}}},{"id": "systemconfigmodel-sms_sign_name", "name": "SystemConfigModel[sms_sign_name]", "attribute": "sms_sign_name", "rules": {"required":true,"messages":{"required":"短信签名不能为空。"}}},{"id": "systemconfigmodel-sms_sign_name", "name": "SystemConfigModel[sms_sign_name]", "attribute": "sms_sign_name", "rules": {"string":true,"messages":{"string":"短信签名必须是一条字符串。","minlength":"短信签名应该包含至少2个字符。","maxlength":"短信签名只能包含至多8个字符。"},"minlength":2,"maxlength":8}},{"id": "systemconfigmodel-sms_api", "name": "SystemConfigModel[sms_api]", "attribute": "sms_api", "rules": {"string":true,"messages":{"string":"短信接口服务必须是一条字符串。"}}},{"id": "systemconfigmodel-sms_api", "name": "SystemConfigModel[sms_api]", "attribute": "sms_api", "rules": {"required":true,"messages":{"required":"短信接口服务不能为空。"}}},]

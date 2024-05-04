@@ -12,4 +12,9 @@ class AttrValue extends BaseModel
     ];
 
     protected $primaryKey = 'attr_vid';
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attr_id','attr_id');
+    }
 }

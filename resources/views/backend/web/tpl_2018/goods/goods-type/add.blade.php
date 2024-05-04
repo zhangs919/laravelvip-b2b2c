@@ -16,7 +16,7 @@
 
     <!-- 表单 -->
     <form id="GoodsTypeModel" class="form-horizontal" name="GoodsTypeModel" action="/goods/goods-type/add" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
             <!-- 隐藏域 -->
             <input type="hidden" id="goodstypemodel-type_id" class="form-control" name="GoodsTypeModel[type_id]" value="{{ $info->type_id ?? ''}}">

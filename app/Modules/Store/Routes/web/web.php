@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
-Route::group(['domain' => env('STORE_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.store_domain')], function ($router) {
 
     // Site Route
     Route::group(['prefix' => 'site'], function () {
@@ -49,10 +49,6 @@ Route::group(['domain' => env('STORE_DOMAIN')], function ($router) {
     $router->get('login.html', 'PassportController@showLoginForm')->name('store.login'); // showLoginForm
     $router->post('login', 'PassportController@login'); // login
     $router->post('site/logout', 'PassportController@logout')->name('store.logout'); // logout
-
-    // WorkerMan Route
-    $router->get('workerman/test', 'WorkerManController@test');
-    $router->get('workerman/test_view', 'WorkerManController@test_view');
 
 
     // Index Route

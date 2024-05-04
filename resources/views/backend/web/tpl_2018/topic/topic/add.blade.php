@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="TopicModel" class="form-horizontal" name="TopicModel" action="/topic/topic/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="topicmodel-topic_id" class="form-control" name="TopicModel[topic_id]" value="{{ $info->topic_id ?? '' }}">
             <!-- 活动名称 -->
@@ -246,7 +246,6 @@
             });
 
             $("#imagegroup_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#topicmodel-share_image').val().split("|"),

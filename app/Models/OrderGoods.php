@@ -41,17 +41,21 @@ class OrderGoods extends BaseModel
     protected $fillable = [
         'record_id', 'order_id', 'goods_id', 'sku_id', 'spec_info', 'goods_name',
         'goods_sn', 'sku_sn', // 两个字段值是一样的 sku_sn的值 直接取goods_sn的值即可
-        'goods_image', 'goods_price', 'goods_points', 'distrib_price', 'goods_number', 'other_price',
+        'goods_image', 'goods_price','original_price','cost_price', 'goods_points', 'distrib_price', 'goods_number', 'other_price',
         'pay_change', 'parent_id', 'is_gift', 'is_evaluate', 'goods_status', 'give_integral', 'stock_mode',
         'stock_dropped', 'act_type', 'goods_type', 'is_distrib', 'discount', 'profits', 'distrib_money',
 
 
-        // goods_contracts:"[{\"contract_id\":\"3\",\"contract_name\":\"\\u7834\\u635f\\u8865\\u5bc4\",\"contract_image\":\"http:\\/\\/images.68mall.com\\/contract\\/2016\\/06\\/07\\/14653028611314.jpg\",\"contract_desc\":\"\\u5356\\u5bb6\\u5c31\\u8be5\\u5546\\u54c1\\u7b7e\\u6536\\u72b6\\u6001\\u4f5c\\u51fa\\u627f\\u8bfa\\uff0c\\u81ea\\u5546\\u54c1\\u7b7e\\u6536\\u4e4b\\u65e5\\u8d77\\u81f3\\u5356\\u5bb6\\u627f\\u8bfa\\u4fdd\\u969c\\u65f6\\u95f4\\u5185\\uff0c\\u5982\\u53d1\\u73b0\\u5546\\u54c1\\u5728\\u8fd0\\u8f93\\u9014\\u4e2d\\u51fa\\u73b0\\u7834\\u635f\\uff0c\\u4e70\\u5bb6\\u53ef\\u7533\\u8bf7\\u7834\\u635f\\u90e8\\u5206\\u5546\\u54c1\\u8865\\u5bc4\\u3002\"},{\"contract_id\":\"2\",\"contract_name\":\"\\u54c1\\u8d28\\u627f\\u8bfa\",\"contract_image\":\"http:\\/\\/images.68mall.com\\/contract\\/2016\\/06\\/07\\/14653028223253.png\",\"contract_desc\":\"\\u5356\\u5bb6\\u5c31\\u8be5\\u5546\\u54c1\\u54c1\\u8d28\\u5411\\u4e70\\u5bb6\\u4f5c\\u51fa\\u627f\\u8bfa\\uff0c\\u627f\\u8bfa\\u5546\\u54c1\\u4e3a\\u6b63\\u54c1\\u3002\"}]",
         'goods_contracts',
         // ext_info:"{\"full_cut_amount\":0,\"gift\":0,\"point\":0,\"bonus\":0}"
         'ext_info', // --此字段不需要存储 关联查询即可 todo 暂时先存起来
 
         'goods_mode',
+
+        'cs_take_rate','cs_take_rate_mode','cs_take_money','tax',
+        'integral_money','custom_ifield','custom_sfield','take_rate',
+        'shop_rate','goods_barcode','goods_stockcode',
+
 
 //        'shop_id', 'contract_ids', 'market_price', 'sku_image',
 //        'back_id', 'back_status', 'back_number',
@@ -69,12 +73,18 @@ class OrderGoods extends BaseModel
     protected $primaryKey = 'record_id';
 
     /**
-     * 多对一关联商品表
+     * 一对一关联商品表
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function goods()
     {
         return $this->belongsTo(Goods::class, 'goods_id', 'goods_id');
     }
+
+    public function orderInfo()
+    {
+        return $this->belongsTo(OrderInfo::class,'order_id','order_id');
+    }
+
 
 }

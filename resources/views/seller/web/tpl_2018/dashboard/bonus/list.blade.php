@@ -1,12 +1,21 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+    <link href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=2.0" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=20190319"/>
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20190319"/>
-    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=20190319"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=20190319"/>
-    <script src="/assets/d2eace91/js/clipboard.min.js?v=20190319"></script>
+
 @stop
 
 {{--content--}}
@@ -96,6 +105,13 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=202003261806"></script>
+    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=202003261806"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
 
@@ -113,11 +129,6 @@
         </div>
     </div>
 
-    <!-- 时间插件引入 start -->
-    <link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.css?v=20190319"/>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190319"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190319"></script>
-    <!-- 时间插件引入 end -->
     <script type='text/javascript'>
         var tablelist;
         $().ready(function() {

@@ -1,13 +1,12 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\System;
+namespace App\Modules\Backend\Http\Controllers\System;
 
 use App\Http\Requests\RegionRequest;
 use App\Models\Region;
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\RegionRepository;
 use App\Repositories\SystemConfigRepository;
-use App\Repositories\ToolsRepository;
 use Illuminate\Http\Request;
 
 class RegionController extends Backend
@@ -22,12 +21,15 @@ class RegionController extends Backend
 
     protected $systemConfig;
 
-    public function __construct()
+    public function __construct(
+        RegionRepository $regions
+        ,SystemConfigRepository $systemConfig
+    )
     {
         parent::__construct();
 
-        $this->regions = new RegionRepository();
-        $this->systemConfig = new SystemConfigRepository();
+        $this->regions = $regions;
+        $this->systemConfig = $systemConfig;
 
         // share parent area data.
         $condition = [
@@ -113,7 +115,9 @@ class RegionController extends Backend
         // 分类列表
         $condition = [
             'where' => $where,
-            'limit' => 0
+            'limit' => 0,
+            'sortname' => 'region_id',
+            'sortorder' => 'asc'
         ];
         list($region_list, $total) = $this->regions->getList($condition);
         $list = [];

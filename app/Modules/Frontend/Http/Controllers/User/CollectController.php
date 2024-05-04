@@ -22,7 +22,6 @@
 
 namespace App\Modules\Frontend\Http\Controllers\User;
 
-use App\Models\Collect;
 use App\Models\Goods;
 use App\Models\Shop;
 use App\Modules\Base\Http\Controllers\UserCenter;
@@ -34,11 +33,11 @@ class CollectController extends UserCenter
 
     protected $collect;
 
-    public function __construct()
+    public function __construct(CollectRepository $collect)
     {
         parent::__construct();
 
-        $this->collect = new CollectRepository();
+        $this->collect = $collect;
     }
 
     /**
@@ -56,17 +55,24 @@ class CollectController extends UserCenter
         $curPage = $request->get('curpage', 1);
         $pageSize = 10;
 
+
         list($list, $total) = $this->collect->getUserCollect($this->user_id, 0, $curPage, $pageSize);
+
+        if ($tab == 'invalid_list') { // todo 无效商品
+            list($list, $total) = [[], 0];
+        }
+
         $pageHtml = frontend_pagination($total);
         $page_array = frontend_pagination($total, true);
         $page_json = json_encode($page_array);
         $goods_collect_count = $this->collect->getUserCollectCount($this->user_id, 0);
         $shop_collect_count = $this->collect->getUserCollectCount($this->user_id, 1);
 
-        $compact = compact('seo_title', 'list','pageHtml', 'page_json', 'total','goods_collect_count','shop_collect_count');
+        $compact = compact('seo_title', 'list','pageHtml', 'page_json', 'total','goods_collect_count','shop_collect_count','tab');
 
-        if ($tab == 'goods_list') {
-            $render = view('user.collect.partials._goods_list', $compact)->render();
+
+        if ($request->ajax()) {
+            $render = view('user.collect.partials._'.$tab, $compact)->render();
             return result(0, $render);
         }
 
@@ -88,6 +94,13 @@ class CollectController extends UserCenter
         return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
+    /**
+     * 店铺收藏列表
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Throwable
+     */
     public function shop(Request $request)
     {
 
@@ -98,6 +111,17 @@ class CollectController extends UserCenter
         $pageSize = 10;
 
         list($list, $total) = $this->collect->getUserCollect($this->user_id, 1, $curPage, $pageSize);
+        if (!empty($list)) {
+            foreach ($list as &$item) {
+                $goods_list = Goods::where('shop_id',$item['shop_id'])->select(['goods_id','goods_name','goods_image'])->limit(4)->get();
+                $item['goods_list'] = $goods_list->toArray();
+            }
+        }
+
+        if ($tab == 'buy_shop_list') { // todo 已购
+            list($list, $total) = [[],0];
+        }
+
         $pageHtml = frontend_pagination($total);
         $page_array = frontend_pagination($total, true);
         $page_json = json_encode($page_array);
@@ -107,9 +131,20 @@ class CollectController extends UserCenter
         $compact = compact('seo_title', 'list','pageHtml','page_json', 'total','goods_collect_count','shop_collect_count');
 
         if ($tab == 'all_shop') {
+            if ($request->get('type', 0) == 1) {
+                $render = view('user.collect.partials._ajax_shop_list', $compact)->render();
+                return result(0, $render);
+            }
+
             $render = view('user.collect.partials._shop_list', $compact)->render();
             return result(0, $render);
+        } elseif ($tab == 'buy_shop_list') {
+            $render = view('user.collect.partials._buy_shop_list', $compact)->render();
+            return result(0, $render);
         }
+
+
+
 
         $webData = []; // web端（pc、mobile）数据对象
         $data = [

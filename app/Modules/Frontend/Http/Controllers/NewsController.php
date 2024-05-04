@@ -43,9 +43,13 @@ class NewsController extends Frontend
     protected $article;
 
 
-    public function __construct(TemplateRepository $template,
-                                TemplateSelectorRepository $selector,
-                                TemplateItemRepository $templateItem)
+    public function __construct(
+        TemplateRepository $template
+        ,TemplateSelectorRepository $selector
+        ,TemplateItemRepository $templateItem
+        ,ArticleCatRepository $articleCat
+        ,ArticleRepository $article
+    )
     {
         parent::__construct();
 
@@ -53,44 +57,15 @@ class NewsController extends Frontend
         $this->selector = $selector;
         $this->templateItem = $templateItem;
 
-        $this->articleCat = new ArticleCatRepository();
-        $this->article = new ArticleRepository();
-
+        $this->articleCat = $articleCat;
+        $this->article = $article;
     }
 
     public function home(Request $request)
     {
-//        $page = 'news';
-
-        // 从 template_item 表中获取模板数据
-//        $where[] = ['page', $page];
-//        $condition = [
-//            // data,shop_id,page,sort,ext_info,tpl_title,is_valid,site_id,code,file //这些字段从模板表取 tpl_name,icon,type
-//            'field' => ['uid', 'data', 'shop_id', 'page', 'sort', 'ext_info', 'tpl_title', 'is_valid', 'site_id', 'code', 'file'],
-//            'where' => $where,
-//            'limit' => 0, // 查询全部
-//            'sortname' => 'sort',
-//            'sortorder' => 'asc'
-//        ];
-//        list($templateItems, $itemCount) = $this->templateItem->getList($condition);
-//
-//        $tplHtml = $navContainerHtml = "";
-//        foreach ($templateItems as &$item)
-//        {
-//            $navTpl = $this->template->getTplList(1, 5, 'code');
-//            if (in_array($item->code, $navTpl)) {
-//                // 如果是导航模板
-//                $navContainerHtml .= $item->file;
-//            }else {
-//                $tplHtml .= $item->file;
-//            }
-//        }
-
-//        $compact = compact('page', 'topic_id', 'tplHtml', 'navContainerHtml');
-
         if (is_app()) {
             $page = 'app_news';
-        } elseif (is_mobile() || (request()->getHost() == env('MOBILE_DOMAIN'))) {
+        } elseif (is_mobile() || (request()->getHost() == config('lrw.mobile_domain'))) {
             $page = 'm_news';
         } else {
             $page = 'news';
@@ -100,9 +75,24 @@ class NewsController extends Frontend
 
         list($tplHtml, $navContainerHtml) = $this->templateItem->getPageTplHtml($page); // 模板Html数据
 
-        $cat_list = []; // 分类列表
+        // 判断首页静态页面开启状态
+        $webStatic = 1; // 固定为开启静态页面
 
-        $compact = compact('page', 'tplHtml', 'navContainerHtml');
+        // 分类列表
+        $articleCatFields = $this->articleCat->getAppArticleCatFields();
+        $condition = [
+            'where' => [
+                ['is_show', 1],
+                ['cat_model', 2], // 普通分类
+                ['cat_type', 1],
+            ],
+            'sortname' => 'cat_sort',
+            'sortorder' => 'asc',
+            'field' => $articleCatFields
+        ];
+        list($cat_list, $cat_total) = $this->articleCat->getList($condition, '', true);
+
+        $compact = compact('page','template', 'tplHtml', 'navContainerHtml','webStatic');
 
         $this->show_seo('seo_news'); // SEO
 
@@ -124,8 +114,6 @@ class NewsController extends Frontend
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-
-//        return view('news.home', $compact);
     }
 
 
@@ -181,7 +169,7 @@ class NewsController extends Frontend
         }
         $page_array = frontend_pagination($total, true);
         $json_page = json_encode($page_array);
-//        dd($list);
+
         $compact = compact('keyword', 'cat_list', 'cat', 'crumbs', 'recommend', 'list', 'pageHtml', 'json_page');
 
         $this->show_seo('seo_news'); // SEO
@@ -206,29 +194,17 @@ class NewsController extends Frontend
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-
-//        return view('news.list', $compact);
     }
 
     public function show(Request $request, $article_id)
     {
-
-//        $article_info = $this->article->getById($article_id);
-//
-//        // 推荐文章
-//        $recommend_list = $this->get_recommend_list($article_info->cat_id);
-//
-//        // 上一篇/下一篇
-//        list($previous, $next) = $this->article->getFrontAfterArticle($article_id);
-//        $seo_title = $article_info->title.' - '.sysconf('site_name');
-//        $compact = compact('seo_title','article_info', 'recommend_list', 'previous', 'next');
-
-
-
         $articleCatFields = $this->articleCat->getAppArticleCatFields();
         $articleFields = $this->article->getAppArticleFields();
 
         $article = $this->article->getById($article_id, $articleFields)->toArray();
+//        $article['content'] = str_replace(['\r', '\n', '\t', '\r\n\t'], ['','','',''], $article['content']); // 过滤 \r\n\t
+//        preg_replace('//s*/', '', $article['content']); ; // 过滤 \r\n\t
+        $hide_header = true;
 
         // 当前文章所属分类信息
         $cat = $this->articleCat->getById($article['cat_id'], $articleCatFields)->toArray();
@@ -238,23 +214,21 @@ class NewsController extends Frontend
         if ($cat['parent_id'] > 0) {
             $crumbs = ArticleCat::where([['is_show',1],['cat_id', $cat['parent_id']]])->select(['cat_id','cat_name','parent_id'])->get()->toArray();
         }
-
         // 推荐文章
         $recommend = $this->get_recommend_list($cat['cat_id']);
 
         // 上一篇、下一篇文章
         list($article_pre, $article_next) = $this->article->getFrontAfterArticle($article_id);
 
-//        $this->show_seo('seo_article_info',['name'=>$article_info['title']]); // SEO
         $seo_title = $article['title'].' - '.sysconf('site_name');
-        $this->show_seo('seo_news',['name'=>$seo_title]); // SEO
+        $this->show_seo('seo_news',['name'=>$seo_title, 'image' => $article['article_thumb']]); // SEO
 
         $compact = compact('article','hide_header','crumbs','cat','recommend','article_pre','article_next', 'seo_title');
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [
                 'article' => $article,
-                'hide_header' => true,
+                'hide_header' => $hide_header,
                 'cat' => $cat,
                 'crumbs' => $crumbs,
                 'recommend' => $recommend,
@@ -270,9 +244,6 @@ class NewsController extends Frontend
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-//        $this->show_seo('seo_news'); // SEO
-
-//        return view('news.show', $compact);
     }
 
     public function get_recommend_list($cat_id)

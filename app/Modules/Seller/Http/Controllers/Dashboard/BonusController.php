@@ -17,23 +17,16 @@
 // +----------------------------------------------------------------------
 // | Author: 雲溪荏苒 <290648237@qq.com>
 // | Date:2019-1-13
-// | Description:
+// | Description:红包管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Dashboard;
+namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
-use App\Models\Activity;
-use App\Models\Bonus;
-use App\Models\Goods;
 use App\Models\Shop;
-use App\Models\UserBonus;
 use App\Modules\Base\Http\Controllers\Seller;
-use App\Repositories\ActivityCategoryRepository;
-use App\Repositories\ActivityRepository;
 use App\Repositories\BonusRepository;
-use App\Repositories\BrandRepository;
-use App\Repositories\CategoryRepository;
-use App\Repositories\GoodsRepository;
+use App\Repositories\ShopConfigFieldRepository;
+use App\Repositories\ShopConfigRepository;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -54,16 +47,51 @@ class BonusController extends Seller
     ];
 
     protected $bonus;
+    protected $shopConfig;
+    protected $shopConfigField;
 
-    public function __construct()
+    public function __construct(BonusRepository $bonus,ShopConfigRepository $shopConfig
+        ,ShopConfigFieldRepository $shopConfigField)
     {
         parent::__construct();
 
-        $this->bonus = new BonusRepository();
+        $this->bonus = $bonus;
+        $this->shopConfig = $shopConfig;
+        $this->shopConfigField = $shopConfigField;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
 
+    public function config(Request $request)
+    {
+        $action_span = [
+            [
+                'url' => '/dashboard/center/index',
+                'icon' => 'fa-reply',
+                'text' => '返回营销中心'
+            ]
+        ];
+
+        $this->sublink($this->links, 'config', '', '', 'add,view');
+
+        $group = 'bonus'; // 当前配置分组
+        $group_info = $this->shopConfigField->getSpecialConfigsByGroup($group, 'code');
+        $title = $fixed_title = '红包设置';
+        $uuid = make_uuid();
+        $script_render = view('shop.config.partials.'.$group, compact('uuid'))->render();
+
+        $explain_panel = [];
+        $blocks = [
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span,
+            'explain_panel' => $explain_panel,
+        ];
+        $this->setLayoutBlock($blocks); // 设置block
+
+        $introduce_box = '';
+
+        return view('shop.config.bonus', compact('title', 'group', 'group_info', 'script_render', 'introduce_box'));
+    }
 
     public function lists(Request $request)
     {
@@ -136,8 +164,6 @@ class BonusController extends Seller
             return result(0, $render);
         }
 
-        // 获取数据
-
         $compact = compact('title', 'list', 'pageHtml');
 
         $webData = []; // web端（pc、mobile）数据对象
@@ -165,10 +191,7 @@ class BonusController extends Seller
     public function add(Request $request)
     {
         $title = '添加';
-
-
         $this->sublink($this->links, 'add', '', '', 'config,view');
-
         $fixed_title = '红包 - '.$title;
 
         $action_span = [
@@ -214,7 +237,7 @@ class BonusController extends Seller
         }
 
         $model = [
-            'shop_id' => $this->seller_info->shop_id,
+            'shop_id' => $this->shop_id,
             'is_original_price' => 1,
             'is_enable' => 1,
             'is_delete' => 0,
@@ -438,7 +461,7 @@ class BonusController extends Seller
     public function qrcode(Request $request)
     {
         $bonus_id = $request->get('bonus_id');
-        $url = 'http://'.env('MOBILE_DOMAIN').'/bonus-'.$bonus_id;
+        $url = route('mobile_bonus_push', ['bonus_id'=>$bonus_id]);
 
         $qrCode = QrCode::errorCorrection('L')
             ->format('png')
@@ -482,12 +505,12 @@ class BonusController extends Seller
         if ($ret === false) {
             // Log
             shop_log('红包作废失败。ID：'.$id);
-            return result(-1, null, '操作失败');
+            return result(-1, null, OPERATE_FAIL);
         }
 
         // Log
         shop_log('红包作废成功。ID：'.$id);
-        return result(0, null, '操作成功');
+        return result(0, null, OPERATE_SUCCESS);
     }
 
     /**

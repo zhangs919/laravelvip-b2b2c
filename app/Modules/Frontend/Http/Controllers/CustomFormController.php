@@ -7,9 +7,7 @@ use App\Models\Form;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\CustomFormDataRepository;
 use App\Repositories\CustomFormRepository;
-use App\Tools\IP;
 use Illuminate\Http\Request;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CustomFormController extends Frontend
 {
@@ -17,12 +15,15 @@ class CustomFormController extends Frontend
     protected $customForm;
     protected $customFormData;
 
-    public function __construct()
+    public function __construct(
+        CustomFormRepository $customForm
+        ,CustomFormDataRepository $customFormData
+    )
     {
         parent::__construct();
 
-        $this->customForm = new CustomFormRepository();
-        $this->customFormData = new CustomFormDataRepository();
+        $this->customForm = $customForm;
+        $this->customFormData = $customFormData;
 
 
     }
@@ -139,7 +140,7 @@ class CustomFormController extends Frontend
             'add_time' => time(),
             'form_data' => json_encode($form_data),
             'location' => '',
-            'ip' => get_client_ip(),
+            'ip' => $request->ip(),
         ];
         $ret = $this->customFormData->store($insert);
         Form::where('form_id', $form_id)->increment('fb_num',1); // 反馈数量自增

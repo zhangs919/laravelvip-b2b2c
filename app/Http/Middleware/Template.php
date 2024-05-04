@@ -22,21 +22,22 @@ class Template
      */
     public function handle($request, Closure $next)
     {
-        $cur_domain = $_SERVER['HTTP_HOST'];
+//        $cur_domain = $_SERVER['HTTP_HOST'];
+        $cur_domain = $request->getHost();
 
         /**
          * 设置模板路径
          */
         $module = '';
-        if ($cur_domain == env('FRONTEND_DOMAIN') || $cur_domain == env('GOODS_DETAIL_DOMAIN')) {
+        if ($cur_domain == config('lrw.frontend_domain') || $cur_domain == config('lrw.goods_detail_domain')) {
             $module = 'Frontend';
-        } elseif ($cur_domain == env('BACKEND_DOMAIN')) {
+        } elseif ($cur_domain == config('lrw.backend_domain')) {
             $module = 'Backend';
-        } elseif ($cur_domain == env('SELLER_DOMAIN')) {
+        } elseif ($cur_domain == config('lrw.seller_domain')) {
             $module = 'Seller';
-        } elseif ($cur_domain == env('STORE_DOMAIN')) {
+        } elseif ($cur_domain == config('lrw.store_domain')) {
             $module = 'Store';
-        } elseif ($cur_domain == env('MOBILE_DOMAIN') || $cur_domain == env('MOBILE_GOODS_DETAIL_DOMAIN')) {
+        } elseif ($cur_domain == config('lrw.mobile_domain') || $cur_domain == config('lrw.api_domain') || $cur_domain == config('lrw.mobile_goods_detail_domain')) {
             $module = 'Mobile';
         }
 
@@ -53,6 +54,9 @@ class Template
         $view = app('view')->getFinder();
         // 重新定义视图目录
         $view->prependLocation($view_path);
+
+        // 重新定义站点目录
+
 
         return $next($request);
     }

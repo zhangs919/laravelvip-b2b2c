@@ -19,14 +19,14 @@
         <td class="tcheck"><input type="checkbox" class="checkbox" id="checkbox5" value="5">
             </input></td>
         <td class="text-c">5</td>
-        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-5.html" target="_blank">
+        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://xxxx/goods-5.html" target="_blank">
                     <!-- 图片缩略图 -->
-                    <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036310873491.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
+                    <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036310873491.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
                     <!-- 虚拟商品 -->
 
                 </a> </div>
             <div class="ng-binding goods-message">
-                <div class="name"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-5.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="诸葛农夫 新鲜西葫芦白瓜番瓜美洲南瓜小瓜菜瓜荨瓜熏瓜2000g"> 诸葛农夫 新鲜西葫芦白瓜番瓜美洲南瓜小瓜... </a>
+                <div class="name"> <a href="http://xxxx/goods-5.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="诸葛农夫 新鲜西葫芦白瓜番瓜美洲南瓜小瓜菜瓜荨瓜熏瓜2000g"> 诸葛农夫 新鲜西葫芦白瓜番瓜美洲南瓜小瓜... </a>
 
                 </div>
                 <div class="active">
@@ -48,7 +48,7 @@
                     <!--新加产品库-->
 
 
-                    <a class="product-label info" href="https://item.taobao.com/item.htm?id=531610068386" target="_blank"  >云产品库</a>
+                    <a class="product-label info" href="https://item.taobao.com/item.htm?id=3333" target="_blank"  >云产品库</a>
 
                 </div>
             </div></td>
@@ -76,14 +76,14 @@
         <td class="tcheck"><input type="checkbox" class="checkbox" id="checkbox4" value="4">
             </input></td>
         <td class="text-c">4</td>
-        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-4.html" target="_blank">
+        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://xxxx/goods-4.html" target="_blank">
                     <!-- 图片缩略图 -->
-                    <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036309897238.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
+                    <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036309897238.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
                     <!-- 虚拟商品 -->
 
                 </a> </div>
             <div class="ng-binding goods-message">
-                <div class="name"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-4.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="现摘现发云南水果玉米3.5斤甜玉米棒 新鲜蔬菜 糯玉米"> 现摘现发云南水果玉米3.5斤甜玉米棒 新... </a>
+                <div class="name"> <a href="http://xxxx/goods-4.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="现摘现发云南水果玉米3.5斤甜玉米棒 新鲜蔬菜 糯玉米"> 现摘现发云南水果玉米3.5斤甜玉米棒 新... </a>
 
                 </div>
                 <div class="active">
@@ -133,14 +133,14 @@
         <td class="tcheck"><input type="checkbox" class="checkbox" id="checkbox3" value="3">
             </input></td>
         <td class="text-c">3</td>
-        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-3.html" target="_blank">
+        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://xxxx/goods-3.html" target="_blank">
                     <!-- 图片缩略图 -->
-                    <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036310045426.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
+                    <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036310045426.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
                     <!-- 虚拟商品 -->
 
                 </a> </div>
             <div class="ng-binding goods-message">
-                <div class="name"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-3.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="诸葛农夫新鲜玉米棒子带壳现摘精选脆甜水果玉米黄粟米5-6支4斤装"> 诸葛农夫新鲜玉米棒子带壳现摘精选脆甜水果... </a>
+                <div class="name"> <a href="http://xxxx/goods-3.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="诸葛农夫新鲜玉米棒子带壳现摘精选脆甜水果玉米黄粟米5-6支4斤装"> 诸葛农夫新鲜玉米棒子带壳现摘精选脆甜水果... </a>
 
                 </div>
                 <div class="active">
@@ -190,14 +190,14 @@
         <td class="tcheck"><input type="checkbox" class="checkbox" id="checkbox2" value="2">
             </input></td>
         <td class="text-c">2</td>
-        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-2.html" target="_blank">
+        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://xxxx/goods-2.html" target="_blank">
                     <!-- 图片缩略图 -->
-                    <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036311036909.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
+                    <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036311036909.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
                     <!-- 虚拟商品 -->
 
                 </a> </div>
             <div class="ng-binding goods-message">
-                <div class="name"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-2.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="顺意生 新鲜蔬菜 新鲜小油菜 精品蔬菜油菜500g 保鲜配送"> 顺意生 新鲜蔬菜 新鲜小油菜 精品蔬菜油... </a>
+                <div class="name"> <a href="http://xxxx/goods-2.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="顺意生 新鲜蔬菜 新鲜小油菜 精品蔬菜油菜500g 保鲜配送"> 顺意生 新鲜蔬菜 新鲜小油菜 精品蔬菜油... </a>
 
                 </div>
                 <div class="active">
@@ -247,14 +247,14 @@
         <td class="tcheck"><input type="checkbox" class="checkbox" id="checkbox1" value="1">
             </input></td>
         <td class="text-c">1</td>
-        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-1.html" target="_blank">
+        <td><div class="goodsPicBox pull-left m-r-10"> <a href="http://xxxx/goods-1.html" target="_blank">
                     <!-- 图片缩略图 -->
-                    <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036310305897.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
+                    <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036310305897.jpg?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" class="goods-thumb"></img>
                     <!-- 虚拟商品 -->
 
                 </a> </div>
             <div class="ng-binding goods-message">
-                <div class="name"> <a href="http://www.cp6znq.yunmall.68mall.com/goods-1.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="黄心细叶苦苣 苦菊苣 苦菊种子 春秋四季播阳台种菜盆栽 蔬菜种子"> 黄心细叶苦苣 苦菊苣 苦菊种子 春秋四季... </a>
+                <div class="name"> <a href="http://xxxx/goods-1.html" target="_blank" data-toggle="tooltip" data-placement="auto bottom" title="黄心细叶苦苣 苦菊苣 苦菊种子 春秋四季播阳台种菜盆栽 蔬菜种子"> 黄心细叶苦苣 苦菊苣 苦菊种子 春秋四季... </a>
 
                 </div>
                 <div class="active">

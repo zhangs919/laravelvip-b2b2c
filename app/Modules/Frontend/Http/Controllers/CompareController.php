@@ -8,6 +8,7 @@ use App\Modules\Base\Http\Controllers\UserCenter;
 use App\Repositories\CompareRepository;
 use App\Repositories\GoodsImageRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\ShopRepository;
 use Illuminate\Http\Request;
 
 class CompareController extends UserCenter
@@ -17,13 +18,17 @@ class CompareController extends UserCenter
     protected $goods;
     protected $goodsImage;
 
-    public function __construct()
+    public function __construct(
+        CompareRepository $compareRep
+        ,GoodsRepository $goods
+        ,GoodsImageRepository $goodsImage
+    )
     {
         parent::__construct();
 
-        $this->compareRep = new CompareRepository();
-        $this->goods = new GoodsRepository();
-        $this->goodsImage = new GoodsImageRepository();
+        $this->compareRep = $compareRep;
+        $this->goods = $goods;
+        $this->goodsImage = $goodsImage;
 
     }
 
@@ -35,17 +40,14 @@ class CompareController extends UserCenter
      */
     public function toggle(Request $request)
     {
-
         $goods_id = $request->post('goods_id');
-        $insert = [
-            'user_id' => $this->user_id,
-            'goods_id' => $goods_id
-        ];
-        $ret = $this->compareRep->store($insert);
-        if (!$ret) {
-            return result(-1, null, '操作失败');
+
+        $ret = $this->compareRep->toggle($this->user_id, $goods_id);
+        if ($ret === false) {
+            return result(-1, null, OPERATE_FAIL);
         }
-        return result(0, null, '操作成功');
+        $message = $ret == 1 ? '已加入对比' : '已移除对比';
+        return result(0, $ret, $message);
     }
 
     /**
@@ -56,14 +58,23 @@ class CompareController extends UserCenter
      */
     public function remove(Request $request)
     {
-
         $goods_id = $request->post('goods_id');
-        $ret = Compare::where([['user_id',$this->user_id],['goods_id',$goods_id]])->delete();
+        $ret = $this->compareRep->remove($this->user_id, $goods_id);
         if ($ret === false) {
-            return result(-1, null, '操作失败');
+            return result(-1, null, OPERATE_FAIL);
         }
 
-        return result(0, null, '操作成功');
+        return result(0, null, OPERATE_SUCCESS);
+    }
+
+    public function clear(Request $request)
+    {
+        $ret = $this->compareRep->clear($this->user_id);
+        if ($ret === false) {
+            return result(-1, null, OPERATE_FAIL);
+        }
+
+        return result(0, null, OPERATE_SUCCESS);
     }
 
     /**
@@ -110,6 +121,7 @@ class CompareController extends UserCenter
                 $join->on('shop.shop_id','=','goods.shop_id');
 
             })
+//            ->limit(3)
 //            ->select(['compare.goods_id','goods_name','goods_image'])
             ->get()->toArray();
         $count = count($list);
@@ -117,6 +129,8 @@ class CompareController extends UserCenter
         if (!empty($list)) {
             foreach ($list as &$v) {
                 $sku_images = $this->goodsImage->getGoodsImages($v['goods_id']);
+                $shopRep = new ShopRepository();
+                $shop_info = $shopRep->shopInfo($v['shop_id']);
                 $v['spec_ids'] = null;
                 $v['g_goods_price'] = $v['goods_price'];
                 $v['sku_images'] = $sku_images;
@@ -125,8 +139,8 @@ class CompareController extends UserCenter
                 $v['customer_tool'] = null;
                 $v['aliim_enable'] = "";
                 $v['system_aliim_enable'] = "";
-                $v['credit_img'] = "";
-                $v['credit_name'] = "旗舰店";
+                $v['credit_img'] = $shop_info['credit']['credit_img'];
+                $v['credit_name'] = $shop_info['credit']['credit_name'];
                 $v['format_goods_price'] = $v['goods_price'];
                 $v['complaint_count'] = 0;
                 $v['complaint_num'] = "0";
@@ -143,16 +157,19 @@ class CompareController extends UserCenter
                     'code' => 1,
                     'button_content' => '请登录'
                 ];
+
+                $v['region_code'] = get_region_names_by_region_code($v['region_code']);
             }
         }
 
         $footer_type = 1; // 底部类型 short_footer
 
+        $show_mall_search_right_ad = false;
 
-        $compact = compact('ids','list','footer_type');
-
-        if ($request->ajax()) {
-            $type = $request->get('type');
+//        dd($list);
+        $compact = compact('ids','list','footer_type', 'show_mall_search_right_ad');
+        $type = $request->get('type');
+        if ($type == 1) {
             $render = view('compare.partials._compare_list', $compact)->render();
             return result(0, $render);
         }
@@ -168,7 +185,7 @@ class CompareController extends UserCenter
                 'show_service' => false,
                 'show_article' => false,
                 'show_cart' => false,
-                'show_mall_search_right_ad' => false,
+                'show_mall_search_right_ad' => $show_mall_search_right_ad,
             ],
             'app_suffix_data' => [],
             'web_data' => $webData,
@@ -181,9 +198,19 @@ class CompareController extends UserCenter
 
     public function freight(Request $request)
     {
-        $data = [
-            '￥6','免运费'
-        ];
+        $cid = $request->get('cid');
+        $ids = $request->get('ids');
+        $ids_arr = explode(',', $ids);
+
+        $data = [];
+        foreach ($ids_arr as $key=>$item) {
+            if ($key < 3) {
+                $data[] = '免运费';
+            }
+        }
+//        $data = [
+//            '￥6','免运费'
+//        ];
         return result(0, $data);
     }
 

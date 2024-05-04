@@ -1,15 +1,15 @@
 /*头部*/
 
-body{ background:#f3f5f7;}
-.header { position:relative;width: 100%; height:50px; background:#F6F6F9 ; zoom: 1 ; border-bottom:1px solid #eee;}
+body{ background:#f8f8f8;}
+.header { position:relative;width: 100%; height:50px; background:#fff ; zoom: 1 ; border-bottom:1px solid #eee;}
 .header:after{ clear: both; content: " "; display: block; font-size: 0; height: 0; visibility: hidden }
 .header-left { float: left; width:15%; height:50px; }
-.header-left a { display: block; width: 30px; height:50px; vertical-align: middle; background: url(../images/top.png) no-repeat; background-size: auto 230px; background-position: 5px 12px; }
-.header-middle {width:70%; text-align:center; color:#222; height:50px; float: left;color: #222; font-size: 0.8rem; line-height:50px; position: relative; padding:0;}
+.header-left a { display: block; width: 30px; height:50px; vertical-align: middle; background:none; }
+.header-middle {width:70%; text-align:center; color:#353535; height:50px; float: left;color: #353535; font-size: 0.8rem; line-height:50px; position: relative; padding:0;}
 .header-right { float: right; width:15%;height:50px; line-height:50px; }
 .header-right a.text {display: inline-block; float:right;white-space: nowrap;line-height: 50px;font-size: 0.65rem;color: #fff;padding-right: 13px;}
 .top_bar { float: right; display: block; width:40px; height:50px; }
-#show_more {background: url(../images/top.png) no-repeat;background-size: auto 230px;width: 30px; height:50px;background-position:0px -25px; }
+#show_more {background:none;width: 30px; height:50px;}
 
 .ui-flex {display: -webkit-box !important;display: -webkit-flex !important;display: -ms-flexbox !important;display: flex !important;-webkit-flex-wrap: wrap;  -ms-flex-wrap: wrap;flex-wrap: wrap;}
 .cell {-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;width: 0;-webkit-flex-basis: 0;-ms-flex-preferred-size: 0;flex-basis: 0;max-width: 100%;    display: block;padding: 0 !important;position: relative;}
@@ -22,7 +22,7 @@ display: flex !important;-webkit-flex-wrap: wrap;-ms-flex-wrap: wrap;flex-wrap: 
 .shop-introduction-top .shop-logo {display: block;width:100px; height:50px;border: 1px solid #f8f8f8;text-align: center;overflow: hidden;}
 .shop-introduction-top .shop-logo img{ width:100px; height:50px;}
 .shop-introduction-top .shop-info{display: block;position: relative;margin-left:10px; overflow:hidden;}
-.shop-introduction-top .shop-info .shop-name{ display:block;height:30px; line-height:30px; font-size:16px; color:#222;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
+.shop-introduction-top .shop-info .shop-name{ display:block;height:30px; line-height:30px; font-size:16px; color:#353535;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
 .shop-introduction-top .shop-info .collect-num{ display:block;height:20px; line-height:20px; font-size:12px; color:#999;}
 .shop-introduction-top .collect-btn{position: relative;display: block; margin-top:13px; padding:0 8px;height:26px;line-height:26px; border-radius:3px;color: #fff;cursor: pointer;text-align: center;border: 1px solid transparent; background: rgba(242,48,48,1);}
 .shop-introduction-top .collect-btn i{display: inline-block;line-height: 26px;font-size: 0.75rem;color: #fff; margin-right:3px; position:relative; vertical-align:top; bottom:-2px;}
@@ -44,7 +44,9 @@ display: flex !important;-webkit-flex-wrap: wrap;-ms-flex-wrap: wrap;flex-wrap: 
 .shop-detail-item .shop-item-list{ height:2rem; line-height:2rem;position: relative;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;
 display: flex;-webkit-box-align: center;-webkit-align-items: center;-ms-flex-align: center;align-items: center; padding:0 2.5%;}
 .shop-detail-item .shop-item-list .item-list-left{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;display: block;color: #232323;font-size:0.65rem; padding-right:0.5rem;}
-.shop-detail-item .shop-item-list .item-list-left .list-title,.shop-detail-item .shop-item-list .item-list-left .list-desc {display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; color:#222;}
+.shop-detail-item .shop-item-list .item-list-left .list-title,.shop-detail-item .shop-item-list .item-list-left .list-desc {display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; color:#353535; padding: 0.5rem 0 !important; line-height:1rem;}
+.common-field .name{ height: 2rem; padding:0.5rem 0 !important; line-height: 1rem; }
+.common-field .content{ padding-left: 10px !important; }
 .shop-detail-item .shop-item-list .item-list-left .list-title{ width:70px;}
 .shop-detail-item .shop-item-list .item-list-left .list-desc{ margin-left:10px;color:#999;}
 .shop-detail-item .shop-item-list .item-list-right {text-align: right;color: #232323;display: block;font-size: .52rem;position: relative;}
@@ -58,10 +60,10 @@ display: flex;-webkit-box-align: center;-webkit-align-items: center;-ms-flex-ali
 .shop-qrcode-section .qrcode-mask {position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: 999;background: rgba(0,0,0,.75);overflow: hidden;}
 .qrcode-box {position: fixed;left: 50%;top: 50%;background: #F8F8F8;z-index: 10000;-webkit-transform: translate3d(-50%,-50%,0);-moz-transform: translate3d(-50%,-50%,0);transform: translate3d(-50%,-50%,0);border-radius:0.15rem;overflow: hidden; max-width:300px;}
 .qrcode-content {position: relative;}
-.qrcode-content-hd {color: #222;font-size:18px;line-height:1.2rem;display: block;border-bottom: 1px solid #eee;padding:0.5rem; white-space: nowrap;overflow: hidden;text-align: center;text-overflow: ellipsis;}
+.qrcode-content-hd {color: #353535;font-size:18px;line-height:1.2rem;display: block;border-bottom: 1px solid #eee;padding:0.5rem; white-space: nowrap;overflow: hidden;text-align: center;text-overflow: ellipsis;}
 .qrcode-content-bd {position: relative;padding:0.5rem 0;text-align: center;display: block;}
 .qrcode-content-bd img {display: block;width:11rem;height:11rem; margin:0 auto;}
 .qrcode-tips {display: block;color: #686868;font-size:0.65rem;padding-top:0.5rem;}
 .common-field {padding: 0 2.5%}
 .common-field .name{ width:70px;}
-.common-field .name,.common-field .content .info{ font-size:0.65rem;}
+.common-field .name,.common-field .content .info{ font-size:0.65rem; line-height: 1rem;}

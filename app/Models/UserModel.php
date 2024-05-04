@@ -21,12 +21,21 @@ class UserModel extends BaseModel
 
     protected $fillable = [
         'role_id', 'user_name', 'nickname', 'rank_id', 'rank_point', 'user_between', 'rank_start_time', 'rank_end_time', 'password', 'sex', 'birthday',
-        'headimg', 'faceimg1', 'faceimg2', 'address_code', 'detail_address', 'mobile', 'email', 'status', 'shopping_status',
+        'headimg', 'faceimg1', 'faceimg2',
+        'address_now', //'address_code', todo
+        'detail_address', 'mobile', 'email', 'status', 'shopping_status',
         'comment_status', 'user_money', 'user_money_limit', 'frozen_money', 'last_login', 'last_ip', 'reg_ip',
         'visit_count', 'is_real', 'reg_time', 'mobile_validated', 'email_validated', 'type', 'surplus_password',
-        'pay_point', 'password_reset_token', 'auth_key', 'user_remark', 'salt', 'shop_id', 'store_id', 'is_seller', 'reg_from',
+        'pay_point',
+        'frozen_point', // 冻结积分 todo
+        'password_reset_token', 'auth_key', 'user_remark', 'salt', 'shop_id', 'store_id',
+        'multi_store_id', // todo
+        'is_seller', 'reg_from',
         'address_id', 'mobile_supplier', 'mobile_province', 'mobile_city', 'auth_codes',
-        'qq_key', 'weibo_key', 'weixin_key', 'invite_code', 'parent_id', 'is_recommend',
+        'qq_key', 'weibo_key', 'weixin_key','github_key',
+//        'qq_info','weibo_info','weixin_info',
+        'invite_code', 'parent_id', 'is_recommend',
+        'customs_money', // todo
 
         'security_level' // 这个应该是算出来 不能存数据
 

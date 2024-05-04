@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-backend_websocket", "name": "SystemConfigModel[backend_websocket]", "attribute": "backend_websocket", "rules": {"string":true,"messages":{"string":"平台订单语音提醒是否开启必须是一条字符串。"}}},{"id": "systemconfigmodel-order_refresh", "name": "SystemConfigModel[order_refresh]", "attribute": "order_refresh", "rules": {"string":true,"messages":{"string":"订单列表自动刷新必须是一条字符串。"}}},{"id": "systemconfigmodel-show_duration", "name": "SystemConfigModel[show_duration]", "attribute": "show_duration", "rules": {"string":true,"messages":{"string":"订单列表默认展示数据必须是一条字符串。"}}},]

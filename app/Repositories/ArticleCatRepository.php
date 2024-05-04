@@ -39,13 +39,15 @@ class ArticleCatRepository
 
     public function getList($condition = [], $column = '', $toTree = false, $toFormatTree = false)
     {
+        $condition['relation'] = 'article'; // 关联文章数量 article_count
+
         $data = $this->model->getList($condition, $column);
 
         if (!empty($data[0]) && $toTree) {
             // 是否转换为树形结构
             $list = [];
             foreach ($data[0] as $key=>$value) {
-                $value->article_count = DB::table('article')->where('cat_id', $value->cat_id)->count();
+//                $value->article_count = DB::table('article')->where('cat_id', $value->cat_id)->count();
                 $list[$key] = $value->toArray();
             }
             $data[0] = $this->tree->list_to_tree($list, 'cat_id', 'parent_id');
@@ -55,7 +57,7 @@ class ArticleCatRepository
             // 是否转换为树形结构
             $list = [];
             foreach ($data[0] as $key=>$value) {
-                $value->article_count = DB::table('article')->where('cat_id', $value->cat_id)->count();
+//                $value->article_count = DB::table('article')->where('cat_id', $value->cat_id)->count();
                 $list[$key] = $value->toArray();
             }
             $data[0] = $this->tree->toFormatTree($list, 'cat_name', 'cat_id', 'parent_id');

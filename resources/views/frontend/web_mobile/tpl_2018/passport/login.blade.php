@@ -15,6 +15,9 @@
     <meta name="Description" content="{{ $seo_description ?? '乐融沃B2B2C商城演示站' }}" />
     <meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- 网站头像 -->
+    <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
 
     <!--登录页css-->
     <script src="/assets/d2eace91/js/jquery.js?v=20180813"></script>
@@ -40,8 +43,10 @@
 <div class="login-top" style='background: url({{ get_image_url(sysconf('m_login_bgimg'), 'm_login_bgimg') }}) no-repeat; background-size:cover'>
     <header id="header" class="header header-color">
         <div class="header-left">
-            <a href="javascript:history.back(-1)" class="sb-back"></a>
-            <a href="/index.html"></a>
+            <a href="javascript:history.back(-1)" class="sb-back">
+				<i class="iconfont">&#xe606;</i>
+            </a>
+            <a href="/"></a>
         </div>
         <div class="header-middle"></div>
         <div class="header-right">
@@ -64,7 +69,7 @@
 
     <div class="middle-content m-t-0" id="con_login_2">
         <form id="form2" action="/login.html" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <div class="form-group-box">
                 <!-- 用户名 -->
                 <div class="form-group form-group-spe" >
@@ -149,7 +154,7 @@
 
     <div class="middle-content m-t-0" id="con_login_1" style="display: none;">
         <form id="form1" action="/login.html" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <div class="form-group-box">
                 <!--  用户名  -->
                 <div class="form-group form-group-spe" >
@@ -241,9 +246,17 @@
         </fieldset>
         <div class="other-login-content">
 
+            @if(sysconf('open_weixin_login') && is_weixin())
+                <a href="login/website-login?type=mobile_weixin" class="weixin"></a>
+            @endif
 
-            <a href="login/website-login?type=qq" class="qq"></a>
+            @if(sysconf('open_qq_login'))
+                <a href="login/website-login?type=qq" class="qq"></a>
+            @endif
 
+            @if(sysconf('open_weibo_login'))
+                <a href="login/website-login?type=weibo" class="sina"></a>
+            @endif
 
         </div>
     </div>

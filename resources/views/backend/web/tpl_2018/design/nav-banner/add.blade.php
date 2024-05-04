@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="NavBannerModel" class="form-horizontal" name="NavBannerModel" action="{{ $form_action }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="navbannermodel-id" class="form-control" name="NavBannerModel[id]" value="{{ $info->id ?? ''}}">
 
@@ -214,7 +214,6 @@
             });
 
             $("#imagegroup_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#navbannermodel-banner_image').val().split("|"),

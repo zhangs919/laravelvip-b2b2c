@@ -61,7 +61,7 @@
         </div>
 
         <form id="ShopFieldValueModel" class="form-horizontal" name="ShopFieldValueModel" action="/shop/apply/auth-info.html?is_supply={{ $is_supply }}&amp;shop_type={{ $shop_type }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!--个人信息认证-->
             <div class="item-box">
                 <div class="title">

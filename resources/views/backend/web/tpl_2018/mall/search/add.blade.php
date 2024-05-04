@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30">
         <form id="DefaultSearchModel" class="form-horizontal" name="DefaultSearchModel" action="/mall/search/add" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="defaultsearchmodel-id" class="form-control" name="DefaultSearchModel[id]" value="{{ $info->id ?? ''}}">
 

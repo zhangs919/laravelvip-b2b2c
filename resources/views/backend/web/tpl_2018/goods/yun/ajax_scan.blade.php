@@ -1,5 +1,5 @@
 <form id="ScanSearchModel" class="form-horizontal" name="ScanSearchModel" action="/goods/yun/ajax-scan" method="post" enctype="multipart/form-data">
-    {{ csrf_field() }}
+    @csrf
     <div class="modal-body">
         <div class="table-content m-t-10 clearfix">
             <!-- 是否采集评论 -->

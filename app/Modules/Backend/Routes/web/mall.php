@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
 
     // Mall Route
@@ -57,6 +57,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::any('sms-test', 'Mall\MessageTemplateController@smsTest')->name('message-template-manage'); // 测试短信模板
             Route::get('client-validate', 'Mall\MessageTemplateController@clientValidate')->name('message-template-manage'); // clientValidate
 
+            Route::post('dis-template', 'Mall\MessageTemplateController@disTemplate')->name('message-template-manage'); //
+
 //            Route::post('delete', 'Mall\MessageTemplateController@delete'); // 删除
         });
 
@@ -71,6 +73,21 @@ Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
             Route::get('print', 'Mall\ShippingController@prints')->name('shipping-waybill-set'); // 设置运单模板/测试打印
             Route::get('set-is-show', 'Mall\ShippingController@setIsShow')->name('mall-shipping-manage'); // 是否启用
             Route::any('sheet-config', 'Mall\ShippingController@sheetConfig')->name('mall-shipping-manage'); // 电子面单参数配置
+        });
+
+        /**
+         * 打印设置
+         */
+        Route::group(['prefix' => 'print-spec'], function () {
+            Route::get('list', 'Mall\PrintSpecController@lists'); // lists
+            Route::get('add', 'Mall\PrintSpecController@add'); // add
+            Route::get('edit', 'Mall\PrintSpecController@edit'); // add
+            Route::post('add', 'Mall\PrintSpecController@saveData'); // saveData
+            Route::post('set-is-default', 'Mall\PrintSpecController@setIsDefault'); // 设置默认打印机
+            Route::post('delete', 'Mall\PrintSpecController@delete'); // delete
+            Route::get('config-printer', 'Mall\PrintSpecController@configPrinter'); // 配置打印机
+            Route::post('config-printer', 'Mall\PrintSpecController@configPrinterSave'); // 配置打印机保存数据
+
         });
 
         // 消费保障

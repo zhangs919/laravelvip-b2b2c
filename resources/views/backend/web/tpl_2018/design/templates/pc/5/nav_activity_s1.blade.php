@@ -20,7 +20,7 @@
                                 <div class="goods-detail">
                                     <p class="time-remain" data-end_time="1546065055">活动已经结束啦!</p>
                                     <a href="javascript:void(0)" title="陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很" class="goods-thumb">
-                                        <img src="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036307529844.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" data-original-webp="http://68dsw.oss-cn-beijing.aliyuncs.com/demo/shop/1/gallery/2017/08/25/15036307529844.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220/format,webp/quality,q_75" alt="16">
+                                        <img src="http://xxxx/demo/shop/1/gallery/2017/08/25/15036307529844.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220" data-original-webp="http://xxxx/demo/shop/1/gallery/2017/08/25/15036307529844.jpg?x-oss-process=image/resize,m_pad,limit_0,h_220,w_220/format,webp/quality,q_75" alt="16">
                                     </a>
                                     <p class="goods-name">
                                         <a href="javascript:void(0)" title="陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很">陕西白鹿原大樱桃 车厘子大红灯 新鲜水果4斤航空包邮 甜的很</a>
@@ -91,21 +91,21 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        var nowtime = Date.parse(new Date());
-        $('#{{ $uid }}').find(".time-remain").each(function(i) {
-            var obj = $(this);
-            var time = $(this).data("time") * 1000 - nowtime;
-            $(obj).countdown({
-                time: time,
+    {{--$(document).ready(function() {--}}
+        {{--var nowtime = Date.parse(new Date());--}}
+        {{--$('#{{ $uid }}').find(".time-remain").each(function(i) {--}}
+            {{--var obj = $(this);--}}
+            {{--var time = $(this).data("time") * 1000 - nowtime;--}}
+            {{--$(obj).countdown({--}}
+                {{--time: time,--}}
 
-                htmlTemplate: '<span><em class="bg-color">%{d}</em> 天 <em class="bg-color">%{h}</em> 小时 <em class="bg-color">%{m}</em> 分 <em class="bg-color">%{s}</em> 秒</span>',
+                {{--htmlTemplate: '<span><em class="bg-color">%{d}</em> 天 <em class="bg-color">%{h}</em> 小时 <em class="bg-color">%{m}</em> 分 <em class="bg-color">%{s}</em> 秒</span>',--}}
 
-                leadingZero: true,
-                onComplete: function(event) {
-                    $(obj).html("活动已经结束啦!");
-                }
-            });
-        });
-    });
+                {{--leadingZero: true,--}}
+                {{--onComplete: function(event) {--}}
+                    {{--$(obj).html("活动已经结束啦!");--}}
+                {{--}--}}
+            {{--});--}}
+        {{--});--}}
+    {{--});--}}
 </script>

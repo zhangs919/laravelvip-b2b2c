@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ArticleCatModel" class="form-horizontal" name="ArticleCatModel" action="/article/article-cat/edit-category" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="articlecatmodel-cat_id" class="form-control" name="ArticleCatModel[cat_id]" value="{{ $cat_info->cat_id }}">
             <!-- 分类名称 -->
@@ -301,7 +301,6 @@
             });
 
             $("#imagegroup_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#articlecatmodel-cat_image').val().split("|"),

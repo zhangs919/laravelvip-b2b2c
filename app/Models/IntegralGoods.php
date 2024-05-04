@@ -28,8 +28,11 @@ class IntegralGoods extends BaseModel
     protected $table = 'integral_goods';
 
     protected $fillable = [
-        'shop_id', 'goods_name', 'goods_price', 'market_price', 'goods_integral', 'goods_number', 'exchange_number', 'goods_status',
-        'is_limit', 'start_time', 'end_time', 'goods_image', 'goods_images', 'pc_desc', 'mobile_desc', 'goods_sort', 'goods_video'
+        'shop_id', 'goods_name', 'goods_price', 'market_price', 'goods_number', 'goods_integral', 'exchange_number',
+        'start_time', 'end_time','add_time', 'goods_image', 'goods_images', 'goods_video','pc_desc', 'mobile_desc',
+        'click_count', 'keywords','sale_num','collect_num','goods_sort','is_delete','goods_status','erp_goods_id',
+
+        'is_limit',
     ];
 
     protected $primaryKey = 'goods_id';

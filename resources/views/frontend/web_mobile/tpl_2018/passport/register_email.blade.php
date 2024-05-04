@@ -17,6 +17,9 @@
     <meta name="wap-font-scale" content="no">
     <meta name="Keywords" content="{{ $seo_keywords ?? '乐融沃B2B2C商城演示站' }}" />
     <meta name="Description" content="{{ $seo_description ?? '乐融沃B2B2C商城演示站' }}" />
+    <!-- 网站头像 -->
+    <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
 
     <link rel="stylesheet" href="/css/common.css?v=20180702"/>
     <link rel="stylesheet" href="/css/login.css?v=20180702"/>
@@ -41,7 +44,9 @@
 
 <div class="reg-content"><header id="header" class="header">
         <div class="header-left">
-            <a href="javascript:history.back(-1)" class="sb-back"></a>
+            <a href="javascript:history.back(-1)" class="sb-back">
+				<i class="iconfont">&#xe606;</i>
+			</a>
         </div>
         <div class="header-middle">邮箱注册</div>
         <div class="header-right">
@@ -66,7 +71,7 @@
 
                     <!-- 邮箱注册 star -->
                     <form id="EmailRegisterModel" class="form-horizontal" name="EmailRegisterModel" action="/register/email.html" method="post">
-                        {{ csrf_field() }}
+                        @csrf
                         <!-- 邮箱 -->
                         <div class="form-group form-group-spe" >
                             <dl>
@@ -279,7 +284,9 @@
         <header>
             <div class="header">
                 <div class="header-left">
-                    <a class="sb-back" href="javascript:void(0)"></a>
+                    <a class="sb-back" href="javascript:void(0)">
+						<i class="iconfont">&#xe606;</i>
+					</a>
                 </div>
                 <div class="header-middle">用户注册协议</div>
                 <div class="header-right"></div>

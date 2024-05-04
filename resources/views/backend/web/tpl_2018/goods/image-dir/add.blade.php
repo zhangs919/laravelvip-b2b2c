@@ -1,5 +1,5 @@
 <form id="{{ $uuid }}" class="form-horizontal" action="/goods/image-dir/add" method="POST" novalidate="novalidate">
-    {{ csrf_field() }}
+    @csrf
     <div class="table-content m-t-30 clearfix">
         <input type="hidden" id="imagedir-dir_id" class="form-control" name="ImageDir[dir_id]" value="{{ $info->dir_id ?? ''}}">
         <!-- 相册名称 -->

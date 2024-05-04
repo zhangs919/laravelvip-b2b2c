@@ -48,17 +48,33 @@ class OrderInfo extends BaseModel
         'pickup_id', 'shipping_status', 'pay_status', 'consignee', 'region_code', 'region_name', 'address',
         'address_lng', 'address_lat', 'receiving_mode', 'tel', 'email', 'postscript', 'best_time', 'pay_id',
         'pay_code', 'pay_name', 'pay_sn', 'is_cod', 'order_amount', 'order_points', 'money_paid', 'goods_amount',
-        'inv_fee', 'shipping_fee', 'cash_more', 'discount_fee', 'change_amount', 'shipping_change', 'surplus',
+        'inv_fee', 'shipping_fee',
+
+        'other_shipping_fee','packing_fee',
+
+        'cash_more', 'discount_fee', 'change_amount', 'shipping_change', 'surplus',
         'user_surplus', 'user_surplus_limit', 'bonus_id', 'shop_bonus_id', 'bonus', 'shop_bonus', 'store_card_id',
         'store_card_price', 'integral', 'integral_money', 'give_integral', 'order_from', 'add_time', 'take_time',
         'take_countdown', 'pay_time', 'shipping_time', 'confirm_time', 'delay_days', 'order_type', 'service_mark',
         'send_mark', 'shipping_mark', 'buyer_type', 'evaluate_status', 'evaluate_time', 'end_time', 'is_distrib',
         'distrib_status', 'is_show', 'is_delete', 'order_data', 'mall_remark', 'site_remark', 'shop_remark', 'store_remark',
         'close_reason', 'cash_user_id', 'last_time', 'order_cancel', 'refuse_reason', 'sub_order_id', 'buy_type', 'reachbuy_code',
-        'growth_value', 'virtual_code',
-        'revision_user_id',
+        'growth_value',
 
-//        'terminal_no',
+
+        'cs_take_status','cs_take_amount','cs_confirm_time',
+        'cs_settlement_time','cs_delivery_fee','cs_delivery_enable',
+        'cs_take_time','revision_user_id','terminal_no',
+        'virtual_code',
+
+        /*以下字段后期考虑移除*/
+        'card_id','is_cross_border','inital_request','inital_response',
+        'import_duty', 'shipping_tax','goods_tax','push_pay_order_status',
+        'push_order_status','push_logistics_order_status',
+        'is_send_weixin_message',
+
+        'is_settlement','chargeoff_status'
+//
 
 //        'pickup_name', 'shop_name', 'shop_type', 'customer_tool', 'customer_account', 'complaint_id', 'complaint_status',
 
@@ -82,4 +98,55 @@ class OrderInfo extends BaseModel
         return $this->hasMany(OrderGoods::class, 'order_id', 'order_id');
     }
 
+    /**
+     * 一对一关联 自提点表
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function pickup()
+    {
+        return $this->hasOne(SelfPickup::class, 'pickup_id', 'pickup_id');
+    }
+
+    /**
+     * 一对多关联 发货单订单表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deliveryOrder()
+    {
+        return $this->hasOne(DeliveryOrder::class, 'order_id','order_id');
+    }
+
+    /**
+     * 关联商家表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class,'shop_id','shop_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','user_id');
+    }
+
+    /**
+     * 关联账单订单
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getSellerBillOrder()
+    {
+        return $this->hasOne(SellerBillOrder::class, 'order_id', 'order_id');
+    }
+
+    /**
+     * 关联退换货订单
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getOrderReturn()
+    {
+        return $this->hasOne(BackOrder::class, 'order_id', 'order_id');
+    }
 }

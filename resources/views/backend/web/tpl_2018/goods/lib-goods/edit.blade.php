@@ -43,10 +43,10 @@
 
         <div class="content m-t-30">
             <div class="goods-info-two">
-                <form id="LibGoodsModel" class="form-horizontal" name="LibGoodsModel" action="/goods/lib-goods/edit?id=5" method="POST" novalidate="novalidate">
-                    <input type="hidden" name="_csrf" value="Ro8LEjlLAymBecHXKXPPrObwAHMnBQI9-VM-e_rAaywx-lpgcwk1H7QhspZdKb_Iv7JXH0pURE_PCQkqv6wPdQ==">
+                <form id="LibGoodsModel" class="form-horizontal" name="LibGoodsModel" action="/goods/lib-goods/edit?id={{ $goods_info['goods_id'] }}" method="POST" novalidate="novalidate">
+                    @csrf
                     <!-- 分类编号 -->
-                    <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="328">
+                    <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="{{ $goods_info['cat_id'] }}">
                     <h5 class="m-b-30">商品基本信息</h5>
                     <div class="simple-form-field">
                         <div class="form-group">
@@ -55,11 +55,15 @@
                                 <span class="ng-binding">商品分类：</span>
                             </label>
                             <div class="col-sm-9">
-                                <label class="control-label" data-anchor="商品分类ID">生鲜食品 &gt; 新鲜水果 &gt; 时令水果</label>
-                                <input type="hidden" id="libgoodsmodel-cat_id" class="form-control" name="LibGoodsModel[cat_id]" value="328">
+                                <label class="control-label" data-anchor="商品分类ID">{!! $cat_names !!}</label>
+                                <input type="hidden" id="libgoodsmodel-cat_id" class="form-control"
+                                       name="LibGoodsModel[cat_id]" value="{{ $cat_id }}">
 
-                                <a id="change_category" href="javascript:void(0);" class="btn btn-warning btn-sm m-l-5" data-goods-id="5">切换商品分类</a>
-
+                                @if($cat_edit)
+                                    <a id="change_category" href="javascript:void(0);" class="btn btn-warning btn-sm m-l-5" data-goods-id="{{ $goods_info['goods_id'] }}">编辑商品分类</a>
+                                @else
+                                    <a title="参与限时折扣的商品不能编辑分类" href="javascript:void(0);" class="btn btn-warning btn-sm m-l-5 disabled" data-goods-id="202">编辑商品分类</a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -74,7 +78,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-goods_name" class="form-control valid" name="LibGoodsModel[goods_name]" value="圣芝红酒 法国进口超级波尔多AOC干红葡萄酒 750ml" data-anchor="商品名称" aria-invalid="false">
+                                    <input type="text" id="libgoodsmodel-goods_name" class="form-control valid" name="LibGoodsModel[goods_name]" value="{{ $goods_info['goods_name'] }}" data-anchor="商品名称" aria-invalid="false">
 
 
                                 </div>
@@ -85,10 +89,40 @@
                     </div>
 
                     <!-- 商品原地址 -->
-
+                    @if(!empty($third_url))
+                        <div class="simple-form-field">
+                            <div class="form-group">
+                                <label for="text4" class="col-sm-3 control-label">
+                                    <span class="text-danger ng-binding"></span>
+                                    <span class="ng-binding">商品原地址：</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-box">
+                                        <label class="control-label">
+                                            <a href="{{ $third_url }}" target="_blank">{{ $third_url }}</a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     <!-- 商品原id -->
-
+                    @if(!empty($third_id))
+                        <div class="simple-form-field">
+                            <div class="form-group">
+                                <label for="text4" class="col-sm-3 control-label">
+                                    <span class="text-danger ng-binding"></span>
+                                    <span class="ng-binding">商品原id：</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-box">
+                                        <label class="control-label">{{ $third_id }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     <!-- 商品关键词 -->
                     <div class="simple-form-field">
@@ -101,7 +135,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-keywords" class="form-control" name="LibGoodsModel[keywords]">
+                                    <input type="text" id="libgoodsmodel-keywords" class="form-control" name="LibGoodsModel[keywords]" value="{{ $goods_info['keywords'] }}">
 
 
                                 </div>
@@ -121,7 +155,7 @@
                                 <div class="form-control-box">
 
 
-                                    <textarea id="libgoodsmodel-goods_subname" class="form-control" name="LibGoodsModel[goods_subname]" rows="5"></textarea>
+                                    <textarea id="libgoodsmodel-goods_subname" class="form-control" name="LibGoodsModel[goods_subname]" rows="5">{!! $goods_info['goods_subname'] !!}</textarea>
 
 
                                 </div>
@@ -141,9 +175,10 @@
                             <div class="col-sm-9">
                                 <div class="form-control-box">
 
-                                    <div class="chosen-container chosen-container-single" title=""><a class="chosen-single" tabindex="-1"><span>Suamgy/圣芝</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off"></div><ul class="chosen-results"></ul></div></div><select name="LibGoodsModel[brand_id]" class="form-control chosen-select" style="display: none;">
-                                        <option value="">--请选择品牌--</option>
-                                        <option value="136">拉菲</option><option value="173">浪漫之花</option><option value="172">柏梭</option><option value="148">鲜农乐</option><option value="147">三只松鼠</option><option value="174" selected="selected">Suamgy/圣芝</option>
+                                    <select name="LibGoodsModel[brand_id]" class="form-control chosen-select">
+                                        @foreach($brand_list as $v)
+                                            <option value="{{ $v['brand_id'] }}" @if($goods_info['brand_id'] == $v['brand_id']) selected="selected" @endif>{{ $v['brand_name'] }}</option>
+                                        @endforeach
                                     </select>
 
                                 </div>
@@ -165,46 +200,66 @@
 
                                     <div class="goods-attr w750" data-anchor="商品属性">
 
-                                        <div class="goods-attr-tit">
-                                            <span>平台系统属性</span>
-                                        </div>
-
-                                        <div class="simple-form-field">
-                                            <div class="form-group">
-                                                <label for="" class="col-sm-2 control-label">
-
-                                                    <span class="ng-binding">产地：</span>
-                                                </label>
-                                                <div class="col-sm-9">
-                                                    <div class="form-control-box">
-
-
-
-
-
-                                                        <div class="attr-values" data-attr-id="12" data-required="0">
-                                                            <!-- 多选属性 -->
-
-                                                            <div class="chosen-container chosen-container-single" title="" id="goods_attrs_12_chosen"><a class="chosen-single" tabindex="-1"><span>法国</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off"></div><ul class="chosen-results"></ul></div></div><select id="goods_attrs_12" class="form-control chosen-select" name="goods_attrs[12]" data-rule-required="" data-msg="" style="display: none;">
-                                                                <option value=""></option>
-                                                                <option value="36">秦皇岛</option>
-                                                                <option value="37">保定</option>
-                                                                <option value="38">承德</option>
-                                                                <option value="39">石家庄</option>
-                                                                <option value="40">唐山</option>
-                                                                <option value="1070" selected="">法国</option>
-                                                                <option value="1071">西班牙</option>
-                                                            </select>
-                                                            <!-- 文本属性 -->
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="help-block help-block-t"></div>
-                                                </div>
+                                        @if(!empty($attr_list))
+                                            <div class="goods-attr-tit">
+                                                <span>平台系统属性</span>
                                             </div>
-                                        </div>
+
+                                            @foreach($attr_list as $v)
+                                                <div class="simple-form-field" >
+                                                    <div class="form-group">
+                                                        <label for="" class="col-sm-2 control-label">
+
+                                                            @if($v['is_required'] == 1)
+                                                                <span class="text-danger ng-binding">*</span>
+                                                            @endif
+                                                            <span class="ng-binding">{{ $v['attr_name'] }}：</span>
+                                                        </label>
+                                                        <div class="col-sm-9">
+                                                            <div class="form-control-box">
+
+
+
+
+
+                                                                <div class="attr-values" data-attr-id="{{ $v['attr_id'] }}" data-required="{{ $v['is_required'] }}">
+                                                                @if($v['attr_style'] == 2)
+                                                                    {{--文本--}}
+                                                                    <!-- 多选属性 -->
+
+                                                                        <input type="text" id="goods_attrs_{{ $v['attr_id'] }}" class="form-control"
+                                                                               name="goods_attrs[{{ $v['attr_id'] }}]" data-rule-required="@if($v['is_required'] == 1){{ $v['is_required'] }}@endif" data-msg="@if($v['is_required'] == 1){{ $v['attr_name'] }}不能为空！ @endif">
+                                                                        <!-- 品牌属性 -->
+                                                                    @elseif($v['attr_style'] == 1)
+                                                                        {{--单选--}}
+                                                                        <select id="goods_attrs_{{ $v['attr_id'] }}" class="form-control chosen-select" name="goods_attrs[{{ $v['attr_id'] }}]" data-rule-required="@if($v['is_required'] == 1){{ $v['is_required'] }}@endif" data-msg="@if($v['is_required'] == 1){{ $v['attr_name'] }}不能为空！ @endif">
+                                                                            <option value=""></option>
+                                                                            @foreach($attr_values[$v['attr_id']] as $av)
+                                                                                <option value="{{ $av['id'] }}" @if(isset($goods_attrs[$v['attr_id']]) && in_array($av['id'], $goods_attrs[$v['attr_id']])) selected @endif>{{ $av['value'] }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    @elseif($v['attr_style'] == 0)
+                                                                        {{--多选--}}
+                                                                        @foreach($attr_values[$v['attr_id']] as $av)
+                                                                            <label class="control-label cur-p m-r-10">
+
+                                                                                <input type="checkbox" id="goods_attrs_{{ $v['attr_id'] }}_{{ $av['id'] }}" @if(isset($goods_attrs[$v['attr_id']]) && in_array($av['id'], $goods_attrs[$v['attr_id']])) checked="checked" @endif name="goods_attrs[{{ $v['attr_id'] }}][]" value="{{ $av['id'] }}" data-rule-required="@if($v['is_required'] == 1){{ $v['is_required'] }}@endif" data-msg="@if($v['is_required'] == 1){{ $v['attr_name'] }}不能为空！ @endif">
+
+                                                                                {{ $av['value'] }}
+                                                                            </label>
+                                                                        @endforeach
+                                                                    @endif
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="help-block help-block-t"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
 
 
                                         <div class="goods-attr-tit">
@@ -212,365 +267,24 @@
                                         </div>
                                         <div class="other-attrs-list">
 
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="厂名" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="JOSEPH VERDIER S.A." placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
+                                            @if(!empty($goods_info['other_attrs']))
+                                                @foreach($goods_info['other_attrs'] as $v)
+                                                    <div class="simple-form-field other-attrs-item">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="{{ $v['attr_name'] }}" placeholder="属性名" />
+                                                                ：
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <div class="form-control-box  control-label">
+                                                                    <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="{{ $v['attr_value'] }}" placeholder="属性值，多个值间用英文逗号分割" />
+                                                                    <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="厂址" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="B.P. 14 49260 Montreuil-Bellay-FRANCE" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="厂家联系方式" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="020-38031373" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="配料表" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="葡萄汁" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="储藏方法" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="低温避光" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="保质期" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="3650" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="食品添加剂" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="二氧化硫" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="净含量" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="750ml" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="系列" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="超级波尔多干红" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="套装规格" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="单支" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="年份" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="1年(含)-3年(含)" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="是否为有机食品" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="否" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="葡萄酒种类" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="红葡萄酒" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="葡萄酒等级" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="法国产区" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="法国产区" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="波尔多" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="葡萄种类" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="赤霞珠,美乐/梅洛" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="口味" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="干葡萄酒 （含糖量小于4克/升）" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="饮酒场合" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="商务宴请区" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="分级" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="大区法定产区AOC" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="包装方式" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="包装" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="搭配菜肴" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="牛肉/羊肉/鸭肉" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="醒酒时间" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="15分钟(含)-30分钟(含)" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="香味" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="水果香" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="simple-form-field other-attrs-item">
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">
-                                                        <input type="text" class="form-control w80 other-attr-name" name="other_attr_name" value="进口类型" placeholder="属性名">
-                                                        ：
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <div class="form-control-box  control-label">
-                                                            <input type="text" class="form-control w450 other-attr-value" name="other_attr_value" value="原瓶进口" placeholder="属性值，多个值间用英文逗号分割">
-                                                            <a class="btn btn-danger btn-sm m-l-5 other-attr-remove">移除</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                @endforeach
+                                            @endif
 
                                         </div>
                                         <a id="btn_add_other_attr" href="javascript:void(0);" class="btn btn-warning btn-sm m-t-10">
@@ -598,7 +312,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-goods_price" class="form-control ipt pull-none m-r-10" name="LibGoodsModel[goods_price]" value="59.00" data-anchor="店铺价">元
+                                    <input type="text" id="libgoodsmodel-goods_price" class="form-control ipt pull-none m-r-10" name="LibGoodsModel[goods_price]" value="{{ $goods_info['goods_price'] }}" data-anchor="店铺价">元
 
 
                                 </div>
@@ -618,7 +332,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-market_price" class="form-control ipt pull-none m-r-10" name="LibGoodsModel[market_price]" value="129.00">元
+                                    <input type="text" id="libgoodsmodel-market_price" class="form-control ipt pull-none m-r-10" name="LibGoodsModel[market_price]" value="{{ $goods_info['market_price'] }}">元
 
 
                                 </div>
@@ -638,7 +352,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-cost_price" class="form-control ipt pull-none m-r-10" name="LibGoodsModel[cost_price]">元
+                                    <input type="text" id="libgoodsmodel-cost_price" class="form-control ipt pull-none m-r-10" name="LibGoodsModel[cost_price]" value="{{ $goods_info['cost_price'] ?? '0.00' }}">元
 
 
                                 </div>
@@ -658,7 +372,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-goods_sn" class="form-control" name="LibGoodsModel[goods_sn]">
+                                    <input type="text" id="libgoodsmodel-goods_sn" class="form-control" name="LibGoodsModel[goods_sn]" value="{{ $goods_info['goods_sn'] }}">
 
 
                                 </div>
@@ -678,7 +392,7 @@
                                 <div class="form-control-box">
 
 
-                                    <input type="text" id="libgoodsmodel-goods_barcode" class="form-control" name="LibGoodsModel[goods_barcode]">
+                                    <input type="text" id="libgoodsmodel-goods_barcode" class="form-control" name="LibGoodsModel[goods_barcode]" value="{{ $goods_info['goods_barcode'] }}">
 
 
                                 </div>
@@ -698,9 +412,9 @@
                                 <div class="form-control-box">
 
                                     <!-- 图片相对路径 -->
-                                    <input type="hidden" id="libgoodsmodel-goods_image" class="form-control" name="LibGoodsModel[goods_image]" value="/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg">
+                                    <input type="hidden" id="libgoodsmodel-goods_image" class="form-control" name="LibGoodsModel[goods_image]" value="{{ $goods_info['goods_image'] }}">
 
-                                    <div id="goods_image_container"><ul class="image-group"><li data-label-index="0" title="点击预览图片"><span title="删除图片" class="image-group-remove">删除图片</span><a href="javascript:void(0);" data-value="/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg" data-url="http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg"><img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg?k=1518665935947" data-value="/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg" data-url="http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg"></a></li><li class="image-group-button" data-label-index="0" title="点击并选择上传的图片" style="display: none;"><div class="image-group-bg"></div></li></ul></div>
+                                    <div id="goods_image_container"></div>
 
                                 </div>
 
@@ -720,9 +434,9 @@
                                 <div class="form-control-box">
 
                                     <!-- 视频相对路径 -->
-                                    <input type="hidden" id="libgoodsmodel-goods_video" class="form-control" name="LibGoodsModel[goods_video]">
+                                    <input type="hidden" id="libgoodsmodel-goods_video" class="form-control" name="LibGoodsModel[goods_video]" value="{{ $goods_info['goods_video'] }}">
 
-                                    <div id="goods_video_container"><ul class="image-group"><li class="image-group-button" data-label-index="0" title="点击并选择上传的视频文件"><div class="image-group-bg-video"></div></li></ul></div>
+                                    <div id="goods_video_container"></div>
 
                                 </div>
 
@@ -757,29 +471,7 @@
                                         <div id="texpress1" class="tab-pane fade in active">
                                             <div class="form-control-box">
                                                 <!-- 文本编辑器 -->
-                                                <div class="ke-container ke-container-default" style="width: 100%;"><div style="display:block;" class="ke-toolbar" unselectable="on"><span class="ke-outline" data-name="source" title="HTML代码" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-source" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="fullscreen" title="全屏显示" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-fullscreen" unselectable="on"></span></span><span class="ke-outline" data-name="undo" title="后退(Ctrl+Z)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-undo" unselectable="on"></span></span><span class="ke-outline" data-name="redo" title="前进(Ctrl+Y)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-redo" unselectable="on"></span></span><span class="ke-outline" data-name="print" title="打印(Ctrl+P)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-print" unselectable="on"></span></span><span class="ke-outline" data-name="cut" title="剪切(Ctrl+X)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-cut" unselectable="on"></span></span><span class="ke-outline" data-name="copy" title="复制(Ctrl+C)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-copy" unselectable="on"></span></span><span class="ke-outline" data-name="paste" title="粘贴(Ctrl+V)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-paste" unselectable="on"></span></span><span class="ke-outline" data-name="plainpaste" title="粘贴为无格式文本" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-plainpaste" unselectable="on"></span></span><span class="ke-outline" data-name="wordpaste" title="从Word粘贴" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-wordpaste" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="justifyleft" title="左对齐" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-justifyleft" unselectable="on"></span></span><span class="ke-outline" data-name="justifycenter" title="居中" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-justifycenter" unselectable="on"></span></span><span class="ke-outline" data-name="justifyright" title="右对齐" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-justifyright" unselectable="on"></span></span><span class="ke-outline" data-name="justifyfull" title="两端对齐" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-justifyfull" unselectable="on"></span></span><span class="ke-outline" data-name="insertorderedlist" title="编号" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-insertorderedlist" unselectable="on"></span></span><span class="ke-outline" data-name="insertunorderedlist" title="项目符号" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-insertunorderedlist" unselectable="on"></span></span><span class="ke-outline" data-name="indent" title="增加缩进" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-indent" unselectable="on"></span></span><span class="ke-outline" data-name="outdent" title="减少缩进" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-outdent" unselectable="on"></span></span><span class="ke-outline" data-name="subscript" title="下标" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-subscript" unselectable="on"></span></span><span class="ke-outline" data-name="superscript" title="上标" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-superscript" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="selectall" title="全选(Ctrl+A)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-selectall" unselectable="on"></span></span><span class="ke-outline" data-name="clearhtml" title="清理HTML代码" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-clearhtml" unselectable="on"></span></span><span class="ke-outline" data-name="quickformat" title="一键排版" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-quickformat" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="formatblock" title="段落" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-formatblock" unselectable="on"></span></span><span class="ke-outline" data-name="fontname" title="字体" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-fontname" unselectable="on"></span></span><span class="ke-outline" data-name="fontsize" title="文字大小" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-fontsize" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="forecolor" title="文字颜色" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-forecolor" unselectable="on"></span></span><span class="ke-outline" data-name="hilitecolor" title="文字背景" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-hilitecolor" unselectable="on"></span></span><span class="ke-outline" data-name="bold" title="粗体(Ctrl+B)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-bold" unselectable="on"></span></span><span class="ke-outline" data-name="italic" title="斜体(Ctrl+I)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-italic" unselectable="on"></span></span><span class="ke-outline" data-name="underline" title="下划线(Ctrl+U)" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-underline" unselectable="on"></span></span><span class="ke-outline" data-name="strikethrough" title="删除线" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-strikethrough" unselectable="on"></span></span><span class="ke-outline" data-name="lineheight" title="行距" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-lineheight" unselectable="on"></span></span><span class="ke-outline" data-name="removeformat" title="删除格式" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-removeformat" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="image" title="图片" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-image" unselectable="on"></span></span><span class="ke-outline" data-name="flash" title="Flash" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-flash" unselectable="on"></span></span><span class="ke-outline" data-name="media" title="视音频" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-media" unselectable="on"></span></span><span class="ke-outline" data-name="table" title="表格" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-table" unselectable="on"></span></span><span class="ke-outline" data-name="hr" title="插入横线" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-hr" unselectable="on"></span></span><span class="ke-outline" data-name="emoticons" title="插入表情" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-emoticons" unselectable="on"></span></span><span class="ke-outline" data-name="link" title="超级链接" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-link" unselectable="on"></span></span><span class="ke-outline" data-name="unlink" title="取消超级链接" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-unlink" unselectable="on"></span></span><span class="ke-inline-block ke-separator"></span><span class="ke-outline" data-name="about" title="关于" unselectable="on"><span class="ke-toolbar-icon ke-toolbar-icon-url ke-icon-about" unselectable="on"></span></span></div><div style="display: block; height: 289px;" class="ke-edit"><iframe class="ke-edit-iframe" hidefocus="true" frameborder="0" tabindex="" style="width: 100%; height: 289px;"></iframe><textarea class="ke-edit-textarea" hidefocus="true" tabindex="" style="width: 100%; height: 289px; display: none;"></textarea></div><div class="ke-statusbar"><span class="ke-inline-block ke-statusbar-center-icon"></span><span class="ke-inline-block ke-statusbar-right-icon"></span></div></div><textarea id="pc_desc" class="form-control" name="LibGoodsModel[pc_desc]" rows="5" style="width: 100%; height: 350px; visibility: hidden; display: none;"> &lt;head&gt;
-
- &lt;/head&gt;
-
-  &lt;p&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2JE3ntXXXXXXTXpXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2B4gutXXXXXXcXpXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2y8A1oXXXXXXtXXXXXXXXXXXX_!!2136152958.jpg" /&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2URj1tXXXXXcxXpXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;/p&gt;
-  &lt;p&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2NhAEtXXXXXbUXXXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2kZP1tXXXXXcVXpXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;/p&gt;
-  &lt;p&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB27i3stXXXXXXeXpXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB24ccRtXXXXXaXXXXXXXXXXXXX_!!725677994.jpg" /&gt;&lt;img alt="" src="http://68yun.oss-cn-beijing.aliyuncs.com//images/14719/taobao-yun-images/531610068386/desc-images/TB2LYs6oVXXXXcXXpXXXXXXXXXX_!!725677994.png" /&gt;&lt;/p&gt;
-
-
-</textarea>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                            <div class="upload-thumb-buttom p-t-10">
-                                                <a id="btn_pc_desc_imagegallery" href="javascript:void(0);" class="btn btn-primary m-l-5">
-                                                    <i class="fa fa-picture-o"></i>
-                                                    批量插入相册图片
-                                                </a>
-                                                <a id="btn_upload_pc_desc" href="javascript:void(0);" class="btn btn-primary" data-toggle="collapse">
-                                                    <i class="fa fa-upload"></i>
-                                                    上传图片
-                                                </a>
-                                                <div id="pc_desc_imagegallery_container" style="width: 750px;"></div>
-                                                <!-- 图片空间选择图片 -->
+                                                <textarea id="pc_desc" class="form-control" name="LibGoodsModel[pc_desc]" rows="5" style="width: 100%; height: 350px; visibility: hidden; display: none;">{!! $goods_info['pc_desc'] !!}</textarea>
                                             </div>
                                         </div>
                                         <div id="texpress2" class="tab-pane fade">
@@ -803,7 +495,50 @@
                                                     </div>
                                                     <div class="content-edit">
                                                         <div class="control-panel">
+                                                            @foreach($goods_info['mobile_desc'] as $v)
+                                                                <div class="module m-image current first">
+                                                                    <ul class="tools">
+                                                                        <li>
+                                                                            <a href="javascript:void(0);" class="up">上移</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0);" class="down">下移</a>
+                                                                        </li>
 
+                                                                        @if($v['type'] == 0)
+                                                                            {{--文本--}}
+                                                                            <li>
+                                                                                <a href="javascript:void(0);" class="edit">编辑</a>
+                                                                            </li>
+                                                                        @elseif($v['type'] == 1)
+                                                                            {{--图片--}}
+                                                                            <li>
+                                                                                <a href="javascript:void(0);" class="replace">替换</a>
+                                                                            </li>
+                                                                        @endif
+
+                                                                        <li>
+                                                                            <a href="javascript:void(0);" class="delete">删除</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="content">
+
+                                                                        @if($v['type'] == 0)
+                                                                            {{--文本--}}
+                                                                            <div class="text-div">
+                                                                                <div class="text-html">{!! $v['content'] !!}</div>
+                                                                            </div>
+                                                                        @elseif($v['type'] == 1)
+                                                                            {{--图片--}}
+                                                                            <div class="image-div">
+                                                                                <img src="{{ get_image_url($v['content']) }}" data-path="{{ $v['content'] }}">
+                                                                            </div>
+                                                                        @endif
+
+                                                                    </div>
+                                                                    <div class="cover"></div>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
                                                         <div id="mobile_text_editor" class="edit-area" style="display: none;">
                                                             <div class="edit-text text-content">
@@ -877,6 +612,19 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div style="clear: both;"></div>
+                                        <div class="upload-thumb-buttom p-t-10">
+                                            <a id="btn_pc_desc_imagegallery" href="javascript:void(0);" class="btn btn-primary m-r-5">
+                                                <i class="fa fa-picture-o"></i>
+                                                批量插入相册图片
+                                            </a>
+                                            <a id="btn_upload_pc_desc" href="javascript:void(0);" class="btn btn-primary">
+                                                <i class="fa fa-upload"></i>
+                                                上传图片
+                                            </a>
+                                            <div id="pc_desc_imagegallery_container" style="width: 750px;"></div>
+                                            <!-- 图片空间选择图片 -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -939,11 +687,12 @@
                             </label>
                             <div class="col-sm-8">
                                 <div class="form-control-box">
-                                    <div class="chosen-container chosen-container-single" title="" id="libgoodsmodel_lib_cat_id_chosen"><a class="chosen-single chosen-default" tabindex="-1"><span></span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off"></div><ul class="chosen-results"></ul></div></div><select id="libgoodsmodel-lib_cat_id" class="form-control chosen-select" name="LibGoodsModel[lib_cat_id]" style="display: none;">
 
+                                    <select id="libgoodsmodel-lib_cat_id" class="form-control chosen-select" name="LibGoodsModel[lib_cat_id]" style="display: none;">
 
-                                        <option value="0"></option>
-
+                                        @foreach($lib_category_list as $k=>$v)
+                                            <option value="{{ $k }}" @if($goods_info['lib_cat_id'] == $k)selected="selected"@endif @if($v['has_child'])disabled="true"@endif>{!! $v['cat_name'] !!}</option>
+                                        @endforeach
 
                                     </select>
                                 </div>
@@ -963,12 +712,12 @@
 
 
                                     <label class="control-label cur-p">
-                                        <input type="radio" id="libgoodsmodel-goods_status_1" name="LibGoodsModel[goods_status]" value="1" checked="checked">
+                                        <input type="radio" id="libgoodsmodel-goods_status_1" name="LibGoodsModel[goods_status]" value="1" @if($goods_info['goods_status'] == 1)checked="checked"@endif />
                                         立刻发布
                                     </label>
                                     <br>
                                     <label class="control-label cur-p">
-                                        <input type="radio" id="libgoodsmodel-goods_status_0" name="LibGoodsModel[goods_status]" value="0">
+                                        <input type="radio" id="libgoodsmodel-goods_status_0" name="LibGoodsModel[goods_status]" value="0" @if($goods_info['goods_status'] == 0)checked="checked"@endif>
                                         放入仓库
                                     </label>
 
@@ -1151,9 +900,7 @@
             $("#helper_tool_nav").find(".count").html(count);
         });
     </script>
-    <script id="goods_sku_list" type="text">
-{"":{"checked":"true","goods_barcode":null,"goods_number":127,"goods_price":"59.00","goods_sn":null,"market_price":"129.00","mobile_price":"0.00","warn_number":0}}
-</script>
+    <script id="goods_sku_list" type='text'>{!! json_encode($goods_sku_list) !!}</script>
     <!-- 规格、属性 -->
     <script type="text/javascript">
         function getOtherValue(attr_id, vname) {
@@ -1781,7 +1528,7 @@
                             $("#goods_image_tag").attr("src", image_url);
                             // 原图路径
                             $("#libgoodsmodel-goods_image").val(path);
-                            $("#goods_image_tag").parent("a").attr("href", "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719//" + path);
+                            $("#goods_image_tag").parent("a").attr("href", "{{ get_oss_host() }}" + path);
                         }
                     });
                 } else {
@@ -1847,8 +1594,8 @@
 
             // 商品主图
             $("#goods_image_container").imagegroup({
-                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
-                values: ["/taobao-yun-images/531610068386/TB1O0Z.MVXXXXXPXVXXXXXXXXXX_!!0-item_pic.jpg"],
+                host: "{{ get_oss_host() }}",
+                values: ["{{ $goods_info['goods_image'] }}"],
                 gallery: true,
                 callback: function(result) {
                     var values = this.getValues();
@@ -1862,8 +1609,8 @@
 
             // 商品主图视频
             $("#goods_video_container").videogroup({
-                host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
-                values: [""],
+                host: "{{ get_oss_host() }}",
+                values: ["{{ $goods_info['goods_video'] }}"],
                 gallery: true,
                 options: {
                     minDuration: "0",
@@ -2081,7 +1828,7 @@
             // 添加手机端图片
             $("#btn_mobile_add_image").click(function() {
                 $.imageupload({
-                    url: '/site/upload-mobile-image.html',
+                    url: '/site/upload-mobile-image',
                     callback: function(result) {
                         if (result.code == 0) {
                             var template = $("#mobile_image_template").html();
@@ -2409,8 +2156,8 @@
                 // 加载
                 $.loading.start();
 
-                if ("5" == "") {
-                    $.post('/goods/lib-goods/add?cat_id=328', {
+                if ("{{ $goods_info['goods_id'] }}" == "") {
+                    $.post('/goods/lib-goods/add?cat_id={{ $goods_info['cat_id'] }}', {
                         data: data
                     }, function(result) {
                         // 停止加载
@@ -2423,13 +2170,13 @@
 
                             // 加载
                             $.loading.start();
-                            $.go('/goods/lib-goods/add-images.html?id=' + goods_id);
+                            $.go('/goods/lib-goods/add-images?id=' + goods_id);
                         } else {
                             $.alert(result.message);
                         }
                     }, 'json');
                 } else {
-                    $.post('/goods/lib-goods/edit.html?id=5', {
+                    $.post('/goods/lib-goods/edit?id={{ $goods_info['goods_id'] }}&scid={{ $scid }}', {
                         data: data
                     }, function(result) {
                         // 停止加载
@@ -2441,7 +2188,7 @@
                             }, function() {
                                 // 加载
                                 $.loading.start();
-                                $.go('/goods/lib-goods/edit.html?id=5');
+                                $.go('/goods/lib-goods/edit?id={{ $goods_info['goods_id'] }}&scid={{ $scid }}');
                             });
                         } else {
                             $.alert(result.message);
@@ -2511,7 +2258,7 @@
             });
 
             $("#btn_view").click(function() {
-                $.go("http://www.cp6znq.yunmall.68mall.com/goods-5.html", "_blank");
+                $.go("{{ route('pc_show_goods',['goods_id'=>$goods_info['goods_id']]) }}", "_blank");
             });
 
             //添加分类按钮
@@ -2525,7 +2272,7 @@
                 });
             });
 
-            var goods_id = "5";
+            var goods_id = "{{ $goods_info['goods_id'] }}";
 
             $("#change_category").click(function() {
                 if (!confirm("此页面要求您确认想要离开 - 您输入的数据可能不会被保存。")) {
@@ -2535,7 +2282,7 @@
                 if (goods_id == "") {
                     $.go("/goods/lib-goods/index.html");
                 } else {
-                    $.go("/goods/lib-goods/index.html?id=5");
+                    $.go("/goods/lib-goods/index.html?id={{ $goods_info['goods_id'] }}");
                 }
             });
 

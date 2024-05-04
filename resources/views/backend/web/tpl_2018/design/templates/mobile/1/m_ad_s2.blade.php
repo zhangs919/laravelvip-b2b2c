@@ -4,9 +4,9 @@
 <!--内容区域 start-->
 
 
-    <div class="img-groups-box" @if(!empty(@$data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
+    <div class="img-groups-box" @if(!empty($data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
 
-        @if(!empty($data['3-1']) && !empty($data['3-2']) && count($data['3-2']) >= 2)
+        @if(!empty($data['3-1']) && !empty($data['3-2']) && count($data['3-2'] ?? []) >= 2)
             @php
             $image_block_width = $data['3-1'][0]['image_width'] + max(array_column($data['3-2'], 'image_width'));
             $first_image_width_percent = calc_width($data['3-1'][0]['image_width'], $image_block_width);
@@ -90,5 +90,5 @@
 
 
 <script type="text/javascript">
-    $.imgloading.loading();
+    // $.imgloading.loading();
 </script>

@@ -5,7 +5,7 @@
             <div class="article-detail">
                 <strong class="tit">{{ $v->title }}</strong>
                 <div class="info">
-                    <span class="resource">{{ $v->add_time }}</span>
+                    <span class="resource">{{ format_time(strtotime($v->add_time),'Y-m-d') }}</span>
                     <span class="paper-views">{{ $v->click_number }}</span>
                 </div>
             </div>

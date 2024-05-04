@@ -41,7 +41,7 @@
         </ul>
     </div>
     <form id="form" class="form-horizontal" action="/system/clear-data/index" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="common-title">
             <h5>
                 <label class="control-label cur-p m-l-10">

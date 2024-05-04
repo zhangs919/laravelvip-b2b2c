@@ -1,9 +1,17 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=1.6"/>
 @stop
 
 {{--content--}}
@@ -37,9 +45,7 @@
             </li>
         </ul>
         <script type="text/javascript">
-            $().ready(function(){
-                $("#step_4").addClass("current");
-            });
+            //
         </script>
         <div class="content">
             <div class="goods-info-four">
@@ -101,9 +107,21 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-
+    <script>
+        $().ready(function(){
+            $("#step_4").addClass("current");
+        });
+        //
+        $("#btn_view").click(function() {
+            $.go("{{ route('pc_show_goods', ['goods_id'=>$goods_id]) }}", "_blank");
+        });
+    </script>
 @stop
 
 {{--outside body script--}}

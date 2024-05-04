@@ -10,7 +10,7 @@
 @section('content')
 
     <form id="FightGroupModel" class="form-horizontal" name="FightGroupModel" action="/dashboard/fight-group/view?id=95" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix fight-group-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->
@@ -23,9 +23,9 @@
                         <div class="col-sm-9">
                             <div class="form-control-box">
 							<span class="fight-group-pic m-r-10" id="goods_image">
-																<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg">
+																<img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg">
 															</span>
-                                <a id="goods_name" class="control-label" href="http://www.b2b2c.yunmall.68mall.com/goods-250.html" target="_blank">金色喀秋莎1000克/包玉米面条</a>
+                                <a id="goods_name" class="control-label" href="http://www.test.com/goods-250.html" target="_blank">金色喀秋莎1000克/包玉米面条</a>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                         <div class="col-sm-8">
                             <div class="form-control-box">
 
-                                <img class="imgpreview-box" src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2019/01/11/15471852565412.jpg" width="250px" height="102px">
+                                <img class="imgpreview-box" src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2019/01/11/15471852565412.jpg" width="250px" height="102px">
 
 
                             </div>
@@ -235,7 +235,7 @@
     <script type='text/javascript'>
         $().ready(function() {
             $("#act_img_container").imagegroup({
-                host: 'http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/',
+                host: '{{ get_oss_host() }}',
                 size: 1,
                 values: ['/shop/1/images/2019/01/11/15471852565412.jpg'],
                 callback: function(data) {

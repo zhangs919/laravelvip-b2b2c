@@ -65,7 +65,7 @@
                         <span>下单时间：</span>
                     </label>
                     <div class="form-control-wrap">
-                        <input type="text" id="add_time_begin" class="form-control form_datetime ipt pull-none" name="add_time_begin" value="2018-09-22" placeholder="开始时间">
+                        <input type="text" id="add_time_begin" class="form-control form_datetime ipt pull-none" name="add_time_begin" value="{{ $add_time_begin }}" placeholder="开始时间">
                         <span class="ctime">至</span>
                         <input type="text" id="add_time_end" class="form-control form_datetime ipt pull-none" name="add_time_end" placeholder="结束时间">
                     </div>
@@ -331,8 +331,8 @@
         }
     </script>
 
-    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/scrollBar/jquery.mCustomScrollbar.js?v=20180919"></script>
+    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js"></script>
+    <script src="/assets/d2eace91/js/scrollBar/jquery.mCustomScrollbar.js"></script>
     <script type='text/javascript'>
         (function($) {
             $(window).load(function() {

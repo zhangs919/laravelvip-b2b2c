@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="NavBrandModel" class="form-horizontal" name="NavBrandModel" action="{{ $form_action }}" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="navbrandmodel-id" class="form-control" name="NavBrandModel[id]" value="{{ $info->id ?? ''}}">
 
@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <label for="text4" class="col-sm-2 control-label"><span class="ng-binding"><div id="brand_name">推荐品牌 </div></span> </label>
                     <div class="col-sm-8">
-                        <!--<img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/" id="brand_logo" height="30px">-->
+                        <!--<img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/14719/" id="brand_logo" height="30px">-->
                         <img src="/images/default/goods.gif" id="brand_logo" height="30px" />
                     </div>
                     <input type="hidden" id="brand_id" name="NavBrandModel[brand_id]" value="{{ $info->brand_id ?? ''}}">

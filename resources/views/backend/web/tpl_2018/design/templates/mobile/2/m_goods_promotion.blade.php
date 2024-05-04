@@ -19,9 +19,12 @@
                 <div class="bd swiper-wrapper">
 
                     @if(!empty($data['2-1']))
-                        @for($n = 1; $n <= (round(count($data['2-1']) / 3)); $n++)
-                            <ul class="swiper-slide @if($n == 1) swiper-slide-active @endif" style="width: 312px;">
-                                @foreach($data['2-1'] as $k=>$v)
+                        @php
+                            $goods_datas = array_chunk($data['2-1'], 3);
+                        @endphp
+                        @foreach($goods_datas as $key=>$goods_data)
+                            <ul class="swiper-slide @if($key == 0) swiper-slide-active @endif" style="width: 312px;">
+                                @foreach($goods_data as $k=>$v)
                                 <li>
                                     <div class="goods-info">
                                         <div class="item-tag-box">
@@ -29,12 +32,12 @@
                                             <!---->
                                         </div>
                                         <div class="goods-pic">
-                                            <a href="{{ route('mobile_show_goods',['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}" style="display: block;">
+                                            <a href="/goods-{{ $v['goods_id'] }}.html" title="{{ $v['goods_name'] }}" style="display: block;">
                                                 <img class="" src="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" data-original-webp="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320/format,webp/quality,q_75" style="display: block;">
                                             </a>
                                         </div>
                                         <div class="goods-name">
-                                            <a href="{{ route('mobile_show_goods',['goods_id'=>$v['goods_id']]) }}" title="{{ $v['goods_name'] }}">{{ $v['goods_name'] }}</a>
+                                            <a href="/goods-{{ $v['goods_id'] }}.html" title="{{ $v['goods_name'] }}">{{ $v['goods_name'] }}</a>
                                         </div>
                                         <div class="price">
                                             <span class="price-color">￥{{ $v['goods_price'] }}</span>
@@ -43,7 +46,7 @@
                                 </li>
                                 @endforeach
                             </ul>
-                        @endfor
+                        @endforeach
                     @else
                         @for($i=1; $i <= 2; $i++)
                             <ul class="swiper-slide">
@@ -89,13 +92,13 @@
 @endif
 
 <script type="text/javascript">
-    var swiper = $('#{{ $uid }} .goods-promotion').swiper({
-        pagination: '#{{ $uid }} .pagination',
-        touchRatio: 1,
-    });
-    var swiper = new Swiper('.seamless-rolling', {
-        slidesPerView: 3.5,
-        freeMode: true
-    });
+    {{--var swiper = $('#{{ $uid }} .goods-promotion').swiper({--}}
+        {{--pagination: '#{{ $uid }} .pagination',--}}
+        {{--touchRatio: 1,--}}
+    {{--});--}}
+    {{--var swiper = new Swiper('.seamless-rolling', {--}}
+        {{--slidesPerView: 3.5,--}}
+        {{--freeMode: true--}}
+    {{--});--}}
 </script>
 

@@ -18,7 +18,7 @@
                         <div class="goods-image">
                             <a href="javascript:void(0)" title="金色喀秋莎1000克/包玉米面条" style="background: url({{ get_image_url(sysconf('default_lazyload_mobile')) }}) no-repeat center center; display: block; background-size: 100px;">
 
-                                <img src="http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2019/01/11/15471852565412.jpg" />
+                                <img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2019/01/11/xxx.jpg" />
 
                             </a>
                             <!--售罄-->

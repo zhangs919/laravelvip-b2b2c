@@ -19,7 +19,7 @@
                     <em style="background:{{ $v['color'] }};">&nbsp;</em>
                     <a href="javascript:void(0)" target="" class="shop-floor-name" style="color:{{ $v['color'] }};">{{ $v['name'] }}</a>
                     <em style="background:{{ $v['color'] }};">&nbsp;</em>
-                    <a href="javascript:void(0)" target="" class="floor-more" style="color:{{ $v['color'] }};">更多 &gt;</a>
+                    <a href="{{ $v['link'] ?? 'javascript:void(0)' }}" target="_blank" class="floor-more" style="color:{{ $v['color'] }};">更多 &gt;</a>
                 @endforeach
             @else
                 <em>&nbsp;</em>
@@ -42,7 +42,7 @@
             <ul>
 
                 @for($i=0; $i <= 9; $i++)
-                    @if(@$data['2-1'][$i] != null)
+                    @if(!empty($data['2-1'][$i]))
                         <li @if($i % 5 == 0) class="first" @endif>
                             <dl>
                                 <dt class="goods-thumb">

@@ -20,11 +20,12 @@
 // | Description:消息模板管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Backend\Http\Controllers\Mall;
+namespace App\Modules\Backend\Http\Controllers\Mall;
 
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\MessageTemplateRepository;
+use App\Services\WechatService;
 use Illuminate\Http\Request;
 
 class MessageTemplateController extends Backend
@@ -57,11 +58,11 @@ class MessageTemplateController extends Backend
     protected $messageTemplate;
 
 
-    public function __construct()
+    public function __construct(MessageTemplateRepository $messageTemplate)
     {
         parent::__construct();
 
-        $this->messageTemplate = new MessageTemplateRepository();
+        $this->messageTemplate = $messageTemplate;
 
     }
 
@@ -246,17 +247,41 @@ class MessageTemplateController extends Backend
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
+        // 获取微信模板消息列表
+        $app = WechatService::app();
+        //{
+        //     "template_list": [{
+        //      "template_id": "iPk5sOIt5X_flOVKn5GrTFpncEYTojx6ddbt8WYoV5s",
+        //      "title": "领取奖金提醒",
+        //      "primary_industry": "IT科技",
+        //      "deputy_industry": "互联网|电子商务",
+        //      "content": "{ {result.DATA} }\n\n领奖金额:{ {withdrawMoney.DATA} }\n领奖  时间:    { {withdrawTime.DATA} }\n银行信息:{ {cardInfo.DATA} }\n到账时间:  { {arrivedTime.DATA} }\n{ {remark.DATA} }",
+        //      "example": "您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡"
+        //   }]
+        //}
+//        $wxTplList = $app->template_message->getPrivateTemplates();
+        $wxTplList = [
+            [
+                'template_id' => 'iPk5sOIt5X_flOVKn5GrTFpncEYTojx6ddbt8WYoV5s',
+                'title' => '领取奖金提醒',
+                'primary_industry' => 'IT科技',
+                'deputy_industry' => '互联网|电子商务',
+                'content' => '{ {result.DATA} }\n\n领奖金额:{ {withdrawMoney.DATA} }\n领奖  时间:    { {withdrawTime.DATA} }\n银行信息:{ {cardInfo.DATA} }\n到账时间:  { {arrivedTime.DATA} }\n{ {remark.DATA} }',
+                'example' => '您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡',
+            ]
+        ];
+
         if ($request->isMethod('POST')) {
             $post = $request->post('MessageTemplate');
             $post['last_modify'] = time();
             $ret = $this->messageTemplate->update($id, $post);
             if ($ret === false) {
-                return result(-1, null, '操作失败');
+                return result(-1, null, OPERATE_FAIL);
             }
-            return result(0, null, '操作成功');
+            return result(0, null, OPERATE_SUCCESS);
         }
 
-        return view('mall.message-template.set', compact('title', 'info', 'type'));
+        return view('mall.message-template.set', compact('title', 'info', 'type','wxTplList'));
     }
 
     public function saveData(Request $request)
@@ -345,7 +370,7 @@ class MessageTemplateController extends Backend
             if ($ret === false) {
                 return result(-1, null, '短信不足');
             }
-            return result(0, null, '操作成功');
+            return result(0, null, OPERATE_SUCCESS);
         }
 
         return view('mall.message-template.sms_test', compact('title'));
@@ -413,6 +438,42 @@ class MessageTemplateController extends Backend
             return result(-1, '', '设置失败');
         }
         return result(0, $ret, 1);
+    }
+
+    /**
+     * 选择微信模板消息
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Throwable
+     */
+    public function disTemplate(Request $request)
+    {
+        $wxCode = $request->post('wx_code');
+
+        $app = WechatService::app();
+//        $wxTplList = $app->template_message->getPrivateTemplates();
+        $wxTplList = [
+            [
+                'template_id' => 'iPk5sOIt5X_flOVKn5GrTFpncEYTojx6ddbt8WYoV5s',
+                'title' => '领取奖金提醒',
+                'primary_industry' => 'IT科技',
+                'deputy_industry' => '互联网|电子商务',
+                'content' => '{ {result.DATA} }\n\n领奖金额:{ {withdrawMoney.DATA} }\n领奖  时间:    { {withdrawTime.DATA} }\n银行信息:{ {cardInfo.DATA} }\n到账时间:  { {arrivedTime.DATA} }\n{ {remark.DATA} }',
+                'example' => '您已提交领奖申请\n\n领奖金额：xxxx元\n领奖时间：2013-10-10 12:22:22\n银行信息：xx银行(尾号xxxx)\n到账时间：预计xxxxxxx\n\n预计将于xxxx到达您的银行卡',
+            ]
+        ];
+        foreach ($wxTplList as $item) {
+            if ($item['template_id'] == $wxCode) {
+                $wxContent = $item['content'];
+            }
+        }
+        if (empty($wxContent)) {
+            return result(-1, null, '微信模板id无效');
+        }
+        $render = view('mall.message-template.dis_template', compact('wxContent'))->render();
+
+        return result(0,$render, '成功');
     }
 
     /**

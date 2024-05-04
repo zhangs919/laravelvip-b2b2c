@@ -1,14 +1,6 @@
 /**
  * AJAX装修组件
- * 
- * ============================================================================
- * 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。
- * ============================================================================
- * 
- * @author: sunlizhi
- * @version 1.0
- * @date 2015-11-19
- * @link http://www.68ecshop.com
+ *
  */
 
 (function($) {
@@ -27,6 +19,10 @@
 	title[10] = '自定义选择器';
 	title[11] = '红包选择器';
 	title[12] = '文本选择器';
+	title[14] = '热点图选择器';
+	title[15] = '线下课选择器';
+	title[16] = '线上课选择器';
+	title[17] = '积分商品选择器';
 
 	/**
 	 * 调用选择器
@@ -54,7 +50,7 @@
 
 		obj = $.extend(true, defaults, obj);
 		// 自定义模板使用modal有问题 暂时使用layer
-		if (obj.type == 10) {
+		if (obj.type == 10 || obj.type == 14) {
 			$.ajax({
 				url: obj.url,
 				dataType: 'json',
@@ -68,11 +64,10 @@
 				success: function(result) {
 					$.open({
 						type: 1,
-						area: '900',
+						area: ['900px', '520px'],
 						btn: false,
 						zIndex: 1000,
 						fix: true,
-						maxmin: true,
 						title: title[obj.type],
 						content: result.data,
 						success: function(layero) {
@@ -87,6 +82,11 @@
 		if (obj.title) {
 			this_title = title[obj.type] + '-' + obj.title;
 		}
+
+		if(obj.type == 99){
+			obj.width = 820;
+		}
+
 		var modal = $.modal(this_obj);
 		var target = this_obj;
 		if (modal) {
@@ -128,6 +128,8 @@
 					if (modal) {
 						modal.hide();
 					}
+					var index = $('#' + result.data.uid).parents().find('.layui-layer-page').attr('times');
+					layer.close(index);
 					// 回调刷新
 					refreshTpl(result.data.page, result.data.uid);
 				} else {

@@ -1,10 +1,12 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
-{{--css style page元素同级上面--}}
-@section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=4.0"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=4.0"/>
+{{--header 内 css文件--}}
+@section('header_css')
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
 @stop
 
 {{--content--}}
@@ -47,7 +49,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 
@@ -92,14 +94,33 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/upload.min.js"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190110"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190110"></script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
-
+            $(".pagination-goto > .goto-input").keyup(function(e) {
+                $(".pagination-goto > .goto-link").attr("data-go-page", $(this).val());
+                if (e.keyCode == 13) {
+                    $(".pagination-goto > .goto-link").click();
+                }
+            });
+            $(".pagination-goto > .goto-button").click(function() {
+                var page = $(".pagination-goto > .goto-link").attr("data-go-page");
+                if ($.trim(page) == '') {
+                    return false;
+                }
+                $(".pagination-goto > .goto-link").attr("data-go-page", page);
+                $(".pagination-goto > .goto-link").click();
+                return false;
+            });
+        });
+        // 
+        $().ready(function() {
             var tablelist = $("#table_list").tablelist({
                 params: $("#searchForm").serializeJson()
             });
@@ -111,11 +132,9 @@
                 });
                 return false;
             });
-
-            // 删除记录
+            // 删除记录  
             $("body").on('click', '.del', function() {
                 var id = $(this).attr("object_id");
-
                 $.confirm('您确定删除这条记录吗？', function() {
                     $.post('/goods/goods-tag/delete', {
                         id: id
@@ -130,12 +149,10 @@
                         }
                     }, "json");
                 })
-
             });
             // 批量删除
             $("body").on("click", ".batch-del", function() {
                 var ids = tablelist.checkedValues();
-
                 if (ids.length == 0) {
                     $.msg("您没有选择任何待处理的数据！");
                     return;

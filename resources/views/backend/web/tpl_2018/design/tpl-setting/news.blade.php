@@ -1,4 +1,4 @@
-@extends('layouts.design_layout_v3')
+@extends('layouts.design_layout')
 
 @section('header_js')
 
@@ -24,22 +24,22 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!--页面css/js-->
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/jump.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/jump.js?v=20180418"></script>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
 
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/index.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/news.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/news.css?v=1.6"/>
+    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/template.css?v=20180702"/>
 
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ env('FRONTEND_DOMAIN') }}/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
@@ -114,6 +114,7 @@
                 <div class="page-operation-btns">
                     <a class="page-btn page-preview-btn SZY-TPL-BACKUP" href="javascript:void(0);">模板备份</a>
                     <a class="page-btn page-preview-btn SZY-TPL-USE" href="javascript:void(0);">使用备份</a>
+                    <a class="page-btn page-preview-btn SZY-TPL-PREVIEW" href="javascript:void(0);">预览 </a>
                     <a class="page-btn page-preview-btn SZY-TPL-RELEASE" href="javascript:void(0);"> 发布 </a>
                 </div>
                 <div class="other-more">
@@ -122,7 +123,7 @@
                         <span class="top-dropdown-bg"></span>
                         <ul>
                             <li>
-                                <a class="other-help" target="_blank" href="http://help.68mall.com/"><i></i>帮助中心</a>
+                                <a class="other-help" target="_blank" href="http://help.laravelvip.com/"><i></i>帮助中心</a>
                             </li>
                             <li>
                                 <a class="other-exit"><i></i>退出设计</a>
@@ -252,6 +253,13 @@
                                         <img src="/assets/d2eace91/images/design/icon/0/ad_one_column.png">
                                     </a>
                                     <a class="panelModuleTitle" href="javascript:void(0);" title="一栏广告">一栏广告</a>
+                                </li>
+
+                                <li class="drag" id="0" data-code="hots_pot">
+                                    <a class="panelModuleIcon" href="javascript:void(0);">
+                                        <img src="/assets/d2eace91/images/design/icon/0/hots_pot.png" class="mCS_img_loaded">
+                                    </a>
+                                    <a class="panelModuleTitle" href="javascript:void(0);" title="热区模板">热区模板</a>
                                 </li>
 
                                 <li class="drag" id="0" data-code="ad_five_column">
@@ -577,7 +585,7 @@
     </script>
 
 
-    <script src="http://{{ env('FRONTEND_DOMAIN') }}/js/news.js?v=20180418"></script>
+    <script src="http://{{ config('lrw.frontend_domain') }}/js/news.js?v=20180418"></script>
 
 @stop
 

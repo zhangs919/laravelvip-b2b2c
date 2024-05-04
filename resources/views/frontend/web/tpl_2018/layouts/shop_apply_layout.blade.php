@@ -14,6 +14,7 @@
     <meta name="Description" content="{{ $seo_description ?? '乐融沃B2B2C商城演示站' }}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
     <meta name="format-detection" content="telephone=no">
+    <meta name="is_frontend" content="yes" />
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
@@ -36,6 +37,8 @@
     <script src="/assets/d2eace91/js/jquery.modal.js?v=1.2"></script>
     <script src="/js/common.js?v=1.2"></script>
 
+    {{--国家默哀日期--}}
+    {!! $national_memorial_day_html ?? '' !!}
 </head>
 <body style="background: #eee">
 {{-- include header_top --}}

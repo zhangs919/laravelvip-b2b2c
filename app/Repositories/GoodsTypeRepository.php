@@ -13,9 +13,9 @@ class GoodsTypeRepository
     protected $model;
 
 
-    public function __construct(GoodsType $model)
+    public function __construct()
     {
-        $this->model = $model;
+        $this->model = new GoodsType();
     }
 
 }

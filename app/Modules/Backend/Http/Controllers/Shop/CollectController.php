@@ -20,12 +20,11 @@
 // | Description:采集控制
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Backend\Http\Controllers\Shop;
+namespace App\Modules\Backend\Http\Controllers\Shop;
 
 
 use App\Models\Shop;
 use App\Modules\Base\Http\Controllers\Backend;
-use App\Repositories\CollectRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\SystemConfigRepository;
 use Illuminate\Http\Request;
@@ -50,12 +49,15 @@ class CollectController extends Backend
 
     protected $systemConfig;
 
-    public function __construct()
+    public function __construct(
+        ShopRepository $shop
+        ,SystemConfigRepository $systemConfig
+    )
     {
         parent::__construct();
 
-        $this->shop = new ShopRepository();
-        $this->systemConfig = new SystemConfigRepository();
+        $this->shop = $shop;
+        $this->systemConfig = $systemConfig;
 
     }
 

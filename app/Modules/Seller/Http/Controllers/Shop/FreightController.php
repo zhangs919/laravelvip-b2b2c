@@ -26,12 +26,15 @@ class FreightController extends Seller
     protected $freight;
     protected $shopConfigField;
 
-    public function __construct()
+    public function __construct(
+        FreightRepository $freight
+        ,ShopConfigFieldRepository $shopConfigField
+    )
     {
         parent::__construct();
 
-        $this->freight = new FreightRepository();
-        $this->shopConfigField = new ShopConfigFieldRepository();
+        $this->freight = $freight;
+        $this->shopConfigField = $shopConfigField;
 
         $this->set_menu_select('goods', 'freight');
     }
@@ -280,7 +283,7 @@ class FreightController extends Seller
         $this->setLayoutBlock($blocks); // 设置block
 
         $group = 'freight'; // 当前配置分组
-        $group_info = $this->shopConfigField->getConfigList($group);
+        $group_info = $this->shopConfigField->getConfigList($group, seller_shop_info()->shop_id);
         $uuid = make_uuid();
         $script_render = view('shop.config.partials.'.$group, compact('uuid'))->render();
 
@@ -375,11 +378,17 @@ class FreightController extends Seller
             $default_desc = '无';
         } else {
             $freight_record = FreightRecord::where([['freight_id', $id], ['is_default', 0]])->first();
-            $default_desc = $freight_record->start_num.'件内'.$freight_record->start_money.'元，每增加'.$freight_record->plus_num.'件，加'.$freight_record->plus_money.'元';
+			if (empty($freight_record)) {
+				$default_desc = '无';
+			} else {
+				$default_desc = $freight_record->start_num.'件内'.$freight_record->start_money.'元，每增加'.$freight_record->plus_num.'件，加'.$freight_record->plus_money.'元';
+			}
         }
-        $desc = $freight_record->start_num.'件内'.$freight_record->start_money.'元，每增加'.$freight_record->plus_num.'件，加'.$freight_record->plus_money.'元';
+        $desc = '';
+        if (!empty($freight_record)) {
+            $desc = $freight_record->start_num.'件内'.$freight_record->start_money.'元，每增加'.$freight_record->plus_num.'件，加'.$freight_record->plus_money.'元';
+        }
 
-//        dd($freight_record);
         $data = [
             'freight' => $freight_info,
             'default_desc' => $default_desc,

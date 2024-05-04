@@ -36,7 +36,7 @@ class GoodsSku extends BaseModel
         'goods_id',
         'sku_name','sku_image','sku_images', // todo 该字段是否不用存储??
         'spec_ids','spec_vids', 'spec_names',
-        'goods_price','mobile_price','market_price','goods_number','sku_number_version',
+        'goods_price','mobile_price','market_price','cost_price','goods_number','sku_number_version',
         'goods_sn', 'goods_barcode','warn_number','goods_stockcode','goods_weight','goods_volume',
         'pc_desc','mobile_desc','is_spu',
         'checked'
@@ -44,4 +44,10 @@ class GoodsSku extends BaseModel
     ];
 
     protected $primaryKey = 'sku_id';
+
+
+    public function getSkuImagesAttribute()
+    {
+        return !empty($this->attributes['sku_images']) ? explode('|', $this->attributes['sku_images']) : [];
+    }
 }

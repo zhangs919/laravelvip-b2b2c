@@ -65,7 +65,7 @@
 
 
                                     @for($i=0; $i <= 24; $i++)
-                                        @if(@$data['9-1'][$i] != null)
+                                        @if(!empty($data['9-1'][$i]))
                                             <a class="store-item item-row-0 item-col-0 " href="{{ route('pc_shop_home', ['shop_id'=>$data['9-1'][$i]['shop_id']]) }}" target="_blank">
                                                 <img class="store-logo" src="{{ $data['9-1'][$i]['shop_logo'] }}" title="{{ $data['9-1'][$i]['shop_name'] }}" alt="{{ $data['9-1'][$i]['shop_name'] }}" height="45" width="90" style="position: relative; top: 0px;">
                                             </a>
@@ -93,8 +93,8 @@
 
 
 <script type="text/javascript">
-    //店铺街logo鼠标经过抖动效果 注意：依赖于 js/jump.js
-    $("#{{ $uid }}").find(".store-wall1 .store-con img").each(function(k, img) {
-        new JumpObj(img, 10);
-    });
+    {{--//店铺街logo鼠标经过抖动效果 注意：依赖于 js/jump.js--}}
+    {{--$("#{{ $uid }}").find(".store-wall1 .store-con img").each(function(k, img) {--}}
+        {{--new JumpObj(img, 10);--}}
+    {{--});--}}
 </script>

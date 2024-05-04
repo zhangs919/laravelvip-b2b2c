@@ -9,7 +9,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ConfigModel" class="form-horizontal" name="ConfigModel" action="" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
 
         @if(isset($info->id))
             <!-- 隐藏域 -->

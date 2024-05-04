@@ -11,7 +11,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="TopicModel" class="form-horizontal" name="TopicModel" action="/topic/topic/add" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="topicmodel-topic_id" class="form-control" name="TopicModel[topic_id]" value="{{ $info->topic_id ?? '' }}">
             <!-- 活动名称 -->
@@ -194,7 +194,11 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 表单验证 -->
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "topicmodel-topic_name", "name": "TopicModel[topic_name]", "attribute": "topic_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "topicmodel-keywords", "name": "TopicModel[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"关键字必须是一条字符串。","maxlength":"关键字只能包含至多50个字符。"},"maxlength":50}},{"id": "topicmodel-describe", "name": "TopicModel[describe]", "attribute": "describe", "rules": {"string":true,"messages":{"string":"描述必须是一条字符串。","maxlength":"描述只能包含至多100个字符。"},"maxlength":100}},{"id": "topicmodel-add_time", "name": "TopicModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"创建时间必须是整数。"}}},{"id": "topicmodel-update_time", "name": "TopicModel[update_time]", "attribute": "update_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"更新时间必须是整数。"}}},{"id": "topicmodel-is_delete", "name": "TopicModel[is_delete]", "attribute": "is_delete", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Is Delete必须是整数。"}}},{"id": "topicmodel-site_id", "name": "TopicModel[site_id]", "attribute": "site_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"站点id必须是整数。"}}},{"id": "topicmodel-shop_id", "name": "TopicModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺id必须是整数。"}}},{"id": "topicmodel-header_style", "name": "TopicModel[header_style]", "attribute": "header_style", "rules": {"string":true,"messages":{"string":"去除头部必须是一条字符串。","maxlength":"去除头部只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-bottom_style", "name": "TopicModel[bottom_style]", "attribute": "bottom_style", "rules": {"string":true,"messages":{"string":"去除底部必须是一条字符串。","maxlength":"去除底部只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-bg_image", "name": "TopicModel[bg_image]", "attribute": "bg_image", "rules": {"string":true,"messages":{"string":"背景图片必须是一条字符串。","maxlength":"背景图片只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-bg_color", "name": "TopicModel[bg_color]", "attribute": "bg_color", "rules": {"string":true,"messages":{"string":"背景颜色必须是一条字符串。","maxlength":"背景颜色只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-m_bg_image", "name": "TopicModel[m_bg_image]", "attribute": "m_bg_image", "rules": {"string":true,"messages":{"string":"背景图片必须是一条字符串。","maxlength":"背景图片只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-m_bg_color", "name": "TopicModel[m_bg_color]", "attribute": "m_bg_color", "rules": {"string":true,"messages":{"string":"背景颜色必须是一条字符串。","maxlength":"背景颜色只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-app_bg_image", "name": "TopicModel[app_bg_image]", "attribute": "app_bg_image", "rules": {"string":true,"messages":{"string":"背景图片必须是一条字符串。","maxlength":"背景图片只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-app_bg_color", "name": "TopicModel[app_bg_color]", "attribute": "app_bg_color", "rules": {"string":true,"messages":{"string":"背景颜色必须是一条字符串。","maxlength":"背景颜色只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-share_image", "name": "TopicModel[share_image]", "attribute": "share_image", "rules": {"string":true,"messages":{"string":"分享推广图必须是一条字符串。","maxlength":"分享推广图只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-topic_name", "name": "TopicModel[topic_name]", "attribute": "topic_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多30个字符。"},"maxlength":30}},]
+</script>
 @stop
 
 
@@ -203,22 +207,15 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+@stop
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180813"></script>
-    <!-- 图片预览 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180813"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20180813"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[{"id": "topicmodel-topic_name", "name": "TopicModel[topic_name]", "attribute": "topic_name", "rules": {"required":true,"messages":{"required":"活动名称不能为空。"}}},{"id": "topicmodel-keywords", "name": "TopicModel[keywords]", "attribute": "keywords", "rules": {"string":true,"messages":{"string":"关键字必须是一条字符串。","maxlength":"关键字只能包含至多50个字符。"},"maxlength":50}},{"id": "topicmodel-describe", "name": "TopicModel[describe]", "attribute": "describe", "rules": {"string":true,"messages":{"string":"描述必须是一条字符串。","maxlength":"描述只能包含至多100个字符。"},"maxlength":100}},{"id": "topicmodel-add_time", "name": "TopicModel[add_time]", "attribute": "add_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"创建时间必须是整数。"}}},{"id": "topicmodel-update_time", "name": "TopicModel[update_time]", "attribute": "update_time", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"更新时间必须是整数。"}}},{"id": "topicmodel-is_delete", "name": "TopicModel[is_delete]", "attribute": "is_delete", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"Is Delete必须是整数。"}}},{"id": "topicmodel-site_id", "name": "TopicModel[site_id]", "attribute": "site_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"站点id必须是整数。"}}},{"id": "topicmodel-shop_id", "name": "TopicModel[shop_id]", "attribute": "shop_id", "rules": {"integer":{"pattern":"/^\\s*[+-]?\\d+\\s*$/"},"messages":{"integer":"店铺id必须是整数。"}}},{"id": "topicmodel-header_style", "name": "TopicModel[header_style]", "attribute": "header_style", "rules": {"string":true,"messages":{"string":"去除头部必须是一条字符串。","maxlength":"去除头部只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-bottom_style", "name": "TopicModel[bottom_style]", "attribute": "bottom_style", "rules": {"string":true,"messages":{"string":"去除底部必须是一条字符串。","maxlength":"去除底部只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-bg_image", "name": "TopicModel[bg_image]", "attribute": "bg_image", "rules": {"string":true,"messages":{"string":"背景图片必须是一条字符串。","maxlength":"背景图片只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-bg_color", "name": "TopicModel[bg_color]", "attribute": "bg_color", "rules": {"string":true,"messages":{"string":"背景颜色必须是一条字符串。","maxlength":"背景颜色只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-m_bg_image", "name": "TopicModel[m_bg_image]", "attribute": "m_bg_image", "rules": {"string":true,"messages":{"string":"背景图片必须是一条字符串。","maxlength":"背景图片只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-m_bg_color", "name": "TopicModel[m_bg_color]", "attribute": "m_bg_color", "rules": {"string":true,"messages":{"string":"背景颜色必须是一条字符串。","maxlength":"背景颜色只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-app_bg_image", "name": "TopicModel[app_bg_image]", "attribute": "app_bg_image", "rules": {"string":true,"messages":{"string":"背景图片必须是一条字符串。","maxlength":"背景图片只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-app_bg_color", "name": "TopicModel[app_bg_color]", "attribute": "app_bg_color", "rules": {"string":true,"messages":{"string":"背景颜色必须是一条字符串。","maxlength":"背景颜色只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-share_image", "name": "TopicModel[share_image]", "attribute": "share_image", "rules": {"string":true,"messages":{"string":"分享推广图必须是一条字符串。","maxlength":"分享推广图只能包含至多225个字符。"},"maxlength":225}},{"id": "topicmodel-topic_name", "name": "TopicModel[topic_name]", "attribute": "topic_name", "rules": {"string":true,"messages":{"string":"活动名称必须是一条字符串。","maxlength":"活动名称只能包含至多30个字符。"},"maxlength":30}},]
-</script>
-    <script type="text/javascript">
+
+    <script>
         $().ready(function() {
             var validator = $("#TopicModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作

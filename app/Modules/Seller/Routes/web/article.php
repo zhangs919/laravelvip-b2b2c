@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
 
     // Article Route
     Route::group(['prefix' => 'article'], function () {
@@ -18,6 +18,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::post('delete', 'Article\ArticleController@delete')->name('delete'); // delete
             Route::post('batch-delete', 'Article\ArticleController@batchDelete')->name('batch-delete'); // batchDelete
 
+			Route::get('picker', 'Article\ArticleController@picker'); // picker
         });
     });
 

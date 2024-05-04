@@ -3,8 +3,12 @@
 namespace App\Models;
 
 
+use Laravel\Scout\Searchable;
+
 class Goods extends BaseModel
 {
+//    use Searchable;
+
     protected $table = 'goods';
 
 //    protected $fillable = [
@@ -98,21 +102,78 @@ class Goods extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'goods_id','goods_name','cat_id','cat_id1','cat_id2','cat_id3','shop_id','sku_open','sku_id','goods_subname','goods_price','market_price','cost_price','mobile_price',
-        'give_integral','goods_number','warn_number','goods_sn','goods_barcode','goods_image','goods_images','goods_video','brand_id','pc_desc','mobile_desc','top_layout_id',
-        'bottom_layout_id','packing_layout_id','service_layout_id','click_count','keywords','goods_info','invoice_type','is_repair','user_discount','stock_mode','comment_num',
-        'sale_num','collect_num','goods_audit','goods_status','goods_reason','is_delete','is_virtual','is_best','is_new','is_hot','is_promote','contract_ids','supplier_id',
-        'freight_id','goods_freight_type','goods_freight_fee','goods_stockcode','goods_volume','goods_weight','goods_remark','goods_sort','add_time','last_time','audit_time',
-        'edit_items','act_id','goods_moq','lib_goods_id','other_attrs','filter_attr_ids','filter_attr_vids','button_name','button_url','pricing_mode','goods_unit','goods_tag', 'sales_model',
+        'goods_id','goods_name','cat_id','cat_id1','cat_id2','cat_id3','shop_id','sku_open', 'sku_id',
+        'sku_mode','prop_open','street_sort', //
+        'goods_subname','goods_price','market_price','cost_price','mobile_price',
+        'give_integral','goods_number','warn_number','goods_sn','goods_barcode','cover_image','goods_image',
+        'goods_images','goods_video','brand_id','pc_desc','mobile_desc','top_layout_id',
+        'bottom_layout_id','packing_layout_id','service_layout_id','click_count','keywords',
+        'goods_info','invoice_type','is_repair','user_discount','stock_mode','comment_num', 'sale_num',
+        'multi_store_sale_num', //
+        'collect_num','goods_audit','goods_status','goods_reason','is_delete',
+        'is_virtual','is_best','is_new','is_hot','is_promote', 'tag_id', 'contract_ids','supplier_id',
+        'freight_id', 'goods_freight_type','goods_freight_fee','goods_stockcode',
+        'goods_volume','goods_weight','goods_remark','goods_sort','add_time','last_time',
+        'audit_time',
+        'edit_items',
+        'act_id',
+        'goods_moq','lib_goods_id',
+        'other_attrs',
+        'filter_attr_ids','filter_attr_vids','button_name','button_url',
+        'pricing_mode','goods_unit', 'sales_model',
+        'sales_area', //
         'order_act_id','goods_mode',
         'ext_info','remark',
+
+        /*4.9版本 新增字段*/
+        'erp_goods_id',
+        'goods_from', //
+        'is_cross_border',
+        'shipper_id',
+
+        'is_sync_stock','is_sync_price','is_sync_onoff','cs_dg_id','is_pickup', //
+        'is_common_package','pickup_timeout','pickup_timeout_type', //
+
         'shop_cat_ids',
+
 
 //        'other_cat_ids' // 考虑另建表存储
 //        'goods_price_format',
     ];
 
     protected $primaryKey = 'goods_id';
+
+    protected $appends = [
+        'status_name'
+    ];
+
+//    // 定义索引里面的类型，上文我们说过，可以把type理解成一个数据表。我们现在要做的就是把我们所有的要全文搜索的字段都存入到es中的一个叫'_doc'的表中。
+//    public function searchableAs()
+//    {
+//        return 'goods';
+//    }
+//    // 定义有那些字段需要搜索
+//    public function toSearchableArray()
+//    {
+//        $array = $this->toArray();
+//
+//        return $array;
+//    }
+
+    public function goodsUnit()
+    {
+        return $this->hasOne(GoodsUnit::class, 'unit_id');
+    }
+
+    public function goodsTag()
+    {
+        return $this->hasOne(GoodsTag::class, 'tag_id');
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id','shop_id');
+    }
 
     /**
      * 一对多关联 商品属性表
@@ -161,12 +222,21 @@ class Goods extends BaseModel
      */
     public function goodsSku()
     {
-        return $this->hasMany(GoodsSku::class, 'goods_id', 'goods_id');
+        return $this->hasMany(GoodsSku::class, 'goods_id', 'goods_id')->where('checked', 1);
+    }
+
+    /**
+     * 关联商品默认SKU
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function goodsSkuMain()
+    {
+        return $this->belongsTo(GoodsSku::class, 'sku_id');
     }
 
     /**
      * 一对多关联 商品规格表
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function goodsSpec()
@@ -190,33 +260,30 @@ class Goods extends BaseModel
      */
     public function getMobileDescAttribute()
     {
-        $mobile_desc = unserialize($this->attributes['mobile_desc']);
-
-        if (empty($mobile_desc)) {
+        if (empty($this->attributes['mobile_desc'])) {
             return [];
         }
+		$mobile_desc = json_decode($this->attributes['mobile_desc'], true) ?? [];
 
         return $mobile_desc;
     }
 
     public function getOtherAttrsAttribute()
     {
-        $other_attrs = unserialize($this->attributes['other_attrs']);
-
-        if (empty($other_attrs)) {
-            return [];
-        }
+		if (empty($this->attributes['other_attrs'])) {
+			return [];
+		}
+        $other_attrs = json_decode($this->attributes['other_attrs'], true);
 
         return $other_attrs;
     }
 
     public function getContractIdsAttribute()
     {
-        $contract_ids = unserialize($this->attributes['contract_ids']);
-
-        if (empty($contract_ids)) {
-            return [];
-        }
+		if (empty($this->attributes['contract_ids'])) {
+			return [];
+		}
+        $contract_ids = json_decode($this->attributes['contract_ids'], true);
 
         return $contract_ids;
     }
@@ -230,5 +297,25 @@ class Goods extends BaseModel
         }
 
         return $goods_images;
+    }
+
+    public function getStatusNameAttribute()
+    {
+        $statusName = '';
+        if (empty($this->attributes['goods_audit'])) {
+            return $statusName;
+        }
+        if ($this->attributes['goods_audit'] == 0) {
+            $statusName = '待审核';
+        } else {
+            if($this->attributes['goods_status'] == 0) {
+                $statusName = '已下架';
+            } elseif ($this->attributes['goods_status'] == 1) {
+                $statusName = '出售中';
+            } elseif ($this->attributes['goods_status'] == 2) {
+                $statusName = '违规下架';
+            }
+        }
+        return $statusName;
     }
 }

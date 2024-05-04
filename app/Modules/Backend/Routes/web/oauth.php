@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['domain' => env('BACKEND_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
 
 
     // 对接周边系统

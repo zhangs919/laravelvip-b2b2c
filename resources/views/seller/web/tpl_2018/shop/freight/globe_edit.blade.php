@@ -15,7 +15,7 @@
 
 
             <form id="form1" class="form-horizontal" name="Freight" action="/shop/freight/edit?id={{ $info->freight_id }}" method="post" left="col-sm-3" right="col-sm-9">
-                {{ csrf_field() }}
+                @csrf
                 <!-- 模板ID -->
                 <input type="hidden" id="freight-freight_id" class="form-control" name="Freight[freight_id]" value="{{ $info->freight_id }}">
                 <!-- 模板名称  -->

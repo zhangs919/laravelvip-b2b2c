@@ -20,7 +20,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ArticleModel" class="form-horizontal" name="ArticleModel" action="/article/article/edit?id={{ $info->article_id }}&amp;show_cat_type={{ $show_cat_type }}" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="articlemodel-article_id" class="form-control" name="ArticleModel[article_id]" value="{{ $info->article_id }}">
 
@@ -51,7 +51,7 @@
                             </div>--}}
                             <select name="ArticleModel[cat_id]" class="form-control chosen-select" style="display: none;">
 
-                                <option value="0" selected="true">-- 请选择分类 --</option>
+                                <option value="" selected="true">-- 请选择分类 --</option>
 
                                 @if(!empty($cat_list))
                                 @foreach($cat_list as $v)
@@ -281,7 +281,9 @@
 
                             <div class="form-control-box">
                                 <!-- 文本编辑器 -->
-                                <textarea id="content" class="form-control" name="ArticleModel[content]" rows="5" style="width: 700px; height: 350px; display: none;">{!! $info->content !!}</textarea>
+                                {!! show_ueditor('articlemodel-content', 'ArticleModel[content]', $info->content, "700", '415') !!}
+
+{{--                                <textarea id="content" class="form-control" name="ArticleModel[content]" rows="5" style="width: 700px; height: 350px; display: none;">{!! $info->content !!}</textarea>--}}
                             </div>
 
 
@@ -497,7 +499,6 @@
             });
 
             $("#imagegroup_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/15164/",
                 host: "{{ get_oss_host() }}",
                 size: $(this).data("size"),
                 values: $('#articlemodel-article_thumb').val().split("|"),

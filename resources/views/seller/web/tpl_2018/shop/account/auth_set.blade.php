@@ -1,16 +1,26 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+    <link href="/assets/d2eace91/css/styles.css" rel="stylesheet">
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
-    <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20181020"/>
+
 @stop
 
 {{--content--}}
 @section('content')
 
-    <form id="form" class="form-horizontal" action="/shop/account/auth-set?id={{ $role_id }}" method="post">
-        {{ csrf_field() }}
+    <form id="form" class="form-horizontal" action="/shop/account/auth-set?id={{ $id }}" method="post">
+        @csrf
         <div class="common-title">
             <div class="ftitle">
                 <h3>权限操作</h3>
@@ -52,22 +62,22 @@
                                         @if(!empty($child['_child']))
                                             @foreach($child['_child'] as $childChild)
                                                 <li>
-                                                    <label title="{{ $childChild['node_title'] }}">
-
-
-                                                        @if(!$childChild['is_auth'])
-                                                            <input type="checkbox" checked="checked" disabled="disabled" />
-
-
-                                                            <font class="c-blue">{{ $childChild['node_title'] }}</font>
-                                                        @else
-                                                            <input type="checkbox" id="{{ $childChild['node_name'] }}" name="role_auths[]"
-                                                                   data-parent-id="{{ $child['node_name'] }}" value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" @if(in_array($childChild['node_name'], $auth_codes))checked="checked"@endif />
-                                                            {{ $childChild['node_title'] }}
-                                                        @endif
-
-
+                                                    @if(in_array($childChild['node_name'], $auth_codes)){{--权限在角色内时--}}
+                                                    <label>
+                                                        {{--todo 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
+                                                        <input type="checkbox" id="{{ $childChild['node_name'] }}" name="auth_codes[]" data-parent-id="{{ $child['node_name'] }}"
+                                                               value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" checked="checked" disabled="disabled">
+                                                        <font class="c-blue">{{ $childChild['node_title'] }}</font>
                                                     </label>
+                                                    @else{{--权限未在角色内时--}}
+                                                    <label>
+                                                        {{--todo 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
+                                                        <input type="checkbox" id="{{ $childChild['node_name'] }}" name="auth_codes[]" data-parent-id="{{ $child['node_name'] }}"
+                                                               value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" @if(in_array($childChild['node_name'], $admin_auth_codes))checked="checked"@endif>
+                                                        {{ $childChild['node_title'] }}
+                                                    </label>
+                                                    @endif
+
                                                 </li>
                                             @endforeach
                                         @endif
@@ -112,9 +122,14 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             //悬浮显示上下步骤按钮
             window.onscroll = function() {
@@ -128,36 +143,28 @@
                         $(".bottom-btn").addClass("bottom-btn-fixed");
                     }
                 });
-
             };
             // 级联选中
             $("[data-parent-id]:checkbox").on("change", function() {
                 var checked = $(this).is(":checked");
                 var parent_id = $(this).data("parent-id");
                 var id = $(this).attr("id")
-
                 var elements = $("[data-parent-id='" + id + "']:checkbox");
-
                 $(elements).prop("checked", checked);
                 $(elements).change();
             });
-
             // 页面加载后的初始化状态
             $(".auth-item").each(function() {
                 selectAuth($(this).attr("id"));
             });
         });
-
         // 选择权限项
         function selectAuth(id) {
             var parent_id = $("#" + id).data("parent-id");
-
             if (!parent_id) {
                 return;
             }
-
             var elements = $("[data-parent-id='" + parent_id + "']:checkbox");
-
             if ($(elements).size() == $(elements).filter(":checked").size()) {
                 $("#" + parent_id).prop("checked", true);
                 selectAuth(parent_id);
@@ -165,14 +172,12 @@
                 $("#" + parent_id).prop("checked", false);
                 selectAuth(parent_id);
             }
-
             // 如果全部禁用了则上级也禁用
             if ($(elements).filter("[disabled]").size() == $(elements).size()) {
                 $("#" + parent_id).prop("disabled", true);
             }
         }
-
-        //全选权限
+        //全选权限 
         function selectAuthsAll(target) {
             $("[data-parent-id='root'").prop("checked", $(target).prop("checked"));
             $("[data-parent-id='root'").change();

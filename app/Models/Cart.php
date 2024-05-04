@@ -47,4 +47,9 @@ class Cart extends BaseModel
     {
         return $this->hasOne(Shop::class, 'shop_id', 'shop_id');
     }
+
+    public function sku()
+    {
+        return $this->hasOne(GoodsSku::class, 'sku_id','sku_id');
+    }
 }

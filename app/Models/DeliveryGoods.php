@@ -45,7 +45,9 @@ class DeliveryGoods extends BaseModel
      */
     protected $fillable = [
 
-        'id','goods_id','sku_id','send_number','delivery_id',
+        'order_id','delivery_id','record_id','goods_id','sku_id','send_number',
+
+//        'is_gift','parent_id',
 
         /*以下字段从发货单表（delivery_order）读取*/
 //        'delivery_sn','order_id','user_id','shipping_id','shipping_code',
@@ -53,7 +55,6 @@ class DeliveryGoods extends BaseModel
 //        'send_time','icode','is_show','is_arrived','exception_reason',
         /*以上字段从发货单表（delivery_order）读取*/
 
-        'record_id',
 
         /*todo 以下信息是否可以直接从订单商品表读取？？*/
 //        'goods_number','goods_image','goods_name',
@@ -68,4 +69,23 @@ class DeliveryGoods extends BaseModel
     ];
 
     protected $primaryKey = 'id';
+
+    /**
+     * 一对一关联商品表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderGoods()
+    {
+        return $this->belongsTo(OrderGoods::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 关联商品SKU表
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function goodsSku()
+    {
+        return $this->belongsTo(GoodsSku::class, 'sku_id','sku_id');
+    }
 }

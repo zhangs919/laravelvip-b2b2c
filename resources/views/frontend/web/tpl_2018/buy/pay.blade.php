@@ -1,7 +1,7 @@
 @extends('layouts.buy_layout')
 
 @section('header_css')
-    <link rel="stylesheet" href="/css/flow.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/flow.css"/>
 @stop
 
 @section('content')
@@ -18,39 +18,15 @@
             <div class="cart-progress ">
                 <ul>
 
-
-                    <li class="finish finish-01">
-                        <i>1</i>
+                    @foreach($steps as $step)
+                    <li class="finish @if($step['selected']){{ 'finish-0'.$step['step'] }}@endif">
+                        <i>{{ $step['step'] }}</i>
                         <span>
-						<a href="/cart.html">我的购物车</a>
+						<a href="{{ $step['url'] ?? 'javascript:;' }}">{{ $step['name'] }}</a>
 					</span>
                         <b></b>
                     </li>
-
-                    <li class="finish finish-02">
-                        <i>2</i>
-                        <span>
-						<a href="/checkout.html">确认订单</a>
-					</span>
-                        <b></b>
-                    </li>
-
-                    <li class="finish finish-03">
-                        <i>3</i>
-                        <span>
-						<a href="">付款</a>
-					</span>
-                        <b></b>
-                    </li>
-
-                    <li class="finish ">
-                        <i>4</i>
-                        <span>
-						<a href="">支付成功</a>
-					</span>
-                        <b></b>
-                    </li>
-
+                    @endforeach
 
                 </ul>
             </div>
@@ -58,88 +34,87 @@
     </div>
 
     <div class="content-bg">
-        <div class="content-main w990"><div class="payment">
-                <!-- 合并付款 start -->
+        <div class="content-main w990">
+            <div class="payment">
 
-                <div class="payment-adjust-box">
-                    <div class="title title-line">
-                        <h2>您正在为以下2笔交易进行合并付款！</h2>
-                        <div class="order">
-                            总额：
-                            <strong class="second-color">￥1880</strong>
+                @if($merge_pay)
+                    <!-- 合并付款 start -->
+
+                    <div class="payment-adjust-box">
+                        <div class="title title-line">
+                            <h2>您正在为以下{{ count($order_list) }}笔交易进行合并付款！</h2>
+                            <div class="order">
+                                总额：
+                                <strong class="second-color">￥{{ $money_pay }}</strong>
+                            </div>
+                        </div>
+                        <div class="payment-order-info">
+                            <ul>
+
+                                @foreach($order_list as $item)
+                                <!--点击选中添加selected样式-->
+                                <li>
+                                    <div class="list-wrap">
+                                        <a class="fl">
+                                            <span>订单号：{{ $item['order_sn'] }}</span>
+                                            <span>购买时间：{{ $item['add_time_format'] }}</span>
+                                        </a>
+                                        <span class="fr">
+                                            <strong>{{ $item['money_paid_format'] }}</strong>
+                                        </span>
+                                        <a class="hasDetail">
+                                            <i>ˇ</i>
+                                        </a>
+                                    </div>
+                                    <div class="detail-table">
+                                        <dl>
+                                            <dt>配送时间：</dt>
+                                            <dd>{{ $item['best_time'] }}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>收货信息：</dt>
+                                            <dd>
+                                                <span class="name">{{ $item['consignee'] }}</span>
+                                                <span class="tel">{{ $item['tel'] }}</span>
+                                                <span class="address">{{ $item['address'] }} </span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </li>
+                                @endforeach
+
+                            </ul>
                         </div>
                     </div>
-                    <div class="payment-order-info">
-                        <ul>
+                    <!-- 合并付款 end -->
 
-                            <!--点击选中添加selected样式-->
-                            <li>
-                                <div class="list-wrap">
-                                    <a class="fl">
-                                        <span>订单号：20181003085428239440</span>
-                                        <span>购买时间：2018-10-03 16:54:28</span>
-                                    </a>
-                                    <span class="fr">
-							<strong>￥680.00</strong>
-						</span>
-                                    <a class="hasDetail">
-                                        <i>ˇ</i>
-                                    </a>
-                                </div>
-                                <div class="detail-table">
-                                    <dl>
-                                        <dt>配送时间：</dt>
-                                        <dd>无</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>收货信息：</dt>
-                                        <dd>
-                                            <span class="address">学府路 </span>
-                                            <span class="name">宝贝</span>
-                                            <span class="tel">13333333333</span>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </li>
-
-                            <!--点击选中添加selected样式-->
-                            <li>
-                                <div class="list-wrap">
-                                    <a class="fl">
-                                        <span>订单号：20181003093704768950</span>
-                                        <span>购买时间：2018-10-03 17:37:04</span>
-                                    </a>
-                                    <span class="fr">
-							<strong>￥1200.00</strong>
-						</span>
-                                    <a class="hasDetail">
-                                        <i>ˇ</i>
-                                    </a>
-                                </div>
-                                <div class="detail-table">
-                                    <dl>
-                                        <dt>配送时间：</dt>
-                                        <dd>无</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>收货信息：</dt>
-                                        <dd>
-                                            <span class="address">学府路 </span>
-                                            <span class="name">宝贝</span>
-                                            <span class="tel">13333333333</span>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </li>
-
-                        </ul>
+                @else
+                    <!-- 二次付款 start -->
+                    <div>
+                        <h2 class="title">最后一步，请尽快付款！</h2>
+                        <div class="order-num">
+                            <p>
+                                订单提交成功，请您尽快完成付款！
+                                <span>订单号：{{ $order_sn }}</span>
+                            </p>
+                        </div>
+                        <div class="order-info">
+                            <div class="fl price-box" id="pay_amount">
+                                <span>应付金额：</span>
+                                <span class="price second-color">￥{{ $money_pay }}</span>
+                            </div>
+                            <div class="fl deliver-info">
+                                <p class="address">{!! $remark_list[0] !!}</p>
+                                <p class="time">{!! $remark_list[1] !!}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- 合并付款 end -->
+                    <!-- 二次付款 end -->
+                @endif
 
-                <input type="hidden" id="order_id" value="368,369" />
-                <input type="hidden" id="order_sn" value="MP201810031143313406098" />
-                <input type="hidden" id="key" value="d3fee3249f0a7d2c1f5222e159c18a2e" />
+                <input type="hidden" id="order_id" value="{{ $order_id }}" />
+                <input type="hidden" id="order_sn" value="{{ $order_sn }}" />
+                <input type="hidden" id="key" value="{{ $key }}" />
                 <!-- 支付方式 -->
 
 
@@ -151,6 +126,7 @@
 
                             <!-- 积分支付 end -->
 
+                            @if($balance_enable){{--todo --}}
                             <!-- 余额支付 start -->
 
 
@@ -159,11 +135,13 @@
                                 剩余应付金额
                                 <strong class="second-color SZY-ORDER-MONEY-PAY">
 
-                                    ￥1880
+                                    ￥{{ $money_pay }}
 
                                 </strong>
                                 请选择以下支付方式支付
                             </p>
+
+                            @endif
 
                             <!-- 银行支付方式调用 start -->
                             <div class="pay-all" id="pay_bank">
@@ -171,33 +149,21 @@
 
                                 <ul id="paylist" class="payment-tab" >
 
-                                    <!-- 货到付款特殊处理 -->
-                                    <li class="clearfix" >
-                                        <label>
-                                            <input type="radio" id="pac_code_3" name="pay_code" class="pay_code" value="weixin" checked>
-                                            <img src="/assets/d2eace91/images/payment/weixin.jpg" alt="" class="pay-img" />
-                                        </label>
-                                        <div class="pay-tips" style="display: none;">
-                                            <div class="pay-tips-name">
-                                                <i></i>
-
+                                    @foreach($pay_list as $pay_info)
+                                        <!-- 货到付款特殊处理 -->
+                                        <li class="clearfix" @if($pay_info['disabled'] == 1)style="display: none;"@endif>
+                                            <label>
+                                                <input type="radio" id="pac_code_{{ $pay_info['id'] }}" name="pay_code" class="pay_code" value="{{ $pay_info['code'] }}" @if($pay_info['checked'] == 'checked'){{ 'checked' }}@endif>
+                                                <img src="/assets/d2eace91/images/payment/{{ $pay_info['code'] }}.jpg" alt="" class="pay-img">
+                                            </label>
+                                            <div class="pay-tips" style="display: none;">
+                                                <div class="pay-tips-name">
+                                                    <i></i>
+                                                    {!! $pay_info['tips'] !!}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-
-                                    <!-- 货到付款特殊处理 -->
-                                    <li class="clearfix" >
-                                        <label>
-                                            <input type="radio" id="pac_code_1" name="pay_code" class="pay_code" value="alipay" >
-                                            <img src="/assets/d2eace91/images/payment/alipay.jpg" alt="" class="pay-img" />
-                                        </label>
-                                        <div class="pay-tips" style="display: none;">
-                                            <div class="pay-tips-name">
-                                                <i></i>
-
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    @endforeach
 
                                 </ul>
 
@@ -209,7 +175,7 @@
                 </div>
 
                 <div class="submit-pay">
-                    <a href="javascript:void(0);" class="submit-btn gopay bg-color" data-order-id="368,369">立即付款</a>
+                    <a href="javascript:void(0);" class="submit-btn gopay bg-color" data-order-id="{{ $order_id }}">立即付款</a>
                 </div>
             </div>
             <script type="text/javascript">
@@ -224,8 +190,8 @@
                     }
                 })
             </script>
-            <link rel="stylesheet" href="/assets/d2eace91/css/highslide.css?v=20180927"/>
-            <script src="/assets/d2eace91/js/pic/highslide-with-gallery.js?v=20180919"></script>
+            <link rel="stylesheet" href="/assets/d2eace91/css/highslide.css"/>
+            <script src="/assets/d2eace91/js/pic/highslide-with-gallery.js"></script>
 
             <script type="text/javascript">
                 //图片弹窗
@@ -245,7 +211,8 @@
                         hideOnMouseOut: true
                     }
                 });
-            </script></div>
+            </script>
+        </div>
     </div>
 
     <!-- 付款信息弹框 -->
@@ -260,8 +227,8 @@
             <p class="prompt">完成付款后请根据您的情况点击下面的按钮</p>
             <p class="btns">
 
-                <a href="/checkout/result.html?key=d3fee3249f0a7d2c1f5222e159c18a2e" class="pay_result">已完成付款</a>
-                <a href="/checkout/result.html?key=d3fee3249f0a7d2c1f5222e159c18a2e" class="m-l-10 pay_result">付款遇到问题</a>
+                <a href="/checkout/result.html?key={{ $key }}" class="pay_result">已完成付款</a>
+                <a href="/checkout/result.html?key={{ $key }}" class="m-l-10 pay_result">付款遇到问题</a>
 
             </p>
             <!-- <p class="back">
@@ -298,17 +265,74 @@
 @stop
 
 
-@section('outside_body_script')
+{{--底部js--}}
+@section('footer_js')
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder"></script>
-    <script src="/js/checkout_repay.js?v=20180919"></script>
-    <script src="/js/common.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/szy.cart.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/jquery.region.js?v=20180919"></script>
     <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20180919"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20180919"></script>
     <!-- 鼠标滚轮 -->
-    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js?v=20180919"></script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/js/checkout_repay.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/scrollBar/jquery.mousewheel.min.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/assets/d2eace91/js/pic/highslide-with-gallery.js"></script>
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+    <script>
+        //批量支付点击展示详细信息
+        $('.hasDetail').click(function() {
+            if ($(this).parents('.payment-order-info li').hasClass('selected')) {
+                $(this).parents('.payment-order-info li').removeClass('selected');
+                $(this).parents(".payment-order-info li").find(".detail-table").slideToggle(200);
+            } else {
+                $(this).parents('.payment-order-info li').addClass('selected');
+                $(this).parents(".payment-order-info li").find(".detail-table").slideToggle(200);
+            }
+        })
+        //
+        $(function(){
+            //图片弹窗
+            hs.graphicsDir = '/assets/d2eace91/js/pic/graphics/';
+            hs.align = 'center';
+            hs.transitions = ['expand', 'crossfade'];
+            hs.outlineType = 'rounded-white';
+            hs.fadeInOut = true;
+            hs.addSlideshow({
+                interval: 5000,
+                repeat: false,
+                useControls: true,
+                fixedControls: 'fit',
+                overlayOptions: {
+                    opacity: .75,
+                    position: 'bottom center',
+                    hideOnMouseOut: true
+                }
+            });
+        })
+        //
+        $(document).ready(function() {
+            $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+                if ($(".search-li-top.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
+    </script>
 @stop

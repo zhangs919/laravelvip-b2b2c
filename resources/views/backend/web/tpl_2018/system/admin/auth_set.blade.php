@@ -8,8 +8,8 @@
 {{--content--}}
 @section('content')
 
-    <form id="form" class="form-horizontal" action="/system/admin/auth-set?id={{ $role_id }}" method="post">
-        {{ csrf_field() }}
+    <form id="form" class="form-horizontal" action="/system/admin/auth-set?id={{ $id }}" method="post">
+        @csrf
         <div class="common-title">
             <h5>
                 <label class="control-label cur-p m-l-10">
@@ -47,13 +47,22 @@
                                             @if(!empty($child['_child']))
                                             @foreach($child['_child'] as $childChild)
                                             <li>
-                                                <label>
-                                                    {{--todo 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
-                                                    <input type="checkbox" id="{{ $childChild['node_name'] }}" name="auth_codes[]" data-parent-id="{{ $child['node_name'] }}"
-                                                           value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" @if(in_array($childChild['node_name'], $auth_codes))checked="checked"@endif @if(!$childChild['is_auth'])disabled="disabled"@endif {{--checked="checked" disabled="disabled"--}}>
+                                                @if(in_array($childChild['node_name'], $auth_codes)){{--权限在角色内时--}}
+                                                    <label>
+                                                        {{--todo 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
+                                                        <input type="checkbox" id="{{ $childChild['node_name'] }}" name="auth_codes[]" data-parent-id="{{ $child['node_name'] }}"
+                                                               value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" checked="checked" disabled="disabled">
+                                                        <font class="c-blue">{{ $childChild['node_title'] }}</font>
+                                                    </label>
+                                                @else{{--权限未在角色内时--}}
+                                                    <label>
+                                                        {{--todo 判断是否选中及是否可选 checked="checked" disabled="disabled"--}}
+                                                        <input type="checkbox" id="{{ $childChild['node_name'] }}" name="auth_codes[]" data-parent-id="{{ $child['node_name'] }}"
+                                                               value="{{ $childChild['node_name'] }}" class="auth-item" onclick="selectAuth(this.id)" @if(in_array($childChild['node_name'], $admin_auth_codes))checked="checked"@endif>
+                                                        {{ $childChild['node_title'] }}
+                                                    </label>
+                                                @endif
 
-                                                    {{ $childChild['node_title'] }}
-                                                </label>
                                             </li>
                                             @endforeach
                                             @endif

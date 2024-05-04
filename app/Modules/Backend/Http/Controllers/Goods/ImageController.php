@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\ImageDirRepository;
@@ -19,13 +19,19 @@ class ImageController extends Backend
     protected $imageDir;
 
     protected $image;
+    protected $tools;
 
-    public function __construct(ImageDirRepository $imageDirRepository, ImageRepository $imageRepository)
+    public function __construct(
+        ImageDirRepository $imageDir
+        , ImageRepository $image
+        , ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->imageDir = $imageDirRepository;
-        $this->image = $imageRepository;
+        $this->imageDir = $imageDir;
+        $this->image = $image;
+        $this->tools = $tools;
     }
 
     /**
@@ -161,16 +167,16 @@ class ImageController extends Backend
         $id = $request->post('id');
         $imageInfo = $this->image->getById($id);
         if (empty($imageInfo)) {
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
         $input['dir_cover'] = $imageInfo->path;
         $ret = $this->imageDir->update($imageInfo['dir_id'], $input);
 
         if ($ret === false) {
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
 
-        return result(0, '', '操作成功');
+        return result(0, '', OPERATE_SUCCESS);
     }
 
     /**
@@ -183,8 +189,7 @@ class ImageController extends Backend
     {
         $filename = $request->post('filename', 'name');
         $storePath = 'backend/gallery'; // todo
-        $tools = new ToolsRepository();
-        $uploadRes = $tools->uploadPic($request, $filename, $storePath, true);
+        $uploadRes = $this->tools->uploadPic($request, $filename, $storePath, true);
         if (isset($uploadRes['error'])) {
             // 上传出错
             return result(-1, '', $uploadRes['error']);
@@ -239,9 +244,9 @@ class ImageController extends Backend
         ];
         $ret = $this->image->batchUpdate('img_id', $img_ids, $update);
         if ($ret === false) {
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
-        return result(0, '', '操作成功');
+        return result(0, '', OPERATE_SUCCESS);
     }
 
     /**

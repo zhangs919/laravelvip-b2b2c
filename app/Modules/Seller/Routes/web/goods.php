@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
+Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
 
     // Goods Route
     Route::group(['prefix' => 'goods'], function () {
@@ -19,6 +19,7 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('sku-list', 'Goods\ListController@skuList'); // skuList
             Route::get('sku-list.html', 'Goods\ListController@skuList'); // skuList
             Route::any('sku-member', 'Goods\ListController@skuMember'); // skuMember
+            Route::any('sku-member.html', 'Goods\ListController@skuMember'); // skuMember
             Route::post('edit-goods-info', 'Goods\ListController@editGoodsInfo'); // editGoodsInfo
             Route::post('edit-goods-sku-info', 'Goods\ListController@editGoodsSkuInfo'); // editGoodsSkuInfo
             Route::any('remark', 'Goods\ListController@remark'); // 商品备注
@@ -28,26 +29,86 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             // 批量操作
             Route::get('set-goods-unit', 'Goods\ListController@setGoodsUnit'); // 设置商品单位
             Route::get('move-goods-cat', 'Goods\ListController@moveGoodsCat'); // 转移商城商品分类
+            Route::post('move', 'Goods\ListController@move'); // 转移商城商品分类-提交
+
+            Route::any('set-regular-time-sale', 'Goods\ListController@setRegularTimeSale'); // 商品定时出售
+
             Route::get('show-shop-goods-cat', 'Goods\ListController@showShopGoodsCat'); // 转移店铺商品分类
+            Route::post('move-shop-goods-cat', 'Goods\ListController@moveShopGoodsCat'); // 转移店铺商品分类-提交
+
+            Route::get('set-goods-tag', 'Goods\ListController@setGoodsTag'); // 打标签
+            Route::post('set-tag', 'Goods\ListController@setTag'); // 打标签-提交保存
+
+            Route::get('set-goods-unit', 'Goods\ListController@setGoodsUnit'); // 商品单位设置
+            Route::post('set-unit', 'Goods\ListController@setUnit'); // 商品单位设置-提交保存
+
             Route::get('set-goods-pricing-mode', 'Goods\ListController@setGoodsPricingMode'); // 计价方式设置
+            Route::post('set-pricing-mode', 'Goods\ListController@setPricingMode'); // 计价方式设置-提交保存
+
+            Route::get('set-goods-stock-mode', 'Goods\ListController@setGoodsStockMode'); // 库存计数设置
+            Route::post('set-stock-mode', 'Goods\ListController@setStockMode'); // 库存计数设置-提交保存
+
             Route::get('set-goods-moq-modal', 'Goods\ListController@setGoodsMoqModal'); // 最小起订量设置
+            Route::post('set-goods-moq', 'Goods\ListController@setGoodsMoq'); // 最小起订量设置-提交保存
+
             Route::get('set-goods-invoice-type', 'Goods\ListController@setGoodsInvoiceType'); // 开具发票设置
+            Route::post('set-invoice-type', 'Goods\ListController@setInvoiceType'); // 开具发票设置-提交保存
+
             Route::get('set-goods-layout', 'Goods\ListController@setGoodsLayout'); // 详情版式
+            Route::post('set-layout', 'Goods\ListController@setLayout'); // 详情版式-提交保存
+
             Route::get('set-goods-contract', 'Goods\ListController@setGoodsContract'); // 服务保障
+            Route::post('set-contract', 'Goods\ListController@setContract'); // 服务保障-提交保存
+
+            Route::get('set-user-discount', 'Goods\ListController@setUserDiscount'); // 会员打折
+            Route::post('set-discount', 'Goods\ListController@setDiscount'); // 会员打折-提交保存
+
             Route::get('batch-sku-member', 'Goods\ListController@batchSkuMember'); // 自定义会员价
+            Route::post('batch-sku-member', 'Goods\ListController@batchSkuMemberSaveData'); // 自定义会员价-提交保存
+
+            Route::any('upload-set-sku-member', 'Goods\ListController@uploadSetSkuMember'); // 批量自定义会员价
+            Route::any('batch-add', 'Goods\ListController@batchAdd'); // 批量excel上传商品
+            Route::any('batch-edit', 'Goods\ListController@batchEdit'); // 批量更新商品价格、库存
+            Route::any('batch-edit-message', 'Goods\ListController@batchEditMessage'); // 批量更新商品信息
+            Route::any('batch-set-pickup-timeout', 'Goods\ListController@batchSetPickupTimeout'); // 批量设置商品自提超时期限
+
+
+
             Route::get('set-goods-freight', 'Goods\ListController@setGoodsFreight'); // 运费设置
+            Route::post('set-freight', 'Goods\ListController@setFreight'); // 运费设置-提交保存
+
+            Route::get('set-price', 'Goods\ListController@setPrice'); // 调整价格
+            Route::post('set-price', 'Goods\ListController@setPriceSaveData'); // 调整价格-提交保存
+
+            Route::any('batch-edit-goods-number', 'Goods\ListController@batchEditGoodsNumber'); // 调整库存
+            Route::any('set-keywords', 'Goods\ListController@setKeywords'); // 调整关键词
+            Route::any('set-pickup-timeout', 'Goods\ListController@setPickupTimeout'); // 调整自提超时期限
+
+
+            Route::get('set-shipper', 'Goods\ListController@setShipper'); // 设置发货方
+            Route::post('set-shipper', 'Goods\ListController@setShipperSaveData'); // 设置发货方-提交保存
+
+
+            Route::get('download.html', 'Goods\ListController@download'); // 下载文件
+
+            Route::get('get-freight-list', 'Goods\ListController@getFreightList');
 
         });
 
         // 发布商品
-        Route::group(['prefix' => 'publish'], function () {
+        Route::group(['prefix' => 'publish'], function ($router) {
             Route::get('add', 'Goods\PublishController@add'); // add
-            Route::get('index', 'Goods\PublishController@add'); // add
-            Route::get('index.html', 'Goods\PublishController@add'); // add
-            if (request()->get('cat_id',0)) {
-                Route::get('index', 'Goods\PublishController@index'); // index
-                Route::get('index.html', 'Goods\PublishController@index'); // index
-            }
+
+//			Route::get('add', 'Goods\PublishController@add'); // add
+            Route::get('add.html', 'Goods\PublishController@add'); // add
+
+			Route::get('index', 'Goods\PublishController@index'); // index
+			Route::get('index.html', 'Goods\PublishController@index'); // index
+
+//            if (request()->input('cat_id')) {
+//                Route::get('index', 'Goods\PublishController@index'); // index
+//                Route::get('index.html', 'Goods\PublishController@index'); // index
+//            }
             Route::post('add', 'Goods\PublishController@saveData'); // saveData
             Route::get('cat-list', 'Goods\PublishController@catList'); // catList
             Route::post('delete', 'Goods\PublishController@delete'); // delete 将商品移入回收站
@@ -56,6 +117,8 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
 
 
             Route::get('add-images', 'Goods\PublishController@addImages'); // addImages
+            Route::get('add-images.html', 'Goods\PublishController@addImages'); // addImages
+            Route::post('add-images', 'Goods\PublishController@saveImageData'); // saveImageData
             Route::get('edit-images', 'Goods\PublishController@editImages'); // editImages
             Route::post('edit-images', 'Goods\PublishController@saveImageData'); // saveImageData
             Route::get('success', 'Goods\PublishController@success'); // success
@@ -68,8 +131,9 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
             Route::get('layouts', 'Goods\PublishController@layouts'); // layouts 详情版式
 
             Route::get('cat-search', 'Goods\PublishController@catSearch'); // 搜索商品分类
-            Route::get('reload-goods-unit', 'Goods\PublishController@reloadGoodsUnit'); // 搜索商品分类
+            Route::get('reload-goods-unit.html', 'Goods\PublishController@reloadGoodsUnit'); // 搜索商品分类
             Route::get('freights', 'Goods\PublishController@freights'); // 刷新运费模板
+
 
             // 批量操作
             Route::post('onsale', 'Goods\PublishController@onsale'); // 商品上架
@@ -210,7 +274,12 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
 
         // 批量采集
         Route::group(['prefix' => 'collect'], function () {
-            Route::get('show', 'Goods\CollectController@show'); // 批量采集 商品
+            Route::any('show', 'Goods\CollectController@show'); // 批量采集 商品
+
+            Route::post('ajax-collect', 'Goods\CollectController@ajaxCollect'); //
+            Route::any('list', 'Goods\CollectController@lists'); //
+            Route::post('add-goods', 'Goods\CollectController@addGoods'); //
+            Route::post('ajax-add', 'Goods\CollectController@ajaxAdd'); //
 
         });
 
@@ -226,12 +295,25 @@ Route::group(['domain' => env('SELLER_DOMAIN')], function ($router) {
         Route::group(['prefix' => 'lib-goods'], function () {
             Route::get('index', 'Goods\LibGoodsController@index'); // index
             Route::get('index.html', 'Goods\LibGoodsController@index'); // index
-            Route::get('import', 'Goods\LibGoodsController@import');
+            Route::any('import', 'Goods\LibGoodsController@import');
             Route::get('sku-list', 'Goods\LibGoodsController@skuList');
             Route::get('auto', 'Goods\LibGoodsController@auto'); // 批量智能导入
             Route::any('file.html', 'Goods\LibGoodsController@file'); // 文件导入
             Route::get('scan.html', 'Goods\LibGoodsController@scan'); // 扫码导入
             Route::post('scan.html', 'Goods\LibGoodsController@scanPreview'); // 扫码导入预览
+
+        });
+
+        // 商品发货方
+        Route::group(['prefix' => 'shop-shipper'], function () {
+            Route::get('list', 'Goods\ShopShipperController@lists'); // lists
+            Route::get('add', 'Goods\ShopShipperController@add'); // add
+            Route::get('edit', 'Goods\ShopShipperController@edit'); // edit
+            Route::post('add', 'Goods\ShopShipperController@saveData'); // saveData
+            Route::post('edit', 'Goods\ShopShipperController@saveData'); // saveData
+            Route::post('delete', 'Goods\ShopShipperController@delete'); // delete
+            Route::post('batch-delete', 'Goods\ShopShipperController@batchDelete'); // batchDelete
+            Route::get('items', 'Goods\ShopShipperController@items'); // 重新加载
 
         });
     });

@@ -1,11 +1,11 @@
 <!-- 表单验证 -->
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
 <!-- AJAX上传+图片预览 -->
-<script src="../../../assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
-<script src="../../../assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.2"></script>
+<script src="/assets/d2eace91/js/jquery.widget.js?v=1.2"></script>
 <!-- 验证规则 -->
 <script id="client_rules" type="text">
 [{"id": "systemconfigmodel-m_login_bgimg", "name": "SystemConfigModel[m_login_bgimg]", "attribute": "m_login_bgimg", "rules": {"string":true,"messages":{"string":"登录页面背景图必须是一条字符串。"}}},{"id": "systemconfigmodel-m_login_logo", "name": "SystemConfigModel[m_login_logo]", "attribute": "m_login_logo", "rules": {"string":true,"messages":{"string":"登录页面LOGO必须是一条字符串。"}}},{"id": "systemconfigmodel-wx_login_logo", "name": "SystemConfigModel[wx_login_logo]", "attribute": "wx_login_logo", "rules": {"string":true,"messages":{"string":"微信登录页面LOGO必须是一条字符串。"}}},{"id": "systemconfigmodel-use_weixin_login", "name": "SystemConfigModel[use_weixin_login]", "attribute": "use_weixin_login", "rules": {"string":true,"messages":{"string":"是否优先使用微信登录必须是一条字符串。"}}},]

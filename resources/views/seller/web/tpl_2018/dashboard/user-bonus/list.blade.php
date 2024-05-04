@@ -74,7 +74,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true>19</span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 

@@ -30,14 +30,18 @@ namespace App\Models;
  */
 class Activity extends BaseModel
 {
+
+
     protected $table = 'activity';
 
     /**
      * ext_info 序列化 数据如:"{\"discount\":{\"2\":{\"reduce_cash\":\"1\"}},\"bonus_list\":null,\"gift_list\":null,\"use_range_check\":\"0\",\"use_range\":\"0\"}"
      *
      * act_type 1-拍卖 2-预售 3-团购
-//     * 5-积分兑换
+     * 5-积分兑换
      * 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动
+     * 14-直播 15-限购 17-打包一口价
+     * 21-第"2"件半价
      *
      * @var array
      */

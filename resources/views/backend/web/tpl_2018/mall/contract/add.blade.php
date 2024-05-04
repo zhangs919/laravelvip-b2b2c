@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ContractModel" class="form-horizontal" name="ContractModel" action="/mall/contract/add" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="contractmodel-contract_id" class="form-control" name="ContractModel[contract_id]" value="{{ $info->contract_id ?? '' }}">
             <!-- 保障服务名称 -->

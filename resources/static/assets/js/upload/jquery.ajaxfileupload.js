@@ -30,9 +30,12 @@
 			alert(e);
 		}
 	};
-	// 设置csrf
-	settings.data[$.getCsrfParam()] = $.getCsrfToken();
-
+	
+	$(function(){
+		// 设置csrf
+		settings.data[$.getCsrfParam()] = $.getCsrfToken();
+	});
+	
 	/**
 	 * {input type='file-image' model=$model field=''}单图上传及预览功能
 	 * 

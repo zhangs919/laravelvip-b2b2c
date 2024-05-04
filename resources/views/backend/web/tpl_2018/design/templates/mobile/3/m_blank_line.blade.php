@@ -1,8 +1,8 @@
 <!-- 空白模板 -->
 {{--背景颜色--}}
 @php
-    $bg_color = @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '';
-    $height = @$data['99-1'][0]['height'] != null ? $data['99-1'][0]['height'] : '';
+    $bg_color = $data['99-1'][0]['bgcolor'] ?? '';
+    $height = $data['99-1'][0]['height'] ?? '';
 @endphp
 
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>

@@ -19,7 +19,7 @@
     <div class="table-content m-t-30 clearfix">
         <h5 class="m-b-10 m-t-0">
             今日实时
-            <span class="f12 c-999 m-l-5">（更新时间：2018-07-24 21:26:52）</span>
+            <span class="f12 c-999 m-l-5">（更新时间：{{ $update_time }}）</span>
         </h5>
         <div class="general clearfix">
             <ul>
@@ -87,7 +87,7 @@
         </div>
         <h5 class="m-b-10 m-t-0">
             今日销售走势
-            <span class="f12 c-999 m-l-5">（更新时间：2018-07-24 21:26:52）</span>
+            <span class="f12 c-999 m-l-5">（更新时间：{{ $update_time }}）</span>
         </h5>
         <!--此为统计图-->
         <div class="module-content m-t-10">
@@ -106,14 +106,14 @@
                     </tr>
                     </thead>
                     <tbody>
-
-                    <tr>
-                        <td class="text-c">1</td>
-                        <td class="text-c">1</td>
-                        <td>九尘教</td>
-                        <td class="text-c">1.00</td>
-                    </tr>
-
+                    @foreach($order_amount_top_shops as $key => $item)
+                        <tr>
+                            <td class="text-c">{{ $key+1 }}</td>
+                            <td class="text-c">{{ $item->shop_id }}</td>
+                            <td>{{ $item->shop_name }}</td>
+                            <td class="text-c">{{ $item->total_fee }}</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -130,12 +130,14 @@
                     </thead>
                     <tbody>
 
-                    <tr>
-                        <td class="text-c">1</td>
-                        <td class="text-c">125</td>
-                        <td>荷美尔Hormel 经典一口香热狗肠 250g</td>
-                        <td class="text-c">1</td>
-                    </tr>
+                    @foreach($goods_sale_top as $key=>$item)
+                        <tr>
+                            <td class="text-c">{{ $key+1 }}</td>
+                            <td class="text-c">{{ $item->goods_id }}</td>
+                            <td>{{ $item->goods_name }}</td>
+                            <td class="text-c">{{ $item->total_num }}</td>
+                        </tr>
+                    @endforeach
 
                     </tbody>
                 </table>
@@ -168,9 +170,9 @@
 {{--footer script page元素同级下面--}}
 @section('footer_script')
     <!-- ECharts单文件引入 -->
-    <script src="/assets/d2eace91/js/echarts/echarts-all.js?v=201807241613"></script>
+    <script src="/assets/d2eace91/js/echarts/echarts-all.js"></script>
     <script type="text/javascript">
-        $().ready(function() {
+        $().ready(function () {
 
             var myChart = echarts.init(document.getElementById('canvas'));
 
@@ -192,13 +194,13 @@
                 },
 
                 toolbox: {
-                    show : true,
-                    feature : {
+                    show: true,
+                    feature: {
                         // mark : {show: true},
                         // dataView : {show: true, readOnly: false},
-                        magicType : {show: true, type: ['line']},
-                        restore : {show: true},
-                        saveAsImage : {show: true}
+                        magicType: {show: true, type: ['line']},
+                        restore: {show: true},
+                        saveAsImage: {show: true}
                     }
                 },
 
@@ -206,7 +208,7 @@
                     name: '时间点',
                     type: 'category',
                     boundaryGap: false,
-                    data: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                    data: {!! json_encode($x_data) !!}
                 },
                 yAxis: {
                     name: '有效销售额',
@@ -215,11 +217,11 @@
                 series: [{
                     name: '昨天',
                     type: 'line',
-                    data: ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"]
+                    data: {!! json_encode($y_data_yesterday) !!}
                 }, {
                     name: '当天',
                     type: 'line',
-                    data: ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"]
+                    data: {!! json_encode($y_data_today) !!}
                 }]
             };
 
@@ -229,11 +231,11 @@
     </script>
 
     <script type="text/javascript">
-        $().ready(function() {
+        $().ready(function () {
             $.ajax({
                 url: '/finance/data-profiling/get-data',
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $("#today_order_amount").html(data.today_order_amount);
                     $("#today_order_users_count").html(data.today_order_users_count);
                     $("#today_order_count").html(data.today_order_count);

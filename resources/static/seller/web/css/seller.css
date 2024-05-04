@@ -16,6 +16,7 @@ input, button, select, textarea {outline: none}
 a img {border: none;}
 i, em {font-style: normal;}
 i.fa {font-size: 14px;vertical-align: middle;}
+.fa-2x { font-size: 2em !important;}
 .w750 {width: 750px !important}
 
 /*动画速度调节，原默认为1s，现调节稍快些为0.5s*/
@@ -102,7 +103,7 @@ i.fa {font-size: 14px;vertical-align: middle;}
 
 /*****************************中间样式**********************************/
 .seller-center {background:#F4F8FB;width: auto;padding-bottom: 10px;position: absolute;left: 210px;right: 0px;min-height: 100%;}
-.seller-center .page {min-height: 650px;height: 100%; min-width: 1130px; }
+.seller-center .page {min-height: 650px;height: 100%; min-width: 1030px; }
 
 
 /*左侧导航样式*/

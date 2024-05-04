@@ -4,12 +4,13 @@
 
     <!-- 楼层 _start -->
     <!-- 楼层颜色 -->
-    <div class="w1210 floor-list">
+    <div class="w1210 floor-list"
+         data-floor_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['floor_name'] }}@endif" data-short_name="@if(!empty($data['4-1'])){{ $data['4-1'][0]['short_name'] }}@endif">
         <div class="floor floor-con7">
             <div class="chn-col">
                 <div class="electronic">
 
-                    <div class="floor-title" style='background-color:{{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '' }};'>
+                    <div class="floor-title" style='background-color:{{ !empty($data['4-1'][0]['bgcolor']) ? $data['4-1'][0]['bgcolor'] : '' }};'>
                         <h3>
 
                             @if(!empty($data['4-1']))
@@ -34,11 +35,11 @@
 
                             @if(!empty($data['6-1']))
                                 @foreach($data['6-1'] as $v)
-                                    <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" target="_blank" class="tags-item" style="border-color:{{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '' }};">{{ $v['cat_name'] }}</a>
+                                    <a href="{{ $v['link'] }}" target="_blank" class="tags-item" style="border-color:{{ !empty($data['4-1'][0]['bgcolor']) ? $data['4-1'][0]['bgcolor'] : '' }};">{{ $v['cat_name'] }}</a>
                                 @endforeach
                             @else
                                 @for($i=1; $i <= 3; $i++)
-                                    <a href="javascript:void(0)" class="tags-item" style='border-color:{{ @$data['4-1'][0]['bgcolor'] != null ? $data['4-1'][0]['bgcolor'] : '' }};'>商品分类</a>
+                                    <a href="javascript:void(0)" class="tags-item" style='border-color:{{ !empty($data['4-1'][0]['bgcolor']) ? $data['4-1'][0]['bgcolor'] : '' }};'>商品分类</a>
                                 @endfor
                             @endif
 
@@ -209,7 +210,7 @@
             <div class="chn-col">
                 <div class="electronic">
 
-                    <div class="floor-title" style='background-color:{{ @$data['4-2'][0]['bgcolor'] != null ? $data['4-2'][0]['bgcolor'] : '' }};'>
+                    <div class="floor-title" style='background-color:{{ !empty($data['4-2'][0]['bgcolor']) ? $data['4-2'][0]['bgcolor'] : '' }};'>
                         <h3>
 
                             @if(!empty($data['4-2']))
@@ -235,11 +236,11 @@
 
                             @if(!empty($data['6-2']))
                                 @foreach($data['6-2'] as $v)
-                                    <a href="{{ route('pc_goods_list', ['cat_id'=>$v['cat_id']]) }}" target="_blank" class="tags-item" style="border-color:{{ @$data['4-2'][0]['bgcolor'] != null ? $data['4-2'][0]['bgcolor'] : '' }};">{{ $v['cat_name'] }}</a>
+                                    <a href="{{ $v['link'] }}" target="_blank" class="tags-item" style="border-color:{{ !empty($data['4-2'][0]['bgcolor']) ? $data['4-2'][0]['bgcolor'] : '' }};">{{ $v['cat_name'] }}</a>
                                 @endforeach
                             @else
                                 @for($i=1; $i <= 3; $i++)
-                                    <a href="javascript:void(0)" class="tags-item" style='border-color:{{ @$data['4-2'][0]['bgcolor'] != null ? $data['4-2'][0]['bgcolor'] : '' }};'>商品分类</a>
+                                    <a href="javascript:void(0)" class="tags-item" style='border-color:{{ !empty($data['4-2'][0]['bgcolor']) ? $data['4-2'][0]['bgcolor'] : '' }};'>商品分类</a>
                                 @endfor
                             @endif
 
@@ -382,7 +383,7 @@
                                             @if(!empty($data['5-2']))
                                                 @foreach($data['5-2'] as $v)
                                                     <li>
-                                                        <a href="{{ route('goods_list', ['filter_str' => '0-0-0-0-0-0-0-0-0-0-0-'.$v['brand_id']]) }}" target="" title="{{ $v['brand_name'] }}">
+                                                        <a href="{{ route('pc_goods_list', ['filter_str' => '0-0-0-0-0-0-0-0-0-0-0-'.$v['brand_id']]) }}" target="" title="{{ $v['brand_name'] }}">
                                                             <img class="" src="{{ get_image_url($v['brand_logo']) }}" data-original="{{ get_image_url($v['brand_logo']) }}" width="100" height="40" alt="{{ $v['brand_name'] }}" style="display: block;">
                                                         </a>
                                                     </li>
@@ -414,7 +415,7 @@
             <div class="chn-col chn-col-right">
                 <div class="electronic">
 
-                    <div class="floor-title" style='background-color:{{ @$data['4-3'][0]['bgcolor'] != null ? $data['4-3'][0]['bgcolor'] : '' }};'>
+                    <div class="floor-title" style='background-color:{{ !empty($data['4-3'][0]['bgcolor']) ? $data['4-3'][0]['bgcolor'] : '' }};'>
                         <h3>
 
                             @if(!empty($data['4-3']))
@@ -440,11 +441,11 @@
 
                             @if(!empty($data['6-3']))
                                 @foreach($data['6-3'] as $v)
-                                    <a href="{{ route('goods_list', ['cat_id'=>$v['cat_id']]) }}" target="_blank" class="tags-item" style="border-color:{{ @$data['4-3'][0]['bgcolor'] != null ? $data['4-3'][0]['bgcolor'] : '' }};">{{ $v['cat_name'] }}</a>
+                                    <a href="{{ $v['link'] }}" target="_blank" class="tags-item" style="border-color:{{ !empty($data['4-3'][0]['bgcolor']) ? $data['4-3'][0]['bgcolor'] : '' }};">{{ $v['cat_name'] }}</a>
                                 @endforeach
                             @else
                                 @for($i=1; $i <= 3; $i++)
-                                    <a href="javascript:void(0)" class="tags-item" style='border-color:{{ @$data['4-3'][0]['bgcolor'] != null ? $data['4-3'][0]['bgcolor'] : '' }};'>商品分类</a>
+                                    <a href="javascript:void(0)" class="tags-item" style='border-color:{{ !empty($data['4-3'][0]['bgcolor']) ? $data['4-3'][0]['bgcolor'] : '' }};'>商品分类</a>
                                 @endfor
                             @endif
 

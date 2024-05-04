@@ -15,21 +15,11 @@
     <meta name="Description" content="{{ $seo_description ?? '乐融沃B2B2C商城演示站' }}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
     <meta name="format-detection" content="telephone=no">
+    <meta name="is_frontend" content="yes" />
     <!-- 网站头像 -->
     <link rel="icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
-
     <!-- ================== END BASE CSS STYLE ================== -->
-    <script src="/assets/d2eace91/js/jquery.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/yii.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/common.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/table/jquery.tablelist.js?v=20180528"></script>
-    <script src="/assets/d2eace91/js/jquery.cookie.js?v=20180528"></script>
-    <script src="/js/common.js?v=20180528"></script>
-    <script src="/js/user.js?v=20180528"></script>
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=20180428"/>
     <link rel="stylesheet" href="/css/common.css?v=20180428"/>
     <link rel="stylesheet" href="/css/user.css?v=20180428"/>
@@ -41,8 +31,17 @@
     @endif
     <!--整站改色 _end-->
 
+    {{--header_css--}}
+    @section('header_css')@show
+
+    <script src="/assets/d2eace91/js/jquery.js"></script>
+    <script src="/assets/d2eace91/js/szy.head.js"></script>
+
     {{--header_js--}}
     @section('header_js')@show
+
+    {{--国家默哀日期--}}
+    {!! $national_memorial_day_html ?? '' !!}
 </head>
 <body>
 <!-- 引入头部文件 -->
@@ -71,36 +70,39 @@
 
 
 
-<script type="text/javascript">
-    $().ready(function() {
+{{--底部js--}}
+@section('footer_js')@show
 
-        /*弹出消息*/
-        @if(!empty(session('layerMsg')))
-        var status = '{{ session()->get('layerMsg.status') }}';
-        var msg = '{{ session()->get('layerMsg.msg') }}';
-        switch (status) {
-            case 'success':
-                $.msg(msg);
-                break;
-            case 'error':
-                $.msg(msg, function () {
-                    // 关闭后的操作
-                });
-                break;
-            case 'info':
-                $.msg(msg)
-                break;
-            case 'warning':
-                $.msg(msg, function () {
-                    // 关闭后的操作
-                });
-                break;
-        }
-        // $.msg('设置成功');
-        @endif
-    })
+<script type="text/javascript">
+    {{--$().ready(function() {--}}
+
+        {{--/*弹出消息*/--}}
+        {{--@if(!empty(session('layerMsg')))--}}
+        {{--var status = '{{ session()->get('layerMsg.status') }}';--}}
+        {{--var msg = '{{ session()->get('layerMsg.msg') }}';--}}
+        {{--switch (status) {--}}
+            {{--case 'success':--}}
+                {{--$.msg(msg);--}}
+                {{--break;--}}
+            {{--case 'error':--}}
+                {{--$.msg(msg, function () {--}}
+                    {{--// 关闭后的操作--}}
+                {{--});--}}
+                {{--break;--}}
+            {{--case 'info':--}}
+                {{--$.msg(msg)--}}
+                {{--break;--}}
+            {{--case 'warning':--}}
+                {{--$.msg(msg, function () {--}}
+                    {{--// 关闭后的操作--}}
+                {{--});--}}
+                {{--break;--}}
+        {{--}--}}
+        {{--// $.msg('设置成功');--}}
+        {{--@endif--}}
+    {{--})--}}
 </script>
-<script src="/js/jquery.fly.min.js?v=20180528"></script>
-<script src="/assets/d2eace91/js/szy.cart.js?v=20180528"></script>
+{{--<script src="/js/jquery.fly.min.js?v=20180528"></script>--}}
+{{--<script src="/assets/d2eace91/js/szy.cart.js?v=20180528"></script>--}}
 </body>
 </html>

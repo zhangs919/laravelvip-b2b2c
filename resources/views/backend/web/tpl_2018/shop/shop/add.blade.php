@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30 clearfix ">
         <form id="ShopModel" class="form-horizontal" name="ShopModel" action="/shop/shop/add?is_supply=0" method="post" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
 
             <input type="hidden" id="shopmodel-is_supply" class="form-control" name="ShopModel[is_supply]" value="0">
 
@@ -113,7 +113,7 @@
                                         <option value="">-- 请选择 --</option>
                                         @foreach($cat_list as $cat)
 
-                                            <option value="{{ $cat['cls_id'] }}">{{ $cat['level_show'] }}{{ $cat['cls_name'] }}</option>
+                                            <option value="{{ $cat['cls_id'] }}">{!! $cat['level_show'] !!}{{ $cat['cls_name'] }}</option>
 
                                         @endforeach
 

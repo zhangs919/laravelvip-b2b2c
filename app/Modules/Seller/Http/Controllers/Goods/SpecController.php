@@ -2,6 +2,7 @@
 
 namespace App\Modules\Seller\Http\Controllers\Goods;
 
+use App\Models\Attribute;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\AttributeRepository;
 use Illuminate\Http\Request;
@@ -16,11 +17,11 @@ class SpecController extends Seller
     protected $attribute;
 
 
-    public function __construct()
+    public function __construct(AttributeRepository $attribute)
     {
         parent::__construct();
 
-        $this->attribute = new AttributeRepository();
+        $this->attribute = $attribute;
 
         $this->set_menu_select('goods', 'goods-spec-list');
 
@@ -74,9 +75,13 @@ class SpecController extends Seller
             'sortorder' => 'asc',
         ];
         list($list, $total) = $this->attribute->getList($condition);
-
+        if (!empty($list)) {
+            foreach ($list as $item) {
+                $attr_values = Attribute::find($item->attr_id)->attr_value()->where('is_delete', 0)->orderBy('attr_vsort')->pluck('attr_vname')->toArray();
+                $item->attr_values = implode('、', $attr_values);
+            }
+        }
         $pageHtml = pagination($total);
-//        dd($list);
         if ($request->ajax()) {
             $render = view('goods.spec.partials._list', compact('list', 'total', 'pageHtml'))->render();
             return result(0, $render);
@@ -95,7 +100,6 @@ class SpecController extends Seller
             $info = $this->attribute->getAttrInfo($id);
             view()->share('info', $info);
             $title = '编辑规格';
-//            dd($info);
         }
 
         $fixed_title = '规格管理 - '.$title;
@@ -144,7 +148,6 @@ class SpecController extends Seller
         if (!empty($postAttribute['attr_id'])) {
             // 编辑
             $postAttribute['attr_values'] = $attr_values;
-//            dd($postAttrValue);
             $ret = $this->attribute->updateAttr($postAttribute, $postAttrValue);
             $msg = '编辑规格';
         }else {
@@ -204,11 +207,11 @@ class SpecController extends Seller
 
         if ($ret === false) {
             // Log
-//            admin_log('商品属性批量删除失败。ID：'.$ids);
+            shop_log('商品属性批量删除失败。ID：'.$ids);
             return result(-1, '', '删除失败');
         }
         // Log
-//        admin_log('商品属性批量删除成功。ID：'.$ids);
+        shop_log('商品属性批量删除成功。ID：'.$ids);
         return result(0, '', '删除成功');
     }
 }

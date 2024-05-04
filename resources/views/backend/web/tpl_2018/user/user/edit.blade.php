@@ -17,7 +17,7 @@
 @section('content')
 
     <form id="UserModel" class="form-horizontal" name="UserModel" action="/user/user/edit?id={{ $info->user_id }}" method="post" novalidate="novalidate">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
 
             <div class="simple-form-field">
@@ -166,7 +166,8 @@
                         <div class="help-block help-block-t"></div>
                     </div>
                 </div>
-            </div> <div class="simple-form-field">
+            </div>
+            <div class="simple-form-field">
                 <div class="form-group">
                     <label for="usermodel-birthday" class="col-sm-4 control-label">
 
@@ -222,7 +223,7 @@
                 </div>
             </div>
 
-            <input type="hidden" id="receive_address" name="receive_address" value="{{ $info->address_code }}">
+            <input type="hidden" id="receive_address" name="receive_address" value="{{ $info->address_now }}">
 
 
             <div class="simple-form-field">
@@ -502,7 +503,7 @@
     <script src="/assets/d2eace91/js/jquery.region.js?v=1.2"></script>
     <script type="text/javascript">
         $("#address").regionselector({
-            value: '{{ $info->address_code }}',
+            value: '{{ $info->address_now }}',
             select_class: "form-control",
             change: function(value, names, is_last) {
                 $("#receive_address").val(value);

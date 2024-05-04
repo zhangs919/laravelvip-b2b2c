@@ -68,31 +68,27 @@ class InformationController extends Frontend
     public function getWeiXinConfig(Request $request)
     {
         if (!is_weixin()) {
-            return result(-1, null, '');
+            return result(-1, null, '请在微信中打开');
         }
-        
-        $config = [
-            'app_id' => sysconf('appid'), //'wx9b2758846c6e64be',
-            'secret' => sysconf('appsecret'), //'c563e41aa2a6ea9824135af59146c856',
 
-            // 指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
-            'response_type' => 'array',
+        $url = $request->get('url');
 
-            //...
-        ];
-        $APIs = ["onMenuShareTimeline", "onMenuShareAppMessage", "scanQRCode"];
-        $app = Factory::officialAccount($config);
-        $res = $app->jssdk->buildConfig($APIs, $debug = false, $beta = false, $json = true);
-        $res = json_decode($res, true);
-        $data = [
-            'appId' => $res['appId'],
-            'timestamp' => $res['timestamp'],
-            'nonceStr' => $res['nonceStr'],
-            'signature' => $res['signature'],
-            'jsApiList' => $res['jsApiList'],
-        ];
+//        $APIs = ["onMenuShareTimeline", "onMenuShareAppMessage", "scanQRCode"];
+        $APIs = [
+//        	"onMenuShareTimeline", "onMenuShareAppMessage",
+			'updateTimelineShareData', 'updateAppMessageShareData','scanQRCode'];
+        $data = get_wx_share_data($APIs, $url);
 
-        return result(0, $data, '',['jsApiList'=>$res['jsApiList']]);
+        if (!$data) {
+            return result(-1, null, '微信分享配置异常');
+        }
+        // 'errCode'=>0 为校验成功 -1为失败
+
+
+        $data['url'] = $url;
+
+//        return result(0, $data, '',['errCode'=>-1]);
+        return result(0, $data, '',['jsApiList'=>$data['jsApiList'],'errCode'=>0]);
     }
 
     public function amap(Request $request)
@@ -103,5 +99,30 @@ class InformationController extends Frontend
         $seo_title = $title;
 
         return view('index.information.amap', compact('dest', 'seo_title', 'title'));
+    }
+
+    /**
+     * 过滤结果,非本站的二维码不可以扫描
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function go(Request $request)
+    {
+        //
+        $url = $request->get('url');
+        if (empty($url)) {
+            return result(-1, null, '扫码结果为空');
+        }
+        // 判断是否是本站二维码
+        if (!in_array(parse_url($url, PHP_URL_HOST), [config('lrw.frontend_domain'), config('lrw.mobile_domain')])) {
+            return result(-1, null, '非本站的二维码不可以扫描');
+        }
+
+        $data = [
+            'url' => $url
+        ];
+
+        return result(0, $data);
     }
 }

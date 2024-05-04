@@ -22,13 +22,19 @@
 
 namespace App\Modules\Seller\Http\Controllers;
 
+use App\Models\Attribute;
+use App\Models\AttrValue;
+use App\Models\PrintSpec;
 use App\Models\Shop;
 use App\Models\ShopCategory;
 use App\Models\TplBackup;
 use App\Modules\Base\Http\Controllers\Foundation;
 use App\Repositories\CategoryRepository;
+use App\Repositories\GoodsRepository;
 use App\Repositories\ImageDirRepository;
 use App\Repositories\ImageRepository;
+use App\Repositories\LinkTypeRepository;
+use App\Repositories\MultiStoreGoodsRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\ShopCategoryRepository;
 use App\Repositories\ToolsRepository;
@@ -36,7 +42,12 @@ use App\Repositories\TplBackupRepository;
 use App\Repositories\UploadVideoRepository;
 use App\Repositories\VideoDirRepository;
 use App\Repositories\VideoRepository;
+use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 /**
  * Class SiteController
@@ -64,30 +75,26 @@ class SiteController extends Foundation
     protected $videoDir;
 
     protected $video;
+    protected $goods;
+
+    protected $linkType; // 链接类型
 
 
-    /**
-     * SiteController constructor.
-     * @param ToolsRepository $tools
-     * @param RegionRepository $regionRepository
-     * @param CategoryRepository $categoryRepository
-     * @param ShopCategoryRepository $shopCategoryRepository
-     * @param TplBackupRepository $tplBackupRepository
-     * @param ImageDirRepository $imageDirRepository
-     * @param ImageRepository $imageRepository
-     * @param VideoDirRepository $videoDirRepository
-     * @param VideoRepository $videoRepository
-     */
-    public function __construct(ToolsRepository $tools,
-                                UploadVideoRepository $uploadVideoRepository,
-                                RegionRepository $regionRepository,
-                                CategoryRepository $categoryRepository,
-                                ShopCategoryRepository $shopCategoryRepository,
-                                TplBackupRepository $tplBackupRepository,
-                                ImageDirRepository $imageDirRepository,
-                                ImageRepository $imageRepository,
-                                VideoDirRepository $videoDirRepository,
-                                VideoRepository $videoRepository)
+
+    public function __construct(
+        ToolsRepository $tools
+        ,UploadVideoRepository $uploadVideoRepository
+        ,RegionRepository $regionRepository
+        ,CategoryRepository $categoryRepository
+        ,ShopCategoryRepository $shopCategoryRepository
+        ,TplBackupRepository $tplBackupRepository
+        ,ImageDirRepository $imageDirRepository
+        ,ImageRepository $imageRepository
+        ,VideoDirRepository $videoDirRepository
+        ,VideoRepository $videoRepository
+        ,GoodsRepository $goods
+        ,LinkTypeRepository $linkType
+    )
     {
         parent::__construct();
 
@@ -101,6 +108,8 @@ class SiteController extends Foundation
         $this->image = $imageRepository;
         $this->videoDir = $videoDirRepository;
         $this->video = $videoRepository;
+        $this->goods = $goods;
+        $this->linkType = $linkType;
     }
 
 
@@ -154,7 +163,6 @@ class SiteController extends Foundation
         if (!isset($params['output'])) {
             $tpl = 'partials._image_gallery_list';
         }
-//        $tpl = 'partials._image_gallery_list';
         if ($request->method() == 'POST') {
             // 上传图片
             $dir_id = $request->post('dir_id', 0); // 相册id
@@ -174,7 +182,7 @@ class SiteController extends Foundation
         }
 
         $params = $request->get('page');
-        $page_id = $params['page_id'];
+        $page_id = $params['page_id'] ?? '';
         $render = view('site.'.$tpl, compact('page_id', 'size', 'image_dir_list', 'image_list', 'pageHtml', 'uuid', 'dir_id'))->render();
         return result(0, $render);
     }
@@ -191,7 +199,6 @@ class SiteController extends Foundation
         $sortname = 'created_at';
         $sortorder = 'desc';
         $video_name = $request->get('video_name', ''); // 视频名称
-//        dd($params);
         if ($sort_name != '') {
             $sortArr = explode('-', $sort_name);
             $sortname = $sortArr[0];
@@ -232,7 +239,6 @@ class SiteController extends Foundation
         if (!isset($params['output'])) {
             $tpl = 'partials._video_gallery_list';
         }
-//        $tpl = 'partials._video_gallery_list';
         if ($request->method() == 'POST') {
             // 上传图片
             $dir_id = $request->post('dir_id', 0); // 相册id
@@ -252,7 +258,7 @@ class SiteController extends Foundation
         }
 
         $params = $request->get('page');
-        $page_id = $params['page_id'];
+        $page_id = $params['page_id'] ?? '';
         $render = view('site.'.$tpl, compact('page_id', 'size', 'video_dir_list', 'video_list', 'pageHtml', 'uuid', 'dir_id'))->render();
         return result(0, $render);
     }
@@ -260,7 +266,7 @@ class SiteController extends Foundation
     public function uploadImage(Request $request)
     {
         $filename = $request->post('filename', 'name');
-        $storePath = 'shop/'.seller_shop_info()->shop_id.'/image'; // todo
+        $storePath = 'shop/'.seller_shop_info()->shop_id.'/image';
         $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
 
         if (isset($uploadRes['error'])) {
@@ -274,7 +280,7 @@ class SiteController extends Foundation
     public function uploadGoodsImage(Request $request)
     {
         $filename = $request->post('filename', 'name');
-        $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // todo 图片路径 /images/shop/64/gallery/2017/11/29/15119252274524.jpg
+        $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // 图片路径 /images/shop/64/gallery/2017/11/29/15119252274524.jpg
         $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
 
         if (isset($uploadRes['error'])) {
@@ -288,7 +294,7 @@ class SiteController extends Foundation
     public function uploadMobileImage(Request $request)
     {
         $filename = $request->post('filename', 'name');
-        $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // todo 图片路径 /images/shop/64/gallery/2017/11/29/15119252274524.jpg
+        $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // 图片路径 /images/shop/64/gallery/2017/11/29/15119252274524.jpg
         $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
 
         if (isset($uploadRes['error'])) {
@@ -303,7 +309,7 @@ class SiteController extends Foundation
     {
         $filename = $request->post('filename', 'name');
         // 获取商品
-        $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // todo 图片路径 /images/shop/64/gallery/2017/11/29/15119252274524.jpg
+        $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // 图片路径 /images/shop/64/gallery/2017/11/29/15119252274524.jpg
         $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
 
         if (isset($uploadRes['error'])) {
@@ -420,124 +426,53 @@ class SiteController extends Foundation
     }
 
     /**
+     * 生成图形验证码
+     *
+     * @param Request $request
+     * @return false|string
+     */
+    public function captcha(Request $request)
+    {
+
+//        return json_encode(['hash1' => 438,'hash2' => '438', 'url' => '/site/captcha.html?v='.uniqid()]);
+        $phraseBuilder = new PhraseBuilder(4, '0123456789'); // 只生成4位数字
+
+        //生成验证码图片的Builder对象，配置相应属性
+        $builder = new CaptchaBuilder(null, $phraseBuilder); // 只生成4位数字
+
+        //可以设置图片宽高及字体
+        $builder->build($width = 100, $height = 40, $font = null);
+        // 设置干扰线
+        $builder->setMaxBehindLines(0);
+        //获取验证码的内容
+        $phrase = $builder->getPhrase();
+
+        //把内容存入session
+        Session::flash('captcha', $phrase);
+
+        //生成图片
+        header("Cache-Control: no-cache, must-revalidate");
+        header('Content-Type: image/jpeg');
+
+        if ($request->get('refresh')) { // 刷新验证码
+            $data = $builder->inline();
+            return json_encode(['hash1' => 447,'hash2' => '447', 'url' => $data]);
+        }
+
+        // 直接输出验证码
+        $builder->output();
+    }
+
+    /**
      * 异步加载地区
      *
      * @param Request $request
      * @return mixed
      */
-//    public function regionList(Request $request)
-//    {
-//
-//        // 判断传入的值是parent_code 还是 region_code
-//        $parent_code = !is_null($request->get('parent_code')) ? $request->get('parent_code') : 0;
-//        $field = 'parent_code';
-//        $params = $request->all();
-//
-//        $level_names = [
-//            0 => "",
-//            1 => '省',
-//            2 => '市',
-//            3 => '区/县',
-//            4 => '镇',
-//            5 => '街道/村'
-//        ];
-//        $extras = [
-//            'level_names' => $level_names,
-//        ];
-//
-//        $region_names = [];
-//        if (isset($params['region_code'])) {
-//            // 查询region_names
-//            $region_info = $this->regions->getByField('parent_code', $params['region_code']);
-//            if (!empty($region_info)) {
-//                $region_names[$params['region_code']] = $region_info->region_name;
-//                $condition = [
-//                    'where' => [[$field, $parent_code]],
-//                    'limit' => 0
-//                ];
-//                list($region_list, $total) = $this->regions->getList($condition);
-//
-//                $data[0] = $region_list;
-//
-//            }
-//            $extras['region_names'] = $region_names;
-//            $parent_code = $request->get('region_code', 0);
-////            $field = 'region_code';
-//        }
-//        $condition = [
-//            'where' => [[$field, $parent_code]],
-//            'limit' => 0
-//        ];
-//        list($region_list, $total) = $this->regions->getList($condition);
-//
-//
-//
-//        $data[0] = $region_list;
-//        return result(0, $data, '', $extras);
-//    }
     public function regionList(Request $request)
     {
 
-        // 判断传入的值是parent_code 还是 region_code
-        $parent_code = !is_null($request->get('parent_code')) ? $request->get('parent_code') : 0;
-        $field = 'parent_code';
-        $params = $request->all();
-
-        $level_names = [
-            0 => "",
-            1 => '省',
-            2 => '市',
-            3 => '区/县',
-            4 => '镇',
-            5 => '街道/村'
-        ];
-        $extras = [
-            'level_names' => $level_names,
-        ];
-
-        if (isset($params['region_code'])) {
-            // 查询region_names
-            $region_names = array_reverse(get_parent_region_list($params['region_code']));
-            $region_names = array_column($region_names, 'region_name', 'region_code');
-            $rr = array_keys($region_names);
-            if (is_int($rr[0])) {
-                array_unshift($rr, 0);
-                if (count($rr) > 3) {
-                    array_pop($rr); // 移除最后一个
-                }
-            }
-            $data = [];
-            foreach ($rr as $key=>$p_code) {
-                $condition = [
-                    'where' => [[$field, strval($p_code)]],
-                    'limit' => 0,
-                    'field' => [
-                        'center', 'city_code', 'is_enable', 'is_scope', 'level',
-                        'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                    ]
-                ];
-                list($region_list, $total) = $this->regions->getList($condition);
-                $data[$key] = $region_list;
-            }
-            $extras['region_names'] = $region_names;
-
-            return result(0, $data, '', $extras);
-        } else {
-            $field = 'parent_code';
-            $condition = [
-                'where' => [[$field, $parent_code]],
-                'limit' => 0,
-                'field' => [
-                    'center', 'city_code', 'is_enable', 'is_scope', 'level',
-                    'parent_code', 'region_code', 'region_id', 'region_name', 'region_type', 'sort'
-                ]
-            ];
-            list($region_list, $total) = $this->regions->getList($condition);
-
-            $data[0] = $region_list;
-            return result(0, $data, '', $extras);
-        }
-
+        return $this->regions->ajaxLoadRegions($request);
     }
 
     /**
@@ -575,9 +510,12 @@ class SiteController extends Foundation
                 'name' => $name,
                 'parent_id' => $value['parent_id'],
                 'isParent' => $value['has_children'] ? true : false,
-                'cat_level' => $value['level'],
+                'cat_level' => $value['level'] + 1,
                 'keywords' => $name_pinyin
             ];
+        }
+        if ($format == 'ztree' && $deep == 3) {
+//            $cat_list = array_chunk($cat_list, 100);
         }
 
         return result(0, $cat_list);
@@ -664,19 +602,34 @@ class SiteController extends Foundation
             // 使用模板/取消使用模板
             $id = $request->get('id');
             $topic_id = $request->get('topic_id', 0);
+            $page = $request->get('page','m_shop');
 
             // todo 如何使用模板
             $tpl_backup_info = TplBackup::where('back_id', $id)->first();
-            $shop_back_id = Shop::where('shop_id', seller_shop_info()->shop_id)->value('back_id');
-            $update = [
-                'back_id' => $id
-            ];
-            if ($tpl_backup_info->is_theme && $id == $shop_back_id) {
-                // 主题风格 // 取消主题
+            $shop_back_ids = Shop::where('shop_id', seller_shop_info()->shop_id)->select(['back_id','m_back_id','app_back_id'])->first();
+            $update = [];
+            if ($page == 'm_shop') {
                 $update = [
-                    'back_id' => 0
+                    'm_back_id' => $id
                 ];
+                if ($tpl_backup_info->is_theme && $id == $shop_back_ids->m_back_id) {
+                    // 主题风格 // 取消主题
+                    $update = [
+                        'm_back_id' => 0
+                    ];
+                }
+            } elseif ($page == 'app_shop') {
+                $update = [
+                    'app_back_id' => $id
+                ];
+                if ($tpl_backup_info->is_theme && $id == $shop_back_ids->app_back_id) {
+                    // 主题风格 // 取消主题
+                    $update = [
+                        'app_back_id' => 0
+                    ];
+                }
             }
+
             $ret = Shop::where('shop_id', seller_shop_info()->shop_id)->update($update);
             if ($ret === false) {
                 return result(-1, null, '设置失败');
@@ -720,26 +673,299 @@ class SiteController extends Foundation
         return result(0, $render);
     }
 
+    /**
+     * ajax渲染模板数据
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function tplData(Request $request)
+    {
+        $tpl_code = $request->get('tpl_code', '');
+
+        // 滚动商品
+        $goods_ids = $request->get('goods_ids', 0);
+        $output = $request->get('output', 0); // 是否渲染输出html
+        $shop_id = $request->get('shop_id', '');
+        $is_last = $request->get('is_last', '');
+
+        // 附近店铺
+        $lat = $request->get('lat', 0); // 经度
+        $lng = $request->get('lng', 0); // 纬度
+
+
+        // 列表
+        $compact = [];
+        if ($tpl_code == 'm_goods_list') {
+            // 滚动商品
+            $where = [];
+            $where[] = ['goods_status',1]; // 商品状态 已发布
+            $where[] = ['goods_audit',1]; // 审核通过
+            $where[] = ['shop_id',seller_info()->shop_id];
+            $condition = [
+                'where' => $where,
+                'sortname' => 'goods_sort',
+                'sortorder' => 'asc'
+            ];
+
+            if (!empty($goods_ids)) {
+                $condition['in'] = [
+                    'field' => 'goods_id',
+                    'condition' => explode(',', $goods_ids)
+                ];
+            }
+
+            list($m_goods_list, $m_goods_total) = $this->goods->getList($condition);
+            $compact = compact('m_goods_list');
+        }
+        $render = view('backend::site.'.$tpl_code, $compact)->render();
+        return result(0, $render);
+    }
+
+    /**
+     * 获取二维码登录信息
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function getQrcodeLoginKey(Request $request)
+    {
+        $data = [
+            'user_id' => 'h7ci760hmcg3um28bmsv4o00us', // 26位 相当于token 用户标识
+            'key' => 'F79FA86071C0DD4CBEE63415ED1090DE' // 32位 // 每隔一段时间刷新该值
+        ];
+        return result(0, $data);
+    }
+
+    /**
+     * 二维码登录
+     * 移动端页面（微信端、App客户端）授权登录页面
+     *
+     * @param Request $request
+     */
+    public function qrcodeLogin(Request $request)
+    {
+        $key = $request->get('k');
+
+        // 验证k是否有效
+
+        if ($request->method() == 'POST') {
+            // 执行登录
+            $user_id = $request->post('user_id');
+            $key = $request->post('key');
+            $handle = $request->post('handle'); // login-登录 cancel-取消
+
+            //二维码已失效
+            $qrcodeInvalid = true;
+            if ($qrcodeInvalid) {
+                $APIs = ["onMenuShareTimeline", "scanQRCode"];
+                $wx_share_data = get_wx_share_data($APIs);
+                $errCode = 0;
+                if (!$wx_share_data) {
+                    $errCode = -1;
+                }
+//                dd($wx_share_data);
+                return view('site.qrcode_login_error', compact('wx_share_data', 'errCode'));
+            }
+
+
+        }
+
+
+        return view('site.qrcode_login', compact('key'));
+    }
 
     public function updateMessage(Request $request)
     {
-        $messageCount = 0; // 消息数量
-        $messageList = [1]; // 消息列表
+        $order_payed_count = 0; // 订单付款成功
+        $back_goods_count = 0; // 退货退款申请
+        $group_buy_audit_count = 0; // 团购审核结果
+        $contract_audit_count = 0; // 消费保障审核结果
 
-        $render = view('site.update_message', compact('messageCount', 'messageList'))->render();
+        $messageCount = $order_payed_count + $back_goods_count
+            + $group_buy_audit_count + $contract_audit_count; // 消息数量
+
+        $messageList = []; // 消息列表
+        if ($order_payed_count > 0) {
+            $messageList['order_payed'] = [
+                'icon'=>"fa-user",
+                'count'=>$order_payed_count,
+                'title'=>'订单付款成功',
+                'content'=>"{$order_payed_count}个订单付款成功",
+            ];
+        }
+        if ($back_goods_count > 0) {
+            $messageList['back_goods'] = [
+                'icon'=>"fa-institution",
+                'count'=>$back_goods_count,
+                'title'=>'退货退款申请',
+                'content'=>"{$back_goods_count}个退货退款需要处理",
+            ];
+        }
+        if ($group_buy_audit_count > 0) {
+            $messageList['group_buy_audit'] = [
+                'icon'=>"fa-thumbs-o-up",
+                'count'=>$group_buy_audit_count,
+                'title'=>'团购审核结果',
+                'content'=>"{$group_buy_audit_count}个团购审核结果",
+            ];
+        }
+        if ($contract_audit_count > 0) {
+            $messageList['contract_audit'] = [
+                'icon'=>"fa-users",
+                'count'=>$contract_audit_count,
+                'title'=>'消费保障审核结果',
+                'content'=>"{$contract_audit_count}个消费保障审核结果",
+            ];
+        }
+
+        $render = view('seller::site.update_message', compact('messageCount', 'messageList'))->render();
         return result(0, $render);
-
     }
 
     public function messageUpdate(Request $request)
     {
-        $object_type = $request->post('object_type'); // goods_apply
+        $object_type = $request->post('object_type'); // order_payed
         $data = [
-            'message_logo_count' => 0,
-            'url' => '/goods/default/wait-audit'
+            'message_logo_count' => 10,
+            'url' => '/trade/order/list'
         ];
 
         return result(0, $data);
+    }
 
+    /**
+     * 清理缓存
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function clearCache(Request $request)
+    {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('clear-compiled');
+
+        return result(0, null, '清理缓存成功！');
+    }
+
+    public function imageHotLink(Request $request)
+    {
+        $uuid = make_uuid();
+        $link_type = $request->get('link_type');
+        $link = $request->get('link');
+        $style = $request->get('style');
+
+        if (is_array($link_type)) {
+            $link_type = 0;
+        }
+
+        $link_data = $this->linkType->getLinkTypeData($link_type);
+
+        $render = view('site.image_hot_link', compact('uuid','link_type','link','style','link_data'))->render();
+
+        return result(0,$render);
+    }
+
+    /**
+     * 自动打印
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function autoPrint(Request $request)
+    {
+        $order_id = $request->get('order_id');
+
+        //lodop_print_html(result.print_title, result.data, result.printer, {
+        //                        width: result.print_spec_width,
+        //                        height: result.print_spec_height
+        //                    });
+        $printer = PrintSpec::where('shop_id', seller_shop_info()->shop_id)->where('is_default', 1)->first();
+        if (empty($printer)) {
+            return result(-1, null, '未配置打印规格');
+        }
+        if (str_contains($printer->print_spec, '*')) {
+            $spec_arr = explode('*', $printer->print_spec);
+            $width = (int)$spec_arr[0];
+            $height = (int)$spec_arr[1];
+        } else {
+            $width = $height = (int)$printer->print_spec;
+        }
+        $extra = [
+            'print_title' => '自动打印',
+            'printer' => $printer->printer,
+            'print_spec_width' => $width,
+            'print_spec_height' => $height,
+        ];
+        return result(0, $printer, '', $extra);
+    }
+
+    public function specList(Request $request)
+    {
+        $format = $request->get('format', 'ztree');
+        $cat_id = $request->get('cat_id', 0);
+        $shop_id = seller_shop_info()->shop_id;
+
+        $list = Attribute::where('shop_id', $shop_id)->orderBy('attr_id', 'desc')->get()->toArray();
+
+        return result(0, $list);
+    }
+
+    public function propList(Request $request)
+    {
+        $format = $request->get('format', 'ztree');
+        $goods_id = $request->get('goods_id', 0);
+
+
+        return result(0, []);
+    }
+
+    public function specValueList(Request $request)
+    {
+        $format = $request->get('format', 'ztree');
+        $attr_id = $request->get('attr_id', 0);
+        $goods_id = $request->get('goods_id', 0);
+
+        $list = AttrValue::where('attr_id', $attr_id)->get()->toArray();
+
+        return result(0, $list);
+    }
+
+    /**
+     * 导入数据执行进度
+     * todo 待研究怎么运行
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function progress(Request $request)
+    {
+        // key: batchedit:multistore:goods:price:stock:396 门店商品库存、价格设置
+        // key: update:multistore:goods:relation:396 门店关联商品
+        $key = $request->get('key', '');
+        $post = cache()->get($key);
+        $index = 0; // 已执行完成的数量
+        $count = 0; // 总的需要执行的数量
+        $multiStoreGoodsRep = new MultiStoreGoodsRepository();
+        switch ($key) {
+            case Str::contains($key, 'batchedit:multistore:goods:price:stock'):
+                // 门店商品库存、价格设置
+                $multiStoreGoodsRep->batchEditGoods($post, $index, $count);
+                break;
+            case Str::contains($key, 'update:multistore:goods:relation'):
+                // 门店关联商品
+                $multiStoreGoodsRep->storeRelatedGoods($post, $index, $count);
+                break;
+        }
+        $progress = (round($index/$count, 4)*100)."%"; // 当前进度百分比
+        $data = [
+            'index' => $index,
+            'count' => $count,
+            'progress' => $progress
+        ];
+        return result(0, $data);
     }
 }

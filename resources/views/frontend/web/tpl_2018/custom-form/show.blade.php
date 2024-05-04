@@ -1,38 +1,13 @@
 @extends('layouts.base')
 
 @section('header_css')
-    <link rel="stylesheet" href="/css/topic_activity.css?v=20190231"/>
-    <link rel="stylesheet" href="/css/template.css?v=20190231"/>
+    <link href="/css/topic_activity.css" rel="stylesheet">
+    <link href="/css/template.css" rel="stylesheet">
+    <link href="/assets/d2eace91/fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/common.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/customform/design.css" rel="stylesheet">
+    <link href="/assets/d2eace91/css/customform/edit.css" rel="stylesheet">
 
-
-@stop
-
-@section('header_js')
-    <script src="/assets/d2eace91/js/jquery.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/jquery.cookie.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/jquery.modal.js?v=20190121"></script>
-    <script src="/js/common.js?v=20190121"></script>
-    <!-- 图片缓载js -->
-    <script src="/assets/d2eace91/js/jquery.lazyload.js?v=20190121"></script>
-    <script src="/js/topic.js?v=20190121"></script>
-    <script src="/js/tabs.js?v=20190121"></script>
-    <script src="/js/index_tab.js?v=20190121"></script>
-    <!-- ****** 表单内容 ****** -->
-    <link rel="stylesheet" href="/assets/d2eace91/fonts/css/font-awesome.min.css?v=20190215"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/common.css?v=20190215"/>
-    <link rel="stylesheet" href="/assets/d2eace91/css/customform/design.css?v=20190215"/>
-    {{--<script src="/assets/d2eace91/js/jquery-1.9.1.min.js?v=20190121"></script>--}}
-    <script src="/assets/d2eace91/js/jquery.superslide.2.1.1.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/layer/layer.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/jquery.method.js?v=20190121"></script>
-    <link rel="stylesheet" href="/assets/d2eace91/css/customform/edit.css?v=20190215"/>
-    <!-- ****** 表单内容 ****** -->
-    <script type="text/javascript">
-        $().ready(function() {
-        })
-    </script>
 @stop
 
 {{--follow_box 注意此效果只在首页面展示--}}
@@ -41,14 +16,7 @@
 @stop
 
 @section('style_js')
-    <!--页面css/js-->
-    <script src="/js/index.js?v=20190121"></script>
-    <script src="/js/tabs.js?v=20190121"></script>
-    <script src="/js/bubbleup.js?v=20190121"></script>
-    <script src="/js/jquery.hiSlider.js?v=20190121"></script>
-    <script src="/js/index_tab.js?v=20190121"></script>
-    <script src="/js/jump.js?v=20190121"></script>
-    <script src="/js/nav.js?v=20190121"></script>
+
 @stop
 
 
@@ -122,24 +90,60 @@
             </div>
         </div>
     </div>
+	<script type="text/javascript">
+		window._AMapSecurityConfig = {
+			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+		};
+	</script>
     <script src="//webapi.amap.com/maps?v=1.4.9&key={{ sysconf('amap_js_key') }}"></script>
     <!-- 日期选择器 -->
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js?v=20190121"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=20190121"></script>
     <!-- 地址 -->
-    <script src="/assets/d2eace91/js/jquery.region.js?v=20190121"></script>
     <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=20190121"></script>
     <!-- 上传组件 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190221"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190221"></script>
-
     <style type="text/css">
         .layui-layer.layui-layer-page{max-width: 480px;}
     </style>
+    <script>
+        //
+    </script>
+    <!-- add -->
+    <!-- 上传组件 -->
+@stop
 
+{{--底部js--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/jquery.superslide.2.1.1.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/bubbleup.js"></script>
+    <script src="/js/jquery.hiSlider.js"></script>
+    <script src="/js/index_tab.js"></script>
+    <script src="/js/jump.js"></script>
+    <script src="/js/nav.js"></script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/topic.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/index_tab.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/requestAnimationFrame.js"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/assets/d2eace91/js/jquery.region.js"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.js"></script>
+    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js"></script>
+    <script src="/assets/d2eace91/js/validate/messages_zh.js"></script>
+    <script src="/assets/d2eace91/js/common.js"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js"></script>
+    <script src="/assets/d2eace91/js/jquery.widget.js"></script>
+    <script src="/assets/d2eace91/js/customform/upload/lib/plupload-2.1.2/js/plupload.full.min.js"></script>
+    <script src="/assets/d2eace91/js/customform/upload/upload.js"></script>
+    <script src="/assets/d2eace91/js/customform/add.js"></script>
     <script>
         var form_id = {{ $form_info['form_id'] }};
         // 存储的表单数据
@@ -149,7 +153,7 @@
             form_datas: JSON.stringify(form_datas),
             global_datas: JSON.stringify(global_datas)
         };
-
+        var map;
         // 日期级别
         var time_level = {
             // 年月日
@@ -167,7 +171,6 @@
                 format: "yyyy-mm-dd hh:ii:ss"
             }
         };
-
         // 下拉地址setting
         var selector_setting = {
             value: '',
@@ -296,9 +299,4 @@
         var aliUrl = '/site/alioss.html';
     </script>
 
-    <!-- add -->
-    <!-- 上传组件 -->
-    <script src="/assets/d2eace91/js/customform/upload/lib/plupload-2.1.2/js/plupload.full.min.js?v=20190221"></script>
-    <script src="/assets/d2eace91/js/customform/upload/upload.js?v=20190221"></script>
-    <script src="/assets/d2eace91/js/customform/add.js?v=20190221"></script>
 @stop

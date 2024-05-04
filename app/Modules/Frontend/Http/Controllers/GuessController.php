@@ -11,11 +11,11 @@ class GuessController extends Frontend
 
     protected $goods;
 
-    public function __construct()
+    public function __construct(GoodsRepository $goods)
     {
         parent::__construct();
 
-        $this->goods = new GoodsRepository();
+        $this->goods = $goods;
 
     }
 
@@ -31,7 +31,7 @@ class GuessController extends Frontend
         $page = !empty($request->get('page')) ? $request->get('page') : 1;
         $num = $request->get('num',6);
         $tpl = $request->get('tpl', '');
-        if (empty($tpl)) {
+        if (empty($tpl) && !is_app()) {
             return result(-1, null, '模板不存在');
         }
         // 猜你喜欢
@@ -42,6 +42,14 @@ class GuessController extends Frontend
             $user_like_page++;
         }else {
             $user_like_page--;
+        }
+
+        if (is_app()) {
+            $data = [
+                'user_like' => $guess_like_goods,
+                'user_like_page' => $user_like_page
+            ];
+            return result(0, $data);
         }
 
         $render = view('frontend.web.modules.library.'.$tpl, compact('guess_like_goods', 'user_like_page'))->render();

@@ -21,7 +21,7 @@
     KindEditor.ready(function(K) {
 
         var extraFileUploadParams = [];
-        extraFileUploadParams['CP6ZNQ_YUNMALL_68MALL_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
+        extraFileUploadParams['CP6ZNQ_YUNMALL_LARAVELVIP_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
 
         window.editor = K.create('#systemconfigmodel-mall_service', {
             width: '100%',
@@ -58,7 +58,7 @@
     KindEditor.ready(function(K) {
 
         var extraFileUploadParams = [];
-        extraFileUploadParams['CP6ZNQ_YUNMALL_68MALL_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
+        extraFileUploadParams['CP6ZNQ_YUNMALL_LARAVELVIP_COM_BACKEND_PHPSESSID'] = '239ake8n3e2sb93j1c0c0ijgt1';
 
         window.editor = K.create('#systemconfigmodel-mall_service_right', {
             width: '100%',

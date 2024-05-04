@@ -77,16 +77,16 @@
 
 
 <script type="text/javascript">
-    if(!localStorage.fixed_ad_layer_{{ time() }}){
-        $('.fixed-img-layer').show();
-    }
-    //悬浮广告弹出层
-    $('body').on('click','.close-fixed-ad-btn',function(){
-        localStorage.fixed_ad_layer_{{ time() }} = true;
-        $('.fixed-img-layer').hide();
-    });
+    {{--if(!localStorage.fixed_ad_layer_{{ time() }}){--}}
+        {{--$('.fixed-img-layer').show();--}}
+    {{--}--}}
+    {{--//悬浮广告弹出层--}}
+    {{--$('body').on('click','.close-fixed-ad-btn',function(){--}}
+        {{--localStorage.fixed_ad_layer_{{ time() }} = true;--}}
+        {{--$('.fixed-img-layer').hide();--}}
+    {{--});--}}
 </script>
 
 <script type="text/javascript">
-    $.imgloading.loading();
+    // $.imgloading.loading();
 </script>

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Seller\Http\Controllers\Article;
+namespace App\Modules\Seller\Http\Controllers\Article;
 
 
 use App\Modules\Base\Http\Controllers\Seller;
@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Seller
 {
-//    private $title;
-
     private $links = [
         ['url' => 'article/article/list?status=1', 'text' => '全部文章'],
         ['url' => 'article/article/list?status=2', 'text' => '待审核文章'],
@@ -34,7 +32,10 @@ class ArticleController extends Seller
     protected $articleCat;
 
 
-    public function __construct(ArticleRepository $articleRepository, ArticleCatRepository $articleCatRepository)
+    public function __construct(
+        ArticleRepository $articleRepository
+        ,ArticleCatRepository $articleCatRepository
+    )
     {
         parent::__construct();
 
@@ -42,7 +43,6 @@ class ArticleController extends Seller
         $this->articleCat = $articleCatRepository;
 
         $this->set_menu_select('shop', 'shop-article-list');
-
     }
 
 
@@ -90,7 +90,6 @@ class ArticleController extends Seller
                 'field' => 'add_time',
                 'condition' => [$request->get('begin'), $request->get('end')]
             ];
-//            $where[] = ['add_time', 'between', [strtotime($request->get('begin')), strtotime($request->get('end'))]];
         } elseif (!empty($request->get('begin')) && empty($request->get('end'))) {
             $where[] = ['add_time', '>', $request->get('begin')];
         } elseif (empty($request->get('begin')) && !empty($request->get('end'))) {
@@ -120,7 +119,6 @@ class ArticleController extends Seller
             $where[] = ['status', 2];
         }
 
-//        dd($condition);
         $where[] = ['shop_id', seller_shop_info()->shop_id]; // 店铺id
 
         // 文章列表
@@ -255,7 +253,7 @@ class ArticleController extends Seller
 
 
 
-        return view('article.article.edit', compact('title', 'cat_model', 'show_cat_type', 'cat_list', 'info'));
+        return view('article.article.edit', compact('title', 'show_cat_type', 'cat_list', 'info'));
     }
 
     public function saveData(Request $request)
@@ -269,6 +267,11 @@ class ArticleController extends Seller
         }else {
             // 添加
             $cat_info = $this->articleCat->getById($post['cat_id']);
+			if (empty($cat_info)) {
+				// fail
+				flash('error', '请选择文章分类');
+				return redirect('/article/article/list');
+			}
             $post['cat_model'] = $cat_info->cat_model;
             $post['cat_type'] = $cat_info->cat_type;
             $post['user_id'] = auth('seller')->id();
@@ -375,11 +378,16 @@ class ArticleController extends Seller
         $pagination_id = $request->get('page')['page_id'];
         $output = $request->get('output');
         $cat_type = $request->get('cat_type', '');
+        $cat_id = $request->get('cat_id', '');
         $selected_ids = $request->get('selected_ids', '');
         $selected_ids = explode(',', $selected_ids);
 
         // 查询条件
         $where[] = ['status', 1];
+        $where[] = ['shop_id', $this->shop_id];
+		if ($cat_id) {
+			$where[] = ['cat_id', $cat_id];
+		}
         $whereIn = [];
 
         $tpl = 'picker';
@@ -403,7 +411,13 @@ class ArticleController extends Seller
         list($list, $total) = $this->article->getList($condition);
         $pageHtml = short_pagination($total);
 
-        $render = view('article.article.'.$tpl, compact('page_id', 'pagination_id', 'list', 'pageHtml', 'selected_ids'))->render();
+		$cat_type = 1; // 只获取普通分类
+		// 获取分类列表
+		$cat_list = $this->articleCat->getCatListByCatModel(2, true, $cat_type);
+
+        $render = view('article.article.'.$tpl,
+			compact('page_id', 'pagination_id', 'list', 'pageHtml', 'selected_ids','cat_list'))
+			->render();
         return result(0, $render);
     }
 

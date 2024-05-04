@@ -14,9 +14,9 @@
                 <a href="#" class="close" data-dismiss="alert"> &times; </a>
                 <strong>警告！</strong>
                 您的商城使用期限
-                <a class="alert-href" href="javascript:;">还剩 7129 天</a>
+                <a class="alert-href" href="javascript:;">还剩 {{ $auth_info['remaining_days'] }} 天</a>
                 ；逾期未续费的商城将自动被打烊。（系统当前版本：
-                <a class="alert-href" href="javascript:;">{{ config('version.version') }}</a>
+                <a class="alert-href" href="javascript:;">{{ get_version() }}</a>
                 ）
             </div>
         </div>
@@ -36,7 +36,7 @@
                             欢迎您，
                             <strong>{{ $admin->real_name }}</strong>
                         </h5>
-                        <span class="time">（2018-03-16 ~ 2038-01-19）</span>
+                        <span class="time">（{{ $auth_info['created_at'] }} ~ {{ $auth_info['valid_at'] }}）</span>
                         <span>
 							独立域名：
 																																	<a class="btn btn-sm btn-warning" onclick="bind()">去绑定</a>
@@ -116,26 +116,26 @@
                         <li>
                             商城首页：
                             <span>
-								<a class="c-blue" href="http://{{ env('FRONTEND_DOMAIN') }}" target="_blank">{{ env('FRONTEND_DOMAIN') }}</a>
+								<a class="c-blue" href="http://{{ config('lrw.frontend_domain') }}" target="_blank">{{ config('lrw.frontend_domain') }}</a>
 							</span>
                         </li>
                         <li>
                             WAP首页：
                             <span>
-								<a class="c-blue" href="http://{{ env('MOBILE_DOMAIN') }}" target="_blank">{{ env('MOBILE_DOMAIN') }}</a>
+								<a class="c-blue" href="http://{{ config('lrw.mobile_domain') }}" target="_blank">{{ config('lrw.mobile_domain') }}</a>
 							</span>
                         </li>
                         <li>
                             卖家后台：
                             <span>
-								<a class="c-blue" href="http://{{ env('SELLER_DOMAIN') }}" target="_blank">{{ env('SELLER_DOMAIN') }}</a>
+								<a class="c-blue" href="http://{{ config('lrw.seller_domain') }}" target="_blank">{{ config('lrw.seller_domain') }}</a>
 							</span>
                         </li>
                         <!--   -->
                         <li>
                             网点后台：
                             <span>
-								<a class="c-blue" href="http://{{ env('STORE_DOMAIN') }}" target="_blank">{{ env('STORE_DOMAIN') }}</a>
+								<a class="c-blue" href="http://{{ config('lrw.store_domain') }}" target="_blank">{{ config('lrw.store_domain') }}</a>
 							</span>
                         </li>
 
@@ -183,13 +183,13 @@
             <!--第一步-->
             <div class="table-content"  id="div_1">
                 <div class="scroll-info" style="height:220px;">
-                    <p>1、为商城绑定独立域名之前，请确保域名已经完整备案，以免绑定后影响系统正常访问！！</p>
+                    <p>1、为商城绑定独立域名之前，请确保域名已经完成备案，以免绑定后影响系统正常访问！！</p>
                     <p>2、请对您的域名进行CNAME解析，解析方式如下<a class="c-red" href="http://help.laravelvip.com/info/137.html" target="_blank">（猛戳这里！！！）</a>：</p>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“www(或者其他前缀，例如：shop、mall、index等)”做CNAME解析跳转到“www.b2b2c.yunmall.laravelvip.com”</br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“backend”做CNAME解析跳转到“{{ env('BACKEND_DOMAIN') }}”</br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“seller”做CNAME解析跳转到“{{ env('SELLER_DOMAIN') }}”</br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“store”做CNAME解析跳转到“{{ env('STORE_DOMAIN') }}”</br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“m”做CNAME解析跳转到“{{ env('MOBILE_DOMAIN') }}”</br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“backend”做CNAME解析跳转到“{{ config('lrw.backend_domain') }}”</br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“seller”做CNAME解析跳转到“{{ config('lrw.seller_domain') }}”</br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“store”做CNAME解析跳转到“{{ config('lrw.store_domain') }}”</br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“m”做CNAME解析跳转到“{{ config('lrw.mobile_domain') }}”</br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“api”做CNAME解析跳转到“{{ env('API_DOMAIN') }}”
                 </div>
                 <div class="text-c"><a class="btn btn-primary" onclick="next()">下一步</a></div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Modules\Backend\Http\Controllers\Goods;
+namespace App\Modules\Backend\Http\Controllers\Goods;
 
 use App\Models\Attribute;
 use App\Models\Brand;
@@ -127,6 +127,7 @@ class CategoryController extends Backend
         // 列表
         $condition = [
             'where' => $where,
+            'relation' => 'goods', // 关联查询分类下商品数量
             'limit' => 0, // 不分页
             'sortname' => 'cat_sort',
             'sortorder' => 'asc'
@@ -225,8 +226,8 @@ class CategoryController extends Backend
     {
         $post = $request->post('CategoryModel');
 
-        $post['cat_letter'] = pinyin_permalink($post['cat_name'], ''); // 拼音全拼
-//        dd($post);
+        $post['cat_name_pinyin_short'] = pinyin_abbr($post['cat_name'], ''); // 拼音首字母简写
+        $post['cat_name_pinyin'] = pinyin_permalink($post['cat_name'], ''); // 拼音全拼 原 cat_letter字段
         $data = [];
         if (!empty($post['cat_id'])) {
             // 编辑
@@ -276,9 +277,7 @@ class CategoryController extends Backend
         }
 
         // 关联品牌
-//        $brand_ids = Brand::whereIn('brand_id', explode(',',$info->brand_ids))->pluck('brand_id')->toArray();
         $brand_ids = BrandCategory::where('cat_id', $id)->pluck('brand_id')->toArray();
-//        dd($relatedBrands);
         $title = '编辑【'.$info->cat_name.'】';
         $fixed_title = '分类管理 - '.$title;
         $action_span = [
@@ -326,7 +325,6 @@ class CategoryController extends Backend
             'sortorder' => 'asc'
         ];
         list($list, $total) = $this->brand->getList($condition);
-//        dd($list);
         return view('goods.category.edit_brand', compact('title', 'list', 'id', 'brand_ids'));
     }
 
@@ -394,10 +392,10 @@ class CategoryController extends Backend
 
             $ret = $this->category->storeCatSpec($postData);
             if ($ret === false) {
-                return result(-1, '', '操作失败');
+                return result(-1, '', OPERATE_FAIL);
             }
 
-            return result(0, '', '操作成功');
+            return result(0, '', OPERATE_SUCCESS);
         }
 
         return view('goods.category.edit_filter', compact('title', 'info', 'cat_attr_list', 'cat_spec_list'));
@@ -472,10 +470,10 @@ class CategoryController extends Backend
 
             $ret = $this->category->storeCatAttr($postData);
             if ($ret === false) {
-                return result(-1, '', '操作失败');
+                return result(-1, '', OPERATE_FAIL);
             }
 
-            return result(0, '', '操作成功');
+            return result(0, '', OPERATE_SUCCESS);
         }
 
 //        dd($cat_spec_list);

@@ -60,7 +60,7 @@
 
                 </ul>
 
-                {{ csrf_field() }}
+                @csrf
 
             </form>
             <!--提交按钮不可删不可移可编辑-->
@@ -79,6 +79,11 @@
     <p class="end-desc">我们已收到您的反馈，感谢填写。</p>
     <a href="/shop/{{ $form_info['shop_id'] }}.html" class="btn">返回首页</a>
 </div>
+<script type="text/javascript">
+	window._AMapSecurityConfig = {
+		securityJsCode: "{{ sysconf('amap_js_security_code') }}",
+	};
+</script>
 <script src="//webapi.amap.com/maps?v=1.4.9&key={{ sysconf('amap_js_key') }}"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <!-- 地址 -->
@@ -282,7 +287,8 @@
     //获取微信配置信息
     if (isWeiXin()) {
         $.ajax({
-            url: "/index/information/get-weixinconfig.html",
+            url: "/site/get-weixinconfig.html",
+            type:"POST",
             data: {
                 url: url
             },
@@ -295,9 +301,10 @@
                         timestamp: result.data.timestamp,
                         nonceStr: result.data.nonceStr,
                         signature: result.data.signature,
-                        jsApiList: [
-                            // 所有要调用的 API 都要加到这个列表中
-                            "onMenuShareTimeline", "onMenuShareAppMessage"]
+						jsApiList: result.data.jsApiList,
+                        // jsApiList: [
+						// 	// 所有要调用的 API 都要加到这个列表中
+                        //     "onMenuShareTimeline", "onMenuShareAppMessage"]
                     });
 
                     wx.ready(function() {

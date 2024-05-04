@@ -16,7 +16,7 @@
 
     <div class="table-content m-t-30">
         <form id="form" class="form-horizontal" action="/user/user/user-batch-upload" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
+            @csrf
 
             <div class="simple-form-field">
                 <div class="form-group">

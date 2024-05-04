@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/assets/d2eace91/css/styles.css?v=20190215"/>
 @stop
 
-{{--alet message page元素同级上面--}}
+{{--alert message page元素同级上面--}}
 @section('alert_msg')
 
 @stop
@@ -46,7 +46,7 @@
 
             <h5>
                 (&nbsp;共
-                <span data-total-record=true></span>
+                <span data-total-record="true" class="pagination-total-record"></span>
                 条记录&nbsp;)
             </h5>
 

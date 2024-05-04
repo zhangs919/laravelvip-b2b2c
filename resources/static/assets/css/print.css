@@ -104,11 +104,11 @@ table { border-spacing: 0; border-collapse: collapse;}
 .m241m93 { width: 241mm; height: 93mm; min-height: 93mm;}
 .m241m139 { width: 241mm; height: 139mm; min-height: 139mm;}
 .m241m280 { width: 241mm; height: 280mm; min-height: 280mm;}
-.a4{width:210mm; height:297mm; min-height: 297mm;}
+/*.a4{width:210mm; height:297mm; min-height: 297mm;}*/
 .m190m93 .print-paper-inner,.m190m140 .print-paper-inner,.m190m280 .print-paper-inner,.a4 .print-paper-inner,.m210m145 .print-paper-inner,.m241m93 .print-paper-inner,.m241m139 .print-paper-inner,.m241m280 .print-paper-inner{ padding: 5mm;}
 .m120m280 .print-paper-inner,.m120m140 .print-paper-inner,.m120m93 .print-paper-inner,.m100 .print-paper-inner,.m80 .print-paper-inner,.m70 .print-paper-inner,.m60 .print-paper-inner,.m50 .print-paper-inner{ padding: 2mm;}
 /*模板内容设计*/
-.print-model-text{ display: block; margin: 15px auto; overflow: hidden;}
+.print-model-text{ display: block; margin: 15px 0; overflow: hidden;}
 .print-model-text ul li{ width: 100%; display: block; }
 .print-model-text.average2 ul li{width: 50%; display: inline-block; float: left;}
 .print-model-text.average3 ul li{ width:33%; display: inline-block; float: left;}
@@ -118,7 +118,7 @@ table { border-spacing: 0; border-collapse: collapse;}
 .print-trim-div.print-trim-selected{ background: #fff; border: 1px dashed #0096FF;}
 .print-trim-div input,.print-trim-div input:hover{ border:none; position: absolute; background: none; box-shadow: none; left:0px; top:0px; right:0px; bottom:0px;}
 .top-right-box{ position: absolute; top:0px; right: 0px; z-index: 2;}
-.top-right-box img{ float: left; margin-left: 25px;}
+.top-right-box img{ float: left; margin-left: 10px;}
 .store-box{ overflow: hidden;}
 .store-box .store-logo{ float: left; display: inline-block; margin-right: 20px;}
 .store-box .store-info{ float: left;}

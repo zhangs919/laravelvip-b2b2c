@@ -15,7 +15,7 @@
 @section('content')
 
     <form id="UserRealModel" class="form-horizontal" name="UserRealModel" action="/user/user/real-info?id={{ $info->user_id }}" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <div class="table-content m-t-30 clearfix">
 
             <div class="simple-form-field" >

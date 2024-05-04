@@ -24,9 +24,8 @@
                         <li>
                             <a href="{{ $v['link'] }}">
 
-{{--                                <img src="{{ get_image_url($v['path'], 'mobile_nav') }}" data-src="{{ get_image_url($v['path'], 'mobile_nav') }}" class="swiper-lazy">--}}
-                                <img src="{{ $v['path'] }}" data-src="{{ $v['path'] }}" class="swiper-lazy">
-
+                                <img src="{{ get_image_url($v['path'], 'mobile_nav') }}" data-src="{{ get_image_url($v['path'], 'mobile_nav') }}" class="swiper-lazy">
+                                {{-- <img src="{{ $v['path'] }}" data-src="{{ $v['path'] }}" class="swiper-lazy"> --}}
 
                                 <span style="color:{{ $v['color'] }}">{{ $v['name'] }}</span>
                             </a>
@@ -54,16 +53,16 @@
 </div>
 
 <script type="text/javascript">
-    var swiper = $('#{{ $uid }} .nav-list-container').swiper({
-        pagination: '.swiper-pagination',
-        paginationClickable: true,
-        autoplay: false,
-        autoplayDisableOnInteraction: false,
-        lazyLoading: true,
-    });
-    if ($('#{{ $uid }} ul').length <= 1) {
-        $('#{{ $uid }}').find('.swiper-pagination').addClass('hide');
-    }
+    {{--var swiper = $('#{{ $uid }} .nav-list-container').swiper({--}}
+        {{--pagination: '.swiper-pagination',--}}
+        {{--paginationClickable: true,--}}
+        {{--autoplay: false,--}}
+        {{--autoplayDisableOnInteraction: false,--}}
+        {{--lazyLoading: true,--}}
+    {{--});--}}
+    {{--if ($('#{{ $uid }} ul').length <= 1) {--}}
+        {{--$('#{{ $uid }}').find('.swiper-pagination').addClass('hide');--}}
+    {{--}--}}
 </script>
 @if($is_design)
     <script type="text/javascript">

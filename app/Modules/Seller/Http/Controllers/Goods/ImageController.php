@@ -1,6 +1,26 @@
 <?php
 
-namespace app\Modules\Seller\Http\Controllers\Goods;
+// +----------------------------------------------------------------------
+// | laravelvip 乐融沃B2B2C商城系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2017-2027 http://www.laravelvip.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Notice: This code is not open source, it is strictly prohibited
+// |         to distribute the copy, otherwise it will pursue its
+// |         legal responsibility.
+// +----------------------------------------------------------------------
+// | 版权所有 2015-2027 云南乐融沃网络科技有限公司，并保留所有权利。
+// | 网站地址: http://www.laravelvip.com
+// +----------------------------------------------------------------------
+// | 这不是一个自由软件！禁止拷贝本软件副本，否则将追究其法律责任！
+// | 如需使用，请移步官网购买正版授权。
+// +----------------------------------------------------------------------
+// | Author: 雲溪荏苒 <290648237@qq.com>
+// | Date:2018-08-29
+// | Description:
+// +----------------------------------------------------------------------
+
+namespace App\Modules\Seller\Http\Controllers\Goods;
 
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ImageDirRepository;
@@ -21,13 +41,19 @@ class ImageController extends Seller
     protected $imageDir;
 
     protected $image;
+    protected $tools;
 
-    public function __construct(ImageDirRepository $imageDirRepository, ImageRepository $imageRepository)
+    public function __construct(
+        ImageDirRepository $imageDir
+        , ImageRepository $image
+        , ToolsRepository $tools
+    )
     {
         parent::__construct();
 
-        $this->imageDir = $imageDirRepository;
-        $this->image = $imageRepository;
+        $this->imageDir = $imageDir;
+        $this->image = $image;
+        $this->tools = $tools;
 
         $this->set_menu_select('goods', 'goods-image-dir-list');
 
@@ -59,7 +85,7 @@ class ImageController extends Seller
             ],
             [
                 'id' => 'btn_upload_image',
-                'url' => '',
+                'url' => 'javascript:void(0);',
                 'icon' => 'fa-cloud-upload',
                 'text' => '上传图片'
             ],
@@ -165,16 +191,16 @@ class ImageController extends Seller
         $id = $request->post('id');
         $imageInfo = $this->image->getById($id);
         if (empty($imageInfo)) {
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
         $input['dir_cover'] = $imageInfo->path;
         $ret = $this->imageDir->update($imageInfo['dir_id'], $input);
 
         if ($ret === false) {
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
 
-        return result(0, '', '操作成功');
+        return result(0, '', OPERATE_SUCCESS);
     }
 
     /**
@@ -188,8 +214,7 @@ class ImageController extends Seller
         $filename = $request->post('filename', 'name');
         $storePath = 'shop/'.seller_shop_info()->shop_id.'/gallery'; // 店铺相册
 
-        $tools = new ToolsRepository();
-        $uploadRes = $tools->uploadPic($request, $filename, $storePath, true);
+        $uploadRes = $this->tools->uploadPic($request, $filename, $storePath, true);
         if (isset($uploadRes['error'])) {
             // 上传出错
             return result(-1, '', $uploadRes['error']);
@@ -238,18 +263,14 @@ class ImageController extends Seller
     {
         $dir_id = $request->post('dir_id');
         $img_ids = $request->post('img_ids');
-//        dd($img_ids);
-        $condition = [
-            ['img_id', 'in', $img_ids]
-        ];
         $update = [
             'dir_id' => $dir_id
         ];
         $ret = $this->image->batchUpdate('img_id', $img_ids, $update);
         if ($ret === false) {
-            return result(-1, '', '操作失败');
+            return result(-1, '', OPERATE_FAIL);
         }
-        return result(0, '', '操作成功');
+        return result(0, '', OPERATE_SUCCESS);
     }
 
     /**
@@ -268,7 +289,6 @@ class ImageController extends Seller
         ];
         $ret = $this->image->batchUpdate('img_id', $ids, $update);
 
-//        $ret = $this->image->batchDel($ids);
         if ($ret === false) {
             return result(-1, '', '删除失败');
         }

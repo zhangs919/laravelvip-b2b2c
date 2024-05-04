@@ -2,8 +2,8 @@
 <!-- 手机端专题商品模板 -->
 {{--背景颜色--}}
 @php
-    $bg_color = @$data['99-1'][0]['bgcolor'] != null ? $data['99-1'][0]['bgcolor'] : '';
-    $height = @$data['99-1'][0]['height'] != null ? $data['99-1'][0]['height'] : '';
+    $bg_color = !empty($data['99-1'][0]['bgcolor']) ? $data['99-1'][0]['bgcolor'] : '';
+    $height = !empty($data['99-1'][0]['height']) ? $data['99-1'][0]['height'] : '';
 @endphp
 
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type }}' data-is_valid='{{ $is_valid }}'>
@@ -21,7 +21,7 @@
         @if(!empty($data['2-1']))
             @foreach($data['2-1'] as $v)
                 <a class="activity-good-item" href="javascript:void(0)">
-                    <div class="activity-good-pic" style="background: url(http://images.68mall.com/system/config/default_image/default_lazyload_mobile_0.png) no-repeat center center; display: block; background-size: 100px;">
+                    <div class="activity-good-pic" style="background: url({{ get_image_url(sysconf('default_lazyload_mobile')) }}) no-repeat center center; display: block; background-size: 100px;">
                         <img class="square" src="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" data-original="{{ get_image_url($v['goods_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_320,w_320" alt="{{ $v['goods_name'] }}" style="height: 154px;">
                     </div>
                     <div class="activity-good-info">

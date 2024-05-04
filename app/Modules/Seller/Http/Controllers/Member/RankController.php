@@ -20,7 +20,7 @@
 // | Description: 店铺会员等级管理
 // +----------------------------------------------------------------------
 
-namespace app\Modules\Seller\Http\Controllers\Member;
+namespace App\Modules\Seller\Http\Controllers\Member;
 
 use App\Models\ShopRank;
 use App\Models\UserShopRank;
@@ -38,11 +38,11 @@ class RankController extends Seller
 
     protected $shopRank;
 
-    public function __construct()
+    public function __construct(ShopRankRepository $shopRank)
     {
         parent::__construct();
 
-        $this->shopRank = new ShopRankRepository();
+        $this->shopRank = $shopRank;
 
         $this->set_menu_select('member', 'member-level');
     }

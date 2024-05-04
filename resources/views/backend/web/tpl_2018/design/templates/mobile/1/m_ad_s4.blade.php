@@ -2,7 +2,7 @@
 <!-- 手机端广告模板板式四 -->
 <div class="drop-item {{ $is_valid != '1' ? 'invalid' : ''}}" id='{{ $uid }}' data-tpl_id='' data-shop_id='' data-tpl_name='{{ $tpl_name }}' data-tpl_type='{{ $tpl_type ?? '' }}' data-is_valid='{{ $is_valid }}'>
 
-    <div class="activity-img-groups clearfix @if(count(@$data['3-1']) > 0) activity-img-groups{{ count(@$data['3-1']) }} @endif" @if(!empty(@$data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
+    <div class="activity-img-groups clearfix @if(count($data['3-1'] ?? []) > 0) activity-img-groups{{ count($data['3-1'] ?? []) }} @endif" @if(!empty($data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
 
         @if($tpl_name != '' && $is_design)
             <a title="编辑" href="javascript:void(0)" class="pic-selector content-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="3" data-number="4">

@@ -19,4 +19,9 @@ class Store extends BaseModel
     ];
 
     protected $primaryKey = 'store_id';
+
+    public function storeGroup()
+    {
+        return $this->belongsTo(StoreGroup::class, 'group_id','group_id');
+    }
 }

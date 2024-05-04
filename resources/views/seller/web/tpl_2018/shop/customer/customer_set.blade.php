@@ -1,6 +1,16 @@
 {{--模板继承--}}
 @extends('layouts.seller_layout')
 
+{{--header 内 css文件--}}
+@section('header_css')
+
+@stop
+
+{{--header 内 css文件--}}
+@section('header_css_2')
+
+@stop
+
 {{--css style page元素同级上面--}}
 @section('style')
 
@@ -11,7 +21,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="CustomerSetModel" class="form-horizontal" name="CustomerSetModel" action="/shop/customer/customer-set" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type='hidden' value='edit' name='edit'/>
             <!-- 服务电话 -->
@@ -85,7 +95,13 @@
 
 {{--extra html block--}}
 @section('extra_html')
-
+    <!-- 验证规则 -->
+    <script id="client_rules" type="text">
+[{"id": "customersetmodel-service_tel", "name": "CustomerSetModel[service_tel]", "attribute": "service_tel", "rules": {"match":{"pattern":/^((0[0-9]{2,3}-[0-9]{7,8})|([0-9]{2,4}-[0-9]{2,4}-[0-9]{2,4})|([0-9]{2,4}[0-9]{2,4}[0-9]{2,4})|(13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}))$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入有效电话号码。"}}},{"id": "customersetmodel-service_hours", "name": "CustomerSetModel[service_hours]", "attribute": "service_hours", "rules": {"string":true,"messages":{"string":"工作时间必须是一条字符串。","maxlength":"工作时间只能包含至多50个字符。"},"maxlength":50}},]
+</script>
+    <script type="text/javascript">
+        // 
+    </script>
 @stop
 
 
@@ -99,17 +115,15 @@
 
 @stop
 
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/min/js/validate.min.js"></script>
+
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- 表单验证 -->
-    <script src="/assets/d2eace91/js/validate/jquery.validate.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/jquery.validate.custom.js?v=1.2"></script>
-    <script src="/assets/d2eace91/js/validate/messages_zh.js?v=1.2"></script>
-    <!-- 验证规则 -->
-    <script id="client_rules" type="text">
-[{"id": "customersetmodel-service_tel", "name": "CustomerSetModel[service_tel]", "attribute": "service_tel", "rules": {"match":{"pattern":/^((0[0-9]{2,3}-[0-9]{7,8})|([0-9]{2,4}-[0-9]{2,4}-[0-9]{2,4})|([0-9]{2,4}[0-9]{2,4}[0-9]{2,4})|(13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}))$/,"not":false,"skipOnEmpty":1},"messages":{"match":"请输入有效电话号码。"}}},{"id": "customersetmodel-service_hours", "name": "CustomerSetModel[service_hours]", "attribute": "service_hours", "rules": {"string":true,"messages":{"string":"工作时间必须是一条字符串。","maxlength":"工作时间只能包含至多50个字符。"},"maxlength":50}},]
-</script>
-    <script type="text/javascript">
+    <script>
         $().ready(function() {
             var validator = $("#CustomerSetModel").validate();
             // 验证规则，此验证规则会影响编辑器中JavaScript的的格式化操作
@@ -121,7 +135,6 @@
                 //加载提示
                 $.loading.start();
                 $("#CustomerSetModel").submit();
-
             });
         });
     </script>

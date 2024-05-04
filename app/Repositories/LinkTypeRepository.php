@@ -26,6 +26,7 @@ namespace App\Repositories;
 
 use App\Models\Article;
 use App\Models\Brand;
+use App\Models\Goods;
 use App\Models\Shop;
 use App\Models\Topic;
 
@@ -55,7 +56,8 @@ class LinkTypeRepository
             case 1: // 常用链接
                 $link_data = $this->link_type1_data();
                 break;
-            case 2: // todo 不知道是什么
+            case 2: // 选择商品
+                $link_data = $this->link_type2_data();
                 break;
             case 3: // 店铺主页
                 $link_data = $this->link_type3_data();
@@ -94,7 +96,7 @@ class LinkTypeRepository
     private function link_type1_data()
     {
         $data = [
-            ['link' => '/index.html', 'title' => '商城首页'],
+            ['link' => '/', 'title' => '商城首页'],
             ['link' => '/user.html', 'title' => '用户中心'],
             ['link' => '/category.html', 'title' => '分类列表'],
             ['link' => '/shop/class.html', 'title' => '店铺分类列表'],
@@ -119,6 +121,22 @@ class LinkTypeRepository
         ];
 
         return $data;
+    }
+
+    /**
+     * 商品数据
+     * @return array
+     */
+    public function link_type2_data()
+    {
+        $link = request()->get('link', '');
+        $goods_id = str_replace(['/goods/','.html'], ['',''], $link);
+        $goods_name = Goods::where('goods_id',$goods_id)->value('goods_name');
+        return [
+            'goods_id' => $goods_id,
+            'link' => $link,
+            'title' => $goods_name
+        ];
     }
 
     /**
@@ -151,7 +169,7 @@ class LinkTypeRepository
         if (!$article_list->isEmpty()) {
             foreach ($article_list as $v) {
                 $data[] = [
-                    'link' => route('show_article', ['article_id' => $v->article_id], false),
+                    'link' => route('pc_show_article', ['article_id' => $v->article_id], false),
                     'title' => $v->title
                 ];
             }
@@ -179,7 +197,7 @@ class LinkTypeRepository
         if (!empty($cat_list)) {
             foreach ($cat_list as $v) {
                 $data[] = [
-                    'link' => route('pc_goods_list', ['cat_id' => $v['cat_id']], false),
+                    'link' => route('pc_goods_list', ['filter_str' => $v['cat_id']], false),
                     'title' => $v['level_show'].$v['cat_name']
                 ];
             }
@@ -264,7 +282,7 @@ class LinkTypeRepository
         if (!empty($topic_list)) {
             foreach ($topic_list as $v) {
                 $data[] = [
-                    'link' => route('show_topic', ['topic_id' => $v->topic_id], false),
+                    'link' => route('pc_show_topic', ['topic_id' => $v->topic_id], false),
                     'title' => $v->topic_name
                 ];
             }

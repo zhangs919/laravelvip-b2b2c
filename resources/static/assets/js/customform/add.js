@@ -1,73 +1,5 @@
-// -------------------------- 上传附件功能  -------------------------- // 
-$('.upload-box').each(function() {
-	/**
-	 * @param string
-	 *            container 外层的包裹的ID
-	 * @param string
-	 *            ossfile oss提示层的ID
-	 * @param string
-	 *            selectfiles 选择文件的ID
-	 * @param string
-	 *            postfiles 开始上传的ID
-	 * @param string
-	 *            szy_filename 文件名的ID
-	 * @param string
-	 *            szy_filetext 原始文件名的ID
-	 */
-	var $self = $(this);
-	// container 外层的包裹的ID
-	var uploadContainer = $self.find('._container').attr('id');
-	// ossfile oss提示层的ID
-	var uploadOssFile = $self.find('._ossfile').attr('id');
-	// selectfiles 选择文件的ID
-	var uploadSelectFiles = $self.find('._selectfiles').attr('id');
-	// postfiles 开始上传的ID
-	var uploadPostFiles = $self.find('._postfiles').attr('id');
-	// szy_filename 文件名的ID
-	var szyFilename = $self.find('._filename').attr('id');
-	// szy_filetext 文件的ID
-	var szyFiletext = $self.find('._filetext').attr('id');
-	// 初始化上传组件
-	initUploader(uploadContainer, uploadOssFile, uploadSelectFiles, uploadPostFiles, szyFilename, szyFiletext);
-});
-
 // 级联地址的详细地址改变监听
 var o_address_detail = $('.address_detail');
-o_address_detail.blur(function() {
-	var self = $(this);
-	var detail = $.trim(self.val());
-	if (detail != '') {
-		var o_region_container = self.parent().prev('.region_container');
-		var $questionConent = o_region_container.closest('.question-conent');
-		var o_full_address = self.parent().next('.full_address');
-		if (o_region_container.length == 1 && o_full_address.length == 1) {
-			var o_region_selector = o_region_container.find('.render-selector');
-			// 标记地址是否为最后一位
-			var isLast = ($questionConent.data('last') == 1)
-			if (isLast) {
-				var address = [];
-				o_region_selector.each(function(i, v) {
-					var self = $(this);
-					var code = self.val();
-					// var text = self.find('option:selected').text();
-					if (code != "") {
-						address.push(code);
-					}
-				});
-				if (isLast) {
-					// var address_text = address.join('');
-					// 最后一位
-					var address_text = address.pop();
-					o_full_address.val(address_text + ' ' + detail);
-				}
-			}
-		}
-	} else {
-		// 没有填写详细地址则清空内容
-		self.closest('.question-conent').find('.full_address').val('');
-	}
-});
-
 var validates = {
 	rules: {},
 	messages: {}
@@ -170,45 +102,6 @@ function typeOfValidate(type, data, index) {
 
 }
 
-// 身份证验证
-jQuery.validator.addMethod("isCardNum", function(value, element, param) {
-	value = $.trim(value);
-	if (value != '') {
-		return isCardNum(value);
-	}
-	return true;
-}, $.validator.format("请输入正确身份证号码"));
-// 手机号码验证
-jQuery.validator.addMethod("isPhoneNum", function(value, element, param) {
-	value = $.trim(value);
-	if (value != '') {
-		return isPhoneNum(value);
-	}
-	return true;
-}, $.validator.format("请输入正确手机号"));
-
-// 遍历日期组件
-if (form_datas) {
-	var form_datas_len = form_datas.length;
-	for (var i = 0; i < form_datas_len; i++) {
-		// 获取当前组件的数据内容
-		var component = form_datas[i];
-		// 获取当前组件的类型
-		var type = component.type;
-		// 初始化组件对应的数据
-		initPreviewComponents(i, type, component);
-		// 生成校验规则
-		var validate = typeOfValidate(type, component, i);
-
-		var component_name = getComponentName(i, component);
-		var rules = validate.rules;
-		var messages = validate.messages;
-
-		validates['rules'][component_name] = rules;
-		validates['messages'][component_name] = messages;
-	}
-}
-
 // 表单
 var o_add_form = $('#add_form');
 // 提交事件
@@ -279,31 +172,141 @@ var prevent = {
 // 合并内容
 $.extend(validates, prevent);
 // 数据校验
-var validator = o_add_form.validate(validates);
-$('.form-submit').find('a').click(function() {
-	if (!validator.form()) {
-		return;
-	}
-	$.loading.start();
-	var data = $('#add_form').serialize();
-	$.post('/customform/form/add.html?id=' + form_id, data, function(res) {
-		if (res.code == -1) {
-			$.msg(res.message);
-		} else {
-			// 提交成功
-			$.open({
-				type: 1,
-				title: false,
-				closeBtn: 0,
-				area: ['80%'],
-				content: $('.form-end')
-			});
+var validator = null;
+
+$(function() {
+	// 遍历日期组件
+	if (form_datas) {
+		var form_datas_len = form_datas.length;
+		for (var i = 0; i < form_datas_len; i++) {
+			// 获取当前组件的数据内容
+			var component = form_datas[i];
+			// 获取当前组件的类型
+			var type = component.type;
+			// 初始化组件对应的数据
+			initPreviewComponents(i, type, component);
+			// 生成校验规则
+			var validate = typeOfValidate(type, component, i);
+
+			var component_name = getComponentName(i, component);
+			var rules = validate.rules;
+			var messages = validate.messages;
+
+			validates['rules'][component_name] = rules;
+			validates['messages'][component_name] = messages;
 		}
-	}, 'JSON').always(function() {
-		$.loading.stop();
+	}
+	validator = o_add_form.validate(validates);
+	// -------------------------- 上传附件功能 -------------------------- //
+	$('.upload-box').each(function() {
+		/**
+		 * @param string
+		 *            container 外层的包裹的ID
+		 * @param string
+		 *            ossfile oss提示层的ID
+		 * @param string
+		 *            selectfiles 选择文件的ID
+		 * @param string
+		 *            postfiles 开始上传的ID
+		 * @param string
+		 *            szy_filename 文件名的ID
+		 * @param string
+		 *            szy_filetext 原始文件名的ID
+		 */
+		var $self = $(this);
+		// container 外层的包裹的ID
+		var uploadContainer = $self.find('._container').attr('id');
+		// ossfile oss提示层的ID
+		var uploadOssFile = $self.find('._ossfile').attr('id');
+		// selectfiles 选择文件的ID
+		var uploadSelectFiles = $self.find('._selectfiles').attr('id');
+		// postfiles 开始上传的ID
+		var uploadPostFiles = $self.find('._postfiles').attr('id');
+		// szy_filename 文件名的ID
+		var szyFilename = $self.find('._filename').attr('id');
+		// szy_filetext 文件的ID
+		var szyFiletext = $self.find('._filetext').attr('id');
+		// 初始化上传组件
+		initUploader(uploadContainer, uploadOssFile, uploadSelectFiles, uploadPostFiles, szyFilename, szyFiletext);
 	});
-	return false;
-});
+
+	o_address_detail.blur(function() {
+		var self = $(this);
+		var detail = $.trim(self.val());
+		if (detail != '') {
+			var o_region_container = self.parent().prev('.region_container');
+			var $questionConent = o_region_container.closest('.question-conent');
+			var o_full_address = self.parent().next('.full_address');
+			if (o_region_container.length == 1 && o_full_address.length == 1) {
+				var o_region_selector = o_region_container.find('.render-selector');
+				// 标记地址是否为最后一位
+				var isLast = ($questionConent.data('last') == 1)
+				if (isLast) {
+					var address = [];
+					o_region_selector.each(function(i, v) {
+						var self = $(this);
+						var code = self.val();
+						// var text = self.find('option:selected').text();
+						if (code != "") {
+							address.push(code);
+						}
+					});
+					if (isLast) {
+						// var address_text = address.join('');
+						// 最后一位
+						var address_text = address.pop();
+						o_full_address.val(address_text + ' ' + detail);
+					}
+				}
+			}
+		} else {
+			// 没有填写详细地址则清空内容
+			self.closest('.question-conent').find('.full_address').val('');
+		}
+	});
+
+	// 身份证验证
+	jQuery.validator.addMethod("isCardNum", function(value, element, param) {
+		value = $.trim(value);
+		if (value != '') {
+			return isCardNum(value);
+		}
+		return true;
+	}, $.validator.format("请输入正确身份证号码"));
+	// 手机号码验证
+	jQuery.validator.addMethod("isPhoneNum", function(value, element, param) {
+		value = $.trim(value);
+		if (value != '') {
+			return isPhoneNum(value);
+		}
+		return true;
+	}, $.validator.format("请输入正确手机号"));
+
+	$('.form-submit').find('a').click(function() {
+		if (!validator.form()) {
+			return;
+		}
+		$.loading.start();
+		var data = $('#add_form').serialize();
+		$.post('/customform/form/add.html?id=' + form_id, data, function(res) {
+			if (res.code == -1) {
+				$.msg(res.message);
+			} else {
+				// 提交成功
+				$.open({
+					type: 1,
+					title: false,
+					closeBtn: 0,
+					area: ['80%'],
+					content: $('.form-end')
+				});
+			}
+		}, 'JSON').always(function() {
+			$.loading.stop();
+		});
+		return false;
+	});
+})
 
 /**
  * 获取索引获取当前ID

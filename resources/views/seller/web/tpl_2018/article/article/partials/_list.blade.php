@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="/assets/d2eace91/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css?v=20180702"/>
-<script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=20180710"></script>
-<link rel="stylesheet" href="/assets/d2eace91/js/bootstrap3-editable/css/bootstrap-editable.css?v=20180702"/>
 <table id="table_list" class="table table-hover">
     <thead>
     <tr>
@@ -82,7 +79,7 @@
     <tfoot>
     <tr>
         <td class="tcheck">
-            <input type="checkbox" class="checkBox table-list-checkbox-all" value="" title="全选/全不选">
+            <input type="checkbox" class="checkBox" value="" />
         </td>
         <td colspan="10">
             <div class="pull-left">
@@ -98,39 +95,3 @@
     </tr>
     </tfoot>
 </table>
-
-<script type="text/javascript">
-    $().ready(function() {
-        $(".article_sort").editable({
-            type: "text",
-            url: 'edit-article-info',
-            pk: 1,
-// title: "排序",
-            ajaxOptions: {
-                type: "post"
-            },
-            params: function(params) {
-                params.article_id = $(this).data("article_id");
-                params.title = 'sort';
-                return params;
-            },
-            validate: function(value) {
-                value = $.trim(value);
-                var ex = /^\d+$/;
-                if (!value) {
-                    return '排序不能为空。';
-                } else if (!ex.test(value)) {
-                    return '排序必须是0~9999的正整数。';
-                } else if (value > 9999) {
-                    return '排序必须是0~9999的正整数。';
-                }
-            },
-            success: function(response, newValue) {
-                var response = eval('(' + response + ')');
-                if (response.code == -1) {
-                    return response.message;
-                }
-            }
-        });
-    });
-</script>

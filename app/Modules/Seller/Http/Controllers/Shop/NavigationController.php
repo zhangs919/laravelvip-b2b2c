@@ -23,13 +23,17 @@ class NavigationController extends Seller
     protected $shopConfigField;
     protected $linkType;
 
-    public function __construct()
+    public function __construct(
+        ShopNavigationRepository $shopNavigation
+        ,ShopConfigFieldRepository $shopConfigField
+        ,LinkTypeRepository $linkType
+    )
     {
         parent::__construct();
 
-        $this->shopNavigation = new ShopNavigationRepository();
-        $this->shopConfigField = new ShopConfigFieldRepository();
-        $this->linkType = new LinkTypeRepository();
+        $this->shopNavigation = $shopNavigation;
+        $this->shopConfigField = $shopConfigField;
+        $this->linkType = $linkType;
 
         $this->set_menu_select('shop', 'shop-navigation');
     }
@@ -38,10 +42,9 @@ class NavigationController extends Seller
     {
         $title = '列表';
 
-        $fixed_title = '店铺导航 - 列表';
-        $this->sublink($this->links, 'list','','','add,edit');
-
         $is_design = $request->get('is_design', 0); // 是否装修模式 默认0 非装修模式
+        $fixed_title = '店铺导航 - 列表';
+        $this->sublink($this->links, 'list','','?is_design='.$is_design,'add,edit');
 
         $action_span = [
             [
@@ -86,9 +89,12 @@ class NavigationController extends Seller
         list($list, $total) = $this->shopNavigation->getList($condition);
         $pageHtml = pagination($total);
 
-        $is_design = $request->get('is_design', 0); // 是否装修模式 默认0 非装修模式
+        $base_layout = 'seller_layout';
+        if ($is_design) {
+            $base_layout = 'seller_layout_single';
+        }
 
-        $compact = compact('title', 'list', 'total', 'pageHtml', 'is_design');
+        $compact = compact('title', 'list', 'total', 'pageHtml', 'is_design', 'base_layout');
         if ($request->ajax()) {
             $render = view('shop.navigation.partials._list', $compact)->render();
             return result(0, $render);
@@ -101,8 +107,9 @@ class NavigationController extends Seller
     {
         $title = '添加';
         $id = $request->get('id', 0);
+        $is_design = $request->get('is_design', 0); // 是否装修模式 默认0 非装修模式
 
-        $this->sublink($this->links, 'add', '', '', 'edit');
+        $this->sublink($this->links, 'add', '', '?is_design='.$is_design, 'edit');
 
         if ($id) {
             // 更新操作
@@ -117,7 +124,7 @@ class NavigationController extends Seller
 
         $action_span = [
             [
-                'url' => 'list',
+                'url' => 'list?is_design='.$is_design,
                 'icon' => 'fa-reply',
                 'text' => '返回店铺导航列表'
             ],
@@ -132,7 +139,12 @@ class NavigationController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
-        return view('shop.navigation.add', compact('title'));
+        $base_layout = 'seller_layout';
+        if ($is_design) {
+            $base_layout = 'seller_layout_single';
+        }
+
+        return view('shop.navigation.add', compact('title', 'base_layout'));
     }
 
     public function edit(Request $request)
@@ -284,7 +296,10 @@ class NavigationController extends Seller
     {
         $title = '店铺导航设置';
         $fixed_title = '店铺导航 - '.$title;
-        $this->sublink($this->links, 'setting','','','add,edit');
+
+        $is_design = $request->get('is_design', 0); // 是否装修模式 默认0 非装修模式
+
+        $this->sublink($this->links, 'setting','','?is_design='.$is_design,'add,edit');
 
 
         $action_span = [];
@@ -300,9 +315,14 @@ class NavigationController extends Seller
 
         $this->setLayoutBlock($blocks); // 设置block
 
+        $base_layout = 'seller_layout';
+        if ($is_design) {
+            $base_layout = 'seller_layout_single';
+        }
+
         $group = 'navigation'; // 当前配置分组
         $config_info = $this->shopConfigField->getSpecialConfigsByGroup($group, 'code');
-        $compact = compact('title', 'config_info', 'group');
+        $compact = compact('title', 'config_info', 'group', 'base_layout');
 
         return view('shop.navigation.setting', $compact);
     }

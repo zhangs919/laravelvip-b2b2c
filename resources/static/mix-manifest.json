@@ -1,0 +1,11 @@
+{
+    "/assets/min/js/core.min.js": "/assets/min/js/core.min.js",
+    "/assets/min/js/app.common.min.js": "/assets/min/js/app.common.min.js",
+    "/assets/min/js/upload.min.js": "/assets/min/js/upload.min.js",
+    "/frontend/web/js/app.frontend.index.min.js": "/frontend/web/js/app.frontend.index.min.js",
+    "/frontend/web_mobile/js/app.frontend.mobile.min.js": "/frontend/web_mobile/js/app.frontend.mobile.min.js",
+    "/assets/min/js/scrollBar.min.js": "/assets/min/js/scrollBar.min.js",
+    "/assets/min/js/validate.min.js": "/assets/min/js/validate.min.js",
+    "/assets/min/js/message.min.js": "/assets/min/js/message.min.js",
+    "/assets/css/app.common.min.css": "/assets/css/app.common.min.css"
+}

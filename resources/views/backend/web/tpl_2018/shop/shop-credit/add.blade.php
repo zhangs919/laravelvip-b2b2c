@@ -17,7 +17,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="ShopCreditModel" class="form-horizontal" name="ShopCreditModel" action="/shop/shop-credit/add" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            {{ csrf_field() }}
+            @csrf
             <!-- 隐藏域 -->
             <input type="hidden" id="shopcreditmodel-credit_id" class="form-control" name="ShopCreditModel[credit_id]" value="{{ $info->credit_id ?? '' }}">
             <!-- 店铺信誉名称 -->
@@ -227,7 +227,6 @@
             $(".rangeSelect").change();
 
             $("#credit_img_container").imagegroup({
-                // host: "http://68yun.oss-cn-beijing.aliyuncs.com/images/14719/",
                 host: "{{ get_oss_host() }}",
                 size: 1,
                 mode: 0,

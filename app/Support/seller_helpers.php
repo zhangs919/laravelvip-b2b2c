@@ -187,42 +187,42 @@ function seller_top_menus($module = '')
                     'menus' =>'trade|trade-order-list',
                     'url' => '/trade/order/list'
                 ],
-                [
-                    'title' => '虚拟兑换订单',
-                    'parent_menu' => 'trade',
-                    'menus' =>'trade|virtual-order-list',
-                    'url' => '/trade/virtual-order/take-list'
-                ],
-                [
-                    'title' => '发货单管理',
-                    'parent_menu' => 'trade',
-                    'menus' =>'trade|trade-delivery-list',
-                    'url' => '/trade/delivery/list'
-                ],
-                [
-                    'title' => '退款/退货管理',
-                    'parent_menu' => 'trade',
-                    'menus' =>'trade|trade-back-list',
-                    'url' => '/trade/back/list'
-                ],
-                [
-                    'title' => '售后管理',
-                    'parent_menu' => 'trade',
-                    'menus' =>'trade|trade-after-sale-list',
-                    'url' => '/trade/back/list?is_after_sale=1'
-                ],
-                [
-                    'title' => '投诉管理',
-                    'parent_menu' => 'trade',
-                    'menus' =>'trade|trade-complaint-manage',
-                    'url' => '/trade/complaint/list'
-                ],
-                [
-                    'title' => '评价管理',
-                    'parent_menu' => 'trade',
-                    'menus' =>'trade|trade-evaluate-buyer-list',
-                    'url' => '/trade/service/evaluate-buyer-list'
-                ],
+                // [
+                //     'title' => '虚拟兑换订单',
+                //     'parent_menu' => 'trade',
+                //     'menus' =>'trade|virtual-order-list',
+                //     'url' => '/trade/virtual-order/take-list'
+                // ],
+                 [
+                     'title' => '发货单管理',
+                     'parent_menu' => 'trade',
+                     'menus' =>'trade|trade-delivery-list',
+                     'url' => '/trade/delivery/list'
+                 ],
+                 [
+                     'title' => '退款/退货管理',
+                     'parent_menu' => 'trade',
+                     'menus' =>'trade|trade-back-list',
+                     'url' => '/trade/back/list'
+                 ],
+                 [
+                     'title' => '售后管理',
+                     'parent_menu' => 'trade',
+                     'menus' =>'trade|trade-after-sale-list',
+                     'url' => '/trade/back/list?is_after_sale=1'
+                 ],
+                 [
+                     'title' => '投诉管理',
+                     'parent_menu' => 'trade',
+                     'menus' =>'trade|trade-complaint-manage',
+                     'url' => '/trade/complaint/list'
+                 ],
+                 [
+                     'title' => '评价管理',
+                     'parent_menu' => 'trade',
+                     'menus' =>'trade|trade-evaluate-buyer-list',
+                     'url' => '/trade/service/evaluate-buyer-list'
+                 ],
                 [
                     'title' => '交易设置',
                     'parent_menu' => 'trade',
@@ -261,48 +261,48 @@ function seller_top_menus($module = '')
                     'menus' =>'member|member-list',
                     'url' => '/member/member/user-list?type=1&order=1'
                 ],
-                [
-                    'title' => '会员标签',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|member-label',
-                    'url' => '/member/label/list'
-                ],
-                [
-                    'title' => '智能营销',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|customer-analysis',
-                    'url' => '/dashboard/customer-analysis/index'
-                ],
-                [
-                    'title' => '商圈营销',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|trade-area',
-                    'url' => '/dashboard/trade-area/list'
-                ],
-                [
-                    'title' => '会员数据',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|user-data',
-                    'url' => '/statistics/users-statistics/index'
-                ],
-                [
-                    'title' => '会员分析',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|user-statistics',
-                    'url' => '/statistics/users-statistics/list'
-                ],
-                [
-                    'title' => '群组分析',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|group-analysis',
-                    'url' => '/dashboard/group-analysis/list'
-                ],
-                [
-                    'title' => '商圈分析',
-                    'parent_menu' => 'member',
-                    'menus' =>'member|trade-area-analysis',
-                    'url' => '/trade-area-analysis'
-                ],
+//                 [
+//                     'title' => '会员标签',
+//                     'parent_menu' => 'member',
+//                     'menus' =>'member|member-label',
+//                     'url' => '/member/label/list'
+//                 ],
+                // [
+                //     'title' => '智能营销',
+                //     'parent_menu' => 'member',
+                //     'menus' =>'member|customer-analysis',
+                //     'url' => '/dashboard/customer-analysis/index'
+                // ],
+                // [
+                //     'title' => '商圈营销',
+                //     'parent_menu' => 'member',
+                //     'menus' =>'member|trade-area',
+                //     'url' => '/dashboard/trade-area/list'
+                // ],
+                // [
+                //     'title' => '会员数据',
+                //     'parent_menu' => 'member',
+                //     'menus' =>'member|user-data',
+                //     'url' => '/statistics/users-statistics/index'
+                // ],
+                // [
+                //     'title' => '会员分析',
+                //     'parent_menu' => 'member',
+                //     'menus' =>'member|user-statistics',
+                //     'url' => '/statistics/users-statistics/list'
+                // ],
+                // [
+                //     'title' => '群组分析',
+                //     'parent_menu' => 'member',
+                //     'menus' =>'member|group-analysis',
+                //     'url' => '/dashboard/group-analysis/list'
+                // ],
+                // [
+                //     'title' => '商圈分析',
+                //     'parent_menu' => 'member',
+                //     'menus' =>'member|trade-area-analysis',
+                //     'url' => '/trade-area-analysis'
+                // ],
                 [
                     'title' => '会员等级',
                     'parent_menu' => 'member',
@@ -374,42 +374,42 @@ function seller_top_menus($module = '')
                     'url' => '/design/tpl-setting/setup?page=shop',
                     'target' => '_blank',
                 ],
-                [
-                    'title' => '授权周边系统',
-                    'parent_menu' => 'shop',
-                    'menus' =>'shop|shop-oauth',
-                    'url' => '/oauth/oauth/index'
-                ]
+                // [
+                //     'title' => '授权周边系统',
+                //     'parent_menu' => 'shop',
+                //     'menus' =>'shop|shop-oauth',
+                //     'url' => '/oauth/oauth/index'
+                // ]
             ]
         ],
 
         // 网点
-        'store' => [
-            'title' => '网点',
-            'parent_menu' => 'root',
-            'menus' => 'store',
-            'url' => '',
-            'child' => [
-                [
-                    'title' => '线下网点管理',
-                    'parent_menu' => 'store',
-                    'menus' =>'store|store-list',
-                    'url' => '/store/default/list'
-                ],
-                [
-                    'title' => '网点分组管理',
-                    'parent_menu' => 'store',
-                    'menus' =>'store|store-group-list',
-                    'url' => '/store/group/list'
-                ],
-                [
-                    'title' => '网点销售统计',
-                    'parent_menu' => 'store',
-                    'menus' =>'store|store-trade-list',
-                    'url' => '/store/trade/list'
-                ],
-            ]
-        ],
+         'store' => [
+             'title' => '网点',
+             'parent_menu' => 'root',
+             'menus' => 'store',
+             'url' => '',
+             'child' => [
+                 [
+                     'title' => '线下网点管理',
+                     'parent_menu' => 'store',
+                     'menus' =>'store|store-list',
+                     'url' => '/store/default/list'
+                 ],
+                 [
+                     'title' => '网点分组管理',
+                     'parent_menu' => 'store',
+                     'menus' =>'store|store-group-list',
+                     'url' => '/store/group/list'
+                 ],
+                 [
+                     'title' => '网点销售统计',
+                     'parent_menu' => 'store',
+                     'menus' =>'store|store-trade-list',
+                     'url' => '/store/trade/list'
+                 ],
+             ]
+         ],
 
         // 账号
         'account' => [
@@ -458,118 +458,136 @@ function seller_top_menus($module = '')
         ],
 
         // 财务
-        'finance' => [
-            'title' => '财务',
-            'parent_menu' => 'root',
-            'menus' => 'finance',
-            'url' => '',
-            'child' => [
-//                    [
-//                        'title' => '交易记录',
-//                        'parent_menu' => 'finance',
-//                        'menus' =>'finance|finance-seller-account',
-//                        'url' => '/finance/seller-account/list'
-//                    ],
-                [
-                    'title' => '结算管理',
-                    'parent_menu' => 'finance',
-                    'menus' =>'finance|finance-bill-manager-list',
-                    'url' => '/finance/bill/shop-bill'
-                ],
-                [
-                    'title' => '网点结算',
-                    'parent_menu' => 'finance',
-                    'menus' =>'finance|finance-bill--list',
-                    'url' => '/finance/bill/store-bill'
-                ],
-                [
-                    'title' => '店铺账户明细',
-                    'parent_menu' => 'finance',
-                    'menus' =>'finance|finance-account-detail',
-                    'url' => '/finance/account-detail/list'
-                ],
-            ]
-        ],
+         'finance' => [
+             'title' => '财务',
+             'parent_menu' => 'root',
+             'menus' => 'finance',
+             'url' => '',
+             'child' => [
+                 [
+                     'title' => '店铺进出账明细',
+                     'parent_menu' => 'finance',
+                     'menus' =>'finance|finance-seller-account',
+                     'url' => '/finance/seller-account/list'
+                 ],
+                 [
+                     'title' => '结算管理',
+                     'parent_menu' => 'finance',
+                     'menus' =>'finance|finance-bill-manager-list',
+                     'url' => '/finance/bill/shop-bill'
+                 ],
+                 /*[
+                     'title' => '门店结算',
+                     'parent_menu' => 'finance',
+                     'menus' =>'finance|finance-bill-multilist',
+                     'url' => '/finance/bill/multi-store-bill'
+                 ],*/
+                 [
+                     'title' => '网点结算',
+                     'parent_menu' => 'finance',
+                     'menus' =>'finance|finance-bill-list',
+                     'url' => '/finance/bill/store-bill'
+                 ],
+                 [
+                     'title' => '店铺账户明细',
+                     'parent_menu' => 'finance',
+                     'menus' =>'finance|finance-account-detail',
+                     'url' => '/finance/account-detail/list'
+                 ],
+             ]
+         ],
 
         // 财务报表 statistics
-        'statistics' => [
-            'title' => '统计',
-            'parent_menu' => 'root',
-            'menus' => 'statistics',
-            'url' => '',
-            'child' => [
-                [
-                    'title' => '数据概况',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|data-profiling',
-                    'url' => '/statistics/data-profiling/index'
-                ],
-                [
-                    'title' => '营业统计',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|sales-statistics',
-                    'url' => '/statistics/sales-statistics/index'
-                ],
-                [
-                    'title' => '商品分析',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|goods-analyse',
-                    'url' => '/statistics/goods-analyse/index'
-                ],
-                [
-                    'title' => '单品分析',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|goods-statistics',
-                    'url' => '/statistics/goods-statistics/sales'
-                ],
-                [
-                    'title' => '交易分析',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|trade-analyse',
-                    'url' => '/statistics/trade-analyse/index'
-                ],
-                [
-                    'title' => '会员统计',
-                    'parent_menu' => 'statistics',
-                    'menus' =>'statistics|users-statistics',
-                    'url' => '/statistics/users-statistics/list'
-                ],
-            ]
-        ],
+         'statistics' => [
+             'title' => '统计',
+             'parent_menu' => 'root',
+             'menus' => 'statistics',
+             'url' => '',
+             'child' => [
+                 [
+                     'title' => '数据概况',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|data-profiling',
+                     'url' => '/statistics/data-profiling/index'
+                 ],
+                 [
+                     'title' => '营业统计',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|sales-statistics',
+                     'url' => '/statistics/sales-statistics/index'
+                 ],
+                 [
+                     'title' => '商品分析',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|goods-analyse',
+                     'url' => '/statistics/goods-analyse/index'
+                 ],
+                 [
+                     'title' => '单品统计',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|goods-statistics',
+                     'url' => '/statistics/goods-statistics/sales'
+                 ],
+                 [
+                     'title' => '交易分析',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|trade-analyse',
+                     'url' => '/statistics/trade-analyse/index'
+                 ],
+                 [
+                     'title' => '销售统计',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|finance-sales-amount',
+                     'url' => '/statistics/sales-amount/index'
+                 ],
+                 [
+                     'title' => '财务统计',
+                     'parent_menu' => 'statistics',
+                     'menus' =>'statistics|finance-amount',
+                     'url' => '/statistics/finance-amount/index'
+                 ],
+//                 [
+//                     'title' => '扫码付统计',
+//                     'parent_menu' => 'statistics',
+//                     'menus' =>'statistics|scancode-statistics-amount',
+//                     'url' => '/statistics/scancode-statistics/index'
+//                 ],
+             ]
+         ],
 
         // 移动端
-        'weixin' => [
-            'title' => '移动端',
-            'parent_menu' => 'root',
-            'menus' => 'weixin',
-            'url' => '',
-            'child' => [
-                [
-                    'title' => '微信设置',
-                    'parent_menu' => 'weixin',
-                    'menus' =>'weixin|shop-weixin-config',
-                    'url' => '/shop/weixin-config/index.html'
-                ],
-                [
-                    'title' => '自定义菜单',
-                    'parent_menu' => 'weixin',
-                    'menus' =>'weixin|shop-weixin-menu',
-                    'url' => '/shop/weixin-menu/list'
-                ],
-                [
-                    'title' => '关键词回复',
-                    'parent_menu' => 'weixin',
-                    'menus' =>'weixin|shop-weixin-keyword',
-                    'url' => '/shop/weixin-keyword/list'
-                ],
-                [
-                    'title' => '小程序码管理',
-                    'parent_menu' => 'weixin',
-                    'menus' =>'weixin|shop-weixin-programs-qrcode',
-                    'url' => '/shop/programs-qrcode/list'
-                ],
-            ]
-        ],
+         'weixin' => [
+             'title' => '移动端',
+             'parent_menu' => 'root',
+             'menus' => 'weixin',
+             'url' => '',
+             'child' => [
+                 [
+                     'title' => '微信设置',
+                     'parent_menu' => 'weixin',
+                     'menus' =>'weixin|shop-weixin-config',
+                     'url' => '/shop/weixin-config/index.html'
+                 ],
+                 [
+                     'title' => '自定义菜单',
+                     'parent_menu' => 'weixin',
+                     'menus' =>'weixin|shop-weixin-menu',
+                     'url' => '/shop/weixin-menu/list'
+                 ],
+                 [
+                     'title' => '关键词回复',
+                     'parent_menu' => 'weixin',
+                     'menus' =>'weixin|shop-weixin-keyword',
+                     'url' => '/shop/weixin-keyword/list'
+                 ],
+                 [
+                     'title' => '小程序码管理',
+                     'parent_menu' => 'weixin',
+                     'menus' =>'weixin|shop-weixin-programs-qrcode',
+                     'url' => '/shop/programs-qrcode/list'
+                 ],
+             ]
+         ],
 
         // 收银台
         /*'cash' => [
@@ -837,6 +855,58 @@ if (! function_exists('get_shop_config_group'))
                 'explain' => [],
                 'anchor' => [],
             ],
+            'app_shop_header' => [
+                'code' => 'app_shop_header',
+                'title' => 'APP店铺头部设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+            'm_shop_style' => [
+                'code' => 'm_shop_style',
+                'title' => 'Mobile自定义风格',
+                'explain' => [
+                    '主体颜色包含商城各个页面的背景或文字颜色，包含项指：首页请登录文字颜色、商品金额颜色、搜索框颜色、左侧分类导航背景颜色、鼠标经过文字/图标颜色、楼层快捷导航按钮颜色；',
+                    '商品详情页的加入购物车、进入店铺、关注店铺按钮、tab切换颜色；商品列表页收藏按钮颜色、卖光了按钮颜色；店铺街分类文字背景色；团购页面马上抢按钮颜色'
+                ],
+                'anchor' => [],
+            ],
+            'shop_style' => [
+                'code' => 'shop_style',
+                'title' => '自定义风格',
+                'explain' => [
+                    '主体颜色包含商城各个页面的背景或文字颜色，包含项指：首页请登录文字颜色、商品金额颜色、搜索框颜色、左侧导航背景颜色、鼠标经过文字/图标颜色、楼层快捷导航按钮颜色；',
+                    '商品详情页的加入购物车、进入店铺、关注店铺按钮、tab切换颜色；商品列表页收藏按钮颜色、卖光了按钮颜色；店铺街分类文字背景色',
+                ],
+                'anchor' => [],
+            ],
+            'integral_mall_set' => [
+                'code' => 'integral_mall_set',
+                'title' => '积分商城设置',
+                'explain' => [],
+                'anchor' => [],
+            ],
+            /*营销中心-红包设置*/
+            'bonus' => [
+                'code' => 'bonus',
+                'title' => '红包设置',
+                'explain' => [],
+                'anchor' => [
+                    'PC端图片设置',
+                    '手机端图片设置',
+                    '引导广告图',
+                    '分享',
+                ],
+            ],
+            /*营销中心-门店设置*/
+            'multi_store' => [
+                'code' => 'multi_store',
+                'title' => '门店设置',
+                'explain' => [
+                    '门店模式-连锁店：连锁店将在手机端前台展示，消费者选择进入某个连锁店进行购物，会员在某个连锁店下单之后，订单会自动派给连锁店，由连锁店进行发货。',
+                    '开启门店独立库存和价格，各个门店可独立设置连锁店售卖的商品价格和库存，不受店铺设置的影响，否则门店不可设置连锁店售卖的商品价格和库存，全部按照店铺统一价售卖。'
+                ],
+                'anchor' => [],
+            ],
         ];
 
         if ($group == '') {
@@ -857,7 +927,7 @@ if (! function_exists('shop_log'))
      * 记录商家后台管理日志
      *
      * @param $log_content
-     * @return \App\Repositories\User|bool
+     * @return mixed
      */
     function shop_log($log_content)
     {
@@ -873,7 +943,7 @@ if (! function_exists('shop_log'))
             'url' => request()->path()
         ];
 
-        $shopLog = new \App\Repositories\ShopLogRepository(new \App\Models\ShopLog());
+        $shopLog = new \App\Repositories\ShopLogRepository();
         $ret = $shopLog->store($insert);
 
         return $ret;

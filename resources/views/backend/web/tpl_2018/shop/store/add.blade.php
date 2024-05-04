@@ -17,7 +17,7 @@
 
     <div class="table-content m-t-30 clearfix">
         <form id="StoreModel" class="form-horizontal" name="StoreModel" action="/shop/store/add" method="post">
-            {{ csrf_field() }}
+            @csrf
             <!-- 店铺 -->
             <div class="simple-form-field" >
                 <div class="form-group">

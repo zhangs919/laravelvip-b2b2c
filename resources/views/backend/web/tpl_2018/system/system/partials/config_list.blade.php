@@ -58,7 +58,7 @@
         <td class="text-c w10">
             <input type="checkbox" class="checkBox table-list-checkbox-all" title="全选/全不选">
         </td>
-        <td colspan="11">
+        <td colspan="7">
             <div class="pull-left">
                 <input type="button" id="batch-delete" class="btn btn-danger m-r-2" value="批量删除">
                 <!--当没有选中任何所操作的项，按钮为禁用状态，将按钮样式btn-danger替换为disabled-->

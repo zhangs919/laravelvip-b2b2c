@@ -34,11 +34,11 @@ class SelfPickupController extends Seller
     protected $selfPickup;
 
 
-    public function __construct()
+    public function __construct(SelfPickupRepository $selfPickup)
     {
         parent::__construct();
 
-        $this->selfPickup = new SelfPickupRepository();
+        $this->selfPickup = $selfPickup;
 
         $this->set_menu_select('shop', 'self-pickup');
 

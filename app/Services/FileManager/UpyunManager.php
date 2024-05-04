@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tools\FileManager;
+namespace App\Services\FileManager;
 
+use App\Tools\FileManager\BaseManager;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

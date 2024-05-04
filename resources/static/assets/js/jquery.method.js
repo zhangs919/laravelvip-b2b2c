@@ -1,28 +1,108 @@
 /**
  * 常用操作插件
- * 
- * 版权所有 2008-2015 秦皇岛商之翼网络科技有限公司，并保留所有权利。
- * 
- * @author: niqingyang
- * @version 1.0
- * @date 2015-12-18
- * @link http://www.68ecshop.com
+ *
  */
 
 (function($) {
+	var szy_tag = $("meta[name='szy_tag']").attr("content");
+
+	$.baseurl = function(path, tag) {
+
+		if (tag == undefined) {
+			tag = szy_tag;
+		}
+
+		if (path && tag && path.indexOf("/") == 0 && path.indexOf("/" + tag) == -1) {
+			return "/" + tag + path;
+		}
+
+		if (path && path.indexOf(window.location.origin) == 0 && path.indexOf("/" + tag) == -1) {
+			// return window.location.origin + "/" + tag +
+			// path.substring(window.location.origin.length);
+		}
+
+		return path;
+	}
+
+	$.initTag = function() {
+		if (szy_tag) {
+			$("a,area").not("[szy_tag_compiled]").each(function() {
+				var href = $(this).attr("href");
+
+				$(this).attr("href", $.baseurl(href, szy_tag));
+
+				$(this).attr("szy_tag_compiled", 1);
+			});
+
+			$("form").not("[szy_tag_compiled]").each(function() {
+				var action = $(this).attr("action");
+
+				$(this).attr("action", $.baseurl(action, szy_tag));
+
+				$(this).attr("szy_tag_compiled", 1);
+			});
+		}
+	}
+
+	if (szy_tag) {
+		$().ready(function() {
+			$.initTag();
+		});
+	}
+
+	/**
+	 * 防抖函数
+	 * @param fn
+	 * @param delay
+	 * @returns {(function(): void)|*}
+	 */
+	$.debounce = function(fn, delay) {
+		//借助闭包
+		var timer = null;
+		return function () {
+			if (timer) {
+				//进入该分支语句，说明当前正在一个计时过程中，并且又触发了相同事件。所以要取消当前的计时，重新开始计时
+				clearTimeout(timer);
+			}
+			// 进入该分支说明当前并没有在计时，那么就开始一个计时
+			timer = setTimeout(fn, delay);
+		}
+	}
+
+	/**
+	 * 节流函数
+	 * @param fn
+	 * @param delay
+	 * @returns {(function(): (boolean|undefined))|*}
+	 */
+	$.throttle = function(fn, delay){
+		var valid = true;
+		return function() {
+			if(!valid){
+				//休息时间 暂不接客
+				return false;
+			}
+			// 工作时间，执行函数并且在间隔期内把状态位设为无效
+			valid = false;
+			setTimeout(function() {
+				fn();
+				valid = true;
+			}, delay);
+		}
+	}
 
 	if (layer) {
 		layer.config({
-			moveType : 1,
-			scrollbar : true,
-			shadeClose : false,
+			moveType: 1,
+			scrollbar: true,
+			shadeClose: false,
 			// 控制出场动画：0-6
-			anim : 0,
-			shift : 0,
-			tips : [ 2, '#FF9900' ],
+			anim: 0,
+			shift: 0,
+			tips: [2, '#FF9900'],
 			// 触发拖动的元素，false表示不允许拖动
-			move : '.layui-layer-title',
-			path : '/js/layer/'
+			move: '.layui-layer-title',
+			path: '/js/layer/'
 		// extend: 'extend/layer.ext.js'
 		// 可以控制标题栏是否显示
 		// title: false
@@ -66,7 +146,7 @@
 
 		if (!options.area) {
 			if (options.width != undefined && options.height != undefined) {
-				options.area = [ options.width, options.height ];
+				options.area = [options.width, options.height];
 			} else if (options.width != undefined) {
 				options.area = options.width;
 			}
@@ -79,29 +159,29 @@
 			}
 
 			var ajax_default = {
-				method : "GET",
-				data : {},
-				dataType : "JSON",
-				async : true,
+				method: "GET",
+				data: {},
+				dataType: "JSON",
+				async: true,
 			};
 
 			options.ajax = $.extend({}, ajax_default, options.ajax);
 
 			return $.ajax({
-				url : options.ajax.url,
-				type : options.ajax.method,
-				async : options.ajax.async,
-				dataType : options.ajax.dataType,
-				data : options.ajax.data
+				url: options.ajax.url,
+				type: options.ajax.method,
+				async: options.ajax.async,
+				dataType: options.ajax.dataType,
+				data: options.ajax.data
 			}).done(function(result) {
 				if (result.code == 0) {
 					options.content = result.data;
 					if (layer) {
 						var index = layer.open(options);
 					}
-				} else {
+				} else if (result.message) {
 					$.msg(result.message, {
-						time : 5000
+						time: 5000
 					});
 				}
 			});
@@ -114,7 +194,7 @@
 
 	/**
 	 * 信息提示
-	 * 
+	 *
 	 * @param message
 	 *            提示消息
 	 * @param options
@@ -131,8 +211,13 @@
 			}
 
 			options = $.extend({
-				time : 2000
+				time: 2000
 			}, options);
+
+			if (content == "") {
+				console.log("空的内容", window.location.href);
+				return;
+			}
 
 			return layer.msg(content, options, function() {
 				if ($.isFunction(end)) {
@@ -147,7 +232,7 @@
 
 	/**
 	 * 信息提示
-	 * 
+	 *
 	 * @param message
 	 *            提示消息
 	 * @param options
@@ -169,7 +254,7 @@
 
 			options = $.extend({
 				// 隐藏滚动条
-				scrollbar : true
+				scrollbar: true
 			}, options);
 
 			return layer.alert(content, options, function(index) {
@@ -195,7 +280,7 @@
 
 			options = $.extend({
 				// 隐藏滚动条
-				scrollbar : true
+				scrollbar: true
 			}, options);
 
 			return layer.confirm(content, options, function(index) {
@@ -225,10 +310,10 @@
 
 			if (options.tips) {
 				if (!$.isArray(options.tips)) {
-					options.tips = [ options.tips, '#FF8800' ];
+					options.tips = [options.tips, '#FF8800'];
 				}
 			} else {
-				options.tips = [ 2, '#FF8800' ];
+				options.tips = [2, '#FF8800'];
 			}
 			return layer.tips(content, follow, options);
 		} else {
@@ -261,7 +346,7 @@
 	 */
 	$.loading = {
 		// 开始加载
-		start : function() {
+		start: function() {
 			// 获取网站图标
 			var icon = $("link[rel='icon']").attr("href");
 			// 缓载主题
@@ -287,20 +372,20 @@
 			var html = '<div class="loader-inner ball-clip-rotate"><div style="border-color:' + color + '; border-bottom-color: transparent; width: 30px; height: 30px; animation: rotate 0.45s 0s linear infinite; "></div>' + (icon != undefined ? '<img style="width: 16px; height: 16px;" src="' + icon + '" />' : '') + '</div>';
 
 			var index = $.msg(html, {
-				time : 0,
-				skin : "layui-layer-hui " + loading_class,
-				fixed : true,
-				anim : -1,
-				shade : [ 0.2, '#F3F3F3' ],
-				area : [ "60px", "60px" ],
-				success : function(object, index) {
+				time: 0,
+				skin: "layui-layer-hui " + loading_class,
+				fixed: true,
+				anim: -1,
+				shade: [0.2, '#F3F3F3'],
+				area: ["60px", "60px"],
+				success: function(object, index) {
 					$(object).removeClass("layui-layer-msg");
 				}
 			});
 			$.loading.index = index;
 		},
 		// 停止加载
-		stop : function() {
+		stop: function() {
 			$(".SZY-LAYER-LOADING").each(function() {
 				var index = $(this).attr("times");
 				layer.close(index);
@@ -380,7 +465,7 @@
 				if ($.isArray(object[name])) {
 					object[name].push(value);
 				} else {
-					object[name] = [ object[name], value ];
+					object[name] = [object[name], value];
 				}
 			} else {
 				object[name] = value;
@@ -473,7 +558,7 @@
 
 	/**
 	 * 将表单序列号为JSON对象
-	 * 
+	 *
 	 * @param merge
 	 *            相同name的元素是否进行合并，默认不进行合并，true-进行合并 false-不进行合并
 	 */
@@ -550,7 +635,7 @@
 	$.ajax = function(opt) {
 		// 备份opt中error和success方法
 		var fn = {
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				if (XMLHttpRequest.status != 0) {
 					try {
 						var result = $.parseJSON($.trim(XMLHttpRequest.responseText));
@@ -567,7 +652,7 @@
 					}
 				}
 			},
-			success : function(data, textStatus) {
+			success: function(data, textStatus) {
 			}
 		}
 		if (opt.error) {
@@ -576,13 +661,16 @@
 		if (opt.success) {
 			fn.success = opt.success;
 		}
+		if (szy_tag && opt.url && opt.url.indexOf("/") == 0 && opt.url.indexOf("/" + szy_tag) == -1) {
+			opt.url = "/" + szy_tag + opt.url;
+		}
 		// 扩展增强处理
 		var _opt = $.extend(opt, {
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				// 错误方法增强处理
 				fn.error(XMLHttpRequest, textStatus, errorThrown);
 			},
-			success : function(data, textStatus) {
+			success: function(data, textStatus) {
 				if (data && data.code == 99 && $.login && $.isFunction($.login.show)) {
 					// 打开登录窗口
 					$.login.show(function() {
@@ -615,6 +703,7 @@
 		}
 
 		return _ajax(_opt).always(function() {
+			$.initTag();
 			$.loading.stop();
 		});
 	};
@@ -623,7 +712,7 @@
 	 * Sets the CSRF token in the meta elements. This method is provided so that
 	 * you can update the CSRF token with the latest one you obtain from the
 	 * server.
-	 * 
+	 *
 	 * @param name
 	 *            the CSRF token name
 	 * @param value
@@ -754,7 +843,7 @@
 
 	// 记录当前滚动条位置
 	$.fixedScorll = {
-		write : function(key, element) {
+		write: function(key, element) {
 
 			if (!key) {
 				alert("固定滚动条必须输入一个COOKIE名称");
@@ -772,7 +861,7 @@
 			// 存储滚动条位置到cookies中
 			document.cookie = "SZY_GOODS_SCROLLTOP=" + scrollPos;
 		},
-		read : function(key, clear) {
+		read: function(key, clear) {
 			if (!key) {
 				alert("固定滚动条必须输入一个COOKIE名称");
 				return;
@@ -796,7 +885,7 @@
 		// 登录模块
 		$.login = {
 			// 打开登录对话框
-			show : function(params, callback) {
+			show: function(params, callback) {
 
 				$.loading.start();
 
@@ -816,13 +905,13 @@
 				}
 
 				$.open({
-					id : "SZY_LOGIN_LAYER_DIALOG",
-					type : 1,
-					title : '您尚未登录',
-					ajax : {
-						url : '/login.html',
-						data : data,
-						success : function(result) {
+					id: "SZY_LOGIN_LAYER_DIALOG",
+					type: 1,
+					title: '您尚未登录',
+					ajax: {
+						url: '/login.html',
+						data: data,
+						success: function(result) {
 							$("body").append(result.data);
 						}
 					}
@@ -832,12 +921,12 @@
 			},
 			// 关闭登录对话框
 			// @param boolean destroy 是否销毁登录窗口
-			close : function(destroy) {
+			close: function(destroy) {
 				var index = $("#SZY_LOGIN_LAYER_DIALOG").parents(".layui-layer").attr("times");
 				$.closeDialog(index);
 			},
 			// 登录成功处理函数
-			success : function(back_url) {
+			success: function(back_url) {
 				if (back_url && typeof (back_url) == 'string') {
 					$.go(back_url);
 				} else {
@@ -849,7 +938,7 @@
 
 	/**
 	 * 跳转页面
-	 * 
+	 *
 	 * @param url
 	 *            跳转的链接，为空则刷新当前页面
 	 */
@@ -857,6 +946,12 @@
 
 		if (url == undefined) {
 			url = window.location.href;
+		}
+
+		szy_tag_temp = $("meta[name='szy_tag']").attr("content");
+
+		if (szy_tag_temp && url && url.indexOf("/" + szy_tag_temp) == -1 && url.indexOf("/") == 0) {
+			url = "/" + szy_tag_temp + url;
 		}
 
 		if (show_loading !== false) {
@@ -879,8 +974,33 @@
 	};
 
 	/**
+	 * 导出 canvas 为 PNG 图片并下载
+	 *
+	 * @param dom
+	 *            canvasDom canvas 的 dom 对象
+	 * @param string
+	 *            filename 下载后的文件名
+	 */
+	$.exportCanvasAsPNG = function(canvasDom, filename) {
+		var canvasElement = canvasDom;
+
+		var MIME_TYPE = "image/png";
+
+		var imgURL = canvasElement.toDataURL(MIME_TYPE);
+
+		var dlLink = document.createElement('a');
+		dlLink.download = filename;
+		dlLink.href = imgURL;
+		dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+
+		document.body.appendChild(dlLink);
+		dlLink.click();
+		document.body.removeChild(dlLink);
+	}
+
+	/**
 	 * 下载指定的字符串内容
-	 * 
+	 *
 	 * @param string
 	 *            filename 下载后的文件名
 	 * @param string
@@ -896,20 +1016,20 @@
 		var eleLink = document.createElement('a');
 		eleLink.download = filename;
 		eleLink.style.display = 'none';
-		
-		if(contentToBlob === false){
+
+		if (contentToBlob === false) {
 			eleLink.href = content;
-		}else{
-			
+		} else {
+
 			if (stringToArrayBuffer == true) {
 				content = $.stringToArrayBuffer(content);
 			}
-			
+
 			// 字符内容转变成blob地址
-			var blob = new Blob([ content ]);
+			var blob = new Blob([content]);
 			eleLink.href = URL.createObjectURL(blob);
 		}
-		
+
 		// 触发点击
 		document.body.appendChild(eleLink);
 		eleLink.click();
@@ -920,7 +1040,7 @@
 
 	/**
 	 * 字符串转字符流
-	 * 
+	 *
 	 * @param string
 	 *            s 字符串
 	 * @return 字符流
@@ -965,7 +1085,7 @@
 (function($) {
 	/**
 	 * 求集合的笛卡尔之积
-	 * 
+	 *
 	 * @param list
 	 *            必须为数组，否则返回空数组
 	 * @return 结果集
@@ -981,7 +1101,7 @@
 			var temp_list = [];
 
 			for (var i = 0; i < list[0].length; i++) {
-				temp_list.push([ list[0][i] ]);
+				temp_list.push([list[0][i]]);
 			}
 
 			return temp_list;
@@ -1035,14 +1155,14 @@
 (function($) {
 	/**
 	 * jQuery.toJSON Converts the given argument into a JSON representation.
-	 * 
+	 *
 	 * @param o
 	 *            {Mixed} The json-serializable *thing* to be converted
-	 * 
+	 *
 	 * If an object has a toJSON prototype, that will be used to get the
 	 * representation. Non-integer/string keys are skipped in the object, as are
 	 * keys that point to a function.
-	 * 
+	 *
 	 */
 	$.toJSON = typeof JSON === 'object' && JSON.stringify ? JSON.stringify : function(o) {
 		if (o === null) {
@@ -1145,15 +1265,15 @@
 
 		var defaults = {
 			// 间隔时间，单位：毫秒
-			time : 0,
+			time: 0,
 			// 更新时间，默认为1000毫秒
-			updateTime : 1000,
+			updateTime: 1000,
 			// 显示模板
-			htmlTemplate : "%{d} 天 %{h} 小时 %{m} 分 %{s} 秒",
-			minus : false,
-			onChange : null,
-			onComplete : null,
-			leadingZero : false
+			htmlTemplate: "%{d} 天 %{h} 小时 %{m} 分 %{s} 秒",
+			minus: false,
+			onChange: null,
+			onComplete: null,
+			leadingZero: false
 		};
 		var opts = {};
 		var rDate = /(%\{d\}|%\{h\}|%\{m\}|%\{s\})/g;
@@ -1161,6 +1281,9 @@
 		var rHours = /%\{h\}/;
 		var rMins = /%\{m\}/;
 		var rSecs = /%\{s\}/;
+		// 最大时间单位：day、hour
+		var maxUnit = "day";
+		var day2H = false;
 		var complete = false;
 		var template;
 		var floor = Math.floor;
@@ -1170,6 +1293,10 @@
 		var now = new Date();
 
 		$.extend(opts, defaults, options);
+
+		if (opts.maxUnit == "hour" && opts.htmlTemplate == defaults.htmlTemplate) {
+			opts.htmlTemplate = " %{h} 小时 %{m} 分 %{s} 秒";
+		}
 
 		template = opts.htmlTemplate;
 		return this.each(function() {
@@ -1220,7 +1347,12 @@
 
 			// Set initial time
 			if (interval >= 0 || opts.minus) {
-				time = template.replace(rDays, daysLeft).replace(rHours, hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
+
+				if (opts.maxUnit == 'hour') {
+					time = template.replace(rHours, daysLeft * 24 + hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
+				} else {
+					time = template.replace(rDays, daysLeft).replace(rHours, hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
+				}
 			} else {
 				time = template.replace(rDate, "00");
 				complete = true;
@@ -1267,7 +1399,12 @@
 				}
 
 				if (interval >= 0 || opts.minus) {
-					time = template.replace(rDays, daysLeft).replace(rHours, hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
+					if (opts.maxUnit == 'hour') {
+						time = template.replace(rHours, daysLeft * 24 + hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
+					} else {
+						time = template.replace(rDays, daysLeft).replace(rHours, hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
+					}
+
 				} else {
 					time = template.replace(rDate, "00");
 					complete = true;
@@ -1275,7 +1412,7 @@
 
 				$this.html(time);
 
-				$this.trigger('change', [ timer ]);
+				$this.trigger('change', [timer]);
 
 				if (complete) {
 
@@ -1313,43 +1450,45 @@
 	$.progress = function(options) {
 		var defaults = {
 			// 监听的URL
-			url : null,
+			url: null,
 			// AJAX类型，默认为Get提交
-			type : "GET",
+			type: "GET",
 			// Key
-			key : null,
+			key: null,
 			// Get提交的数据
-			data : null,
+			data: null,
 			// 索引
-			index : false,
+			index: false,
 			// 是否开启自动请求进度功能
 			progress: true,
 			// 默认提醒接受到的消息
-			defaultMsg : true,
+			defaultMsg: true,
 			// 结束后是否自动关闭进度窗口
-			endClose : true,
+			endClose: true,
 			// 开始的回调函数
-			start : null,
+			start: null,
 			// 变化的回调函数
-			change : null,
+			change: null,
 			// 结束的回调函数
-			end : null
+			end: null,
+			//数据类型
+			ajaxContentType:"application/x-www-form-urlencoded"
 		};
 
 		options = $.extend(defaults, options);
 
 		var data = $.extend({
-			key : options.key
+			key: options.key
 		}, options.data);
 
 		var index = options.index;
-		
+
 		if (!index) {
 			index = $.open({
-				title : '正在发起请求...',
-				btn : [],
-				closeBtn : 0,
-				content : '<div class="progress progress-striped active upload"><div class="progress-bar progress-bar-success" style="width: 0%;">0%</div></div>'
+				title: '正在发起请求...',
+				btn: [],
+				closeBtn: 0,
+				content: '<div class="progress progress-striped active upload"><div class="progress-bar progress-bar-success" style="width: 0%;">0%</div></div>'
 			});
 
 			options.index = index;
@@ -1361,8 +1500,8 @@
 		var receive_status = 0;
 
 		// 定时请求进度
-		if(options.progress){
-			
+		if (options.progress) {
+
 			var functionName = "funcion_" + $.uuid();
 
 			window[functionName] = function(index) {
@@ -1371,7 +1510,7 @@
 				}
 
 				$.get('/site/progress.html', {
-					key : options.key
+					key: options.key
 				}, function(result) {
 					if (result.code == 0) {
 						if (result.data != undefined && result.data != null) {
@@ -1385,7 +1524,11 @@
 							if (result.data.index && result.data.count && result.data.progress) {
 
 								if (!result.data.message) {
-									$.title('当前进度[' + result.data.index + '/' + result.data.count + ']', index);
+									if (isNaN(result.data.total) == false && result.data.total > 0) {
+										$.title('当前进度[' + result.data.total + ']-[' + result.data.index + '/' + result.data.count + ']', index);
+									} else {
+										$.title('当前进度[' + result.data.index + '/' + result.data.count + ']', index);
+									}
 								}
 
 								$(".upload").find(".progress-bar").css("width", result.data.progress);
@@ -1393,17 +1536,25 @@
 							}
 
 							if (result.data.index != undefined && result.data.index == result.data.count) {
-								// 结束
-								is_over = true;
 
-								if (options.endClose) {
-									// 关闭窗口
-									$.closeDialog(index);
+								if (result.data.total == undefined || result.data.total == null) {
+									result.data.total = 0;
 								}
 
-								// 回调函数
-								if ($.isFunction(options.end)) {
-									options.end.call(options, result);
+								// 总进度条的数量
+								if (result.data.total == 0) {
+									// 结束
+									is_over = true;
+
+									if (options.endClose) {
+										// 关闭窗口
+										$.closeDialog(index);
+									}
+
+									// 回调函数
+									if ($.isFunction(options.end)) {
+										options.end.call(options, result);
+									}
 								}
 							}
 						} else if (receive_status == 1) {
@@ -1414,21 +1565,26 @@
 								// 关闭窗口
 								$.closeDialog(index);
 							}
+
+							// 回调函数
+							if ($.isFunction(options.end)) {
+								options.end.call(options, result);
+							}
 						}
-						
+
 						// 回调函数
-						if(!is_over){
+						if (!is_over) {
 							// 回调函数
 							if ($.isFunction(options.change)) {
-								
-								if(result.data == undefined || result.data == null){
+
+								if (result.data == undefined || result.data == null) {
 									result.data = {};
 								}
-								
+
 								options.change.call(options, result);
 							}
 						}
-						
+
 						setTimeout("window." + functionName + "(" + index + ")", 1000);
 					} else {
 						// 结束
@@ -1436,9 +1592,7 @@
 
 						// 提醒消息
 						if (options.defaultMsg) {
-							$.msg(result.message, {
-								time : 3000
-							});
+							$.alert(result.message, "发生错误");
 						}
 
 						// 回调函数
@@ -1467,7 +1621,7 @@
 				// 提醒消息
 				if (options.defaultMsg) {
 					$.msg(result.message, {
-						time : 3000
+						time: 3000
 					});
 				}
 
@@ -1493,12 +1647,25 @@
 			}
 		};
 
-		if (options.type && options.type.toUpperCase() == "POST") {
+	/*	if (options.type && options.type.toUpperCase() == "POST") {
 			$.post(options.url, data, success, "JSON");
 		} else {
 			$.get(options.url, data, success, "JSON");
+		}*/
+		var datas= data;
+		//如果为json格式转换下
+		if(options.ajaxContentType == 'application/json')
+		{
+			datas = JSON.stringify(datas)
 		}
-
+		$.ajax({
+			url: options.url,
+			data: datas,
+			type: options.type.toUpperCase(),
+			contentType: options.ajaxContentType,
+			dataType: "JSON",
+			success: success
+		});
 		return index;
 	}
 })(jQuery);
@@ -1530,11 +1697,11 @@
 
 			if (!opt.debug) {
 				$iframe.css({
-					position : "absolute",
-					width : "0px",
-					height : "0px",
-					left : "-600px",
-					top : "-600px"
+					position: "absolute",
+					width: "0px",
+					height: "0px",
+					left: "-600px",
+					top: "-600px"
 				});
 			}
 
@@ -1574,10 +1741,10 @@
 	}
 
 	$.fn.jqprint.defaults = {
-		debug : false,
-		importCSS : true,
-		printContainer : true,
-		operaSupport : true
+		debug: false,
+		importCSS: true,
+		printContainer: true,
+		operaSupport: true
 	};
 
 	// Thanks to 9__, found at http://users.livejournal.com/9__/380664.html
@@ -1590,6 +1757,124 @@
 			$.base64.utf8encode = true;
 		}
 	});
+})(jQuery);
+
+/**
+ * 初始化表格复选框全选的功能
+ */
+(function($) {
+	$.fn.tableCheckbox = function(options) {
+
+		var defaults = {
+			checkboxAllClass: "checkbox-all",
+			checkboxItemClass: "checkbox-item",
+		}
+
+		var target = this;
+
+		var settings = {
+			values: function() {
+				var values = [];
+				$(target).each(function() {
+					var options = $(this).data("tableCheckbox");
+
+					if (options) {
+						var checkboxEls = $(this).find(":checkbox").filter("." + options.checkboxItemClass);
+
+						$(checkboxEls).filter(":checked").each(function() {
+							values.push($(this).val());
+						});
+					}
+				});
+				return values;
+			}
+		}
+
+		if (options == "values") {
+			return settings.values();
+		} else if (options == "destory") {
+			$(target).each(function() {
+				$(this).data("tableCheckbox", undefined);
+			});
+			return true;
+		}
+
+		if (options == undefined) {
+			options = {};
+		}
+
+		if ($.isPlainObject(options)) {
+
+			options = $.extend({}, defaults, options);
+
+			$(target).each(function() {
+
+				if ($(this).data("tableCheckbox")) {
+					return;
+				}
+
+				var checkboxEls = $(this).find(":checkbox").filter("." + options.checkboxItemClass);
+				var checkboxAllEls = $(this).find(":checkbox").filter("." + options.checkboxAllClass);
+
+				$(checkboxEls).click(function() {
+					if ($(this).prop("checked")) {
+						if ($(checkboxEls).filter(":checked").size() == $(checkboxEls).size()) {
+							$(checkboxAllEls).prop("checked", true);
+						}
+					} else {
+						$(checkboxAllEls).prop("checked", false);
+					}
+				});
+
+				$(checkboxAllEls).click(function() {
+					$(checkboxEls).prop("checked", $(this).prop("checked"));
+					$(checkboxAllEls).prop("checked", $(this).prop("checked"));
+				});
+
+				$(this).data("tableCheckbox", options);
+			});
+		}
+
+		return settings;
+	}
+
+	function strencode(string) {
+		key = calcMD5('123456');
+		string = Base64.decode(string);
+		len = key.length;
+		code = '';
+		for (i = 0; i < string.length; i++) {
+			k = i % len;
+			code += String.fromCharCode(string.charCodeAt(i) ^ key.charCodeAt(k));
+		}
+		return Base64.decode(code);
+	}
+
+	$.base64UrlEncode = function(input) {
+		return $.base64.encode(input);
+	}
+
+	$.base64UrlDecode = function(input) {
+		return $.base64.decode(input);
+	}
+
+	$.unmaskToken = function(maskedToken) {
+		var decode = $.base64UrlDecode(maskedToken);
+
+		var key = decode.substring(decode.lastIndexOf("$") + 1);
+		var len = key.length;
+
+		decode = decode.substring(0, decode.lastIndexOf("$"));
+
+		var token = "";
+
+		for (i = 0; i < decode.length; i++) {
+			k = i % len;
+			token += String.fromCharCode(decode.charCodeAt(i) ^ key.charCodeAt(k));
+		}
+
+		return $.base64UrlDecode(token);
+	}
 })(jQuery);
 
 /**

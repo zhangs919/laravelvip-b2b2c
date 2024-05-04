@@ -37,11 +37,28 @@ class IntegralOrderInfo extends BaseModel
         'region_code','region_name','address','address_lng','address_lat','receiving_mode','tel','email','postscript','best_time',
         'shipping_fee','order_from','add_time','shipping_time','confirm_time','delay_days','order_type','service_mark','send_mark',
         'shipping_mark','buyer_type','end_time','is_show','is_delete','close_reason','order_cancel','refuse_reason','order_points',
-        'remark','last_time','shipping_id','express_sn','buy_type','user_name','shop_name','shop_type','customer_tool','customer_account',
+        'remark','last_time','shipping_id','express_sn','buy_type','user_name',
+
+
+//        'shop_name','shop_type','customer_tool','customer_account',
 
         // 以下字段接口返回 不用存表
-        'order_status_format','order_from_format','goods_list'
+//        'order_status_format','order_from_format','goods_list'
     ];
 
     protected $primaryKey = 'order_id';
+
+    /**
+     * 一对多关联 订单商品表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function integralOrderGoods()
+    {
+        return $this->hasMany(IntegralOrderGoods::class, 'order_id', 'order_id');
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id','shop_id');
+    }
 }

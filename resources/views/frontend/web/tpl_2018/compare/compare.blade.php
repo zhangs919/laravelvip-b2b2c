@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('header_css')
-    <link rel="stylesheet" href="/css/compare.css?v=20180702"/>
+    <link rel="stylesheet" href="/css/compare.css"/>
 @stop
 
 @section('header_js')
@@ -44,7 +44,6 @@
                     <!-- 选择进行对比的商品 给Li标签追加 class 值为"active" _end-->
                     <!---->
                     @endforeach
-                    <!---->
                 </ul>
             </div>
         </div>
@@ -54,12 +53,56 @@
         <!---->
     </div>
     <script type="text/javascript">
-        var local_region_code = "53,01";
-        var local_region_name = "云南省 昆明市";
+        //
     </script>
-    <script src="/js/compare.js?v=20180027"></script>
-    <script src="/js/tabs.js?v=20180027"></script>
     <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+@stop
+
+@section('footer_js')
+    <!-- 消息提醒 -->
+    <script type="text/javascript">
+        //
+    </script>
+    <script type="text/javascript">
+        //
+    </script>
+    <script src="/assets/d2eace91/js/jquery.cookie.js"></script>
+    <script src="/assets/d2eace91/js/layer/layer.js"></script>
+    <script src="/assets/d2eace91/js/jquery.method.js"></script>
+    <script src="/assets/d2eace91/js/jquery.modal.js"></script>
+    <script src="/assets/d2eace91/js/jquery.lazyload.js"></script>
+    <script src="/js/jquery.fly.min.js"></script>
+    <script src="/assets/d2eace91/js/szy.cart.js"></script>
+    <script src="/js/requestAnimationFrame.js"></script>
+    <script src="/js/compare.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/assets/d2eace91/min/js/message.min.js"></script>
+    <script>
+        $('.list-item-slide').each(function() {
+            $(this).rTabs({
+                bind: 'hover',
+                animation: 'up'
+            });
+        });
+        //
+        var local_region_code = "{{ sysconf('mall_region_code') }}";
+        var local_region_name = "{{ get_region_names_by_region_code(sysconf('mall_region_code')) }}";
+        //
         $("body").on("click", "a[class='cart-btn add-to-cart'],a[class='list-item-btn add-to-cart']", function() {
             var buy_enable = $(this).data("buy-enable");
             if(buy_enable){
@@ -70,8 +113,7 @@
                 is_sku: false
             });
         });
-    </script>
-    <script type="text/javascript">
+        //
         $(document).ready(function() {
             $.ajax({
                 type: 'GET',
@@ -86,24 +128,19 @@
                     });
                 }
             })
-
         });
-    </script>
-    <script type="text/javascript">
+        //
         function buy(goods_id) {
-
             $.get('/compare/in-cart?id=' + goods_id, function(results) {
                 if (results.code == 0) {
                     $.cart.quickBuy(results.data, 1);
                     //$.go("/cart/quick-buy.html?sku_id=" + results.data + "&number=1","_blank");
                 } else {
-                    $.go("/goods-" + goods_id + ".html");
+                    $.go("http://{{ config('lrw.frontend_domain') }}/goods-" + goods_id + ".html");
                 }
             }, "json");
-
         }
-    </script>
-    <script type="text/javascript">
+        //
         $(".nav-item").click(function() {
             if ($("li[class='nav-item active']").length >= 3) {
                 if ($(this).hasClass("active")) {
@@ -122,10 +159,9 @@
                 int++;
             });
             var spread = $("li[class='list-row-item more-shop-info']").attr("style");
-
             $.ajax({
                 type: 'GET',
-                url: '/user/compare.html?type=1&ids=' + arr,
+                url: '/compare?type=1&ids=' + arr,
                 dataType: 'json',
                 success: function(result) {
                     $("#compare").html(result.data);
@@ -135,12 +171,11 @@
                         dataType: 'json',
                         success: function(result) {
                             $("span[class='rmb-num freught']").each(function(index, eve) {
-
                                 $(this).html(result.data[index]);
+                                console.log(111)
                                 if (spread == "display: list-item;") {
                                     $('.more-shop-info').attr("style", "display: list-item;");
                                 }
-
                             });
                             $(".distance").each(function(index, eve) {
                                 $(this).children().html(returnCitySN.cname);
@@ -150,8 +185,7 @@
                 }
             })
         });
-    </script>
-    <script type="text/javascript">
+        //
         $("body").on("click", "a[class='del btn-del-sku'],a[class='list-item-btn list-item-del']", function() {
             var c_id = $(this).next().val()
             var int = 0;
@@ -160,7 +194,6 @@
                 if (s) {
                     $("li[class='nav-item active']").each(function() {
                         var id = $("li[class='nav-item active']").eq(int).children("input").val();
-
                         if (id == c_id) {
                             $(this).remove();
                         } else {
@@ -192,20 +225,52 @@
                 }
             })
         });
-    </script>
-
-@stop
-
-@section('footer_js')
-    <script src="/js/jquery.fly.min.js?v=20180027"></script>
-    <script src="/assets/d2eace91/js/szy.cart.js?v=20180027"></script>
-    <!--[if lte IE 9]>
-    <script src="/js/requestAnimationFrame.js?v=20180027"></script>
-    <![endif]-->
-    <script type="text/javascript">
+        //
+        //解决因为缓存导致获取分类ID不正确问题，需在ready之前执行
+        $(".SZY-DEFAULT-SEARCH").data("cat_id", "");
+        $().ready(function() {
+            $(".SZY-SEARCH-BOX-KEYWORD").val("");
+            $(".SZY-SEARCH-BOX-KEYWORD").data("search_type", "");
+            //
+            $(".SZY-SEARCH-BOX .SZY-SEARCH-BOX-SUBMIT").click(function() {
+                if ($(".search-li.curr").attr('num') == 0) {
+                    var keyword_obj = $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-KEYWORD");
+                    var keywords = $(keyword_obj).val();
+                    if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入要搜索的关键词") {
+                        keywords = $(keyword_obj).data("searchwords");
+                        $(keyword_obj).val(keywords);
+                    }
+                    $(keyword_obj).val(keywords);
+                }
+                $(this).parents(".SZY-SEARCH-BOX").find(".SZY-SEARCH-BOX-FORM").submit();
+            });
+        });
+        //
         $().ready(function(){
             // 缓载图片
             $.imgloading.loading();
         });
+        //
+        $().ready(function() {
+            WS_AddPoint({
+                user_id: '{{ $user_info['user_id'] ?? 0 }}',
+                url: "{{ get_ws_url('4431') }}",
+                type: "add_point_set"
+            });
+        }, 'JSON');
+        function addPoint(ob) {
+            if (ob != null && ob != 'undefined') {
+                if (ob.point && ob.point > 0 && ob.user_id && ob.user_id == '{{ $user_info['user_id'] ?? 0 }}') {
+                    $.intergal({
+                        point: ob.point,
+                        name: '积分'
+                    });
+                }
+            }
+        }
+        //
+        $().ready(function() {
+        })
+        //
     </script>
 @stop

@@ -163,17 +163,8 @@
         </div>
         <div class="bottom">
             <p>
-
                 <a class="btn btn-primary" href="/shop/apply/register.html"> 上一步 </a>
-
-                @if(@$shop_cache['shop']['shop_type'] == 1)
-                    <a id="next" class="btn btn-primary" href="/shop/apply/auth-info.html?is_supply={{ $shop_cache['shop']['is_supply'] }}&shop_type=1"> 下一步 </a>
-                @elseif(@$shop_cache['shop']['shop_type'] == 2)
-                    <a id="next" class="btn btn-primary" href="/shop/apply/auth-info.html?is_supply={{ $shop_cache['shop']['is_supply'] }}&shop_type=2"> 下一步 </a>
-                @else
-                    <a id="next" class="btn btn-primary disabled" href="javascript:void(0);"> 下一步 </a>
-                @endif
-
+                <a id="next" class="btn btn-primary disabled" href="javascript:void(0);"> 下一步 </a>
             </p>
         </div>
     </div>
@@ -183,7 +174,7 @@
                 $("li[class='selected']").removeAttr("class");
                 $(this).addClass("selected");
                 $("#next").removeClass("disabled");
-                $("#next").attr("href", "/shop/apply/auth-info.html?is_supply=0&shop_type=" + $(this).attr('value'));
+                $("#next").attr("href", "/shop/apply/auth-info.html?is_supply={{ $shop_cache['shop']['is_supply'] }}&shop_type=" + $(this).attr('value'));
 
                 if ($(this).attr('value') == 1) {
                     $("#type_personal").html("已选择");

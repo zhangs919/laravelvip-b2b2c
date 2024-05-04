@@ -8,48 +8,50 @@
 
 
         <!-- 站点 -->
-        <!--站点 start-->
-        <div class="SZY-SUBSITE"><!--站点 start-->
-            <div class="SZY-SUBSITE">
+        @if(sysconf('site_open'))
+            <!--站点 start-->
+            <div class="SZY-SUBSITE"><!--站点 start-->
+                <div class="SZY-SUBSITE">
 
 
-                <ul class="fl">
-                    <li class="dorpdown" id="city-choice">
-                        <dt class="sc-icon">
-                            <div class="sc-choie">
-                                <i class="iconfont color"></i>
-                                <span class="ui-areamini-text" data-id="2" title="">开州区&nbsp;&nbsp;&nbsp;</span>
-                            </div>
-                            <div class="dd-spacer"></div>
-                        </dt>
-                        <dd class="dorpdown-layer">
-                            <div class="ui-areamini-content-wrap" id="ui-content-wrap">
-                                <!--当站点少的活，以dl下展示形式展示，如果展示多的话，以ul下的li展示形式展示-->
+                    <ul class="fl">
+                        <li class="dorpdown" id="city-choice">
+                            <dt class="sc-icon">
+                                <div class="sc-choie">
+                                    <i class="iconfont color"></i>
+                                    <span class="ui-areamini-text" data-id="2" title="">开州区&nbsp;&nbsp;&nbsp;</span>
+                                </div>
+                                <div class="dd-spacer"></div>
+                            </dt>
+                            <dd class="dorpdown-layer">
+                                <div class="ui-areamini-content-wrap" id="ui-content-wrap">
+                                    <!--当站点少的活，以dl下展示形式展示，如果展示多的话，以ul下的li展示形式展示-->
 
-                                <dl>
-                                    <dt>站点</dt>
-
-
-                                    <dd>
-                                        <a href="/subsite/index.html?site_id=1">北京站</a>
-                                    </dd>
-
-                                    <dd>
-                                        <a href="/subsite/index.html?site_id=2">开州区</a>
-                                    </dd>
+                                    <dl>
+                                        <dt>站点</dt>
 
 
-                                </dl>
+                                        <dd>
+                                            <a href="/subsite/index.html?site_id=1">北京站</a>
+                                        </dd>
 
-                            </div>
-                        </dd>
-                    </li>
-                </ul>
+                                        <dd>
+                                            <a href="/subsite/index.html?site_id=2">开州区</a>
+                                        </dd>
 
+
+                                    </dl>
+
+                                </div>
+                            </dd>
+                        </li>
+                    </ul>
+
+                </div>
+                <!--站点 end-->
             </div>
             <!--站点 end-->
-        </div>
-        <!--站点 end-->
+        @endif
 
 
         <!-- 登录信息 -->
@@ -186,18 +188,18 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
-            if ($(".search-li-top.curr").attr('num') == 0) {
-                var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
-
-                var keywords = $(keyword_obj).val();
-                if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
-                    keywords = $(keyword_obj).data("searchwords");
-                }
-                $(keyword_obj).val(keywords);
-            }
-            $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
-        });
-    });
+    // $(document).ready(function() {
+    //     $(".SZY-SEARCH-BOX-TOP .SZY-SEARCH-BOX-SUBMIT-TOP").click(function() {
+    //         if ($(".search-li-top.curr").attr('num') == 0) {
+    //             var keyword_obj = $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-KEYWORD");
+    //
+    //             var keywords = $(keyword_obj).val();
+    //             if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+    //                 keywords = $(keyword_obj).data("searchwords");
+    //             }
+    //             $(keyword_obj).val(keywords);
+    //         }
+    //         $(this).parents(".SZY-SEARCH-BOX-TOP").find(".SZY-SEARCH-BOX-FORM").submit();
+    //     });
+    // });
 </script>
