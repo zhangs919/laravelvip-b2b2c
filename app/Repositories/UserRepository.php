@@ -61,6 +61,23 @@ class UserRepository
     }
 
     /**
+     * 检查用户是否是主播
+     *
+     * @param $condition
+     * @return bool
+     */
+    public function checkIsAnchor($condition)
+    {
+        $condition[] = ['live_verified', 1];
+        $data = $this->model->where($condition)->count();
+        if ($data > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 注册会员
      *
      * @param array $userData 注册信息
@@ -319,6 +336,58 @@ class UserRepository
         return $success_count;
     }
 
+    /**
+     * 主播认证
+     *
+     * @param $user_id
+     * @param $data
+     * @return bool
+     * @throws \Exception
+     */
+    public function liveVerified($user_id, $data)
+    {
+        DB::beginTransaction();
+        try {
+            // 验证手机验证码
+            $cache_id = CACHE_KEY_SMS_CAPTCHA[0].':'.$user_id.':6';
+            $sms_captcha = cache()->get($cache_id);
+            if (env('APP_ENV') == 'production' && $sms_captcha != $data['sms_captcha']) {
+                throw new \Exception('短信验证码无效');
+            }
+            // 写入用户认证数据
+            $user_real = UserReal::where([['user_id', $user_id]])->first();
+            if (!empty($user_real)) {
+                if ($user_real->status == 0) {
+                    $user_real->status = 1;
+                    $user_real->real_name = $data['real_name'];
+                    $user_real->id_code = $data['id_code'];
+                    $user_real->save();
+                } else {
+                    // 已完成实名认证 不做修改
 
+                }
+            } else {
+                $insert = [
+                    'real_name' => $data['real_name'],
+                    'id_code' => $data['id_code'],
+                    'user_id' => $user_id,
+                    'status' => 1,
+                ];
+                $user_real_model = new UserReal();
+                $user_real_model->fill($insert);
+                $user_real_model->save();
+            }
+
+            // 更新用户主播认证状态
+            $update = ['live_verified' => 2];// 认证中（待审核）
+            User::where([['user_id', $user_id]])->update($update);
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
 
 }

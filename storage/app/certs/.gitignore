@@ -1,2 +1,5 @@
 *
 !.gitignore
+!chat
+!live
+!pay

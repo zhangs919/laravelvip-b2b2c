@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        /**
+         * 服务器添加：* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+         */
+
 //         $schedule->command('inspire')
 //                  ->everyMinute()->sendOutputTo('t.txt',true);
 
@@ -52,6 +56,18 @@ class Kernel extends ConsoleKernel
 
         // 自动备份数据库 间隔：每天 00:10
         $schedule->command('data:backup')->dailyAt("00:10");
+
+        /* 每天午夜执行一次任务每天零点，查询账单订单数据是否存在 */
+        $schedule->command('app:commission sorder')->daily();
+
+        /* 每天 1 点 和 2 点分别执行一次任务，执行为生成账单 */
+        $schedule->command('app:commission')->twiceDaily(1, 2);
+
+        /* 每天 1 点 和 2 点分别执行一次任务，执行为生成账单详细数据 */
+        $schedule->command('app:commission charge')->twiceDaily(1, 2);
+
+        /* 每天午夜执行一次任务（译者注：每天零点），执行账单订单佣金插入数据 */
+        $schedule->command('app:commission settlement')->daily();
 
         // 使用方式三：调度队列任务
 //        $schedule->job(new ProcessUserBonus())

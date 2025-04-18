@@ -85,6 +85,8 @@ Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
         // 限时折扣 ok
         Route::group(['prefix' => 'limit-discount'], function () {
             Route::get('list', 'Dashboard\LimitDiscountController@lists'); // lists
+            Route::any('shop-activity-goods-list', 'Dashboard\LimitDiscountController@shopActivityGoodsList');
+            Route::get('add-activity-goods', 'Dashboard\LimitDiscountController@addActivityGoods');
             Route::get('add', 'Dashboard\LimitDiscountController@add'); // add
             Route::get('edit', 'Dashboard\LimitDiscountController@edit'); // edit
             Route::post('add', 'Dashboard\LimitDiscountController@saveData'); // saveData
@@ -137,8 +139,44 @@ Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
             Route::post('add', 'Dashboard\FightGroupController@saveData'); // saveData
             Route::post('delete', 'Dashboard\FightGroupController@delete'); // delete
             Route::post('batch-delete', 'Dashboard\FightGroupController@batchDelete'); // batchDelete
-            Route::get('picker', 'Dashboard\ActivityGoodsController@picker'); // add
+            Route::any('picker', 'Dashboard\FightGroupController@picker'); // add
             Route::get('change-mode', 'Dashboard\FightGroupController@changeMode'); // changeMode 更换优惠模式
+            Route::get('sku-list', 'Dashboard\FightGroupController@skuList'); // skuList
+
+
+        });
+
+        // 拼团订单
+        Route::group(['prefix' => 'groupon-order'], function () {
+            Route::get('list', 'Dashboard\GrouponOrderController@lists'); // lists
+            Route::get('info', 'Dashboard\GrouponOrderController@info');
+            Route::get('refund', 'Dashboard\GrouponOrderController@refund');
+
+
+        });
+
+        // 砍价
+        Route::group(['prefix' => 'bargain'], function () {
+            Route::get('list', 'Dashboard\BargainController@lists'); // lists
+            Route::any('shop-activity-goods-list', 'Dashboard\BargainController@shopActivityGoodsList');
+            Route::get('add-activity-goods', 'Dashboard\BargainController@addActivityGoods');
+            Route::get('add', 'Dashboard\BargainController@add'); // add
+            Route::post('add', 'Dashboard\BargainController@saveData'); // saveData
+            Route::post('delete', 'Dashboard\BargainController@delete'); // delete
+//            Route::post('batch-delete', 'Dashboard\BargainController@batchDelete'); // batchDelete
+            Route::any('picker', 'Dashboard\BargainController@picker'); // add
+            Route::post('sku-info', 'Dashboard\BargainController@skuInfo'); // skuInfo
+            Route::post('goods-info', 'Dashboard\BargainController@goodsInfo');
+//            Route::post('batch-goods-info', 'Dashboard\BargainController@batchGoodsInfo');
+//            Route::post('edit-act-info', 'Dashboard\BargainController@editActInfo'); // editActInfo
+
+
+        });
+
+        // 砍价订单
+        Route::group(['prefix' => 'bargain-order'], function () {
+            Route::get('list', 'Dashboard\BargainOrderController@lists'); // lists
+            Route::get('info', 'Dashboard\BargainOrderController@info');
 
 
         });

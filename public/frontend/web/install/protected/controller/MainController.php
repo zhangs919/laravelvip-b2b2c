@@ -67,6 +67,37 @@ class MainController extends BaseController
             $this->redirect('?a=index');
         }
         $this->timezones = $this->geTimezones();
+
+        $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+        $host_arr = explode('.', $host);
+        $current_sub = $host_arr[0]; // 当前访问域名的子域
+
+        $appUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $host;
+        preg_match("#\.(.*)#i", $appUrl, $match);
+//        $session_domain = $match[0];
+        $root_domain = $match[1];
+
+        $this->frontend_sub = $current_sub;
+        $this->mobile_sub = 'm';
+        $this->backend_sub = 'backend';
+        $this->seller_sub = 'seller';
+        $this->store_sub = 'store';
+        $this->api_sub = 'api';
+        $this->push_sub = 'push';
+        $this->kf_sub = 'kf';
+        $this->goods_detail_sub = 'item.m';
+        $this->mobile_goods_detail_sub = 'item';
+
+        $this->frontend_domain = $current_sub.'.' . $root_domain;
+        $this->mobile_domain = 'm.' . $root_domain;
+        $this->backend_domain = 'backend.' . $root_domain;
+        $this->seller_domain = 'seller.' . $root_domain;
+        $this->store_domain = 'store.' . $root_domain;
+        $this->api_domain = 'api.' . $root_domain;
+        $this->push_domain = 'push.' . $root_domain;
+        $this->kf_domain = 'kf.' . $root_domain;
+        $this->goods_detail_domain = 'item.' . $root_domain;
+        $this->mobile_goods_detail_domain = 'item.m.' . $root_domain;
     }
 
     public function actionDatabases()
@@ -150,18 +181,34 @@ class MainController extends BaseController
 
 
         $host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+        $host_arr = explode('.', $host);
+        $current_sub = $host_arr[0]; // 当前访问域名的子域
+
         $appUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $host;
         preg_match("#\.(.*)#i", $appUrl, $match);
         $session_domain = $match[0];
         $root_domain = $match[1];
 
-        $frontend_domain = 'www.' . $root_domain;
-        $mobile_domain = 'm.' . $root_domain;
-        $backend_domain = 'backend.' . $root_domain;
-        $seller_domain = 'seller.' . $root_domain;
-        $store_domain = 'store.' . $root_domain;
-        $api_domain = 'api.' . $root_domain;
-        $push_domain = 'push.' . $root_domain;
+        // 域名验证
+        $frontend_sub = $current_sub;
+        $mobile_sub = request('mobile_sub', '');
+        $backend_sub = request('backend_sub', '');
+        $seller_sub = request('seller_sub', '');
+        $store_sub = request('store_sub', '');
+        $api_sub = request('api_sub', '');
+        $push_sub = request('push_sub', '');
+        if (!$frontend_sub || !$mobile_sub || !$backend_sub || !$seller_sub
+            || !$store_sub || !$api_sub || !$push_sub) {
+            die(json_encode(['status' => 'n', 'info' => '请检查域名配置信息是否正确']));
+        }
+
+        $frontend_domain = $frontend_sub.'.' . $root_domain; // PC端域名 固定取当前访问域名
+        $mobile_domain = $mobile_sub.'.' . $root_domain;
+        $backend_domain = $backend_sub.'.' . $root_domain;
+        $seller_domain = $seller_sub.'.' . $root_domain;
+        $store_domain = $store_sub.'.' . $root_domain;
+        $api_domain = $api_sub.'.' . $root_domain;
+        $push_domain = $push_sub.'.' . $root_domain;
         $kf_domain = 'kf.' . $root_domain;
         $goods_detail_domain = 'item.' . $root_domain;
         $mobile_goods_detail_domain = 'item.m.' . $root_domain;
@@ -186,13 +233,21 @@ class MainController extends BaseController
         // 导入数据
         $db = $this->getDb($db_host, $db_port, $db_user, $db_pass, $db_name);
         $sqls = ['structure.sql'];
-        foreach ($sqls as $sql) {
-            $this->importSql($db, $sql, $db_prefix);
+        try {
+            foreach ($sqls as $sql) {
+                $this->importSql($db, $sql, $db_prefix);
+            }
+        } catch (Exception $e) {
+            die(json_encode(['status' => 'n', 'info' => '数据导入失败['.$e->getMessage().']']));
         }
+
 
         // 执行安装shell脚本
         $output = shell_exec('sh ../../../../scripts/install_panel.sh');
 //        $output = shell_exec('sudo -u www sh ../../../../scripts/install_panel.sh');
+        if ($output === NULL) {
+            die(json_encode(['status' => 'n', 'info' => 'shell脚本执行失败']));
+        }
         if ($output && !str_contains($output, 'INFO')) {
             die(json_encode(['status' => 'n', 'info' => 'shell脚本执行失败[' . $output . ']']));
         }
@@ -235,7 +290,10 @@ class MainController extends BaseController
         try {
             // 执行seeder数据填充 写入授权码
             $seeder_url = "$appUrl/install/seeder?username={$admin['username']}&password={$admin['password']}&app_key={$app_key}";
-            $seeder_res = Http::get($seeder_url);
+            list($seeder_res, $http_status_code) = Http::get($seeder_url);
+            if ($http_status_code != 200) {
+                throw new Exception('执行seeder数据填充失败，状态码：'.$http_status_code);
+            }
             $seeder_res = json_decode($seeder_res, true);
             if ($seeder_res['code'] == -1) {
                 throw new Exception($seeder_res['message']);

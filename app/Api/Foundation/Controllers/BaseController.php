@@ -16,7 +16,7 @@ class BaseController extends Controller
     }
 
     //成功返回
-    public function success($data = null, $message = "数据获取成功", $extra = [])
+    public function success($data = [], $message = "数据获取成功", $extra = [])
     {
         $this->parseNull($data);
         return result(0, $data, $message, $extra);
@@ -24,7 +24,7 @@ class BaseController extends Controller
 
 
     //失败返回
-    public function error($code = "422", $data = null, $message = "fail")
+    public function error($message = "fail",$code = 1, $data = [])
     {
         return result($code, $data, $message);
     }

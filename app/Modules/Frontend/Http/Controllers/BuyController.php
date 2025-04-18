@@ -7,11 +7,13 @@ use App\Models\User;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\BuyRepository;
 use App\Repositories\CheckoutRepository;
+use App\Repositories\GoodsRepository;
 use App\Repositories\OrderInfoRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\UserAddressRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BuyController extends Frontend
 {
@@ -21,6 +23,7 @@ class BuyController extends Frontend
 //    protected $buy; // 购物逻辑代码
     protected $checkout;
     protected $orderInfo;
+    protected $goods;
 
     public function __construct(
         UserAddressRepository $userAddress
@@ -28,6 +31,7 @@ class BuyController extends Frontend
 //        ,BuyRepository $buy
         ,CheckoutRepository $checkout
         ,OrderInfoRepository $orderInfo
+        ,GoodsRepository $goods
     )
     {
         parent::__construct();
@@ -39,6 +43,7 @@ class BuyController extends Frontend
 //        $this->buy = $buy;
         $this->checkout = $checkout;
         $this->orderInfo = $orderInfo;
+        $this->goods = $goods;
 
     }
 
@@ -50,9 +55,9 @@ class BuyController extends Frontend
      */
     public function checkout(Request $request)
     {
-        if ($this->getNationalMemorialDayStatus()) {
-            abort(403, '今日是国家默哀日，暂停购物！');
-        }
+//        if ($this->getNationalMemorialDayStatus()) {
+//            abort(403, '今日是国家默哀日，暂停购物！');
+//        }
         if (!sysconf('is_enable_buy')) {
             abort(404, '暂未开放购买功能！');
         }
@@ -61,19 +66,74 @@ class BuyController extends Frontend
 
         // 获取数据
         // 购买第一步 返回下单页面数据
-        $checkout_submit_data = $this->checkout->getCheckoutData();
-        if (empty($checkout_submit_data)) {
-            // 客户端判断
-            if (is_app()) { // app
-                return result($checkout_submit_data['code'], $checkout_submit_data['data'], $checkout_submit_data['message']);
-            }/* elseif (is_mobile() || (request()->getHost() == config('lrw.mobile_domain'))) { // 微信端
-                // 购买参数错误 跳转到购物车页面
-                return redirect(route('mobile_cart_list'));
-            } else { // pc端
-                // 购买参数错误 跳转到购物车页面
-                return redirect(route('pc_cart_list'));
-            }*/
-            else { // 否则跳转到购物车页面
+        if (is_app()) { // app
+//            $this->checkout->clearCheckoutData($this->user_id);
+
+            $checkout_submit_data = $this->checkout->getCheckoutData($this->user_id);
+            if (empty($checkout_submit_data)) {
+                // 购买类型 0-加入购物车购买 1-立即购买 2-去结算 3-兑换 4-自由购 5-到店购 6-礼品提货
+                $buy_type = $request->input('buy_type', 1);
+                // 先清空购买信息
+                $this->checkout->clearCheckoutData($this->user_id);
+
+                if ($buy_type == 1) { // 直接购买
+                    $sku_id = $request->input('sku_id');
+                    $goods_id = $this->goods->getGoodsId($sku_id);
+                    $number = $request->input('number');
+                    $group_sn = $request->input('group_sn'); // 团长开团或用户参与拼团 必传参数
+                    $goods_info = $this->goods->getOnSaleGoodsInfo($goods_id, $sku_id, $number);
+                    if (empty($goods_info)) {
+                        // 商品不存在
+                        return result(-1,null,'商品不存在');
+                    }
+                    // 设置购买信息
+                    $cart_id[$goods_info['shop_id']] = [$goods_id.'|'.$sku_id.'|'.$number];
+                    $checkoutData = [
+                        'buy_type' => 1,
+                        'cart_id' => $cart_id,
+                        'group_sn' => $group_sn
+                    ];
+                } else { // 购物车下单
+                    // 从购物车表中取当前登录用户的选中购物车商品列表
+                    $this->cart->setUserId($this->user_id);
+                    $this->cart->setUniqueId($this->session_id);
+                    $cart_list = $this->cart->getCartGoodsList(1); // 购物车数据
+                    $cart_id = [];
+                    foreach ($cart_list as $v) {
+                        $cart_id[$v['shop_id']][] = $v['cart_id'].'|'.$v['sku_id'].'|'.$v['goods_number'];
+                    }
+                    $checkoutData = [
+                        'buy_type' => 0,
+                        'cart_id' => $cart_id
+                    ];
+                }
+
+                $ret = $this->checkout->setCheckoutData($this->user, $checkoutData);
+                if (isset($ret['code']) && $ret['code'] == 1) {
+                    return result(-1, null, $ret['message']);
+                }
+                $checkout_submit_data = $this->checkout->getCheckoutData($this->user_id);
+                if (empty($checkout_submit_data)) {
+                    return result(-1, null, '您没有提交任何需要结算的商品！！');
+                }
+            } else {
+                // 获取
+                $checkout_submit_data = $this->checkout->getCheckoutData($this->user_id);
+            }
+
+//                return result(0, $checkout_submit_data['data'], '获取成功');
+        } else {
+            $checkout_submit_data = $this->checkout->getCheckoutData($this->user_id);
+            if (empty($checkout_submit_data)) {
+                // 客户端判断
+                /* elseif (is_mobile() || (request()->getHost() == config('lrw.mobile_domain'))) { // 微信端
+                    // 购买参数错误 跳转到购物车页面
+                    return redirect(route('mobile_cart_list'));
+                } else { // pc端
+                    // 购买参数错误 跳转到购物车页面
+                    return redirect(route('pc_cart_list'));
+                }*/
+                // 否则跳转到购物车页面
                 return redirect('/cart.html');
             }
         }
@@ -135,6 +195,7 @@ class BuyController extends Frontend
         $data = [
             'app_prefix_data' => [
                 'address_list' => $address_list,
+                'address_info' => $address_info,
                 'address_list_show' => $address_list_show,
                 'send_time_list' => $send_time_list,
                 'send_time_desc' => $send_time_desc,
@@ -189,9 +250,11 @@ class BuyController extends Frontend
         ];
 
         // 设置购买信息
-        $this->checkout->setCheckoutData($this->user, $checkoutData, 2);
-
-        return result(0);
+        $ret = $this->checkout->setCheckoutData($this->user, $checkoutData, 2);
+        if (isset($ret['code']) && $ret['code'] == 1) {
+            return result(-1, null, $ret['message']);
+        }
+        return result(0, [], '操作成功');
     }
 
     /**
@@ -219,9 +282,11 @@ class BuyController extends Frontend
         ];
 
         // 设置购买信息
-        $this->checkout->setCheckoutData($this->user, $checkoutData, 1);
-
-        return result(0, $checkoutData);
+        $ret = $this->checkout->setCheckoutData($this->user, $checkoutData, 1);
+        if (isset($ret['code']) && $ret['code'] == 1) {
+            return result(-1, null, $ret['message']);
+        }
+        return result(0, $checkoutData, '操作成功');
     }
 
     /**
@@ -236,10 +301,13 @@ class BuyController extends Frontend
         $checkoutData = $request->post();
 
         // 设置购买信息
-        $this->checkout->setCheckoutData($this->user, $checkoutData, 4);
+        $ret = $this->checkout->setCheckoutData($this->user, $checkoutData, 4);
+        if (isset($ret['code']) && $ret['code'] == 1) {
+            return result(-1, null, $ret['message']);
+        }
 
         // 获取购买信息
-        $checkoutData = $this->checkout->getCheckoutData();
+        $checkoutData = $this->checkout->getCheckoutData($this->user_id);
 
         $key = array_search('selected', array_column($checkoutData['invoice_info'], 'selected'));
         $result = $checkoutData['invoice_info'][$key]['name'];
@@ -287,7 +355,13 @@ class BuyController extends Frontend
 
         // 设置购买信息
         $checkoutData['postscript'] = $postscript;
-        $this->checkout->setCheckoutData($this->user, $checkoutData, 5);
+        $checkoutRet = $this->checkout->setCheckoutData($this->user, $checkoutData, 5);
+        Log::info("提交订单 checkoutRet:".json_encode($checkoutRet));
+
+        if (isset($checkoutRet['code']) && $checkoutRet['code'] == 1) {
+            return result(-1, null, $checkoutRet['message']);
+        }
+        Log::info("提交订单结果:".json_encode($checkoutRet));
 
         $ret = $this->checkout->submitOrder($this->user);
         if ($ret['code'] != 0) {
@@ -295,14 +369,19 @@ class BuyController extends Frontend
         }
 
 
+        Log::info("提交订单结果:".json_encode($ret));
 
+        $group_sn = $ret['data']['group_sn'] ?? null;
         $order_sn = $ret['data']['order_sn'];
 
         $data = route('payment').'?order_sn='.$order_sn; // 支付页面url
         $extra = [
-            'group_sn' => null,
+            'group_sn' => $group_sn,
             'order_sn' => $order_sn
         ];
+        if (is_app()) {
+            return result(0, $extra, '提交订单成功');
+        }
         return result(0, $data, '提交订单成功', $extra);
     }
 
@@ -502,7 +581,7 @@ class BuyController extends Frontend
         // key 随机生成md5字符串
 
         if (!$order_id) {
-            abort(200, '订单不存在或者状态已改变');
+            abort(-1, '订单不存在或者状态已改变');
         }
 
         // 获取数据
@@ -569,9 +648,13 @@ class BuyController extends Frontend
         ];
         $checkoutData['data']['order']['pay_code'] = $pay_code;
         // 设置购买信息
-        $this->checkout->setCheckoutData($this->user, $checkoutData, 3);
+        $ret = $this->checkout->setCheckoutData($this->user, $checkoutData, 3);
+        if (isset($ret['code']) && $ret['code'] == 1) {
+            return result(-1, null, $ret['message']);
+        }
+
         // 获取购买信息
-        $checkoutData = $this->checkout->getCheckoutData();
+        $checkoutData = $this->checkout->getCheckoutData($this->user_id);
         $pay_list = $this->payment->getPaymentList($pay_code);
         // 按店铺分为多个数组
         $shop_orders = [];
@@ -586,7 +669,9 @@ class BuyController extends Frontend
             'check_address' => $checkoutData['check_address'],
             'pickup_id' => null
         ];
-
+        if (is_app()) {
+            return result(0, $extra, '操作成功');
+        }
         return result(0, null, null, $extra);
     }
 

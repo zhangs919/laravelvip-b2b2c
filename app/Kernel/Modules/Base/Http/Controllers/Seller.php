@@ -135,7 +135,7 @@ class Seller extends Foundation
 //            if (!$this->checkPermission($array)) continue;
 
             // 过滤add方法
-            if ($filter_link != '' && in_array($array[2], explode(',', $filter_link))) {
+            if ($filter_link != '' && (in_array($array[2], explode(',', $filter_link)) || in_array($value['url'], explode(',', $filter_link)))) {
                 unset($key);
                 continue;
             }

@@ -51,6 +51,37 @@ class PassportController extends Controller
         return view('passport.login', compact('copyright_auth','uuid'));
     }
 
+    protected function redirectTo() {
+        return '/index';
+    }
+
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+        try {
+            if ($this->hasTooManyLoginAttempts($request)) {
+                $this->fireLockoutEvent($request);
+
+                return $this->sendLockoutResponse($request);
+            }
+
+            if ($this->attemptLogin($request)) {
+                return $this->sendLoginResponse($request);
+            }
+
+            // 这里捕获登录失败的异常
+            $this->incrementLoginAttempts($request);
+            $this->incrementLoginAttempts($request);
+            throw new \Exception('用户名或者密码错误');
+        } catch (\Exception $e) {
+            // 处理其他异常
+            flash('error', $e->getMessage());
+            return $this->sendFailedLoginResponse($request);
+
+        }
+    }
+
     protected function redirectPath()
     {
         // 登录成功 记录shop_id session
@@ -63,6 +94,9 @@ class PassportController extends Controller
         // 记录日志
         shop_log('卖家管理员【'.seller_info()->user_name.'】登录卖家中心。');
         $back_url = \request()->post('back_url','/index');
+        if ($back_url == str_contains($back_url, 'login')) {
+            $back_url = '/index';
+        }
         return $back_url;
     }
 
@@ -106,9 +140,10 @@ class PassportController extends Controller
 
             $condition[] = [$username_field, $username];
             $isSeller = $this->user->checkIsSeller($condition);
+
             if (!$isSeller) {
                 // 如果不是卖家 则返回错误
-                return false;
+                throw new \Exception('你还不是商家');
             }
             $loginData = [$username_field => $request->input('LoginModel.username'), 'password' => $request->input('LoginModel.password')];
         }

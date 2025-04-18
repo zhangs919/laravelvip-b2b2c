@@ -22,12 +22,18 @@
 
 namespace App\Modules\Seller\Http\Controllers\Dashboard;
 
+use App\Models\ActivityCategory;
+use App\Models\Goods;
+use App\Models\GoodsActivity;
+use App\Models\GoodsSku;
 use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\ActivityCategoryRepository;
 use App\Repositories\ActivityRepository;
 use App\Repositories\BrandRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\ShopCategoryRepository;
+use App\Services\Enum\ActTypeEnum;
 use Illuminate\Http\Request;
 
 /**
@@ -51,6 +57,7 @@ class FightGroupController extends Seller
     protected $goods;
     protected $category;
     protected $brand;
+    protected $shopCategory;
 
     public function __construct(
         ActivityRepository $activity
@@ -58,6 +65,7 @@ class FightGroupController extends Seller
         ,GoodsRepository $goods
         ,CategoryRepository $category
         ,BrandRepository $brand
+        ,ShopCategoryRepository $shopCategory
     )
     {
         parent::__construct();
@@ -67,6 +75,7 @@ class FightGroupController extends Seller
         $this->goods = $goods;
         $this->category = $category;
         $this->brand = $brand;
+        $this->shopCategory = $shopCategory;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -76,7 +85,7 @@ class FightGroupController extends Seller
     {
         $title = '列表';
         $fixed_title = '营销中心 - '.$title;
-        $this->sublink($this->links, 'list', '', '', 'check');
+        $this->sublink($this->links, 'dashboard/fight-group/list', '', '', 'add,view');
 
         $action_span = [
             [
@@ -114,6 +123,8 @@ class FightGroupController extends Seller
 
         $where = [];
         $where[] = ['shop_id', seller_shop_info()->shop_id];
+        $where[] = ['act_type', ActTypeEnum::ACT_TYPE_FIGHT_GROUP]; // 6-拼团
+
         // 搜索条件
         $search_arr = ['act_name','begin','end','act_status'];
         foreach ($search_arr as $v) {
@@ -127,7 +138,13 @@ class FightGroupController extends Seller
             }
         }
         // 列表
-        list($list, $total) = $this->activity->getFightGroupGoodsActivityList($where);
+        $condition = [
+            'where' => $where,
+            'sortname' => 'act_id',
+            'sortorder' => 'desc',
+        ];
+        // 列表
+        list($list, $total) = $this->activity->getList($condition);
 
         $pageHtml = pagination($total);
         $page = frontend_pagination($total, true);
@@ -163,7 +180,7 @@ class FightGroupController extends Seller
         $title = '添加';
 
         $id = $request->get('id', 0);
-        $this->sublink($this->links, 'add', '', '', 'view');
+        $this->sublink($this->links, 'add', '', '', 'dashboard/groupon-order/list,view');
 
         $fixed_title = '拼团活动 - '.$title;
 
@@ -190,7 +207,7 @@ class FightGroupController extends Seller
         ];
         $start_time = date('Y-m-d H:i:s', time());
         $end_time = date("Y-m-d H:i:s",strtotime("+7 day"));
-        $cat_list = []; // 拼团活动分类
+        $cat_list = $this->activityCategory->getCateData(); //拼团活动分类
 
         $compact = compact('title', 'model', 'start_time', 'end_time', 'cat_list');
 
@@ -213,12 +230,84 @@ class FightGroupController extends Seller
         return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
+    /**
+     * 保存信息
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function saveData(Request $request)
+    {
+        $post = $request->post();
+        $postModel = $request->post('FightGroupModel');
+        $shop_id = seller_shop_info()->shop_id;
+
+        // 扩展数据
+        $ext_info = [
+            'act_price' => $post['act_price'],
+            'first_discount' => $post['first_discount'],
+            'discount_price' => null,
+            'act_stock' => $post['act_stock'],
+            'sku_ids' => array_keys($post['act_price'])
+        ];
+
+        // 活动扩展数据
+        $act_ext_info = [
+            'groupon_mode' => $postModel['groupon_mode'],
+            'fight_num' => $postModel['fight_num'],
+            'fight_time' => $postModel['fight_time'],
+            'fight_time_unit' => $postModel['fight_time_unit'],
+            'is_gather' => $postModel['is_gather'],
+            'is_imitate' => $postModel['is_imitate'],
+            'is_commander_discount' => $postModel['is_commander_discount'],
+            'discount_over_used' => $postModel['discount_over_used'],
+            'groupon_rule' => $postModel['groupon_rule'],
+        ];
+
+        $postModel['ext_info'] = $ext_info;
+        $postModel['act_ext_info'] = $act_ext_info;
+        $postModel['act_type'] = ActTypeEnum::ACT_TYPE_FIGHT_GROUP; // 6-拼团
+
+        $activityData = $postModel;
+        $goodsActivityData = [];
+        foreach ($post['act_price'] as $k=>$v) {
+            $act_stock = $post['act_stock'][$k];
+            $goodsActivityData[] = [
+                'shop_id' => $shop_id,
+                'sku_id' => $k,
+                'act_type' => ActTypeEnum::ACT_TYPE_FIGHT_GROUP,
+                'goods_id' => $post['goods_id'],
+                'cat_id' => $postModel['cat_id'],
+                'act_price' => $v,
+                'act_stock' => $act_stock,
+                'is_enable' => 1,
+                'ext_info' => [],
+            ];
+        }
+
+        // 添加
+        $activityData['shop_id'] = $shop_id;
+        $activityData['create_user_id'] = seller_shop_info()->user_id;
+
+        try {
+            $ret = $this->activity->addActivity($activityData, $goodsActivityData);
+        } catch (\Exception $e) {
+            return result(-1, null, '拼团活动添加失败'.$e->getMessage());
+        }
+        $act_id = $ret->act_id;
+
+        // success
+        shop_log('拼团活动添加成功。ID：'.$act_id);
+        return result(0, null, '拼团活动添加成功');
+    }
+
+
     public function view(Request $request)
     {
         $title = '拼团详情';
 
         $id = $request->get('id', 0);
-        $this->sublink($this->links, 'view', '', '', 'add');
+        $this->sublink($this->links, 'view', '', '', 'dashboard/groupon-order/list,add');
         $fixed_title = '拼团活动 - '.$title;
 
         $action_span = [
@@ -239,23 +328,31 @@ class FightGroupController extends Seller
         $this->setLayoutBlock($blocks); // 设置block
 
         // 获取数据
-        $min_price = '';
-        $max_price = null;
-
+        $cat_id = GoodsActivity::where('act_id', $id)->value('cat_id');
+        $cat_name = ActivityCategory::where('id', $cat_id)->value('cat_name');
         $model = $this->activity->getById($id);
         $model = $model->toArray();
-        $goods_info = []; // 拼团商品信息
+        $goods_id = GoodsSku::whereIn('sku_id', array_keys($model['ext_info']['act_price']))->value('goods_id');
+        $goods_info = Goods::where('goods_id', $goods_id)->first()->toArray(); // 拼团商品信息
+        $sku_ext = $model['ext_info'];
+        $sku_list = $this->goods->getSkuList($goods_id);
+        $sku_list = $sku_list->toArray();
+//        dd($model);
 
-        $compact = compact('title', 'model', 'goods_info');
+        $compact = compact('title', 'cat_name','model', 'goods_info','sku_ext',
+        'sku_list','is_commander_discount','is_view');
 
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_extra_data' => [],
             'app_prefix_data' => [
-                'min_price' => $min_price,
-                'max_price' => $max_price,
+                'cat_name' => $cat_name,
                 'model' => $model,
                 'goods_info' => $goods_info,
+                'sku_ext' => $sku_ext,
+                'sku_list' => $sku_list,
+                'is_commander_discount' => $model['act_ext_info']['is_commander_discount'],
+                'is_view' => 1,
             ],
             'app_context_data' => $this->getAppContext(),
             'app_suffix_data' => [],
@@ -265,30 +362,6 @@ class FightGroupController extends Seller
         ];
         $this->setData($data); // 设置数据
         return $this->displayData(); // 模板渲染及APP客户端返回数据
-    }
-
-    /**
-     * 保存信息
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function saveData(Request $request)
-    {
-        $post = $request->post('FightGroupModel');
-
-        // 添加
-        $post['shop_id'] = seller_shop_info()->shop_id;
-
-        $ret = $this->activity->store($post);
-        $msg = '拼团活动添加';
-
-        if ($ret === false) {
-            // fail
-            return result(-1, null, $msg.'失败');
-        }
-        // success
-        return result(0, null, $msg.'成功');
     }
 
     /**
@@ -338,6 +411,97 @@ class FightGroupController extends Seller
         $discount_mode = $request->get('discount_mode',0); // 优惠模式 0-团长享受折扣 1-团长优惠价格
 
         $render = view('dashboard.fight-group.change_mode', compact('discount_mode'))->render();
+        return result(0, $render);
+    }
+
+    /**
+     * 商品选择器
+     *
+     * @param Request $request
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function picker(Request $request)
+    {
+        $page_id = make_uuid();
+        $pagination_id = $request->post('page')['page_id'];
+        $output = $request->post('output');
+        $left = $request->post('left');
+        $right = $request->post('right');
+        $goods_status = $request->post('goods_status', 1); // 商品状态
+        $is_sku = $request->post('is_sku', 0); //
+        $is_supply = $request->post('is_supply', null); //
+        $show_store = $request->post('show_store', 0); //
+        $is_enable = $request->post('is_enable', 1); //
+        $goods_audit = $request->post('goods_audit', 1); //
+        $goods_ids = $request->post('goods_ids', []);
+        $sku_ids = $request->post('sku_ids', []);
+
+        // 商品列表
+        $where[] = ['shop_id', seller_shop_info()->shop_id];
+        $where[] = ['goods_status', $goods_status];
+//        $where[] = ['is_sku', $is_sku];
+//        $where[] = ['show_store', $show_store];
+//        $where[] = ['is_enable', $is_enable];
+        $where[] = ['goods_audit', $goods_audit];
+
+        $whereIn = [];
+
+        $tpl = 'picker';
+
+
+
+        $condition = [
+            'where' => $where,
+            'in' => $whereIn,
+            'sortname' => 'goods_id',
+            'sortorder' => 'desc'
+        ];
+        list($list, $total) = $this->goods->getList($condition);
+        $pageHtml = short_pagination($total, 5);
+
+        // 查询商品分类列表（树形）
+        $where = [];
+        $where[] = ['is_show',1];
+        $condition = [
+            'where' => $where,
+            'limit' => 0, // 不分页
+            'sortname' => 'created_at',
+            'sortorder' => 'asc',
+        ];
+        list($category_list, $category_total) = $this->category->getList($condition, '', false, true);
+
+        // 查询品牌
+        $where = [];
+        $where[] = ['is_show',1];
+        $condition = [
+            'where' => $where,
+            'sortname' => 'brand_id',
+            'sortorder' => 'desc',
+            'field' => ['brand_id', 'brand_name']
+        ];
+        list($brand_list, $brand_total) = $this->brand->getList($condition);
+
+        // 店铺内分类列表
+        $shop_cat_list = $this->shopCategory->getShopCategoryList(seller_shop_info()->shop_id);
+
+        $compact = compact(
+            'page_id', 'pagination_id', 'list', 'pageHtml',
+            'sku_ids', 'goods_ids', 'category_list',
+            'brand_list', 'shop_cat_list');
+        $render = view('dashboard.fight-group.'.$tpl, $compact)->render();
+        return result(0, $render);
+    }
+
+    public function skuList(Request $request)
+    {
+        $goods_id = $request->get('goods_id');
+        $is_commander_discount = $request->get('is_commander_discount');
+        $is_going = $request->get('is_going');
+        $sku_list = $this->goods->getSkuList($goods_id);
+        $uuid = make_uuid();
+        $render = view('dashboard.fight-group.sku_list', compact('goods_id','is_commander_discount','is_going', 'sku_list', 'uuid'))->render();
+
         return result(0, $render);
     }
 

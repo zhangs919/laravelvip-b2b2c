@@ -108,9 +108,13 @@ class UploadVideoRepository
         if ($defaultDriver == 'oss') {
             // oss上传
             $host = 'http://'.sysconf('oss_domain').$fullpath;
+
             $url = $host.ltrim($path, '/');
             $contents = file_get_contents($file); // 文件内容
             $result = Storage::put($fullpath.ltrim($path, '/'), $contents);
+
+//            $result = Storage::put($fullpath.trim($dirname, '/'), $file);
+//            $url = 'http://'.sysconf('oss_domain').'/'.$result;
         }elseif($defaultDriver == 'local') {
             // 本地上传
             $host = route('pc_home').'/images';

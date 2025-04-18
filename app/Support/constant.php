@@ -208,4 +208,29 @@ const CACHE_KEY_HOT_SEARCH = [
     30*60 // 缓存时间 单位：秒
 ];
 
+const CACHE_KEY_CHECKOUT_SUBMIT_DATA = [
+    'checkout_submit_data', // 下单信息
+    15*60 // 缓存时间 单位：秒
+];
+
+const CACHE_KEY_ALL_REGION = [
+    'checkout_submit_data', // 所有地区信息
+    365*24*60*60 // 缓存时间 单位：秒 缓存一年
+];
+
 /*缓存id END*/
+
+// 第三方应用用户登录商城的密钥
+define('THIRD_APP_SECRET', 'kFt76BkYCdnMzZ2n');
+// 允许第三方应用用户登录商城的ip
+const THIRD_APP_AUTH_IP = [
+    '127.0.0.1',
+    '192.168.56.1',
+    '82.156.173.65',
+    '8.137.122.160'
+];
+
+const CACHE_KEY_SMS_CAPTCHA = [
+    'sms_captcha', // 短信验证码
+    5*60 // 缓存时间 单位：秒
+];

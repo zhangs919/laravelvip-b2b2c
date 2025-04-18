@@ -440,8 +440,8 @@
 
                 <span class="tool m-l-10">
 
-					<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=123456s&amp;site=qq&amp;menu=yes">
-						<img border="0" src="http://wpa.qq.com/pa?p=2:2697138383:51" alt="点击这里给我发消息" title="点击这里给我发消息">
+					<a target="_blank" href="//wpa.qq.com/msgrd?v=3&amp;uin=123456s&amp;site=qq&amp;menu=yes">
+						<img border="0" src="//wpa.qq.com/pa?p=2:2697138383:51" alt="点击这里给我发消息" title="点击这里给我发消息">
 					</a>
 
 				</span>

@@ -10,7 +10,6 @@ class SellerNegativeBill extends BaseModel
 
     protected $table = 'seller_negative_bill';
 
-    public $timestamps = false;
 
     protected $fillable = [
         'bill_sn',

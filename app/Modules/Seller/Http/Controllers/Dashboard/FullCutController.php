@@ -342,22 +342,26 @@ class FullCutController extends Seller
 
         if (!empty($postModel['act_id'])) {
             // 编辑
-            $ret = $this->activity->modifyActivity($activityData, $goodsActivityData, $goodsData);
+            try {
+                $ret = $this->activity->modifyActivity($activityData, $goodsActivityData, $goodsData);
+            } catch (\Exception $e) {
+                return result(-1, null, '满减送编辑失败'.$e->getMessage());
+            }
             $msg = '满减送编辑';
             $act_id = $postModel['act_id'];
         }else {
             // 添加
             $activityData['shop_id'] = seller_shop_info()->shop_id;
 
-            $ret = $this->activity->addActivity($activityData, $goodsActivityData, $goodsData);
+            try {
+                $ret = $this->activity->addActivity($activityData, $goodsActivityData, $goodsData);
+            } catch (\Exception $e) {
+                return result(-1, null, '满减送添加失败：'.$e->getMessage());
+            }
             $msg = '满减送添加';
             $act_id = @$ret->act_id;
         }
 
-        if ($ret === false) {
-            // fail
-            return result(-1, null, $msg.'失败');
-        }
         // success
         shop_log($msg.'成功。ID：'.$act_id);
         return result(0, null, $msg.'成功');

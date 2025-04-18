@@ -32,24 +32,27 @@
                 <input type="checkbox" class="checkBox" />
             </td>
             <td>{{ $item['start_date'] }} - {{ $item['end_date'] }} </td>
-            <td class="text-c">{{ $item['shop_name'] }}</td>
+            <td class="text-c">{{ $item['shop']['shop_name'] }}</td>
             <td class="text-c">{{ $item['order_count'] }}</td>
             <td class="w500">
                 <div class="colspan-div">
-                    <span class="w150 c-green text-c">{{ $item['shop_money'] }}</span>
+                    <span class="w150 c-green text-c">{{ $item['order_amount'] }}</span>
                     <span class="w100 c-green text-c">+{{ $item['activity_money'] }}</span>
                     <span class="w70 c-green text-c">+{{ $item['shipping_fee'] }}</span>
-                    <span class="w80 c-red text-c">-{{ $item['system_money'] }}</span>
+                    <span class="w80 c-red text-c">-{{ $item['should_amount'] }}</span>
                 </div>
             </td>
-            <td class="text-c">{{ $item['order_amount'] }}</td>
+            <td class="text-c">{{ $item['gain_commission'] }}</td>
             <td class="text-c">
                 <!-- -->
-                <font class="c-green">{{ $item['shop_status_format'] }}</font>
+                <font class="c-green">{{ $item['chargeoff_status_format'] }}</font>
                 <!-- -->
             </td>
             <td class="handle">
-                <a href="shop-orders-info?shop_id={{ $item['shop_id'] }}&group_time={{ $item['group_time'] }}&type={{ $type }}">查看</a>
+                @if($item['chargeoff_status'] == 1)
+                    <a href="javascript:void(0)" class="statement" data-id="{{ $item['id'] }}">结算</a>
+                @endif
+                <a href="shop-orders-info?id={{ $item['id'] }}">查看</a>
 {{--                <a href="javascript:void(0)" class='show_panel'>支付汇总</a>--}}
             </td>
         </tr>
@@ -86,7 +89,7 @@
             <div class="pull-left">
                 <!--当没有选中任何所操作的项，按钮为禁用状态，将按钮样式btn-danger替换为disabled-->
                 <!--<a class="btn btn-default m-r-5">批量结算</a>-->
-                <button class="btn btn-default m-r-5 apply_count" type="button">合计</button>
+{{--                <button class="btn btn-default m-r-5 apply_count" type="button">合计</button>--}}
             </div>
             <div class="pull-right page-box">
 

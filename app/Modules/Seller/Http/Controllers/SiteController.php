@@ -28,7 +28,7 @@ use App\Models\PrintSpec;
 use App\Models\Shop;
 use App\Models\ShopCategory;
 use App\Models\TplBackup;
-use App\Modules\Base\Http\Controllers\Foundation;
+use App\Modules\Base\Http\Controllers\Seller;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\ImageDirRepository;
@@ -53,8 +53,11 @@ use Illuminate\Support\Str;
  * Class SiteController
  * @package App\Modules\Seller\Http\Controllers
  */
-class SiteController extends Foundation
+class SiteController extends Seller
 {
+    private $links = [
+        ['url' => 'site/export', 'text' => '导出'],
+    ];
 
     protected $tools; // 工具类 如：图片上传
 
@@ -967,5 +970,56 @@ class SiteController extends Foundation
             'progress' => $progress
         ];
         return result(0, $data);
+    }
+
+    /**
+     * 导出
+     * todo 后期做导出功能按照这里的来修改开发！！！
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function export(Request $request)
+    {
+        $title = '导出';
+        $fixed_title = '';
+        $this->sublink($this->links, 'site/export');
+
+        $url = $request->get('url');
+
+        $action_span = [];
+
+        $explain_panel = [
+            '每2000条左右数据将生成一个excel文件，生成后可以点击“下载”按钮进行下载',
+            '建议使用最新的chrome或者火狐浏览器，新版浏览器支持多文件同时下载、速度更快'
+        ];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+        // 解析url 并判断页面来源
+        $this->set_menu_select('goods', 'goods-list');
+
+
+        $compact = compact('title', 'url');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'url'=>$url,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'site.export'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 }

@@ -18,4 +18,5 @@ return [
     'brand_name'        => '品牌名称',
     'type_name'         => '类型名称',
     'rank_name'         => '等级名称',
+    'unit_name'         => '单位名称',
 ];

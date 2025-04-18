@@ -41,14 +41,14 @@ class Migration_v4_0_0
         Eloquent::unguard();
 
         // 导入菜单权限及系统配置
-        $path = 'data/backend.sql'; // sql文件路径
+        $path = base_path('data/backend.sql'); // sql文件路径
         DB::unprepared(file_get_contents($path));
 
         // 导入订单相关表结构
         // 具体表：order_info order_pay order_goods order_action back_order
         // order_settlement_log seller_bill_back_order seller_negative_bill
         // seller_negative_order seller_bill_goods seller_bill_order seller_commission_bill
-        $path = 'data/v4_0_0.sql'; // sql文件路径
+        $path = base_path('data/v4_0_0.sql'); // sql文件路径
         DB::unprepared(file_get_contents($path));
     }
 

@@ -1,26 +1,25 @@
 /**
  * 常用操作插件
- *
  */
 
 (function($) {
 	var szy_tag = $("meta[name='szy_tag']").attr("content");
-
+	
 	$.baseurl = function(path, tag) {
-
+		
 		if (tag == undefined) {
 			tag = szy_tag;
 		}
-
+		
 		if (path && tag && path.indexOf("/") == 0 && path.indexOf("/" + tag) == -1) {
 			return "/" + tag + path;
 		}
-
+		
 		if (path && path.indexOf(window.location.origin) == 0 && path.indexOf("/" + tag) == -1) {
 			// return window.location.origin + "/" + tag +
 			// path.substring(window.location.origin.length);
 		}
-
+		
 		return path;
 	}
 
@@ -28,17 +27,17 @@
 		if (szy_tag) {
 			$("a,area").not("[szy_tag_compiled]").each(function() {
 				var href = $(this).attr("href");
-
+				
 				$(this).attr("href", $.baseurl(href, szy_tag));
-
+				
 				$(this).attr("szy_tag_compiled", 1);
 			});
-
+			
 			$("form").not("[szy_tag_compiled]").each(function() {
 				var action = $(this).attr("action");
-
+				
 				$(this).attr("action", $.baseurl(action, szy_tag));
-
+				
 				$(this).attr("szy_tag_compiled", 1);
 			});
 		}
@@ -108,14 +107,17 @@
 		// title: false
 		});
 	}
-
+	
 	// 可以统一控制是否全屏显示
 	if (top.layer) {
 		// layer = top.layer;
 	}
-
+	
 	$.closeDialog = function(index) {
 		if (layer) {
+			if(index == undefined) {
+				index = $(".layui-layer:last").attr("times");
+			}
 			layer.close(index);
 		}
 	}
@@ -135,15 +137,15 @@
 	 * 打开一个模式窗口
 	 */
 	$.open = function(options) {
-
+		
 		if (isNaN(options.width) == false) {
 			options.width = options.width + "px";
 		}
-
+		
 		if (isNaN(options.height) == false) {
 			options.height = options.height + "px";
 		}
-
+		
 		if (!options.area) {
 			if (options.width != undefined && options.height != undefined) {
 				options.area = [options.width, options.height];
@@ -151,22 +153,24 @@
 				options.area = options.width;
 			}
 		}
-
+		
 		if (options.ajax) {
 			// 默认值
 			if (options.type == undefined) {
 				options.type = 1;
 			}
-
+			
 			var ajax_default = {
 				method: "GET",
 				data: {},
 				dataType: "JSON",
 				async: true,
 			};
-
+			
 			options.ajax = $.extend({}, ajax_default, options.ajax);
 
+			$.loading.start();
+			
 			return $.ajax({
 				url: options.ajax.url,
 				type: options.ajax.method,
@@ -184,6 +188,8 @@
 						time: 5000
 					});
 				}
+			}).always(function () {
+				$.loading.stop();
 			});
 		} else {
 			if (layer) {
@@ -194,7 +200,7 @@
 
 	/**
 	 * 信息提示
-	 *
+	 * 
 	 * @param message
 	 *            提示消息
 	 * @param options
@@ -204,35 +210,35 @@
 	 */
 	$.msg = function(content, options, end) {
 		if (layer) {
-
+			
 			if ($.isFunction(options)) {
 				end = options;
 				options = {};
 			}
-
+			
 			options = $.extend({
 				time: 2000
 			}, options);
-
-			if (content == "") {
-				console.log("空的内容", window.location.href);
-				return;
-			}
-
+			
+			// if (content == "") {
+			// 	console.log("空的内容", window.location.href);
+			// 	return;
+			// }
+			
 			return layer.msg(content, options, function() {
 				if ($.isFunction(end)) {
 					end.call(layer);
 				}
 			});
-
+			
 		} else {
 			alert("缺少组件：" + content);
 		}
 	};
-
+	
 	/**
 	 * 信息提示
-	 *
+	 * 
 	 * @param message
 	 *            提示消息
 	 * @param options
@@ -246,17 +252,19 @@
 			if (type) {
 				yes = options;
 			}
-
+			
 			if ($.isFunction(options)) {
 				yes = options;
 				options = {};
 			}
-
+			
 			options = $.extend({
 				// 隐藏滚动条
-				scrollbar: true
+				scrollbar: true,
+				// 隐藏关闭按钮
+				closeBtn: 0
 			}, options);
-
+			
 			return layer.alert(content, options, function(index) {
 				if (yes == undefined || !$.isFunction(yes)) {
 					layer.close(index);
@@ -277,12 +285,14 @@
 				yes = options;
 				options = {};
 			}
-
+			
 			options = $.extend({
 				// 隐藏滚动条
-				scrollbar: true
+				scrollbar: true,
+				// 隐藏关闭按钮
+				closeBtn: 0
 			}, options);
-
+			
 			return layer.confirm(content, options, function(index) {
 				if ($.isFunction(yes) && yes.call(layer, index) != false) {
 					layer.close(index);
@@ -292,7 +302,7 @@
 					layer.close(index);
 				}
 			});
-
+			
 		} else {
 			return confirm("缺少组件：" + content);
 		}
@@ -303,11 +313,11 @@
 	 */
 	$.tips = function(content, follow, options) {
 		if (layer) {
-
+			
 			if (!options) {
 				options = {};
 			}
-
+			
 			if (options.tips) {
 				if (!$.isArray(options.tips)) {
 					options.tips = [options.tips, '#FF8800'];
@@ -320,7 +330,7 @@
 			return alert("缺少组件");
 		}
 	};
-
+	
 	/**
 	 * 改变标题
 	 */
@@ -329,7 +339,7 @@
 			layer.title(title, index);
 		}
 	};
-
+	
 	function loopWindows(win, callback) {
 		if (win) {
 			if (callback(win) == true) {
@@ -340,7 +350,7 @@
 		}
 		return true;
 	}
-
+	
 	/**
 	 * 加载
 	 */
@@ -353,7 +363,7 @@
 			var loading_class = "layer-msg-loading SZY-LAYER-LOADING";
 			// 缓载颜色
 			var color = "#fff";
-
+			
 			// 读取Cookie
 			var arr, reg = new RegExp("(^| )loading_style=([^;]*)(;|$)");
 			if (icon != undefined) {
@@ -368,9 +378,9 @@
 					}
 				}
 			}
-
+			
 			var html = '<div class="loader-inner ball-clip-rotate"><div style="border-color:' + color + '; border-bottom-color: transparent; width: 30px; height: 30px; animation: rotate 0.45s 0s linear infinite; "></div>' + (icon != undefined ? '<img style="width: 16px; height: 16px;" src="' + icon + '" />' : '') + '</div>';
-
+			
 			var index = $.msg(html, {
 				time: 0,
 				skin: "layui-layer-hui " + loading_class,
@@ -392,15 +402,15 @@
 			});
 		}
 	};
-
+	
 	$.prompt = function(options, yes) {
 		if (layer) {
-
+			
 			if ($.isFunction(options)) {
 				yes = options;
 				options = {};
 			}
-
+			
 			layer.ready(function() {
 				layer.prompt(options, function(value, index, element) {
 					if ($.isFunction(yes) && yes.call(layer, value, index, element)) {
@@ -422,7 +432,7 @@
 	}
 
 	var lastUuid = 0;
-
+	
 	$.uuid = function() {
 		return (new Date()).getTime() * 1000 + (lastUuid++) % 1000;
 	}
@@ -431,7 +441,7 @@
 		if (words) {
 			if (words.length > length) {
 				words = words.substring(0, length);
-
+				
 				if (suffix) {
 					words = words + suffix;
 				}
@@ -480,35 +490,35 @@
 		if (new RegExp("^[a-zA-Z_][a-zA-Z0-9_]+(\\[\\])?((\\[[a-zA-Z0-9_]+\\]))*(\\[\\])?$").test(name)) {
 			// 识别出[A]部分
 			var subNames = name.match(new RegExp("\\[[a-zA-Z0-9_]+\\]", "g"));
-
+			
 			// 如果不包含“[”则直接赋值返回
 			if (name.indexOf("[") < 0) {
 				// 相同的name不进行替换，而是进行合并，合并成为一个数组
 				$.mergeSetValue(object, name, value, merge);
 				return object;
 			}
-
+			
 			// 识别出变量名
 			var var_name = name.substring(0, name.indexOf("["));
-
+			
 			if (object[var_name] == undefined) {
 				object[var_name] = {};
 			}
-
+			
 			// 设置临时变量
 			var temp = object[var_name];
-
+			
 			for (i in subNames) {
-
+				
 				// 非数字跳过，否则IE8下会有错误
 				if (isNaN(i)) {
 					continue;
 				}
-
+				
 				var subName = subNames[i];
-
+				
 				subName = subName.substring(1, subName.length - 1);
-
+				
 				if (i == subNames.length - 1) {
 					// 如果是以[]结尾则代表为数组
 					if (new RegExp("\\[\\]$").test(name)) {
@@ -523,7 +533,7 @@
 						// 相同的name不进行替换，而是进行合并，合并成为一个数组
 						$.mergeSetValue(temp, subName, value, merge);
 					}
-
+					
 				} else {
 					if (temp[subName] == undefined) {
 						temp[subName] = {};
@@ -531,7 +541,7 @@
 				}
 				temp = temp[subName];
 			}
-
+			
 			if (subNames == null || subNames.length == 0) {
 				// 如果是以[]结尾则代表为数组
 				if (new RegExp("\\[\\]$").test(name)) {
@@ -547,7 +557,7 @@
 					$.mergeSetValue(object, var_name, value, merge);
 				}
 			}
-
+			
 			return object;
 		} else {
 			// 相同的name不进行替换，而是进行合并，合并成为一个数组
@@ -558,34 +568,34 @@
 
 	/**
 	 * 将表单序列号为JSON对象
-	 *
+	 * 
 	 * @param merge
 	 *            相同name的元素是否进行合并，默认不进行合并，true-进行合并 false-不进行合并
 	 */
 	$.fn.serializeJson = function(merge) {
-
+		
 		if (merge == undefined || merge == null) {
 			merge = false;
 		}
-
+		
 		var serializeObj = {};
 		var array = [];
-
+		
 		// 判断当前元素是否为input元素
 		if ($(this).is(":input")) {
 			array = $(this).serializeArray();
 		} else {
 			array = $(this).find(":input").serializeArray();
 		}
-
+		
 		$(array).each(function() {
 			$.resolveVarName(serializeObj, this.name, this.value, merge);
 		});
 		return serializeObj;
 	};
-
+	
 	// ---------------------------------------------------------------------------------------------------
-
+	
 	/**
 	 * @return string|undefined the CSRF parameter name. Undefined is returned
 	 *         if CSRF validation is not enabled.
@@ -611,6 +621,49 @@
 		return false;
 	}
 
+	// 将JSON转换为CSV文件并下载，必须引入文件 json2csv.js
+	$.toCSV = function (csv_data) {
+		// 字符型关键词
+		var textKeys = ['sn', 'barcode', 'code', 'mobile', 'tel'];
+
+		if($.isArray(csv_data.textKeys)) {
+			textKeys = csv_data.textKeys;
+		}
+
+		// 导出
+		JSonToCSV.setDataConver({
+			data: csv_data.list,
+			fileName: csv_data.filename,
+			columns: {
+				title: csv_data.titles,
+				key: csv_data.keys,
+				formatter: function(n, v) {
+					return v;
+				},
+				append: function (row, k, v) {
+					var showText = false;
+
+					if(typeof v === 'string') {
+						for(var i = 0; i < textKeys.length; i++) {
+							if(k.indexOf(textKeys[i]) !== -1) {
+								showText = true;
+								break;
+							}
+						}
+					}
+
+					if(showText) {
+						row += '="' + v + '",';
+					}else{
+						row += '"' + v + '",';
+					}
+
+					return row;
+				}
+			}
+		});
+	}
+
 	/**
 	 * 重写post提交，自动补充csrf参数
 	 */
@@ -620,17 +673,17 @@
 		if (data && data[$.getCsrfParam()] == undefined) {
 			data[$.getCsrfParam()] = $.getCsrfToken();
 		}
-
+		
 		if (type == undefined) {
 			type = "string";
 		}
-
+		
 		return _post(url, data, callback, type);
 	};
-
+	
 	// 备份jquery的ajax方法
 	var _ajax = $.ajax;
-
+	
 	// 重写jquery的ajax方法
 	$.ajax = function(opt) {
 		// 备份opt中error和success方法
@@ -682,37 +735,37 @@
 				}
 			}
 		});
-
+		
 		if (opt.data == undefined) {
 			opt.data = {};
 		}
-
+		
 		if (opt.type == undefined) {
 			opt.type = "GET";
 		}
-
+		
 		var type = opt.type.toLowerCase();
-
+		
 		// 绑定csrf参数
 		if (type == 'post' && opt.data[$.getCsrfParam()] == undefined) {
 			opt.data[$.getCsrfParam()] = $.getCsrfToken();
 		}
-
+		
 		if (type == undefined) {
 			type = "string";
 		}
-
+		
 		return _ajax(_opt).always(function() {
 			$.initTag();
 			$.loading.stop();
 		});
 	};
-
+	
 	/**
 	 * Sets the CSRF token in the meta elements. This method is provided so that
 	 * you can update the CSRF token with the latest one you obtain from the
 	 * server.
-	 *
+	 * 
 	 * @param name
 	 *            the CSRF token name
 	 * @param value
@@ -736,15 +789,15 @@
 
 	var clickableSelector = 'a, button, input[type="submit"], input[type="button"], input[type="reset"], input[type="image"]';
 	var changeableSelector = 'select, input, textarea';
-
+	
 	function initDataMethods() {
 		var handler = function(event) {
 			var $this = $(this), method = $this.data('method'), message = $this.data('confirm');
-
+			
 			if (method === undefined && message === undefined) {
 				return true;
 			}
-
+			
 			if (message !== undefined) {
 				$.confirm(message, {}, function() {
 					handleAction($this);
@@ -759,10 +812,10 @@
 		// elements
 		$(document).on('click', clickableSelector, handler).on('change', changeableSelector, handler);
 	}
-
+	
 	function handleAction(obj) {
 		var method = $(obj).data('method'), $form = $(obj).closest('form'), action = obj.attr('href'), params = obj.data('params');
-
+		
 		if (method === undefined) {
 			if (action && action != '#') {
 				window.location = action;
@@ -770,8 +823,30 @@
 				$form.trigger('submit');
 			}
 			return;
+		}else if(action && $(obj).data("ajax")) {
+			$.loading.start();
+			$.ajax({
+				url: action,
+				type: method,
+				data: params,
+				dataType: "JSON",
+				success: function(result) {
+					if(result.code == 0) {
+						$.msg(result.message, function() {
+							if(typeof tablelist != "undefined") {
+								tablelist.load();
+							}
+						});
+					}else if(result.message){
+						$.msg(result.message);
+					}
+				}
+			}).always(function () {
+				$.loading.stop();
+			});
+			return;
 		}
-
+		
 		var newForm = !$form.length;
 		if (newForm) {
 			if (!action) {
@@ -795,21 +870,21 @@
 			}
 			$form.hide().appendTo('body');
 		}
-
+		
 		var activeFormData = $form.data('yiiActiveForm');
 		if (activeFormData) {
 			// remember who triggers the form submission. This is used by
 			// yii.activeForm.js
 			activeFormData.submitObject = $(obj);
 		}
-
+		
 		// temporarily add hidden inputs according to data-params
 		if (params && $.isPlainObject(params)) {
 			$.each(params, function(idx, obj) {
 				$form.append('<input name="' + idx + '" value="' + $(obj) + '" type="hidden">');
 			});
 		}
-
+		
 		var oldMethod = $form.attr('method');
 		$form.attr('method', method);
 		var oldAction = null;
@@ -817,39 +892,39 @@
 			oldAction = $form.attr('action');
 			$form.attr('action', action);
 		}
-
+		
 		$form.trigger('submit');
-
+		
 		if (oldAction != null) {
 			$form.attr('action', oldAction);
 		}
 		$form.attr('method', oldMethod);
-
+		
 		// remove the temporarily added hidden inputs
 		if (params && $.isPlainObject(params)) {
 			$.each(params, function(idx, obj) {
 				$('input[name="' + idx + '"]', $form).remove();
 			});
 		}
-
+		
 		if (newForm) {
 			$form.remove();
 		}
 	}
-
+	
 	$().ready(function() {
 		initDataMethods();
 	});
-
+	
 	// 记录当前滚动条位置
 	$.fixedScorll = {
 		write: function(key, element) {
-
+			
 			if (!key) {
 				alert("固定滚动条必须输入一个COOKIE名称");
 				return;
 			}
-
+			
 			var scrollPos;
 			if (typeof window.pageYOffset != 'undefined') {
 				scrollPos = window.pageYOffset;
@@ -876,34 +951,34 @@
 				// 读完Cookie就立即删除掉
 				document.cookie = "SZY_GOODS_SCROLLTOP=0";
 			}
-
+			
 		}
 	};
-
+	
 	// 如果登录模块已存在则不覆盖
 	if ($.login == undefined) {
 		// 登录模块
 		$.login = {
 			// 打开登录对话框
 			show: function(params, callback) {
-
+				
 				$.loading.start();
-
+				
 				var data = {};
-
+				
 				if ($.isFunction(params)) {
 					callback = params;
 					params = {};
 				}
-
+				
 				if (params) {
 					data = $.extend(true, data, params);
 				}
-
+				
 				if ($.isFunction(callback)) {
 					$.login.success = callback;
 				}
-
+				
 				$.open({
 					id: "SZY_LOGIN_LAYER_DIALOG",
 					type: 1,
@@ -935,30 +1010,30 @@
 			}
 		};
 	}
-
+	
 	/**
 	 * 跳转页面
-	 *
+	 * 
 	 * @param url
 	 *            跳转的链接，为空则刷新当前页面
 	 */
 	$.go = function(url, target, show_loading) {
-
+		
 		if (url == undefined) {
 			url = window.location.href;
 		}
-
+		
 		szy_tag_temp = $("meta[name='szy_tag']").attr("content");
-
+		
 		if (szy_tag_temp && url && url.indexOf("/" + szy_tag_temp) == -1 && url.indexOf("/") == 0) {
 			url = "/" + szy_tag_temp + url;
 		}
-
+		
 		if (show_loading !== false) {
 			// 开启缓载效果
 			$.loading.start();
 		}
-
+		
 		var id = $.uuid();
 		var element = $("<a id='" + id + "' style='display: none;'></a>");
 		$(element).attr("href", url);
@@ -972,10 +1047,10 @@
 			document.getElementById(id).click();
 		}
 	};
-
+	
 	/**
 	 * 导出 canvas 为 PNG 图片并下载
-	 *
+	 * 
 	 * @param dom
 	 *            canvasDom canvas 的 dom 对象
 	 * @param string
@@ -983,16 +1058,16 @@
 	 */
 	$.exportCanvasAsPNG = function(canvasDom, filename) {
 		var canvasElement = canvasDom;
-
+		
 		var MIME_TYPE = "image/png";
-
+		
 		var imgURL = canvasElement.toDataURL(MIME_TYPE);
-
+		
 		var dlLink = document.createElement('a');
 		dlLink.download = filename;
 		dlLink.href = imgURL;
 		dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-
+		
 		document.body.appendChild(dlLink);
 		dlLink.click();
 		document.body.removeChild(dlLink);
@@ -1000,7 +1075,7 @@
 
 	/**
 	 * 下载指定的字符串内容
-	 *
+	 * 
 	 * @param string
 	 *            filename 下载后的文件名
 	 * @param string
@@ -1012,24 +1087,24 @@
 	 * @return boolean
 	 */
 	$.download = function(filename, content, stringToArrayBuffer, contentToBlob) {
-
+		
 		var eleLink = document.createElement('a');
 		eleLink.download = filename;
 		eleLink.style.display = 'none';
-
+		
 		if (contentToBlob === false) {
 			eleLink.href = content;
 		} else {
-
+			
 			if (stringToArrayBuffer == true) {
 				content = $.stringToArrayBuffer(content);
 			}
-
+			
 			// 字符内容转变成blob地址
 			var blob = new Blob([content]);
 			eleLink.href = URL.createObjectURL(blob);
 		}
-
+		
 		// 触发点击
 		document.body.appendChild(eleLink);
 		eleLink.click();
@@ -1037,10 +1112,10 @@
 		document.body.removeChild(eleLink);
 		return true;
 	};
-
+	
 	/**
 	 * 字符串转字符流
-	 *
+	 * 
 	 * @param string
 	 *            s 字符串
 	 * @return 字符流
@@ -1053,7 +1128,7 @@
 		}
 		return buf;
 	};
-
+	
 	/**
 	 * 将网址加入收藏
 	 */
@@ -1063,7 +1138,7 @@
 				window.external.addFavorite(url, title);
 				return true;
 			} catch (a) {
-
+				
 			}
 		} else {
 			if ($.browser.mozilla) {
@@ -1074,39 +1149,39 @@
 				}
 			}
 		}
-
+		
 		$.alert("请按键盘 <b>CTRL</b>键 + <b>D</b> 把『" + title + "』放入收藏夹！");
-
+		
 		return false
 	};
-
+	
 })(jQuery);
 
 (function($) {
 	/**
 	 * 求集合的笛卡尔之积
-	 *
+	 * 
 	 * @param list
 	 *            必须为数组，否则返回空数组
 	 * @return 结果集
 	 */
 	$.toDkezj = function(list) {
-
+		
 		if ($.isArray(list) == false || list.length == 0) {
 			return [];
 		}
-
+		
 		if (list.length == 1) {
-
+			
 			var temp_list = [];
-
+			
 			for (var i = 0; i < list[0].length; i++) {
 				temp_list.push([list[0][i]]);
 			}
-
+			
 			return temp_list;
 		}
-
+		
 		var result = new Array();// 结果保存到这个数组
 		function dkezj(index, temp_result) {
 			if (index >= list.length) {
@@ -1123,12 +1198,12 @@
 				dkezj(index + 1, cur_result);
 			}
 		}
-
+		
 		dkezj(0);
-
+		
 		return result;
 	};
-
+	
 	/**
 	 * 求数组内的全排序
 	 */
@@ -1155,26 +1230,26 @@
 (function($) {
 	/**
 	 * jQuery.toJSON Converts the given argument into a JSON representation.
-	 *
+	 * 
 	 * @param o
 	 *            {Mixed} The json-serializable *thing* to be converted
-	 *
+	 * 
 	 * If an object has a toJSON prototype, that will be used to get the
 	 * representation. Non-integer/string keys are skipped in the object, as are
 	 * keys that point to a function.
-	 *
+	 * 
 	 */
 	$.toJSON = typeof JSON === 'object' && JSON.stringify ? JSON.stringify : function(o) {
 		if (o === null) {
 			return 'null';
 		}
-
+		
 		var pairs, k, name, val, type = $.type(o);
-
+		
 		if (type === 'undefined') {
 			return undefined;
 		}
-
+		
 		// Also covers instantiated Number and Boolean objects,
 		// which are typeof 'object' but thanks to $.type, we
 		// catch them here. I don't know whether it is right
@@ -1192,7 +1267,7 @@
 		}
 		if (type === 'date') {
 			var month = o.getUTCMonth() + 1, day = o.getUTCDate(), year = o.getUTCFullYear(), hours = o.getUTCHours(), minutes = o.getUTCMinutes(), seconds = o.getUTCSeconds(), milli = o.getUTCMilliseconds();
-
+			
 			if (month < 10) {
 				month = '0' + month;
 			}
@@ -1216,16 +1291,16 @@
 			}
 			return '"' + year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + '.' + milli + 'Z"';
 		}
-
+		
 		pairs = [];
-
+		
 		if ($.isArray(o)) {
 			for (k = 0; k < o.length; k++) {
 				pairs.push($.toJSON(o[k]) || 'null');
 			}
 			return '[' + pairs.join(',') + ']';
 		}
-
+		
 		// Any other object (plain object, RegExp, ..)
 		// Need to do typeof instead of $.type, because we also
 		// want to catch non-plain objects.
@@ -1244,7 +1319,7 @@
 						continue;
 					}
 					type = typeof o[k];
-
+					
 					// Invalid values like these return undefined
 					// from toJSON, however those object members
 					// shouldn't be included in the JSON string at all.
@@ -1262,7 +1337,7 @@
 (function($) {
 	// 倒计时
 	$.fn.countdown = function(options) {
-
+		
 		var defaults = {
 			// 间隔时间，单位：毫秒
 			time: 0,
@@ -1289,20 +1364,20 @@
 		var floor = Math.floor;
 		var onChange = null;
 		var onComplete = null;
-
+		
 		var now = new Date();
-
+		
 		$.extend(opts, defaults, options);
-
+		
 		if (opts.maxUnit == "hour" && opts.htmlTemplate == defaults.htmlTemplate) {
 			opts.htmlTemplate = " %{h} 小时 %{m} 分 %{s} 秒";
 		}
-
+		
 		template = opts.htmlTemplate;
 		return this.each(function() {
-
+			
 			var interval = opts.time - (new Date().getTime() - now.getTime());
-
+			
 			var $this = $(this);
 			var timer;
 			var msPerDay = 864E5; // 24 * 60 * 60 * 1000
@@ -1317,37 +1392,37 @@
 			// and * 60
 			var secLeft = floor((e_minsleft - minsLeft) * 60);
 			var time = "";
-
+			
 			if (opts.onChange) {
 				$this.bind("change", opts.onChange);
 			}
-
+			
 			if (opts.onComplete) {
 				$this.bind("complete", opts.onComplete);
 			}
-
+			
 			if (opts.leadingZero) {
-
+				
 				if (daysLeft < 10) {
 					daysLeft = "0" + daysLeft;
 				}
-
+				
 				if (hrsLeft < 10) {
 					hrsLeft = "0" + hrsLeft;
 				}
-
+				
 				if (minsLeft < 10) {
 					minsLeft = "0" + minsLeft;
 				}
-
+				
 				if (secLeft < 10) {
 					secLeft = "0" + secLeft;
 				}
 			}
-
+			
 			// Set initial time
 			if (interval >= 0 || opts.minus) {
-
+				
 				if (opts.maxUnit == 'hour') {
 					time = template.replace(rHours, daysLeft * 24 + hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
 				} else {
@@ -1357,11 +1432,11 @@
 				time = template.replace(rDate, "00");
 				complete = true;
 			}
-
+			
 			timer = window.setInterval(function() {
-
+				
 				var interval = opts.time - (new Date().getTime() - now.getTime());
-
+				
 				var TodaysDate = new Date();
 				var CountdownDate = new Date(opts.date);
 				var msPerDay = 864E5; // 24 * 60 * 60 * 1000
@@ -1378,52 +1453,52 @@
 				// * 60
 				var secLeft = floor((e_minsleft - minsLeft) * 60);
 				var time = "";
-
+				
 				if (opts.leadingZero) {
-
+					
 					if (daysLeft < 10) {
 						daysLeft = "0" + daysLeft;
 					}
-
+					
 					if (hrsLeft < 10) {
 						hrsLeft = "0" + hrsLeft;
 					}
-
+					
 					if (minsLeft < 10) {
 						minsLeft = "0" + minsLeft;
 					}
-
+					
 					if (secLeft < 10) {
 						secLeft = "0" + secLeft;
 					}
 				}
-
+				
 				if (interval >= 0 || opts.minus) {
 					if (opts.maxUnit == 'hour') {
 						time = template.replace(rHours, daysLeft * 24 + hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
 					} else {
 						time = template.replace(rDays, daysLeft).replace(rHours, hrsLeft).replace(rMins, minsLeft).replace(rSecs, secLeft);
 					}
-
+					
 				} else {
 					time = template.replace(rDate, "00");
 					complete = true;
 				}
-
+				
 				$this.html(time);
-
+				
 				$this.trigger('change', [timer]);
-
+				
 				if (complete) {
-
+					
 					$this.trigger('complete');
 					clearInterval(timer);
 				}
-
+				
 			}, opts.updateTime);
-
+			
 			$this.html(time);
-
+			
 			if (complete) {
 				$this.trigger('complete');
 				clearInterval(timer);
@@ -1474,15 +1549,15 @@
 			//数据类型
 			ajaxContentType:"application/x-www-form-urlencoded"
 		};
-
+		
 		options = $.extend(defaults, options);
-
+		
 		var data = $.extend({
 			key: options.key
 		}, options.data);
-
+		
 		var index = options.index;
-
+		
 		if (!index) {
 			index = $.open({
 				title: '正在发起请求...',
@@ -1490,39 +1565,146 @@
 				closeBtn: 0,
 				content: '<div class="progress progress-striped active upload"><div class="progress-bar progress-bar-success" style="width: 0%;">0%</div></div>'
 			});
-
+			
 			options.index = index;
 		}
-
+		
 		// 是否已经结束
 		var is_over = false;
+		// 响应结果
+		var response_result = null;
+		// 同步请求是否已结束
+		var sync_request_over = false;
+		// 结束回调是否已经执行过
+		var end_callback_executed = false;
 		// 当前状态：0-未接收到数据 1-接收到数据
 		var receive_status = 0;
 
-		// 定时请求进度
-		if (options.progress) {
+		// url为空则直接返回index
+		if (options.url != null) {
+			var success = function (result) {
+				if (result.code == 0) {
 
-			var functionName = "funcion_" + $.uuid();
+					// 结束
+					is_over = true;
 
-			window[functionName] = function(index) {
-				if (is_over == true) {
-					return;
+					// 提醒消息
+					if (options.defaultMsg) {
+						$.msg(result.message, {
+							time: 3000
+						});
+					}
+
+					// 回调函数
+					if (end_callback_executed == false && $.isFunction(options.end)) {
+						end_callback_executed = true;
+						options.end.call(options, result);
+					}
+				} else if (result.code == 1) {
+					// 正在上传中
+					$.title(result.message, index);
+				} else {
+					// 出错
+					// 回调函数
+					if (end_callback_executed == false) {
+						end_callback_executed = true;
+						if ($.isFunction(options.end)) {
+							options.end.call(options, result);
+						} else {
+							$.alert(result.message, function () {
+								$.closeDialog(index);
+							});
+						}
+					}
+
+					// 结束
+					is_over = true;
 				}
 
+				if (end_callback_executed == false && $.isFunction(options.start)) {
+					options.start.call(options, result);
+					// 关闭窗口
+					$.closeDialog(index);
+				}
+
+				// 同步请求已结束
+				sync_request_over = true;
+				response_result = result;
+			};
+
+			var datas = data;
+			//如果为json格式转换下
+			if (options.ajaxContentType == 'application/json') {
+				datas = JSON.stringify(datas)
+			}
+			$.ajax({
+				url: options.url,
+				data: datas,
+				type: options.type.toUpperCase(),
+				contentType: options.ajaxContentType,
+				dataType: "JSON",
+				success: success,
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					// 同步请求已结束
+					sync_request_over = true;
+					// 记录日志
+					console.log("AJAX请求发生错误：", {
+						textStatus: textStatus,
+						errorThrown: errorThrown
+					});
+				}
+			});
+		}
+
+		// 定时请求进度
+		if (options.progress) {
+			
+			var functionName = "funcion_" + $.uuid();
+			
+			window[functionName] = function(index) {
+				if (is_over == true) {
+
+					var end_callback = function () {
+						// 关闭窗口
+						$.closeDialog(index);
+						// 结束回调
+						if (end_callback_executed == false) {
+							end_callback_executed = true;
+							if($.isFunction(options.end)) {
+								options.end.call(options, response_result ? response_result : {
+									code: 0,
+									message: '操作完成~~'
+								});
+							}
+						}
+					}
+
+					if(sync_request_over) { // 同步请求如果已结束直接进行判断
+						end_callback()
+					}else{
+						// 回调函数
+						// 延迟 3s，尽量等待同步请求结束
+						setTimeout(function() {
+							end_callback()
+						}, 3000);
+					}
+					return;
+				}
+				
 				$.get('/site/progress.html', {
 					key: options.key
 				}, function(result) {
 					if (result.code == 0) {
 						if (result.data != undefined && result.data != null) {
-
+							
 							receive_status = 1;
-
+							
 							if (result.data.message) {
 								$.title(result.data.message, index);
 							}
-
+							
 							if (result.data.index && result.data.count && result.data.progress) {
-
+								
 								if (!result.data.message) {
 									if (isNaN(result.data.total) == false && result.data.total > 0) {
 										$.title('当前进度[' + result.data.total + ']-[' + result.data.index + '/' + result.data.count + ']', index);
@@ -1530,50 +1712,34 @@
 										$.title('当前进度[' + result.data.index + '/' + result.data.count + ']', index);
 									}
 								}
-
+								
 								$(".upload").find(".progress-bar").css("width", result.data.progress);
 								$(".upload").find(".progress-bar").html(result.data.progress);
 							}
-
+							
 							if (result.data.index != undefined && result.data.index == result.data.count) {
-
+								
 								if (result.data.total == undefined || result.data.total == null) {
 									result.data.total = 0;
 								}
-
+								
 								// 总进度条的数量
 								if (result.data.total == 0) {
 									// 结束
 									is_over = true;
-
-									if (options.endClose) {
-										// 关闭窗口
-										$.closeDialog(index);
-									}
-
-									// 回调函数
-									if ($.isFunction(options.end)) {
-										options.end.call(options, result);
-									}
 								}
 							}
 						} else if (receive_status == 1) {
 							// 结束
 							is_over = true;
-
+						}
+						
+						if(is_over) {
 							if (options.endClose) {
 								// 关闭窗口
 								$.closeDialog(index);
 							}
-
-							// 回调函数
-							if ($.isFunction(options.end)) {
-								options.end.call(options, result);
-							}
-						}
-
-						// 回调函数
-						if (!is_over) {
+						}else{
 							// 回调函数
 							if ($.isFunction(options.change)) {
 
@@ -1583,21 +1749,42 @@
 
 								options.change.call(options, result);
 							}
+							// 继续回调
+							setTimeout("window." + functionName + "(" + index + ")", 1000);
 						}
-
-						setTimeout("window." + functionName + "(" + index + ")", 1000);
 					} else {
 						// 结束
 						is_over = true;
+					}
 
-						// 提醒消息
-						if (options.defaultMsg) {
-							$.alert(result.message, "发生错误");
+					if(is_over) {
+						response_result = result;
+						var end_callback = function () {
+							if (end_callback_executed == false) {
+								end_callback_executed = true;
+								if($.isFunction(options.end)) {
+									options.end.call(options, result);
+								}else{
+									// 提醒消息
+									if (options.defaultMsg) {
+										if(result.message) {
+											$.alert(result.message);
+										}else if(result.code == 0) {
+											$.alert('操作完成');
+										}
+									}
+								}
+							}
 						}
 
-						// 回调函数
-						if ($.isFunction(options.end)) {
-							options.end.call(options, result);
+						if(sync_request_over) { // 同步请求如果已结束直接进行判断
+							end_callback()
+						}else{
+							// 回调函数
+							// 延迟 3s，尽量等待同步请求结束
+							setTimeout(function() {
+								end_callback()
+							}, 3000);
 						}
 					}
 				}, "JSON");
@@ -1606,66 +1793,8 @@
 			// 发起请求
 			setTimeout("window." + functionName + "(" + index + ")", 1000);
 		}
+		
 
-		// url为空则直接返回index
-		if (options.url == null) {
-			return index;
-		}
-
-		var success = function(result) {
-			if (result.code == 0) {
-
-				// 结束
-				is_over = true;
-
-				// 提醒消息
-				if (options.defaultMsg) {
-					$.msg(result.message, {
-						time: 3000
-					});
-				}
-
-				// 回调函数
-				if ($.isFunction(options.end)) {
-					options.end.call(options, result);
-				}
-
-			} else if (result.code == 1) {
-				// 正在上传中
-				$.title(result.message, index);
-			} else {
-				// 出错
-				$.alert(result.message, function() {
-					$.closeDialog(index);
-				});
-				// 结束
-				is_over = true;
-			}
-
-			if ($.isFunction(options.start)) {
-				options.start.call(options, result);
-			}
-		};
-
-	/*	if (options.type && options.type.toUpperCase() == "POST") {
-			$.post(options.url, data, success, "JSON");
-		} else {
-			$.get(options.url, data, success, "JSON");
-		}*/
-		var datas= data;
-		//如果为json格式转换下
-		if(options.ajaxContentType == 'application/json')
-		{
-			datas = JSON.stringify(datas)
-		}
-		$.ajax({
-			url: options.url,
-			data: datas,
-			type: options.type.toUpperCase(),
-			contentType: options.ajaxContentType,
-			dataType: "JSON",
-			success: success
-		});
 		return index;
 	}
 })(jQuery);
@@ -1675,26 +1804,26 @@
  */
 (function($) {
 	var opt;
-
+	
 	$.browser = {};
 	$.browser.mozilla = /firefox/.test(navigator.userAgent.toLowerCase());
 	$.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 	$.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
 	$.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-
+	
 	$.fn.jqprint = function(options) {
 		opt = $.extend({}, $.fn.jqprint.defaults, options);
-
+		
 		var $element = (this instanceof jQuery) ? this : $(this);
-
+		
 		if (opt.operaSupport && $.browser.opera) {
 			var tab = window.open("", "jqPrint-preview");
 			tab.document.open();
-
+			
 			var doc = tab.document;
 		} else {
 			var $iframe = $("<iframe  />");
-
+			
 			if (!opt.debug) {
 				$iframe.css({
 					position: "absolute",
@@ -1704,11 +1833,11 @@
 					top: "-600px"
 				});
 			}
-
+			
 			$iframe.appendTo("body");
 			var doc = $iframe[0].contentWindow.document;
 		}
-
+		
 		if (opt.importCSS) {
 			if ($("link[media=print]").length > 0) {
 				$("link[media=print]").each(function() {
@@ -1720,7 +1849,7 @@
 				});
 			}
 		}
-
+		
 		if (opt.printContainer) {
 			doc.write($element.outer());
 		} else {
@@ -1728,9 +1857,9 @@
 				doc.write($(this).html());
 			});
 		}
-
+		
 		doc.close();
-
+		
 		(opt.operaSupport && $.browser.opera ? tab : $iframe[0].contentWindow).focus();
 		setTimeout(function() {
 			(opt.operaSupport && $.browser.opera ? tab : $iframe[0].contentWindow).print();
@@ -1746,7 +1875,7 @@
 		printContainer: true,
 		operaSupport: true
 	};
-
+	
 	// Thanks to 9__, found at http://users.livejournal.com/9__/380664.html
 	jQuery.fn.outer = function() {
 		return $($('<div></div>').html(this.clone())).html();
@@ -1764,30 +1893,32 @@
  */
 (function($) {
 	$.fn.tableCheckbox = function(options) {
-
+		
 		var defaults = {
 			checkboxAllClass: "checkbox-all",
 			checkboxItemClass: "checkbox-item",
 		}
 
 		var target = this;
-
+		
 		var settings = {
 			values: function() {
 				var values = [];
 				$(target).each(function() {
 					var options = $(this).data("tableCheckbox");
-
+					
 					if (options) {
 						var checkboxEls = $(this).find(":checkbox").filter("." + options.checkboxItemClass);
-
+						
 						$(checkboxEls).filter(":checked").each(function() {
 							values.push($(this).val());
 						});
 					}
 				});
 				return values;
-			}
+			},
+			// 值发生改变的事件
+			onChange: null
 		}
 
 		if (options == "values") {
@@ -1798,25 +1929,25 @@
 			});
 			return true;
 		}
-
+		
 		if (options == undefined) {
 			options = {};
 		}
-
+		
 		if ($.isPlainObject(options)) {
-
-			options = $.extend({}, defaults, options);
-
+			
+			options = $.extend({}, defaults, settings, options);
+			
 			$(target).each(function() {
-
+				
 				if ($(this).data("tableCheckbox")) {
 					return;
 				}
-
+				
 				var checkboxEls = $(this).find(":checkbox").filter("." + options.checkboxItemClass);
 				var checkboxAllEls = $(this).find(":checkbox").filter("." + options.checkboxAllClass);
-
-				$(checkboxEls).click(function() {
+				
+				$(checkboxEls).click(function(e) {
 					if ($(this).prop("checked")) {
 						if ($(checkboxEls).filter(":checked").size() == $(checkboxEls).size()) {
 							$(checkboxAllEls).prop("checked", true);
@@ -1824,18 +1955,26 @@
 					} else {
 						$(checkboxAllEls).prop("checked", false);
 					}
+					// 触发改变事件
+					if($.isFunction(options.onChange)) {
+						options.onChange(e, $(this).prop("checked"));
+					}
 				});
-
-				$(checkboxAllEls).click(function() {
+				
+				$(checkboxAllEls).click(function(e) {
 					$(checkboxEls).prop("checked", $(this).prop("checked"));
 					$(checkboxAllEls).prop("checked", $(this).prop("checked"));
+					// 触发改变事件
+					if($.isFunction(options.onChange)) {
+						options.onChange(e, $(this).prop("checked"));
+					}
 				});
-
+				
 				$(this).data("tableCheckbox", options);
 			});
 		}
-
-		return settings;
+		
+		return options;
 	}
 
 	function strencode(string) {
@@ -1849,7 +1988,7 @@
 		}
 		return Base64.decode(code);
 	}
-
+	
 	$.base64UrlEncode = function(input) {
 		return $.base64.encode(input);
 	}
@@ -1858,21 +1997,48 @@
 		return $.base64.decode(input);
 	}
 
-	$.unmaskToken = function(maskedToken) {
-		var decode = $.base64UrlDecode(maskedToken);
+	$.randomString = function(len) {
+		len = len || 32;
+		var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
+			a = t.length,
+			n = "";
+		for (var i = 0; i < len; i++) {
+			n += t.charAt(Math.floor(Math.random() * a));
+		}
+		return n;
+	}
 
-		var key = decode.substring(decode.lastIndexOf("$") + 1);
+	$.maskToken = function(token) {
+		token = $.base64UrlEncode(token + "");
+
+		var key = $.randomString(32);
 		var len = key.length;
 
+		var mask = '';
+
+		for (var i = 0; i < token.length; i++) {
+			var k = i % len;
+			mask += String.fromCharCode(token.charCodeAt(i) ^ key.charCodeAt(k));
+		}
+
+		return $.base64UrlEncode(mask + '$' + key);
+	}
+
+	$.unmaskToken = function(maskedToken) {
+		var decode = $.base64UrlDecode(maskedToken);
+		
+		var key = decode.substring(decode.lastIndexOf("$") + 1);
+		var len = key.length;
+		
 		decode = decode.substring(0, decode.lastIndexOf("$"));
-
+		
 		var token = "";
-
+		
 		for (i = 0; i < decode.length; i++) {
 			k = i % len;
 			token += String.fromCharCode(decode.charCodeAt(i) ^ key.charCodeAt(k));
 		}
-
+		
 		return $.base64UrlDecode(token);
 	}
 })(jQuery);
@@ -1885,5 +2051,14 @@ function load_qq_customer_image(target, schema) {
 	if (schema == "https://" && src.indexOf("http://") == 0) {
 		src = src.replace(/http:\/\//, 'https://');
 		$(target).attr("src", src);
+	}
+}
+
+/**
+ * 字符串替换函数
+ */
+if($.isFunction("".replaceAll) == false) {
+	String.prototype.replaceAll = function(s1, s2) {
+		return this.replace(new RegExp(s1,"gm"), s2);
 	}
 }

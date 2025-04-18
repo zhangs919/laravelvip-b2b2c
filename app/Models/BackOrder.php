@@ -55,7 +55,8 @@ class BackOrder extends BaseModel
      */
     protected $fillable = [
         'back_id','back_sn','back_type','site_id','shop_id','user_id','order_id','delivery_id','record_id','goods_id','sku_id',
-        'back_number','add_time','last_time','dismiss_time','disabled_time','back_status','back_reason','refund_money','refund_type',
+        'back_number','add_time','last_time','dismiss_time','disabled_time','back_status','back_reason','refund_money','should_return',
+        'actual_return','return_shipping_fee','refund_type',
         'refund_status','back_desc','back_img1','back_img2','back_img3','send_time','shipping_id','shipping_code','shipping_name',
         'shipping_sn','seller_reason','seller_desc','seller_img1','seller_img2','seller_img3','seller_address','reminder_times',
         'exchange_reason','repair_reason','user_address','exchange_desc','repair_desc','is_after_sale','update_time',

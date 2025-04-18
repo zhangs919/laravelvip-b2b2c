@@ -10,10 +10,12 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
 
     // User Route 用户中心路由
-    Route::get('user.html', 'User\IndexController@center')->name('mobile_user_center'); // index
+    Route::get('user', 'User\IndexController@center')->name('mobile_user_center'); // index
 
 
     Route::group(['prefix' => 'user'], function () {
+
+        Route::get('user-info', 'User\IndexController@userInfo');
 
         // 找回密码
         Route::any('find-password.html', 'User\FindPasswordController@findPassword'); //
@@ -27,16 +29,16 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
         Route::get('profile.html', 'User\ProfileController@profile'); // profile
         Route::get('security.html', 'User\SecurityController@security'); // security
         Route::get('bind.html', 'User\BindController@index'); // index
-        Route::get('address.html', 'User\AddressController@index'); // index
+        Route::get('address', 'User\AddressController@index'); // index
         Route::get('growth-value.html', 'User\RankController@growthValue'); // 会员成长值
         Route::get('history.html', 'User\HistoryController@index'); // 我的足迹
-        Route::get('order.html', 'User\OrderController@index'); // 我的订单
+        Route::get('order', 'User\OrderController@index'); // 我的订单
         Route::get('integral.html', 'User\IntegralController@detail'); // 我的积分
         Route::get('bonus.html', 'User\BonusController@lists'); // 我的红包
         Route::get('complaint.html', 'User\ComplaintController@lists'); // 我的投诉
         Route::get('member-card.html', 'User\MemberCardController@lists'); // 我的会员卡 后期废弃掉
         Route::get('rights-card.html', 'User\RightsCardController@index'); // 我的会员卡 新的样式
-        Route::get('back.html', 'User\BackOrderController@lists'); // 退款退货、换货维修
+        Route::get('back', 'User\BackOrderController@lists'); // 退款退货、换货维修
         Route::get('capital-account.html', 'User\CapitalAccountController@lists'); // 我的资金账户
 
 
@@ -50,10 +52,12 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
         // 个人资料
         Route::group(['prefix' => 'profile'], function () {
             Route::get('client-validate', 'User\ProfileController@clientValidate'); // clientValidate
+            Route::post('edit-profile', 'User\ProfileController@editProfile'); // 修改会员资料 app端
             Route::post('edit-profile-info', 'User\ProfileController@editProfileInfo'); // 修改会员信息
             Route::post('edit-base', 'User\ProfileController@editBase'); // 修改基本信息
             Route::post('edit-real', 'User\ProfileController@editReal'); // 修改实名认证信息
             Route::post('up-load', 'User\ProfileController@upload'); // 修改头像信息
+            Route::post('upload', 'User\ProfileController@upload'); // 修改头像信息
         });
 
         // 账户安全
@@ -106,15 +110,11 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
         // 收货地址
         Route::group(['prefix' => 'address'], function () {
             Route::get('index.html', 'User\AddressController@index'); // index
-            Route::get('add', 'User\AddressController@add'); // add
-            Route::get('add.html', 'User\AddressController@add'); // add
-            Route::get('edit', 'User\AddressController@edit'); // edit
-            Route::get('edit.html', 'User\AddressController@edit'); // edit
-            Route::post('add.html', 'User\AddressController@saveData'); // saveData
-            Route::post('edit.html', 'User\AddressController@saveData'); // saveData
+            Route::get('info', 'User\AddressController@edit'); // info
+            Route::post('add', 'User\AddressController@saveData'); // saveData
+            Route::post('edit', 'User\AddressController@saveData'); // saveData
             Route::get('set-default', 'User\AddressController@setDefault'); // setDefault
             Route::get('del', 'User\AddressController@delete'); // delete
-            Route::get('del.html', 'User\AddressController@delete'); // delete
 
         });
 
@@ -128,16 +128,13 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
         // 我的订单
         Route::group(['prefix' => 'order'], function () {
-            Route::get('list.html', 'User\OrderController@lists'); // 订单列表
             Route::get('list', 'User\OrderController@lists'); // 订单列表
             Route::get('info', 'User\OrderController@info'); // 订单详情
-            Route::get('info.html', 'User\OrderController@info'); // 订单详情
             Route::get('edit-order', 'User\OrderController@editOrder'); //
-            Route::get('edit-order.html', 'User\OrderController@editOrder'); //
-            Route::post('cancel.html', 'User\OrderController@cancel'); // 取消订单
+            Route::post('cancel', 'User\OrderController@cancel'); // 取消订单
             Route::post('confirm', 'User\OrderController@confirm'); // 确认收货
-            Route::post('delete.html', 'User\OrderController@delete'); // 删除订单
-            Route::get('express.html', 'User\OrderController@express'); // 查看物流
+            Route::post('delete', 'User\OrderController@delete'); // 删除订单
+            Route::get('express', 'User\OrderController@express'); // 查看物流
 
         });
 
@@ -182,14 +179,16 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
         // 退款退货、换货维修
         Route::group(['prefix' => 'back'], function () {
+            Route::get('list', 'User\BackOrderController@lists'); // 退款退货、换货维修
             Route::get('info', 'User\BackOrderController@info'); //
-            Route::get('info.html', 'User\BackOrderController@info'); //
-            Route::get('apply.html', 'User\BackOrderController@apply'); // 申请售后
-            Route::post('apply.html', 'User\BackOrderController@applySave'); // 申请售后提交
-            Route::get('edit.html', 'User\BackOrderController@edit'); //
-            Route::post('edit.html', 'User\BackOrderController@editSave'); // 修改申请售后提交
+            Route::get('apply', 'User\BackOrderController@apply'); // 申请售后
+            Route::post('apply', 'User\BackOrderController@applySave'); // 申请售后提交
+            Route::get('edit', 'User\BackOrderController@edit'); //
+            Route::post('edit', 'User\BackOrderController@editSave'); // 修改申请售后提交
+            Route::get('edit-order', 'User\BackOrderController@editOrder'); //
+            Route::post('edit-order', 'User\BackOrderController@editOrderSave'); //
             Route::post('cancel', 'User\BackOrderController@cancel'); // 取消售后申请
-            Route::get('confirm-sys.html', 'User\BackOrderController@confirmSys'); // 系统自动同意申请
+            Route::get('confirm-sys', 'User\BackOrderController@confirmSys'); // 系统自动同意申请
 
         });
 
@@ -212,6 +211,54 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
             Route::get('info.html', 'User\SignInController@info'); // 签到页面
             Route::post('go.html', 'User\SignInController@go'); // 开始签到
         });
+
+        // 视频/帖子
+        Route::group(['prefix' => 'article'], function () {
+//            Route::get('cat-list', 'User\ArticleController@catList');
+            Route::post('publish', 'User\ArticleController@publish');
+            Route::post('change-live-status', 'User\ArticleController@changeLiveStatus');
+            Route::get('info', 'User\ArticleController@info');
+            Route::get('list', 'User\ArticleController@lists');
+            Route::post('del', 'User\ArticleController@delete'); // 删除记录
+        });
+
+        // 用户直播
+        Route::group(['prefix' => 'live'], function () {
+            Route::post('verified', 'User\LiveController@verified');
+        });
+
+        // 用户点赞
+        Route::group(['prefix' => 'user-praise'], function () {
+            Route::get('list', 'User\UserPraiseController@lists');
+            Route::post('toggle', 'User\UserPraiseController@toggle');
+        });
+
+        // 用户关注
+        Route::group(['prefix' => 'user-follow'], function () {
+            Route::get('list', 'User\UserFollowController@lists');
+            Route::get('fans-list', 'User\UserFollowController@fansList');
+            Route::post('toggle', 'User\UserFollowController@toggle');
+        });
+
+        // 用户收藏
+        Route::group(['prefix' => 'user-collect'], function () {
+            Route::get('list', 'User\UserCollectController@lists');
+            Route::post('toggle', 'User\UserCollectController@toggle');
+        });
+
+        // 用户评论
+        Route::group(['prefix' => 'user-comment'], function () {
+            Route::get('my-list', 'User\UserCommentController@myList');
+//            Route::get('list', 'User\UserCommentController@lists');
+            Route::post('comment', 'User\UserCommentController@comment');
+        });
+
+        Route::group(['prefix' => 'chat'], function () {
+            Route::get('bind-client-id', 'User\ChatController@bindClientId');
+            Route::get('get-conversation-list', 'User\ChatController@getConversationList');
+            Route::get('get-conversation-messages', 'User\ChatController@getConversationMessages');
+        });
+
     });
 
 });

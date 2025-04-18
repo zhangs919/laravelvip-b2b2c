@@ -3,6 +3,7 @@
 namespace App\Kernel\Repositories\Common;
 
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,11 +42,13 @@ class LrwRepository
     public static function lrwEmpower(string $app_key, string $activate_time)
     {
         $checkRes = self::checkEmpower(0, $app_key);
-        if ($checkRes['code'] == 0) {
-            Storage::disk('local')->put('certs/lrw_public_key.pem', $app_key);
-            $data = "乐融沃 https://www.laravelvip.com/ \r\n 安装时间：" . $activate_time;
-            Storage::disk('local')->put('seeder/install.lock', $data);
+        if (!empty($checkRes) && $checkRes['code'] == -1) {
+            throw new \Exception($checkRes['message']);
         }
+
+        Storage::disk('local')->put('certs/lrw_public_key.pem', $app_key);
+        $data = "乐融沃 https://www.laravelvip.com/ \r\n 安装时间：" . $activate_time;
+        Storage::disk('local')->put('seeder/install.lock', $data);
     }
 
     /**
@@ -77,24 +80,25 @@ class LrwRepository
                         throw new \Exception('请先获取授权码');
                     }
                 }
-                $lrw_url = config('lrw.upgrade_server') . "/update/check-auth";
                 $post = [
                     'name' => config('app.name'),
                     'domain' => $domain,
                     'auth_code' => $auth_code
                 ];
-                $res = Http::post($lrw_url, $post);
-                if ($res->status() != 200) {
-                    throw new \Exception('请求失败');
-                }
-                $res = json_decode($res->body(), true);
-                if ($res['code'] == -1) {
-                    throw new \Exception($res['message']);
-                }
+                $data = [
+                    'name' => $post['name'] ?? '',
+                    'domain' => $post['domain'],
+                    'auth_code' => $post['auth_code'],
+                    'auth_type' => 1,
+                    'status' => 1,
+                    'valid_at' => Carbon::now()->addYear()->toDateTimeString(),
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
+                ];
 
                 // 验证通过 存储授权信息
-                cache()->put($cache_id, $res['data'], CACHE_KEY_MALL_AUTH[1]);
-                return arr_result(0, ['auth_code' => $res['data']['auth_code']], '验证通过');
+                cache()->put($cache_id, $data, CACHE_KEY_MALL_AUTH[1]);
+                return arr_result(0, ['auth_code' => $data['auth_code']], '验证通过');
             }
         } catch (\Exception $e) {
             return arr_result(-1, null, $e->getMessage());

@@ -134,19 +134,21 @@ class PaymentController extends Backend
         $pay_name = $post['pay_name'];
         $pay_type = $post['pay_type'];
         $pay_config = [];
-//        dd($post);
         foreach ($pay_name as $key=>$item) {
             if ($pay_type[$key] == 'file-button') {
                 // todo 如果是文件上传 处理文件上传
                 $filename = $request->post($item, 'name');
-                $storePath = 'backend/gallery'; // 需要判断是平台方 还是店铺 站点
-                $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
-
-                if (isset($uploadRes['error'])) {
-                    // 上传出错
-                    return result(-1, '', $uploadRes['error']);
+                $storePath = 'app/certs/pay'; // 需要判断是平台方 还是店铺 站点
+                $file = request()->file()[$pay_name[$key]];
+                if (!empty($file)) {
+                    $uploadRes = $this->tools->upfile($file, request(), $storePath, false, '', 'local');
+//                $uploadRes = $this->tools->upfile($request, $filename, $storePath, false, '', 'local');
+                    if (isset($uploadRes['error'])) {
+                        // 上传出错
+                        return result(-1, '', $uploadRes['error']);
+                    }
+                    $post[$item] = $uploadRes['path'];
                 }
-                $post[$item] = $uploadRes['data']['path'];
             }
             $pay_config[] = [
                 'pay_name' => $item,

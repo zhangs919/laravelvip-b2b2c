@@ -32,8 +32,10 @@ use App\Models\GoodsUnit;
 use App\Models\LibGoodsSku;
 use App\Models\Shop;
 use App\Modules\Base\Http\Controllers\Frontend;
+use App\Repositories\ActivityRepository;
 use App\Repositories\BonusRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\CheckoutRepository;
 use App\Repositories\CollectRepository;
 use App\Repositories\CompareRepository;
 use App\Repositories\CustomerRepository;
@@ -43,6 +45,7 @@ use App\Repositories\GoodsRepository;
 use App\Repositories\GoodsSkuRepository;
 use App\Repositories\LibGoodsRepository;
 use App\Repositories\LibGoodsSkuRepository;
+use App\Repositories\OrderInfoRepository;
 use App\Repositories\SelfPickupRepository;
 use App\Repositories\ShopCategoryRepository;
 use App\Repositories\ShopCreditRepository;
@@ -268,7 +271,7 @@ class GoodsController extends Frontend
         }
         $field = ['goods_id','goods_name','cat_id','shop_id','sku_id','sku_open','goods_price','market_price','mobile_price','give_integral','goods_number','warn_number','goods_image','brand_id','click_count','sale_num','comment_num','collect_num','is_best','is_new','is_hot','is_promote','freight_id','sales_model','goods_sort','last_time',
 //            'shop_name','shop_type','is_supply','show_price','show_content','button_content', 'is_free', 'brand_name','button_url'
-            'goods_freight_fee'
+            'goods_freight_fee', 'act_id'
         ];
         $total = $goodsQuery
             ->select($field)->count();
@@ -289,13 +292,40 @@ class GoodsController extends Frontend
                     $isCollected = 1;
                 }
                 $v = array_merge($v,$shop_info);
+
+                // 活动商品
+                $activity = (new ActivityRepository())->getActivityInfo($v['goods_id'], $v['sku_id'], $v['act_id']);
+
+                $goods_price = !empty($activity) ? $activity['act_price'] : $v['goods_price'];
+                $original_price = !empty($activity) ? $activity['original_price'] : $v['goods_price'];
+                $sku_number = !empty($activity) ? $activity['act_stock'] : $v['goods_number'];
+                $floor_price_init = !empty($activity) ? true : false;
+
                 $v['is_free'] = $v['goods_freight_fee'] > 0 ? 0 : 1;
                 $v['brand_name'] = $brand_name;
-                $v['act_type'] = null;
+                $v['act_type'] = !empty($activity) ? $activity['act_type'] : '';
                 $v['default_spec_id'] = null;
                 $v['goods_gift'] = 0;
+                $v['activity_goods_number'] = $sku_number;
+                $v['prices'] = [
+                    'is_original_price' => !empty($activity) ? 0 : 1,
+                    'price_type' => !empty($activity) ? 'activity_price' : 'original_price',
+                    'original_price' => $original_price,
+                    'original_price_format' => '￥'.$original_price,
+                    'activity_price' => !empty($activity) ? $activity['act_price'] : 0,
+                    'member_price' => 0,
+                    'member_price_type' => '',
+                    'goods_price' => $goods_price,
+                    'activity_enable' => !empty($activity) ? 1 : 0,
+                ];
+                $v['goods_price'] = $goods_price;
+                $v['goods_price_format'] = '￥'.$goods_price;
+                $v['floor_price_init'] = $floor_price_init;
+                $v['floor_price_label'] = '原价';
+                $v['floor_price'] = $original_price;
+                $v['floor_price_format'] = '￥'.$original_price;
+                $v['integral_label'] = '';
                 $v['price_show'] = ['code'=>1];
-                $v['goods_price_format'] = '￥'.$v['goods_price'];
                 $v['market_price_format'] = '￥'.$v['market_price'];
                 $v['buy_enable'] = [ // 判断是否登录
                     'code' => 1,
@@ -303,9 +333,12 @@ class GoodsController extends Frontend
                 ];
                 $v['is_collected'] = $isCollected; // 判断是否收藏商品
 				$v['cart_num'] = isset($cart_goods[$v['goods_id']]) ? $cart_goods[$v['goods_id']]['goods_number'] : 0; // 该商品购物车数量
+                $v['goods_image'] = get_image_url($v['goods_image']);
+                $v['act_labels'] = (new OrderInfoRepository())->getActLabels($v);
 
             }
         }
+//        dd($list);
 
         // 分页
         $pageHtml = frontend_pagination($total);
@@ -393,8 +426,12 @@ class GoodsController extends Frontend
      * @param $goods_id
      * @return mixed
      */
-    public function showGoods(Request $request, $goods_id)
+    public function showGoods(Request $request, $goods_id = '')
     {
+        if (!$goods_id) {
+            $goods_id = $request->input('goods_id');
+        }
+        $user_id = $request->input('user_id', 0);
 
         // 将客户端用户信息写入session
         $user_address = [
@@ -442,11 +479,6 @@ class GoodsController extends Frontend
 
         $goods = $goods_info->toArray();
 
-        // 适配uni-app端 临时增加限购字段
-        $goods['max_buy'] = 5;
-        $goods['stock'] = $goods['goods_number'];
-        $goods['promotion_price'] = $goods['goods_price']; // 促销价格 todo 促销工具功能完善后再取促销价格
-        $goods['member_price'] = $goods['goods_price']; // 会员价格 todo 促销工具功能完善后再取促销价格
 
 
 
@@ -539,14 +571,15 @@ class GoodsController extends Frontend
         $goods['is_compare'] = $is_compare;
         $goods['is_collect'] = $is_collect;
         $goods['shop_collect'] = $is_shop_collect;
-
+        $goods['goods_image'] = get_image_url($goods['goods_image']);
         $goods['show_sale_number'] = sysconf('goods_show_sale_number'); // 是否显示商品销量
 
         // 商品SKU信息
-        $sku = $this->goodsSku->getGoodsSkuInfo($sku_id, $goods_info, $shop_info['shop']);
+        $sku = $this->goodsSku->getGoodsSkuInfo($sku_id, $goods_info, $shop_info['shop'], $user_id);
 		if (empty($sku)) {
 			abort(404, '商品SKU不存在');
 		}
+        $goods['goods_images'] = $sku['goods_images'];
 
         // 是否微信端访问
         $is_weixin = is_weixin();
@@ -562,6 +595,54 @@ class GoodsController extends Frontend
 
 
         $im_enable = 1; // todo
+
+
+        // 适配uni-app端 临时增加限购字段
+        $goods['max_buy'] = 5;
+        $goods['stock'] = $goods['goods_number'];
+        $goods['promotion_price'] = $goods['goods_price']; // 促销价格 todo 促销工具功能完善后再取促销价格
+        $goods['member_price'] = $goods['goods_price']; // 会员价格 todo 促销工具功能完善后再取促销价格
+        $goods['wechat_code'] = '';
+        $productAttr = [];
+        foreach($spec_list as $item) {
+            $attr_value = [];
+            $attr_values = [];
+            foreach($item['attr_values'] as $sub) {
+                $attr_value[] = [
+                    'attr' => $sub['attr_value'],
+                    'check' => $sub['selected']
+                ];
+                $attr_values[] = $sub['attr_value'];
+            }
+            $productAttr[] = [
+                'id' => $item['attr_id'],
+                'product_id' => $goods_id,
+                'type' => $item['spec_show_type'] ?? 0,
+                'attr_name' => $item['attr_name'],
+                'attr_value' => $attr_value,
+                'attr_values' => $attr_values
+            ];
+        }
+        $productValue = [];
+        foreach($sku_list as $item) {
+            $suk = explode(':', $item['spec_names'])[1] ?? '';
+            $suk = str_replace(' ', ',', $suk);
+            if ($suk) {
+                $productValue[$suk] = [
+                    'id' => $item['sku_id'],
+                    'goods_image' => $item['goods_image'] ?? $goods['goods_image'],
+                    'ot_price' => 0,
+                    'goods_price' => $item['goods_price'],
+                    'goods_id' => $goods_id,
+                    'goods_number' => $item['goods_number'],
+                    'stock' => $item['goods_number'],
+                    'suk' => $suk,
+                    'weight' => '0.00',
+                    'volume' => '0.00',
+                    'vip_price' => 0
+                ];
+            }
+        }
 
 
 
@@ -655,6 +736,11 @@ class GoodsController extends Frontend
         list($goods_history,$goods_history_total) = $this->goods->getGoodsHistory($cat_id_arr, 10, [['user_id', $this->user_id]]);
         $goods_history = $goods_history->toArray();
 
+        if ($this->user_id) {
+            // 先清空购买信息
+            (new CheckoutRepository())->clearCheckoutData($this->user_id);
+        }
+
         /* PC端独有 END */
         $compact = compact(
             'goods', 'sku', 'is_weixin','shop_goods_count','shop_collect_count',
@@ -669,6 +755,8 @@ class GoodsController extends Frontend
 //        dd($shop_info);
         $data = [
             'app_prefix_data' => [
+                'productAttr' => $productAttr,
+                'productValue' => $productValue,
                 'goods' => $goods,
                 'sku' => $sku,
                 'is_weixin' => is_weixin(),
@@ -904,131 +992,29 @@ class GoodsController extends Frontend
     public function sku(Request $request)
     {
         $sku_id = $request->get('sku_id');
+        $user_id = $request->get('user_id', 0);
         $is_lib_goods = $request->get('is_lib_goods');
 
         if ($is_lib_goods) {
             $goods_id = $this->libGoods->getGoodsId($sku_id);
-            $goods_info = $this->libGoods->getById($goods_id)->toArray();
+            $goods_info = $this->libGoods->getById($goods_id);
 
             // 店铺信息
             $shop_info = [];
-
-            // 默认sku
-            $default_sku = LibGoodsSku::where('sku_id',$sku_id)->first()->toArray();
-            $spec_ids = explode('|', $default_sku['spec_ids']);
-            $selected_spec_names = $default_sku['spec_names'];
-//            $selected_spec_id = explode('|', $default_sku['spec_ids'])[1];
-//            $goods_images = $this->libGoods->getGoodsImages($goods_id, $selected_spec_id);
         } else {
             $goods_id = $this->goods->getGoodsId($sku_id);
-            $goods_info = $this->goods->getById($goods_id)->toArray();
+            $goods_info = $this->goods->getById($goods_id);
 
             // 店铺信息
-            $shop_info = Shop::where('shop_id',$goods_info['shop_id'])->first()->toArray();
-            $shop_info['opening_hour'] = unserialize($shop_info['opening_hour']);
-
-            // 默认sku
-            $default_sku = GoodsSku::where('sku_id',$sku_id)->first()->toArray();
-            $spec_ids = explode('|', $default_sku['spec_ids']);
-            $selected_spec_names = $default_sku['spec_names'];
-//            $selected_spec_id = explode('|', $default_sku['spec_ids'])[1];
-//            $goods_images = $this->goods->getGoodsImages($goods_id, $selected_spec_id);
+            $shop_info = $this->shop->shopInfo($goods_info->shop_id);
         }
 
-
-        // 商品图片相册
-        $sku_images = [];
-        foreach ($default_sku['sku_images'] as $image) {
-            $sku_images[] = [
-                get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
-                get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
-                get_image_url($image)
-            ];
+        $sku = $this->goodsSku->getGoodsSkuInfo($sku_id, $goods_info, $shop_info['shop'], $user_id);
+        if (empty($sku)) {
+            abort(404, '商品SKU不存在');
         }
 
-        $spec_attr_value = [];
-        foreach (explode(' ', $selected_spec_names) as $item) {
-            $spec_attr_value[] = explode(':', $item)[1];
-        }
-        $spec_attr_value = implode(' ', $spec_attr_value);
-        $sku_name = $goods_info['goods_name'].' '.$spec_attr_value;
-
-        // 2019.10.22更新
-        $data = [
-            'sku_id' => $sku_id,
-            'goods_id' => $goods_info['goods_id'],
-            'sku_name' => $sku_name,
-            'sku_image' => get_image_url($default_sku['sku_image']),
-            'goods_price' => $default_sku['goods_price'],
-            'original_price' => "1.00", // 商品表添加字段
-            'market_price' => $default_sku['market_price'],
-            'goods_number' => $default_sku['goods_number'],
-            'original_number' => 2, // 商品表添加字段
-            'spec_ids' => $spec_ids,
-            'is_enable' => 1,
-            'cart_step' => 1,
-            'goods_image' => get_image_url($goods_info['goods_image']),
-            'shop_id' => $goods_info['shop_id'],
-            'goods_status' => $goods_info['goods_status'],
-            'goods_audit' => $goods_info['goods_audit'],
-            'act_id' => "0",
-            'order_act_id' => "0",
-            'goods_moq' => $goods_info['goods_moq'],
-            'user_discount' => "0",
-            'freight_id' => $goods_info['freight_id'],
-            'unit_name' => $goods_info['goods_unit'], // 商品单位id
-            'is_virtual' => "0",
-            'ext_info' => null,
-            'is_supply' => $shop_info['is_supply'],
-            'shop_type' => "1",
-            'show_price' => "1",
-            'show_content' => $shop_info['show_content'] ?? '', // 店铺价格显示内容
-            'button_content' => $shop_info['button_content'] ?? '', // 购买按钮显示内容
-            'button_url' => null,
-            'start_price' => $shop_info['start_price'] ?? '0.00', // 起送金额
-            'sales_model' => $goods_info['sales_model'] ?? 0,
-            'is_give' => null,
-            'give_number' => null,
-            'is_deduction' => null,
-            'deduction_number' => null,
-            'goods_mix' => [],
-            'market_price_format' => "￥".$default_sku['market_price'],
-            'sku_images' => $sku_images,
-            'spec_attr_value' => $spec_attr_value,
-            'gift_list' => [],
-            'purchase_num' => 0,
-            'activity' => null,
-            'order_activity' => null,
-            'saled' => 0,
-            'cs_act_type' => 0,
-            'cs_act_status' => 1,
-            'cs_act_status_label' => null,
-            'button_label' => "加入购物车",
-            'cs_start_time' => 0,
-            'cs_end_time' => 0,
-            'cs_start_time_format' => "1970-01-01 08:00:00",
-            'cs_end_time_format' => "1970-01-01 08:00:00",
-            'original_price_format' => "￥1.00",
-            'goods_price_format' => "￥".$default_sku['goods_price'],
-            'prices' => [
-                'is_original_price' => true,
-                'price_type' => "original_price",
-                'original_price' => "0.00",
-                'activity_price' => false,
-                'member_price' => false,
-                'goods_price' => $default_sku['goods_price'],
-                'activity_enable' => "0.00",
-            ],
-            'cash_back' => [],
-            'rank_prices' => null,
-            'price_show' => ['code'=>1],
-            'buy_enable' => [
-                'code'=>1,
-                'button_content' => "请登录"
-            ],
-        ];
-
-        return result(0, $data);
+        return result(0, $sku);
     }
 
     /**

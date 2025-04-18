@@ -26,6 +26,9 @@ namespace App\Repositories;
 use App\Models\OrderInfo;
 use App\Models\ShopPayment;
 use App\Services\Enum\AccountProcessTypeEnum;
+use App\Services\WechatService;
+use EasyWeChat\Pay\Message;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yansongda\Pay\Pay;
@@ -35,6 +38,8 @@ class PaymentLogicRepository
     use BaseRepository;
 
     protected $config = [];
+    protected $alipay_config = [];
+    protected $weixin_config = [];
 	protected $domain = '';
 
     public function __construct()
@@ -44,6 +49,8 @@ class PaymentLogicRepository
 		$weixin_config = $payment->getPayConfig('weixin');
 		$this->domain = request()->getSchemeAndHttpHost();
 
+		$this->alipay_config = $alipay_config;
+		$this->weixin_config = $weixin_config;
 		$config = [
 			'alipay' => [
 				'default' => [
@@ -82,11 +89,11 @@ class PaymentLogicRepository
 					// 必填-商户私钥 字符串或路径
 					// 即 API证书 PRIVATE KEY，可在 账户中心->API安全->申请API证书 里获得
 					// 文件名形如：apiclient_key.pem
-					'mch_secret_cert' => $weixin_config['apiclient_key'],
+					'mch_secret_cert' => storage_path($weixin_config['apiclient_key']),
 					// 必填-商户公钥证书路径
 					// 即 API证书 CERTIFICATE，可在 账户中心->API安全->申请API证书 里获得
 					// 文件名形如：apiclient_cert.pem
-					'mch_public_cert_path' => $weixin_config['apiclient_cert'],
+					'mch_public_cert_path' => storage_path($weixin_config['apiclient_cert']),
 					// 必填-微信回调url
 					// 不能有参数，如?号，空格等，否则会无法正确回调
 					'notify_url' => $this->domain.'/notify/front-weixin',
@@ -94,7 +101,7 @@ class PaymentLogicRepository
 					// 可在 mp.weixin.qq.com 设置与开发->基本配置->开发者ID(AppID) 查看
 					'mp_app_id' => '',
 					// 选填-小程序 的 app_id
-					'mini_app_id' => '',
+					'mini_app_id' => $weixin_config['appid'],
 					// 选填-app 的 app_id
 					'app_id' => $weixin_config['appid'],
 					// 选填-合单 app_id
@@ -186,7 +193,7 @@ class PaymentLogicRepository
 					// 判断客户端
 					if (is_mobile_domain()) {
 						// mobile 访问
-						$alipay = Pay::alipay()->wap($order);
+						$alipay = Pay::alipay()->h5($order);
 					} elseif (is_pc_domain()) {
 						if (is_app()) {
 							// app客户端
@@ -207,43 +214,134 @@ class PaymentLogicRepository
 				case 'weixin'://微信支付
 					Pay::config($this->config);
 
-					$order = [
-						'_config' => 'default', // 注意这一行
-						'out_trade_no' => $order_sn,
-						'total_fee' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
-						'body' => $subject,
-						'openid' => 'o4Kp800BMtwNp8K7fc84c0ypdlqs', // 云 我的微信
-					];
+                    $openid = DB::table('user')->where('user_id', $orderInfo['user_id'])->value('weixin_key') ?? '';
+                    Log::info("支付:".is_pc_domain().is_app('weapp'));
 
 					// 判断客户端
-					if (request()->getHost() == config('lrw.mobile_domain')) {
+					if (is_mobile_domain()) {
 						// m.lrw.com 访问
+                        $order = [
+                            '_config' => 'default', // 注意这一行
+                            'out_trade_no' => $order_sn,
+                            'description' => $subject,
+                            'amount' => [
+                                'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
+                            ],
+                            'payer' => [
+                                'openid' => $openid,
+                            ]
+                        ];
 						$pay = Pay::wechat()->mp($order);
 						return $pay;
-					} elseif (request()->getHost() == config('lrw.frontend_domain')) {
+					} elseif (is_pc_domain()) {
 						// pc端
+                        $order = [
+                            '_config' => 'default', // 注意这一行
+                            'out_trade_no' => $order_sn,
+                            'description' => $subject,
+                            'amount' => [
+                                'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
+                            ]
+                        ];
 						$pay = Pay::wechat()->scan($order);
-
 						$result = [
 							'pay' => $pay,
 							'subject' => $subject,
 							'total_fee' => $total_amount
 						];
 						return $result;
-					}
+					} elseif (is_app('weapp')) {
+//                        $order = [
+//                            '_config' => 'default', // 注意这一行
+//                            'out_trade_no' => $order_sn,
+//                            'description' => $subject,
+//                            'amount' => [
+//                                'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
+//                                'currency' => 'CNY',
+//                            ],
+//                            'payer' => [
+//                                'openid' => $openid,
+//                            ]
+//                        ];
+//                        $pay = Pay::wechat()->mini($order);
+
+
+                        // easywechat v7.*
+//                        $app = WechatService::pay();
+//                        $response = $app->getClient()->postJson("v3/pay/transactions/jsapi", [
+//                            "mchid" => $this->weixin_config['mchid'], // <---- 请修改为您的商户号
+//                            "out_trade_no" => $order_sn,
+//                            "appid" => sysconf('weixin_programs_appid'), // <---- 请修改为服务号的 appid
+//                            "description" => $subject,
+//                            "notify_url" => $this->domain.'/notify/front-weixin',
+//                            "amount" => [
+//                                'total' => (int)$total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
+//                                "currency" => "CNY"
+//                            ],
+//                            "payer" => [
+//                                'openid' => $openid,
+//                            ],
+//                            'attach' => urlencode("payment_source={$payment_source}") // 额外参数 异步回调使用
+//                        ]);
+//                        $result = $response->toArray(false);
+//                        Log::info($result);
+//                        $prepayId = array_get($response->toArray(false), 'prepay_id');
+//                        $utils = $app->getUtils();
+//                        $appId = sysconf('weixin_programs_appid');
+//                        $signType = 'RSA'; // 默认RSA，v2要传MD5
+//                        $pay = $utils->buildBridgeConfig($prepayId, $appId, $signType); // 返回数组
+
+                        $app = WechatService::pay();
+                        $result = $app->order->unify([
+                            'body' => $subject,
+                            'out_trade_no' => $order_sn,
+                            'total_fee' => $total_amount * 100,
+                            'notify_url' => request()->getSchemeAndHttpHost().'/notify/front-weixin', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+                            'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
+                            'openid' => $openid,
+                        ]);
+                        Log::info("支付:".json_encode($result));
+
+                        if ($result['return_code'] != 'SUCCESS') {
+                            return arr_result(-1, null, $result['return_msg']);
+                        } else if ($result['result_code'] != 'SUCCESS') {
+                            $this->errMsg = $result['err_code_des'];
+                            return arr_result(-1, null, $result['err_code_des']);
+                        }
+                        $prepay_id = $result['prepay_id'];
+                        $app = WechatService::pay();
+                        $jssdk = $app->jssdk;
+                        $prepay_data = $jssdk->bridgeConfig($prepay_id, false);
+                        $sdk_config = $app->jssdk->sdkConfig($prepay_id);
+
+                        Log::info("微信支付:".json_encode($prepay_data));
+                        Log::info("微信支付:".json_encode($result));
+//                        $unify = [
+//                            'appid' => array_get($prepay_data, 'appId'),
+//                            'partnerid' => array_get($result, 'mch_id'),
+//                            'prepayid' => array_get($result, 'prepay_id'),
+//                            'package' => 'Sign=WXPay',
+//                            'noncestr' => array_get($result, 'nonce_str'),
+//                            'timestamp' => array_get($prepay_data, 'timeStamp'),
+//                            'sign' => array_get($result, 'sign'),
+//                        ];
+//                        Log::info("微信支付:".json_encode($unify));
+
+                        return $prepay_data;
+                    }
 
 					break;
 
 				case 'app_weixin'://APP微信支付
 					Pay::config($this->config);
-
-					$order = [
-						'_config' => 'default', // 注意这一行
-						'out_trade_no' => $order_sn,
-						'total_fee' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
-						'body' => $subject,
-						'openid' => 'o4Kp800BMtwNp8K7fc84c0ypdlqs', // 云 我的微信
-					];
+                    $order = [
+                        '_config' => 'default', // 注意这一行
+                        'out_trade_no' => $order_sn,
+                        'description' => $subject,
+                        'amount' => [
+                            'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
+                        ],
+                    ];
 					$pay = Pay::wechat()->app($order);
 					return $pay;
                 case '0': // 余额支付-全部用余额支付
@@ -337,13 +435,17 @@ class PaymentLogicRepository
         }
     }
 
-	/**
-	 * 支付异步通知
-	 *
-	 * @param $pay_code
-	 * @return \Psr\Http\Message\ResponseInterface
-	 * @throws \Yansongda\Pay\Exception\ContainerException
-	 */
+    /**
+     * 支付异步通知
+     *
+     * @param $pay_code
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \Yansongda\Artful\Exception\ContainerException
+     */
     public function notify($pay_code)
     {
 		Log::stack(['api'])->info("---notify0 ".$pay_code);
@@ -379,6 +481,12 @@ class PaymentLogicRepository
 
                     $payment_source = $passback_params['payment_source'] ?? 0; // 支付来源 默认为：0-订单支付
                     Log::stack(['api'])->info("---notify $payment_source");
+                    $order = OrderInfo::where('order_sn', $out_trade_no)
+                        ->first();
+                    if (empty($order) || !empty($order->pay_sn)) {
+                        // 如果订单不存在 或者 订单已经支付过了
+                        return Pay::alipay()->success();
+                    }
                     $res = $this->_updateOrder($out_trade_no, $trade_no, $payment_source);
 
                     if (!$res) {
@@ -394,7 +502,91 @@ class PaymentLogicRepository
                 return Pay::alipay()->success();// laravel 框架中请直接 `return $alipay->success()
 
             case 'weixin':
-				// todo
+                Log::stack(['api'])->info("---notify2 ".$pay_code);
+
+                //easywechat v7.*
+                /*$app = WechatService::pay();
+                $server = $app->getServer();
+                $server->handlePaid(function (Message $message, \Closure $next) {
+                    Log::info('支付回调2：');
+                    Log::info(json_encode($message));
+
+                    // $message->out_trade_no 获取商户订单号
+                    // $message->payer['openid'] 获取支付者 openid
+                    $out_trade_no = $message->out_trade_no;
+                    $openid = $message->payer['openid'];
+                    $trade_no = $message->transaction_id;
+                    parse_str(urldecode($message->attach), $attach);
+
+                    $payment_source = $attach['payment_source'] ?? 0; // 支付来源 默认为：0-订单支付
+
+                    $order = OrderInfo::where('order_sn', $out_trade_no)
+                        ->first();
+                    if (empty($order) || !empty($order->pay_sn)) {
+                        // 如果订单不存在 或者 订单已经支付过了
+                        return true;
+                    }
+
+                    $res = $this->_updateOrder($out_trade_no, $trade_no, $payment_source);
+
+                    if (!$res) {
+                        // 订单状态修改失败处理
+                        throw new \Exception('订单状态修改失败');
+                    }
+
+
+                    // 🚨🚨🚨 注意：推送信息不一定靠谱哈，请务必验证
+                    // 建议是拿订单号调用微信支付查询接口，以查询到的订单状态为准
+                    return $next($message);
+                });
+
+                // 默认返回 ['code' => 'SUCCESS', 'message' => '成功']
+                return $server->serve();*/
+
+                $app = WechatService::pay();
+                $response = $app->handlePaidNotify(function ($message, $fail) {
+                    Log::info('支付回调2：');
+                    Log::info(json_encode($message));
+                    // 你的逻辑
+
+                    $out_trade_no = $message['out_trade_no'];
+//                    $openid = $message['payer']['openid'];
+                    $trade_no = $message['transaction_id'];
+//                    parse_str(urldecode($message->attach), $attach);
+
+                    $payment_source = 0; //$attach['payment_source'] ?? 0; // 支付来源 默认为：0-订单支付
+
+                    $order = OrderInfo::where('order_sn', $out_trade_no)
+                        ->first();
+                    if (empty($order) || !empty($order->pay_sn)) {
+                        // 如果订单不存在 或者 订单已经支付过了
+                        return true;
+                    }
+
+                    if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
+                        // 用户是否支付成功
+                        if (array_get($message, 'result_code') === 'SUCCESS') {
+                            $res = $this->_updateOrder($out_trade_no, $trade_no, $payment_source);
+                            if (!$res) {
+                                // 订单状态修改失败处理
+                                throw new \Exception('订单状态修改失败');
+                            }
+                            // 用户支付失败
+                        } elseif (array_get($message, 'result_code') === 'FAIL') {
+                            $order->status = 'paid_fail';
+                        }
+                    } else {
+                        Log::info('通信失败，请稍后再通知我：');
+
+                        return $fail('通信失败，请稍后再通知我');
+                    }
+
+                    // 返回处理完成
+                    return true;
+                });
+
+                $response->send(); // Laravel 里请使用：return $response;
+
 
                 break;
 
@@ -448,6 +640,56 @@ class PaymentLogicRepository
 
 	}
 
+    public function notifyRefund($pay_code)
+    {
+        Log::stack(['api'])->info("---notify0000 ".$pay_code);
+        Log::info('退款回调1：');
+        switch ($pay_code) {
+
+            case 'weixin':
+                $app = WechatService::pay();
+                $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail) {
+                    Log::info($message);
+                    Log::info($reqInfo);
+                    // 其中 $message['req_info'] 获取到的是加密信息
+                    // $reqInfo 为 message['req_info'] 解密后的信息
+                    // 你的业务逻辑...
+
+                    $orderInfo = DB::table('order_info')->where('order_sn', $reqInfo['out_trade_no'])->first();
+                    if (empty($orderInfo)) {
+                        return $fail('订单ID无效！');
+                    }
+                    $orderInfo = (array)$orderInfo;
+                    $orderInfo['buttons'] = get_order_all_operate_state($orderInfo);
+                    if (!in_array('buyer_cancel', $orderInfo['buttons'])) {
+                        return $fail('订单状态无效！');
+                    }
+
+                    $update = [
+                        'order_cancel' => 2,
+                        'order_status' => OS_CANCELED,
+                        'last_time' => time(),
+                        'end_time' => time(),
+                        'refuse_reason' => ''
+                    ];
+                    $update['order_status'] = OS_CANCELED;
+                    $update['end_time'] = time();
+                    OrderInfo::where('order_id', $orderInfo['order_id'])->update($update);
+
+                    return true; // 返回 true 告诉微信“我已处理完成”
+                    // 或返回错误原因 $fail('参数格式校验错误');
+                });
+
+                $response->send(); // Laravel 里请使用：return $response;
+
+                break;
+
+            default:
+
+                break;
+        }
+    }
+
     /**
      * 更新订单信息
      * @param string $out_trade_no 商户订单号
@@ -455,7 +697,7 @@ class PaymentLogicRepository
      * @param int $payment_source 支付来源
      * @return bool
      */
-    private function _updateOrder($out_trade_no, $trade_no = '', $payment_source = 0)
+    public function _updateOrder($out_trade_no, $trade_no = '', $payment_source = 0)
     {
         switch ($payment_source) {
             case 1: // 商家入驻缴费支付

@@ -282,7 +282,7 @@
 			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
 		};
 	</script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
+    <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}&&plugin=AMap.Scale,AMap.PolyEditor,AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.InfoWindow,AMap.ToolBar"></script>
     @if(!isset($info->region_id))
         <!-- 验证规则 -->
         <script id="client_rules_{{ $uuid }}" type="text">

@@ -25,6 +25,12 @@
 
                     </div>
                     <div class="item-name">
+                        @if(!empty($v['act_labels']))
+                            @foreach($v['act_labels'] as $act_label)
+                                <!-- 活动标签 -->
+                                <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                            @endforeach
+                        @endif
                         <a href="{{ route('pc_show_goods', ['goods_id'=>$v['goods_id']]) }}" target="_blank" title="{{ $v['goods_name'] }}">{{ $v['goods_name'] }}</a>
                         <!-- 包邮、赠品标签  _star -->
 

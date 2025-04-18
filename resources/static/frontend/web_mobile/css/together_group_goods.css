@@ -1,0 +1,78 @@
+@charset "utf-8";
+body{ min-width: 320px; max-width: 640px; margin: 0 auto;}
+.swiper-slide img {width: 100%;display: block; max-width: 640px !important;}
+
+/*头部样式*/
+.goods-header, .goods-desc-main, .goods-desc-main .goods-desc-type{ max-width: 640px; margin:0 auto;}
+
+/*内容样式*/
+.nearby-group-detail .nearby-group-btn i, .paly-rule-step li.item .icon, .goods-footer-nav .footer-icon { background-image:url(../images/group-icon.png);}
+
+/*附近团*/
+#nearby-group-box { width: 100%; max-width: 640px; clear: both;background: #fff;position: relative;}
+.nearby-group-title { display: inline-block; padding: 7px 2%; width: 96%; clear: both; color: #353535;font-size: .7rem; line-height:30px; position:relative;}
+#nearby-group-box:after,.paly-rule-title:after{height: 1px;content: '';width: 100%;border-top: 1px solid #e3e5e9;position: absolute;bottom: -1px;right: 0;transform: scaleY(.5);-webkit-transform: scaleY(.5); z-index: 10;}
+#nearby-group-box:after{ left:55px; right: 0; width: auto; border-top: 1px solid #eee; }
+.nearby-group-detail { height: 70px; position: relative; margin:0px 2% 0px; padding-left: 55px; padding-right: 90px;}
+#nearby-group-box .nearby-group-detail:last-child:after{ content:none;}
+.nearby-group-detail .nearby-group-img { width: 45px; height: 45px; position: absolute; left: 2px; top: 12px;}
+.nearby-group-detail .nearby-group-img img { width: 45px; height: 45px; border-radius: 50%; -webkit-border-radius: 50%; display: inline-block; background: #fff;}
+.nearby-group-detail .nearby-group-info-box { height: 45px; padding: 12px 0;}
+.nearby-group-detail .nearby-group-info-box .nearby-group-info { height: 38px;position:relative; }
+.nearby-group-detail .nearby-group-info-box .nearby-group-info .user-num{ display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; line-height: 23px; font-size: .65rem; color: #353535; padding-top:2px}
+.nearby-group-detail .nearby-group-info-box .nearby-group-info p span { float:left;font-size: 12px; color: #999; line-height: 20px; height: 20px;}
+.nearby-group-detail .nearby-group-btn {font-size: .6rem;width:3.15rem;text-align: center;display: block;position: absolute;right: 0;top: 0;color: #fff;white-space: nowrap; background:#f23030;border-radius:0.7rem;box-sizing: border-box;margin-top:19px;}
+.nearby-group-detail .nearby-group-btn>span{ display:block; line-height:26px;}
+
+/*拼团玩法*/
+.play-rule{ width: 100%; clear: both; background: #fff;}
+.paly-rule-title{ padding: 7px 2%; width: 96%; height: 20px; display: inline-table; clear: both; position:relative;}
+.paly-rule-title .title{ font-size: .7rem; float: left; color: #353535;}
+.paly-rule-title .see-info{ font-size: .55rem; float: right; color: #999;}
+.paly-rule-step{ width: 100%; height: 40px; padding: 10px 0px; display: inline-block;}
+.paly-rule-step li.item{ width: 24%; height: 40px; line-height: 20px; font-size: .6rem; float: left; text-align: center; position: relative; padding-left:3%; display: inline-block;}
+.paly-rule-step li.item:first-child { width: 19%; padding-left: 0;}
+.paly-rule-step li.item .icon { width: 10px; height: 20px; position: absolute; left: 6px; top: 50%; margin-top: -10px; background-position: 0px -240px;}
+.paly-rule-step li.item-active{color: #fa4862;}
+.paly-rule-step li.item-active .icon{ background-position: -40px -240px;} 
+
+/*底部导航*/
+.goods-footer-nav {font-size: .6rem; height:50px; left:0; padding-right: 5px;}
+.goods-footer-nav .footer-index, .goods-footer-nav .footer-collect, .goods-footer-nav .footer-message { width: 14%; height: 42px; margin-top: 3px; position: relative; float: left; display: inline-block; border-right: 1px solid #eee; box-sizing: border-box;}
+.goods-footer-nav .footer-message{ border: none; text-align:center;}
+.goods-footer-nav .footer-icon { width: 30px; height: 25px; border: 0; margin: 0 auto; display: block; background: url(../images/goods/pub_goods1.png) no-repeat;background-size: auto 150px;}
+.goods-footer-nav .footer-index .footer-icon { background-position:5px 5px;}
+.goods-footer-nav .footer-collect .footer-icon { background-position: 4px -94px;}
+.goods-footer-nav .footer-collect .footer-icon.selected { background-position: 4px -58px;}
+.goods-footer-nav .footer-message .footer-icon { background-position: 4px -125px;}
+.goods-footer-nav .footer-message .service-online-nav{background: url(../images/group-icon.png);background-repeat: no-repeat;background-size: 23px auto;background-position: 0px -43px;width: 30px;height: 25px;border: 0;margin: 0 auto;display: block;}
+.goods-footer-nav .footer-message .goods-phone-nav{background: url(../images/goods/tab_phone_contact_selected.png) center center no-repeat; background-size:auto 23px; display: block;width: 30px;height: 25px;margin: 0 auto;}
+.goods-footer-nav .footer-message .goods-phone-none{background: url(../images/goods/tab_phone_none.png) center center no-repeat; background-size:auto 23px;display: block;width: 30px;height: 25px;margin: 0 auto;}
+.goods-footer-nav .footer-text { font-size: .5rem; color: #666; display: block; text-align: center; -webkit-text-size-adjust: none; line-height:20px;}
+.goods-footer-nav .footer-item {float: right; width: 29%; height: 40px; margin-top: 5px; overflow: hidden;text-align: center; font-size: .6rem;position: relative; -webkit-box-flex: 1;box-flex: 1;flex: 1;}
+.goods-footer-nav .footer-item-buy { background-color: #fd948e; border-top-left-radius: 20px; border-bottom-left-radius: 20px;}
+.goods-footer-nav .footer-item-group-buy { background-color: #74d0c3; border-top-right-radius: 20px; border-bottom-right-radius: 20px;}
+.goods-footer-nav .footer-item .footer-price { text-align: center; margin-top: 3px; height: 20px; line-height: 20px; font-size: .6rem;}
+.goods-footer-nav .footer-item .footer-price b { font-weight: 400; color: #fff;}
+.footer-item-buy-type { font-weight: 400; font-size: .6rem; color: #fff; width: 100%; height: 12px; line-height: 12px;}
+.play-rule-new{ background:#fff;padding: 0.5rem 2.5%; font-size: 0.65rem; height:auto; line-height: 1rem; position:relative; cursor: pointer; color: #353535; font-weight: 600;}
+.play-rule-new .play-type i{ font-size: 18px; vertical-align: middle; margin-right: 3px;}
+.play-rule-new .play-rule-info{ color:#666; font-size:0.65rem; margin-left: 0.5rem; margin-right: .5rem; overflow:hidden;font-weight: normal;}
+.play-rule-new .more{ position:absolute; right: 2.5%; top: 0.5rem;}
+.play-rule-new .more i{ width:0.5rem; height:0.35rem; font-size:0.8rem;color:#999; /*font-weight:600;*/ font-weight: normal;}
+.nearby-title-new{padding:12px 2% 10px 2.3%; box-sizing: border-box; font-size: .65rem; font-weight: 600; position: relative;}
+.nearby-title-new:after{height: 1px;content: '';width: 100%;border-top: 1px solid #e3e5e9;position: absolute;bottom: -1px;right: 0;transform: scaleY(.5);-webkit-transform: scaleY(.5); z-index: 10;}
+.nearby-title-new i{ display:inline-block; width:4px; height:18px;vertical-align: middle;margin-right: 3px;background-image: -webkit-linear-gradient(top,#f2270c 5%,#f9bfb7);
+    background-image: linear-gradient(top,#f2270c 5%,#f9bfb7); }
+.nearby-title-new em{ font-size:.75rem; }
+
+.group-swiper-container{ max-height: 140px;}
+.group-swiper-container .swiper-slide,.group-swiper-container .swiper-slide-active { width: 100% !important; height: 70px !important;}
+
+/*拼团提示*/
+.groupon-mask-div{ background-color: #000; opacity: 0.8; height: 100%; margin: 0px; width: 100%; position:fixed; top: 0; left: 0; z-index: 223; display: none; }
+.groupon-tips-con{ display: none; white-space: nowrap;position:fixed; width: 86%; left: 50%;top: 50%;-webkit-transform: translate(-50%,-50%);-moz-transform: translate(-50%,-50%); -o-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);transform: translate(-50%,-50%);background:#fff;border-radius:0.3rem;z-index: 999; overflow:hidden;}
+.groupon-tips-con .groupon-tips{ text-align: center; margin: 1rem 0;}
+.groupon-tips-con .groupon-tips h3,.groupon-tips-con .groupon-tips p{ color: #353535;}
+.groupon-tips-con button{ position: relative; width: 50%; float: left; border: none; color: #353535; padding: .6rem 0; font-size: 0.7rem; text-align: center; background-color: #f1f1f1;border-radius: 0 0 0 0.3rem; border: none; line-height: 0.95rem;}
+.groupon-tips-con button:last-child{ float:right; color:#fff; border-radius: 0 0 .3rem 0;}

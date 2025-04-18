@@ -10,7 +10,6 @@ class SellerNegativeOrder extends BaseModel
 
     protected $table = 'seller_negative_order';
 
-    public $timestamps = false;
 
     protected $fillable = [
         'negative_id',

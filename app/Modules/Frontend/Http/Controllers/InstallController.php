@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  *
@@ -51,7 +52,7 @@ class InstallController extends Controller
         }
         $username = \request()->get('username') ?? '';
         $password = \request()->get('password') ?? '';
-        $app_key = \request()->get('app_key') ?? '';
+        $app_key = \request()->get('app_key') ?? Str::random(32);
         if (!$username || !$password) {
             return result(-1, null, '参数缺失！');
         }

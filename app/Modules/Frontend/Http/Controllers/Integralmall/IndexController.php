@@ -262,7 +262,7 @@ class IndexController extends Frontend
         //message: "校验成功"
         //pay_point: 0 线上可用积分
 
-        if (!auth('user')->check()) {
+        if (!is_login()) {
             return result(-1, null, '校验失败');
         }
         $frozen_point = $this->user->frozen_point;

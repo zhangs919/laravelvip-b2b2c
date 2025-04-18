@@ -144,19 +144,19 @@ Route::group(['domain' => $domain], function ($router) use ($goodsDetailDomain, 
         Route::get('qrcode.html', 'ShopController@qrCode'); // 店铺二维码
 
         // 店铺入驻路由
-        Route::get('apply.html', 'ShopController@apply');
-        Route::get('apply/index.html', 'ShopController@apply');
-        Route::get('apply/agreement.html', 'ShopController@agreement');
-        Route::get('apply/register.html', 'ShopController@register');
-        Route::get('apply/progress.html', 'ShopController@apply'); // 店铺入驻进度
-        Route::get('apply/result.html', 'ShopController@result'); // 店铺入驻结果
-        Route::get('apply/agreement-type1.html', 'ShopController@agreementType1');
-        Route::any('apply/auth-info.html', 'ShopController@authInfo');
-        Route::any('apply/shop-info.html', 'ShopController@shopInfo');
-        Route::get('apply/client-validate', 'ShopController@clientValidate'); // clientValidate
-        Route::post('apply/pay.html', 'ShopController@pay');
-        Route::get('apply/payment.html', 'ShopController@payment');
-        Route::get('apply/check-is-pay', 'ShopController@checkIsPay');
+        Route::get('apply.html', 'ShopApplyController@apply');
+        Route::get('apply/index.html', 'ShopApplyController@apply');
+        Route::get('apply/agreement.html', 'ShopApplyController@agreement');
+        Route::get('apply/register.html', 'ShopApplyController@register');
+        Route::get('apply/progress.html', 'ShopApplyController@apply'); // 店铺入驻进度
+        Route::get('apply/result.html', 'ShopApplyController@result'); // 店铺入驻结果
+        Route::get('apply/agreement-type1.html', 'ShopApplyController@agreementType1');
+        Route::any('apply/auth-info.html', 'ShopApplyController@authInfo');
+        Route::any('apply/shop-info.html', 'ShopApplyController@shopInfo');
+        Route::get('apply/client-validate', 'ShopApplyController@clientValidate'); // clientValidate
+        Route::post('apply/pay.html', 'ShopApplyController@pay');
+        Route::get('apply/payment.html', 'ShopApplyController@payment');
+        Route::get('apply/check-is-pay', 'ShopApplyController@checkIsPay');
 
         // 店铺街/店铺首页/店铺商品信息路由
 //        Route::get('street/ref-distance', 'ShopController@refDistance'); //
@@ -324,7 +324,8 @@ Route::group(['domain' => $domain], function ($router) use ($goodsDetailDomain, 
 	// 支付异步回调地址
 	Route::any('notify/front-alipay', 'NotifyController@frontAlipay'); // 支付宝异步通知
 	Route::any('notify/front-weixin', 'NotifyController@frontWeixin'); // 微信异步通知
-	Route::any('notify/front-unipay', 'NotifyController@frontUnipay'); // unipay异步通知
+    Route::any('notify/front-weixin-refund', 'NotifyController@frontWeixinRefund'); // 微信退款异步通知
+    Route::any('notify/front-unipay', 'NotifyController@frontUnipay'); // unipay异步通知
 
     // 直播
     Route::get('live/index/list.html', 'LiveController@live')->name('live.live'); // 直播列表

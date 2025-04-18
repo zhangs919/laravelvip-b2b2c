@@ -55,4 +55,11 @@ class ActivityCategoryRepository
         return $data;
     }
 
+    public function getCateData()
+    {
+        $list = ActivityCategory::where('is_show', 1)->pluck('cat_name','id')->toArray();
+
+        return $list;
+    }
+
 }

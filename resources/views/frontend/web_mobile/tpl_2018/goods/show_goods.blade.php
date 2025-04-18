@@ -5,8 +5,9 @@
     <link href="/css/goods.css" rel="stylesheet">
     <link href="/css/bonus_message.css" rel="stylesheet">
     <link href="/css/distributor-reg-check.css" rel="stylesheet">
+    <link href="/css/kanjia.css?v=1.4" rel="stylesheet">
     <link href="/css/template.css" rel="stylesheet">
-
+    <link href="/css/together_group_goods.css?v=1.4" rel="stylesheet">
     <link href="/css/login.css" rel="stylesheet">
 @stop
 
@@ -69,36 +70,70 @@
             </div>
             <!-- 免费购 -->
             <!-- 商品团购倒计时 -->
-        {{--todo 判断 团购商品展示 后期再做促销功能--}}
-        {{--<div class="goods-promotion-box clearfix">
-            <div class="goods-promotion-left">
-                <dt>
-                    <em>￥40.00</em>
-                </dt>
-                <dd>
-                    <p>
-                        <del>￥50.00</del>
-                    </p>
-                    <span>
-                100
-                <em>件已售</em>
-            </span>
-                </dd>
+            @if($sku['act_type'] == 6)
+            <div class="goods-activity-type-group-buy-temp">
+                <!--团购未开始样式-->
             </div>
-            <div class="goods-promotion-right">
-                <div class="goods-promotion-text">距结束仅剩</div>
-                <div class="goods-promotion-time" id="groupbuy_countdown">
-                    <span class="time">00</span>
-                    <span class="separator">:</span>
-                    <span class="time">00</span>
-                    <span class="separator">:</span>
-                    <span class="time">00</span>
-                    <span class="separator">:</span>
-                    <span class="time">00</span>
+            <div class="groupon-decoration">
+                <div class="msg">
+                    <span class="tag">{{ $sku['activity']['fight_num'] }}人团</span>
+                    <div class="price-warp">
+                <span class="price">
+                    <em class="SZY-GOODS-PRICE">{{ $sku['activity']['act_price_format'] }}</em>
+                </span>
+                        <span class="original-price">￥{{ $sku['activity']['goods_price'] }}</span>
+                    </div>
+                </div>
+                <div class="goods-promotion-right">
+                    <div class="goods-promotion-text">距结束仅剩</div>
+                    <div class="goods-promotion-time" id="groupon_countdown">
+                        <span class="time">00</span>
+                        <span class="separator">:</span>
+                        <span class="time">00</span>
+                        <span class="separator">:</span>
+                        <span class="time">00</span>
+                        <span class="separator">:</span>
+                        <span class="time">00</span>
+                    </div>
                 </div>
             </div>
-        </div>--}}
-            <!--团购未开始样式-->
+            @endif
+
+            <!-- 砍价_start -->
+            @if($sku['act_type'] == 8)
+                <div id="act_bargain_info">
+                    <div class="bargain-goods-top clearfix">
+                        <div class="bargain-top-left">
+                            <dt>
+                                <span>底价</span>
+                                <em>{{ $sku['activity']['bargain_act_price_format'] }}</em>
+                            </dt>
+                            <dd>
+                                <p>
+                                    <del class="SZY-MARKET-PRICE">{{ $sku['activity']['original_price_format'] }}</del>
+                                </p>
+                                <span>{{ $sku['activity']['params']['help_bargain_num'] }}人已参与</span>
+                            </dd>
+                        </div>
+                        <div class="bargain-top-right">
+                            <div class="goods-promotion-text">距结束仅剩</div>
+                            <div class="goods-promotion-time" id="bargain_countdown">
+                                <span class="time">00</span>
+                                <span class="separator">:</span>
+                                <span class="time">00</span>
+                                <span class="separator">:</span>
+                                <span class="time">00</span>
+                                <span class="separator">:</span>
+                                <span class="time">00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        //
+                    </script>
+                </div>
+            @endif
+            <!-- 砍价_end -->
             <!-- 批发商品 -->
             <div class="goods-info bdr-bottom">
                 <div class="goods-info-top">
@@ -110,6 +145,7 @@
                         <span class="share-text">分享</span>
                     </div>
                 </div>
+                @if(!$sku['act_type'])
                 <span class="goods-depict color">{{ $goods['goods_subname'] }}</span>
                 <div class="goods-price">
                     <div class="now-prices">
@@ -118,9 +154,50 @@
                     </div>
                     <span class="sold">销量：{{ $goods['sale_num'] }}件</span>
                 </div>
+                @endif
+
+                {{-- 限时折扣标签 --}}
+                @if($sku['act_type'] == 11)
+                    <div class="goods_activity_temp">
+                        <div class="goods-price">
+                            <div class="now-prices">
+                                <em class="SZY-GOODS-PRICE price-color">{{ $sku['activity']['act_price_format'] }}</em>
+                                <del class="SZY-MARKET-PRICE" >￥{{ $sku['market_price'] }}</del>
+                            </div>
+                            <span class="sold">销量：{{ $goods['sale_num'] }}件</span>
+                        </div>
+                        <div class="activity_type_limited_discount_temp">
+                            <div class="limit-discount-con">
+                                <span class="limit-discount-tag">
+                                    <i class="label-icon-div">
+                                        <i class="label-icon"></i>
+                                        <span class="label-text">{{ $sku['activity']['act_label'] }}</span>
+                                    </i>
+                                </span>
+                                <span class="activity-text">
+                                    <em class="discount">{{ $sku['activity']['act_sub_label'] }}</em>
+                                    <span id="limit_discount_countdown" class="promotion-time">
+                                        <span class="time">00</span>
+                                        <span class="separator">:</span>
+                                        <span class="time">00</span>
+                                        <span class="separator">:</span>
+                                        <span class="time">00</span>
+                                        <span class="separator">:</span>
+                                        <span class="time">00</span>
+                                    </span>
+                                    <em>后结束，请尽快购买！</em>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--动态生成商品价格 start-->
+                    <div class="goods_price_temp"></div>
+                    <!--动态生成商品价格 end-->
+                @endif
+
                 <!--会员权益卡 内容 start-->
                 <!--会员权益卡 内容 end-->
-            {{--todo 判断显示 限时折扣标签 后期再做促销功能--}}
+
             {{--<div class="limit-discount-con">
                 <span class="limit-discount-tag">
                     <i class="label-icon-div">
@@ -329,8 +406,8 @@
                     {{ $sku['spec_attr_value'] }}
                 </i>
                 <span class="more">
-        <i class="iconfont">&#xe607;</i>
-    </span>
+                    <i class="iconfont">&#xe607;</i>
+                </span>
             </div>
             @endif
             <!-- 虚拟商品判断 -->
@@ -383,8 +460,135 @@
             <!-- 门店展示 -->
             <div id="store_exhibition"></div>
             <!-- 拼团活动_start -->
+            @if($sku['act_type'] == 6)
+                @if(!empty($sku['activity']['params']['groupon_log_list']))
+                <div class="blank-div"></div>
+                <!--附近团-->
+                <div id="nearby-group-box">
+                <span class="nearby-group-title nearby-title-new"><i></i>以下小伙伴已发起拼团，快来参与吧！</span>
+                <div class="swiper-container group-swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            @foreach($sku['activity']['params']['groupon_log_list'] as $groupon_log)
+                            <div class="nearby-group-detail">
+                                <a href="javascript:;" data-sn="{{ $groupon_log['group_sn'] }}" class="gather">
+                                    <div class="nearby-group-img">
+                                        <img src="{{ $groupon_log['headimg'] }}" />
+                                    </div>
+                                    <div class="nearby-group-info-box">
+                                        <div class="nearby-group-info">
+                                            <span class="user-num">{{ $groupon_log['user_name'] }}</span>
+                                            <p><span class="m-r-10">还差<em class="color">{{ $groupon_log['diff_num'] }}人</em>成团</span><span class="time" id="counter_{{ $groupon_log['order_id'] }}"></span></p>
+                                        </div>
+                                    </div>
+                                    <div class="nearby-group-btn">
+                                        <span>去凑团</span>
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
+                            <script type="text/javascript">
+                                //
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $().ready(function(){
+                        var swiper1 = new Swiper('.group-swiper-container', {
+                            direction: 'vertical',
+                            slidesPerView: 2,
+                            slidesPerGroup: 2,
+                            //loop: true,
+                            autoplay : 3000,
+                        });
+                    });
+                </script>
+            </div>
+                @endif
+            <!--拼团玩法-->
+            <a class="play-rule-new ub" href="/groupon-rule-22">
+                <span>玩法</span>
+                <span class="play-rule-info ub-f1">开团/参团-邀请好友-满员发货（不满员退款）</span>
+                <span class="more">
+                    <i class="iconfont">&#xe607;</i>
+                </span>
+            </a>
+            <!-- mask-div的层为底部黑色的遮罩层，如果该提示信息展示，就让mask-div的层show出来 -->
+            <div class="groupon-mask-div"></div>
+            <div class="groupon-tips-con">
+                <div class="groupon-tips">
+                    <h3>仅限新用户参加</h3>
+                    <p>老朋友，你可以去开个新团哦</p>
+                </div>
+                <div class="prompt-choose-bottom clearfix">
+                    <button type="button" class="btn btn-default" onclick="close_choose()">取消</button>
+                    <button id="btn_submit" type="button" class="btn btn-primary select-spec" onclick="close_choose()" data-is-groupon="1" data-sku-open="0">开个新团</button>
+                </div>
+            </div>
+            <script type="text/javascript">
+                //
+            </script>
+            <script type="text/javascript">
+                //
+            </script>
+            @endif
             <!-- 拼团活动_end -->
             <!-- 砍价活动_start -->
+            @if($sku['act_type'] == 8)
+                <div id="act_bargain">
+                    <div class="blank-div"></div>
+                    <div class="bargain-user-con">
+                        <div class=" bargain-user-img">
+                            <img src="{{ $sku['activity']['user_info']['headimg'] }}?x-oss-process=image/resize,m_pad,limit_0,h_80,w_80" />
+                        </div>
+                        <div class="bargain-user-info">
+                            @if(!empty($sku['activity']['user_info']['nickname']))
+                            <h4>{{ $sku['activity']['user_info']['nickname'] }}</h4>
+                            @endif
+                            <p>
+                                {{ $sku['activity']['part_price_label'] }}：
+                                <em class="">{{ $sku['activity']['act_price_format'] }}</em>
+                            </p>
+                            <span>库存：{{ $sku['activity']['goods_number'] }}</span>
+                        </div>
+                        <div class="bargain-user-r">
+                            <span>{{ $sku['activity']['part_status_label'] }}</span>
+                            <span>{{ $sku['activity']['params']['help_bargain_num'] }}人帮砍</span>
+                        </div>
+                    </div>
+                    <div class="blank-div"></div>
+                    <div class="cut-com">
+                        <div class="bargain-goods-rule">
+                            <a href="javascript:void(0)">
+                                砍价规则
+                                <div class="more">
+                                    <i class="iconfont"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!--砍价规则弹出层 start-->
+                    <div class="popup-bargainrule">
+                        <div class="content-block rule-content">
+                            <h4>砍价规则</h4>
+                            <div class="rule-content-info">
+                                <p>1、</p>
+                            </div>
+                            <a href="javascript:void(0);" class="close-popup" onclick="close_bargain_rule();">关闭砍价规则</a>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        //
+                    </script>
+                    <!--砍价后弹出层 end-->
+                    <!--提示关注弹出层 start g给下面div 增加hide样式即可隐藏-->
+                    <!--提示关注弹出层 end-->
+                    <script type="text/javascript">
+                        //
+                    </script>
+                </div>
+            @endif
             <!-- 砍价活动_end -->
             {{--获取商品最新的一条评价信息 没有时 不显示--}}
             @if(!empty($goods['comment']))
@@ -826,7 +1030,7 @@
             //
         </script>
         <!--底部菜单 start-->
-        <div class="goods-footer-nav bdr-top">
+        <div class="goods-footer-nav">
             <a href="{{ shop_prefix_url($shop_info['shop']['shop_id']) }}" class="nav-button">
                 <em class="goods-index-nav"></em>
                 <span>店铺</span>
@@ -841,8 +1045,6 @@
                     <span>收藏</span>
                 @endif
             </a>
-            <!-- 是否配置了云旺客服 -->
-            <!-- 微商城客服调用qq -->
             @if(!empty($shop_info['shop']['service_tel']))
             <a href="tel:{{ $shop_info['shop']['service_tel'] }}" class="nav-button customer">
                 <em class="goods-phone-nav"></em>
@@ -854,25 +1056,46 @@
                 <span>电话</span>
             </a>
             @endif
-            {{--<a href="http://wpa.qq.com/msgrd?v=3&amp;uin=410284576&amp;site=qq&amp;menu=yes" class="nav-button customer">
-                <em class="goods-qq-nav"></em>
-                <span>客服</span>
-            </a>--}}
-            <div class="btn-group">
-                <dl class="ub">
-                    <dd class="flow">
-                        <a href="javascript:void(0)" class="button" onClick="select_spec('add-cart')">
-                            加入购物车
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="javascript:void(0)" class="button" onClick="select_spec('buy-goods')">立即购买</a>
-                    </dd>
-                </dl>
-            </div>
+
+            @if($sku['act_type'] == 6)
+                <a class="footer-item footer-item-buy select-spec" data-is-groupon="0" data-sku-open="0" href="javascript:void(0);">
+                    <div class="footer-price">
+                        <b>￥{{ $sku['activity']['goods_price'] }}</b>
+                    </div>
+                    <div class="footer-item-buy-type">单独购买</div>
+                </a>
+                <a class="footer-item footer-item-group-buy select-spec bg-color" data-is-groupon="1" data-sku-open="0" data-act_price="￥{{ $sku['activity']['act_price'] }}" href="javascript:void(0);">
+                    <div class="footer-price">
+                        <b>￥{{ $sku['activity']['act_price'] }}</b>
+                    </div>
+                    <div class="footer-item-buy-type">我要开团</div>
+                </a>
+            @elseif($sku['act_type'] == 8)
+                <div class="btn-group">
+                    <dl class="ub">
+                        <dd class="join-bargain">
+                            <a href="javascript:void(0)" class="button select-spec" data-sku-open="0" data-prop-open="0">立即砍价</a>
+                        </dd>
+                    </dl>
+                </div>
+            @else
+                <div class="btn-group">
+                    <dl class="ub">
+                        <dd class="flow">
+                            <a href="javascript:void(0)" class="button" onClick="select_spec('add-cart')">
+                                加入购物车
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:void(0)" class="button" onClick="select_spec('buy-goods')">立即购买</a>
+                        </dd>
+                    </dl>
+                </div>
+            @endif
         </div>
+        <!-- 购物车弹出代码-->
         <div class="choose-attribute-mask"></div>
-        <div class="choose-attribute-main" id="choose_attr">
+        <div class="choose-attribute-main spec-menu-hide" id="choose_attr">
             <div class="choose-attribute-header clearfix">
                 <div class="choose-attribute-pic">
                     <img class="SZY-GOODS-IMAGE-THUMB" src="{{ get_image_url($sku['sku_image']) }}?x-oss-process=image/resize,m_pad,limit_0,h_450,w_450" />
@@ -949,9 +1172,15 @@
 
                 </div>
             </div>
+            @if($sku['act_type'] == 6)
+            <input type="hidden" id="is_groupon" value="1">
+            @endif
             <div class="choose-foot clearfix">
-{{--                <a href="javascript:void(0)" class="SZY-BUY-BUTTON bg-color add-cart disabled" szy_tag_compiled="1">库存不足</a>--}}
-                <a href="javascript:void(0)" class="SZY-BUY-BUTTON bg-color">确定</a>
+                @if($sku['act_type'] == 6)
+                    <a href="javascript:void(0)" class="SZY-BUY-BUTTON buy-goods bg-color " data-is-groupon="1">确定</a>
+                @else
+                    <a href="javascript:void(0)" class="SZY-BUY-BUTTON buy-goods bg-color">确定</a>
+                @endif
                 <a href="javascript:void(0)" class="SZY-BUY-SELECT button-attr buy-goods">立即购买</a>
                 <a href="javascript:void(0)" class="SZY-BUY-SELECT button-attr add-cart">加入购物车</a>
             </div>
@@ -1074,6 +1303,40 @@
                 <span class="flow-cartnum SZY-CART-COUNT bg-color">0</span>
             </a>
         </div>
+        <!--非营业时间下单提示-->
+        <script type="text/javascript">
+            //
+        </script>
+        <!--获取热销热销商品-->
+        <script>
+            $(document).ready(function () {
+                /**
+                 * 获取商品信息
+                 */
+                $.goodsinfo = function () {
+                    var goods_info = {
+                        act_type: "{{ $sku['act_type'] }}",
+                        goods_sale_num: "{{ $goods['sale_num'] }}",
+                        goods_unit: "{{ $sku['unit_name'] }}",
+                        show_sale_number: "{{ $goods['show_sale_number'] }}",
+                        sale_num: "{{ $goods['sale_num'] }}"
+                    };
+                    return goods_info;
+                }
+                // 获取热销商品、热门收藏 数据
+                $.ajax({
+                    type: "post",
+                    url: "/goods/sale-collect-nav",
+                    dataType: 'json',
+                    data: {
+                        shop_id: "{{ $goods['shop_id'] }}",
+                    },
+                    success: function (result) {
+                        $("#hot-sale").html(result.data);
+                    }
+                });
+            });
+        </script>
         <div style="height: 50px;"></div></div>
     {{--引入右上角菜单--}}
     @include('layouts.partials.right_top_menu')
@@ -1099,9 +1362,100 @@
     <script src="/js/goods.js?v=3"></script>
     <script src="/js/multistore_position.js?v=2.1"></script>
     <script src="/assets/d2eace91/js/geolocation/amap.js"></script>
-    <script src="/js/multistore_position.js"></script>
     <script src="/assets/d2eace91/min/js/message.min.js"></script>
     <script>
+        @if($sku['act_type'] == 6)
+            @if(!empty($sku['activity']['params']['groupon_log_list']))
+            $(document).ready(function() {
+                @foreach($sku['activity']['params']['groupon_log_list'] as $groupon_log)
+                $("#counter_{{ $groupon_log['order_id'] }}").countdown({
+                    time: "3513000",
+                    leadingZero: true,
+                    htmlTemplate: '剩余%{d}:%{h}:%{m}:%{s}',
+                    onComplete: function(event) {
+                        $(this).html("已超时！");
+                        // 超时事件，预留
+                        $.ajax({
+                            type: 'GET',
+                            url: '/activity/groupon/cancel',
+                            data: {
+                                group_sn: '{{ $groupon_log['group_sn'] }}'
+                            },
+                            dataType: 'json',
+                            success: function(result) {
+                                if(result.code == 0){
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    },
+                });
+                @endforeach
+            });
+            @endif
+        //
+        var scrollheight = 0;
+        function close_choose() {
+            $(".groupon-mask-div").hide();
+            $('.groupon-tips-con').hide();
+            $("body").css("top","auto");
+            $("body").removeClass("visibly");
+            $(window).scrollTop(scrollheight);
+        }
+        //
+        $().ready(function() {
+            // 去凑团
+            var act_id = "{{ $sku['act_id'] }}";
+            $(".gather").click(function() {
+                var group_sn = $(this).data('sn');
+                $.ajax({
+                    type: 'GET',
+                    url: '/goods/gather',
+                    data: {
+                        act_id: act_id,
+                        group_sn: group_sn
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if(result.code == 0){
+                            $.go('/groupon-join-'+group_sn);
+                        }else if(result.code == -1){
+                            $.msg(result.message);
+                        }else if(result.code == 1){
+                            $(".groupon-mask-div").show();
+                            scrollheight = $(document).scrollTop();
+                            $("body").css("top", "-" + scrollheight + "px");
+                            $("body").addClass("visibly");
+                            $('.groupon-tips-con').show();
+                        }
+                    }
+                })
+            });
+        });
+        @endif
+
+        @if($sku['act_type'] == 8)
+        $().ready(function() {
+            $("#bargain_countdown").countdown({
+                time: "{{ ($sku['activity']['cutdown_time'] - time())*1000 }}",
+                leadingZero: true,
+                htmlTemplate: "<span class='time'>%{d}天</span><span class='separator'>:</span><span class='time'>%{h}</span><span class='separator'>:</span><span class='time'>%{m}</span><span class='separator'>:</span><span class='time'>%{s}</span>",
+                onComplete: function(event) {
+                    $(this).parent('.bargain-top-right').html("该砍价活动已结束！");
+                    $.go("{{ route('mobile_show_goods', ['goods_id' => $goods['goods_id']]) }}");
+                }
+            });
+        });
+        //
+        $('.bargain-goods-rule').click(function() {
+            $('.mask-div').show();
+            scrollheight = $(document).scrollTop();
+            $("body").css("top", "-" + scrollheight + "px");
+            $("body").addClass("visibly");
+            $('.popup-bargainrule').show();
+        });
+        @endif
+
         // 添加收藏
         $('body').on('click', '.collect-shop', function(event) {
             var target = $(this);
@@ -1373,13 +1727,63 @@
                     $.msg("商品数量必须大于" + (this.min - 1));
                 }
             });
+            @if($sku['act_type'] == 6)
+            // 拼团活动
+            // 立即购买
+            $(".buy-goods").click(function() {
+                if ($(this).hasClass("disabled")) {
+                    return;
+                }
+                var sku_id = getSkuId();
+                // var is_groupon = $(this).data("is-groupon");
+                var is_groupon = $("#is_groupon").val();
+                var number = $(".goods-num").find('.num').val();
+                if (is_groupon == 1) {
+                    $.cart.quickBuy(sku_id, number, {
+                        group_sn: 0,
+                        // 商品特殊属性
+                        goods_id: "{{ $goods['goods_id'] }}"
+                    });
+                } else {
+                    $.cart.quickBuy(sku_id, number, {
+                        // 商品特殊属性
+                        goods_id: "{{ $goods['goods_id'] }}"
+                    });
+                }
+            });
+            $("body").data("is-original", 0);
+            $(".select-spec").click(function() {
+                var sku_open = $(this).data("sku-open");
+                var is_groupon = $(this).data("is-groupon");
+                var act_price = $(this).data("act_price");
+                var sku_id = getSkuId();
+                $('.groupon-tips-con').hide();
+                if (sku_id == null || sku_id == undefined) {
+                    $(".SZY-GOODS-PRICE").html(act_price);
+                }
+                getSkuInfo(sku_id).then(function(sku) {
+                    $("#is_groupon").val(is_groupon);
+                    if (is_groupon == 1) {
+                        $("body").data("is-original", 0);
+                        $(".purchase-msg").show();
+                    } else {
+                        $("body").data("is-original", 1);
+                        $(".purchase-msg").hide();
+                    }
+                    setSkuInfo(sku);
+                    $(".goods-buy-number").show();
+                    select_spec(this);
+                });
+            });
+            @else
             // 立即购买
             $('body').on('click', '.buy-goods', function() {
-                var act_type = "";
-                var purchase = "15";
+                var act_type = "{{ $sku['act_type'] }}";
+                var purchase = "{{ $user_info['user_id'] ?? 0 }}";
                 var pre_sale = "2";
                 var virtual = "0";
                 var is_lib_goods = "";
+                var miniprogram_live_room_id = '' || 0;
                 if (is_lib_goods == true) {
                     return;
                 }
@@ -1388,18 +1792,23 @@
                 }
                 var sku_id = getSkuId();
                 var number = $(".goods-num").find('.num').val();
-                var data = {};
+                var data = {
+                    // 商品特殊属性
+                    goods_id: "{{ $goods['goods_id'] }}"
+                };
                 if (act_type == 'purchase' || act_type == 'pre_sale') {
                     data.act_type = act_type;
                 }
                 if (virtual > 0) {
                     data.virtual = virtual;
                 }
+                data.miniprogram_live_room_id = miniprogram_live_room_id;
                 $.cart.quickBuy(sku_id, number, data);
             });
             // 添加购物车
             $('body').on('click', '.add-cart', function(event) {
-                if ($(this).hasClass("disabled")) {
+                var target = this;
+                if ($(target).hasClass("disabled")) {
                     return;
                 }
                 //var image_url = $(".SZY-GOODS-IMAGE-THUMB").attr("src");
@@ -1407,6 +1816,8 @@
                 var sku_id = getSkuId();
                 $.cart.add(sku_id, number, {
                     is_sku: true,
+                    goods_id: "{{ $goods['goods_id'] }}",
+                    miniprogram_live_room_id: '' || 0,
                     //image_url: image_url,
                     //event: event,
                     callback: function(result) {
@@ -1431,23 +1842,14 @@
                 }
                 var sku_id = getSkuId();
                 var number = $(".goods-num").find('.num').val();
-                var data = {};
+                var data = {
+                    // 商品特殊属性
+                    goods_id: "{{ $goods['goods_id'] }}"
+                };
                 data.exchange = true;
                 $.cart.quickBuy(sku_id, number, data);
             });
-            // 小程序控制客服
-            /* if (window.__wxjs_environment === 'miniprogram') {
-                var service_tel = '13207377959';
-                if (service_tel != '' || service_tel != null) {
-                    $('.customer').attr('href', 'tel:' + service_tel);
-                    $('.customer').attr('class', 'nav-button customer');
-                    $('.customer').html('<em class="goods-phone-nav"></em><span>电话</span>');
-                } else {
-                    $('.customer').attr('href', 'javascript:void(0)');
-                    $('.customer').attr('onClick', '$.msg("卖家没有设置联系电话")');
-                    $('.customer').attr('class', 'nav-button customer');
-                }
-            } */
+            @endif
         });
         //
         @if(!empty($user_info))
@@ -1462,61 +1864,51 @@
             }
         @endif
         //
-        $().ready(function(){
+        $().ready(function() {
             //首先将#back-to-top隐藏
             //$("#back-to-top").addClass('hide');
             //当滚动条的位置处于距顶部1000像素以下时，跳转链接出现，否则消失
-            $(function ()
-            {
-                $(window).scroll(function()
-                {
-                    if ($(window).scrollTop()>600)
-                    {
-                        $('body').find(".back-to-top").removeClass('hide');
-                    }
-                    else
-                    {
-                        $('body').find(".back-to-top").addClass('hide');
-                    }
-                });
-                //当点击跳转链接后，回到页面顶部位置
-                $(".back-to-top").click(function()
-                {
-                    $('body,html').animate(
-                        {
-                            scrollTop:0
-                        }
-                        ,600);
-                    return false;
-                });
+            $(window).scroll(function() {
+                if ($(window).scrollTop() > 600) {
+                    $('body').find(".back-to-top").removeClass('hide');
+                } else {
+                    $('body').find(".back-to-top").addClass('hide');
+                }
+            });
+            //当点击跳转链接后，回到页面顶部位置
+            $(".back-to-top").click(function() {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 600);
+                return false;
             });
         });
         //
-        $(document).ready(function(){
+        $(document).ready(function () {
             /*图片预览 start*/
-            $("#goods_pic .SZY-GOODS-IMAGE").on("click", ".swiper-slide a img", function() {
+            $("#goods_pic .SZY-GOODS-IMAGE").on("click", ".swiper-slide a img", function () {
                 //$(this).parents('#goods_pic').addClass('preview-picture');
                 if ($(this).parents('#goods_pic').hasClass('preview-picture')) {
                     $('#goods_pic').removeClass('preview-picture');
                     $('.icon-guanbi').remove();
-                }else{
+                } else {
                     $('#goods_pic').addClass('preview-picture');
                     //document.getElementById("goods_pic").innerHTML+'<i class='iconfont icon-guanbi'></i>';
-                    var em=document.createElement("i");
+                    var em = document.createElement("i");
                     em.setAttribute("class", "iconfont icon-guanbi");
                     $('#goods_pic').append(em);
                 }
             });
-            $(document).bind("click",function(e){
-                if($('#goods_pic').hasClass('preview-picture')){
-                    var target  = $(e.target);
-                    if(target.closest(".swiper-slide").length == 0){
+            $(document).bind("click", function (e) {
+                if ($('#goods_pic').hasClass('preview-picture')) {
+                    var target = $(e.target);
+                    if (target.closest(".swiper-slide").length == 0) {
                         $('#goods_pic').removeClass('preview-picture');
                         $('.icon-guanbi').remove();
                     }
                 }
             });
-            $('body').on('click','.icon-guanbi',function(){
+            $('body').on('click', '.icon-guanbi', function () {
                 $('#goods_pic').removeClass('preview-picture');
                 $('.icon-guanbi').remove();
             });
@@ -1537,6 +1929,34 @@
             $('.icon-guanbi').remove();
         });
         //
+        @if($sku['act_type'] == 6)
+        $().ready(function () {
+            $("#groupon_countdown").countdown({
+                time: "{{ ($sku['activity']['cutdown_time'] - time())*1000 }}",
+                leadingZero: true,
+                htmlTemplate: "<span class='time'>%{d}天</span><span class='separator'>:</span><span class='time'>%{h}</span><span class='separator'>:</span><span class='time'>%{m}</span><span class='separator'>:</span><span class='time'>%{s}</span>",
+                onComplete: function (event) {
+                    $(this).parent('.goods-promotion-right').html("拼团活动已结束！");
+                    $.go("{{ route('mobile_show_goods', ['goods_id' => $goods['goods_id']]) }}");
+                }
+            });
+        });
+        @endif
+        @if($sku['act_type'] == 11)
+        $().ready(function () {
+            // <font id="groupbuy_countdown">此商品正在参加团购活动 3天19时28秒后结束</font>
+            $("#limit_discount_countdown").countdown({
+                time: "{{ ($sku['activity']['cutdown_time'] - time())*1000 }}",
+                leadingZero: true,
+                htmlTemplate: "<span class='time'>%{d}天</span><span class='separator'>:</span><span class='time'>%{h}</span><span class='separator'>:</span><span class='time'>%{m}</span><span class='separator'>:</span><span class='time'>%{s}</span>",
+                onComplete: function (event) {
+                    //$(this).parent().html("活动已结束！");
+                    $.go("{{ route('mobile_show_goods', ['goods_id' => $goods['goods_id']]) }}");
+                }
+            });
+        });
+        @endif
+
         var sku_freights = [];
         $().ready(function() {
             //加载图文详情
@@ -1551,7 +1971,7 @@
             })
             // 门店自提
             $("body").on('click', '.pickup', function() {
-                $.go('/pickup/{{ $shop_info['shop']['shop_id'] }}.html');
+                $.go('/pickup/{{ $shop_info['shop']['shop_id'] }}.html?goods_id={{ $goods['goods_id'] }}&region_code=0');
             });
         });
         //加载图文详情
@@ -1620,6 +2040,43 @@
         var getPropData = null;
         // 设置SKU信息
         function setSkuInfo(sku) {
+            // sku活动倒计时label渲染
+            if (sku.goods_number && sku.goods_number > 0) {
+                // 获取商品信息
+                var goods_info = $.goodsinfo();
+                if (!sku.activity) {
+                    // 处理数据
+                    $.renderGoodsActivityInfo({
+                        type: goods_info.act_type,
+                        is_not_act: 1,
+                        goods_price_format: sku.goods_price_format,
+                        floor_price: sku.floor_price,
+                        floor_price_format: sku.floor_price_format,
+                        goods_sale_num: goods_info.goods_sale_num,
+                        goods_unit: goods_info.goods_unit,
+                        show_sale_number: goods_info.show_sale_number,
+                    });
+                } else {
+                    $.renderGoodsActivityInfo({
+                        type: sku.activity.act_type,
+                        label: sku.activity.act_label,
+                        subLabel: sku.activity.act_sub_label,
+                        act_status: sku.activity.act_status,
+                        price_type: sku.prices ? sku.prices.price_type : '',
+                        cutdown_time: sku.activity.cutdown_time,
+                        end_time: sku.activity.end_time,
+                        is_finish: sku.activity.is_finish,
+                        min_price: sku.activity.min_price ? sku.activity.min_price : 0,
+                        total_sale_count_format: sku.activity.total_sale_count_format ? sku.activity.total_sale_count_format : 0,
+                        sku_open: sku.sku_open ? sku.sku_open : 0,
+                        exchange_goods: sku.exchange_goods ? sku.exchange_goods : 0,
+                        goods_sale_num: goods_info.goods_sale_num ? goods_info.goods_sale_num : 0,
+                        original_price_format: sku.original_price_format ? sku.original_price_format : 0,
+                        sku: sku,
+                        sale_num: goods_info.sale_num ? goods_info.sale_num : 0,
+                    });
+                }
+            }
             if (sku == undefined || sku == null || sku == false) {
                 $(".SZY-BUY-BUTTON").addClass("disabled");
                 $('.SZY-BUY-BUTTON').text('库存不足');
@@ -1635,7 +2092,7 @@
                         // goods_number = sku_freights[local_region_code].goods_number;
                     }
                 } else {
-                    changeLocation(local_region_code).always(function(result) {
+                    changeLocation(local_region_code).always(function (result) {
                         sku_freights[local_region_code] = result.data;
                         // 设置SKU信息
                         setSkuInfo(sku);
@@ -1655,15 +2112,33 @@
                 show_activity = true;
             } else {
             }
+            // 第二件半价(最低价半价)
+            if (sku.order_activity && sku.order_activity.act_type == '21') {
+                show_activity = true;
+            }
+            // 第二件半价(单品半价)
+            if (sku.activity_single_discount_message) {
+                show_activity = true;
+            }
+            // 新人专享 显示原价
+            if (sku.activity && sku.activity.act_sub_label) {
+                if (sku.activity.act_type == 23) {
+                    if (sku.purchase_num > 0) {
+                        show_activity = true;
+                        $('.purchase_num_msg').html("（每人限购" + sku.purchase_num + "件）")
+                        $('.activity_limit_message').html(sku.activity_limit_message)
+                    }
+                }
+            }
             // 商品规格
-            $(".selected-attr.SZY-GOODS-SPEC").html("已选：<i class='i_dd ub-f1'>"+sku.spec_attr_value+"</i>    <span class='more'><i class='iconfont'>&#xe607;</i></span>");
-            $(".choose-result-attr.SZY-GOODS-SPEC").html("已选：<i class='i_dd'>"+sku.spec_attr_value+"</i>");
+            $(".selected-attr.SZY-GOODS-SPEC").html("已选<i class='i_dd ub-f1'>" + sku.spec_attr_value + "</i>    <span class='more'><i class='iconfont'>&#xe607;</i></span>");
+            $(".choose-result-attr.SZY-GOODS-SPEC").html("已选<i class='i_dd'>" + sku.spec_attr_value + "</i>");
             // 商品名称
             $(".SZY-GOODS-NAME").html(sku.sku_name);
             if (sku.is_default == 1) {
                 $(".SZY-GOODS-IMAGE-THUMB").attr("src", sku.sku_images[0][1]);
                 var html = '';
-                $.each(sku.sku_images, function(i, v) {
+                $.each(sku.sku_images, function (i, v) {
                     html += "<div class='swiper-slide'><a href='javascript:void(0)'><img width='100%' src='" + v[main_image_size] + "'></a></div>";
                 });
                 $(".SZY-GOODS-IMAGE").html(html);
@@ -1672,19 +2147,19 @@
                 // goods_pic_swiper.reLoop();
             }
             // 限时折扣 显示原价
-            if(sku.activity && sku.activity.act_sub_label){
+            if (sku.activity && sku.activity.act_sub_label) {
                 $(".discount").html(sku.activity.act_sub_label);
-            }else{
+            } else {
                 $(".discount").html("");
             }
             var bargain_type = "8";
             // 售价
-            if(sku.activity && sku.activity.act_type == bargain_type){
+            if (sku.activity && sku.activity.act_type == bargain_type) {
                 $(".SZY-GOODS-PRICE").html(sku.activity.bargain_act_price_format);
-            }else{
-                if(is_original == 0 && sku.activity){
+            } else {
+                if (is_original == 0 && sku.activity) {
                     $(".SZY-GOODS-PRICE").html(sku.activity.act_price_format);
-                }else{
+                } else {
                     $(".SZY-GOODS-PRICE").html(sku.goods_price_format);
                 }
             }
@@ -1706,14 +2181,13 @@
                 $('.handsel_tail').html('付尾款' + sku.tail_money_format);
             }
             // 库存
-            if(is_original == 1){
+            if (is_original == 1) {
                 goods_number = sku.original_number;
             }
-            console.log(sku)
             if (goods_number > 0) {
                 if ("1" == 1) {
                     $(".SZY-GOODS-NUMBER").html("库存：" + goods_number + "件");
-                }else{
+                } else {
                     $(".SZY-GOODS-NUMBER").html("");
                 }
             } else {
@@ -1729,7 +2203,7 @@
                 $('.SZY-BUY-BUTTON').text('确定');
             }
             // 最大购买数量
-            if(sku.goods_max_number == null || sku.goods_max_number == undefined || isNaN(sku.goods_max_number)){
+            if (sku.goods_max_number == null || sku.goods_max_number == undefined || isNaN(sku.goods_max_number)) {
                 sku.goods_max_number = goods_number;
             }
             $(".amount-input").data("amount-step", sku.cart_step);
@@ -1739,9 +2213,9 @@
                 $(".amount-input").val(sku.cart_step);
             } else if (goods_number == 0 && $(".amount-input").val() != 0) {
                 $(".amount-input").val(0);
-            } else if ($(".amount-input").val() < sku.cart_step){
+            } else if ($(".amount-input").val() < sku.cart_step) {
                 $(".amount-input").val(sku.cart_step);
-            } else if ($(".amount-input").val() % sku.cart_step != 0){
+            } else if ($(".amount-input").val() % sku.cart_step != 0) {
                 $(".amount-input").val(sku.cart_step);
             }
             var goods_number_input = parseInt($(".amount-input").val());
@@ -1759,7 +2233,7 @@
                 element.append('<div class="dt">赠品</div><div class="dd"></div>');
                 for (var i = 0; i < sku.gift_list.length; i++) {
                     var gift = sku.gift_list[i];
-                    element.find('.dd:last').append('<div class="prom-gift-list"><a href="/'+ gift.gift_sku_id +'.html" title="'+gift.sku_name+'"><img src="'+gift.goods_image_thumb+'" width="20" height="20" class="gift-img" /></a><em class="gift-number color">× '+gift.gift_number+'</em></div>')
+                    element.find('.dd:last').append('<div class="prom-gift-list"><a href="/' + gift.gift_sku_id + '.html" title="' + gift.sku_name + '"><img src="' + gift.goods_image_thumb + '" width="20" height="20" class="gift-img" /></a><em class="gift-number color">× ' + gift.gift_number + '</em></div>')
                 }
                 $(".SZY-GIFT-LIST").append($(element));
             } else {
@@ -1775,7 +2249,7 @@
                 $(".SZY-INTEGRAL-ITEM").show();
                 $(".SZY-INTEGRAL-ITEM .pro-info p").html(sku.integral_label);
                 show_activity = true;
-            }else{
+            } else {
                 $(".SZY-INTEGRAL-LABEL").hide();
                 $(".SZY-INTEGRAL-ITEM").hide();
             }
@@ -1789,7 +2263,7 @@
             goods_pic_swiper.slideTo(0, 1000, false);
             goods_pic_swiper.startAutoplay();
         }
-        $().ready(function() {
+        $().ready(function () {
             // 检查SKU组合
             $.cart.checkSkus($(".SZY-GOODS-SPEC-ITEMS"), sku_list);
             // 绑定规格事件
@@ -1798,23 +2272,23 @@
                 container: $(".SZY-GOODS-SPEC-ITEMS"),
                 objects: $(".SZY-GOODS-SPEC-ITEMS").find("li"),
                 // 参数回调
-                params_callback: function(params){
+                params_callback: function (params) {
                     //
                     return params;
                 },
                 // 处理选中的SKU
-                done_callback: function(sku){
+                done_callback: function (sku) {
                     // SKU存在
                     setSkuInfo(sku);
                     // 设置标题
                     $("title").html(sku.sku_name);
                 },
                 // 处理未选中SKU时的事件
-                fail_callback: function(result){
+                fail_callback: function (result) {
                     // SKU不存在
                     setSkuInfo(false);
                     // 设置标题
-                    $("title").html("直播-快鹿情侣时尚条纹亚麻拖鞋室内地板家居拖鞋...");
+                    $("title").html("{{ $goods['goods_name'] }}");
                 },
             });
             // 解析
@@ -1823,12 +2297,12 @@
             getSkuInfo = specObj.getSkuInfo;
             getPropData = specObj.getPropData;
             // 添加收藏
-            $(".collect-goods").click(function(event) {
+            $(".collect-goods").click(function (event) {
                 var target = $(this);
                 var goods_id = $(this).data("goods-id");
                 var sku_id = getSkuId();
                 $.loading.start();
-                $.collect.toggleGoods(goods_id, sku_id, function(result) {
+                $.collect.toggleGoods(goods_id, sku_id, function (result) {
                     $.loading.stop();
                     if (result.data == 1) {
                         target.find('.goods-collect-nav').addClass("selected");
@@ -1840,15 +2314,15 @@
                 }, true);
             });
             // 领取红包
-            $("body").on("click", ".bonus-receive", function() {
+            $("body").on("click", ".bonus-receive", function () {
                 var bonus_id = $(this).data("bonus-id");
                 var target = $(this);
-                $.bonus.receive(bonus_id, function(result) {
+                $.bonus.receive(bonus_id, function (result) {
                     if (result.code == 0) {
-                        if(result.data == 0){
+                        if (result.data == 0) {
                             $(target).html("已领取").removeClass("bg-color").removeClass("bonus-receive").addClass("bonus-received").addClass('color');
                         }
-                        $.msg(result.message,{
+                        $.msg(result.message, {
                             icon_type: 1
                         });
                         return;
@@ -1864,34 +2338,31 @@
                 });
             });
             //立即砍价
-            $('body').on('click', '.cut-money', function() {
+            $('body').on('click', '.cut-money', function () {
                 var goods_id = $(this).data('goods_id');
                 var openid = $(this).data('open_id');
-                $.ajax({
-                    type: 'GET',
-                    url: '/goods/bargain',
-                    data: {
-                        goods_id: goods_id,
-                        openid: openid
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if(result.code == 0){
-                            /* $('#act_bargain').html(result.bar_data);
-                            $('#act_bargain_footer').html(result.bar_foot_data);
-                            $('#act_bargain_info').html(result.bar_info_data); */
-                            $('.mask-div').show();
-                            $('.cut-money-info').show();
-                            $('.bar-amount').html('￥'+result.bar_info.bar_amount);
-                            replaceUrl('bar_id', result.bar_info.bar_id);
-                        }else{
-                            $.msg(result.message);
-                        }
+                $.loading.start();
+                $.get('/goods/bargain', {
+                    goods_id: goods_id,
+                    openid: openid
+                }, function (result) {
+                    if (result.code == 0) {
+                        /* $('#act_bargain').html(result.bar_data);
+                        $('#act_bargain_footer').html(result.bar_foot_data);
+                        $('#act_bargain_info').html(result.bar_info_data); */
+                        $('.mask-div').show();
+                        $('.cut-money-info').show();
+                        $('.bar-amount').html('￥' + result.bar_info.bar_amount);
+                        replaceUrl('bar_id', result.bar_info.bar_id);
+                    } else {
+                        $.msg(result.message);
                     }
-                })
+                }, "JSON").always(function () {
+                    $.loading.stop();
+                });
             });
             //立即砍价
-            $('body').on('click', '.help-cut-money', function() {
+            $('body').on('click', '.help-cut-money', function () {
                 var bar_id = $(this).data('bar_id');
                 var openid = $(this).data('open_id');
                 $.ajax({
@@ -1902,14 +2373,14 @@
                         openid: openid
                     },
                     dataType: 'json',
-                    success: function(result) {
-                        if(result.code == 0){
+                    success: function (result) {
+                        if (result.code == 0) {
                             /* $('#act_bargain').html(result.bar_data);
                             $('#act_bargain_footer').html(result.bar_foot_data); */
                             $('.mask-div').show();
                             $('.cut-money-info').show();
-                            $('.bar-amount').html('￥'+result.bar_amount);
-                        }else{
+                            $('.bar-amount').html('￥' + result.bar_amount);
+                        } else {
                             $.msg(result.message);
                         }
                     }
@@ -1917,14 +2388,14 @@
             });
             // 设置默认权益卡
             /* $.get('/goods/set-default-card', {
-                    shop_id: "309"
-                }, function(result) {
-                    if (result.code == 0) {
-                        window.location.reload();
-                        $.msg(result.message);
-                    } else {
-                    }
-            }, "json"); */
+                    shop_id: "8"
+            }, function(result) {
+                if (result.code == 0) {
+                    window.location.reload();
+                    $.msg(result.message);
+                } else {
+                }
+        }, "json"); */
         });
         function replaceUrl(name, value) {
             var obj = new Object();
@@ -1932,7 +2403,7 @@
             History.replaceState(obj, '', '?' + name + '=' + value);
         }
         //
-        var goods_share_mode = "php"
+        var goods_share_mode = "js"
         var qrcode_type = '0';
         var click_loading = false;
         // 商品分享
@@ -1949,6 +2420,7 @@
                     goods_id: '{{ $goods['goods_id'] }}',
                     mode: goods_share_mode,
                     qrcode_type: qrcode_type,
+                    position: 'goods_info',
                     callback: function(res){
                         click_loading = false;
                         $(obj).attr('data-uuid',res.uuid);

@@ -2,6 +2,7 @@
 
 namespace App\Services\Commission;
 
+use App\Models\BackOrder;
 use App\Models\Category;
 use App\Models\Goods;
 //use App\Models\MerchantsServer;
@@ -27,7 +28,9 @@ use App\Repositories\Common\TimeRepository;
 //use App\Services\Order\OrderGoodsService;
 //use App\Services\Order\OrderRefoundService;
 use App\Services\Order\OrderCommonService;
+use App\Services\Order\OrderGoodsService;
 use App\Services\Order\OrderRefoundService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class CommissionService
@@ -37,7 +40,7 @@ class CommissionService
 //    protected $commonManageService;
     protected $orderCommonService;
     protected $orderRefoundService;
-//    protected $orderGoodsService;
+    protected $orderGoodsService;
 //    protected $cartCommonService;
 
     public function __construct(
@@ -45,7 +48,7 @@ class CommissionService
 //        CommonManageService $commonManageService,
         OrderCommonService $orderCommonService,
         OrderRefoundService $orderRefoundService,
-//        OrderGoodsService $orderGoodsService,
+        OrderGoodsService $orderGoodsService,
 //        CartCommonService $cartCommonService
     ) {
         $this->lrwRepository = $lrwRepository;
@@ -56,7 +59,7 @@ class CommissionService
 //        $this->commonManageService = $commonManageService;
         $this->orderCommonService = $orderCommonService;
         $this->orderRefoundService = $orderRefoundService;
-//        $this->orderGoodsService = $orderGoodsService;
+        $this->orderGoodsService = $orderGoodsService;
 //        $this->cartCommonService = $cartCommonService;
     }
 
@@ -107,7 +110,7 @@ class CommissionService
                 $res[$key] = $row;
             }
 
-            cache()->forever('shop_list', $res);
+//            cache()->forever('shop_list', $res);
         }
 
         return $res;
@@ -718,7 +721,7 @@ class CommissionService
                 $value['return_amount'] = 0;
                 $value['return_shippingfee'] = 0;
 
-                $value['order_amount'] = $value['total_fee'] - $value['discount'];
+                $value['order_amount'] = $value['total_fee'] - $value['discount_fee'];
 
                 /* 商品佣金比例 start */
                 $order = [
@@ -907,12 +910,12 @@ class CommissionService
             ->where('confirm_take_time', '<=', $end_time);
 
         if (!empty($order_list)) {
-            $order_list = BaseRepository::getExplode($order_list);
+//            $order_list = BaseRepository::getExplode($order_list);
             $list = $list->whereIn('order_id', $order_list);
         } else {
             $list = $this->orderCommonService->orderQuerySelect($list, 'confirm_take');
 
-            $list = $list->whereHasIn('getOrder', function ($query) {
+            $list = $list->with('getOrder', function ($query) {
                 $query->where('is_settlement', 0);
             });
         }
@@ -1028,7 +1031,7 @@ class CommissionService
         /**
          * 订单信息
          */
-        $order = SellerBillOrder::selectRaw("GROUP_CONCAT(order_id) AS order_list, SUM(drp_money) AS drp_money, SUM((" . $this->orderCommissionTotalField() . ")) AS total_fee, SUM((" . $this->orderCommissionField() . ")) AS commission_total_fee, SUM(return_amount) AS return_amount, SUM(shipping_fee) AS shipping_fee, SUM(return_shippingfee) AS return_shippingfee, SUM(return_rate_fee) AS return_rate_fee, SUM(goods_amount) AS goods_amount, SUM(discount) AS discount, SUM(coupons) AS coupons, SUM(integral_money) AS integral_money, SUM(bonus) AS bonus, SUM(value_card) AS value_card, SUM(rate_fee) AS rate_fee")
+        $order = SellerBillOrder::selectRaw("GROUP_CONCAT(order_id) AS order_list, SUM(drp_money) AS drp_money, SUM((" . $this->orderCommissionTotalField() . ")) AS total_fee, SUM((" . $this->orderCommissionField() . ")) AS commission_total_fee, SUM(return_amount) AS return_amount, SUM(shipping_fee) AS shipping_fee, SUM(return_shippingfee) AS return_shippingfee, SUM(return_rate_fee) AS return_rate_fee, SUM(goods_amount) AS goods_amount, SUM(discount_fee) AS discount_fee, SUM(coupons) AS coupons, SUM(integral_money) AS integral_money, SUM(bonus) AS bonus, SUM(store_card_price) AS store_card_price, SUM(rate_fee) AS rate_fee")
             ->where('shop_id', $shop_id)
             ->where('bill_id', 0)
             ->where('confirm_take_time', '>=', $start_time)
@@ -1042,14 +1045,14 @@ class CommissionService
             $order = $order->where('chargeoff_status', $chargeoff_status);
         }
 
-        $order = $order->whereHasIn('getOrder', function ($query) {
+        $order = $order->with('getOrder', function ($query) {
             $query->where('is_settlement', 0);
         });
 
         $order = BaseRepository::getToArrayFirst($order);
 
         if ($order) {
-            $order_list = $order['order_list'] ?? [];
+            $order_list = $order['order_list'] ?? '';
 
             $order['order_list'] = BaseRepository::getExplode($order_list);
 
@@ -1068,7 +1071,7 @@ class CommissionService
             $order['return_shippingfee'] = isset($order['return_shippingfee']) ? $order['return_shippingfee'] : 0;
             $order['return_rate_fee'] = isset($order['return_rate_fee']) ? $order['return_rate_fee'] : 0;
             $order['integral_money'] = isset($order['integral_money']) ? $order['integral_money'] : 0;
-            $order['order_amount'] = isset($order['total_fee']) ? $order['total_fee'] - $order['discount'] : 0;
+            $order['order_amount'] = isset($order['total_fee']) ? $order['total_fee'] - $order['discount_fee'] : 0;
             $order['shipping_amount'] = isset($order['shipping_fee']) ? $order['shipping_fee'] : 0;
             $order['drp_money'] = isset($order['drp_money']) ? $order['drp_money'] : 0;
             $order['rate_fee'] = isset($order['rate_fee']) ? $order['rate_fee'] : 0;
@@ -1195,6 +1198,7 @@ class CommissionService
             }
         }
 
+        dd($arr);
         return $arr;
     }
 
@@ -1278,14 +1282,15 @@ class CommissionService
                 $row[$key]['rate_activity'] = round($row[$key]['order_percent'] * $res['rate_activity'], 2);
                 $row[$key]['goods_amount'] = round($goods['goods_amount'] - $row[$key]['rate_activity'], 2);
 
-                $OrderReturn = OrderReturn::selectRaw("(actual_return - return_shipping_fee - return_rate_price) AS actual_return");
-                $OrderReturn = $OrderReturn->whereHasIn('getReturnGoods', function ($query) use ($key) {
-                    $query->where('rec_id', $key);
-                });
+//                $OrderReturn = BackOrder::selectRaw("(actual_return - return_shipping_fee - return_rate_price) AS actual_return");
+//                $OrderReturn = $OrderReturn->whereHasIn('getReturnGoods', function ($query) use ($key) {
+//                    $query->where('rec_id', $key);
+//                });
+//
+//                $OrderReturn = $OrderReturn->doesntHave('getSellerNegativeOrder');
 
-                $OrderReturn = $OrderReturn->doesntHave('getSellerNegativeOrder');
-
-                $actual_return = $OrderReturn->value('actual_return');
+//                $actual_return = $OrderReturn->value('actual_return');
+                $actual_return = 0;
                 $row['actual_return'] = $actual_return ? $actual_return : 0;
 
                 $row[$key]['should_amount'] = number_format(($row[$key]['goods_amount'] - $actual_return) * $goods['commission_rate'], 2, '.', ''); //应结佣金
@@ -1535,12 +1540,13 @@ class CommissionService
 
             /* 获取表字段 */
             $BillOrderOther = BaseRepository::getArrayfilterTable($other, 'seller_bill_order');
-
             $bill_order_id = 0;
             if ($billOrder) {
                 SellerBillOrder::where('id', $billOrder['id'])
                     ->update($BillOrderOther);
             } else {
+                $BillOrderOther['created_at'] = Carbon::now()->toDateTimeString();
+                $BillOrderOther['updated_at'] = Carbon::now()->toDateTimeString();
                 $bill_order_id = SellerBillOrder::insertGetId($BillOrderOther);
             }
 
@@ -1549,49 +1555,49 @@ class CommissionService
             ];
             $goods_list = $this->orderGoodsService->getOrderGoodsList($where);
 
-            $drp_money = 0;
             if ($goods_list) {
                 foreach ($goods_list as $key => $row) {
-                    $parent_id = OrderInfo::where('order_id', $row['order_id'])->value('parent_id');
+//                    $parent_sn = OrderInfo::where('order_id', $row['order_id'])->value('parent_sn');
 
-                    $drp_money += $row['drp_money'];
+                    $drp_money = 0; // 分销金额
 
                     //商品金额促销 start
                     $goods_amount = $row['goods_price'] * $row['goods_number'];
-                    $goods_con = $this->cartCommonService->getConGoodsAmount($goods_amount, $row['goods_id'], 0, 0, $parent_id);
 
-                    $amount = $goods_con['amount'] ? explode(',', $goods_con['amount']) : [];
-                    $amount = $amount ? min($amount) : 0;
-
-                    $row['dis_amount'] = $goods_amount - $amount;
+                    $row['dis_amount'] = 0;
                     //商品金额促销 end
 
                     $row['cat_id'] = Goods::where('goods_id', $row['goods_id'])->value('cat_id');
                     $row['cat_id'] = $row['cat_id'] ?? 0;
 
-                    $proportion = $this->getOrderGoodsCommission($row['order_id'], 1);
+//                    $proportion = $this->getOrderGoodsCommission($row['order_id'], 1);
 
-                    if ($proportion['cat']) {
-                        foreach ($proportion['cat'] as $gkey => $grow) {
-                            if ($row['goods_id'] == $gkey) {
-                                $row['proportion'] = $grow['commission_rate'];
-                                $row['cat_id'] = $grow['cat_id'] ?? 0;
-                                break;
-                            }
-                        }
-                    }
+//                    if ($proportion['cat']) {
+//                        foreach ($proportion['cat'] as $gkey => $grow) {
+//                            if ($row['goods_id'] == $gkey) {
+//                                $row['proportion'] = $grow['commission_rate'];
+//                                $row['cat_id'] = $grow['cat_id'] ?? 0;
+//                                break;
+//                            }
+//                        }
+//                    }
 
-                    $row['commission_rate'] = !empty($row['commission_rate']) ? $row['commission_rate'] / 100 : 0;
+                    // 固定使用设置的店铺分佣比例与平台进行分佣
+                    $row['proportion'] = 0;
+                    $shop_commission = $this->getSellerCommissionInfo($other['shop_id']);
+                    $row['commission_rate'] = !empty($shop_commission['percent_value']) ? $shop_commission['percent_value'] / 100 : 0;
+//                    $row['commission_rate'] = !empty($row['commission_rate']) ? $row['commission_rate'] / 100 : 0;
 
-                    $count = SellerBillGoods::where('rec_id', $row['rec_id'])
+                    $count = SellerBillGoods::where('rec_id', $row['record_id'])
                         ->where('order_id', $row['order_id'])
                         ->count();
 
                     /* 获取表字段 */
                     $goods = BaseRepository::getArrayfilterTable($row, 'seller_bill_goods');
+                    $goods['rec_id'] = $row['record_id'];
 
                     if ($count) {
-                        SellerBillGoods::where('rec_id', $row['rec_id'])
+                        SellerBillGoods::where('rec_id', $row['record_id'])
                             ->where('order_id', $row['order_id'])
                             ->update($goods);
                     } else {
@@ -1600,35 +1606,31 @@ class CommissionService
                 }
 
                 if ($bill_order_id > 0) {
-                    SellerBillOrder::where('id', $bill_order_id)->update([
-                        'drp_money' => $drp_money
-                    ]);
+//                    SellerBillOrder::where('id', $bill_order_id)->update([
+//                        'drp_money' => $drp_money
+//                    ]);
 
                     $filter = [
                         'order_sn' => $BillOrderOther['order_sn']
                     ];
 
                     /* 微分销 */
-                    if (file_exists(MOBILE_DRP)) {
-                        $no_settlement = $this->merchantsIsSettlement($BillOrderOther['shop_id'], 0, $filter);
-                    } else {
-                        $no_settlement = $this->merchantsIsSettlement($BillOrderOther['shop_id'], 0, $filter);
-                    }
+//                    $no_settlement = $this->merchantsIsSettlement($BillOrderOther['shop_id'], 0, $filter);
 
-                    $gain_amount = $no_settlement['all_gain_commission'] ?? 0;
-                    $gain_amount = $this->lrwRepository->changeFloat($gain_amount);
-
-                    $actual_amount = $no_settlement['all_price'] ?? 0;
-                    $actual_amount = $this->lrwRepository->changeFloat($actual_amount);
-
-                    $log = [
-                        'order_id' => $BillOrderOther['order_id'],
-                        'ru_id' => $BillOrderOther['shop_id'],
-                        'gain_amount' => $gain_amount,
-                        'actual_amount' => $actual_amount,
-                        'add_time' => TimeRepository::getGmTime()
-                    ];
-                    (new OrderSettlementLog())->add($log);
+//                    $gain_amount = $no_settlement['all_gain_commission'] ?? 0;
+//                    $gain_amount = $this->lrwRepository->changeFloat($gain_amount);
+//
+//                    $actual_amount = $no_settlement['all_price'] ?? 0;
+//                    $actual_amount = $this->lrwRepository->changeFloat($actual_amount);
+//
+//                    $log = [
+//                        'order_id' => $BillOrderOther['order_id'],
+//                        'ru_id' => $BillOrderOther['shop_id'],
+//                        'gain_amount' => $gain_amount,
+//                        'actual_amount' => $actual_amount,
+//                        'add_time' => TimeRepository::getGmTime()
+//                    ];
+//                    (new OrderSettlementLog())->add($log);
                 }
             }
         }

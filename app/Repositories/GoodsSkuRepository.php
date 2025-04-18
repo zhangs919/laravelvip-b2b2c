@@ -9,6 +9,7 @@ use App\Models\GoodsImage;
 use App\Models\GoodsSku;
 use App\Models\GoodsSpec;
 use App\Models\GoodsUnit;
+use App\Services\Enum\ActTypeEnum;
 
 class GoodsSkuRepository
 {
@@ -115,7 +116,7 @@ class GoodsSkuRepository
      * @param $shop_info
      * @return array|null
      */
-    public function getGoodsSkuInfo($skuId, $goods_info, $shop_info)
+    public function getGoodsSkuInfo($skuId, $goods_info, $shop_info, $user_id = 0)
     {
         if (empty($skuId)) {
             return [];
@@ -135,12 +136,14 @@ class GoodsSkuRepository
 
         // 商品图片相册
         $sku_images = [];
+        $goods_images = [];
         foreach ($info->sku_images as $image) {
             $sku_images[] = [
                 get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_80,w_80',
                 get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450',
                 get_image_url($image)
             ];
+            $goods_images[] = get_image_url($image).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450';
         }
 //        $goods_images = array_column($goods_images->toArray(), 'path');
 //        $goods_images_list = [];
@@ -163,19 +166,27 @@ class GoodsSkuRepository
 //            $sku_name = $sku_name.' '.$spec_attr_value;
         }
 
+        $activity = (new ActivityRepository())->getActivityInfo($goods_info->goods_id, $skuId, $goods_info->act_id, $user_id);
+//        dd($activity);
+        $goods_price = !empty($activity) ? $activity['act_price'] : $info->goods_price;
+        $original_price = !empty($activity) ? $activity['goods_price'] : $info->goods_price;
+        $sku_number = !empty($activity) ? $activity['act_stock'] : $info->goods_number;
+
         $sku = [
             'sku_id' => $info->sku_id,
             'goods_id' => $info->goods_id,
             'sku_name' => $info->sku_name,
             'sku_image' => $info->sku_image,
-            'goods_price' => $info->goods_price,
-            'original_price' => '', // todo
+            'goods_price' => $goods_price,
+            'original_price' => $original_price,
             'market_price' => $info->market_price,
-            'goods_number' => $info->goods_number,
-            'original_number' => '', // todo
+            'goods_number' => $sku_number,
+            'original_number' => !empty($activity) ? $activity['goods_number'] : $info->goods_number,
             'spec_ids' => !empty($info->spec_ids) ? explode('|', $info->spec_ids) : null,
             'is_enable' => $info->checked,
+            'cart_step' => 1,
             'goods_image' => $goods_info->goods_image,
+            'goods_images' => $goods_images,
             'shop_id' => $goods_info->shop_id,
             'goods_status' => $goods_info->goods_status,
             'goods_audit' => $goods_info->goods_audit,
@@ -197,11 +208,23 @@ class GoodsSkuRepository
             'sku_images' => $sku_images,
             'spec_attr_value' => $spec_attr_value,
             'gift_list' => null, // todo
+            'act_type' => $activity['act_type'] ?? '',
             'purchase_num' => 0, // todo
-            'activity' => null, // todo
-            'order_activity' => false, // todo
-            'original_price_format' => "￥".$goods_info->goods_price,
-            'goods_price_format' => '￥'.$goods_info->goods_price,
+            'activity' => $activity,
+            'order_activity' => null, // todo
+            'prices' => [
+                'is_original_price' => !empty($activity) ? 0 : 1,
+                'price_type' => !empty($activity) ? 'activity_price' : 'original_price',
+                'original_price' => $original_price,
+                'original_price_format' => '￥'.$original_price,
+                'activity_price' => !empty($activity) ? $activity['act_price'] : 0,
+                'member_price' => 0,
+                'member_price_type' => '',
+                'goods_price' => $goods_price,
+                'activity_enable' => !empty($activity) ? 1 : 0,
+            ],
+            'original_price_format' => "￥".$original_price,
+            'goods_price_format' => '￥'.$goods_price,
             'price_show' => [
                 'code' => 1 // todo
             ],
@@ -209,6 +232,13 @@ class GoodsSkuRepository
                 'code' => 1 // todo
             ]
         ];
+        if (!empty($activity) && $activity['act_type'] == ActTypeEnum::ACT_TYPE_BARGAIN) {
+            // 砍价活动商品
+            $sk['floor_price_init'] = true;
+            $sk['floor_price_label'] = '原价';
+            $sk['floor_price'] = $activity['act_price'];
+            $sk['floor_price_format'] = "￥".$activity['act_price'];
+        }
 
         return $sku;
     }

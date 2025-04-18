@@ -24,18 +24,18 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
 
-    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/template.css?v=20180702"/>
+    <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
+    <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/template.css?v=20180702"/>
 
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v={{ time() }}" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v={{ time() }}" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
@@ -132,7 +132,7 @@
                         <span class="top-dropdown-bg"></span>
                         <ul>
                             <li>
-                                <a class="other-help" target="_blank" href="http://help.laravelvip.com/"><i></i>帮助中心</a>
+                                <a class="other-help" target="_blank" href="//help.laravelvip.com/"><i></i>帮助中心</a>
                             </li>
                             <li>
                                 <a class="other-exit"><i></i>退出设计</a>
@@ -150,14 +150,14 @@
         <!-- 顶部导航模块_start -->
         <div class="SZY-TPL-HEADER m-t-5">
             <!--页面css/js-->
-            <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/index.js?v=1.2"></script>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/tabs.js?v=1.2"></script>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/bubbleup.js?v=1.2"></script>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/jquery.hiSlider.js?v=1.2"></script>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/index_tab.js?v=1.2"></script>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/jump.js?v=1.2"></script>
-            <script src="http://{{ config('lrw.frontend_domain') }}/js/nav.js?v=1.2"></script>
+            <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/index.css?v=1.6"/>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/index.js?v=1.2"></script>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/tabs.js?v=1.2"></script>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/bubbleup.js?v=1.2"></script>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/jquery.hiSlider.js?v=1.2"></script>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/index_tab.js?v=1.2"></script>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/jump.js?v=1.2"></script>
+            <script src="//{{ config('lrw.frontend_domain') }}/js/nav.js?v=1.2"></script>
 
             <!-- 分类导航设置  _start -->
             <!-- 分类导航设置  _end -->

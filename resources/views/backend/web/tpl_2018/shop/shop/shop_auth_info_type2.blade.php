@@ -37,7 +37,7 @@
 
 
 
-                            <input type="text" id="shopfieldvaluemodel-company_name" class="form-control" name="ShopFieldValueModel[company_name]" value="{{ $info->shopFieldValue->real_name }}">
+                            <input type="text" id="shopfieldvaluemodel-company_name" class="form-control" name="ShopFieldValueModel[company_name]" value="{{ $info->shopFieldValue->company_name }}">
 
 
 

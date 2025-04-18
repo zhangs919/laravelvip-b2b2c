@@ -50,12 +50,12 @@ class DefaultController extends Backend
         $action_span = [];
         if ($type == 'list') {
             $action_span = [
-                [
-                    'id' => 'btn_build_goods_region',
-                    'url' => '',
-                    'icon' => 'fa-cloud-upload',
-                    'text' => '重建商品数据关联关系'
-                ],
+//                [
+//                    'id' => 'btn_build_goods_region',
+//                    'url' => '',
+//                    'icon' => 'fa-cloud-upload',
+//                    'text' => '重建商品数据关联关系'
+//                ],
             ];
         }
 

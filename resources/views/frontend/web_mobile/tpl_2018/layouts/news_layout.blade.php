@@ -28,7 +28,8 @@
     <!--整站改色 _start-->
     <link href="/assets/d2eace91/css/swiper/swiper.min.css" rel="stylesheet" position="1">
     <link href="/css/iconfont/iconfont.css" rel="stylesheet">
-    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">
+{{--    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">--}}
+    <link href="/css/common.css" rel="stylesheet">
     <link href="/css/article.css" rel="stylesheet">
     <link href="/css/news.css" rel="stylesheet">
     @if(sysconf('custom_style_enable_m_site') == 1)

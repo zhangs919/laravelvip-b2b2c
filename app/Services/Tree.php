@@ -21,7 +21,7 @@ class Tree extends Controller {
      * @return array
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
-    public function list_to_tree($list, $pk='id', $pid = 'pid', $child = '_child', $root = 0) {
+    public function list_to_tree($list, $pk='id', $pid = 'pid', $child = '_child', $root = 0, $showChilds = true) {
         // 创建Tree
         $tree = [];
         if(is_array($list) || is_object($list)) {
@@ -38,7 +38,9 @@ class Tree extends Controller {
                 } else{
                     if (isset($refer[$parentId])) {
                         $parent =& $refer[$parentId];
-                        $parent['childs'][] = $data[$pk];
+                        if ($showChilds) {
+                            $parent['childs'][] = $data[$pk];
+                        }
                         $parent[$child][] =& $list[$key];
                     } else {
                         $tree[] =& $list[$key];

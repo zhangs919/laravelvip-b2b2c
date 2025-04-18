@@ -54,16 +54,21 @@ class OrderController extends Backend
 
         $where = [];
         $whereIn = [];
+        $whereBetween = [];
         // 搜索条件 name 商品名称/订单编号/买家账号
-        $search_arr = ['name', 'order_status', 'add_time_begin', 'add_time_end', 'shop_name', 'evaluate_status', 'pay_type',
+        $search_arr = ['name', 'order_status',
+//            'add_time_begin', 'add_time_end',
+//            'shop_name', 'evaluate_status', 'pay_type',
             'service_type', 'pickup', 'order_type', 'user_mobile', 'consignee_name', 'consignee_mobile', 'consignee_address'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
                 if ($v == 'name') { // todo
 //                    $where[] = [$v, 'like', "%{$params[$v]}%"];
-                } elseif ($v == 'add_time_begin' || $v == 'add_time_end') {
-
-                } elseif ($v == 'order_status') {
+                }
+//                elseif ($v == 'add_time_begin' || $v == 'add_time_end') {
+//
+//                }
+                elseif ($v == 'order_status') {
                     if ($params[$v] == 'unpayed') {
                         $whereIn[] = ['order_status', [OS_UNCONFIRMED, OS_CONFIRMED]];
                         $where[] = ['pay_status', PS_UNPAYED];
@@ -112,11 +117,23 @@ class OrderController extends Backend
             $where[] = ['user_id', $uid];
         }
 
+        if (!empty($params['add_time_begin']) && empty($params['add_time_end'])) {
+            $where[] = ['created_at', '>', $params['add_time_begin']];
+        } elseif (empty($params['add_time_begin']) && !empty($params['add_time_end'])) {
+            $where[] = ['created_at', '<', $params['start_to']];
+        } elseif (!empty($params['add_time_begin']) && !empty($params['add_time_end'])) {
+            $whereBetween =  [
+                'field' => 'created_at',
+                'condition' => [$params['add_time_begin'], $params['add_time_end']]
+            ];
+        }
+
         // 列表
         $condition = [
             'with' => ['pickup','orderGoods', 'deliveryOrder', 'deliveryOrder.deliveryGoods'],
             'where' => $where,
             'where_in' => $whereIn,
+            'between' => $whereBetween,
             'sortname' => 'order_id',
             'sortorder' => 'desc'
         ];

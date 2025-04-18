@@ -24,7 +24,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <meta name="m_main_color" content="" />
     <link href="/css/iconfont/iconfont.css" rel="stylesheet">
-    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">
+{{--    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">--}}
+    <link href="/css/common.css" rel="stylesheet">
 
     {{--header_css--}}
     @section('header_css')@show

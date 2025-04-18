@@ -7,6 +7,7 @@ namespace App\Services;
 use AlibabaCloud\Client\AlibabaCloud;
 use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
+use Illuminate\Support\Facades\Storage;
 
 class AlibabaCloudLiveService
 {
@@ -16,15 +17,25 @@ class AlibabaCloudLiveService
 
     protected $host = 'live.aliyuncs.com';
 
+    protected $push_domain = 'live.xxx.com';
+    protected $play_domain = 'living.xxx.com';
+    protected $push_auth_key = 'xxxxxxxx';
+    protected $play_auth_key = 'xxxxxxxx';
+    protected $push_auth_expire = 1440; // 推流鉴权有效期：1天 阿里云后台设置的是：1,440 分钟
+    protected $play_auth_expire = 3600; // 播流鉴权有效期：1小时 阿里云后台设置的是：60 分钟
+
     public function __construct()
     {
-        $this->accessKeyId = sysconf('alioss_access_key_id'); //env('ALI_ACCESS_KEY_ID');
-        $this->accessKeySecret = sysconf('alioss_access_key_secret'); //env('ALI_ACCESS_KEY_SECRET');
+        // 已完成安装
+        if (Storage::disk('local')->exists('seeder/install.lock')) {
+            $this->accessKeyId = sysconf('alioss_access_key_id');
+            $this->accessKeySecret = sysconf('alioss_access_key_secret');
 
-        // Set up a global client
-        AlibabaCloud::accessKeyClient($this->accessKeyId, $this->accessKeySecret)
-            ->regionId('cn-hangzhou')
-            ->asDefaultClient();
+            // Set up a global client
+            AlibabaCloud::accessKeyClient($this->accessKeyId, $this->accessKeySecret)
+                ->regionId('cn-hangzhou')
+                ->asDefaultClient();
+        }
     }
 
     /**
@@ -52,11 +63,13 @@ class AlibabaCloudLiveService
 
             return $result->toArray();
         } catch (ClientException $e) {
+            throw new \Exception($e->getErrorMessage());
 //            echo $e->getErrorMessage() . PHP_EOL;
-            return false;
+//            return false;
         } catch (ServerException $e) {
+            throw new \Exception($e->getErrorMessage());
 //            echo $e->getErrorMessage() . PHP_EOL;
-            return false;
+//            return false;
         }
 
     }
@@ -71,7 +84,7 @@ class AlibabaCloudLiveService
     {
         $query = [
             'RegionId' => "cn-hangzhou",
-            'DomainName' => "living.laravelvip.com",
+            'DomainName' => $this->play_domain,
         ];
         return $this->execute("DescribeLiveDomainDetail", $query);
     }
@@ -79,17 +92,21 @@ class AlibabaCloudLiveService
     /**
      * 禁止某条流的推送，可以预设某个时刻将流恢复。
      *
+     * @param string $appName 推流所属应用名称 格式：user(表示用户发起的直播)/shop(表示商家发起的直播)
+     * @param string $streamName 推流名称 格式：room+对应id（如：文章ID）
+     * @param string $oneshot 是否只断流不加入黑名单。取值：yes：只断流不加黑名单（支持上行推送或上行播流）。no：断流加入黑名单。
+     * @param string $resumeTime // 恢复流的时间 可选 格式为：yyyy-MM-ddTHH:mm:ssZ（UTC时间）
      * @return array|false
      */
-    public function forbidLiveStream()
+    public function forbidLiveStream($appName, $streamName, $oneshot = 'no', $resumeTime = '')
     {
         $query = [
-            'RegionId' => "cn-hangzhou",
-            'AppName' => "lrw",
-            'StreamName' => "room1",
-            'LiveStreamType' => "publisher",
-            'DomainName' => "living.laravelvip.com",
-            'ResumeTime' => "2015-12-01T17:37:00Z", // 恢复流的时间 可选
+            'DomainName' => $this->push_domain,//推流域名
+            'AppName' => $appName,//推流所属应用名称
+            'StreamName' => $streamName,//推流名称
+            'LiveStreamType' => "publisher", //用于指定主播推流还是客户端播流。目前仅支持：publisher（主播推流）
+            'Oneshot' => $oneshot,
+            'ResumeTime' => $resumeTime
         ];
         return $this->execute("ForbidLiveStream", $query);
     }
@@ -97,16 +114,17 @@ class AlibabaCloudLiveService
     /**
      * 恢复某条流的推送
      *
+     * @param string $appName 推流所属应用名称
+     * @param string $streamName 推流名称
      * @return array|false
      */
-    public function resumeLiveStream()
+    public function resumeLiveStream($appName, $streamName)
     {
         $query = [
-            'RegionId' => "cn-hangzhou",
-            'AppName' => "lrw",
-            'StreamName' => "room1",
-            'LiveStreamType' => "publisher",
-            'DomainName' => "living.laravelvip.com",
+            'DomainName' => $this->push_domain,//推流域名
+            'AppName' => $appName,//推流所属应用名称
+            'StreamName' => $streamName,//推流名称
+            'LiveStreamType' => "publisher", //用于指定主播推流还是客户端播流。目前仅支持：publisher（主播推流）
         ];
         return $this->execute("ResumeLiveStream", $query);
     }
@@ -154,7 +172,7 @@ class AlibabaCloudLiveService
         $query = [
             'RegionId' => "cn-hangzhou",
             'NotifyUrl' => "http://play.aliyunlive.com/notify",
-            'DomainName' => "live.laravelvip.com",
+            'DomainName' => $this->push_domain,
         ];
         return $this->execute("SetLiveStreamsNotifyUrlConfig", $query);
     }
@@ -169,7 +187,7 @@ class AlibabaCloudLiveService
         $query = [
             'RegionId' => "cn-hangzhou",
             'NotifyUrl' => "http://play.aliyunlive.com/notify",
-            'DomainName' => "live.laravelvip.com", // 加速域名
+            'DomainName' => $this->push_domain, // 加速域名
         ];
         return $this->execute("DescribeLiveStreamsNotifyUrlConfig", $query);
     }
@@ -180,88 +198,94 @@ class AlibabaCloudLiveService
      * 生成推/播流URL
      *
      * @param $id
+     * @param string $appName shop-商家直播 user-用户直播
      * @param int $type 0-推流 1-播流
-     * @param string $playType 'm3u8、flv'
-     * @return string
+     * @return array
      */
-    public function createStreamUrl($id, $type = 0, $playType = 'm3u8')
+    public function createStreamUrl($id, $type = 0, $appName = 'shop')
     {
-        $pushDomain = 'rtmp://live.laravelvip.com';
-        $playDomain = 'https://living.laravelvip.com';
-        $rtmpPlayDomain = "rtmp://living.laravelvip.com";
-
-        $appName = "lrw";
         $streamName = "room{$id}";
-        $uriStr = "/{$appName}/{$streamName}";
         $domainInfo = [
-            'push_auth_expire' => 3600*24, // 推流鉴权有效期：1天
-            'play_auth_expire' => 3600, // 播流鉴权有效期：1小时
-            'auth_key' => 'Q90vEPQt1l',
+            'push_domain' => $this->push_domain,
+            'play_domain' => $this->play_domain,
+            'push_auth_expire' => $this->push_auth_expire,
+            'play_auth_expire' => $this->play_auth_expire,
+            'push_auth_key' => $this->push_auth_key,
+            'play_auth_key' => $this->play_auth_key,
             'app_name' => $appName,
             'stream_name' => $streamName,
         ];
-
         if ($type == 0) {
-            return $pushDomain . $this->getPushAuthUri($uriStr, $domainInfo);
+            return $this->getPushUrl($domainInfo);
         } else {
-            if ($playType == 'm3u8') {
-                return $playDomain . $this->getPlayAuthUri($uriStr, $domainInfo, 'm3u8');
-            } elseif ($playType == 'flv') {
-                return $playDomain . $this->getPlayAuthUri($uriStr, $domainInfo,'flv');
-            } else {
-                return $rtmpPlayDomain . $this->getPlayAuthUri($uriStr, $domainInfo);
-            }
+            return $this->getPlayAUrl($domainInfo);
+
         }
     }
-
 
     /**
      * 播流 url 鉴权生成
      *
-     * @param $uri
      * @param $domainInfo
-     * @param string $type
-     * @return string
+     * @return string[]
      */
-    private function getPlayAuthUri($uri, $domainInfo, $type = '')
+    function getPlayAUrl($domainInfo)
     {
-        $expressTime = time() + $domainInfo['play_auth_expire'];
-        $liveSessionKey = 'live_'.$domainInfo['app_name'].'_'.$domainInfo['stream_name'];
-        // 先从缓存中读取 auth_key
-        $authKey = session($liveSessionKey);
-
-        if ($type) {
-            if (!$authKey) {
-                // 不存在
-                $authKey = $expressTime . '-0-0-' . md5($uri . '.' . $type . '-' . $expressTime. '-0-0-' . $domainInfo['auth_key']);
-                // 写入缓存
-                session([$liveSessionKey=>$authKey]);
-            }
-            $url = $uri . '.' . $type . '?auth_key='.$authKey;
+        $play_domain = $domainInfo['play_domain'];
+        $play_key = $domainInfo['play_auth_key'];
+        $appName = $domainInfo['app_name'];
+        $streamName = $domainInfo['stream_name'];
+        $expireTime = $domainInfo['play_auth_expire'];
+        //未开启鉴权Key的情况下
+        if ($play_key == '') {
+            $rtmp_play_url = 'rtmp://' . $play_domain . '/' . $appName . '/' . $streamName;
+            $flv_play_url = 'http://' . $play_domain . '/' . $appName . '/' . $streamName . '.flv';
+            $hls_play_url = 'http://' . $play_domain . '/' . $appName . '/' . $streamName . '.m3u8';
         } else {
-            if (!$authKey) {
-                // 不存在
-                $authKey = $expressTime . '-0-0-' .md5($uri . '-' . $expressTime. '-0-0-' . $domainInfo['auth_key']);
-                // 写入缓存
-                session([$liveSessionKey=>$authKey]);
-            }
-            $url = $uri . $type . '?auth_key=' .  $authKey;
-        }
+            $timeStamp = time() + $expireTime;
 
-        return $url;
+            $rtmp_sstring = '/' . $appName . '/' . $streamName . '-' . $timeStamp . '-0-0-' . $play_key;
+            $rtmp_md5hash = md5($rtmp_sstring);
+            $rtmp_play_url = 'rtmp://' . $play_domain . '/' . $appName . '/' . $streamName . '?auth_key=' . $timeStamp . '-0-0-' . $rtmp_md5hash;
+
+            $flv_sstring = '/' . $appName . '/' . $streamName . '.flv-' . $timeStamp . '-0-0-' . $play_key;
+            $flv_md5hash = md5($flv_sstring);
+            $flv_play_url = 'http://' . $play_domain . '/' . $appName . '/' . $streamName . '.flv?auth_key=' . $timeStamp . '-0-0-' . $flv_md5hash;
+
+            $hls_sstring = '/' . $appName . '/' . $streamName . '.m3u8-' . $timeStamp . '-0-0-' . $play_key;
+            $hls_md5hash = md5($hls_sstring);
+            $hls_play_url = 'http://' . $play_domain . '/' . $appName . '/' . $streamName . '.m3u8?auth_key=' . $timeStamp . '-0-0-' . $hls_md5hash;
+        }
+        return [
+            'rtmp' => $rtmp_play_url,
+            'flv' => $flv_play_url,
+            'hls' => $hls_play_url,
+        ];
     }
 
     /**
      * 推流 url 鉴权生成
      *
-     * @param $uri
      * @param $domainInfo
-     * @return string
+     * @return string[]
      */
-    private function getPushAuthUri($uri, $domainInfo)
+    private function getPushUrl($domainInfo)
     {
-        $expressTime = time() + $domainInfo['push_auth_expire'];
-        $preMd5Str = $uri . '-' . $expressTime. '-0-0-' . $domainInfo['auth_key'];
-        return $uri . '?auth_key=' . $expressTime . '-0-0-' . md5($preMd5Str);
+        $push_domain = $domainInfo['push_domain'];
+        $push_key = $domainInfo['push_auth_key'];
+        $appName = $domainInfo['app_name'];
+        $streamName = $domainInfo['stream_name'];
+        $expireTime = $domainInfo['push_auth_expire'];
+        if (empty($push_key)) {
+            $push_url = 'rtmp://' . $push_domain . '/' . $appName . '/' . $streamName;
+        } else {
+            $timeStamp = time() + $expireTime;
+            $sstring = '/' . $appName . '/' . $streamName . '-' . $timeStamp . '-0-0-' . $push_key;
+            $md5hash = md5($sstring);
+            $push_url = 'rtmp://' . $push_domain . '/' . $appName . '/' . $streamName . '?auth_key=' . $timeStamp . '-0-0-' . $md5hash;
+        }
+        return [
+            'rtmp' => $push_url
+        ];
     }
 }

@@ -147,7 +147,11 @@ class UpgradeRepository
     {
         $version = 'App\\Patch\\Migration_' . str_replace('.', '_', $version);
         if (class_exists($version)) {
-            app($version)->run();
+            try {
+                app($version)->run();
+            } catch (\Throwable $e) {
+                dd($e->getMessage());
+            }
         }
     }
 

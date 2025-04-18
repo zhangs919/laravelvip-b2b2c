@@ -108,6 +108,13 @@ class BaseModel extends Model
             // "(concat(user_name,',',mobile,',',email) like '%".$keyword."%')"
             $query = $query->whereRaw($condition['where_raw']['field'], $condition['where_raw']['condition']);
         }
+        if (!empty($condition['where_has'])) {
+            $field = $condition['where_has']['field'];
+            $value = $condition['where_has']['value'];
+            $query = $query->whereHas($condition['where_has']['table'], function ($query) use($field,$value) {
+                $query->where($field, 'like', "%{$value}%");
+            });
+        }
 
         if (!empty($condition['multi_like'])) {
             $query = $query->whereRaw($condition['multi_like']);
@@ -299,13 +306,21 @@ class BaseModel extends Model
                 [$attribute,'=', $name],
                 [$this->primaryKey, '!=', $id]
             ];
-            $result = $this->where($condition)->count();
         } elseif($scenario == 'create') {
-            $result = $this->where($attribute, $name)->count();
+            $condition = [
+                [$attribute,'=', $name],
+            ];
         } else {
             // 默认是新增
-            $result = $this->where($attribute, $name)->count();
+            $condition = [
+                [$attribute,'=', $name],
+            ];
         }
+        if (!empty($requestModel['shop_id'])) {
+            $condition[] = ['shop_id', '=', $requestModel['shop_id']];
+        }
+        $result = $this->where($condition)->count();
+
         if ($result) {
             $msg = trans('global.'.$attribute).'"'.$name.'"已经被占用了。';
             return result(false, '', $msg, [], false);

@@ -90,7 +90,7 @@ class ListController extends Seller
         $fixed_title = '商品管理 - 列表';
 
         $action_span = [
-            [
+            /*[
                 'url' => '/goods/list/batch-edit',
                 'icon' => 'fa-refresh',
                 'text' => '批量更新商品价格、库存'
@@ -114,7 +114,7 @@ class ListController extends Seller
                 'url' => '/goods/list/batch-set-pickup-timeout',
                 'icon' => 'fa-cubes',
                 'text' => '批量设置商品自提超时期限'
-            ],
+            ],*/
         ];
 
         $explain_panel = [];
@@ -1520,5 +1520,26 @@ class ListController extends Seller
         $freight_list = Freight::where('shop_id', seller_shop_info()->shop_id)->pluck('title', 'freight_id')->toArray();
         $freight_list = array_merge(["0" => "请选择", '-1' => '店铺统一运费'], $freight_list);
         return view('goods.list.freight_list', compact('freight_list', 'freight_id', 'freight_fee'))->render();
+    }
+
+    /**
+     * 导出
+     * todo 后期做导出功能按照这里的来修改开发！！！
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function export(Request $request)
+    {
+        $params = $request->all();
+
+        $total = 0;
+        $rows = [];
+
+        $extra = [
+            'page' => frontend_pagination(0, true),
+            'rows' => $rows, // 25条数据分组
+            'title' => seller_shop_info()->shop_name.'_商品列表'
+        ];
+        return result(0, null, '', $extra);
     }
 }

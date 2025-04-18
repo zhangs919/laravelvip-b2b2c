@@ -17,12 +17,12 @@ class ToolsRepository
 
     protected $model;
 
-    public function uploadOnePic($request, $filename, $storePath = '', $isReplace = false, $base64Field = '')
+    public function uploadOnePic($request, $filename, $storePath = '', $isReplace = false, $base64Field = '', $defaultDriver = '')
     {
 
         if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $filename, $result) || $base64Field == 'img_base64') {//base64上传
             // 单图上传
-            $data = $this->upfile($filename, $request, $storePath, $isReplace, $base64Field);
+            $data = $this->upfile($filename, $request, $storePath, $isReplace, $base64Field, $defaultDriver);
             $count = 1;
         } else {
             // file上传
@@ -41,12 +41,19 @@ class ToolsRepository
                 // 多图上传
                 $data = [];
                 foreach ($file as $item) {
-                    $data[] = $this->upfile($item, $request, $storePath, $isReplace);
+                    $resItem = $this->upfile($item, $request, $storePath, $isReplace, '', $defaultDriver);
+                    if (isset($resItem['error']) && !empty($resItem['error'])) {
+                        $error = $resItem['error'];
+                    }
+                    $data[] = $resItem;
                 }
                 $count = count($data);
             } else {
                 // 单图上传
-                $data = $this->upfile($file, $request, $storePath, $isReplace);
+                $data = $this->upfile($file, $request, $storePath, $isReplace, '', $defaultDriver);
+                if (isset($data['error']) && !empty($data['error'])) {
+                    $error = $data['error'];
+                }
                 $count = 1;
             }
         }
@@ -55,11 +62,14 @@ class ToolsRepository
             'count' => $count,
             'data' => $data
         ];
+        if (!empty($error)) {
+            $result['error'] = $error;
+        }
 
         return $result;
     }
 
-    public function upfile($file, Request $request, $storePath = 'temp', $isReplace = false, $base64Field = '')
+    public function upfile($file, Request $request, $storePath = 'temp', $isReplace = false, $base64Field = '', $defaultDriver = '')
     {
 
         if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $file, $result) || $base64Field == 'img_base64') {//base64上传
@@ -79,12 +89,15 @@ class ToolsRepository
             $filesize = $file->getSize();
             // 4.先得到文件后缀,然后将后缀转换成小写,然后看是否在否和图片的数组内
             $ext = strtolower($file->extension()) == 'jpeg' ? 'jpg' : strtolower($file->extension());
-
             $originalName = $file->getClientOriginalName();
+
+            if ($ext == 'txt') {
+                $ext = str_replace('.', '', strrchr($originalName, '.'));
+            }
             $name = str_replace(strrchr($originalName, '.'), '', $originalName);
         }
 
-        if(! in_array( $ext, ['jpeg','jpg','gif','gpeg','png'])){
+        if(! in_array( $ext, ['jpeg','jpg','gif','gpeg','png','txt', 'pem'])){
             return ['error' => '上传图片后缀不合法'];
         }
 
@@ -104,30 +117,39 @@ class ToolsRepository
 //        }
 
 
-        $dirname = '/'.$storePath.'/'.date('Y/m/d').'/'; // /backend/gallery/2018/04/05/
-        $path = $dirname.$newName.'.'.$ext;
 
         // 默认文件系统驱动
-        $defaultDriver = config('filesystems.default');
+        if (!$defaultDriver) {
+//            $defaultDriver = config('filesystems.default');
+            $defaultDriver = sysconf('alioss_enable') ? 'oss' : 'local';
+        }
 
         // 是否添加水印
         $is_watermark = $request->post('is_watermark', 0);
         if ($is_watermark) {
             // 添加水印
-            
+
         }
 
         if ($defaultDriver == 'oss') {
             // oss上传
-            $host = 'http://'.sysconf('oss_domain').$fullpath;
+            $dirname = '/'.$storePath.'/'.date('Y/m/d').'/'; // /backend/gallery/2018/04/05/
+            $path = $dirname.$newName.'.'.$ext;
+            $host = 'https://'.sysconf('oss_domain').$fullpath;
             $url = $host.ltrim($path, '/');
-            $contents = file_get_contents($file); // 文件内容
-            $result = Storage::put($fullpath.ltrim($path, '/'), $contents);
+            try {
+                $contents = file_get_contents($file); // 文件内容
+                $result = Storage::put($fullpath.ltrim($path, '/'), $contents);
+            } catch(\Exception $e) {
+                return ['error' => $e->getMessage()];
+            }
         }elseif($defaultDriver == 'local') {
             // 本地上传
-            $host = route('pc_home').'/images';
-            $url = $host.$path;
-            $result = $file->move(public_path($fullpath.ltrim($dirname, '/')), $newName.'.'.$ext);
+            $dirname = '/upload/'.$storePath.'/'.date('Y/m/d').'/'; // /backend/gallery/2018/04/05/
+            $path = $dirname.$newName.'.'.$ext;
+            $host = request()->getSchemeAndHttpHost().'/';
+            $url = $host.ltrim($path, '/');
+            $result = $file->move(storage_path(ltrim($dirname, '/')), $newName.'.'.$ext);
         }
 
         if(!$result){
@@ -203,9 +225,9 @@ class ToolsRepository
     }
 
     //    上传图片
-    public function uploadPic(Request $request, $filename, $storePath = '', $isReplace = false, $base64Field = '')
+    public function uploadPic(Request $request, $filename, $storePath = '', $isReplace = false, $base64Field = '', $defaultDriver = '')
     {
-        $result = $this->uploadOnePic($request, $filename, $storePath, $isReplace, $base64Field);
+        $result = $this->uploadOnePic($request, $filename, $storePath, $isReplace, $base64Field, $defaultDriver);
         return $result;
 
     }

@@ -55,7 +55,7 @@
     <!--logo信息-->
     <div class="admincp-name">
         <h1 class="logo-image">
-            <img src="/oss/images/system/config/website/backend_logo_0.png" />
+            <img src="{{ sysconf('backend_logo') ? get_image_url(sysconf('backend_logo')) : '/oss/images/system/config/website/backend_logo_0.png' }}" />
         </h1>
         <h1 class="logo-text">乐融沃B2B2C商城演示站平台管理中心</h1>
         <h2 class="logo-text-small">Platform Management Center</h2>

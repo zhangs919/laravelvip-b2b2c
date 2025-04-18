@@ -41,6 +41,7 @@
 
     <script src="/assets/d2eace91/js/jquery.js"></script>
     <script src="/assets/d2eace91/js/szy.head.js"></script>
+    <script src="/assets/d2eace91/js/jquery.base64.js?v=1.1"></script>
 
 
     {{--header_js--}}

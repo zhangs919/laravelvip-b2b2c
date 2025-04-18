@@ -23,15 +23,20 @@
 namespace App\Repositories;
 
 
+use App\Models\Activity;
 use App\Models\Admin;
 use App\Models\Goods;
+use App\Models\GrouponLog;
 use App\Models\OrderAction;
+use App\Models\OrderGoods;
 use App\Models\OrderInfo;
 use App\Models\OrderPay;
 use App\Models\SellerAccount;
 use App\Models\Shop;
 use App\Models\TradeSnapshot;
 use App\Services\Enum\AccountProcessTypeEnum;
+use App\Services\Enum\ActTypeEnum;
+use App\Services\WechatService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -96,14 +101,35 @@ class OrderInfoLogicRepository
                         'end_time' => time(),
                         'close_reason' => $closeReason
                     ];
+                    OrderInfo::where('order_id', $orderInfo['order_id'])->update($update);
                 } else {
-                    $update = [
-                        'order_cancel' => OC_WAIT_AUDIT,//1等待商家审核
-                        'last_time' => time(),
-                        'close_reason' => $closeReason
-                    ];
+                    $need_shop_audit = false; // 是否需要商家审核 暂固定设置为不需要审核
+                    if ($need_shop_audit) {
+                        // 方式一：商家审核
+                        $update = [
+                            'order_cancel' => OC_WAIT_AUDIT,//1等待商家审核
+                            'last_time' => time(),
+                            'close_reason' => $closeReason
+                        ];
+                        OrderInfo::where('order_id', $orderInfo['order_id'])->update($update);
+                    } else {
+                        // 方式二：取消订单退款 直接退回原路
+                        $resetGoodsData = true;
+                        /*$update = [
+                            'order_cancel' => 2,
+                            'order_status' => OS_CANCELED,
+                            'last_time' => time(),
+                            'end_time' => time(),
+                            'refuse_reason' => $closeReason
+                        ];
+                        $update['order_status'] = OS_CANCELED;
+                        $update['end_time'] = time();*/
+                        // 商家同意取消订单退款 退回原路
+                        Log::info('取消订单 退款：' . $orderInfo['money_paid']);
+                        $this->refund($orderInfo, '用户取消订单');
+                    }
                 }
-                OrderInfo::where('order_id', $orderInfo['order_id'])->update($update);
+//
             } elseif ($type == 'shop_audit_cancel') {
 
                 //用户提交取消申请状态 默认0 无取消申请 1等待商家审核 2商家审核通过 3商家拒绝通过
@@ -114,10 +140,15 @@ class OrderInfoLogicRepository
                 ];
                 if ($orderCancel == OC_AUDITED) {
                     $resetGoodsData = true;
-                    $update['order_status'] = OS_CANCELED;
-                    $update['end_time'] = time();
+//                    $update['order_status'] = OS_CANCELED;
+//                    $update['end_time'] = time();
+                    // 商家同意取消订单退款 退回原路
+                    Log::info('取消订单 退款：' . $orderInfo['money_paid']);
+                    $this->refund($orderInfo, '用户取消订单');
+
+                } else {
+                    OrderInfo::where('order_id', $orderInfo['order_id'])->update($update);
                 }
-                OrderInfo::where('order_id', $orderInfo['order_id'])->update($update);
             } elseif ($type == 'system_cancel') {
                 $resetGoodsData = true;
                 $update = [
@@ -176,12 +207,82 @@ class OrderInfoLogicRepository
             $sellerAccount = new SellerAccountRepository();
             $sellerAccount->addData(SellerAccount::ACCOUNT_TYPE_TRADE_ORDER, $orderInfo['order_id'], $orderInfo['user_id'], $shopInfo->user_id);
 
+            $act_id = 0;
+            $orderData = [];
+            if (!empty($orderInfo['order_data'])) {
+                $orderInfo['order_data'] = json_decode($orderInfo['order_data'], true);
+                $act_id = $orderInfo['order_data']['act_id'] ?? 0;
+            }
+            // 添加活动订单数据
+            switch ($orderInfo['order_type']) {
+                case ActTypeEnum::ACT_TYPE_FIGHT_GROUP: // 拼团
+                    $orderGoods = OrderGoods::where('order_id', $orderInfo['order_id'])->first();
+                    $activity = Activity::where('act_id', $act_id)->first();
+                    $act_ext_info = $activity->act_ext_info;
+                    $fight_num = $act_ext_info['fight_num'];
+                    $fight_time = $act_ext_info['fight_time'];
+                    $start_time = time();
+                    $fight_time_unit = $act_ext_info['fight_time_unit']; // 0-小时 1-分钟
+                    if ($fight_time_unit == 1) {
+                        $end_time = $start_time + $fight_time * 60;
+                    } else {
+                        $end_time = $start_time + $fight_time * 60 * 60;
+                    }
+                    $orderData = $orderInfo['order_data'];
+
+                    // 默认 团长开团
+                    $user_type = 0;
+                    $group_sn = make_order_sn();
+                    // 已参团数量
+                    $is_finish = false;
+                    $have_num = 0;
+                    if (!empty($orderData['group_sn'])) {
+                        $have_num = GrouponLog::where('group_sn', $orderData['group_sn'])->count();
+                    }
+
+                    if ($have_num > 0 && !empty($orderData['group_sn'])) {
+                        // 用户参与拼团
+                        $user_type = 1;
+                        $group_sn = $orderData['group_sn'];
+                    }
+                    $grouponOrder = [
+                        'shop_id' => $orderInfo['shop_id'],
+                        'goods_id' => $orderGoods->goods_id,
+                        'act_id' => $act_id,
+                        'user_id' => $orderInfo['user_id'],
+                        'user_type' => $user_type,
+                        'group_sn' => $group_sn,
+                        'order_sn' => $orderInfo['order_sn'],
+                        'add_time' => time(),
+                        'status' => 0, // 0-拼团中
+                        'start_time' => $start_time,
+                        'end_time' => $end_time,
+                    ];
+
+                    $grouponOrderRet = (new GrouponOrderRepository())->addData($grouponOrder);
+                    if ($user_type == 0) {
+                        $orderData['group_sn'] = $group_sn;
+                    }
+
+                    if ($fight_num == $have_num + 1) {
+                        // 参团数量达成 已成团 将拼团订单状态改为：1-拼团成功
+                        $is_finish = true;
+                        GrouponLog::where('group_sn', $grouponOrderRet->group_sn)->update(['status' => 1]);
+
+                    }
+
+                    break;
+            }
+
             // 更新订单状态
             $updateArray = [];
             $updateArray['pay_time'] = time();
             $updateArray['pay_status'] = PS_PAYED;
             if (!empty($post['trade_no'])) {
                 $updateArray['pay_sn'] = $post['trade_no'];
+            }
+            if (!empty($orderData)) { // 更新订单活动数据
+                $updateArray['order_data'] = json_encode($orderData);
             }
 
             OrderInfo::where('order_sn', $orderInfo['order_sn'])->update($updateArray);
@@ -204,6 +305,83 @@ class OrderInfoLogicRepository
         }
     }
 
+    /**
+     * 退款操作
+     *
+     * @param $order
+     * @param string $refund_desc
+     * @return bool
+     * @throws \Exception
+     */
+    public function refund($order, $refund_desc = '')
+    {
+        $order_sn = $order['order_sn'];
+        $refund_number = 'tk'.$order['order_sn'];
+        $total_fee = $order['order_amount'];
+        $refund_fee = $order['money_paid'];
+
+        try {
+            switch ($order['pay_code']) {
+                case '0':
+                    // 余额支付
+                    $surplus = isset($order['surplus']) && $order['surplus'] > 0 ? $order['surplus'] : 0;
+
+                    if ($surplus > 0) {
+                        DB::table('user')->where('user_id', $order['user_id'])
+                            ->increment('user_money', $surplus);
+                    }
+                    $update = [
+                        'order_cancel' => 2,
+                        'order_status' => OS_CANCELED,
+                        'last_time' => time(),
+                        'end_time' => time(),
+                        'refuse_reason' => ''
+                    ];
+                    $update['order_status'] = OS_CANCELED;
+                    $update['end_time'] = time();
+                    OrderInfo::where('order_id', $order['order_id'])->update($update);
+
+                    break;
+                case 'weixin':
+                    Log::info("微信支付======");
+                    Log::info($order['pay_code']);
+                    // 微信支付
+                    $app = WechatService::pay();
+
+                    // 参数分别为：微信订单号、商户退款单号、订单金额、退款金额、其他参数
+                    $config = [
+                        'notify_url'  => request()->getSchemeAndHttpHost().'/notify/front-weixin-refund', //
+                        'refund_desc' => $refund_desc
+                    ];
+                    Log::info("config======");
+                    Log::info(json_encode($config));
+                    $total_fee = $total_fee*100; // 单位：分
+                    $refund_fee = $refund_fee*100; // 单位：分
+                    $result = $app->refund->byOutTradeNumber($order_sn, $refund_number, $total_fee, $refund_fee, $config);
+                    Log::info("result======");
+                    Log::info(json_encode($result));
+
+                    if ($result['return_code'] != 'SUCCESS') {
+                        throw new \Exception($result['return_msg']);
+                    } else if ($result['result_code'] != 'SUCCESS') {
+                        $this->errMsg = $result['err_code_des'];
+                        throw new \Exception($result['err_code_des']);
+                    }
+                    break;
+                case 'alipay':
+                    // 支付宝支付
+
+                    break;
+                default:
+                    break;
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+
+
+        return true;
+    }
 
     /**
      * 记录订单操作记录

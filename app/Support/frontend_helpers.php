@@ -28,8 +28,13 @@
  */
 function is_login()
 {
-    if (auth('user')->id()) {
-        return auth('user')->id();
+    if (is_app()) {
+        $auth_type = 'sanctum';
+    } else {
+        $auth_type = 'user';
+    }
+    if (auth($auth_type)->id()) {
+        return auth($auth_type)->id();
     } else {
         return false;
     }

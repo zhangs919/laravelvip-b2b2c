@@ -41,7 +41,7 @@ class Migration_demo
         Eloquent::unguard();
 
         // 导入菜单权限及系统配置
-        $path = 'data/backend.sql'; // sql文件路径
+        $path = base_path('data/backend.sql'); // sql文件路径
         DB::unprepared(file_get_contents($path));
     }
 

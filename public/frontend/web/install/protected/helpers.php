@@ -15,7 +15,7 @@ function check_env()
         'disk' => array('磁盘空间', '1024M', '不限制', '未知', 'success'),
     );
     // 操作系统检测
-    if ($items['os'][3] != 'Linux') {
+    if (!in_array($items['os'][3], ['Linux', 'Darwin'])) {
         $items['os'][4] = 'error';
         $_SESSION['ins_error'] = true;
     }

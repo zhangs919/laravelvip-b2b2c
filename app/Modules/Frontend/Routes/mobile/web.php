@@ -15,7 +15,7 @@ use \App\Modules\Frontend\Http\Controllers;
 
 $prefix = '';
 $lrw_tag = get_lrw_tag();
-if ((strlen($lrw_tag) == 7 || strlen($lrw_tag) == 9) && !in_array($lrw_tag, ['article', 'website', 'respond'])) {
+if ((strlen($lrw_tag) == 7 || strlen($lrw_tag) == 9) && !in_array($lrw_tag, ['article', 'website', 'respond', 'dashboard'])) {
     $prefix = $lrw_tag;
 }
 Route::group(['domain' => config('lrw.mobile_domain'), 'prefix' => $prefix], function ($router) {
@@ -142,15 +142,20 @@ Route::group(['domain' => config('lrw.mobile_domain'), 'prefix' => $prefix], fun
     Route::group(['prefix'=>'shop'], function () {
         Route::get('qrcode.html', 'ShopController@qrCode'); // 店铺二维码
 
-        Route::get('apply.html', 'ShopController@apply');
-        Route::get('apply/index.html', 'ShopController@apply');
-        Route::get('apply/agreement-type1.html', 'ShopController@agreementType1');
-        Route::any('apply/auth-info.html', 'ShopController@authInfo');
-        Route::any('apply/shop-info.html', 'ShopController@shopInfo');
-        Route::get('apply/client-validate', 'ShopController@clientValidate'); // clientValidate
-        Route::post('apply/pay.html', 'ShopController@pay');
-        Route::get('apply/payment.html', 'ShopController@payment');
-        Route::get('apply/check-is-pay', 'ShopController@checkIsPay');
+        // 店铺入驻路由
+        Route::get('apply.html', 'ShopApplyController@apply');
+        Route::get('apply/index.html', 'ShopApplyController@apply');
+        Route::get('apply/agreement.html', 'ShopApplyController@agreement');
+        Route::get('apply/register.html', 'ShopApplyController@register');
+        Route::get('apply/progress.html', 'ShopApplyController@apply'); // 店铺入驻进度
+        Route::get('apply/result.html', 'ShopApplyController@result'); // 店铺入驻结果
+        Route::get('apply/agreement-type1.html', 'ShopApplyController@agreementType1');
+        Route::any('apply/auth-info.html', 'ShopApplyController@authInfo');
+        Route::any('apply/shop-info.html', 'ShopApplyController@shopInfo');
+        Route::get('apply/client-validate', 'ShopApplyController@clientValidate'); // clientValidate
+        Route::post('apply/pay.html', 'ShopApplyController@pay');
+        Route::get('apply/payment.html', 'ShopApplyController@payment');
+        Route::get('apply/check-is-pay', 'ShopApplyController@checkIsPay');
 
 //        Route::get('street/index.html', 'ShopController@street')->name('mobile_shop_street'); // 店铺街
 //        Route::get('street/index', 'ShopController@street')->name('mobile_shop_street'); // 店铺街
@@ -327,6 +332,7 @@ Route::group(['domain' => config('lrw.mobile_domain'), 'prefix' => $prefix], fun
     // 支付异步回调地址
     Route::any('notify/front-alipay', 'NotifyController@frontAlipay'); // 支付宝异步通知
     Route::any('notify/front-weixin', 'NotifyController@frontWeixin'); // 微信异步通知
+    Route::any('notify/front-weixin-refund', 'NotifyController@frontWeixinRefund'); // 微信退款异步通知
     Route::any('notify/front-unipay', 'NotifyController@frontUnipay'); // unipay异步通知
 
 
@@ -342,6 +348,9 @@ Route::group(['domain' => config('lrw.mobile_domain'), 'prefix' => $prefix], fun
 
     Route::get('/bonus-list-{filter_str?}.html', 'BonusController@lists')->name('pc_bonus_list');
     Route::get('/bonus-list.html', 'BonusController@lists'); // 红包集市
+
+    // 拼团-参团详情
+    Route::get('activity/groupon/join.html', 'Activity\GrouponController@join'); // 领取红包
 
     // 测试路由
     Route::get('send', 'HomeController@send');

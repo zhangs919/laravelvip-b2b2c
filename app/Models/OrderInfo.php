@@ -110,7 +110,7 @@ class OrderInfo extends BaseModel
     /**
      * 一对多关联 发货单订单表
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function deliveryOrder()
     {

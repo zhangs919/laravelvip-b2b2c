@@ -204,7 +204,7 @@
 
         <td>
             <div class="ng-binding">
-                <span>{{ $v->reg_time }}</span>
+                <span>{{ $v->created_at }}</span>
             </div>
         </td>
 

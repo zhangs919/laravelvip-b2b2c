@@ -439,7 +439,15 @@ class GoodsRepository
                     }
                 }
             } else {
-                GoodsSku::where('goods_id', $goods_id)->where('spec_ids', '=', null)->update(['sku_name' => $goodsUpdate['goods_name']]);
+                GoodsSku::where('goods_id', $goods_id)->where('spec_ids', '=', null)->update([
+                    'sku_name' => $goodsUpdate['goods_name'],
+                    'goods_price' => $goodsUpdate['goods_price'],
+                    'market_price' => $goodsUpdate['market_price'],
+                    'cost_price' => $goodsUpdate['cost_price'],
+                    'goods_number' => $goodsUpdate['goods_number'],
+                    'warn_number' => $goodsUpdate['warn_number'],
+                    'mobile_price' => $goodsUpdate['mobile_price'],
+                    ]);
             }
 
             $default_sku_id = GoodsSku::where([['goods_id',$goods_id],['checked',1]])->select(['sku_id','goods_id'])->orderBy('sku_id', 'asc')->value('sku_id');
@@ -875,6 +883,7 @@ class GoodsRepository
                     'code' => 1, // todo
                 ];
                 $item['goods_price_format'] = '￥'.$item['goods_price'];
+                $item['goods_image'] = get_image_url($item['goods_image']);
             }
         }
         return $list;
@@ -979,6 +988,7 @@ class GoodsRepository
                         'goods_price' => $item->goods_price,
                         'goods_number' => $item->goods_number,
                         'spec_names' => $spec_names_str,
+                        'goods_image' => $item->goods_image,
                     ];
                 } else {
                     $resData[""] = [
@@ -987,7 +997,8 @@ class GoodsRepository
                         'spec_vids' => "",
                         'goods_price' => $item->goods_price,
                         'goods_number' => $item->goods_number,
-                        'spec_names' => null
+                        'spec_names' => null,
+                        'goods_image' => $item->goods_image,
                     ];
                 }
             }

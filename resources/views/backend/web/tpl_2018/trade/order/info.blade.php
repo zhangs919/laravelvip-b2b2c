@@ -211,18 +211,32 @@
                     <div class="txt-info">
                         <div class="desc m-b-5">
                             <a class="goods-name" href="{{ route('pc_show_goods', ['goods_id'=>$goods['goods_id']]) }}" target="_blank" title="查看商品详情">
-
+                                @if(!empty($goods['act_labels']))
+                                    @foreach($goods['act_labels'] as $act_label)
+                                        @if(!empty($act_label['group_sn']))
+                                            <a href="{{ $act_label['url'] }}" target="_blank" title="{{ $act_label['title'] }}">
+                                                <span style="display: inline-block;">
+                                                    <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                                    <span class="c-red">【{{ $v['groupon_status_format'] }}】</span>
+                                                </span>
+                                            </a>
+                                        @else
+                                        <!-- 活动标签 -->
+                                            <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 {{ $goods['goods_name'] }}
                             </a>
                             <!-- <a class="snap">【交易快照】</a> -->
                         </div>
 
                         {{--商品活动标识--}}
-                        @if($goods['goods_type'] > 0)
-                            <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">
-                                <a>{{ format_order_goods_type($goods['goods_type']) }}</a>
-                            </div>
-                        @endif
+{{--                        @if($goods['goods_type'] > 0)--}}
+{{--                            <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">--}}
+{{--                                <a>{{ format_order_goods_type($goods['goods_type']) }}</a>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
 
 
                     </div>
@@ -285,7 +299,7 @@
                 <span>余额：￥{{ $info['surplus'] }}</span>
                 <em class="operator">=</em>
                 <span class="order-amount">
-					<strong>待付款金额：￥{{ $info['money_paid'] }}</strong>
+					<strong>付款金额：￥{{ $info['money_paid'] }}</strong>
 				</span>
             </p>
 
@@ -324,7 +338,7 @@
 			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
 		};
 	</script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
+    <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
     <script type="text/javascript">
 
         // 发货单tab切换事件

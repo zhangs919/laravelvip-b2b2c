@@ -15,7 +15,7 @@ use \App\Modules\Frontend\Http\Controllers;
 
 $prefix = '';
 $lrw_tag = get_lrw_tag();
-if ((strlen($lrw_tag) == 7 || strlen($lrw_tag) == 9) && !in_array($lrw_tag, ['article', 'website', 'respond'])) {
+if ((strlen($lrw_tag) == 7 || strlen($lrw_tag) == 9) && !in_array($lrw_tag, ['article', 'website', 'respond', 'payment', 'dashboard'])) {
     $prefix = $lrw_tag;
 }
 Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], function ($router) {
@@ -26,6 +26,7 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
     Route::get('/index.html', 'HomeController@home')->name('mobile_home'); // todo ok
     Route::get('/', 'HomeController@home')->name('mobile_home'); // todo ok
     Route::get('/preview.html', 'HomeController@preview')->name('mobile_preview'); // 装修预览
+    Route::get('/navigation', 'HomeController@navigation');
 
     // 店铺红包推广
     Route::get('bonus-success-{bonus_id}', 'HomeController@bonusSuccess')->where('bonus_id', '[0-9]+'); // 红包领取成功页面
@@ -35,7 +36,7 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
     Route::post('activity/bonus/index.html', 'Activity\BonusController@index'); // 领取红包
 
     // 商品全部分类
-    Route::get('/category.html', 'CategoryController@index')->name('mobile_category'); // todo ok
+    Route::get('/category', 'CategoryController@index')->name('mobile_category'); // todo ok
 
     // Search Route
     Route::get('/search.html', 'SearchController@index')->name('mobile_global_search'); // 全站搜索（商品/店铺）
@@ -46,8 +47,9 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
     // Site Route
     Route::group(['prefix' => 'site'], function () {
 
+        Route::get('user-center', 'SiteController@userCenter');
+        Route::get('user-list', 'SiteController@userList');
         Route::get('user', 'SiteController@user');
-        Route::get('user.html', 'SiteController@user');
 		Route::post('sms-captcha', 'SiteController@smsCaptcha'); // 发送短信验证码
         Route::get('subsite-location.html', 'SiteController@subSiteLocation'); //
 
@@ -56,7 +58,8 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
         Route::get('captcha.html', 'SiteController@captcha'); // 图片验证码
         Route::get('region-list', 'SiteController@regionList'); // 异步加载地区
-        Route::get('region-list.html', 'SiteController@regionList'); // 异步加载地区
+        Route::get('all-region-list', 'SiteController@allRegionList'); // 异步加载所有地区
+        Route::any('upload-video', 'SiteController@uploadVideo'); // 用户上传视频
         Route::post('upload-image', 'SiteController@uploadImage'); // 用户上传图片
         Route::get('tpl-data', 'SiteController@tplData'); // 异步加载模板数据
 
@@ -68,12 +71,16 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
         Route::get('get-yikf.html', 'SiteController@getYikf');
         Route::post('get-weixinconfig.html', 'SiteController@getWeiXinConfig'); // getWeiXinConfig
         Route::get('app-info', 'SiteController@appInfo'); // App全局数据
+        Route::get('user-center-data', 'SiteController@userCenterData'); // 用户中心数据
+        Route::post('image-base64', 'SiteController@imageBase64');
+
+        Route::get('agreement/{type}', 'SiteController@agreement'); // 获取用户相关协议
 
     });
 
 
     // 购物车 Route
-    Route::get('/cart.html', 'CartController@cartList')->name('mobile_cart_list'); // 购物车结算列表
+    Route::get('/cart', 'CartController@cartList')->name('mobile_cart_list'); // 购物车结算列表
     Route::group(['prefix' => 'cart'], function () {
 
         Route::get('box-goods-list.html', 'CartController@boxGoodsList'); // 顶部和右边购物车盒子
@@ -139,17 +146,21 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
     Route::get('shop/{shop_id}.html', 'ShopController@shopHome')->name('mobile_shop_home')->where('shop_id', '[0-9]+'); // 店铺首页
     Route::group(['prefix'=>'shop'], function () {
-        Route::get('qrcode.html', 'ShopController@qrCode'); // 店铺二维码
+        Route::get('qrcode', 'ShopController@qrCode'); // 店铺二维码
 
-        Route::get('apply.html', 'ShopController@apply');
-        Route::get('apply/index.html', 'ShopController@apply');
-        Route::get('apply/agreement-type1.html', 'ShopController@agreementType1');
-        Route::any('apply/auth-info.html', 'ShopController@authInfo');
-        Route::any('apply/shop-info.html', 'ShopController@shopInfo');
-        Route::get('apply/client-validate', 'ShopController@clientValidate'); // clientValidate
-        Route::post('apply/pay.html', 'ShopController@pay');
-        Route::get('apply/payment.html', 'ShopController@payment');
-        Route::get('apply/check-is-pay', 'ShopController@checkIsPay');
+        // 店铺入驻路由
+        Route::get('apply', 'ShopApplyController@apply');
+        Route::get('apply/agreement', 'ShopApplyController@agreement');
+        Route::get('apply/register', 'ShopApplyController@register');
+        Route::get('apply/progress', 'ShopApplyController@apply'); // 店铺入驻进度
+        Route::get('apply/result', 'ShopApplyController@result'); // 店铺入驻结果
+        Route::get('apply/agreement-type1', 'ShopApplyController@agreementType1');
+        Route::any('apply/auth-info', 'ShopApplyController@authInfo');
+        Route::any('apply/shop-info', 'ShopApplyController@shopInfo');
+        Route::get('apply/client-validate', 'ShopApplyController@clientValidate'); // clientValidate
+        Route::post('apply/pay', 'ShopApplyController@pay');
+        Route::get('apply/payment', 'ShopApplyController@payment');
+        Route::get('apply/check-is-pay', 'ShopApplyController@checkIsPay');
 
 //        Route::get('street/index.html', 'ShopController@street')->name('mobile_shop_street'); // 店铺街
 //        Route::get('street/index', 'ShopController@street')->name('mobile_shop_street'); // 店铺街
@@ -232,7 +243,7 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
     });
 
     // 购买下单
-    Route::get('/checkout.html', 'BuyController@checkout')->name('pc-checkout'); // 购物车/直接购买 确认交易
+    Route::get('/checkout', 'BuyController@checkout')->name('pc-checkout'); // 购物车/直接购买 确认交易
     Route::group(['prefix' => 'checkout'], function () {
         Route::get('user-address', 'BuyController@userAddress'); // 用户收货地址
         Route::get('user-address.html', 'BuyController@userAddress'); // 用户收货地址
@@ -252,18 +263,19 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
     });
 
     // 订单支付
+    Route::get('/payment', 'PaymentController@payment'); // 订单支付 支付宝/微信
     Route::get('/payment.html', 'PaymentController@payment')->name('payment'); // 订单支付 支付宝/微信
     Route::group(['prefix' => 'payment'], function () {
         Route::get('check-is-pay', 'PaymentController@checkIsPay'); // ajax检查订单是否支付
 
     });
 
-//    dd($router->routePrefix);
     // 商品
-    Route::get('goods-{goods_id}.html', 'GoodsController@showGoods')->name('mobile_show_goods')
-        ->where('goods_id', '[0-9]+'); // showGoods
-    Route::get('/list-{filter_str?}.html', 'GoodsController@lists')->name('mobile_goods_list'); // goodsList
-    Route::get('/list.html', 'GoodsController@lists'); // goodsList
+//    Route::get('goods/{goods_id}', 'GoodsController@showGoods')->name('mobile_show_goods')
+//        ->where('goods_id', '[0-9]+'); // showGoods
+    Route::get('goods/info', 'GoodsController@showGoods')->name('mobile_show_goods'); // showGoods
+    Route::get('/goods/list-{filter_str?}', 'GoodsController@lists')->name('mobile_goods_list'); // goodsList
+    Route::get('/goods/list', 'GoodsController@lists'); // goodsList
 //    Route::get('/list-{filter_str}.html', 'GoodsController@lists'); // goodsList
 //    Route::get('/list.html', 'GoodsController@lists')->name('mobile_goods_list'); // goodsList
 //    Route::get('/list-{cat_id}-{p1?}-{p2?}-{is_platform?}-{is_free_shipping?}-{is_offpay?}-{has_goods_number?}-{sort_type?}-{p9?}-{area_code?}-{p11?}-{brand_id?}-{min_price?}-{max_price?}.html', 'GoodsController@goodsList')->name('goods_list'); // 商品列表 筛选条件
@@ -325,11 +337,24 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
     // 支付异步回调地址
     Route::any('notify/front-alipay', 'NotifyController@frontAlipay'); // 支付宝异步通知
-    Route::any('notify/front-weixin', 'NotifyController@frontWeixin'); // 微信异步通知
+    Route::any('notify/front-weixin', 'NotifyController@frontWeixin'); // 微信订单异步通知
+    Route::any('notify/front-weixin-refund', 'NotifyController@frontWeixinRefund'); // 微信退款异步通知
     Route::any('notify/front-unipay', 'NotifyController@frontUnipay'); // unipay异步通知
 
 
     Route::post('multistore/help/get-exhibition', 'SiteController@getExhibition');
+
+    // 视频/帖子
+    Route::group(['prefix' => 'article'], function () {
+        Route::get('cat-list', 'ArticleController@catList');
+        Route::get('info', 'ArticleController@info');
+        Route::get('list', 'ArticleController@lists');
+    });
+
+    // 用户评论
+    Route::group(['prefix' => 'user-comment'], function () {
+        Route::get('list', 'UserCommentController@lists');
+    });
 
     // 直播
     Route::get('live/index/list.html', 'LiveController@live')->name('live.live'); // 直播列表
@@ -341,6 +366,9 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
 
     Route::get('/bonus-list-{filter_str?}.html', 'BonusController@lists')->name('pc_bonus_list');
     Route::get('/bonus-list.html', 'BonusController@lists'); // 红包集市
+
+    // 拼团-参团详情
+    Route::get('activity/groupon/join.html', 'Activity\GrouponController@join'); // 领取红包
 
     // 测试路由
     Route::get('send', 'HomeController@send');

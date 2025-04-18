@@ -26,8 +26,11 @@
                                 <dt class="goods-name">
                                     <!-- -->
                                     {{--商品活动标识--}}
-                                    @if($goods['goods_type'] > 0)
-                                        <em class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}-label">{{ format_order_goods_type($goods['goods_type']) }}</em>
+                                    @if(!empty($goods['act_labels']))
+                                        @foreach($goods['act_labels'] as $act_label)
+                                            <!-- 活动标签 -->
+                                                <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                        @endforeach
                                     @endif
                                     {{ $goods['goods_name'] }}
                                 </dt>

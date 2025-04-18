@@ -2,9 +2,11 @@
 
 namespace App\Modules\Frontend\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Collect;
 use App\Models\Compare;
 use App\Models\DefaultSearch;
+use App\Models\GoodsComment;
 use App\Models\HotSearch;
 use App\Models\TemplateItem;
 use App\Models\User;
@@ -13,7 +15,13 @@ use App\Repositories\GoodsRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\TemplateItemRepository;
 use App\Repositories\ToolsRepository;
+use App\Repositories\UploadVideoRepository;
+use App\Repositories\UserCollectRepository;
+use App\Repositories\UserFollowRepository;
 use App\Repositories\UserMessageRepository;
+use App\Repositories\UserPraiseRepository;
+use App\Repositories\VideoDirRepository;
+use App\Repositories\VideoRepository;
 use App\Services\AddressParse;
 use App\Services\AmapService;
 use App\Services\ConnectApi;
@@ -30,6 +38,9 @@ class SiteController extends Frontend
     protected $templateItem;
     protected $connectApi;
     protected $goods;
+    protected $uploadVideo; // 上传视频
+    protected $videoDir;
+    protected $video;
 
     public function __construct(
         RegionRepository $regions
@@ -37,6 +48,9 @@ class SiteController extends Frontend
         ,TemplateItemRepository $templateItem
         ,ConnectApi $connectApi
         ,GoodsRepository $goods
+        ,UploadVideoRepository $uploadVideoRepository
+        ,VideoDirRepository $videoDirRepository
+        ,VideoRepository $videoRepository
     )
     {
         parent::__construct();
@@ -46,7 +60,9 @@ class SiteController extends Frontend
         $this->templateItem = $templateItem;
         $this->connectApi = $connectApi;
         $this->goods = $goods;
-
+        $this->uploadVideo = $uploadVideoRepository;
+        $this->videoDir = $videoDirRepository;
+        $this->video = $videoRepository;
     }
 
     public function user(Request $request)
@@ -160,7 +176,7 @@ class SiteController extends Frontend
 
 
         // 判断是否登录
-        if (auth('user')->check()) {
+        if (is_login()) {
             $user = $this->user;
             $user_rank = $this->user_rank_info;
             $user_rank['rank_img'] = get_image_url($user_rank['rank_img']);
@@ -250,15 +266,18 @@ class SiteController extends Frontend
     {
         $mobile = $request->get('mobile');
         $captcha = $request->get('captcha');
-        $log_type = 2; // 登录
+        $scene_id = $request->get('scene_id', 2); // 2-登录 6-常规验证类验证码
 
+//        $cache_id = CACHE_KEY_SMS_CAPTCHA[0].':'.$this->user_id.':6';
+//        $sms_captcha = cache()->get($cache_id);
+//        dd($sms_captcha);
         // 发送频繁
 //        return result(-1, ['show_captcha'=>1], '每60秒内只能发送一次短信验证码，请稍候重试', ['errors'=>['mobile' => ['每60秒内只能发送一次短信验证码，请稍候重试']]]);
-        $ret = $this->connectApi->sendCaptcha($mobile, $log_type);
-        if (!$ret['code']) {
+        $ret = $this->connectApi->sendCaptcha($mobile, $scene_id);
+        if ($ret['code'] != 0) {
             return result(-1, ['field'=>'mobile','show_captcha'=>0], $ret['message'], ['errors'=>['mobile' => [$ret['message']]]]);
         }
-        return result(0, null, '发送成功');
+        return result(0, [], '发送成功');
     }
 
     /**
@@ -313,6 +332,39 @@ class SiteController extends Frontend
     }
 
     /**
+     * 获取所有地区
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function allRegionList(Request $request)
+    {
+        return result(0, $this->regions->getAllRegions(), '获取成功');
+    }
+
+    /**
+     * 上传视频
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function uploadVideo(Request $request)
+    {
+        // 上传视频
+        $storePath = 'temp';
+        if ($this->user_id) {
+            $storePath = 'videos/user/'.$this->user_id; // 存储路径是动态的
+        }
+        $filename = $request->post('filename', 'name');
+        $uploadRes = $this->uploadVideo->uploadVideo($request, $filename, $storePath);
+        if (isset($uploadRes['error'])) {
+            // 上传出错
+            return result(-1, '', $uploadRes['error']);
+        }
+        return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
+    }
+
+    /**
      * 用户上传图片
      *
      * @param Request $request
@@ -335,11 +387,14 @@ class SiteController extends Frontend
         } else {
             // PC端访问
             $filename = $request->post('filename', 'name');
+//            if (empty($request->file($filename))) {
+//                return result(-1, '', '请上传图片');
+//            }
             $uploadRes = $this->tools->uploadPic($request, $filename, $storePath);
         }
-        if (isset($uploadRes['error'])) {
+        if (isset($uploadRes['data']['error'])) {
             // 上传出错
-            return result(-1, '', $uploadRes['error']);
+            return result(-1, '', $uploadRes['data']['error']);
         }
         return result(0, $uploadRes['data'], '上传成功！', ['count' => $uploadRes['count']]);
     }
@@ -616,12 +671,20 @@ class SiteController extends Frontend
         $data = [
             'lrw_version' => str_replace('v','',sysconf('lrw_version')),
             'is_open' => 0,
-            "app_enable_unforced_updates" => 0,
+            "app_enable_forced_updates" => 1, // APP是否启动强制更新 0-非强制更新 1-强制更新
+
+            // APP应用设置
             'app_ios_is_open' => sysconf('app_ios_is_open'),
             'app_ios_use_version' => sysconf('app_ios_use_version'),
             'app_android_is_open' => sysconf('app_android_is_open'),
             'app_android_use_version' => sysconf('app_android_use_version'),
-            'close_reason' => sysconf('app_close_reason'),
+            'app_close_reason' => sysconf('app_close_reason'),
+
+            // APP下载设置
+            'open_download_qrcode' => sysconf('open_download_qrcode'),
+            'mall_android_app' => sysconf('mall_android_app'),
+            'mall_ios_app' => sysconf('mall_ios_app'),
+
             'login_bgimg' => sysconf('app_login_bgimg'),
             'login_logo' => sysconf('app_login_logo'),
             'mall_phone' => sysconf('mall_phone'),
@@ -632,8 +695,6 @@ class SiteController extends Frontend
             'default_shop_image' => sysconf('default_shop_image'),
             'default_user_portrait' => sysconf('default_user_portrait'),
             'default_micro_shop_image' => sysconf('default_micro_shop_image'),
-            'app_android_update_content' => sysconf('app_android_update_content'),
-            'app_ios_update_content' => sysconf('app_ios_update_content'),
             'aliim_icon_show' => sysconf('app_aliim_icon_show'),
             'aliim_icon' => sysconf('app_aliim_icon'),
             'user_id' => $this->user_id,
@@ -644,7 +705,6 @@ class SiteController extends Frontend
             'aliim_headimg' => sysconf('default_user_portrait'),
             'image_url' => get_oss_host(),
             'version' => "1.1.0",
-            'update_url' => sysconf('app_android_update_url'),
             'seller_version' => "1.0.0",
             'seller_update_url' => "",
             'use_weixin_login' => sysconf('use_weixin_login'),
@@ -678,6 +738,17 @@ class SiteController extends Frontend
             'integral_custom_name' => "积分",
 
         ];
+
+//        // APP强制更新
+        if (is_app('android')) {
+            $data['app_version'] = sysconf('app_android_version');
+            $data['app_update_url'] = sysconf('app_android_update_url');
+            $data['app_update_content'] = sysconf('app_android_update_content');
+        } elseif (is_app('ios')) {
+            $data['app_version'] = sysconf('app_ios_version');
+            $data['app_update_url'] = sysconf('app_ios_update_url');
+            $data['app_update_content'] = sysconf('app_ios_update_content');
+        }
 
         return result(0, $data);
     }
@@ -744,9 +815,9 @@ class SiteController extends Frontend
         return result(0, $data, '',['jsApiList'=>$data['jsApiList'],'errCode'=>0]);
     }
 
-   /**
+    /**
      * 根据经纬度获取地区信息
-    *
+     *
      * @param Request $request
      * @return array
      */
@@ -761,8 +832,8 @@ class SiteController extends Frontend
         $amapService = new AmapService();
         $info = $amapService->action_regeocode($location);
         $city = !empty($info['city']) ? $info['city'] : $info['province'];
-        $formattedAddress = $info['province'].$city.$info['district'].$info['streetNumber']['street'];
-        $region_name = $info['province'].' '.$city.' '.$info['district'];
+        $formattedAddress = $info['province'] . $city . $info['district'] . $info['streetNumber']['street'];
+        $region_name = $info['province'] . ' ' . $city . ' ' . $info['district'];
         $region_code = (new RegionRepository())->getRegionCodesByNames($region_name);
         $data = [
             'citycode' => $info['citycode'],
@@ -777,6 +848,185 @@ class SiteController extends Frontend
             'region_name' => $region_name,
             'is_last' => true,
         ];
+
+        return result(0, $data);
+    }
+
+    public function userCenter(Request $request)
+    {
+        $seo_title = '用户主页';
+        $user_id = $request->input('user_id', 0);
+        $user_info = $this->userRep->getById($user_id, ['user_id', 'nickname', 'headimg', 'summary']);
+
+        if (empty($user_info)) {
+            return result(-1, [], INVALID_PARAM);
+        }
+
+        $user_info->headimg = get_image_url($user_info->headimg, 'headimg');
+
+        $praise_count = (new UserPraiseRepository())->getUserPraiseCount($user_id, 0, 1);
+        $collect_count = (new UserCollectRepository())->getUserCollectCount($user_id, 0, 1);
+        $follow_count = (new UserFollowRepository())->getUserFollowCount($user_id, 1);
+        $fans_count = (new UserFollowRepository())->getUserFansCount($user_id, 1);
+        $live_status = Article::where([['user_id', $user_id], ['status', 1], ['article_type', 3]])
+            ->orderBy('article_id', 'desc')
+            ->value('live_status'); // 直播状态 0-未开始 1-直播总 2-已结束
+        $is_followed = (new UserFollowRepository())->checkIsFollowed($this->user_id, $user_id);
+
+        $compact = compact('seo_title',
+            'user_info');
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_prefix_data' => [
+                'user_info' => $user_info,
+                'praise_count' => $praise_count,
+                'collect_count' => $collect_count,
+                'follow_count' => $follow_count,
+                'fans_count' => $fans_count,
+                'live_status' => $live_status ?? 0,
+                'is_followed' => $is_followed,
+
+            ],
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'site.user_center'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+    /**
+     * 获取会员中心数据
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function userCenterData()
+    {
+        $menus = [
+            [
+                'name' => '地址管理',
+                'pic' => '',
+                'url' => '/pages/users/user_address_list/index',
+                'group_data_id' => 0,
+                'group_mer_id' => 0,
+            ]
+        ];
+        $data = [
+            'banner' => [],
+            'global_theme' => [
+                'type' => 'purple',
+                'theme_color' => '#905EFF',
+                'assist_color' => '#FDA900',
+                'theme' => '--view-theme: #905EFF;--view-assist:#FDA900;--view-priceColor:#FDA900;--view-bgColor:rgba(253, 169, 0,.1);--view-minorColor:rgba(144, 94, 255,.1);--view-bntColor11:#FFC552;--view-bntColor12:#FDB000;--view-bntColor21:#905EFF;--view-bntColor22:#A764FF;',
+            ],
+            'menu' => $menus
+        ];
+        return result(0, $data);
+    }
+
+    /**
+     * 图片地址转base64
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function imageBase64(Request $request)
+    {
+        $code = $request->input('code', '');
+        $image = $request->input('image', '');
+
+        $imageBase64 = base64_encode_image($image);
+
+        $data = [
+            'code' => false,
+            'image' => $imageBase64
+        ];
+
+        return result(0, $data);
+    }
+
+    public function userList(Request $request)
+    {
+        $params = $request->all();
+
+        // 获取数据
+        $where = [];
+        // 搜索条件 会员昵称
+        $search_arr = ['keyword'];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+                if ($v == 'keyword') {
+                    $where[] = ['nickname', 'like', "%{$params[$v]}%"];
+                } else {
+                    $where[] = [$v, $params[$v]];
+                }
+            }
+        }
+
+        $where[] = ['status', 1];
+        // 列表
+        $condition = [
+            'where' => $where,
+            'sortname' => 'user_id',
+            'sortorder' => 'desc',
+            'field' => ['user_id', 'nickname', 'headimg']
+        ];
+
+        list($list, $total) = $this->userRep->getList($condition);
+        if ($list->isNotEmpty()) {
+            foreach ($list as $item) {
+                $item->headimg = get_image_url($item->headimg, 'headimg');
+                $item->is_followed = (new UserFollowRepository())->checkIsFollowed($this->user_id, $item->user_id);
+            }
+        }
+        $pageHtml = frontend_pagination($total);
+        $page_array = frontend_pagination($total, true);
+
+        $compact = compact('seo_title', 'pageHtml', 'list', 'page_json');
+
+        if ($request->ajax() && !is_app()) { // web端访问 ajax请求
+            $render = view('site.partials._user_list', $compact)->render();
+            return result(0, $render);
+        }
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_prefix_data' => [
+                'page' => $page_array,
+                'list' => $list,
+            ],
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'site.user_list'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+    /**
+     * 用户相关协议
+     */
+    public function agreement($type)
+    {
+        if ($type == 'user_protocol') {
+            $data = [
+                'title' => '用户协议',
+                'content' => sysconf('user_protocol')
+            ];
+        } else if ($type == 'private_protocol') {
+            $data = [
+                'title' => '隐私协议',
+                'content' => sysconf('user_protocol')
+            ];
+        } else if ($type == 'integral_rules') {
+            $data = [
+                'title' => '积分规则',
+                'content' => sysconf('user_protocol')
+            ];
+        }
 
         return result(0, $data);
     }

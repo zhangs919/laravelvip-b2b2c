@@ -38,7 +38,16 @@
         <td class="handle">
             <a href="edit?id={{ $v['act_id'] }}">编辑</a>
             <span>|</span>
+            <span>|</span>
+            <a href="shop-activity-goods-list?act_id={{ $v['act_id'] }}" data-id="{{ $v['act_id'] }}" class="goods-list border-none">活动商品</a>
+            @if($v['is_finish'] == 1)
+            <span>|</span>
+            <a href="javascript:void(0);" data-id="{{ $v['act_id'] }}" data-name="{{ $v['act_name'] }}" class="del end-activity">结束活动</a>
+            @endif
+            @if($v['is_finish'] == 2)
+            <span>|</span>
             <a href="javascript:void(0);" data-id="{{ $v['act_id'] }}" class="del border-none">删除</a>
+            @endif
         </td>
     </tr>
     @endforeach

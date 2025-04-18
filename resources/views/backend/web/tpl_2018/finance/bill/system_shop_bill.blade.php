@@ -19,28 +19,28 @@
         <dl>
             <dt>累积销售总额</dt>
             <dd>
-                <span class="money">0.00</span>
+                <span class="money">{{ $calc_result['total_order_amount'] }}</span>
                 <span class="unit">元</span>
             </dd>
         </dl>
         <dl>
             <dt>待结算金额</dt>
             <dd>
-                <span class="money">0.00</span>
+                <span class="money">{{ $calc_result['total_wait_amount'] }}</span>
                 <span class="unit">元</span>
             </dd>
         </dl>
         <dl>
             <dt>已结算金额</dt>
             <dd>
-                <span class="money">0.00</span>
+                <span class="money">{{ $calc_result['total_finished_amount'] }}</span>
                 <span class="unit">元</span>
             </dd>
         </dl>
         <dl>
             <dt>店铺商家</dt>
             <dd>
-                <span class="money">2</span>
+                <span class="money">{{ $calc_result['shop_count'] }}</span>
                 <span class="unit">家</span>
             </dd>
         </dl>
@@ -281,9 +281,10 @@
 
     //弹出模态框
     $("body").on("click", ".statement", function() {
-        var shop_id = $(this).data("shop_id");
-        var group_time = $(this).data("group_time");
-        var type = $(this).data("type");
+        var id = $(this).data("id");
+        // var shop_id = $(this).data("shop_id");
+        // var group_time = $(this).data("group_time");
+        // var type = $(this).data("type");
         if ($.modal($(this))) {
             $.modal($(this)).show();
         } else {
@@ -296,9 +297,9 @@
                 ajax: {
                     url: '/finance/bill/deposite',
                     data: {
-                        shop_id: shop_id,
-                        group_time: group_time,
-                        type: type
+                        // shop_id: shop_id,
+                        // group_time: group_time,
+                        // type: type
                     }
                 },
             });

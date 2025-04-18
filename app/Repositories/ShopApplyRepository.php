@@ -21,6 +21,24 @@ class ShopApplyRepository
         $this->shop = new ShopRepository();
     }
 
+    public function apply($shopInsert,$shopFieldValueInsert,$shopApplyModel)
+    {
+        DB::beginTransaction();
+        try {
+            $ret = $this->shop->addShop($shopInsert, $shopFieldValueInsert);
+
+            $shopApplyModel['shop_id'] = $ret->shop_id;
+
+            $this->addData($shopApplyModel);
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
 
     public function addData($shopApplyModel)
     {
@@ -62,9 +80,8 @@ class ShopApplyRepository
      * 撤销开店申请
      * @return bool
      */
-    public function cancelShopApply()
+    public function cancelShopApply($user_id)
     {
-        $user_id = auth('user')->id();
         DB::beginTransaction();
         try {
             if (!$user_id) {

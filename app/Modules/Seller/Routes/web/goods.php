@@ -90,6 +90,7 @@ Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
 
 
             Route::get('download.html', 'Goods\ListController@download'); // 下载文件
+            Route::get('export.html', 'Goods\ListController@export'); // 导出
 
             Route::get('get-freight-list', 'Goods\ListController@getFreightList');
 

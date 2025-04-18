@@ -90,7 +90,12 @@
                         </div>
                         <dl class="goods-info">
                             <dt class="goods-name">
-                                <!-- -->
+                                @if(!empty($goods['act_labels']))
+                                    @foreach($goods['act_labels'] as $act_label)
+                                        <!-- 活动标签 -->
+                                        <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                    @endforeach
+                                @endif
                                 {{ $goods['goods_name'] }}
                             </dt>
                             <dd class="goods-attr">

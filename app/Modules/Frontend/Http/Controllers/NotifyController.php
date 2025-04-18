@@ -2,6 +2,7 @@
 
 namespace App\Modules\Frontend\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Base\Http\Controllers\Frontend;
 use App\Repositories\CheckoutRepository;
 use App\Repositories\OrderInfoRepository;
@@ -14,7 +15,7 @@ use App\Repositories\PaymentLogicRepository;
  * Class RespondController
  * @package App\Modules\Frontend\Http\Controllers
  */
-class NotifyController extends Frontend
+class NotifyController extends Controller
 {
 
     protected $orderInfo;
@@ -31,7 +32,6 @@ class NotifyController extends Frontend
         , PaymentLogicRepository $paymentLogic
         , CheckoutRepository $checkout)
     {
-        parent::__construct();
 
 
         $this->orderInfo = $orderInfo;
@@ -58,6 +58,16 @@ class NotifyController extends Frontend
 
 		$this->paymentLogic->notify($this->payCode);
 	}
+
+    /**
+     * 微信退款异步通知
+     */
+    public function frontWeixinRefund()
+    {
+        $this->payCode = 'weixin';
+
+        $this->paymentLogic->notifyRefund($this->payCode);
+    }
 
 	/**
 	 * unipay异步通知

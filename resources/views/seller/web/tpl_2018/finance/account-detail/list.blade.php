@@ -313,7 +313,7 @@
                 $("#process_type").val($(this).attr("value"));
             });
             $("#deposit").click(function() {
-                $.go("http://{{ config('lrw.frontend_domain') }}/user/deposit/add.html", '_blank', false);
+                $.go("//{{ config('lrw.frontend_domain') }}/user/deposit/add.html", '_blank', false);
             });
         });
     </script>

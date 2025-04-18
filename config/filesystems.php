@@ -91,6 +91,7 @@ return [
 		public_path('frontend/web/installs') => resource_path('static/installs'),
 
 		// 用户端-PC端
+        public_path('frontend/web/upload') => storage_path('upload'), // 上传文件目录
 		public_path('frontend/web/css') => resource_path('static/frontend/web/css'),
 		public_path('frontend/web/js') => resource_path('static/frontend/web/js'),
 		public_path('frontend/web/images') => resource_path('static/frontend/web/images'),
@@ -100,12 +101,14 @@ return [
 		public_path('frontend/web/vendor/horizon') => resource_path('../vendor/laravel/horizon/public'),
 
 		// 用户端-手机端
+        public_path('frontend/web_mobile/upload') => storage_path('upload'), // 上传文件目录
 		public_path('frontend/web_mobile/css') => resource_path('static/frontend/web_mobile/css'),
 		public_path('frontend/web_mobile/js') => resource_path('static/frontend/web_mobile/js'),
 		public_path('frontend/web_mobile/images') => resource_path('static/frontend/web_mobile/images'),
 		public_path('frontend/web_mobile/assets/d2eace91') => resource_path('static/assets'),
 
 		// 平台端-PC端
+        public_path('backend/web/upload') => storage_path('upload'), // 上传文件目录
 		public_path('backend/web/css') => resource_path('static/backend/web/css'),
 		public_path('backend/web/js') => resource_path('static/backend/web/js'),
 		public_path('backend/web/images') => resource_path('static/backend/web/images'),
@@ -114,6 +117,7 @@ return [
 		public_path('backend/web/68yun') => resource_path('static/68yun'),
 
 		// 商家端-PC端
+        public_path('seller/web/upload') => storage_path('upload'), // 上传文件目录
 		public_path('seller/web/css') => resource_path('static/seller/web/css'),
 		public_path('seller/web/js') => resource_path('static/seller/web/js'),
 		public_path('seller/web/files') => resource_path('static/seller/web/files'),
@@ -123,6 +127,7 @@ return [
 		public_path('seller/web/68yun') => resource_path('static/68yun'),
 
 		// 网点端-PC端
+        public_path('store/web/upload') => storage_path('upload'), // 上传文件目录
 		public_path('store/web/css') => resource_path('static/store/web/css'),
 		public_path('store/web/images') => resource_path('static/store/web/images'),
 		public_path('store/web/assets/d2eace91') => resource_path('static/assets'),

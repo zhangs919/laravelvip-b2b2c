@@ -51,6 +51,11 @@ class CartController extends Frontend
         list($guess_goods_list, $guess_goods_list_total) = $this->goods->getGuessLikeGoods(1, 12);
         $guess_goods_list = array_chunk($guess_goods_list->toArray(), 4);
 
+        if ($this->user_id) {
+            // 先清空购买信息
+            (new CheckoutRepository())->clearCheckoutData($this->user_id);
+        }
+
         $this->show_seo('seo_index'); // SEO
 
         $cart = $this->cart->getShopCartData();
@@ -442,7 +447,7 @@ class CartController extends Frontend
             return result(99, null, '需要登录');
         }
         // 先清空购买信息
-        $this->checkout->clearCheckoutData();
+        $this->checkout->clearCheckoutData($this->user_id);
 
         // 购买类型 0-加入购物车购买 1-立即购买 2-去结算 3-兑换 4-自由购 5-到店购 6-礼品提货
         // 将用户购买类型等信息存入session 方便checkout页面判断
@@ -499,7 +504,7 @@ class CartController extends Frontend
 //        return result(0,null,'请跳转到结算页！');
 
         // 先清空购买信息
-        $this->checkout->clearCheckoutData();
+        $this->checkout->clearCheckoutData($this->user_id);
 
 
         // 设置购买信息

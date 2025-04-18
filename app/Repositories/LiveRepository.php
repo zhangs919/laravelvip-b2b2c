@@ -104,7 +104,7 @@ class LiveRepository
             return $ret;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
+//            echo $e->getMessage();
             return false;
         }
     }

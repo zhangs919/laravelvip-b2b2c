@@ -10,6 +10,7 @@ use App\Repositories\OrderGoodsRepository;
 use App\Repositories\OrderInfoRepository;
 use App\Repositories\UserRankLogRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends UserCenter
 {
@@ -56,6 +57,9 @@ class OrderController extends UserCenter
             if (isset($params[$v]) && !empty($params[$v])) {
                 if ($v == 'name') { // todo
 //                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                    $order_ids = DB::table('order_goods')->select(['order_id'])->where('goods_name', 'like', "%{$params[$v]}%")
+                        ->pluck('order_id')->toArray();
+                    $whereIn[] = ['order_id', $order_ids];
                 } elseif ($v == 'add_time_begin' || $v == 'add_time_end') {
 
                 } elseif ($v == 'order_status') {
@@ -75,6 +79,10 @@ class OrderController extends UserCenter
 						$where[] = ['shipping_status', SS_RECEIVED];
 						$where[] = ['pay_status', PS_PAYED];
                         $where[] = ['evaluate_status', ES_UNEVALUATED];
+                    }  elseif ($params[$v] == 'finished') {
+                        $whereIn[] = ['order_status', [OS_CONFIRMED, OS_SPLITED, OS_RETURNED_PART, OS_ONLY_REFOUND]];
+                        $where[] = ['shipping_status', SS_RECEIVED];
+                        $where[] = ['pay_status', PS_PAYED];
                     } elseif ($params[$v] == 'backing') {
 						$whereIn[] = ['order_status', [OS_ONLY_REFOUND]];
 						$where[] = ['pay_status', PS_PAYED];
@@ -216,9 +224,7 @@ class OrderController extends UserCenter
 
         // 获取数据
         $operate_text = '';
-        $buttons = [
-            'view_logistics',
-        ];
+
         $customer_service_term = sysconf('customer_service_term') * 24*60*60;
         $types = [
             "无需物流",
@@ -236,7 +242,7 @@ class OrderController extends UserCenter
         if (empty($order_info)) {
             abort(404, '订单id无效');
         }
-
+        $buttons = $order_info['buttons'];
         $order_schedules = $this->orderInfo->getOrderSchedules($order_info,1);
 
         $compact = compact('seo_title','operate_text','buttons','customer_service_term',
@@ -314,13 +320,19 @@ class OrderController extends UserCenter
     public function cancel(Request $request)
     {
         $order_id = $request->post('id'); // 批量操作时，以英文逗号分隔订单id
-        $reason = $request->post('reason');  // 取消原因 如：未及时付款
+        $reason = $request->post('reason', '');  // 取消原因 如：未及时付款
 
         $condition = [
             ['order_id', $order_id],
             ['user_id', $this->user_id]
         ];
-        $info = $this->orderInfo->getOrderInfo($condition);
+        $info = $this->orderInfo->getFrontendOrderInfo($condition);
+        if (empty($info)) {
+            return result(-1, null, '订单ID无效！');
+        }
+        if (!in_array('buyer_cancel', $info['buttons'])) {
+            return result(-1, null, '订单状态无效！');
+        }
         $ret = OrderCancel::dispatch($info,'buyer_cancel', $reason);
         if ($ret === false) {
             return result(-1, null, '取消订单失败！');
@@ -340,6 +352,17 @@ class OrderController extends UserCenter
     {
         $order_id = $request->post('id'); //
 
+        $condition = [
+            ['order_id', $order_id],
+            ['user_id', $this->user_id]
+        ];
+        $info = $this->orderInfo->getFrontendOrderInfo($condition);
+        if (empty($info)) {
+            return result(-1, null, '订单ID无效！');
+        }
+        if (!in_array('buyer_confirm_receipt', $info['buttons'])) {
+            return result(-1, null, '订单状态无效！');
+        }
         $update = [
             'shipping_status' => SS_RECEIVED,
             'end_time' => time(),
@@ -440,7 +463,7 @@ class OrderController extends UserCenter
     public function delete(Request $request)
     {
         $order_id = is_array($request->post('order_id')) ? array_filter($request->post('order_id')) : $request->post('order_id'); // 批量删除 为数组
-        $type = $request->post('type'); // 0-还原订单 1-放入回收站 2-彻底删除 3-批量删除订单(确认弹出框)
+        $type = $request->post('type', 1); // 0-还原订单 1-放入回收站 2-彻底删除 3-批量删除订单(确认弹出框)
 
         if ($type == 3) {
             return result(0, null, '您确定要删除被选中的'.count($order_id).'个订单吗？');
@@ -470,6 +493,32 @@ class OrderController extends UserCenter
             // 成功
             return result(0, null, '成功'.$msg.'了'.count($order_id).'个订单', ['ids'=>$order_id]);
         } else {
+            $condition = [
+                ['order_id', $order_id],
+                ['user_id', $this->user_id]
+            ];
+            $info = $this->orderInfo->getFrontendOrderInfo($condition);
+            if (empty($info)) {
+                return result(-1, null, '订单ID无效！');
+            }
+
+            if ($type == 2) {
+                // 彻底删除
+                if (!in_array('buyer_drop', $info['buttons'])) {
+                    return result(-1, null, '订单状态无效！');
+                }
+            } elseif ($type == 1) {
+                // 放入回收站
+                if (!in_array('buyer_delete', $info['buttons'])) {
+                    return result(-1, null, '订单状态无效！');
+                }
+            } else {
+                // 还原订单
+                if (!in_array('buyer_restore', $info['buttons'])) {
+                    return result(-1, null, '订单状态无效！');
+                }
+            }
+
             $ret = OrderInfo::where('order_id', $order_id)->update(['is_delete' => $is_delete]);
             if ($ret === false) {
                 return result(-1,null, $msg.'失败');

@@ -22,11 +22,9 @@
 
 namespace App\Modules\Seller\Http\Controllers\Finance;
 
-use App\Models\Commission;
-use App\Models\SellerCommissionBill;
 use App\Modules\Base\Http\Controllers\Seller;
+use App\Repositories\SellerBillOrderRepository;
 use App\Repositories\SellerCommissionBillRepository;
-use App\Repositories\ShopBillRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -49,18 +47,18 @@ class BillController extends Seller
         ['url' => 'finance/bill/store-bill?type=3', 'text' => '3日结'],
     ];
 
-    protected $shopBill;
     protected $sellerCommissionBill;
+    protected $sellerBillOrder;
 
     public function __construct(
-        ShopBillRepository $shopBill,
-        SellerCommissionBillRepository $sellerCommissionBill
+        SellerCommissionBillRepository $sellerCommissionBill,
+        SellerBillOrderRepository $sellerBillOrder
     )
     {
         parent::__construct();
 
-        $this->shopBill = $shopBill;
         $this->sellerCommissionBill = $sellerCommissionBill;
+        $this->sellerBillOrder = $sellerBillOrder;
 
     }
 
@@ -80,22 +78,31 @@ class BillController extends Seller
         $type = $request->get('type', 0); // 结算周期 默认0-月结
 
         $action_span = [
-            [
-                'url' => '',
-                'id' => 'btn_export',
-                'icon' => 'fa-cloud-download',
-                'text' => '导出'
-            ],
+//            [
+//                'url' => '',
+//                'id' => 'btn_export',
+//                'icon' => 'fa-cloud-download',
+//                'text' => '导出'
+//            ],
         ];
         $explain_panel = [
+            // 简化说明
             '每个商家都有自己的结算周期，每个结算周期都会生成一个结算账单，周期内所有订单出账后，金额会自动打款到店铺的会员账户余额中，店铺可二次消费或者提现',
-            '付款金额=订单中所有商品总金额-店铺红包-店铺优惠-平台红包-积分抵扣金额-退款成功的商品的退款金额； 平台佣金=（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例-（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例*站点与平台间的佣金比例，站点佣金=（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例*站点与平台间的佣金比例',
-            '账单计算公式：应付店铺金额=订单中未退款的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠+运费+额外配送费+包装费-（店铺购物卡总支付金额-店铺购物卡退回金额）-平台佣金-站点佣金+（退款成功的商品的应退款金额-退款成功的商品的实际退款金额）-未退款商品均分的订单返现金额；如发现金额计算不准，是因为存在货到付款情况，请以本期应结金额为准',
-            '货到付款支付方式，应付店铺金额=余额支付金额+平台承担活动款+积分抵扣金额-平台佣金-站点佣金 货到付款是特殊的付款方式，系统默认此款项已由店铺收取，因此店铺需要支付佣金给平台，所以本期应结金额为负数，结算时请注意',
-            '账单处理流程：系统自动出账 > 商家手动结算打款到网点/门店的结算账户中，共2个环节',
+            '付款金额=未退款的商品总金额； ',
+            '平台佣金=未退款成功的商品总金额*平台与店铺的佣金比例',
+            '账单计算公式：应付店铺金额=订单中未退款的商品总金额-平台佣金；',
+            '账单处理流程：系统自动出账 > 平台手动结算打款到商家的结算账户中，共2个环节',
             '账单出账时间：当周期内的所有订单都已经确认收货，并不再发生退款退货时，即可出账，例如：订单在1号确认收货，商城设置“申请售后期限”为7天，那么此笔订单会在8号出账',
-            '平台承担活动款：是指由平台方发起的活动所产生的金额，此金额是由平台承担，例如：平台方红包',
-            '支付汇总：统计结算周期内所有订单的各种支付方式的支付金额',
+            '支付汇总：统计结算周期内所有订单的各种支付方式的支付金额'
+            // 详细说明
+//            '每个商家都有自己的结算周期，每个结算周期都会生成一个结算账单，周期内所有订单出账后，金额会自动打款到店铺的会员账户余额中，店铺可二次消费或者提现',
+//            '付款金额=订单中所有商品总金额-店铺红包-店铺优惠-平台红包-积分抵扣金额-退款成功的商品的退款金额； 平台佣金=（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例-（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例*站点与平台间的佣金比例，站点佣金=（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例*站点与平台间的佣金比例',
+//            '账单计算公式：应付店铺金额=订单中未退款的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠+运费+额外配送费+包装费-（店铺购物卡总支付金额-店铺购物卡退回金额）-平台佣金-站点佣金+（退款成功的商品的应退款金额-退款成功的商品的实际退款金额）-未退款商品均分的订单返现金额；如发现金额计算不准，是因为存在货到付款情况，请以本期应结金额为准',
+//            '货到付款支付方式，应付店铺金额=余额支付金额+平台承担活动款+积分抵扣金额-平台佣金-站点佣金 货到付款是特殊的付款方式，系统默认此款项已由店铺收取，因此店铺需要支付佣金给平台，所以本期应结金额为负数，结算时请注意',
+//            '账单处理流程：系统自动出账 > 商家手动结算打款到网点/门店的结算账户中，共2个环节',
+//            '账单出账时间：当周期内的所有订单都已经确认收货，并不再发生退款退货时，即可出账，例如：订单在1号确认收货，商城设置“申请售后期限”为7天，那么此笔订单会在8号出账',
+//            '平台承担活动款：是指由平台方发起的活动所产生的金额，此金额是由平台承担，例如：平台方红包',
+//            '支付汇总：统计结算周期内所有订单的各种支付方式的支付金额',
         ];
         $blocks = [
             'fixed_title' => $fixed_title,
@@ -108,17 +115,12 @@ class BillController extends Seller
 
         $where = [];
         // 搜索条件 name 商品名称/订单编号/买家账号
-        $search_arr = ['chargeoff_status','shop_money_lt_zero'];
+        $search_arr = ['chargeoff_status'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
-                if ($v == 'shop_money_lt_zero') { // 店铺欠款
-                    if ($params[$v] == 1) {
-                        $where[] = ['order_amount', '<', 0];
-                    } else {
-                        $where[] = ['order_amount', '>', 0];
-                    }
-                }
-                else {
+                if ($v == 'xxx') {
+                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                } else {
                     $where[] = [$v, $params[$v]];
                 }
             }
@@ -131,9 +133,8 @@ class BillController extends Seller
             'where' => $where,
             'sortname' => 'id',
             'sortorder' => 'asc',
-            'relation' => 'orderCount'
+            'relation' => 'order'
         ];
-
         // 获取数据
         list($list, $total) = $this->sellerCommissionBill->getList($condition);
         $list = $list->toArray();
@@ -183,12 +184,12 @@ class BillController extends Seller
 
 
         $action_span = [
-            [
-                'url' => '',
-                'id' => 'btn_export',
-                'icon' => 'fa-cloud-download',
-                'text' => '导出'
-            ],
+//            [
+//                'url' => '',
+//                'id' => 'btn_export',
+//                'icon' => 'fa-cloud-download',
+//                'text' => '导出'
+//            ],
             [
                 'url' => 'javascript:history.go(-1);',
                 'id' => '',
@@ -196,16 +197,7 @@ class BillController extends Seller
                 'text' => '返回店铺账单列表'
             ],
         ];
-        $explain_panel = [
-//            '付款金额=订单中所有商品总金额-店铺红包-店铺优惠-平台红包-积分抵扣金额-退款成功的商品的退款金额； 平台佣金=（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例-（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例*站点与平台的佣金比例，站点佣金=（未退款成功的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠）*平台与店铺的佣金比例*站点与平台间的佣金比例',
-//            '账单计算公式：应付店铺金额=订单中未退款的商品总金额-未退款商品均分的店铺红包-未退款商品均分的店铺优惠+运费+额外配送费+包装费-（店铺购物卡总支付金额-店铺购物卡退回金额）-平台佣金-站点佣金+（退款成功的商品的应退款金额-退款成功的商品的实际退款金额）-未退款商品均分的订单返现金额；如发现金额计算不准，是因为存在货到付款情况，请以本期应结金额为准',
-//            '货到付款支付方式，应付店铺金额=余额支付金额-商品消费店铺储值卡支付金额+平台承担活动款+积分抵扣金额-平台佣金-站点佣金 货到付款是特殊的付款方式，系统默认此款项已由店铺收取，因此店铺需要支付佣金给平台，所以本期应结金额为负数，结算时请注意',
-//            '账单处理流程：系统自动出账 > 商家手动结算打款到网点/门店的结算账户中，共2个环节',
-//            '账单出账时间：当周期内的所有订单都已经确认收货，并不再发生退款退货时，即可出账，例如：订单在1号确认收货，商城设置“申请售后期限”为7天，那么此笔订单会在8号出账',
-//            '店铺欠款：指结算周期的账单，出账统计的结算金额是负数，那么此账单内的所有订单都有"欠"标记，表示店铺应线下给平台支付的费用',
-//            '支付汇总：统计结算周期内所有订单的各种支付方式的支付金额',
-//            '如果结算周期已经超过了，并且账单状态已经是已出账，已转入余额后，但是这个周期内的某个订单在结算周期过了之后才点击的确认收货并且尚未超过售后期限的时候，有待结算标记，在超过售后期限后，系统将自动补寄一张本周期内的账单',
-        ];
+        $explain_panel = [];
         $blocks = [
             'fixed_title' => $fixed_title,
             'action_span' => $action_span,
@@ -214,34 +206,43 @@ class BillController extends Seller
         $this->setLayoutBlock($blocks); // 设置block
 
 
-        $shop_id = seller_shop_info()->shop_id;
-        $store_id = 0; // todo
-        $group_time = $request->get('group_time');
-        $type = $request->get('type', 0);
-        $order_sn = $request->get('order_sn');
-        $store_type = 0;//todo
+        $params = $request->all();
+        $id = $params['id'];
 
-//        $is_cod = $request->get('is_cod');
+        $where = [];
+        // 搜索条件 name 商品名称/订单编号/买家账号
+        $search_arr = ['order_sn', 'chargeoff_status'];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+                if ($v == 'order_sn') {
+                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                } else {
+                    $where[] = [$v, $params[$v]];
+                }
+            }
+        }
 
-        // 查询参数
-        $params['shop_id'] = seller_shop_info()->shop_id;
-        $params['store_id'] = $store_id;
-        $params['group_time'] = $group_time;
-        $params['type'] = $type;
-        $params['order_sn'] = $order_sn;
+        $where[] = ['shop_id', seller_shop_info()->shop_id];
+        $where[] = ['bill_id', $id];
+
+        // 列表
+        $condition = [
+            'where' => $where,
+            'sortname' => 'id',
+            'sortorder' => 'asc',
+        ];
 
         // 获取数据
-        list($list, $total) = $this->shopBill->getOrders($params);
+        list($list, $total) = $this->sellerBillOrder->getList($condition);
+        $total_data = $this->sellerBillOrder->getSumData($where);
         $pageHtml = pagination($total);
         $page = frontend_pagination($total, true);
 
-        $order_message = $this->shopBill->getOrderCount($params);
-        $shop_info = seller_shop_info()->toArray();
-        $store_info = null; // 网点信息
-        $site = null; // 站点信息
-
-        $compact = compact('title', 'list', 'pageHtml','shop_id','store_id','group_time','type','order_sn','store_type',
-            'order_message','shop_info','store_info','site');
+        $bill_info = $this->sellerCommissionBill->getById($id);
+        $bill_info['start_time'] = format_time($bill_info['start_time'], 'Y-m-d');
+        $bill_info['end_time'] = format_time($bill_info['end_time'], 'Y-m-d');
+        $shop_info = seller_shop_info();
+        $compact = compact('title', 'list', 'pageHtml', 'bill_info','shop_info','total_data');
 
         if ($request->ajax()) {
             $render = view('finance.bill.partials._shop_orders_info', $compact)->render();
@@ -254,16 +255,10 @@ class BillController extends Seller
             'app_prefix_data' => [
                 'list' => $list,
                 'page' => $page,
-                'shop_id' => $shop_id,
-                'store_id' => $store_id,
-                'group_time' => $group_time,
-                'type' => $type,
-                'order_sn' => $order_sn,
-                'store_type' => $store_type,
-                'order_message' => $order_message,
+//                'order_message' => $order_message,
+                'bill_info' => $bill_info,
                 'shop_info' => $shop_info,
-                'store_info' => $store_info,
-                'site' => $site,
+                'total_data' => $total_data,
             ],
             'app_context_data' => $this->getAppContext(),
             'app_suffix_data' => [],

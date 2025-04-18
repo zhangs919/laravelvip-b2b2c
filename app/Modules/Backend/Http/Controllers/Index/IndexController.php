@@ -114,7 +114,7 @@ class IndexController extends Backend
     public function getData()
     {
         $today_gains = OrderInfo::whereDate('created_at', today())
-            ->selectRaw('SUM(money_paid + surplus) as total_fee')->value('total_fee');
+            ->selectRaw('IFNULL(SUM(money_paid + surplus), 0.00) as total_fee')->value('total_fee');
         $today_orders = OrderInfo::whereDate('created_at', today())
             ->distinct('order_id')->count();
         $today_shops = Shop::whereDate('created_at', today())->count();

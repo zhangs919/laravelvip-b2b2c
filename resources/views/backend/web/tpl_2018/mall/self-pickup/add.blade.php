@@ -8,8 +8,8 @@
 			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
 		};
 	</script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
-    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_js_key') }}"></script>
+    <script type="text/javascript" src="//cache.amap.com/lbs/static/addToolbar.js"></script>
     <style type="text/css">
         #panel {
             position: absolute;
@@ -101,7 +101,7 @@
                     </label>
                     <div class="col-sm-5">
                         <div class="form-control-box">
-                            <div id="container" style="margin-bottom: 5px; width: 700px; height: 400px; border: 1px solid rgb(215, 215, 215); overflow: hidden; position: relative; background: rgb(252, 249, 242); cursor: url(&quot;http://webapi.amap.com/theme/v1.3/openhand.cur&quot;), default;" class="amap-container">
+                            <div id="container" style="margin-bottom: 5px; width: 700px; height: 400px; border: 1px solid rgb(215, 215, 215); overflow: hidden; position: relative; background: rgb(252, 249, 242); cursor: url(&quot;//webapi.amap.com/theme/v1.3/openhand.cur&quot;), default;" class="amap-container">
                                 {{--<object style="display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;" type="text/html" data="about:blank"></object><div class="amap-maps"><div class="amap-drags" style=""><div class="amap-layers" style="transform: translateZ(0px);"><div class="amap-markers" style="position: absolute; z-index: 120; top: 199px; left: 349px;"></div><canvas class="amap-layer" width="698" height="398" style="position: absolute; z-index: 0; top: 0px; left: 0px; height: 398px; width: 698px;"></canvas><canvas class="amap-labels" draggable="false" style="position: absolute; z-index: 99; height: 398px; width: 698px; top: 0px; left: 0px;" width="698" height="398"></canvas></div><div class="amap-overlays" style=""></div></div></div><div style="display: none;"></div><div class="amap-controls"><div class="amap-toolbar" style="left: 10px; top: 10px; visibility: visible;"><div class="amap-pancontrol" style="position: relative; display: block;"><div class="amap-pan-left"></div><div class="amap-pan-top"></div><div class="amap-pan-right"></div><div class="amap-pan-bottom"></div></div><div class="amap-locate" style="position: relative; left: 17px; display: block;"></div><div class="amap-zoomcontrol" style="position: relative; left: 14px;"><div class="amap-zoom-plus"></div><div class="amap-zoom-ruler" style="display: block;"><div class="amap-zoom-mask" style="height: 45px;"></div><div class="amap-zoom-cursor" style="top: 45px;"></div><div class="amap-zoom-labels"><div class="amap-zoom-label-street"></div><div class="amap-zoom-label-city"></div><div class="amap-zoom-label-province"></div><div class="amap-zoom-label-country"></div></div></div><div class="amap-zoom-minus"></div></div></div><div class="amap-indoormap-floorbar-control" style="display: none;"></div></div><a class="amap-logo" href="http://gaode.com" target="_blank"><img src="http://webapi.amap.com/theme/v1.3/autonavi.png"></a><div class="amap-copyright" style="display: none;"><!--v1.3.28--> © 2018 AutoNavi <span class="amap-mcode">- GS(2016)710号</span></div>--}}
                             </div>
                             <div id="panel"></div>

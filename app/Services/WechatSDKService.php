@@ -9,8 +9,8 @@ class WechatSDKService
 
 	public function __construct($shop_id = 0)
 	{
-		$app = WechatService::app($shop_id);
-		$this->api = $app->getClient();
+//		$app = WechatService::app($shop_id);
+//		$this->api = $app->getClient();
 	}
 
 	/**
@@ -28,6 +28,7 @@ class WechatSDKService
 	public function getQRCode($scene_id, $type = 0, $expire = 604800)
 	{
 
+	    return false;
 		if (!isset($scene_id)) {
 			return false;
 		}

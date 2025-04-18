@@ -154,6 +154,9 @@ class ShopRepository
         $info->user_name = $info->user->user_name;
         $info->shop_type_fmt = str_replace([1, 2], ['个人店铺', '企业店铺'], $info->shop_type);
 
+        $info->shop_image = get_image_url($info->shop_image);
+        $info->shop_logo = get_image_url($info->shop_logo);
+        $info->shop_poster = get_image_url($info->shop_poster);
         $info = $info->toArray();
         return $info;
     }
@@ -163,7 +166,7 @@ class ShopRepository
      *
      * @param array $shopInsert 店铺信息
      * @param array $shopFieldValueInsert 店铺认证信息
-     * @return bool
+     * @return mixed
      */
     public function addShop($shopInsert, $shopFieldValueInsert = [])
     {
@@ -253,19 +256,20 @@ class ShopRepository
                 $tplBackupInsert = $tplBackupInsert->toArray();
                 $tplBackupInsert['shop_id'] = $shop_result->shop_id;
                 $tplBackupInsert['add_time'] = time();
+
+                $tplBackup = new TplBackup();
+                $tplBackup->fill($tplBackupInsert);
+                $tplBackup->save();
             }
-            $tplBackup = new TplBackup();
-            $tplBackup->fill($tplBackupInsert);
-            $tplBackup->save();
 
 
             DB::commit();
-            return true;
+            return $shop_result;
         } catch (\Exception $e) {
             DB::rollback();//事务回滚
-            echo $e->getMessage();
-            echo $e->getCode();
-            return $e->getMessage();
+//            echo $e->getMessage();
+//            echo $e->getCode();
+            return false;
         }
     }
 
@@ -310,8 +314,8 @@ class ShopRepository
             return true;
         } catch (\Exception $e) {
             DB::rollback();//事务回滚
-            echo $e->getMessage();
-            echo $e->getCode();
+//            echo $e->getMessage();
+//            echo $e->getCode();
             return false;
         }
     }

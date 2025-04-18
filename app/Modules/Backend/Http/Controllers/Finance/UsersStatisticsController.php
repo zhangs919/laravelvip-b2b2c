@@ -15,9 +15,9 @@ class UsersStatisticsController extends Backend
     private $links = [
         ['url' => 'finance/users-statistics/index', 'text' => '新增会员'],
         ['url' => 'finance/users-statistics/users-list', 'text' => '会员分析'],
-        ['url' => 'finance/users-statistics/areas-list', 'text' => '会员区域分析'],
-        ['url' => 'finance/users-statistics/ranks-list', 'text' => '会员等级分析'],
-        ['url' => 'finance/users-statistics/sales-list', 'text' => '会员消费排行'],
+//        ['url' => 'finance/users-statistics/areas-list', 'text' => '会员区域分析'],
+//        ['url' => 'finance/users-statistics/ranks-list', 'text' => '会员等级分析'],
+//        ['url' => 'finance/users-statistics/sales-list', 'text' => '会员消费排行'],
     ];
 
 

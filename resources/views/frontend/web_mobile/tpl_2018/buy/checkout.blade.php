@@ -128,7 +128,11 @@
                                             <strong>
                                                 <!-- 活动色块 -->
 
-
+                                                @if(!empty($goods['act_labels']))
+                                                    @foreach($goods['act_labels'] as $act_label)
+                                                        <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                                    @endforeach
+                                                @endif
 
 
                                                 {{ $goods['goods_name'] }}

@@ -23,6 +23,7 @@
 namespace App\Services;
 
 
+use Illuminate\Support\Facades\Log;
 use Overtrue\EasySms\EasySms;
 use Overtrue\EasySms\Exceptions\Exception;
 
@@ -38,21 +39,26 @@ class SmsService
     public function send($mobile, $content = '', $captcha = '')
     {
         $config = config('sms');
-
+        // 动态获取配置信息
+        $config['gateways']['aliyun'] = [
+            'access_key_id' => sysconf('aliyunsms_app_key'),
+            'access_key_secret' => sysconf('aliyunsms_app_secret'),
+            'sign_name' => sysconf('sms_sign_name'),
+        ];
         $easySms = new EasySms($config);
 
         // 暂时默认使用阿里云短信 后期优化
         $gateway = 'aliyun';
-
         try {
             /*todo 暂时注释 上线后打开注释*/
             $res = $easySms->send($mobile, [
                 'content'  => $content, //'您的验证码为：6379，该验证码 5 分钟内有效，请勿泄漏于他人。',
-                'template' => 'SMS_141615486', // 注册：SMS_162522033 登录：SMS_141615486
+                'template' => 'SMS_296920556', // 注册：SMS_162522033 登录：SMS_141615486
                 'data' => [
                     'code' => $captcha
                 ],
             ]);
+            Log::info(json_encode($res));
             if ($res[$gateway]['status'] == 'failure') {
                 // 发送失败 返回错误信息
                 throw new \Exception('短信发送失败');
@@ -75,8 +81,7 @@ class SmsService
 
             return true;
         } catch (Exception $e) {
-//            dd($e->getResults());
-            return false;
+            return $e->getMessage();
         }
 
 

@@ -8,7 +8,10 @@ use App\Models\ActivityCategory;
 use App\Models\Goods;
 use App\Models\GoodsActivity;
 use App\Models\GoodsSku;
+use App\Models\GrouponLog;
 use App\Models\Shop;
+use App\Models\User;
+use App\Services\Enum\ActTypeEnum;
 use Illuminate\Support\Facades\DB;
 
 class ActivityRepository
@@ -25,6 +28,338 @@ class ActivityRepository
         $this->goodsActivity = new GoodsActivityRepository();
     }
 
+    public function getActivityInfo($goods_id, $sku_id, $act_id, $user_id = 0)
+    {
+        if (!$goods_id || !$sku_id || !$act_id) {
+            return [];
+        }
+        $data = $this->model->getById($act_id);
+        $data = $data->toArray();
+        $this->fetchActivityInfo($goods_id, $sku_id,$data, $user_id);
+        return $data;
+    }
+
+    private function fetchActivityInfo($goods_id, $sku_id, &$data, $user_id = 0)
+    {
+        switch ($data['act_type']) {
+            case ActTypeEnum::ACT_TYPE_FIGHT_GROUP: // 拼团
+                $sku_ids = $data['ext_info']['sku_ids'];
+                $sku_id = array_first($sku_ids);
+                $sku = GoodsSku::where('sku_id', $sku_id)->first();
+
+                $act_price_arr = array_values($data['ext_info']['act_price']);
+                $min_act_price = min($act_price_arr);
+                $max_act_price = max($act_price_arr);
+                $act_price = $min_act_price != $max_act_price ? $min_act_price.'~'.$max_act_price : $min_act_price;
+                $data['act_price'] = $act_price;
+                $act_stock_arr = array_values($data['ext_info']['act_stock']);
+                $min_act_stock = min($act_stock_arr);
+                $max_act_stock = max($act_stock_arr);
+                $act_stock = $min_act_stock != $max_act_stock ? $min_act_stock.'~'.$max_act_stock : $min_act_stock;
+                $data['act_stock'] = $act_stock;
+                $data['goods_price'] = $sku->goods_price;
+                $data['goods_number'] = $sku->goods_number;
+                $data['market_price'] = $sku->market_price;
+                $data['act_code'] = 'fight_group';
+                $data['order_goods_number'] = 1;
+                $data['groupon_mode'] = $data['act_ext_info']['groupon_mode'];
+                $data['fight_num'] = $data['act_ext_info']['fight_num'];
+                $data['fight_time'] = $data['act_ext_info']['fight_time'];
+                $data['sku_ids'] = $sku_ids;
+                $data['act_prices'] = $data['ext_info']['act_price'];
+                $data['act_stocks'] = $data['ext_info']['act_stock'];
+                $data['first_discounts'] = $data['ext_info']['first_discounts'];
+                $data['discount_prices'] = $data['ext_info']['discount_prices'];
+                $data['is_gather'] = $data['act_ext_info']['is_gather'];
+                $data['is_imitate'] = $data['act_ext_info']['is_imitate'];
+                $data['is_commander_discount'] = $data['act_ext_info']['is_commander_discount'];
+                $data['discount_over_used'] = $data['act_ext_info']['discount_over_used'];
+                $data['groupon_rule'] = $data['act_ext_info']['groupon_rule'];
+                $data['act_price_format'] = $min_act_price != $max_act_price ? '￥'.$min_act_price.'~￥'.$max_act_price : '￥'.$min_act_price;
+                $data['cutdown_time'] = strtotime($data['end_time']);
+
+                $groupon_log_list = GrouponLog::where('act_id', $data['act_id'])
+                    ->where('user_type', 0) // 团长
+                    ->where('status', 0) // 拼团中
+                    ->where('goods_id', $sku->goods_id)
+                    ->with(['orderInfo' => function ($query) {
+                        $query->select(['order_id', 'order_sn', 'order_status', 'pay_status','shipping_status','is_cod', 'order_amount']);
+                    },'orderInfo.orderGoods','user' => function ($query) {
+                        $query->select(['user_id', 'user_name','headimg']);
+                    }])->withCount('grouponLog')
+                    ->orderBy('user_type', 'asc')
+                    ->get()->toArray();
+
+               if (!empty($groupon_log_list)) {
+                   foreach ($groupon_log_list as &$item) {
+                       $item['user_name'] = $item['user']['user_name'];
+                       $item['headimg'] = get_image_url($item['user']['headimg'], 'headimg');
+                       $item['act_ext_info'] = $data['act_ext_info'];
+                       $item['order_id'] = $item['order_info']['order_id'];
+                       $item['diff_num'] = $data['act_ext_info']['fight_num'] - $item['groupon_log_count'];
+                       unset($item['order_info'],$item['user'], $item['groupon_log_count']);
+                   }
+               }
+                $data['params'] = [
+                    'groupon_log_list' => $groupon_log_list
+                ];
+
+                break;
+
+            case ActTypeEnum::ACT_TYPE_BARGAIN: // 砍价
+                $act_info = $data;
+
+                $goodsActivity = $this->getGoodsActivityInfo($data['act_id'], $sku_id);
+
+                // 活动价 todo 根据已砍记录计算
+                $act_price = '';
+
+                $data['act_ext_info'] = $data['ext_info'];
+                $data['ext_info'] = $goodsActivity['ext_info'];
+
+                $data['act_price'] = $act_price;
+                $data['act_stock'] = $goodsActivity['act_stock'];
+                $data['plat_act_id'] = 0;
+                $data['sale_base'] = $goodsActivity['sale_base'];
+                $data['is_show_plat'] = 0;
+                $data['shop_id'] = $goodsActivity['goods']['shop_id'];
+                $data['goods_price'] = $goodsActivity['goods_sku']['goods_price'];
+                $data['goods_number'] = $goodsActivity['act_stock'];
+                $data['act_code'] = 'bargain';
+                $data['order_goods_number'] = 0;
+                $data['goods_max_number'] = 1;
+                $data['bargain_time'] = $data['act_ext_info']['bargain_time'];
+                $data['all_goods_bargain_num'] = $data['act_ext_info']['all_goods_bargain_num'];
+                $data['one_goods_bargain_num'] = $data['act_ext_info']['one_goods_bargain_num'];
+                $data['original_price_label'] = '价值';
+                $data['original_price'] = $goodsActivity['goods_sku']['goods_price'];
+                $data['original_price_format'] = '￥'.$data['original_price'];
+                $data['bargain_act_price_format'] = '￥'.$goodsActivity['ext_info']['act_price'];
+                $user_info = [
+                    'headimg' => get_image_url('', 'headimg')
+                ];
+                if ($user_id) {
+                    $user_info = User::where('user_id', $user_id)->first()->toArray();
+                }
+                $data['user_info'] = $user_info; // 砍价发起人信息
+                $data['part_price_label'] = '价值';
+                $data['part_status_label'] = '未参与';
+                $data['act_price_format'] = '￥'.$data['act_price'];
+
+                // 已帮砍列表
+                $help_bargain_list = null;
+
+                $bargain_info = $act_info;
+                $goods_count = GoodsActivity::where('act_id', $data['act_id'])->groupBy('goods_id')->count() ?? 0;
+                $bargain_info['plat_act_id'] = 0;
+                $bargain_info['is_show_plat'] = 0;
+                $bargain_info['part_shop_ids'] = null;
+                $bargain_info['act_multistore_type'] = 0;
+                $bargain_info['act_group_ids'] = null;
+                $bargain_info['act_multistore_ids'] = 0;
+                $bargain_info['out_code'] = '';
+                $bargain_info['first_order_num'] = 0;
+                $bargain_info['source_type'] = 'ONLINE';
+                $bargain_info['goods_count'] = $goods_count;
+                $bargain_info['multistore_count'] = 0;
+                $bargain_info['sale_base'] = $goodsActivity['sale_base'];
+                $bargain_info['goods_id'] = $goodsActivity['goods_id'];
+                $bargain_info['act_price'] = $data['act_price'];
+                $bargain_info['act_stock'] = $goodsActivity['act_stock'];
+                $bargain_info['goods_name'] = $goodsActivity['goods']['goods_name'];
+                $bargain_info['goods_number'] = $goodsActivity['act_stock'];
+                $bargain_info['goods_price'] = $goodsActivity['goods_sku']['goods_price'];
+                $bargain_info['market_price'] = $goodsActivity['goods_sku']['market_price'];
+                $bargain_info['goods_image'] = $goodsActivity['goods']['goods_image'];
+                $bargain_info['order_goods_number'] = 0;
+                //hero_list:{
+                //                                "bar_id": "1",
+                //                                "add_time": "1716609909",
+                //                                "nickname": null,
+                //                                "headimg": null,
+                //                                "total_amount": null
+                //                            }
+                $bargain_info['hero_list'] = null; // 帮砍统计
+                $bargain_info['bargain_num'] = 0; // 帮砍数量
+                $bargain_info['original_price'] = $goodsActivity['goods_sku']['goods_price']; // 原始价格
+                $bargain_info['floor_price'] = $goodsActivity['ext_info']['act_price']; // 底价
+
+                $data['params'] = [
+                    'help_bargain_list' => $help_bargain_list, // 帮砍列表
+                    'help_bargain_num' => 0,
+                    'bargain_info' => $bargain_info
+                ];
+                $data['cutdown_time'] = strtotime($data['end_time']);
+
+                $data['min_price'] = null;
+
+
+                break;
+            case ActTypeEnum::ACT_TYPE_LIMIT_DISCOUNT: // 限时折扣
+                $goodsActivity = $this->getGoodsActivityInfo($data['act_id'], $sku_id);
+
+                $data['act_ext_info'] = $data['ext_info'];
+                $data['ext_info'] = $goodsActivity['ext_info'];
+
+                $data['act_price'] = $goodsActivity['act_price'];
+                $data['act_stock'] = $goodsActivity['act_stock'];
+                $data['sale_base'] = $goodsActivity['sale_base'];
+                $data['goods_id'] = $goodsActivity['goods_id'];
+                $data['sku_id'] = $goodsActivity['sku_id'];
+                $data['goods_status'] = $goodsActivity['goods']['goods_status'];
+                $data['sku_open'] = $goodsActivity['goods']['sku_open'];
+                $data['prop_open'] = $goodsActivity['goods']['prop_open'];
+                $data['user_discount'] = $goodsActivity['goods']['user_discount'];
+                $data['sales_model'] = $goodsActivity['goods']['sales_model'];
+                $data['shop_id'] = $goodsActivity['goods']['shop_id'];
+                $data['goods_price'] = $goodsActivity['goods_sku']['goods_price'];
+                $data['goods_number'] = $goodsActivity['act_stock'];
+                $data['original_number'] = $goodsActivity['goods_sku']['goods_number'];
+                $data['original_price'] = $goodsActivity['goods_sku']['goods_price'];
+                $data['discount_mode'] = $data['ext_info']['discount_mode'];
+                $data['discount_num'] = $data['ext_info']['discount_num'];
+                $data['act_repeat'] = $data['act_ext_info']['act_repeat'];
+                $data['cycle_data'] = $data['act_ext_info']['cycle_data'];
+                $data['act_label'] = $data['act_ext_info']['act_label'] ?? '限时折扣';
+                $data['limit_type'] = $data['act_ext_info']['limit_type'];
+                $data['limit_num'] = $data['act_ext_info']['limit_num'];
+                $data['act_code'] = 'limit_discount';
+                $data['act_status'] = $data['is_finish'];
+                $data['cutdown_time'] = strtotime($data['end_time']);
+                if ($data['discount_mode'] == 2) { // 折扣价
+                    $discount_mode_format = '折扣价';
+                } elseif ($data['discount_mode'] == 1) { // 减价
+                    $discount_mode_format = '减'.$data['discount_num'].'元';
+                } else { // 打折
+                    $discount_mode_format = $data['discount_num'].'折';
+                }
+
+                $data['act_sub_label'] = $discount_mode_format;
+                $data['order_goods_number'] = 0;
+                $data['user_purchased_num'] = $data['purchase_num'];
+                $data['act_hash_code'] = 'bf873808';
+                $data['act_price_format'] = '￥'.$data['act_price'];
+                $data['params'] = null;
+                $data['min_price'] = null;
+
+                break;
+
+            default:
+
+                break;
+        }
+
+    }
+
+    private function getGoodsActivityInfo($act_id, $sku_id)
+    {
+        $data = GoodsActivity::where([['act_id', $act_id], ['sku_id', $sku_id]])
+            ->with(['goods'=>function($query) {
+                $query->select(['goods_id','sku_open','prop_open','goods_price','goods_number','goods_name','goods_image','goods_status']);
+            }, 'goodsSku' => function($query) {
+                $query->select(['goods_id', 'sku_id','goods_price','goods_number','goods_barcode','goods_sn','sku_image','spec_names','checked']);
+            }])
+            ->first()->toArray();
+
+        return $data;
+    }
+
+    public function getList($condition = [], $column = '')
+    {
+        $data = $this->model->getList($condition, $column);
+
+        if (!$data[0]->isEmpty()) {
+
+            foreach ($data[0] as $key=>$value) {
+
+                $this->fetchActExtInfo($value);
+            }
+        }
+        return $data;
+    }
+
+    private function fetchActExtInfo(&$value)
+    {
+        switch ($value->act_type) {
+            case ActTypeEnum::ACT_TYPE_FIGHT_GROUP: // 拼团
+                $goodsActivityList = GoodsActivity::where('act_id', $value->act_id)
+                    ->with(['goods'=>function($query) {
+                        $query->select(['goods_id','sku_open','goods_price','goods_number','goods_name','goods_image','goods_status']);
+                    }, 'goodsSku' => function($query) {
+                        $query->select(['goods_id', 'sku_id','goods_price','goods_number','goods_barcode','goods_sn','sku_image','spec_names','checked']);
+                    }])
+                    ->get();
+
+                $goods_price_arr = [];
+                foreach ($goodsActivityList as $item) {
+                    $goods_price_arr[] = $item->goodsSku->goods_price;
+                }
+                $goodsActivity = $goodsActivityList[0];
+                $goods = $goodsActivity->goods;
+                $goods_sku = $goodsActivity->goodsSku;
+
+                $value->goods_id = $goods->goods_id;
+                $value->sku_id = $goods_sku->sku_id;
+                $value->goods_image = get_image_url($goods->goods_image);
+                $value->goods_name = $goods->goods_name;
+                $value->goods_price = $goods_sku->goods_price;
+
+                $act_price_arr = array_values($value->ext_info['act_price']);
+                $min_act_price = min($act_price_arr);
+                $max_act_price = max($act_price_arr);
+
+                $value->act_price = $min_act_price != $max_act_price ? $min_act_price.'~'.$max_act_price : $min_act_price;
+
+                $min_goods_price = min($goods_price_arr);
+                $max_goods_price = max($goods_price_arr);
+
+                // 根据商品规格计算
+                $value->min_act_price = $min_act_price;
+                $value->max_act_price = $max_act_price;
+                $value->act_stock = $goodsActivity->act_stock;
+                $value->min_goods_price = $min_goods_price;
+                $value->max_goods_price = $max_goods_price;
+                $value->fight_num = $value->act_ext_info['fight_num'];
+                $value->groupon_mode = $value->act_ext_info['groupon_mode'];
+                $value->status_format = str_replace([0,1,2], ['未开始', '进行中', '已结束'], $value->status);
+
+                break;
+            case ActTypeEnum::ACT_TYPE_BARGAIN: // 砍价
+                $goods_count = GoodsActivity::where('act_id', $value->act_id)->groupBy('goods_id')->count() ?? 0;
+                $shop_name = Shop::where('shop_id', $value->shop_id)->value('shop_name');
+                $value->plat_act_id = 0;
+                $value->is_show_plat = 0;
+                $value->part_shop_ids = null;
+                $value->act_multistore_type = 0;
+                $value->act_group_ids = null;
+                $value->act_multistore_ids = null;
+                $value->out_code = '';
+                $value->first_order_num = 0;
+                $value->source_type = 'ONLINE';
+                $value->goods_count = $goods_count;
+                $value->multistore_count = 0;
+                $value->shop_name = $shop_name;
+                $value->total_bargain_num = '0'; // 总发起砍价次数
+                $value->total_help_bargain_num = '0';//帮砍次数
+                $value->total_virtual_num = '0';//虚拟参与人数
+                $value->bargain_time = $value->ext_info['bargain_time'];//砍价时限（时）
+                $value->status_message = str_replace([0,1,2], ['未开始', '进行中', '已结束'], $value->status);
+
+                break;
+
+            case ActTypeEnum::ACT_TYPE_LIMIT_DISCOUNT: // 限时折扣
+
+
+
+                break;
+
+            default:
+
+                break;
+        }
+
+    }
+
     /**
      * 新增活动
      *
@@ -38,6 +373,10 @@ class ActivityRepository
         DB::beginTransaction();
         try {
             // 插入活动表
+            $activityData['purchase_num'] = $activityData['purchase_num'] ?? 0;
+            $activityData['status'] = 1; // 默认 审核通过
+            $activityData['is_finish'] = 1; // 默认 进行中 todo 需根据开始结束时间进行判断
+
             $activityRet = $this->store($activityData);
 
             // 插入活动商品表
@@ -48,6 +387,15 @@ class ActivityRepository
                     $goodsActivity = new GoodsActivity();
                     $goodsActivity->fill($v);
                     $goodsActivity->save();
+
+                    // 判断商品是否已参与其他活动
+                    if (Goods::where('goods_id', $v['goods_id'])->value('act_id')) {
+                        throw new \Exception('该商品已参与其他活动');
+                    }
+                    // 修改商品的活动ID
+                    Goods::where('goods_id', $v['goods_id'])->update([
+                        'act_id' => $v['act_id'],
+                    ]);
                 }
             }
 
@@ -70,9 +418,9 @@ class ActivityRepository
             return $activityRet;
         } catch (\Exception $e) {
             DB::rollBack(); // 事务回滚
-            echo $e->getMessage();
-            echo $e->getCode();
-            return false;
+//            echo $e->getMessage();
+//            echo $e->getCode();
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -134,9 +482,9 @@ class ActivityRepository
             return true;
         } catch (\Exception $e) {
             DB::rollBack(); // 事务回滚
-            echo $e->getMessage();
-            echo $e->getCode();
-            return false;
+//            echo $e->getMessage();
+//            echo $e->getCode();
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -556,7 +904,7 @@ class ActivityRepository
      */
     public function getLimitDiscountActivityList($where = [])
     {
-        $where[] = ['act_type', 11]; // 11-限时折扣
+        $where[] = ['act_type', ActTypeEnum::ACT_TYPE_LIMIT_DISCOUNT]; // 11-限时折扣
 
         // 列表
         $condition = [
@@ -644,13 +992,12 @@ class ActivityRepository
 
     /**
      * 获取拼团活动列表
-     * todo 此方法有问题 后面再完善
      * 需从goods_activity表中查询数据
      *
      * @param array $where 查询条件
      * @return array
      */
-    public function getFightGroupGoodsActivityList($where = [])
+    public function getFightGroupActivityList($where = [])
     {
         $where[] = ['act_type', 6]; // 6-拼团
 
@@ -789,4 +1136,6 @@ class ActivityRepository
 
         return $list;
     }
+
+
 }

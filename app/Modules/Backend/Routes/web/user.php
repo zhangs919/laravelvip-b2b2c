@@ -54,6 +54,13 @@ Route::group(['domain' => config('lrw.backend_domain')], function ($router) {
             Route::get('client-validate', 'User\ShopController@clientValidate')->name('shop-user-rank-list'); // clientValidate
             Route::post('delete', 'User\ShopController@delete')->name('shop-user-rank-delete'); // delete
         });
+
+        // 社交 主播认证申请列表
+        Route::group(['prefix' => 'live-user'], function () {
+            Route::get('list', 'User\LiveUserController@lists')->name('user-live-user-list'); // lists
+            Route::get('audit-list', 'User\LiveUserController@auditList')->name('user-live-user-audit-list'); // lists
+            Route::any('audit', 'User\LiveUserController@audit')->name('user-live-user-audit'); //
+        });
     });
 
 });

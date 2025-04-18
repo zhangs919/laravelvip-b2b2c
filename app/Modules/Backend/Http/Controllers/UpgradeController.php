@@ -79,7 +79,7 @@ class UpgradeController extends Backend
         /**
          * 在线升级功能
          */
-        if ($_REQUEST['act'] == 'init') {
+        if ($act == 'init') {
             // 检查权限
             $check_auth = backend_auth('upgrade_manage');
             if ($check_auth !== true) {
@@ -104,7 +104,13 @@ class UpgradeController extends Backend
             }
 
             // 更新补丁包
-            $this->upgrade->upgrade($patch[0]);
+            try {
+                $this->upgrade->upgrade($patch[0]);
+            } catch (\Exception $e) {
+                return result(-1, null, $e->getMessage());
+            } catch (\ValueError $e) {
+                return result(-1, null, $e->getMessage());
+            }
 
             // 生成队列url
             if (isset($patch[1])) {

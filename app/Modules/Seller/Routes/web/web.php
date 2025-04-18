@@ -56,6 +56,7 @@ Route::group(['domain' => config('lrw.seller_domain')], function ($router) {
         Route::get('progress.html', 'SiteController@progress'); // 导入数据执行进度
 
         Route::get('auto-print', 'SiteController@autoPrint'); //
+        Route::get('export', 'SiteController@export'); // 导出数据
 
 
     });

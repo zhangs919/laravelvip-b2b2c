@@ -305,7 +305,7 @@ class SecurityController extends UserCenter
         // 发送频繁
 //        return result(-1, ['show_captcha'=>1], '每60秒内只能发送一次短信验证码，请稍候重试', ['errors'=>['mobile' => ['每60秒内只能发送一次短信验证码，请稍候重试']]]);
         $ret = $this->connectApi->sendCaptcha($mobile, $log_type);
-        if (!$ret['code']) {
+        if ($ret['code'] != 0) {
             return result(-1, null, $ret['message']);
         }
         return result(0, null, '发送成功');

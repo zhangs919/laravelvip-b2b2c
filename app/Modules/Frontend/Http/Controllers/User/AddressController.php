@@ -42,7 +42,7 @@ class AddressController extends UserCenter
 //                $region_name = array_reverse(get_parent_region_list($v->region_code));
 //                $region_name = array_column($region_name, 'region_name');
 //                $v->region_name = implode(' ', $region_name);
-                $v->region_name = get_region_names_by_region_code($v->region_code, ' ');
+                $v->region_name = get_region_names_by_region_code($v->region_code, ' ', true);
             }
         }
 
@@ -87,9 +87,13 @@ class AddressController extends UserCenter
         if ($address_id) {
             // 更新地址
             $address_info = $this->userAddress->getById($address_id);
-            $address_info->region_name = get_region_names_by_region_code($address_info->region_code, ' ');
-
-            $model = $address_info->toArray();
+            if ($address_info) {
+                $address_info->region_name = get_region_names_by_region_code($address_info->region_code, ' ', true);
+                $model = $address_info->toArray();
+            }
+            if (empty($address_info) && is_app()) {
+                return result(-1, [], INVALID_PARAM);
+            }
             view()->share('address_info', $address_info);
             $tpl = 'edit';
         }
@@ -110,7 +114,6 @@ class AddressController extends UserCenter
             return result(0, $data);
         }
 
-        $checkout = 0;
         $freight_mode = 0;
         $address_parse_enable = false;
 
@@ -151,36 +154,37 @@ class AddressController extends UserCenter
 
         if (!empty($address_id)) {
             // 编辑
-            $ret = $this->userAddress->update($address_id, $post);
+            $post['address_id'] = $address_id;
+            $ret = $this->userAddress->saveData($post, $this->user_id);
             $msg = '地址编辑';
         }else {
             // 添加
             // 判断用户收货地址是否超过20个
-            if (!$this->userAddress->checkUserAddressLimit(auth('user')->id())) {
+            if (!$this->userAddress->checkUserAddressLimit($this->user_id)) {
                 return result(-1, null, '最多只能保存20条地址');
             }
-            $post['user_id'] = auth('user')->id();
+            $post['user_id'] = $this->user_id;
             // 判断是否是第一个
             if (!$this->userAddress->getByField('user_id', $post['user_id'])) {
                 $post['is_default'] = 1;// 设置为默认地址
             }
-            $ret = $this->userAddress->store($post);
+            $ret = $this->userAddress->saveData($post, $this->user_id);
             $msg = '地址添加';
         }
 
         if ($ret === false) {
             // fail
-            if ($checkout) {
+            if ($checkout && !is_app()) {
                 return redirect('/checkout.html');
             }
             return result(-1, null, OPERATE_FAIL);
         }
         // success
         if ($checkout) {
-            return result(0, ['address_id'=>$ret], '添加成功！');
+            return result(0, ['address_id'=>$ret], OPERATE_SUCCESS);
 //            return redirect('/checkout.html');
         }
-        return result(0, null, OPERATE_SUCCESS);
+        return result(0, $ret, OPERATE_SUCCESS);
     }
 
     public function setDefault(Request $request)
@@ -190,7 +194,7 @@ class AddressController extends UserCenter
             return  result(-1, null, '参数错误');
         }
 
-        $ret = $this->userAddress->setDefault($address_id, auth('user')->id());
+        $ret = $this->userAddress->setDefault($address_id, $this->user_id);
         if ($ret === false) {
             return result(-1, null, '设置失败');
         }

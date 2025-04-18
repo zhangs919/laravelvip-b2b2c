@@ -28,7 +28,7 @@
                     <img src="/images/enter.jpg" />
                 </a>
 
-                <a href="http://seller.laravelvip.com" target="_blank" class="store-join-help">
+                <a href="//seller.laravelvip.com" target="_blank" class="store-join-help">
                     <i class="icon-cog"></i>
                     登录商家管理中心
                 </a>

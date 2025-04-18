@@ -24,6 +24,11 @@
                                 <dt class="">
 									<!-- 会员价标签 -->
 									<!-- 活动色块 -->
+                                    @if(!empty($v['act_labels']))
+                                        @foreach($v['act_labels'] as $act_label)
+                                            <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                        @endforeach
+                                    @endif
                                     {{ $v['goods_name'] }}
                                 </dt>
                                 <!-- -->

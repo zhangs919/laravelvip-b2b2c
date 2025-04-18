@@ -3,6 +3,8 @@
 namespace App\Kernel\Repositories\Common;
 
 
+use Illuminate\Support\Facades\Schema;
+
 /**
  * Class BaseRepository
  * @package App\Kernel\Repositories\Common
@@ -92,5 +94,20 @@ class BaseRepository
     public static function getArrayChunk($list = [], $size = 0)
     {
         return array_chunk($list, $size);
+    }
+
+    //过滤表字段数组
+    public static function getArrayfilterTable($other = [], $table = '')
+    {
+        $result = [];
+        // 获取指定表的所有字段
+        $columns = Schema::getColumnListing($table);
+        foreach ($other as $field=>$value) {
+            if (in_array($field, $columns)) {
+                $result[$field] = $value;
+            }
+        }
+
+        return $result;
     }
 }

@@ -6,7 +6,7 @@
 
 
 
-    <div class="img-groups-box img-groups8-box">
+    <div class="img-groups-box img-groups8-box" @if(!empty($data['99-1'][0]['bgcolor'])) style="background-color: {{ $data['99-1'][0]['bgcolor'] }};" @endif>
 
         @if($tpl_name != '' && $is_design)
             <a title="编辑" href="javascript:void(0)" class="pic-selector content-selector SZY-TPL-SELECTOR" data-uid="{{ $uid }}" data-cat_id="1" data-type="3" data-number="8">
@@ -15,7 +15,7 @@
             </a>
         @endif
 
-        <ul>
+        <ul  @if(!empty($data['99-1'][0]['border'])) class="border-0" @endif>
 
             @if(!empty($data['3-1']))
                 @foreach($data['3-1'] as $v)

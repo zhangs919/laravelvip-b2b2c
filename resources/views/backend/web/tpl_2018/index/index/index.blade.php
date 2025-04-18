@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="col-lg-3 col-sm-3">
-            <a href="/trade/order/list?add_time_begin=2018-02-15">
+            <a href="/trade/order/list?add_time_begin={{ format_time(time(), 'Y-m-d') }}">
                 <div class="panel yellow">
                     <div class="symbol">
                         <i class="fa fa-bar-chart"></i>
@@ -91,7 +91,7 @@
             </a>
         </div>
         <div class="col-lg-3 col-sm-3">
-            <a href="/shop/shop/index?is_supply=0&amp;start_from=2018-02-15">
+            <a href="/shop/shop/index?is_supply=0&amp;start_from={{ format_time(time(), 'Y-m-d') }}">
                 <div class="panel green">
                     <div class="symbol">
                         <i class="fa fa-bank"></i>
@@ -104,7 +104,7 @@
             </a>
         </div>
         <div class="col-lg-3 col-sm-3">
-            <a href="/user/user/list?reg_time_begin=2018-02-15">
+            <a href="/user/user/list?reg_time_begin={{ format_time(time(), 'Y-m-d') }}">
                 <div class="panel red">
                     <div class="symbol">
                         <i class="fa fa-users"></i>
@@ -381,17 +381,19 @@
             <div class="pull-left text-box">
                 <div class="text-l">
                     <p>为了将系统更安全，系统分不同角色不同后台。</p>
-                    <p>运营方/总部的管理后台<span>（即平台方后台）</span>，<!--招商加盟的区域分站后台<span>（站点后台）</span>，-->自营或入驻商家的后台<span>（即店铺后台）</span>，每个商家可开通线下多网点，进行网点就近接单<span>（网点后台）</span>。</p>
+                    <p>运营方/总部的管理后台<span>（即平台方后台）</span>，<!--招商加盟的区域分站后台<span>（站点后台）</span>，-->自营或入驻商家的后台<span>（即店铺后台）</span>
+{{--                        ，每个商家可开通线下多网点，进行网点就近接单<span>（网点后台）</span>--}}
+                        。</p>
                     <p>点击“<span> 首页 -> 新手向导 </span>”菜单，更进一步的了解商城后台系统</p>
                 </div>
             </div>
             <div class="pull-right">
                 <div class="sub-title">相关后台切换地址</div>
                 <ul class="backend-block">
-                    <li class="current"><a class="blue-bg"  target="_blank" href="http://{{ config('lrw.backend_domain') }}">平台方后台</a></li>
+                    <li class="current"><a class="blue-bg"  target="_blank" href="//{{ config('lrw.backend_domain') }}">平台方后台</a></li>
                     <!---->
-                    <li><a class="green-bg"  target="_blank" href="http://{{ config('lrw.seller_domain') }}">店铺后台</a></li>
-                    <li><a class="yellow-bg"  target="_blank" href="http://{{ config('lrw.store_domain') }}">网点后台</a></li>
+                    <li><a class="green-bg"  target="_blank" href="//{{ config('lrw.seller_domain') }}">店铺后台</a></li>
+{{--                    <li><a class="yellow-bg"  target="_blank" href="http://{{ config('lrw.store_domain') }}">网点后台</a></li>--}}
                 </ul>
             </div>
         </div>

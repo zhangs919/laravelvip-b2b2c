@@ -123,13 +123,12 @@
 
 {{--footer_js page元素同级下面--}}
 @section('footer_js')
-    <script src="/assets/d2eace91/js/lodop/LodopAuto.js?v=202003261806"></script>
-    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=202003261806"></script>
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=202003261806"></script>
-    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=202003261806"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=202003261806"></script>
-    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=202003261806"></script>
-
+    <script src="/assets/d2eace91/js/bootstrap3-editable/js/bootstrap-editable.js?v=1.1"></script>
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.1"></script>
+    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.1"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/bootstrap-datetimepicker.min.js?v=1.1"></script>
+    <script src="/assets/d2eace91/bootstrap/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js?v=1.1"></script>
+    <script src="/assets/d2eace91/js/activity.js?v=1.1"></script>
 @stop
 
 {{--footer script page元素同级下面--}}

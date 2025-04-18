@@ -460,7 +460,25 @@ class TemplateItemRepository
                                 break;
 
                             case 8: // 导航模板
-                                $tplData['mnav_'.$dKeyCategory] = $datum;
+                                foreach ($datum as $kData) {
+                                    if ($kData['link_type'] == 5) {
+                                        $target_id = (int)str_replace(['/list-','.html'], ['',''], $kData['link']);
+                                    } else {
+                                        // 其他情况
+                                        $target_id = 0;
+                                    }
+
+                                    $tplData['mnav_'.$dKeyCategory][] = [
+                                        'path' => $kData['path'],
+                                        'link' => $kData['link'],
+                                        'link_type' => $kData['link_type'],
+                                        'name' => $kData['name'],
+                                        'color' => $kData['color'],
+                                        'sort' => $kData['sort'],
+                                        'target_id' => $target_id,
+                                    ];
+                                }
+//                                $tplData['mnav_'.$dKeyCategory] = $datum;
                                 break;
 
                             case 9: // 店铺 todo 不确定
@@ -475,6 +493,10 @@ class TemplateItemRepository
                                 }
                                 break;
 
+                            case 10: // 自定义模版
+                                $tplData['custom_'.$dKeyCategory] = $datum;
+                                break;
+
                             case 11: // 红包
                                 foreach ($datum as $kData) {
                                     $bonusInfo = Bonus::where('bonus_id', $kData['bonus_id'])->first();
@@ -487,6 +509,10 @@ class TemplateItemRepository
                                         'shop_id' => $bonusInfo->shop_id,
                                     ];
                                 }
+                                break;
+
+                            case 12: // 自定义公告
+                                $tplData['text_'.$dKeyCategory] = $datum;
                                 break;
 
                             case 14: // 热点模板
@@ -506,6 +532,17 @@ class TemplateItemRepository
                 $appTplItem['uid'] = $item->uid;
 
                 $appTplItems[] = $appTplItem;
+            }
+
+            // 首页追加搜索栏 header_serch
+            if ($page == 'app') {
+                array_unshift($appTplItems, [
+                    'temp_name' => null,
+                    'temp_code' => 'header_serch',
+                    'data' => [],
+                    'ext_info' => [],
+                    'uid' => '',
+                ]);
             }
 
             cache()->put($cache_id, $appTplItems, CACHE_KEY_PAGE_TPL_ITEMS[1]);

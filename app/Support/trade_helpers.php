@@ -833,6 +833,16 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
     $isCod = $orderInfo['is_cod']; //是否为货到付款 0 否 1 是
     $isDelete = $orderInfo['is_delete']; // 订单删除状态 默认0 0-正常 1-放入回收站 2-彻底删除
 
+    // 拼团 拼团成功 才能发货
+    $fight_group_status = true;
+    if ($orderInfo['order_type'] == \App\Services\Enum\ActTypeEnum::ACT_TYPE_FIGHT_GROUP
+        && !empty($orderInfo['group_sn'])) {
+        $groupon_log = DB::table('groupon_log')->where('group_sn', $orderInfo['group_sn'])->first();
+        if (!empty($groupon_log) && $groupon_log->status != 1) {
+            $fight_group_status = false;
+        }
+    }
+
     switch ($operate){
         /****买家操作****/
         // 买家-取消订单
@@ -850,7 +860,7 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         // 买家-确认收货
         case 'buyer_confirm_receipt':
             $state = ($orderStatus == OS_CONFIRMED && $shippingStatus == SS_SHIPPED
-                && intval($orderInfo['shipping_time']) > (time() - get_order_receiving_term() - get_order_delay_days_term($orderInfo['delay_days'])));
+                && intval($orderInfo['shipping_time']) < (time() - get_order_receiving_term() - get_order_delay_days_term($orderInfo['delay_days'])));
             break;
 
         // 买家-延迟收货时间
@@ -954,7 +964,9 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         case 'shop_assign':
             $state = (in_array($orderStatus, [OS_UNCONFIRMED, OS_CONFIRMED])
                 && $payStatus == PS_PAYED
-                && $shippingStatus == SS_UNSHIPPED);
+                && $shippingStatus == SS_UNSHIPPED
+                && $fight_group_status
+            );
             break;
 
         // 商家-取消指派
@@ -968,7 +980,9 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         case 'shop_delivery':
             $state = (in_array($orderStatus, [OS_UNCONFIRMED, OS_CONFIRMED])
                 && $payStatus == PS_PAYED
-                && $shippingStatus == SS_UNSHIPPED);
+                && $shippingStatus == SS_UNSHIPPED
+                && $fight_group_status
+            );
             break;
 
         // 商家-拆单发货 发货中
@@ -982,7 +996,9 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         case 'shop_quick_delivery':
             $state = (in_array($orderStatus, [OS_UNCONFIRMED, OS_CONFIRMED])
                 && $payStatus == PS_PAYED
-                && $shippingStatus == SS_UNSHIPPED);
+                && $shippingStatus == SS_UNSHIPPED
+                && $fight_group_status
+            );
             break;
 
         // 商家-查看物流 todo
@@ -1234,6 +1250,7 @@ function get_complaint_operate_state($operate, $complaintInfo)
 
 /**
  * 格式化输出订单商品类型
+ * todo 暂时未用到该方法
  *
  * @param int $goodsType 商品类型
  * @param int $formatType 返回格式类型 0-商品类型中文描述 1-商品类型英文class名称
@@ -1242,27 +1259,62 @@ function get_complaint_operate_state($operate, $complaintInfo)
 function format_order_goods_type($goodsType, $formatType = 0)
 {
     // 商品交易类型 0-普通商品 1-拍卖 2-预售 3-团购 5-积分兑换 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动 99-电子秤商品
+    switch ($goodsType) {
+        case 99:
+            $class = 'freebuy';
+            $label = '电子秤商品';
+            break;
+        case 13:
+            $class = 'gift';
+            $label = '赠品活动';
+            break;
+        case 12:
+            $class = 'fullsubtraction';
+            $label = '满减送';
+            break;
+        case 11:
+            $class = 'limited-discount';
+            $label = '限时抢';
+            break;
+        case 10:
+            $class = '';
+            $label = '搭配套餐';
+            break;
+        case 8:
+            $class = 'bargain';
+            $label = '砍价';
+            break;
+        case 6:
+            $class = '';
+            $label = '拼团';
+            break;
+        case 5:
+            $class = 'exchange';
+            $label = '积分兑换';
+            break;
+        case 3:
+            $class = 'group-buy';
+            $label = '团购';
+            break;
+        case 2:
+            $class = 'pre-sale';
+            $label = '预售';
+            break;
+        case 1:
+            $class = 'auction';
+            $label = '拍卖';
+            break;
+        default:
+            $class = '';
+            $label = '普通商品';
+            break;
+    }
     if ($formatType == 1) {
         // 返回英文class 名称
-        if (empty($goodsType)) {
-            return '';
-        }
-
-        return str_replace(
-            [0,1,2,3,5,6,8,10,11,12,13,99],
-            ['','auction','pre-sale','group-buy','exchange',''
-                ,'bargain','','discount','fullsubtraction','gift','freebuy'], $goodsType
-        );
+        return $class;
     } else {
         // 返回中文描述
-        if (empty($goodsType)) {
-            return '普通商品';
-        }
-        return str_replace(
-            [0,1,2,3,5,6,8,10,11,12,13,99],
-            ['普通商品','拍卖','预售','团购','积分兑换','拼团'
-                ,'砍价','搭配套餐','限时折扣','满减送','赠品活动','电子秤商品'], $goodsType
-            );
+        return $label;
     }
 }
 
@@ -1577,4 +1629,19 @@ function format_user_capital_status($status = 0)
         return '';
     }
     return $data[$status];
+}
+
+/**
+ * 生成订单编号
+ *
+ * 长度 = 8位 + 2位 + 4位 + 6位 = 20位 如: 20190309 10 0059 974040
+ *
+ * @return string
+ */
+function make_order_sn()
+{
+    return format_time(time(), 'Ymd')
+    . sprintf('%02d', mt_rand(0, 10)) // 0-10取两位 不足两位前面加0补两位
+    . format_time(time(), 'is')
+    . mt_rand(100000, 999999);
 }

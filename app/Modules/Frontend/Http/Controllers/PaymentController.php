@@ -43,6 +43,7 @@ class PaymentController extends Frontend
      */
     public function payment(Request $request)
     {
+//        dd((new PaymentLogicRepository())->_updateOrder('20240524085410508692', '20240524022233256223'));
         // 合并支付单号：MP202001041512549732598 或 订单编号：202001041512549732592
         $order_sn = $request->get('order_sn');
         $area_tag = $request->get('area_tag');
@@ -82,10 +83,33 @@ class PaymentController extends Frontend
             return redirect($redirect_url);
         }
         if ($order_info['pay_code'] == 'weixin') {
-            if (is_weixin()) {
+            if (is_weixin() && !is_app()) {
                 // 微信端
                 $app_prefix_data = [];
                 $compact = compact('seo_title','payResult','order_sn');
+            } elseif(is_app()) {
+                if (empty($payResult)) {
+                    return result(-1, null, '获取支付信息失败');
+                }
+//                $subject = $payResult['subject'];
+//                $total_fee = $payResult['total_fee'];
+
+                // 微信小程序支付
+                $pay_info = $payResult;
+                $pay_type = $order_info['pay_code'];
+
+                // 根据不同支付方式 返回不同的 app_prefix_data
+                $app_prefix_data = [
+                    'pay_info' => $pay_info,
+//                    'subject' => $subject,
+//                    'total_fee' => $total_fee,
+                    'order_sn' => $order_sn,
+                    'order_info' => $order_info,
+//                    'pay_type' => $pay_type
+                ];
+
+                $compact = compact('seo_title','pay_info','subject','total_fee','order_sn','order_info','pay_type');
+
             } else {
                 // PC
                 $subject = $payResult['subject'];

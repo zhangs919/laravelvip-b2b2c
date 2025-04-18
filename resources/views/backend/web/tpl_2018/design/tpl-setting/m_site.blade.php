@@ -32,9 +32,9 @@
 
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
-        <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.mobile_domain') }}/css/custom/m_site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/color-style.css?v=1.2" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.mobile_domain') }}/css/color-style.css?v=1.2" id="site_style"/>
     @endif
     <!--整站改色 _end-->
     <!-- GPS获取坐标 -->
@@ -43,7 +43,7 @@
 			securityJsCode: "{{ sysconf('amap_js_security_code') }}",
 		};
 	</script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_web_key') }}"></script>
+    <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.15&key={{ sysconf('amap_web_key') }}"></script>
     <script src="/assets/d2eace91/js/geolocation/amap.js?v=1.2"></script>
 
 

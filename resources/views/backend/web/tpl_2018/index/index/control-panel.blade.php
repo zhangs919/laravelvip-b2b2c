@@ -116,26 +116,26 @@
                         <li>
                             商城首页：
                             <span>
-								<a class="c-blue" href="http://{{ config('lrw.frontend_domain') }}" target="_blank">{{ config('lrw.frontend_domain') }}</a>
+								<a class="c-blue" href="//{{ config('lrw.frontend_domain') }}" target="_blank">{{ config('lrw.frontend_domain') }}</a>
 							</span>
                         </li>
                         <li>
                             WAP首页：
                             <span>
-								<a class="c-blue" href="http://{{ config('lrw.mobile_domain') }}" target="_blank">{{ config('lrw.mobile_domain') }}</a>
+								<a class="c-blue" href="//{{ config('lrw.mobile_domain') }}" target="_blank">{{ config('lrw.mobile_domain') }}</a>
 							</span>
                         </li>
                         <li>
                             卖家后台：
                             <span>
-								<a class="c-blue" href="http://{{ config('lrw.seller_domain') }}" target="_blank">{{ config('lrw.seller_domain') }}</a>
+								<a class="c-blue" href="//{{ config('lrw.seller_domain') }}" target="_blank">{{ config('lrw.seller_domain') }}</a>
 							</span>
                         </li>
                         <!--   -->
                         <li>
                             网点后台：
                             <span>
-								<a class="c-blue" href="http://{{ config('lrw.store_domain') }}" target="_blank">{{ config('lrw.store_domain') }}</a>
+								<a class="c-blue" href="//{{ config('lrw.store_domain') }}" target="_blank">{{ config('lrw.store_domain') }}</a>
 							</span>
                         </li>
 
@@ -184,7 +184,7 @@
             <div class="table-content"  id="div_1">
                 <div class="scroll-info" style="height:220px;">
                     <p>1、为商城绑定独立域名之前，请确保域名已经完成备案，以免绑定后影响系统正常访问！！</p>
-                    <p>2、请对您的域名进行CNAME解析，解析方式如下<a class="c-red" href="http://help.laravelvip.com/info/137.html" target="_blank">（猛戳这里！！！）</a>：</p>
+                    <p>2、请对您的域名进行CNAME解析，解析方式如下<a class="c-red" href="//help.laravelvip.com/info/137.html" target="_blank">（猛戳这里！！！）</a>：</p>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“www(或者其他前缀，例如：shop、mall、index等)”做CNAME解析跳转到“www.b2b2c.yunmall.laravelvip.com”</br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“backend”做CNAME解析跳转到“{{ config('lrw.backend_domain') }}”</br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将“seller”做CNAME解析跳转到“{{ config('lrw.seller_domain') }}”</br>

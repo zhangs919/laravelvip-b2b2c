@@ -148,9 +148,13 @@ class ShopController extends Backend
         $where = [];
         $where[] = ['shop_type', '>', 0]; // 个人店铺/企业店铺
         $where[] = ['shop_audit', 1]; // 审核通过
+        $whereBetween = [];
 
         // 搜索条件
-        $search_arr = ['key_word', 'shop_type', 'shop_status', 'start_from', 'start_to', 'end_from', 'end_to', 'credit_from', 'credit_to'];
+        $search_arr = ['key_word',
+//            'shop_type', 'shop_status',
+//            'start_from', 'start_to', 'end_from', 'end_to', 'credit_from', 'credit_to'
+        ];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
 
@@ -161,9 +165,21 @@ class ShopController extends Backend
                 }
             }
         }
+        if (!empty($params['start_from']) && empty($params['start_to'])) {
+            $where[] = ['created_at', '>', $params['start_from']];
+        } elseif (empty($params['start_from']) && !empty($params['start_to'])) {
+            $where[] = ['created_at', '<', $params['start_to']];
+        } elseif (!empty($params['start_from']) && !empty($params['start_to'])) {
+            $whereBetween =  [
+                'field' => 'created_at',
+                'condition' => [$params['start_from'], $params['start_to']]
+            ];
+        }
+//        dd($where);
         // 列表
         $condition = [
             'where' => $where,
+            'between' => $whereBetween,
             'relation' => ['orderInfo','member'],
             'sortname' => 'shop_id',
             'sortorder' => 'desc'

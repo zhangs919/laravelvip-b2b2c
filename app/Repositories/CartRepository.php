@@ -415,9 +415,9 @@ class CartRepository
                 ],
             ],
             'submit_enable' => 1,
-            'show_start_price_ids' => null,
+            'show_start_price_ids' => [],
             'shop_list' => $shop_list,
-            'invalid_list' => null
+            'invalid_list' => []
         ];
         return $cart;
     }

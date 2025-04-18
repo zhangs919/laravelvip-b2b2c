@@ -33,24 +33,6 @@
     <script src="/assets/d2eace91/js/szy.head.js"></script>
 </head>
 <body>
-{{--post 提交 错误提示信息--}}
-{{--{{ dd($errors) }}--}}
-@if(is_object($errors) && count($errors->all()) > 0)
-    <script>
-        var msg = '@foreach ($errors->all() as $error)<p>{{ $error }}</p>@endforeach';
-        layer.msg(msg);
-    </script>
-@elseif(is_array($errors) && !empty($errors))
-    <script>
-        var msg = '@foreach ($errors as $error)<p>{{ $error }}</p>@endforeach';
-        layer.msg(msg);
-    </script>
-@elseif(is_string($errors))
-    <script>
-        var msg = '<p>{{ $errors }}</p>';
-        layer.msg(msg);
-    </script>
-@endif
 <div class="header login-header w990">
     <div class="logo-info">
         <a href="./" class="logo">
@@ -61,7 +43,7 @@
     <div class="logo-right">
         <ul class="logo-right-menu">
             <li class="current"><a class="seller" href="//{{ config('lrw.seller_domain') }}/index" target="_blank"><i></i>商家管理中心</a></li>
-            <li ><a class="store" href="//{{ config('lrw.store_domain') }}/index" target="_blank"><i></i>网点管理中心</a></li>
+{{--            <li ><a class="store" href="//{{ config('lrw.store_domain') }}/index" target="_blank"><i></i>网点管理中心</a></li>--}}
         </ul>
     </div>
 </div>
@@ -73,24 +55,24 @@
             <div id="{{ $uuid }}" class="login-form">
                 <div class="login-con pos-r">
 
-                    <div class="login-switch">
+                    {{--<div class="login-switch">
                         <a href="javascript:;" class="qrcode-target btn-qrcode" on-moblie="false" title="手机扫码登录"></a>
-                    </div>
+                    </div>--}}
 
                     <div class="login-wrap ">
 
-                        <div class="login-tit">
+                        {{--<div class="login-tit">
                             还不是卖家？
                             <a href="//{{ config('lrw.frontend_domain') }}/shop/apply.html" class="regist-link color">
                                 立即申请
                                 <i>&gt;</i>
                             </a>
-                        </div>
+                        </div>--}}
 
                         <div class="login-radio">
                             <ul>
                                 <li class="active" id="login2" onclick="setTab('login',2,2)">普通登录</li>
-                                <li class="" id="login1" onclick="setTab('login',1,2)">动态密码登录</li>
+{{--                                <li class="" id="login1" onclick="setTab('login',1,2)">动态密码登录</li>--}}
                             </ul>
                         </div>
                         <!-- 普通登录 start -->
@@ -106,6 +88,12 @@
                                         <input type="text" id="username" name="LoginModel[username]" value="" class="text" tabindex="1" placeholder="已验证手机/邮箱/用户名" autocomplete="off" />
                                     </div>
 
+                                    @if(!empty(session('layerMsg')) && session()->get('layerMsg.status') == 'error')
+                                    <span id="username-error" data-error-id="username" class="form-control-error">
+                                        <i class="fa fa-warning"></i>
+                                        {{ session()->get('layerMsg.msg') }}
+                                    </span>
+                                    @endif
                                     <!-- 错误项标注 给div另添加一个class值'error' end -->
                                 </div>
                                 <div class="form-group item-password">
@@ -131,7 +119,7 @@
                                         <span>自动登录</span>
                                     </label>
 
-                                    <a class="forget-password fr" href="//{{ config('lrw.frontend_domain') }}/user/find-password.html">忘记密码？</a>
+{{--                                    <a class="forget-password fr" href="//{{ config('lrw.frontend_domain') }}/user/find-password.html">忘记密码？</a>--}}
                                 </div>
                                 <div class="login-btn">
                                     <input type="hidden" name="act" value="act_login" />

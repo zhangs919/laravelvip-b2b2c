@@ -24,32 +24,32 @@
     <link rel="stylesheet" href="/assets/d2eace91/iconfont/iconfont.css?v=1.6"/>
 
     <!-- 公共css -->
-    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
+    <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/common.css?v=1.6"/>
     <!-- -->
-    <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/topic_activity.css?v=1.6"/>
+    <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/topic_activity.css?v=1.6"/>
 
-    <link href="http://{{ config('lrw.frontend_domain') }}/css/template.css" rel="stylesheet">
+    <link href="//{{ config('lrw.frontend_domain') }}/css/template.css" rel="stylesheet">
 
 
     <!-- 风格样式 -->
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=1.6" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/color-style.css?v=1.6" id="site_style"/>
     @endif
     <!--整站改色 _end-->
 
     <link rel="stylesheet" href="/assets/d2eace91/css/design/tplsetting.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/design.css?v=1.6"/>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/common.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/index.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/tabs.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/bubbleup.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/jquery.hiSlider.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/index_tab.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/jump.js?v=20180418"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/nav.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/common.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/index.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/tabs.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/bubbleup.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/jquery.hiSlider.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/index_tab.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/jump.js?v=20180418"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/nav.js?v=20180418"></script>
     <!-- 背景设置 -->
 
 

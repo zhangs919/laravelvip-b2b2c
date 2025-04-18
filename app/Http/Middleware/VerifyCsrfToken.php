@@ -47,6 +47,7 @@ class VerifyCsrfToken extends Middleware
         'dashboard/activity-category/edit-sort',
         'design/tpl-setting/save-tpls',
         'design/tpl-setting/sort',
+        'system/clear-data/index',
 
         // 商家后台
         'goods/publish/add',

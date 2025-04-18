@@ -26,6 +26,8 @@ namespace App\Repositories;
 use App\Models\BackLog;
 use App\Models\BackOrder;
 use App\Models\DeliveryGoods;
+use App\Models\OrderGoods;
+use App\Models\OrderInfo;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -122,10 +124,15 @@ class BackOrderRepository
         }
         $info->back_reason_format = format_refund_reason($info->back_reason);
         $info->back_status_format = format_back_order_status($info->back_status, $info->back_type);
+        $info->address_info = []; // 退货地址
+        $info->seller_back_desc = '';
+        $info->counter = ($info->disabled_time - time())*1000;
 
         $info = $info->toArray();
 
+//        dd($info);
         return $info;
+
     }
 
 
@@ -178,6 +185,7 @@ class BackOrderRepository
             return false;
         }
         $info->back_reason_format = format_refund_reason($info->back_reason);
+        $info->back_status_format = format_back_order_status($info->back_status, $info->back_type);
         $info->address_info = []; // 退货地址
         $info->seller_back_desc = '';
         $info->counter = ($info->disabled_time - time())*1000;
@@ -234,8 +242,13 @@ class BackOrderRepository
         DB::beginTransaction();
         try {
             $backOrderInput = $params['BackOrder'];
-            $img_path = $params['img_path'];
-            $img_path_arr = explode(',', $img_path); // 最多3张
+            $img_path = '';
+            $img_path_arr = [];
+            if (!empty($params['img_path'])) {
+                $img_path = $params['img_path'];
+                $img_path_arr = explode(',', $img_path); // 最多3张
+            }
+
             $id = $params['id']; // 订单ID
             $record_id = $params['record_id']; // 订单商品表ID
             $gid = $params['gid']; // 商品ID
@@ -263,6 +276,28 @@ class BackOrderRepository
                 throw new \Exception('订单发货单不不存在');
             }
 
+            if (!in_array('buyer_refund', $order_info['buttons'])) {
+                throw new \Exception('订单状态无效！');
+            }
+            // 判断是否存在待处理退款退货申请
+            $back_order = DB::table('back_order')
+                ->where([['order_id', $id], ['record_id', $record_id],['sku_id', $sid], ['back_status', '<>', 7]])->first();
+            if (!empty($back_order)) {
+                throw new \Exception('存在待处理的申请！');
+            }
+            $back_number = $backOrderInput['back_number'] ?? 1; // 订单商品数量
+            $back_number = (int)$back_number;
+            $back_number = $back_number > $delivery_goods->send_number ? $delivery_goods->send_number : $back_number;//最大不超过购买数量
+
+            if ($back_type == 1) {
+                $back_number = $delivery_goods->send_number ?? 1; // 仅退款退换所有商品
+
+            } elseif ($back_type == 2) {
+
+            } elseif ($back_type == 3) {
+
+            }
+
             $post = [];
             $post['back_type'] = $back_type;
             $post['site_id'] = $order_info['site_id'];
@@ -273,13 +308,14 @@ class BackOrderRepository
             $post['record_id'] = $record_id;
             $post['goods_id'] = $gid;
             $post['sku_id'] = $sid;
-            $post['back_number'] = $backOrderInput['back_number'];
+            $post['back_number'] = $back_number;
             $post['add_time'] = time();
             $post['last_time'] = time();
             $post['disabled_time'] = time() + sysconf('seller_service_term') * 24 * 60 * 60;
             $post['back_status'] = 0;
             $post['back_reason'] = $backOrderInput['back_reason'];
             $post['refund_money'] = $backOrderInput['refund_money'];
+            $post['should_return'] = $backOrderInput['refund_money'];
             $post['refund_type'] = $backOrderInput['refund_type'];
             $post['refund_status'] = 0;
             $post['back_desc'] = $backOrderInput['back_desc'];
@@ -288,6 +324,18 @@ class BackOrderRepository
             $post['back_img3'] = $img_path_arr[2] ?? '';
 
             $post['back_sn'] = $this->makeBackSn();
+
+
+            // 1 退货、3 退款
+            if (in_array($back_type, [1, 2])) {
+                $orderReturnFee = self::getOrderReturnFee($post['order_id'], $post['record_id'], $back_number);
+                $post['should_return'] = $orderReturnFee['return_price'] ?? 0;
+                $post['return_shipping_fee'] = $orderReturnFee['return_shipping_fee'] ?? 0;
+            } else {
+                $post['should_return'] = 0;
+                $post['return_shipping_fee'] = 0;
+            }
+
             $ret = $this->store($post);
 
             // 添加售后协商记录
@@ -313,8 +361,7 @@ class BackOrderRepository
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -354,6 +401,7 @@ class BackOrderRepository
             $post['back_status'] = 0;
             $post['back_reason'] = $backOrderInput['back_reason'];
             $post['refund_money'] = $backOrderInput['refund_money'];
+            $post['should_return'] = $backOrderInput['refund_money'];
             $post['refund_type'] = $backOrderInput['refund_type'];
             $post['refund_status'] = 0;
             $post['back_desc'] = $backOrderInput['back_desc'];
@@ -431,7 +479,7 @@ class BackOrderRepository
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
+//            echo $e->getMessage();
             return false;
         }
     }
@@ -455,7 +503,6 @@ class BackOrderRepository
     {
         DB::beginTransaction();
         try {
-
             $post = [
                 'back_status' => 1,
                 'last_time' => time()
@@ -477,6 +524,32 @@ class BackOrderRepository
                 'add_time' => time(),
             ]);
 
+            // 仅退款 商家同意 立刻退款
+            if ($back_info['back_type'] == 1) {
+                // 仅退款
+                // todo 订单退款
+
+                $post = [
+                    'back_status' => 4,
+                    'last_time' => time()
+                ];
+                $this->update($back_info['back_id'], $post);
+
+                // 添加售后协商记录
+                $user = User::where('user_id', $back_info['user_id'])->select('user_name','headimg')->first();
+                $headimg = $user->headimg ?? '';
+                $contents = "退款成功";
+                $title = '系统';
+                BackLog::insert([
+                    'back_id' => $back_info['back_id'],
+                    'record_id' => $back_info['record_id'],
+                    'title' => $title,
+                    'contents' => $contents,
+                    'headimg' => $headimg,
+                    'add_time' => time(),
+                ]);
+            }
+
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -484,6 +557,144 @@ class BackOrderRepository
             echo $e->getMessage();
             return false;
         }
+    }
+
+    /**
+     * 计算订单退款金额
+     *
+     * @param int $order_id
+     * @param int $rec_id
+     * @param int $return_number
+     * @return array
+     */
+    public static function getOrderReturnFee($order_id = 0, $rec_id = 0, $return_number = 0)
+    {
+        $orders = OrderInfo::select('money_paid', 'goods_amount', 'surplus', 'shipping_fee')->where('order_id', $order_id)->first()->toArray();
+
+        // 计算运费
+        $return_shipping_fee = BackOrder::selectRaw("SUM(return_shipping_fee) AS return_shipping_fee")
+            ->where('order_id', $order_id)
+            ->whereIn('back_type', [1, 2])
+            ->value('return_shipping_fee');
+
+        $return_shipping_fee = $return_shipping_fee ?? 0;
+
+        $res = OrderGoods::selectRaw("goods_number, goods_price, (goods_number * goods_price) AS goods_amount")->where('record_id', $rec_id)->first()->toArray();
+
+        if ($res && $return_number > $res['goods_number'] || empty($return_number)) {
+            $return_number = $res['goods_number'];
+        }
+
+        $return_price = $return_number * $res['goods_price'];
+        $return_shipping_fee = $orders['shipping_fee'] - $return_shipping_fee;
+
+        if ($return_price > 0) {
+            $return_price = number_format($return_price, 2, '.', '');
+        }
+
+        if ($return_shipping_fee > 0) {
+            $return_shipping_fee = number_format($return_shipping_fee, 2, '.', '');
+        }
+
+        return [
+            'return_price' => $return_price,
+            'return_shipping_fee' => $return_shipping_fee
+        ];
+    }
+
+    /**
+     * 退换货订单 已退金额、运费、税费
+     * @param int $order_id
+     * @param int $back_id
+     * @return array
+     */
+    public static function orderRefundFee($order_id = 0, $back_id = 0)
+    {
+        if (empty($order_id)) {
+            return [];
+        }
+
+        $price = BackOrder::selectRaw('SUM(return_shipping_fee) AS return_shipping_fee, SUM(actual_return) AS actual_return, SUM(return_rate_price) AS return_rate_price')
+            ->where('order_id', $order_id)
+            ->whereIn('refund_type', [0,1])
+            ->where('refund_status', 1); // 已退款
+
+        if ($back_id > 0) {
+            $price = $price->where('back_id', '<>', $back_id);
+        }
+
+        $fee = $price->select('return_shipping_fee', 'actual_return', 'return_rate_price')->first()->toArray();
+
+        return $fee;
+    }
+
+    /**
+     * 获取退货单最终退款金额
+     *
+     * @param array $order_info
+     * @param array $back_order
+     * @param int $refund_type
+     * @return float|int|mixed
+     */
+    public static function getOrderReturnAmount($order_info = [], $back_order = [], $refund_type = 0)
+    {
+        if (empty($order_info) || empty($back_order)) {
+            return 0;
+        }
+
+        // 退换货单申请时记录的 应退金额
+        $should_return = $back_order['should_return'] ?? 0;
+
+        //已退金额
+        $order_id = $order_info['order_id'] ?? 0;
+        $back_id = $back_order['back_id'] ?? 0;
+        $refundFee = self::orderRefundFee($order_id, $back_id);
+        $actual_return = $refundFee['actual_return'] ?? 0;
+
+        if ($actual_return > 0 && $should_return > $actual_return) {
+            // 订单实际已支付金额（含使用余额）
+            $paid_amount = $order_info['money_paid'] + $order_info['surplus'];
+
+            if ($refund_type == 6 && $order_info['surplus'] > 0) {
+                // 原路退回 订单实际已支付金额 须扣除使用余额部分
+                $paid_amount -= $order_info['surplus'];
+            }
+            // 订单实际已支付金额 扣除运费
+            if ($paid_amount > 0 && $paid_amount >= $order_info['shipping_fee']) {
+                $paid_amount = $paid_amount - $order_info['shipping_fee'];
+            }
+            $paid_amount = $paid_amount - $actual_return;
+            $paid_amount = round($paid_amount, 2);
+            // 按金额 从小到大退款
+            if ($should_return > $paid_amount) {
+                $should_return = $paid_amount;
+            }
+        }
+
+        // 应退运费
+        $should_return += $back_order['return_shipping_fee'] ?? 0;
+
+//        // 应退优惠券
+//        if (isset($back_order['goods_coupons']) && $back_order['goods_coupons'] > 0) {
+//            $should_return -= $back_order['goods_coupons'];
+//        }
+//
+//        // 应退红包
+//        if (isset($back_order['goods_bonus']) && $back_order['goods_bonus'] > 0) {
+//            $should_return -= $back_order['goods_bonus'];
+//        }
+//
+//        // 应退折扣
+//        if (isset($back_order['goods_favourable']) && $back_order['goods_favourable'] > 0) {
+//            $should_return -= $back_order['goods_favourable'];
+//        }
+//
+//        // 应退储值卡折扣
+//        if (isset($back_order['value_card_discount']) && $back_order['value_card_discount'] > 0) {
+//            $should_return -= $back_order['value_card_discount'];
+//        }
+
+        return $should_return;
     }
 
     /**

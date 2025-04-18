@@ -29,6 +29,7 @@ use App\Repositories\UserRepository;
 use App\Services\IP;
 use App\Services\Statistics\UserStat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class ConnectApi
@@ -175,11 +176,13 @@ class ConnectApi
             }
             if ($state == true) {
                 // 缓存验证码
-                session(['sms_captcha' => $captcha]);
+//                session(['sms_captcha' => $captcha]);
+                $cache_id = CACHE_KEY_SMS_CAPTCHA[0].':'.$user_info->user_id.':'.$log_type;
+                cache()->put($cache_id, $captcha, CACHE_KEY_SMS_CAPTCHA[1]);
                 $sms = new SmsService();
                 $result = $sms->send($phone, $log_msg, $captcha);
 
-                if ($result) { // 短信发送成功 新增短信日志记录
+                if ($result == true) { // 短信发送成功 新增短信日志记录
                     $log_array['log_phone'] = $phone;
                     $log_array['log_captcha'] = $captcha;
                     $log_array['log_ip'] = $this->ipService->get();
@@ -188,12 +191,11 @@ class ConnectApi
                     $this->smsLog->store($log_array);
                 } else {
                     $state = false;
-                    $msg = '手机短信发送失败';
+                    $msg = env('APP_ENV') != 'production' ? $result : '手机短信发送失败';
                 }
             }
         }
-
-        return result($state, null, $msg, [], false);
+        return arr_result(($state ? 0 : -1), [], $msg);
     }
 
     /**
@@ -214,6 +216,48 @@ class ConnectApi
     }
 
     /**
+     * 第三方应用用户登录商城
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function attemptThirdLogin(Request $request)
+    {
+        $app_secret = $request->input('app_secret');
+        $mobile = $request->input('mobile');
+        $req_ip = request()->ip();
+        // 验证请求IP地址是否合法
+        if (!in_array($req_ip, THIRD_APP_AUTH_IP)) {
+            return arr_result(1, [], '非法请求');
+        }
+        if ($app_secret != THIRD_APP_SECRET) {
+            return arr_result(1, [], '授权密钥无效');
+        }
+
+        $u = User::where('mobile', $mobile)->first();
+        // 验证手机号是否存在
+        if (empty($u)) {
+            return arr_result(1, [], '手机号码不存在');
+        }
+        if (!$u->status) {
+            return arr_result(1, [], '账户已经禁用');
+        }
+        $device_name = $request->input('device_name');
+        $tokenData = $u->createToken($device_name,
+//                ['server:limited']
+            ['*'],
+            Carbon::now()->addDays(7) // token有效期：7天
+        );
+
+        $loginData = [
+            'mobile' => $mobile,
+            'access_token' => $tokenData->plainTextToken,
+            'expires_at' => $tokenData->accessToken->expires_at->toDateTimeString()
+        ];
+        return arr_result(0, $loginData);
+    }
+
+    /**
      * 执行登录
      *
      * @param Request $request
@@ -222,27 +266,28 @@ class ConnectApi
     public function attemptLogin(Request $request)
     {
         if ($mobile = $request->input('SmsLoginModel.mobile')) { // 动态密码登录
-            $user_info = User::where('mobile', $mobile)->first();
+            $u = User::where('mobile', $mobile)->first();
             // 验证手机号是否存在
-            if (empty($user_info)) {
+            if (empty($u)) {
                 return arr_result(-1, null, '手机号码不存在', ['redirect' => '/login.html']);
             }
-            if (!$user_info->status) {
+            if (!$u->status) {
                 return arr_result(-1, null, '账户已经禁用', ['redirect' => '/login.html']);
             }
 
             // 验证手机验证码
 			$sms_captcha = $request->input('SmsLoginModel.sms_captcha');
-            if (config('app.env') == 'production' && session('sms_captcha') != $sms_captcha) {
+            $cache_id = CACHE_KEY_SMS_CAPTCHA[0].':'.$u->user_id.':2';
+            $cache_sms_captcha = cache()->get($cache_id);
+            if (config('app.env') == 'production' && $cache_sms_captcha != $sms_captcha) {
                 return arr_result(-1, null, '手机验证码有误', ['redirect' => '/login.html']);
             }
             // 验证通过 手动认证登录
- 			auth('user')->login($user_info);
+ 			auth('user')->login($u);
 			$loginData = [
 				'mobile' => $mobile,
 				'sms_captcha' => $sms_captcha,
 			];
-			return arr_result(0, $loginData);
         } elseif ($username = $request->input('LoginModel.username')) { // 普通登录
             if (check_is_mobile($username)) { // 手机号登录
                 $username_field = 'mobile';
@@ -274,20 +319,24 @@ class ConnectApi
                     return arr_result(-1, null, '验证码有误', ['redirect' => '/login.html']);
                 }
             }
-
-            // app或小程序访问
-            if (is_app()) {
-                $device_name = $request->input('LoginModel.device_name');
-                $tokenData = $u->createToken($device_name,
-//                ['server:limited']
-                );
-                $loginData['access_token'] = $tokenData->plainTextToken;
-                $loginData['expires_at'] = $tokenData->accessToken->expires_at;
-                $loginData['token_type'] = 'bearer';
-                unset($loginData[$username_field], $loginData['password']);
-            }
-            return arr_result(0, $loginData);
         }
+
+        // app或小程序访问
+        if (is_app()) {
+            $device_name = $request->input('device_name');
+            $tokenData = $u->createToken($device_name,
+//                ['server:limited']
+            );
+            $loginData['access_token'] = $tokenData->plainTextToken;
+            // $loginData['expires_at'] = $tokenData->accessToken->expires_at;
+            $loginData['expires_at'] = time() + 525600 * 60; // 365天
+            $loginData['token_type'] = 'bearer';
+            $loginData['user_id'] = $u->user_id;
+            $loginData['user'] = $u;
+
+            unset($loginData[$username_field], $loginData['password']);
+        }
+        return arr_result(0, $loginData);
     }
 
     /**

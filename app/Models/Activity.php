@@ -48,13 +48,17 @@ class Activity extends BaseModel
     protected $fillable = [
         'act_name','act_title','act_type','act_img','start_time','end_time',
         'is_finish','purchase_num','status','is_recommend',
-        'shop_id','site_id','ext_info','use_range','sort','reason',
+        'create_user_id','shop_id','site_id','ext_info','use_range','sort','reason',
+        'act_ext_info'
 
         /*2-预售*/ // 预售表对活动表 一对一
 //        'id','act_id','sku_id','goods_id','cat_id','sale_base','act_price', 'act_stock', 'click_count',
 //        'shop_name','goods_name','goods_image','goods_price', 不存表
 //        "ext_info": "a:7:{s:13:\"pre_sale_mode\";s:1:\"2\";s:17:\"deliver_time_type\";s:1:\"0\";s:12:\"deliver_time\";s:1:\"3\";s:9:\"act_price\";a:4:{i:1089;s:2:\"12\";i:1090;s:1:\"2\";i:1091;s:1:\"3\";i:1092;s:1:\"5\";}s:13:\"earnest_money\";N;s:10:\"tail_money\";N;s:7:\"sku_ids\";a:4:{i:0;i:1089;i:1;i:1090;i:2;i:1091;i:3;i:1092;}}",
-
+//        "act_ext_info":"a:9:{s:12:"groupon_mode";i:0;s:9:"fight_num";s:1:"3";s:10:"fight_time";s:1:"1";s:15:"fight_time_unit";s:1:"0";s:9:"is_gather";s:1:"1";s:10:"is_imitate";s:1:"0";s:21:"is_commander_discount";s:1:"0";s:18:"discount_over_used";s:3:"0,1";s:12:"groupon_rule";s:538:"1、拼团有效期内达到成团人数，则拼团成功；若在有效期内未达到成团人数，则拼团失败，订单关闭并自动退款；
+//2、拼团有效期内，商品已提前售罄，则拼团失败；
+//3、高峰期间，同时支付的人数过多，团人数有限制，以接收第三方支付信息时间先后为准，超出该团人数限制的部分用户，则会拼团失败；
+//4、拼团失败的订单，系统会自动原路退款至支付账户中，如使用余额支付，则立即退回至余额中；";}"
 
         /*3-团购*/ // 活动表对商品表 一对多
 //          "ext_info": null,
@@ -136,5 +140,25 @@ class Activity extends BaseModel
     public function getExtInfoAttribute()
     {
         return json_decode($this->attributes['ext_info'],true);
+    }
+
+    /**
+     * 设置活动扩展数据 json_encode
+     *
+     * @param $value
+     */
+    public function setActExtInfoAttribute($value)
+    {
+        $this->attributes['act_ext_info'] = json_encode($value);
+    }
+
+    /**
+     * 获取活动扩展数据 json_decode
+     *
+     * @return mixed
+     */
+    public function getActExtInfoAttribute()
+    {
+        return json_decode($this->attributes['act_ext_info'],true);
     }
 }

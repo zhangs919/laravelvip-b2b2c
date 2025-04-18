@@ -83,6 +83,57 @@ class HomeController extends Frontend
     }
 
 
+    /**
+     * 获取底部导航
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function navigation()
+    {
+        if (is_app()) {
+            $nav_page = 'app';
+        } else {
+            $nav_page = 'm_site';
+        }
+        $limit = 6;
+        $nav_position = 3; // 底部
+        $navigation = $this->template->getNavigationData($nav_page, $limit, $nav_position); // 导航菜单
+
+        $data = [
+            'navigation' => $navigation,
+            'txtColor' => [
+                'title' => '文字颜色',
+                'name' => 'txtColor',
+                'default' => [
+                    'item' => '#282828'
+                ],
+                'color' => [
+                    'item' => '#282828'
+                ]
+            ],
+            'activeTxtColor' => [
+                'title' => '选中文字颜色',
+                'name' => 'activeTxtColor',
+                'default' => [
+                    'item' => '#F62C2C'
+                ],
+                'color' => [
+                    'item' => '#F62C2C'
+                ]
+            ],
+            'bgColor' => [
+                'title' => '背景颜色',
+                'name' => 'bgColor',
+                'default' => [
+                    'item' => '#fff'
+                ],
+                'color' => [
+                    'item' => '#fff'
+                ]
+            ]
+        ];
+        return result(0, $data);
+    }
 
     public function home(Request $request, $tpl_name = 'home')
     {

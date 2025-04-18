@@ -310,7 +310,7 @@
 
                                             {{--todo 以下代码重写--}}
                                             @if(!empty($order_info['delivery_list']))
-                                            @foreach($order_info['delivery_list'] as $goods)
+                                            @foreach($order_info['delivery_list']['goods_list'] as $goods)
                                             <tr>
                                                 <td class="header-item">
                                                     <div class="item-container clearfix">
@@ -322,7 +322,7 @@
                                                         <div class="item-meta">
                                                             <a class="item-link" href="{{ route('pc_show_goods', ['goods_id' => $goods['goods_id']]) }}" title="查看宝贝详情" target="_blank">
 
-                                                                {{ $og->goods_name }}
+                                                                {{ $goods['goods_name'] }}
                                                             </a>
                                                             <span class="icon-lists">
 																<span class="icon-group">
@@ -343,7 +343,7 @@
                                                 <td class="header-count font-high-light">{{ $goods['goods_number'] }}</td>
 
                                                 <td class="header-favorable font-high-light">
-                                                    <div class="favorable-hight-light">卖家优惠 ￥{{ $goods['discount'] }}</div>
+                                                    <div class="favorable-hight-light">卖家优惠 ￥{{ $goods['discount'] ?? 0 }}</div>
                                                 </td>
 
                                                 <td class="header-status font-high-light">
@@ -437,15 +437,14 @@
                                                         </div>
                                                         <div class="item-meta">
                                                             <a class="item-link" href="{{ route('pc_show_goods', ['goods_id'=>$goods['goods_id']]) }}" title="查看宝贝详情" target="_blank">
+                                                                @if(!empty($goods['act_labels']))
+                                                                    @foreach($goods['act_labels'] as $act_label)
+                                                                        <!-- 活动标签 -->
+                                                                        <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                                                    @endforeach
+                                                                @endif
                                                                 {{ $goods['goods_name'] }}
                                                             </a>
-
-                                                            {{--商品活动标识--}}
-                                                            @if($goods['goods_type'] > 0)
-                                                                <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">
-                                                                    <a>{{ format_order_goods_type($goods['goods_type']) }}</a>
-                                                                </div>
-                                                            @endif
 
                                                             <span class="icon-lists">
 
@@ -474,7 +473,7 @@
                                                 <td class="header-price font-high-light">￥{{ $goods['goods_price'] }}</td>
                                                 <td class="header-count font-high-light">{{ $goods['goods_number'] }}</td>
                                                 <td class="header-favorable font-high-light">
-                                                    <div class="favorable-hight-light">￥{{ $goods['goods_price']*$goods['goods_number'] }}</div>
+                                                    <div class="favorable-hight-light">￥{{ $goods['discount'] }}</div>
                                                 </td>
                                                 <td class="header-status font-high-light">
                                                     <div class="font-black">

@@ -15,7 +15,7 @@
 * 支持自适应APP或小程序端接口（使用Laravel官方的插件`sanctum`实现api接口开发）
 * 前端首页支持丰富的模版自定义装修
 * 丰富的营销工具助力商城的有效运营及客户转化
-* 用户端采用 `uniapp` 多端合一技术（安卓、iOS、微信小程序、公众号H5等。注：`uniapp`目前正在开发中，不建议直接使用！）
+* 用户端采用 `uniapp` 多端合一技术（安卓、iOS、微信小程序、公众号H5等。注：`uniapp`已停止更新了，不建议直接使用！）
 
 #### 开源交流群
 * QQ群：691273771
@@ -34,15 +34,21 @@
 #### 系统演示
 您可以通过以下链接查看系统的演示效果：
 
-- PC端后台演示：http://www.mall.laravelvip.com/
+- PC端演示[octane加速]：http://www.shop.laravelvip.com/
 
-- 微信端后台演示：http://m.mall.laravelvip.com/
+- 微信端演示[octane加速]：http://m.shop.laravelvip.com/
 
-- 平台端后台演示：http://backend.mall.laravelvip.com/
-   - 用户名和密码：test 123456(基础权限账号)、test01 123456(高级权限账号)
+- 安卓APP端演示：https://www.pgyer.com/35fYkO0L
 
-- 商家端后台演示：http://seller.mall.laravelvip.com/
-   - 用户名和密码：18669035369 111111
+#### APP端运行效果图
+
+<img src="./md/app/1.jpg" width="33%" height="33%" alt="">
+<img src="./md/app/2.jpg" width="33%" height="33%" alt="">
+<img src="./md/app/3.jpg" width="33%" height="33%" alt="">
+<img src="./md/app/4.jpg" width="33%" height="33%" alt="">
+<img src="./md/app/5.jpg" width="33%" height="33%" alt="">
+<img src="./md/app/6.jpg" width="33%" height="33%" alt="">
+
 
 #### 源码下载
 您可以通过以下链接下载该项目的源码：
@@ -51,22 +57,28 @@
 
    下载地址：[https://gitee.com/laravelmall/laravelvip-b2b2c](https://gitee.com/laravelmall/laravelvip-b2b2c)
 
-2. 用户端（也叫客户端、前端，uniapp开发 用于生成H5和微信小程序）(注：用户端项目正在开发中...)
+2. 用户端（也叫客户端、前端，uniapp开发 用于生成H5和微信小程序）(注：用户端开源版项目已停止更新)
 
    下载地址：[https://gitee.com/laravelmall/laravelvip-uni-app](https://gitee.com/laravelmall/laravelvip-uni-app)
+
+   注：最新版的uniapp用户端不对外开源！！！ 如有需要请联系作者获取。
 
 #### 环境要求
 - CentOS 7.0+
 - Nginx 1.10+
 - PHP 8.2+
-- MySQL 5.7+
+- MySQL 8.0+
 - Redis 7.0+
 
 #### 如何安装（同样适用于本地其他开发环境，如：homestead）
 请参考以下链接了解如何在服务器上安装该系统：
 
 - 哔哩哔哩：[乐融沃商城系统宝塔面板部署教程](https://www.bilibili.com/video/BV13w4m1m7RQ/)
-- [宝塔面板部署文档](./md/宝塔面板部署教程.md)
+- [宝塔面板部署教程（web界面一键安装，适用于无编程基础的用户）](./md/宝塔面板部署教程.md)
+
+注：`web界面一键安装` 仅适用于真实域名Linux服务器上部署安装，如果是本地开发环境安装，请参考 `手动命令行部署教程`
+
+- [手动命令行部署教程（命令行模式安装，适用于有一定编程基础的开发人员）](./md/手动命令行部署教程.md)
 
 #### 后台地址
 
@@ -78,6 +90,17 @@
 
 #### 系统功能列表
 ![系统功能列表](./md/系统功能列表.png "系统功能列表")
+
+#### 常见问题
+
+- 如果安装完成后，不能正常访问，请提交issue反馈，比如：使用的操作系统、php环境及版本信息、错误提示截图等信息，这边会根据反馈信息对bug进行修复处理。
+- 旧版本升级暂只支持 `v4.3.0` 以后的版本通过后台自动升级
+
+    **_注：升级后建议重新执行`composer install` 安装`composer`依赖_**
+  
+    **_注：为确保代码完整，请从gitee拉取master分支的最新代码后，再点击升级按钮进行升级_**
+
+- 使用`web界面一键安装`方式时，提示`执行seeder数据填充失败，状态码：0`，该种方式不适用于本地开发环境安装，请参考 `手动命令行部署教程`进行安装。
 
 #### 版权须知
 
@@ -92,9 +115,9 @@
 4. 技术支持：售后可以正常获得官方技术服务支持，确保网站稳定运行
 
 #### 如何获取正版授权？
-1. 请添加 QQ：410284576 或 wx：zs1321255 获取
+1. 请添加 QQ：410284576获取
 
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2018-2028 By 乐融沃科技 (https://www.laravelvip.com) All rights reserved。
+版权所有Copyright © 2018-2028 By 乐融沃 All rights reserved。

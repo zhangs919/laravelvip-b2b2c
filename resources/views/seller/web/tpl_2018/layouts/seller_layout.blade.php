@@ -33,6 +33,7 @@
     <link href="/assets/d2eace91/css/scrollBar/jquery.mCustomScrollbar.css" rel="stylesheet">
     <link href="/assets/d2eace91/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/d2eace91/css/app.common.min.css?v=333" rel="stylesheet">
+    <link href="/assets/d2eace91/css/styles.css?v=1.4" rel="stylesheet">
     <link href="/css/seller.css" rel="stylesheet">
     <link href="/css/mj-style.css" rel="stylesheet">
     @section('header_css_2')@show
@@ -44,6 +45,7 @@
     <link href="/assets/d2eace91/js/chosen/chosen.css" rel="stylesheet">
     <script src="/assets/d2eace91/js/jquery.js"></script>
     <script src="/assets/d2eace91/js/szy.head.js"></script>
+    <script src="/assets/d2eace91/js/jquery.base64.js?v=1.1"></script>
     <script type="text/javascript">
         $().ready(function() {
 
@@ -140,7 +142,7 @@
                     <div class="user-dropdown-select">
                         {{--<a href="#" target="_blank">批发市场</a>--}}
                         <a  href='{{ route('pc_shop_home',['shop_id'=>$shop->shop_id ?? 0]) }}' target="_blank">前往店铺</a>
-                        <a href="http://{{ config('lrw.frontend_domain') }}/user/security/edit-password.html" >修改密码</a>
+                        <a href="//{{ config('lrw.frontend_domain') }}/user/security/edit-password.html" >修改密码</a>
                         <a  onClick="clearCache()">清除缓存</a>
                         <a href="/site/logout" data-method="post" data-confirm="您确定要退出卖家中心吗？">安全退出</a>
                     </div>

@@ -47,6 +47,78 @@
         <form action="?a=save" method="post" id="js-setting" name="installForm">
             <div class="database_content">
                 <div class="database_content_title d-flex a-content">
+                    <div class="font-18 font-weight ml-25">域名配置</div>
+                </div>
+                <div class="database_content_footer ">
+
+                    <div class="d-flex a-content">
+                        <label for="frontend_sub" class="font-16 w-250 align-right">用户PC端域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="frontend_sub" id="frontend_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$frontend_sub}>" disabled>
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">用户PC端域名前缀，默认前缀为：www，如：<{$frontend_domain}></div>
+
+                    <div class="d-flex a-content">
+                        <label for="mobile_sub" class="font-16 w-250 align-right">手机端域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="mobile_sub" id="mobile_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$mobile_sub}>">
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">手机端域名前缀，默认为：m，如：<{$mobile_domain}></div>
+
+                    <div class="d-flex a-content">
+                        <label for="backend_sub" class="font-16 w-250 align-right">平台方后台域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="backend_sub" id="backend_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$backend_sub}>">
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">平台方后台域名前缀，默认为：backend，如：<{$backend_domain}></div>
+
+                    <div class="d-flex a-content">
+                        <label for="seller_sub" class="font-16 w-250 align-right">商家端后台域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="seller_sub" id="seller_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$seller_sub}>">
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">商家端后台域名前缀，默认为：seller，如：<{$seller_domain}></div>
+
+
+                    <div class="d-flex a-content">
+                        <label for="store_sub" class="font-16 w-250 align-right">网点端后台域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="store_sub" id="store_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$store_sub}>">
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">网点端后台域名前缀，默认为：store，如：<{$store_domain}></div>
+
+                    <div class="d-flex a-content">
+                        <label for="api_sub" class="font-16 w-250 align-right">APP接口域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="api_sub" id="api_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$api_sub}>">
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">APP接口域名前缀，默认为：api，如：<{$api_domain}></div>
+
+                    <div class="d-flex a-content">
+                        <label for="push_sub" class="font-16 w-250 align-right">Websocket域名前缀</label>
+                        <div class="ml-35 line-height-40">
+                            <input type="text" name="push_sub" id="push_sub" datatype="s"
+                                   class="radius-5 border-ccc h-40 w-350 required float-left" value="<{$push_sub}>">
+                        </div>
+                    </div>
+                    <div class="font-15 text-999 ml-285 py-10">Websocket域名前缀，默认为：push，如：<{$push_domain}></div>
+                </div>
+            </div>
+
+            <div class="database_content">
+                <div class="database_content_title d-flex a-content">
                     <div class="font-18 font-weight ml-25">数据库账号</div>
                 </div>
                 <div class="database_content_footer">
@@ -99,14 +171,14 @@
                     </div>
                     <div class="font-15 text-999 ml-285 py-10">⽤于安装程序的数据库，若不存在则创建</div>
 
-                    <div class="d-flex a-content">
-                        <label for="prefix" class="font-16 w-250 align-right">数据库表前缀</label>
-                        <div class="ml-35 line-height-40">
-                            <input type="text" name="db_prefix" id="prefix" value="_" datatype="s"
-                                   class="float-left radius-5 border-ccc h-40 w-350 required">
-                        </div>
-                    </div>
-                    <div class="font-15 text-999 ml-285 py-10">⼀个数据库安装多个程序时，建议您修改数据表前缀</div>
+                    <!--                    <div class="d-flex a-content">-->
+                    <!--                        <label for="prefix" class="font-16 w-250 align-right">数据库表前缀</label>-->
+                    <!--                        <div class="ml-35 line-height-40">-->
+                    <!--                            <input type="text" name="db_prefix" id="prefix" value="_" datatype="s"-->
+                    <!--                                   class="float-left radius-5 border-ccc h-40 w-350 required">-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="font-15 text-999 ml-285 py-10">⼀个数据库安装多个程序时，建议您修改数据表前缀</div>-->
                 </div>
             </div>
             <div class="database_content">
@@ -170,8 +242,8 @@
                     <div class="d-flex a-content">
                         <label for="ali_access_key_id" class="font-16 w-250 align-right">阿里云 AccessKeyID</label>
                         <div class="ml-35 line-height-40">
-                            <input type="text" name="ali_access_key_id" id="ali_access_key_id" datatype="s"
-                                   class="radius-5 border-ccc h-40 w-350 required float-left">
+                            <input type="text" name="ali_access_key_id" id="ali_access_key_id"
+                                   class="radius-5 border-ccc h-40 w-350 float-left">
                         </div>
                     </div>
                     <div class="font-15 text-999 ml-285 py-10">设置阿里云AccessKeyID，需登录阿里云后台获取</div>
@@ -179,20 +251,20 @@
                     <div class="d-flex a-content">
                         <label for="ali_access_key_secret" class="font-16 w-250 align-right">阿里云 AccessKeySecret</label>
                         <div class="ml-35 line-height-40">
-                            <input type="password" name="ali_access_key_secret" id="ali_access_key_secret" datatype="*"
-                                   class="required radius-5 border-ccc h-40 w-350 float-left">
+                            <input type="password" name="ali_access_key_secret" id="ali_access_key_secret"
+                                   class="radius-5 border-ccc h-40 w-350 float-left">
                         </div>
                     </div>
                     <div class="font-15 text-999 ml-285 py-10">设置阿里云AccessKeySecret，需登录阿里云后台获取</div>
 
-                    <div class="d-flex a-content">
-                        <label for="es_hosts" class="font-16 w-250 align-right">ElasticSearch hosts</label>
-                        <div class="ml-35 line-height-40">
-                            <input type="text" name="es_hosts" id="es_hosts" value="127.0.0.1"
-                                   class="float-left radius-5 border-ccc h-40 w-350 required">
-                        </div>
-                    </div>
-                    <div class="font-15 text-999 ml-285 py-10">如有用到 ElasticSearch 需设置</div>
+                    <!--                    <div class="d-flex a-content">-->
+                    <!--                        <label for="es_hosts" class="font-16 w-250 align-right">ElasticSearch hosts</label>-->
+                    <!--                        <div class="ml-35 line-height-40">-->
+                    <!--                            <input type="text" name="es_hosts" id="es_hosts" value="127.0.0.1"-->
+                    <!--                                   class="float-left radius-5 border-ccc h-40 w-350 required">-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="font-15 text-999 ml-285 py-10">如有用到 ElasticSearch 需设置</div>-->
                 </div>
             </div>
 

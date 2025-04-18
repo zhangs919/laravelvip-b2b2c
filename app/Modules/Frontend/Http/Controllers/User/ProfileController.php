@@ -90,6 +90,23 @@ class ProfileController extends UserCenter
     }
 
     /**
+     * 修改会员资料
+     * 适用app端
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function editProfile(Request $request)
+    {
+        $userUpdate = $request->only(['nickname', 'sex', 'summary', 'headimg']);
+        $ret = $this->userRep->update($this->user_id, $userUpdate);
+        if ($ret === false) {
+            return result(-1, null, '更新失败！');
+        }
+        return result(0, null, '更新成功！');
+    }
+
+    /**
      * 实名认证
      *
      * @param Request $request
@@ -151,6 +168,9 @@ class ProfileController extends UserCenter
             return result(-1, '', '设置头像失败！');
         }
 
+        if (is_app()) {
+            return result(0, ['path' => $uploadRes['data']['path'],'url' => $uploadRes['data']['url']], '设置头像成功');
+        }
         return result(0, null, '设置头像成功', ['path' => $uploadRes['data']['path'],'url' => $uploadRes['data']['url']]);
     }
 

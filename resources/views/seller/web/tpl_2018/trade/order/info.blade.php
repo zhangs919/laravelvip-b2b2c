@@ -243,6 +243,21 @@
                     <div class="txt-info w200">
                         <div class="desc m-b-5">
                             <a class="goods-name" href="{{ route('pc_show_goods', ['goods_id'=>$goods['goods_id']]) }}" target="_blank" title="查看商品详情">
+                                @if(!empty($goods['act_labels']))
+                                    @foreach($goods['act_labels'] as $act_label)
+                                        @if(!empty($act_label['group_sn']))
+                                            <a href="{{ $act_label['url'] }}" target="_blank" title="{{ $act_label['title'] }}">
+                                                <span style="display: inline-block;">
+                                                    <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                                    <span class="c-red">【{{ $info['groupon_status_format'] }}】</span>
+                                                </span>
+                                            </a>
+                                        @else
+                                        <!-- 活动标签 -->
+                                            <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 {{ $goods['goods_name'] }}
                             </a>
                             <!-- -->
@@ -250,13 +265,6 @@
                             <div class="icon">
                             </div>
                         </div>
-
-                        {{--商品活动标识--}}
-                        @if($goods['goods_type'] > 0)
-                            <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">
-                                <a>{{ format_order_goods_type($goods['goods_type']) }}</a>
-                            </div>
-                        @endif
 
 
                     </div>

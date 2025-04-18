@@ -293,7 +293,21 @@
                         <div class="txt-info">
                             <div class="desc">
                                 <a href="{{ route('pc_show_goods', ['goods_id' => $goods['goods_id']]) }}" class="goods-name" target="_blank" title="{{ $goods['goods_name'] }}">
-
+                                    @if(!empty($goods['act_labels']))
+                                        @foreach($goods['act_labels'] as $act_label)
+                                            @if(!empty($act_label['group_sn']))
+                                                <a href="{{ $act_label['url'] }}" target="_blank" title="{{ $act_label['title'] }}">
+                                                    <span style="display: inline-block;">
+                                                        <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                                        <span class="c-red">【{{ $v['groupon_status_format'] }}】</span>
+                                                    </span>
+                                                </a>
+                                            @else
+                                            <!-- 活动标签 -->
+                                                <em class="act-type {{ $act_label['code'] }}">{{ $act_label['name'] }}</em>
+                                            @endif
+                                        @endforeach
+                                    @endif
 
                                     {{ $goods['goods_name'] }}
                                 </a>
@@ -331,11 +345,11 @@
                         <div class="price m-b-3">￥{{ $goods['goods_price'] }}</div>
 
                         {{--商品活动标识--}}
-                        @if($goods['goods_type'] > 0)
-                            <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">
-                                <a>{{ format_order_goods_type($goods['goods_type']) }}</a>
-                            </div>
-                        @endif
+{{--                        @if($goods['goods_type'] > 0)--}}
+{{--                            <div class="goods-active {{ format_order_goods_type($goods['goods_type'],1) }}">--}}
+{{--                                <a>{{ format_order_goods_type($goods['goods_type']) }}</a>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
 
                     </td>
 

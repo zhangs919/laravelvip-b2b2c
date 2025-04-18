@@ -26,11 +26,13 @@ namespace App\Repositories;
 use App\Models\BackOrder;
 use App\Models\Goods;
 use App\Models\GoodsSku;
+use App\Models\GrouponLog;
 use App\Models\OrderInfo;
 use App\Models\SelfPickup;
 use App\Models\Shop;
 use App\Models\ShopFieldValue;
 use App\Models\User;
+use App\Services\Enum\ActTypeEnum;
 
 class OrderInfoRepository
 {
@@ -238,6 +240,11 @@ class OrderInfoRepository
                 $v['cs_region_name'] = null; // todo
                 $v['cs_address'] = null; // todo
                 $v['cs_user_id'] = null; // todo
+                // 订单活动数据
+                $order_data = !empty($v['order_data']) ? json_decode($v['order_data'], true) : [];
+                if (!empty($order_data)) {
+                    $v = array_merge($v, $order_data);
+                }
                 $v['order_number'] = 1; // 该会员下单总数
                 $v['order_status_format'] = format_order_status($v['order_status'],$v['shipping_status'],$v['pay_status']); //'交易关闭'; // todo
                 $v['shipping_status_format'] = format_shipping_status($v['shipping_status']); //'待发货'; // todo
@@ -285,6 +292,8 @@ class OrderInfoRepository
                         $goods['goods_back_format'] = '';
                         $goods['goods_status_format'] = format_order_status($v['order_status'],$v['shipping_status'],$v['pay_status']); // 取订单状态
 
+                        $goods['act_labels'] = $this->getActLabels($v);
+
                         $v['goods_list'][] = $goods;
                     }
                 }
@@ -298,14 +307,69 @@ class OrderInfoRepository
                 $v['order_final'] = $v['order_amount'] - $v['commission'];
                 $delivery_info = !empty($v['delivery_list']['goods_list']) ? array_first($v['delivery_list']['goods_list']) : [];
                 $v['buttons'] = get_order_all_operate_state($v, $delivery_info, 'shop');
-                $v['groupon_status'] = null;
-                $v['groupon_status_format'] = null;
+
+                $groupon_log = GrouponLog::where('order_sn', $v['order_sn'])->first();
+                $v['groupon_status'] = !empty($groupon_log) ? $groupon_log->status : null;
+                $v['groupon_status_format'] = !empty($groupon_log) ? str_replace([0,1,2], ['买家已付款，等待成团', '拼团成功', '拼团失败，交易取消'], $v['groupon_status']) : null;
                 $v['order_status_text'] = format_order_status($v['order_status'],$v['shipping_status'],$v['pay_status']); // 取订单状态
 
             }
         }
 
         return [$list, $total];
+    }
+
+    /**
+     * 获取订单活动标签
+     * 商家后台
+     *
+     * @param $order_type
+     * @return array
+     */
+    public function getActLabels($v)
+    {
+        $act_labels = [];
+        if (empty($v['order_type'])) {
+            return $act_labels;
+        }
+        switch ($v['order_type']) {
+            case ActTypeEnum::ACT_TYPE_FIGHT_GROUP:
+                $act_label = [
+                    'code' => 'fight-group',
+                    'name' => '拼团',
+                    'color' => '#FA8E1D',
+                ];
+                if (!empty($v['group_sn'])) {
+                    $act_label['url'] = '/dashboard/groupon-order/info?group_sn='.$v['group_sn'];
+                    $act_label['title'] = '点击查看看拼团详情';
+                    $act_label['group_sn'] = $v['group_sn'];
+                }
+                $act_labels[] = $act_label;
+                break;
+
+            case ActTypeEnum::ACT_TYPE_BARGAIN:
+                $act_labels[] = [
+                    'code' => 'bargain',
+                    'name' => '砍价',
+                    'color' => '#F0AA4A',
+                ];
+                break;
+
+            case ActTypeEnum::ACT_TYPE_LIMIT_DISCOUNT:
+                $act_labels[] = [
+                    'code' => 'limited-discount',
+                    'name' => '限时抢',
+                    'color' => '#FD7622',
+                ];
+                break;
+
+            default:
+
+                break;
+        }
+
+        return $act_labels;
+
     }
 
     /**
@@ -334,6 +398,11 @@ class OrderInfoRepository
                 // 客服信息
                 $customer_info = $this->customer->getCustomerMain($v['shop_id']);
 
+                $v['pay_time'] = format_time($v['pay_time']);
+                $v['shipping_time'] = format_time($v['shipping_time']);
+                $v['confirm_time'] = format_time($v['confirm_time']);
+                $v['evaluate_time'] = format_time($v['evaluate_time']);
+                $v['end_time'] = format_time($v['end_time']);
                 $v['pickup_name'] = $pickup_info['pickup_name'] ?? null;
                 $v['shop_name'] = $shop_info->shop_name ?? null;
                 $v['shop_type'] = $shop_info->shop_type ?? null;
@@ -349,12 +418,7 @@ class OrderInfoRepository
                 $v['comment_type'] = 3; //todo
                 $v['shop_url'] = "/shop/{$v['shop_id']}.html";
                 $v['complainted'] = -1; // todo
-                // todo 按钮显示控制
-                $v['buttons'] = [
-                    'cancel_order',
-                    'to_pay',
-                    'zr_to_pay'
-                ];
+
 
                 $v['goods_list'] = [];
                 $v['group_name'] = [];
@@ -369,7 +433,8 @@ class OrderInfoRepository
                         $goods['shop_id'] = $v['shop_id'];
                         $goods['contract_ids'] = !empty($goods_contracts) ? implode(',', array_column($goods_contracts, 'contract_id')) : '';
                         $goods['market_price'] = $goods['original_price'];
-                        $goods['sku_image'] = $goods['goods_image'];
+                        $goods['sku_image'] = get_image_url($goods['goods_image']);
+                        $goods['goods_image'] = get_image_url($goods['goods_image']);
 
                         $goods['back_id'] = null;
                         $goods['back_status'] = null;
@@ -380,6 +445,7 @@ class OrderInfoRepository
                         $goods['goods_price_format'] = '￥'.$goods['goods_price'];
                         $goods['market_price_format'] = '￥'.$goods['original_price'];
                         $goods['gifts_list'] = null; // todo
+                        $goods['act_labels'] = $this->getActLabels($v);
 
                         $v['goods_list'][] = $goods;
 
@@ -406,6 +472,14 @@ class OrderInfoRepository
                 $v['group_sn'] = null;
                 $v['has_backing_goods'] = false;
                 $v['countdown'] = $this->getOrderCountdown($v); // 倒计时
+
+                // 按钮显示控制
+                $v['buttons'] = get_order_all_operate_state($v, [], 'buyer');
+//                $v['buttons'] = [
+//                    'cancel_order',
+//                    'to_pay',
+//                    'zr_to_pay'
+//                ];
             }
         }
 
@@ -460,6 +534,11 @@ class OrderInfoRepository
         $info['inv_money'] = null;
         /*发票信息*/
 
+        // 订单活动数据
+        $order_data = !empty($info['order_data']) ? json_decode($info['order_data'], true) : [];
+        if (!empty($order_data)) {
+            $info = array_merge($info, $order_data);
+        }
         $info['back_id'] = null;
         $info['order_status_code'] = format_order_status($info['order_status'],$info['shipping_status'],$info['pay_status'],null,1);
         $info['order_status_format'] = format_order_status($info['order_status'],$info['shipping_status'],$info['pay_status']); //'交易关闭 | 订单已确认，等待买家付款'; // todo
@@ -484,7 +563,7 @@ class OrderInfoRepository
 
         $info['goods_list'] = [];
         if (!empty($info['order_goods'])) {
-            foreach ($info['order_goods'] as $goods) {
+            foreach ($info['order_goods'] as &$goods) {
 //                $goods_info = Goods::select(['shop_id'])->find($goods['goods_id']);
                 $goods_contracts = json_decode($goods['goods_contracts'],true);
                 $sku_info = GoodsSku::select(['goods_id','market_price','goods_number'])->find($goods['sku_id']);
@@ -524,6 +603,7 @@ class OrderInfoRepository
                 $goods['url'] = null;
                 $goods['saleservice'] = $goods_contracts; // 根据contract_ids查询保障服务信息
                 $goods['goods_status_format'] = format_order_status($info['order_status'],$info['shipping_status'],$info['pay_status']); // 取订单状态
+                $goods['act_labels'] = $this->getActLabels($info);
 
                 $info['goods_list'][] = $goods;
             }
@@ -599,6 +679,9 @@ class OrderInfoRepository
         $delivery_info = !empty($info['delivery_list']['goods_list']) ? array_first($info['delivery_list']['goods_list']) : [];
         $info['buttons'] = get_order_all_operate_state($info, $delivery_info, 'shop');
 
+        $groupon_log = GrouponLog::where('order_sn', $info['order_sn'])->first();
+        $info['groupon_status'] = !empty($groupon_log) ? $groupon_log->status : null;
+        $info['groupon_status_format'] = !empty($groupon_log) ? str_replace([0,1,2], ['买家已付款，等待成团', '拼团成功', '拼团失败，交易取消'], $info['groupon_status']) : null;
 //        $info['buttons'] = [
 //            "cancel_order",
 //            "change_order"
@@ -614,7 +697,7 @@ class OrderInfoRepository
      */
     public function getFrontendOrderInfo($condition)
     {
-        $info = $this->model->where($condition)->with(['orderGoods', 'deliveryOrder', 'deliveryOrder.deliveryGoods'])->first();
+        $info = $this->model->where($condition)->with(['orderGoods', 'deliveryOrder', 'deliveryOrder.deliveryGoods', 'deliveryOrder.deliveryGoods.orderGoods'])->first();
         if (empty($info)) {
             return false;
         }
@@ -636,6 +719,12 @@ class OrderInfoRepository
 
         // 客服信息
         $customer_info = $this->customer->getCustomerMain($info['shop_id']);
+
+        $info['pay_time'] = format_time($info['pay_time']);
+        $info['shipping_time'] = format_time($info['shipping_time']);
+        $info['confirm_time'] = format_time($info['confirm_time']);
+        $info['evaluate_time'] = format_time($info['evaluate_time']);
+        $info['end_time'] = format_time($info['end_time']);
 
         /*自提点信息*/
         $info['pickup_name'] = $pickup_info->pickup_name ?? null;
@@ -703,57 +792,60 @@ class OrderInfoRepository
         $info['delivery_list'] = [];
         if (!empty($info['delivery_order'])){
             $deliveryOrder = $info['delivery_order'];
-            $deliveryGoodsList = [];
-            if (!empty($deliveryOrder['delivery_goods'])) {
-                foreach ($deliveryOrder['delivery_goods'] as $deliveryGood) {
+            if ($deliveryOrder['delivery_status'] == 0) {
+                $deliveryGoodsList = [];
+                if (!empty($deliveryOrder['delivery_goods'])) {
+                    foreach ($deliveryOrder['delivery_goods'] as $deliveryGood) {
 
-                    $goods_contracts = json_decode($deliveryGood['order_goods']['goods_contracts'],true);
+                        $goods_contracts = json_decode($deliveryGood['order_goods']['goods_contracts'],true);
+//                        dd($deliveryGood);
 
-                    $deliveryGoodsList[] = [
-                        'id' => $deliveryGood['id'],
-                        'goods_id' => $deliveryGood['goods_id'],
-                        'sku_id' => $deliveryGood['sku_id'],
-                        'send_number' => $deliveryGood['send_number'],
+                        $deliveryGoodsList[] = [
+                            'id' => $deliveryGood['id'],
+                            'goods_id' => $deliveryGood['goods_id'],
+                            'sku_id' => $deliveryGood['sku_id'],
+                            'send_number' => $deliveryGood['send_number'],
 
-                        /*从发货单订单表读取数据*/
-                        'delivery_id' => $deliveryGood['delivery_id'],
-                        'delivery_sn' => $deliveryOrder['delivery_sn'],
-                        'order_id' => $deliveryOrder['order_id'],
-                        'user_id' => $deliveryOrder['user_id'],
-                        'shipping_id' => $deliveryOrder['shipping_id'],
-                        'shipping_code' => $deliveryOrder['shipping_code'],
-                        'shipping_name' => $deliveryOrder['shipping_name'],
-                        'shipping_type' => $deliveryOrder['shipping_type'],
-                        'delivery_charge' => $deliveryOrder['delivery_charge'],
-                        'sender_id' => $deliveryOrder['sender_id'],
-                        'region_code' => $deliveryOrder['region_code'],
-                        'name' => $deliveryOrder['name'],
-                        'address' => $deliveryOrder['address'],
-                        'tel' => $deliveryOrder['tel'],
-                        'express_sn' => $deliveryOrder['express_sn'],
-                        'delivery_status' => $deliveryOrder['delivery_status'],
-                        'add_time' => $deliveryOrder['add_time'],
-                        'send_time' => $deliveryOrder['send_time'],
-                        'icode' => $deliveryOrder['icode'],
-                        'is_show' => $deliveryOrder['is_show'],
-                        'is_arrived' => $deliveryOrder['is_arrived'],
-                        'exception_reason' => $deliveryOrder['exception_reason'],
+                            /*从发货单订单表读取数据*/
+                            'delivery_id' => $deliveryGood['delivery_id'],
+                            'delivery_sn' => $deliveryOrder['delivery_sn'],
+                            'order_id' => $deliveryOrder['order_id'],
+                            'user_id' => $deliveryOrder['user_id'],
+                            'shipping_id' => $deliveryOrder['shipping_id'],
+                            'shipping_code' => $deliveryOrder['shipping_code'],
+                            'shipping_name' => $deliveryOrder['shipping_name'],
+                            'shipping_type' => $deliveryOrder['shipping_type'],
+                            'delivery_charge' => $deliveryOrder['delivery_charge'],
+                            'sender_id' => $deliveryOrder['sender_id'],
+                            'region_code' => $deliveryOrder['region_code'],
+                            'name' => $deliveryOrder['name'],
+                            'address' => $deliveryOrder['address'],
+                            'tel' => $deliveryOrder['tel'],
+                            'express_sn' => $deliveryOrder['express_sn'],
+                            'delivery_status' => $deliveryOrder['delivery_status'],
+                            'add_time' => $deliveryOrder['add_time'],
+                            'send_time' => $deliveryOrder['send_time'],
+                            'icode' => $deliveryOrder['icode'],
+                            'is_show' => $deliveryOrder['is_show'],
+                            'is_arrived' => $deliveryOrder['is_arrived'],
+                            'exception_reason' => $deliveryOrder['exception_reason'],
 
-                        /*从订单商品表读取数据*/
-                        'goods_image' => get_image_url($deliveryGood['order_goods']['goods_image']),
-                        'goods_name' => $deliveryGood['order_goods']['goods_name'],
-                        'spec_info' => $deliveryGood['order_goods']['spec_info'],
-                        'goods_price' => $deliveryGood['order_goods']['goods_price'],
-                        'other_price' => $deliveryGood['order_goods']['other_price'],
-                        'pay_change' => $deliveryGood['order_goods']['pay_change'],
-                        'contract_ids' => !empty($goods_contracts) ? implode(',', array_column($goods_contracts, 'contract_id')) : '',
-                        'saleservice' => $goods_contracts, // 根据contract_ids查询保障服务信息
-                    ];
+                            /*从订单商品表读取数据*/
+                            'goods_image' => get_image_url($deliveryGood['order_goods']['goods_image']),
+                            'goods_name' => $deliveryGood['order_goods']['goods_name'],
+                            'spec_info' => $deliveryGood['order_goods']['spec_info'],
+                            'goods_price' => $deliveryGood['order_goods']['goods_price'],
+                            'other_price' => $deliveryGood['order_goods']['other_price'],
+                            'pay_change' => $deliveryGood['order_goods']['pay_change'],
+                            'contract_ids' => !empty($goods_contracts) ? implode(',', array_column($goods_contracts, 'contract_id')) : '',
+                            'saleservice' => $goods_contracts, // 根据contract_ids查询保障服务信息
+                        ];
 
+                    }
+                    $info['delivery_list']['goods_list'] = $deliveryGoodsList;
+                    // todo
+                    $info['delivery_list']['base_info'] = array_first($deliveryGoodsList);
                 }
-                $info['delivery_list']['goods_list'] = $deliveryGoodsList;
-                // todo
-                $info['delivery_list']['base_info'] = array_first($deliveryGoodsList);
             }
         }
         // 移除 delivery_order 对象
@@ -781,6 +873,7 @@ class OrderInfoRepository
                 $goods['pay_status'] = $info['pay_status'];
                 $goods['is_cod'] = $info['is_cod'];
                 $goods['shop_bonus'] = $info['shop_bonus'];
+                $goods['goods_image'] = get_image_url($goods['goods_image']);
 
 
                 $goods['contract_ids'] = "1";
@@ -794,6 +887,7 @@ class OrderInfoRepository
                 $goods['saleservice'] = []; // 根据contract_ids查询保障服务信息
                 $goods['goods_back_format'] = '';
                 $goods['goods_status_format'] = format_order_status($info['order_status'],$info['shipping_status'],$info['pay_status']); // 取订单状态
+                $goods['act_labels'] = $this->getActLabels($info);
 
                 $info['goods_list'][] = $goods;
             }

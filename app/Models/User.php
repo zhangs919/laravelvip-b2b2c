@@ -39,8 +39,9 @@ class User extends Authenticatable
 		'invite_code', 'parent_id', 'is_recommend',
 		'customs_money', // todo
 
-		'security_level' // 这个应该是算出来 不能存数据
+		'security_level', // 这个应该是算出来 不能存数据
 
+        'summary','live_verified','live_verified_remark'
 		/*
 		 * 新加字段
 		 * rank_point

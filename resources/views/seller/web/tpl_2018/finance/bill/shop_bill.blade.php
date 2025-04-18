@@ -26,9 +26,9 @@
                     <span>结算状态：</span>
                 </label>
                 <div class="form-control-wrap">
-                    <select id="shop_status" name="chargeoff_status" class="form-control">
+                    <select id="chargeoff_status" name="chargeoff_status" class="form-control">
                         <option value="">全部</option>
-                        <option value="0">未出账</option>
+{{--                        <option value="0">未出账</option>--}}
                         <option value="1">已出账</option>
                         <option value="2">账单结束</option>
                         <option value="3">关闭账单</option>
@@ -36,18 +36,18 @@
                 </div>
             </div>
         </div>
-        <div class="simple-form-field">
-            <div class="form-group">
-                <label class="control-label">
-                    <span>店铺欠款：</span>
-                </label>
-                <div class="form-control-wrap">
-                    <select id="shop_money_lt_zero" name="shop_money_lt_zero" class="form-control">
-                        <option value="">全部</option><option value="1">是</option><option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+{{--        <div class="simple-form-field">--}}
+{{--            <div class="form-group">--}}
+{{--                <label class="control-label">--}}
+{{--                    <span>店铺欠款：</span>--}}
+{{--                </label>--}}
+{{--                <div class="form-control-wrap">--}}
+{{--                    <select id="shop_money_lt_zero" name="shop_money_lt_zero" class="form-control">--}}
+{{--                        <option value="">全部</option><option value="1">是</option><option value="0">否</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="simple-form-field">
             <label class="control-label"></label>
             <div class="form-control-wrap">
@@ -197,18 +197,18 @@
             $("#bill_status_" + status).addClass("active");
             serachList();
         }
-        $('.toggle-btn').each(function() {
-            $(this).find('td:not(.tcheck,.handle)').click(function() {
-                $(this).parents().addClass("active").siblings('.toggle-btn').removeClass('active');
-                $(".toggle-panel").not($(this).parents().next(".toggle-panel")).hide();
-                $(this).parents().next(".toggle-panel").slideToggle(300);
-            })
-        });
-        $("body").on("click", ".show_panel", function() {
-            $(this).parents().addClass("active").siblings('.toggle-btn').removeClass('active');
-            $(".toggle-panel").not($(this).parents().next(".toggle-panel")).hide();
-            $(this).parents().next(".toggle-panel").slideToggle(300);
-        });
+        // $('.toggle-btn').each(function() {
+        //     $(this).find('td:not(.tcheck,.handle)').click(function() {
+        //         $(this).parents().addClass("active").siblings('.toggle-btn').removeClass('active');
+        //         $(".toggle-panel").not($(this).parents().next(".toggle-panel")).hide();
+        //         $(this).parents().next(".toggle-panel").slideToggle(300);
+        //     })
+        // });
+        // $("body").on("click", ".show_panel", function() {
+        //     $(this).parents().addClass("active").siblings('.toggle-btn').removeClass('active');
+        //     $(".toggle-panel").not($(this).parents().next(".toggle-panel")).hide();
+        //     $(this).parents().next(".toggle-panel").slideToggle(300);
+        // });
     </script>
 @stop
 

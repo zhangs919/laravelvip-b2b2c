@@ -667,7 +667,8 @@ class OrderController extends Seller
 
         // 成功
         flash('success', '一键发货成功！');
-        return redirect('/trade/order/list');
+//        return redirect('/trade/order/list');
+        return redirect('/trade/delivery/to-shipping?id='.$ret);
     }
 
     /**
@@ -680,7 +681,7 @@ class OrderController extends Seller
     {
         $order_id = $request->get('order_id');
 
-        $data = '12.00';
+        $data = '0.00';
 
         return result(0, $data, '',['no_use'=>0,'is_update_price'=>0]);
     }

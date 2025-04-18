@@ -41,9 +41,9 @@
 <div class="page-container">
     <div class="login-menu swing animated">
         <ul>
-            <li class="current"><a class="blue-bg"  target="_blank" href="http://{{ config('lrw.backend_domain') }}"><i>☜</i>平台后台</a></li>
-            <li><a class="green-bg"  target="_blank" href="http://{{ config('lrw.seller_domain') }}">商家后台</a></li>
-            <li><a class="yellow-bg"  target="_blank" href="http://{{ config('lrw.store_domain') }}">网点后台</a></li>
+            <li class="current"><a class="blue-bg"  target="_blank" href="//{{ config('lrw.backend_domain') }}"><i>☜</i>平台后台</a></li>
+            <li><a class="green-bg"  target="_blank" href="//{{ config('lrw.seller_domain') }}">商家后台</a></li>
+            <li><a class="yellow-bg"  target="_blank" href="//{{ config('lrw.store_domain') }}">网点后台</a></li>
         </ul>
     </div>
     <div class="center">

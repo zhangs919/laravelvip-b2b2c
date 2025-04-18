@@ -116,7 +116,7 @@ class RoleController extends Backend
         ];
         $this->setLayoutBlock($blocks); // 设置block
 
-        $nodes = AdminNode::orderBy('id', 'asc')->get()->toArray();
+        $nodes = AdminNode::orderBy('id', 'asc')->where('is_show', 1)->get()->toArray();
         $nodes = $this->tree->list_to_tree($nodes, 'id', 'parent_node_id');
 
 

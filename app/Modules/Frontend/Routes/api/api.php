@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/auth/third-login', '\App\Api\V1\Controllers\AuthController@thirdLogin'); // 第三方应用登录
 Route::post('/auth/login', '\App\Api\V1\Controllers\AuthController@login'); // 用户登录
 
 Route::post('/auth/logout', '\App\Api\V1\Controllers\AuthController@logout'); // 退出登录

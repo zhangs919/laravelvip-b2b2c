@@ -23,6 +23,8 @@
 namespace App\Modules\Backend\Http\Controllers\Finance;
 
 use App\Modules\Base\Http\Controllers\Backend;
+use App\Repositories\SellerBillOrderRepository;
+use App\Repositories\SellerCommissionBillRepository;
 use App\Repositories\ShopBillRepository;
 use Illuminate\Http\Request;
 
@@ -46,13 +48,19 @@ class BillController extends Backend
     ];
 
     protected $shopBill;
+    protected $sellerCommissionBill;
+    protected $sellerBillOrder;
 
-    public function __construct(ShopBillRepository $shopBill)
+    public function __construct(ShopBillRepository $shopBill,
+        SellerCommissionBillRepository $sellerCommissionBill,
+        SellerBillOrderRepository $sellerBillOrder
+    )
     {
         parent::__construct();
 
         $this->shopBill = $shopBill;
-
+        $this->sellerCommissionBill = $sellerCommissionBill;
+        $this->sellerBillOrder = $sellerBillOrder;
     }
 
     /**
@@ -95,12 +103,17 @@ class BillController extends Backend
         $params = $request->all();
 
         $where = [];
+        $whereHas = [];
         // 搜索条件 name 商品名称/订单编号/买家账号
         $search_arr = ['keywords','is_supply'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
                 if ($v == 'keywords') { //
-
+                    $whereHas = [
+                        'table' => 'shop',
+                        'field' => 'shop_name',
+                        'value' => $params[$v]
+                    ];
                 }
                 else {
                     $where[] = [$v, $params[$v]];
@@ -111,18 +124,23 @@ class BillController extends Backend
         // 列表
         $condition = [
             'where' => $where,
-            'sortname' => 'bill_id',
-            'sortorder' => 'asc'
+            'where_has' => $whereHas,
+            'with' => ['shop' => function($q) {
+                $q->selectRaw('shop_id,shop_name');
+            }],
+            'sortname' => 'id',
+            'sortorder' => 'asc',
+            'relation' => 'order'
         ];
 
         // 获取数据
-        list($list, $total) = $this->shopBill->getList($condition);
+        list($list, $total) = $this->sellerCommissionBill->getList($condition);
         $list = $list->toArray();
 
         $pageHtml = pagination($total);
-        $page = frontend_pagination($total, true);
+//        $page = frontend_pagination($total, true);
 
-        $calc_result = null;
+        $calc_result = $this->sellerCommissionBill->getSumData();
 
         $compact = compact('title', 'list', 'pageHtml','calc_result','type');
 
@@ -147,12 +165,12 @@ class BillController extends Backend
 
 
         $action_span = [
-            [
-                'url' => '',
-                'id' => 'btn_export',
-                'icon' => 'fa-cloud-download',
-                'text' => '导出'
-            ],
+//            [
+//                'url' => '',
+//                'id' => 'btn_export',
+//                'icon' => 'fa-cloud-download',
+//                'text' => '导出'
+//            ],
             [
                 'url' => 'javascript:history.go(-1);',
                 'id' => '',
@@ -170,33 +188,42 @@ class BillController extends Backend
         $this->setLayoutBlock($blocks); // 设置block
 
 
-        $shop_id = seller_shop_info()->shop_id;
-        $store_id = 0; // todo
-        $group_time = $request->get('group_time');
-        $type = $request->get('type', 0);
-        $order_sn = $request->get('order_sn');
-        $store_type = 0;//todo
+        $params = $request->all();
+        $id = $params['id'];
 
-//        $is_cod = $request->get('is_cod');
+        $where = [];
+        // 搜索条件 name 商品名称/订单编号/买家账号
+        $search_arr = ['order_sn', 'chargeoff_status'];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+                if ($v == 'order_sn') {
+                    $where[] = [$v, 'like', "%{$params[$v]}%"];
+                } else {
+                    $where[] = [$v, $params[$v]];
+                }
+            }
+        }
 
-        // 查询参数
-        $params['shop_id'] = seller_shop_info()->shop_id;
-        $params['store_id'] = $store_id;
-        $params['group_time'] = $group_time;
-        $params['type'] = $type;
-        $params['order_sn'] = $order_sn;
+        $where[] = ['bill_id', $id];
+
+        // 列表
+        $condition = [
+            'where' => $where,
+            'sortname' => 'id',
+            'sortorder' => 'asc',
+        ];
 
         // 获取数据
-        list($list, $total) = $this->shopBill->getOrders($params);
+        list($list, $total) = $this->sellerBillOrder->getList($condition);
+        $total_data = $this->sellerBillOrder->getSumData($where);
         $pageHtml = pagination($total);
+        $page = frontend_pagination($total, true);
 
-        $order_message = $this->shopBill->getOrderCount($params);
-        $shop_info = seller_shop_info()->toArray();
-        $store_info = null; // 网点信息
-        $site = null; // 站点信息
-
-        $compact = compact('title', 'list', 'pageHtml','shop_id','store_id','group_time','type','order_sn','store_type',
-            'order_message','shop_info','store_info','site');
+        $bill_info = $this->sellerCommissionBill->getById($id);
+        $bill_info['start_time'] = format_time($bill_info['start_time'], 'Y-m-d');
+        $bill_info['end_time'] = format_time($bill_info['end_time'], 'Y-m-d');
+        $shop_info = seller_shop_info();
+        $compact = compact('title', 'list', 'pageHtml', 'bill_info','shop_info','total_data');
 
         if ($request->ajax()) {
             $render = view('finance.bill.partials._shop_orders_info', $compact)->render();

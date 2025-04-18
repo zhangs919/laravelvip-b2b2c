@@ -58,7 +58,7 @@
                     </dt>
                     <dd>
                         <span>
-                            <a href="/trade/order/info.html?id={{ $back_info['order_id'] }}" data-toggle="tooltip" data-placement="auto bottom" title="点击进入订单详情" class="c-blue">{{ $order_info['order_sn'] }}</a>
+                            <a href="/trade/order/info?id={{ $back_info['order_id'] }}" data-toggle="tooltip" data-placement="auto bottom" title="点击进入订单详情" class="c-blue">{{ $order_info['order_sn'] }}</a>
                         </span>
                     </dd>
                 </dl>
@@ -453,7 +453,7 @@
                         $.msg(result.message, {
                             time: 2000
                         }, function(){
-                            $.go("/trade/back/info.html?id=" + back_id);
+                            $.go("/trade/back/info?id=" + back_id);
                         });
                     }else{
                         $.msg(result.message, {
@@ -479,7 +479,7 @@
                         $.msg(result.message, {
                             time: 2000
                         }, function(){
-                            $.go('/trade/back/info.html?id=' + back_id);
+                            $.go('/trade/back/info?id=' + back_id);
                         });
                     }else{
                         $.msg(data.message, {

@@ -273,22 +273,26 @@ class GiftController extends Seller
 
         if (!empty($postModel['act_id'])) {
             // 编辑
-            $ret = $this->activity->modifyActivity($activityData, $goodsActivityData);
+            try {
+                $ret = $this->activity->modifyActivity($activityData, $goodsActivityData);
+            } catch (\Exception $e) {
+                return result(-1, null, '赠品活动编辑失败'.$e->getMessage());
+            }
             $msg = '赠品活动编辑';
             $act_id = $postModel['act_id'];
         }else {
             // 添加
             $activityData['shop_id'] = seller_shop_info()->shop_id;
 
-            $ret = $this->activity->addActivity($activityData, $goodsActivityData);
+            try {
+                $ret = $this->activity->addActivity($activityData, $goodsActivityData);
+            } catch (\Exception $e) {
+                return result(-1, null, '赠品活动添加失败'.$e->getMessage());
+            }
             $msg = '赠品活动添加';
             $act_id = @$ret->act_id;
         }
 
-        if ($ret === false) {
-            // fail
-            return result(-1, null, $msg.'失败');
-        }
         // success
         shop_log($msg.'成功。ID：'.$act_id);
         return result(0, null, $msg.'成功');

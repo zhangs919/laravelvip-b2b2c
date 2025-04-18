@@ -1,17 +1,17 @@
 @extends('layouts.design_layout')
 
 @section('header_css')
-    <link href="http://{{ config('lrw.frontend_domain') }}/css/common.css" rel="stylesheet">
-    <link href="http://{{ config('lrw.frontend_domain') }}/css/shop_index.css" rel="stylesheet">
-    <link href="http://{{ config('lrw.frontend_domain') }}/css/topic_activity.css" rel="stylesheet">
-    <link href="http://{{ config('lrw.frontend_domain') }}/css/template.css" rel="stylesheet">
-    <link href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css" rel="stylesheet">
+    <link href="//{{ config('lrw.frontend_domain') }}/css/common.css" rel="stylesheet">
+    <link href="//{{ config('lrw.frontend_domain') }}/css/shop_index.css" rel="stylesheet">
+    <link href="//{{ config('lrw.frontend_domain') }}/css/topic_activity.css" rel="stylesheet">
+    <link href="//{{ config('lrw.frontend_domain') }}/css/template.css" rel="stylesheet">
+    <link href="//{{ config('lrw.frontend_domain') }}/css/color-style.css" rel="stylesheet">
     <link href="/assets/d2eace91/css/design/tplsetting.css" rel="stylesheet">
     <link href="/assets/d2eace91/css/design/design.css" rel="stylesheet">
     @if(sysconf('custom_style_enable') == 1)
-        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=2" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/custom/site-color-style-0.css?v=2" id="site_style"/>
     @else
-        <link rel="stylesheet" href="http://{{ config('lrw.frontend_domain') }}/css/color-style.css?v=2" id="site_style"/>
+        <link rel="stylesheet" href="//{{ config('lrw.frontend_domain') }}/css/color-style.css?v=2" id="site_style"/>
     @endif
     <link href="/assets/d2eace91/js/colour/css/spectrum.css?v=20201012" rel="stylesheet">
     <link href="/assets/d2eace91/js/chosen/chosen.css?v=20201012" rel="stylesheet">
@@ -568,7 +568,7 @@
     <script src="/assets/d2eace91/js/design/jump.js?v=202003261806"></script>
     <script src="/assets/d2eace91/js/design/common.js?v=202003261806"></script>
     <script src="/assets/d2eace91/js/design/tplsetting.js?v=202003261806"></script>
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/app.frontend.index.min.js?v=12"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/app.frontend.index.min.js?v=12"></script>
     <script src="/assets/d2eace91/js/jquery-ui.js?v=202003261806"></script>
     <script src="/assets/d2eace91/min/js/validate.min.js?v=20201016"></script>
     <script src="/assets/d2eace91/min/js/upload.min.js?v=20201016"></script>

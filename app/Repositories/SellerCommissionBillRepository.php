@@ -33,4 +33,16 @@ class SellerCommissionBillRepository
         return $data;
     }
 
+    public function getSumData()
+    {
+        $info = SellerCommissionBill::selectRaw('IFNULL(SUM(order_amount), 0.00) as total_order_amount,
+                IFNULL(SUM(IF(chargeoff_status=1,should_amount,0)), 0.00) as total_wait_amount,
+                IFNULL(SUM(IF(chargeoff_status=2,should_amount,0)), 0.00) as total_finished_amount,
+                IFNULL(COUNT(shop_id), 0) as shop_count
+            ')
+            ->first();
+
+        return $info;
+    }
+
 }

@@ -85,16 +85,16 @@ class CategoryController extends Backend
                 'icon' => 'fa-plus',
                 'text' => '添加商品分类'
             ],
-            [
-                'url' => 'cate-batch-upload',
-                'icon' => 'fa-cloud-upload',
-                'text' => '上传ecshop数据源'
-            ],
-            [
-                'url' => '/goods/cloud/category-import',
-                'icon' => 'fa-cloud-upload',
-                'text' => '批量导入分类库'
-            ]
+//            [
+//                'url' => 'cate-batch-upload',
+//                'icon' => 'fa-cloud-upload',
+//                'text' => '上传ecshop数据源'
+//            ],
+//            [
+//                'url' => '/goods/cloud/category-import',
+//                'icon' => 'fa-cloud-upload',
+//                'text' => '批量导入分类库'
+//            ]
         ];
 
         $explain_panel = [

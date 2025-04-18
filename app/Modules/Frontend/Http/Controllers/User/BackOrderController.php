@@ -12,6 +12,7 @@ use App\Repositories\BackOrderRepository;
 use App\Repositories\OrderInfoRepository;
 use App\Repositories\ShopRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BackOrderController extends UserCenter
 {
@@ -54,16 +55,17 @@ class BackOrderController extends UserCenter
         }
 
         $where[] = ['user_id', $this->user_id];
-
+        $whereIn = [];
         if ($type == 0) {
-            $where[] = ['back_type', [1,2]];
+            $whereIn[] = ['back_type', [1,2]];
         } else {
-            $where[] = ['back_type', [3,4]];
+            $whereIn[] = ['back_type', [3,4]];
         }
 
         // 列表
         $condition = [
             'where' => $where,
+            'where_in' => $whereIn,
             'sortname' => 'back_id',
             'sortorder' => 'desc'
         ];
@@ -118,7 +120,7 @@ class BackOrderController extends UserCenter
         ];
         $back_info = $this->backOrder->getUserCenterBackOrderInfo($condition);
         if (empty($back_info)) {
-            abort(200, '退款信息不存在！');
+            abort(1, '退款信息不存在！');
         }
 
         $back_schedules = $this->backOrder->getBackSchedules($back_info);
@@ -195,14 +197,14 @@ class BackOrderController extends UserCenter
 		];
 		$order_info = $this->orderInfo->getFrontendOrderInfo($condition);
 		if (empty($order_info)) {
-			abort(200, '订单id无效');
+			abort(1, '订单id无效');
 		}
 		// 订单商品信息
         $goods_info = [];
 		if ($record_id) {
             $goods_info = OrderGoods::where('record_id',$record_id)->first()->toArray();
             if (empty($goods_info)) {
-                abort(200, '订单商品信息不存在！');
+                abort(1, '订单商品信息不存在！');
             }
         }
 		// 可退款金额
@@ -218,6 +220,9 @@ class BackOrderController extends UserCenter
         $webData = []; // web端（pc、mobile）数据对象
         $data = [
             'app_prefix_data' => [
+                'refund_reason_list' => $refund_reason_list,
+                'exchange_reason_list' => $exchange_reason_list,
+                'format_repair_reason' => $format_repair_reason,
 				'order_info' => $order_info,
                 'goods_info' => $goods_info,
             ],
@@ -233,12 +238,39 @@ class BackOrderController extends UserCenter
     public function applySave(Request $request)
     {
         $params = $request->all();
+        // 验证参数
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer',
+            'record_id' => 'required|integer',
+            'gid' => 'required|integer',
+            'sid' => 'required|integer',
+            'back_type' => 'required|integer',
+            'BackOrder.back_reason' => 'required|integer',
+            'BackOrder.back_number' => 'required|integer',
+            'BackOrder.refund_money' => 'required|numeric',
+            'BackOrder.refund_type' => 'required|integer',
+            'BackOrder.back_desc' => 'required|string',
+            'img_path' => 'nullable|string',
+        ], [
+            'id.required' => '订单ID不能为空',
+            'BackOrder.back_reason.required' => '退款原因不能为空',
+            'BackOrder.back_number.required' => '退款数量不能为空',
+            'BackOrder.refund_money.required' => '退款金额不能为空',
+        ]);
 
-        $ret = $this->backOrder->applySave($params, $this->user_id);
-        if (!$ret) {
-            abort(200, '提交失败');
+        if ($validator->fails()) {
+            abort(-1, $validator->messages()->first());
         }
 
+        try {
+            $this->backOrder->applySave($params, $this->user_id);
+        } catch (\Exception $e) {
+            abort(-1, $e->getMessage());
+        }
+
+        if (is_app()) {
+            return result(0, [], '提交成功');
+        }
         return redirect('/user/back.html');
     }
 
@@ -275,12 +307,12 @@ class BackOrderController extends UserCenter
         ];
         $order_info = $this->orderInfo->getFrontendOrderInfo($condition);
         if (empty($order_info)) {
-            abort(200, '订单id无效');
+            abort(1, '订单id无效');
         }
         // 订单商品信息
         $goods_info = OrderGoods::where('record_id',$back_info['record_id'])->first()->toArray();
         if (empty($goods_info)) {
-            abort(200, '订单商品信息不存在！');
+            abort(1, '订单商品信息不存在！');
         }
         // 可退款金额
         $goods_info['refund_amount'] = $goods_info['goods_price']*$goods_info['goods_number'];
@@ -317,15 +349,24 @@ class BackOrderController extends UserCenter
         ];
         $back_info = $this->backOrder->getUserCenterBackOrderInfo($condition);
         if (empty($back_info)) {
-            abort(200, '退款信息不存在！');
+            abort(1, '退款信息不存在！');
         }
 
         $ret = $this->backOrder->editSave($params, $back_info);
         if (!$ret) {
-            abort(200, '保存失败');
+            abort(1, '保存失败');
+        }
+        if (is_app()) {
+            return result(0, [], '操作成功');
         }
 
         return redirect('/user/back.html');
+    }
+
+    public function editOrder(Request $request)
+    {
+        $type = $params['type'] ?? ''; // 类型 默认：空 空-修改订单 shipping-发回商品
+
     }
 
     /**
@@ -350,6 +391,9 @@ class BackOrderController extends UserCenter
         $ret = $this->backOrder->cancel($params, $back_info);
         if (!$ret) {
             abort(200, '保存失败');
+        }
+        if (is_app()) {
+            return result(0, [], '撤销成功');
         }
 
         return redirect('/user/back.html');

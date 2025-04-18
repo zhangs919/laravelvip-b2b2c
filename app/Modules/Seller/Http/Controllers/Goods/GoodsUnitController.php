@@ -60,7 +60,7 @@ class GoodsUnitController extends Seller
 
         $action_span = [
             [
-                'url' => '',
+                'url' => 'javascript:void(0);',
                 'id' => 'btn-add',
                 'icon' => 'fa-plus',
                 'text' => '添加商品单位'

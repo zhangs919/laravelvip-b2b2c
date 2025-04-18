@@ -66,22 +66,22 @@ class UserController extends Backend
                 'icon' => 'fa-plus',
                 'text' => '新增个人会员'
             ],
-            [
-                'url' => 'user-batch-upload',
-                'icon' => 'fa-cloud-upload',
-                'text' => '上传ecshop数据源'
-            ],
-            [
-                'url' => 'batch-add',
-                'icon' => 'fa-cloud-upload',
-                'text' => '批量导入会员'
-            ],
-            [
-                'id' => 'btn_update_user_rank',
-                'url' => '',
-                'icon' => 'fa-cloud-upload',
-                'text' => '重建会员等级关联关系'
-            ],
+//            [
+//                'url' => 'user-batch-upload',
+//                'icon' => 'fa-cloud-upload',
+//                'text' => '上传ecshop数据源'
+//            ],
+//            [
+//                'url' => 'batch-add',
+//                'icon' => 'fa-cloud-upload',
+//                'text' => '批量导入会员'
+//            ],
+//            [
+//                'id' => 'btn_update_user_rank',
+//                'url' => '',
+//                'icon' => 'fa-cloud-upload',
+//                'text' => '重建会员等级关联关系'
+//            ],
         ];
 
         $explain_panel = [
@@ -97,10 +97,12 @@ class UserController extends Backend
 
         $params = $request->all();
         $where = [];
+        $whereBetween = [];
         // 搜索条件
         $search_arr = ['user_name', 'rank_id', 'is_seller', 'is_real',
             'reg_from', 'status', 'shopping_status', 'comment_status',
-            'reg_time_begin', 'reg_time_end', 'last_time'];
+//            'reg_time_begin', 'reg_time_end', 
+            'last_time'];
         foreach ($search_arr as $v) {
             if (isset($params[$v]) && !empty($params[$v])) {
 
@@ -110,6 +112,16 @@ class UserController extends Backend
                     $where[] = [$v, $params[$v]];
                 }
             }
+        }
+        if (!empty($params['reg_time_begin']) && empty($params['reg_time_end'])) {
+            $where[] = ['created_at', '>', $params['reg_time_begin']];
+        } elseif (empty($params['reg_time_begin']) && !empty($params['reg_time_end'])) {
+            $where[] = ['created_at', '<', $params['start_to']];
+        } elseif (!empty($params['reg_time_begin']) && !empty($params['reg_time_end'])) {
+            $whereBetween =  [
+                'field' => 'created_at',
+                'condition' => [$params['reg_time_begin'], $params['reg_time_end']]
+            ];
         }
 
         // 排序
@@ -124,6 +136,7 @@ class UserController extends Backend
         // 列表
         $condition = [
             'where' => $where,
+            'between' => $whereBetween,
             'sortname' => $sortname,
             'sortorder' => $sortorder
         ];

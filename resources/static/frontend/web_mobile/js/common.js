@@ -139,15 +139,15 @@ $().ready(function() {
 				yes = options;
 				options = {};
 			}
-
+			
 			// 手机端不需要icon
 			delete options['icon'];
-
+			
 			options = $.extend({
 				// 隐藏滚动条
 				scrollbar: true
 			}, options);
-
+			
 			options.success = function(layer) {
 				if (layer.find('.layui-layer-btn a').eq(1)) {
 					layer.find('.layui-layer-btn a').eq(1).insertBefore(layer.find('.layui-layer-btn a').eq(0));
@@ -181,7 +181,7 @@ $().ready(function() {
 		if (szy_tag && url && url.indexOf("/" + szy_tag) == -1 && url.indexOf("/") == 0) {
 			url = "/" + szy_tag + url;
 		}
-
+		
 		if (show_loading !== false) {
 			// 开启缓载效果
 			$.loading.start();
@@ -219,7 +219,7 @@ $().ready(function() {
 		if (options.icon_type == 1) {
 			icon_html = '<i class="iconfont icon-success"></i>';
 		}
-
+		
 		if (content == "") {
 			console.log("空的内容", window.location.href, options);
 			return;
@@ -424,7 +424,7 @@ $().ready(function() {
 (function() {
 	if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
 		handleFontSize();
-	} else {
+	} else {　　
 		if (document.addEventListener) {
 			document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
 		} else if (document.attachEvent) {
@@ -543,7 +543,7 @@ function webNavToMiniprogram(link, open_miniprogram)
 	if(open_miniprogram == undefined){
 		open_miniprogram = '';
 	}
-
+	
 	if (isWeiXin()) {
 		wx.ready(function() {
 			if (window.__wxjs_environment === 'miniprogram') {
@@ -551,7 +551,7 @@ function webNavToMiniprogram(link, open_miniprogram)
 					min_nav_click = true;
 					wx.miniProgram.navigateTo({
 						url: link,
-						complete: function() {
+						complete: function() { 
 							setTimeout(function(){ min_nav_click = false; }, 3000);
 						}
 					});
@@ -644,72 +644,72 @@ function show_goods_freight_map(options) {
 	if(!options){
 		options = {};
 	}
+	
+    $.loading.start();
+    
+    return $.get('/site/freight-map', {
+        goods_id: options.goods_id,
+        address_id: options.address_id,
+        position: options.position
+    }, function(result) {
+        if (result.code == 0) {
+        	var element = $(result.data);
+        	
+            $("body").append(element);
 
-	$.loading.start();
-
-	return $.get('/site/freight-map', {
-		goods_id: options.goods_id,
-		address_id: options.address_id,
-		position: options.position
-	}, function(result) {
-		if (result.code == 0) {
-			var element = $(result.data);
-
-			$("body").append(element);
-
-			$(element).animate({
-				height: $(window).height()
-			}, 300);
-		} else {
-			$.msg(result.message, {
-				time: 3000
-			});
-		}
-	}, "JSON").always(function(){
-		$.loading.stop();
-	});
+            $(element).animate({
+                height: $(window).height()
+            }, 300);
+        } else {
+            $.msg(result.message, {
+                time: 3000
+            });
+        }
+    }, "JSON").always(function(){
+    	$.loading.stop();
+    });
 }
 
 // 商品不支持配送地址地图弹层
 $(function() {
-	$("body").on('click', '.no-goods-tip', function() {
-		var code = $(this).data('code');
-		var message = $(this).data('message');
-		var shop_id = $(this).data('shop-id');
-		var goods_id = $(this).data('goods_id');
-		var position = $(this).data('position');
-		var address_id = $(this).data('address_id');
-		var freight_type = $(this).data('freight_type');
+    $("body").on('click', '.no-goods-tip', function() {
+        var code = $(this).data('code');
+        var message = $(this).data('message');
+        var shop_id = $(this).data('shop-id');
+        var goods_id = $(this).data('goods_id');
+        var position = $(this).data('position');
+        var address_id = $(this).data('address_id');
+        var freight_type = $(this).data('freight_type');
 
-		// 错误提示
-		if (code == "limit_sale" && freight_type == "1") {
-			show_goods_freight_map({
-				goods_id: goods_id,
-				address_id: address_id,
-				position: position
-			});
-		} else {
-			$.msg(message, {
-				time: 3000
-			});
-		}
-	});
+        // 错误提示
+        if (code == "limit_sale" && freight_type == "1") {
+        	show_goods_freight_map({
+            	goods_id: goods_id, 
+            	address_id: address_id, 
+            	position: position
+            });
+        } else {
+            $.msg(message, {
+                time: 3000
+            });
+        }
+    });
 
-	// 首页客服按钮
+     // 首页客服按钮
 	var windowTop = 20;
 	$(window).scroll(function() {
-		var scrolls = $(this).scrollTop();
-		if(scrolls >= windowTop){
-			$('.yikf-form').css({
-				'transform': 'translate3d(100px,0,0)'
-			});
-			windowTop=scrolls;
-		}else if(scrolls <= windowTop && scrolls > 20){
-			$('.yikf-form').css('transform', 'translate3d(0,0,0)');
-			windowTop = scrolls;
-		}else if(scrolls <= 20){
-			$('.yikf-form').css('transform', 'translate3d(0,0,0)');
-		}
+	    var scrolls = $(this).scrollTop();
+	    if(scrolls >= windowTop){
+	        $('.yikf-form').css({
+	        	'transform': 'translate3d(100px,0,0)'
+	        });
+	        windowTop=scrolls;
+	    }else if(scrolls <= windowTop && scrolls > 20){
+	        $('.yikf-form').css('transform', 'translate3d(0,0,0)');
+	        windowTop = scrolls;
+	    }else if(scrolls <= 20){
+	        $('.yikf-form').css('transform', 'translate3d(0,0,0)');
+	    }
 	})
 
 	//返回上一页，如果没有可返回的页面，返回首页

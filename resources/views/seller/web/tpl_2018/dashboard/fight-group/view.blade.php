@@ -9,12 +9,27 @@
 {{--content--}}
 @section('content')
 
-    <form id="FightGroupModel" class="form-horizontal" name="FightGroupModel" action="/dashboard/fight-group/view?id=95" method="post" enctype="multipart/form-data">
+    <form id="FightGroupModel" class="form-horizontal" name="FightGroupModel" action="/dashboard/fight-group/view?id={{ $model['act_id'] }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="table-content m-t-30 clearfix fight-group-goods">
             <div class="form-horizontal">
                 <!-- 隐藏域 -->
-                <input type="hidden" id="fightgroupmodel-act_id" class="form-control" name="FightGroupModel[act_id]" value="95">
+                <input type="hidden" id="fightgroupmodel-act_id" class="form-control" name="FightGroupModel[act_id]" value="{{ $model['act_id'] }}">
+                <!-- 拼团类型 -->
+                <div class="simple-form-field" >
+                    <div class="form-group">
+                        <label for="fightgroupmodel-groupon_mode" class="col-sm-4 control-label">
+                            <span class="ng-binding">拼团类型：</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-control-box">
+                                <label class="control-label cur-p"><input type="radio" class="groupon_mode" name="FightGroupModel[groupon_mode]" value="0" @if($model['groupon_mode'] == 0) checked @else disabled @endif> 普通拼团</label>
+                                <label class="control-label cur-p"><input type="radio" class="groupon_mode" name="FightGroupModel[groupon_mode]" value="1" @if($model['groupon_mode'] == 1) checked @else disabled @endif> 老带新拼团</label>
+                            </div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">普通拼团：所有会员都可以选择开团或者凑团购买商品<br>老带新拼团：所有人都能开团，但是只有店铺的新会员，并且没有下过单的用户才能参团；</div></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="simple-form-field">
                     <div class="form-group">
                         <label class="col-sm-3 control-label">
@@ -22,34 +37,14 @@
                         </label>
                         <div class="col-sm-9">
                             <div class="form-control-box">
-							<span class="fight-group-pic m-r-10" id="goods_image">
-																<img src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/backend/gallery/2019/01/05/15466928132839.jpg">
-															</span>
-                                <a id="goods_name" class="control-label" href="http://www.test.com/goods-250.html" target="_blank">金色喀秋莎1000克/包玉米面条</a>
+                                <span class="fight-group-pic m-r-10" id="goods_image">
+                                    <img src="{{ get_image_url($goods_info['goods_image']) }}">
+                                </span>
+                                <a id="goods_name" class="control-label" href="{{ route('pc_show_goods', ['goods_id' => $goods_info['goods_id']]) }}" target="_blank">{{ $goods_info['goods_name'] }}</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- 活动图片 -->
-                <div class="simple-form-field" >
-                    <div class="form-group">
-                        <label for="fightgroupmodel-act_img" class="col-sm-4 control-label">
-
-                            <span class="ng-binding">活动图片：</span>
-                        </label>
-                        <div class="col-sm-8">
-                            <div class="form-control-box">
-
-                                <img class="imgpreview-box" src="http://xxx.oss-cn-beijing.aliyuncs.com/images/15164/shop/1/images/2019/01/11/15471852565412.jpg" width="250px" height="102px">
-
-
-                            </div>
-
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">用拼团活动页面的图片，请使用640*260像素<br>大小1M内的图片，支持jpg、jpeg、gif、png格式上传</div></div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="simple-form-field" >
                     <div class="form-group">
                         <label for="fightgroupmodel-cat_id" class="col-sm-4 control-label">
@@ -58,13 +53,9 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="form-control-box">
-
-                                <label class="control-label">大金智能锁</label>
-
-
+                                <label class="control-label">{{ $cat_name }}</label>
                             </div>
-
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">活动分类可在平台方后台->商城->促销->拼团->拼团分类添加</div></div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">活动分类由平台方管理员添加，如果没有您所需要的分类，请联系平台方管理人员</div></div>
                         </div>
                     </div>
                 </div>
@@ -76,55 +67,190 @@
                         </label>
                         <div class="col-sm-9">
                             <div class="form-control-box">
-
                                 <label class="control-label">
-                                    2019-01-11 13:40:36
+                                    {{ format_time($model['start_time']) }}
                                     <span class="ctime">至</span>
-                                    2019-01-18 13:40:36
+                                    {{ format_time($model['end_time']) }}
                                 </label>
-
-
                             </div>
-
                             <div class="help-block help-block-t"></div>
                         </div>
                     </div>
-                </div>			<!-- 拼团价格 -->
+                </div>
+                <!-- 是否开启凑团 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
-                        <label for="fightgroupmodel-act_price" class="col-sm-4 control-label">
-                            <span class="text-danger ng-binding">*</span>
-                            <span class="ng-binding">拼团价格：</span>
+                        <label for="fightgroupmodel-is_gather" class="col-sm-4 control-label">
+                            <span class="ng-binding">是否开启凑团：</span>
                         </label>
                         <div class="col-sm-8">
                             <div class="form-control-box">
-
-                                <label class="control-label">6.00&nbsp;&nbsp;元
-                                    <span id="goods_price" class="m-l-20">店铺价：<strong class="order-amount c-orange m-r-5">90.00</strong>元</span></label>
-
-
+                                <label class="control-label">{{ $model['act_ext_info']['is_gather'] ? '是' : '否' }}</label>
                             </div>
-
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">拼团价不能大于店铺价</div></div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">开启凑团后，对于未参团的买家，活动商品详情页会显示未成团的团列表，买家可以直接任选一个参团，提升成团率。</div></div>
+                        </div>
+                    </div>
+                </div>            <!-- 是否开启模拟成团 -->
+                <div class="simple-form-field" >
+                    <div class="form-group">
+                        <label for="fightgroupmodel-is_imitate" class="col-sm-4 control-label">
+                            <span class="ng-binding">是否开启模拟成团：</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-control-box">
+                                <label class="control-label">{{ $model['act_ext_info']['is_imitate'] ? '是' : '否' }}</label>
+                            </div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">开启模拟成团后，拼团有效期内人数未满的团，系统将会模拟“匿名买家”凑满人数，使该团成团。您只需要对已付款参团的真实买家发货。建议合理开启，以提高成团率。</div></div>
                         </div>
                     </div>
                 </div>
-                <!-- 团长优惠金额百分比 -->
+                <!-- 是否开启团长优惠 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
-                        <label for="fightgroupmodel-first_discount" class="col-sm-4 control-label">
-
-                            <span class="ng-binding">团长享受折扣：</span>
+                        <label for="fightgroupmodel-is_commander_discount" class="col-sm-4 control-label">
+                            <span class="ng-binding">是否开启团长优惠：</span>
                         </label>
                         <div class="col-sm-8">
                             <div class="form-control-box">
-
-                                <label class="control-label">10&nbsp;%</label>
-
-
+                                <label class="control-label">{{ $model['act_ext_info']['is_commander_discount'] ? '是' : '否' }}</label>
                             </div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">开启团长优惠后，团长将享受更优惠价格，有助于提高开团率和成团率。 注意：模拟成团的团长也能享受团长优惠，请谨慎设置，避免资金损失。</div></div>
+                        </div>
+                    </div>
+                </div>            <!-- 优惠是否叠加使用 -->
+                <div class="simple-form-field" >
+                    <div class="form-group">
+                        <label for="fightgroupmodel-discount_over_used" class="col-sm-4 control-label">
+                            <span class="ng-binding">优惠是否叠加使用：</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-control-box">
+                                <label class="control-label cur-p m-r-10">
+                                    <input type="checkbox" name="FightGroupModel[discount_over_used][]" value="0" disabled="true" checked="{{ in_array(0, $model['act_ext_info']['discount_over_used']) ? 'true' : 'false' }}">可叠加使用红包
+                                </label>
+                                <label class="control-label cur-p m-r-10">
+                                    <input type="checkbox" name="FightGroupModel[discount_over_used][]" value="1" disabled="true" checked="{{ in_array(0, $model['act_ext_info']['discount_over_used']) ? 'true' : 'false' }}">可叠加使用积分
+                                </label>
+                            </div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">未选中，则下单时不可使用红包/积分结算；选中，则下单时可使用红包/积分结算；</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="simple-form-field">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">拼团价格：</label>
+                        <div class="col-sm-9">
+                            <div id="sku_list_container">
+                                <table id="1715863162RhV9et" class="table table-hover m-b-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="w50 text-c">序号</th>
+                                        <th class="w200">SKU规格</th>
+                                        <th class="w100 text-c">商品售价（元）</th>
+                                        <th class="w100 text-c">
+                                            拼团价（元）
+                                            <div class="batch">
+                                                <a class="batch-edit" title="批量设置">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <div class="batch-input" style="display: none">
+                                                    <h6>批量设置拼团价：</h6>
+                                                    <a class="batch-close">X</a>
+                                                    <input class="form-control text small batch_set_act_price" type="text">
+                                                    <a class="btn btn-primary btn-sm m-l-5 btn_batch_set" data-type=0>设置</a>
+                                                    <span class="arrow"></span>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        @if($is_commander_discount)
+                                        <th class="w120 text-c">
+                                            团长享受折扣（%）<i class='fa fa-question-circle c-ccc m-l-5' data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="团长享受折扣价是以拼团价格为计算基数的；例如：商品拼团价为10元，团长享受折扣为90%，那么团长购买此商品最终的价格即为9元；"></i>
+                                            <div class="batch">
+                                                <a class="batch-edit" title="批量设置">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <div class="batch-input" style="display: none">
+                                                    <h6>批量设置团长享受折扣：</h6>
+                                                    <a class="batch-close">X</a>
+                                                    <input class="form-control text small batch_set_first_discount" type="text">
+                                                    <a class="btn btn-primary btn-sm m-l-5 btn_batch_set" data-type=1>设置</a>
+                                                    <span class="arrow"></span>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="w120 text-c">
+                                            团长优惠价格（元）<i class='fa fa-question-circle c-ccc m-l-5' data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="团长优惠价格是以拼团价为计算基数的；例如：商品拼团价为10元，团长优惠价格为2元，那么团长购买此商品最终的价格为8元；"></i>
+                                            <div class="batch">
+                                                <a class="batch-edit" title="批量设置">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <div class="batch-input" style="display: none">
+                                                    <h6>批量设置团长优惠价格：</h6>
+                                                    <a class="batch-close">X</a>
+                                                    <input class="form-control text small batch_set_discount_price" type="text">
+                                                    <a class="btn btn-primary btn-sm m-l-5 btn_batch_set" data-type=2>设置</a>
+                                                    <span class="arrow"></span>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        @endif
+                                        <th class="w100 text-c">
+                                            活动库存
+                                            <div class="batch">
+                                                <a class="batch-edit" title="批量设置">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <div class="batch-input" style="display: none">
+                                                    <h6>批量设置活动库存：</h6>
+                                                    <a class="batch-close">X</a>
+                                                    <input class="form-control text small batch_set_act_stock" type="text">
+                                                    <a class="btn btn-primary btn-sm m-l-5 btn_batch_set" data-type=3>设置</a>
+                                                    <span class="arrow"></span>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="w100 text-c">总库存</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($sku_list as $k=>$item)
+                                    <tr id="sku_list_{{ $item['sku_id'] }}" class="sku-list-tr ">
+                                        <td class=" text-c">
+                                            <div class="pos-r">
+                                                {{ $k+1 }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="ng-binding">{{ $item['spec_names'] ?? '无' }}</div>
+                                        </td>
+                                        <td class="text-c">
+                                            {{ $item['goods_price'] }}
+                                        </td>
+                                        <td class="text-c">
+                                            <input type="text" name="act_price[{{ $item['sku_id'] }}]" disabled="disabled"  value="{{ $sku_ext['act_price'][$item['sku_id']] }}" class="form-control form-control-sm w60 act_price_input" onkeyup="clearNoNum(this)" data-rule-callback='list_act_price_callback'>
+                                        </td>
+                                        @if($is_commander_discount)
+                                        <td class="text-c">
+                                            <input type="text" name="first_discount[{{ $item['sku_id'] }}]" id="first_discount[{{ $item['sku_id'] }}]" disabled="disabled"  value="{{ $sku_ext['first_discount'][$item['sku_id']] }}" class="form-control form-control-sm w60 first_discount_input first_discount_{{ $item['sku_id'] }}" onkeyup="checkDiscount({{ $item['sku_id'] }},'first_discount')" data-rule-callback='list_first_discount_callback'>
+                                        </td>
+                                        <td class="text-c">
+                                            <input type="text" name="discount_price[{{ $item['sku_id'] }}]" id="discount_price[{{ $item['sku_id'] }}]" disabled="disabled"  value="{{ $sku_ext['discount_price'][$item['sku_id']] ?? '0.00' }}" class="form-control form-control-sm w60 discount_price_input discount_price_{{ $item['sku_id'] }}" onkeyup="checkDiscount({{ $item['sku_id'] }},'discount_price')" data-rule-callback='list_discount_price_callback'>
+                                        </td>
+                                        @endif
+                                        <td class="text-c">
+                                            <input type="text" name="act_stock[{{ $item['sku_id'] }}]" id="act_stock[{{ $item['sku_id'] }}]" disabled="disabled"  value="{{ $sku_ext['act_stock'][$item['sku_id']] }}" class="form-control form-control-sm w60 act_stock_input" data-rule-callback='list_act_stock_callback'>
+                                        </td>
+                                        <td class="text-c">{{ $item['goods_number'] }}</td>
+                                    </tr>
+                                    @endforeach
 
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">团长享受折扣价是以拼团价格为计算基数的；例如：商品拼团价为10元，团长享受折扣为90%，那么团长购买此商品最终的价格即为9元</div></div>
+
+                                    </tbody>
+                                </table>
+                                <script type="text/javascript">
+                                    //
+                                </script>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,39 +258,17 @@
                 <div class="simple-form-field" >
                     <div class="form-group">
                         <label for="fightgroupmodel-purchase_num" class="col-sm-4 control-label">
-
                             <span class="ng-binding">限购：</span>
                         </label>
                         <div class="col-sm-8">
                             <div class="form-control-box">
-
-                                <label class="control-label">1&nbsp;&nbsp;件
-
+                                <label class="control-label">{{ $model['purchase_num'] }}&nbsp;&nbsp;件</label>
                             </div>
-
                             <div class="help-block help-block-t"><div class="help-block help-block-t">限制会员购买活动中的每件商品的限购数量，为0或空时，则不限购</div></div>
                         </div>
                     </div>
-                </div>			<!-- 活动库存 -->
-                <div class="simple-form-field" >
-                    <div class="form-group">
-                        <label for="fightgroupmodel-act_stock" class="col-sm-4 control-label">
-                            <span class="text-danger ng-binding">*</span>
-                            <span class="ng-binding">活动库存：</span>
-                        </label>
-                        <div class="col-sm-8">
-                            <div class="form-control-box">
-
-                                <label class="control-label">10&nbsp;&nbsp;件
-                                    <span id="number" class="m-l-20">总库存：<strong class="order-amount c-orange m-r-5">100</strong>件</span></label>
-
-
-                            </div>
-
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">活动库存不能大于总库存</div></div>
-                        </div>
-                    </div>
-                </div>			<!-- 参团人数 -->
+                </div>
+                <!-- 参团人数 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
                         <label for="fightgroupmodel-fight_num" class="col-sm-4 control-label">
@@ -173,16 +277,12 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="form-control-box">
-
-                                <label class="control-label">2&nbsp;&nbsp;人</label>
-
-
+                                <label class="control-label">{{ $model['act_ext_info']['fight_num'] }}&nbsp;&nbsp;人</label>
                             </div>
-
                             <div class="help-block help-block-t"><div class="help-block help-block-t">建议3人以上</div></div>
                         </div>
                     </div>
-                </div>			<!-- 成团时限 -->
+                </div>            <!-- 成团时限 -->
                 <div class="simple-form-field" >
                     <div class="form-group">
                         <label for="fightgroupmodel-fight_time" class="col-sm-4 control-label">
@@ -191,16 +291,27 @@
                         </label>
                         <div class="col-sm-8">
                             <div class="form-control-box">
-
-                                <label class="control-label">5&nbsp;&nbsp;小时</label>
-
-
+                                <label class="control-label">{{ $model['act_ext_info']['fight_time'] }}&nbsp;&nbsp;{{ $model['act_ext_info']['fight_time_unit'] == 0 ? '小时' : '分钟' }}</label>
                             </div>
-
-                            <div class="help-block help-block-t"><div class="help-block help-block-t">组团限制时间，单位为小时</div></div>
+                            <div class="help-block help-block-t"><div class="help-block help-block-t">组团限制时间</div></div>
                         </div>
                     </div>
-                </div>		</div>
+                </div>
+                <!-- 活动规则 -->
+                <div class="simple-form-field" >
+                    <div class="form-group">
+                        <label for="fightgroupmodel-groupon_rule" class="col-sm-4 control-label">
+                            <span class="ng-binding">活动规则：</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-control-box">
+                                <textarea id="fightgroupmodel-groupon_rule" class="form-control" name="FightGroupModel[groupon_rule]" rows="5">{!! $model['act_ext_info']['groupon_rule'] !!}</textarea>
+                            </div>
+                            <div class="help-block help-block-t"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 
@@ -227,17 +338,137 @@
 
 @stop
 
+
+{{--footer_js page元素同级下面--}}
+@section('footer_js')
+    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=1.1"></script>
+    <script src="/assets/d2eace91/js/pic/imgPreview.js?v=1.1"></script>
+@stop
+
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <!-- AJAX上传 -->
-    <script src="/assets/d2eace91/js/upload/jquery.ajaxfileupload.js?v=20190121"></script>
-    <script src="/assets/d2eace91/js/jquery.widget.js?v=20190121"></script>
-    <script type='text/javascript'>
+    <script>
+        $().ready(function () {
+            var container = $("#1715863162RhV9et");
+            $("[data-toggle='popover']").popover();
+            $(container).on('click', '.del-btn', function() {
+                $(this).removeClass('del-btn').addClass('allow-btn').html('√');
+                $(this).parents('tr').addClass('disabled');
+                $(this).parents('tr').find('input').attr('disabled', 'disabled');
+            });
+            $(container).on('click', '.allow-btn', function() {
+                $(this).removeClass('allow-btn').addClass('del-btn').html('×');
+                $(this).parents('tr').removeClass('disabled');
+                $(this).parents('tr').find('input').removeAttr('disabled');
+            });
+        });
+        function checkDiscount(sku_id,type)
+        {
+            if(type == 'first_discount'){
+                if($('.first_discount_'+sku_id).val() == '' || $('.first_discount_'+sku_id).val() <= 0){
+                    $('.discount_price_'+sku_id).removeAttr("disabled");
+                    $('.first_discount_'+sku_id).removeAttr("disabled");
+                }else{
+                    $('.discount_price_'+sku_id).attr("disabled","disabled");
+                    $('.first_discount_'+sku_id).removeAttr("disabled");
+                }
+            }
+            else{
+                if($('.discount_price_'+sku_id).val() == '' || $('.discount_price_'+sku_id).val() <= 0){
+                    $('.discount_price_'+sku_id).removeAttr("disabled");
+                    $('.first_discount_'+sku_id).removeAttr("disabled");
+                }else{
+                    $('.discount_price_'+sku_id).removeAttr("disabled");
+                    $('.first_discount_'+sku_id).attr("disabled","disabled");
+                }
+            }
+        }
+        // 自定义验证规则：拼团价格
+        function list_act_price_callback(element, value) {
+            var regu = /^[0-9]+\.?[0-9]*$/;
+            if ($(element).val() == "" || isNaN($(element).val())) {
+                $(element).data("msg", "拼团价必须是数字。");
+                return false;
+            }
+            if (parseFloat($(element).val()) < 0) {
+                $(element).data("msg", "拼团价必须大于0。");
+                return false;
+            }
+            if ($(element).val().indexOf('.') > -1) {
+                if ($(element).val().split('.')[1].length > 2) {
+                    $(element).data("msg", "拼团价只能保留2位小数。");
+                    return false;
+                }
+            }
+            return true;
+        }
+        // 自定义验证规则：团长享受折扣
+        function list_first_discount_callback(element, value) {
+            var regu = /^[0-9]+\.?[0-9]*$/;
+            if ($(element).val() == "" || isNaN($(element).val())) {
+                $(element).data("msg", "团长享受折扣必须是数字。");
+                return false;
+            }
+            if (parseFloat($(element).val()) < 0) {
+                $(element).data("msg", "团长享受折扣必须大于0。");
+                return false;
+            }
+            if (parseFloat($(element).val()) > 100) {
+                $(element).data("msg", "团长享受折扣必须小于100。");
+                return false;
+            }
+            if ($(element).val().indexOf('.') > -1) {
+                if ($(element).val().split('.')[1].length > 2) {
+                    $(element).data("msg", "团长享受折扣只能保留2位小数。");
+                    return false;
+                }
+            }
+            return true;
+        }
+        // 自定义验证规则：团长优惠价格
+        function list_discount_price_callback(element, value) {
+            var regu = /^[0-9]+\.?[0-9]*$/;
+            if ($(element).val() == "" || isNaN($(element).val())) {
+                $(element).data("msg", "团长优惠价格必须是数字。");
+                return false;
+            }
+            if (parseFloat($(element).val()) < 0) {
+                $(element).data("msg", "团长优惠价格必须大于0。");
+                return false;
+            }
+            if ($(element).val().indexOf('.') > -1) {
+                if ($(element).val().split('.')[1].length > 2) {
+                    $(element).data("msg", "团长优惠价格只能保留2位小数。");
+                    return false;
+                }
+            }
+            return true;
+        }
+        // 自定义验证规则：活动库存
+        function list_act_stock_callback(element, value) {
+            var regu = /^[0-9]+\.?[0-9]*$/;
+            if ($(element).val() == "" || isNaN($(element).val())) {
+                $(element).data("msg", "活动库存必须是数字。");
+                return false;
+            }
+            if (parseFloat($(element).val()) < 0) {
+                $(element).data("msg", "活动库存必须大于等于0。");
+                return false;
+            }
+            if ($(element).val().indexOf('.') > -1) {
+                if ($(element).val().split('.')[1].length > 0) {
+                    $(element).data("msg", "活动库存只能是整数。");
+                    return false;
+                }
+            }
+            return true;
+        }
+        //
         $().ready(function() {
             $("#act_img_container").imagegroup({
                 host: '{{ get_oss_host() }}',
                 size: 1,
-                values: ['/shop/1/images/2019/01/11/15471852565412.jpg'],
+                values: [''],
                 callback: function(data) {
                     $("#fightgroupmodel-act_img").val(data.path);
                 },
@@ -245,8 +476,8 @@
                     $("#fightgroupmodel-act_img").val('');
                 }
             });
-
         })
+        //
     </script>
 @stop
 

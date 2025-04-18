@@ -51,9 +51,13 @@ class SellerCommissionBill extends BaseModel
 
     protected $primaryKey = 'id';
 
-    public function orderCount()
+    public function order()
     {
-        return $this->hasMany(SellerBillOrder::class, 'bill_id');
+        return $this->hasMany(SellerBillOrder::class, 'bill_id', 'id');
     }
 
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class,'shop_id','shop_id');
+    }
 }

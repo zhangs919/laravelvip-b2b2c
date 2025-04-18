@@ -29,11 +29,13 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Contract;
 use App\Models\Goods;
+use App\Models\GrouponLog;
 use App\Models\OrderInfo;
 use App\Models\OrderPay;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Services\Enum\ActTypeEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -245,178 +247,178 @@ class CheckoutRepository
      * @param $buyItems
      * @return mixed
      */
-    public function getQuickBuyShopGoods($user_id, $buyItems)
-    {
-        $buy_item = array_first($buyItems);
-
-        $goods_id = $buy_item['cart_id'];
-        $sku_id = $buy_item['sku_id'];
-        $goods_number = $buy_item['number']; // 购买数量
-        $goods_info = $this->goods->getOnSaleGoodsInfo($goods_id, $sku_id, $goods_number);
-        $sku_info = $this->goodsSku->getById($sku_id);
-
-        // 店铺信息
-        $shop_info = $this->shop->getShopInfo($goods_info['shop_id']);
-//        dd($shop_info);
-//        $shop_info->customer = $this->customer->getCustomerMain($goods_info['shop_id']);
-//        $shop_info->aliim_enable = shopconf('aliim_enable', '', $goods_info['shop_id']); // 店铺是否开启阿里云旺客服
-//        $shop_info->system_aliim_enable = sysconf('aliim_enable'); // 平台是否开启阿里云旺客服
-        // 店铺自提点列表
-//        $pickup_list = $shop_info['pickup_list'];
-//        $shop_info->delivery_enable = !empty($pickup_list) ? 1 : 0;
-//        $shop_info->pickup_list = $pickup_list;
-
-        // 计算店铺商品运费
-        $shipping_fee = 0.00; // todo 需要计算
-
-        // 配送方式
-        $shipping_list = $this->getShippingList($shipping_fee);
-
-        // 订单初始化数据
-        // 商品总金额 商品单价*购买数量
-        $goods_amount = $sku_info->goods_price * $goods_number;
-        // 订单总金额 商品总金额 + 运费 + 其他优惠 - 其他优惠
-        $order_amount = $goods_amount + $shipping_fee;
-        $order = [
-            'order_amount' => $order_amount,
-            'goods_amount' => $goods_amount,
-            'shipping_fee' => $shipping_fee,
-            'give_integral' => $goods_info['give_integral'],
-            'integral' => 0,
-            'integral_amount' => 0,
-            'inv_fee' => 0,
-            'is_cash' => 1,
-            'cash_more' => "2",
-            'shop_bonus_id' => 0,
-            'shop_bonus_amount' => 0,
-            'bonus_amount' => 0,
-            'order_type' => 0,
-            'other_amount' => 0,
-            'buyer_type' => 0,
-            'buy_type' => 1,
-            'card_id' => 0,
-            'shop_store_card_amount' => 0,
-            'full_cut_amount' => 0,
-            'full_cut_bonus' => [],
-            'full_cut_point' => 0,
-            'discount_fee' => 0,
-            'pre_sale_mode' => null,
-            'other_shipping_fee_amount' => 0,
-            'packing_fee' => 0,
-            'cs_delivery_fee' => 0,
-            'other_shipping_fee' => [],
-            'other_shipping_fee_amount_format' => '￥0',
-            'packing_fee_format' => '￥0',
-            'shop_bonus_amount_format' => '￥0',
-            'shipping_fee_format' => '￥1',
-            'order_amount_format' => '￥' . $order_amount,
-            'bonus_amount_format' => '￥0',
-            'cash_more_format' => '￥2',
-            'full_cut_amount_format' => '￥0',
-            'cs_delivery_fee_format' => '￥0',
-            'shop_id' => $goods_info['shop_id'],
-            'shop_store_card_amount_format' => '￥0',
-        ];
-
-        $data[$goods_info['shop_id']] = [
-            'select' => 0,
-            'add_time' => time(),
-            'add_time_format' => format_time(time(), 'Y-m-d H:i:s'),
-            'shop_info' => $shop_info,
-            'bonus_list' => [], // todo
-            'goods_list' => [
-                [
-                    'user_id' => $user_id,
-                    'session_id' => 0,
-                    'goods_id' => $goods_id,
-                    'sku_id' => $sku_id,
-                    'goods_name' => $goods_info['goods_name'],
-                    'goods_number' => $goods_number,
-                    'goods_price' => $goods_info['goods_price'],
-                    'goods_type' => 0,
-                    'parent_id' => 0,
-                    'is_gift' => 0,
-                    'add_time' => time(),
-                    'buyer_type' => 0, // 买家类型 0-普通买家 1-商家买家
-                    'buy_type' => 1, // 购买类型 1-直接购买
-
-                    'shop_id' => $goods_info['shop_id'],
-                    'store_id' => 0,
-                    'cart_id' => null,
-                    // SKU信息
-                    'sku_name' => $sku_info->sku_name,
-                    'sku_image' => $sku_info->sku_image,
-                    'original_price' => $sku_info->goods_price,
-                    'sku_number' => $sku_info->goods_number,
-                    'market_price' => $sku_info->market_price,
-                    'sku_sn' => $sku_info->goods_sn,
-                    'spec_names' => !empty($sku_info->spec_names) ? explode(' ', $sku_info->spec_names) : '',
-
-                    // 商品信息
-                    'cat_id' => $goods_info['cat_id'],
-                    'order_act_id' => $goods_info['order_act_id'],
-                    'brand_id' => $goods_info['brand_id'],
-                    'goods_status' => $goods_info['goods_status'] == 1 ? true : false,
-                    'goods_audit' => $goods_info['goods_audit'],
-                    'is_delete' => $goods_info['is_delete'],
-                    'goods_image' => $goods_info['goods_image'],
-                    'goods_images' => $goods_info['goods_images'],
-                    'give_integral' => $goods_info['give_integral'],
-                    'invoice_type' => $goods_info['invoice_type'],
-                    'stock_mode' => $goods_info['stock_mode'],
-                    'spu_number' => $goods_info['goods_number'],
-                    'contract_ids' => $goods_info['contract_ids'],
-                    'goods_sn' => $goods_info['goods_sn'],
-                    'act_id' => $goods_info['act_id'],
-                    'user_discount' => $goods_info['user_discount'],
-                    'sales_model' => $goods_info['sales_model'],
-                    'is_virtual' => $goods_info['is_virtual'],
-                    'goods_mode' => $goods_info['goods_mode'],
-                    'ext_info' => $goods_info['ext_info'],
-
-                    // 店铺信息
-                    'shop_status' => $shop_info['shop_status'],
-                    'is_cross_border' => '0',
-                    'goods_min_number' => 1,
-                    'goods_max_number' => $goods_info['goods_number'],
-                    'select' => 0,
-                    'cart_act_id' => $goods_info['act_id'],
-                    'activity' => null,
-                    'order_activity' => null, // todo
-                    'act_type' => null, // todo
-                    'prices' => [
-                        'is_original_price'=>true,
-                        'price_type' => 'original_price',
-                        'original_price' => $sku_info->original_price,
-                        'activity_price' => false,
-                        'member_price' => false,
-                        'goods_price' => $sku_info->goods_price,
-                        'activity_enable' => '0.00',
-                    ],
-                    'goods_price_format' => '￥' . $sku_info->goods_price,
-                    'market_price_format' => '￥' . $sku_info->market_price,
-                    'original_price_format' => '￥' . $sku_info->original_price,
-                    'add_time_format' => format_time(time(), 'Y-m-d H:i:s'),
-                    'goods_amount' => $sku_info->goods_price * $goods_number,
-                    'goods_amount_format' => '￥' . $sku_info->goods_price * $goods_number,
-                    'cart_disable' => 0,
-                    'contract_list' => [],
-                    'gift_list' => [],
-                    'reduce_cash' => 0,
-                    'discount_fee' => 0,
-                    'shop_bonus_amount' => 0,
-                    'other_price' => 0
-                ]
-            ],
-            'shipping_list' => $shipping_list,
-            'limit_goods' => [],
-            'limit_goods_ids' => [],
-            'order' => $order,
-            'store_card_list' => [],
-        ];
-
-        return $data;
-    }
+//    public function getQuickBuyShopGoods($user_id, $buyItems)
+//    {
+//        $buy_item = array_first($buyItems);
+//
+//        $goods_id = $buy_item['cart_id'];
+//        $sku_id = $buy_item['sku_id'];
+//        $goods_number = $buy_item['number']; // 购买数量
+//        $goods_info = $this->goods->getOnSaleGoodsInfo($goods_id, $sku_id, $goods_number);
+//        $sku_info = $this->goodsSku->getById($sku_id);
+//
+//        // 店铺信息
+//        $shop_info = $this->shop->getShopInfo($goods_info['shop_id']);
+////        dd($shop_info);
+////        $shop_info->customer = $this->customer->getCustomerMain($goods_info['shop_id']);
+////        $shop_info->aliim_enable = shopconf('aliim_enable', '', $goods_info['shop_id']); // 店铺是否开启阿里云旺客服
+////        $shop_info->system_aliim_enable = sysconf('aliim_enable'); // 平台是否开启阿里云旺客服
+//        // 店铺自提点列表
+////        $pickup_list = $shop_info['pickup_list'];
+////        $shop_info->delivery_enable = !empty($pickup_list) ? 1 : 0;
+////        $shop_info->pickup_list = $pickup_list;
+//
+//        // 计算店铺商品运费
+//        $shipping_fee = 0.00; // todo 需要计算
+//
+//        // 配送方式
+//        $shipping_list = $this->getShippingList($shipping_fee);
+//
+//        // 订单初始化数据
+//        // 商品总金额 商品单价*购买数量
+//        $goods_amount = $sku_info->goods_price * $goods_number;
+//        // 订单总金额 商品总金额 + 运费 + 其他优惠 - 其他优惠
+//        $order_amount = $goods_amount + $shipping_fee;
+//        $order = [
+//            'order_amount' => $order_amount,
+//            'goods_amount' => $goods_amount,
+//            'shipping_fee' => $shipping_fee,
+//            'give_integral' => $goods_info['give_integral'],
+//            'integral' => 0,
+//            'integral_amount' => 0,
+//            'inv_fee' => 0,
+//            'is_cash' => 1,
+//            'cash_more' => "2",
+//            'shop_bonus_id' => 0,
+//            'shop_bonus_amount' => 0,
+//            'bonus_amount' => 0,
+//            'order_type' => 0,
+//            'other_amount' => 0,
+//            'buyer_type' => 0,
+//            'buy_type' => 1,
+//            'card_id' => 0,
+//            'shop_store_card_amount' => 0,
+//            'full_cut_amount' => 0,
+//            'full_cut_bonus' => [],
+//            'full_cut_point' => 0,
+//            'discount_fee' => 0,
+//            'pre_sale_mode' => null,
+//            'other_shipping_fee_amount' => 0,
+//            'packing_fee' => 0,
+//            'cs_delivery_fee' => 0,
+//            'other_shipping_fee' => [],
+//            'other_shipping_fee_amount_format' => '￥0',
+//            'packing_fee_format' => '￥0',
+//            'shop_bonus_amount_format' => '￥0',
+//            'shipping_fee_format' => '￥1',
+//            'order_amount_format' => '￥' . $order_amount,
+//            'bonus_amount_format' => '￥0',
+//            'cash_more_format' => '￥2',
+//            'full_cut_amount_format' => '￥0',
+//            'cs_delivery_fee_format' => '￥0',
+//            'shop_id' => $goods_info['shop_id'],
+//            'shop_store_card_amount_format' => '￥0',
+//        ];
+//
+//        $data[$goods_info['shop_id']] = [
+//            'select' => 0,
+//            'add_time' => time(),
+//            'add_time_format' => format_time(time(), 'Y-m-d H:i:s'),
+//            'shop_info' => $shop_info,
+//            'bonus_list' => [], // todo
+//            'goods_list' => [
+//                [
+//                    'user_id' => $user_id,
+//                    'session_id' => 0,
+//                    'goods_id' => $goods_id,
+//                    'sku_id' => $sku_id,
+//                    'goods_name' => $goods_info['goods_name'],
+//                    'goods_number' => $goods_number,
+//                    'goods_price' => $goods_info['goods_price'],
+//                    'goods_type' => 0,
+//                    'parent_id' => 0,
+//                    'is_gift' => 0,
+//                    'add_time' => time(),
+//                    'buyer_type' => 0, // 买家类型 0-普通买家 1-商家买家
+//                    'buy_type' => 1, // 购买类型 1-直接购买
+//
+//                    'shop_id' => $goods_info['shop_id'],
+//                    'store_id' => 0,
+//                    'cart_id' => null,
+//                    // SKU信息
+//                    'sku_name' => $sku_info->sku_name,
+//                    'sku_image' => $sku_info->sku_image,
+//                    'original_price' => $sku_info->goods_price,
+//                    'sku_number' => $sku_info->goods_number,
+//                    'market_price' => $sku_info->market_price,
+//                    'sku_sn' => $sku_info->goods_sn,
+//                    'spec_names' => !empty($sku_info->spec_names) ? explode(' ', $sku_info->spec_names) : '',
+//
+//                    // 商品信息
+//                    'cat_id' => $goods_info['cat_id'],
+//                    'order_act_id' => $goods_info['order_act_id'],
+//                    'brand_id' => $goods_info['brand_id'],
+//                    'goods_status' => $goods_info['goods_status'] == 1 ? true : false,
+//                    'goods_audit' => $goods_info['goods_audit'],
+//                    'is_delete' => $goods_info['is_delete'],
+//                    'goods_image' => $goods_info['goods_image'],
+//                    'goods_images' => $goods_info['goods_images'],
+//                    'give_integral' => $goods_info['give_integral'],
+//                    'invoice_type' => $goods_info['invoice_type'],
+//                    'stock_mode' => $goods_info['stock_mode'],
+//                    'spu_number' => $goods_info['goods_number'],
+//                    'contract_ids' => $goods_info['contract_ids'],
+//                    'goods_sn' => $goods_info['goods_sn'],
+//                    'act_id' => $goods_info['act_id'],
+//                    'user_discount' => $goods_info['user_discount'],
+//                    'sales_model' => $goods_info['sales_model'],
+//                    'is_virtual' => $goods_info['is_virtual'],
+//                    'goods_mode' => $goods_info['goods_mode'],
+//                    'ext_info' => $goods_info['ext_info'],
+//
+//                    // 店铺信息
+//                    'shop_status' => $shop_info['shop_status'],
+//                    'is_cross_border' => '0',
+//                    'goods_min_number' => 1,
+//                    'goods_max_number' => $goods_info['goods_number'],
+//                    'select' => 0,
+//                    'cart_act_id' => $goods_info['act_id'],
+//                    'activity' => null,
+//                    'order_activity' => null, // todo
+//                    'act_type' => null, // todo
+//                    'prices' => [
+//                        'is_original_price'=>true,
+//                        'price_type' => 'original_price',
+//                        'original_price' => $sku_info->original_price,
+//                        'activity_price' => false,
+//                        'member_price' => false,
+//                        'goods_price' => $sku_info->goods_price,
+//                        'activity_enable' => '0.00',
+//                    ],
+//                    'goods_price_format' => '￥' . $sku_info->goods_price,
+//                    'market_price_format' => '￥' . $sku_info->market_price,
+//                    'original_price_format' => '￥' . $sku_info->original_price,
+//                    'add_time_format' => format_time(time(), 'Y-m-d H:i:s'),
+//                    'goods_amount' => $sku_info->goods_price * $goods_number,
+//                    'goods_amount_format' => '￥' . $sku_info->goods_price * $goods_number,
+//                    'cart_disable' => 0,
+//                    'contract_list' => [],
+//                    'gift_list' => [],
+//                    'reduce_cash' => 0,
+//                    'discount_fee' => 0,
+//                    'shop_bonus_amount' => 0,
+//                    'other_price' => 0
+//                ]
+//            ],
+//            'shipping_list' => $shipping_list,
+//            'limit_goods' => [],
+//            'limit_goods_ids' => [],
+//            'order' => $order,
+//            'store_card_list' => [],
+//        ];
+//
+//        return $data;
+//    }
 
     /**
      * 获取直接购买/购物车购买 店铺及商品数据
@@ -424,9 +426,10 @@ class CheckoutRepository
      * @param $buyType
      * @param $user
      * @param $buyItems
+     * @param $groupSn
      * @return array
      */
-    public function getBuyShopGoods($buyType, $user, $buyItems)
+    public function getBuyShopGoods($buyType, $user, $buyItems, $groupSn = null)
     {
         // 买家类型 0-普通买家 1-商家买家
         $buyerType = $user->shop_id > 0 ? 1 : 0;
@@ -437,7 +440,7 @@ class CheckoutRepository
             $shop_info = $this->shop->getShopInfo($shopId);
 
             // 计算店铺商品运费
-            $shipping_fee = 0.00; // todo 需要计算
+            $shipping_fee = shopconf('freight_fee', false, $shopId) ?? 0.00; // todo 需要计算 暂固定取店铺统一运费
 
             // 配送方式
             $shipping_list = $this->getShippingList($shipping_fee);
@@ -466,6 +469,27 @@ class CheckoutRepository
 //                $goods_number = $item['number']; // 购买数量
                 $goods_info = $this->goods->getOnSaleGoodsInfo($goods_id, $sku_id,  $item['number']);
                 $sku_info = $this->goodsSku->getById($sku_id);
+                $goods_images = [];
+                if (!empty($sku_info->sku_images)) {
+                    foreach ($sku_info->sku_images as $si) {
+                        $goods_images[] = get_image_url($si).'?x-oss-process=image\/resize,m_pad,limit_0,h_450,w_450';
+                    }
+                }
+
+                $activity = (new ActivityRepository())->getActivityInfo($goods_id, $sku_id, $goods_info['act_id'], $user->user_id);
+                $act_id = !empty($activity) ? $activity['act_id'] : 0;
+                $act_type = !empty($activity) ? $activity['act_type'] : 0;
+                if ($act_type == ActTypeEnum::ACT_TYPE_FIGHT_GROUP && $groupSn == null) {
+                    // 拼团活动 原价购买
+                    $activity = null;
+                    $act_id = 0;
+                    $act_type = 0;
+                }
+
+                // 其他活动 按活动价购买
+                $goods_price = !empty($activity) ? $activity['act_price'] : $sku_info->goods_price;
+                $original_price = !empty($activity) ? $activity['goods_price'] : $sku_info->goods_price;
+                $sku_number = !empty($activity) ? $activity['act_stock'] : $sku_info->goods_number;
 
                 $goodsList[] = [
                     'user_id' => $user->user_id,
@@ -473,8 +497,8 @@ class CheckoutRepository
                     'goods_id' => $goods_id,
                     'sku_id' => $sku_id,
                     'goods_name' => $goods_info['goods_name'],
-                    'goods_number' =>  $item['number'],
-                    'goods_price' => $goods_info['goods_price'],
+                    'goods_number' => $item['number'],
+                    'goods_price' => $goods_price, // 根据不同活动 获取活动价格
                     'goods_type' => 0,
                     'parent_id' => 0,
                     'is_gift' => 0,
@@ -488,8 +512,8 @@ class CheckoutRepository
                     // SKU信息
                     'sku_name' => $sku_info->sku_name,
                     'sku_image' => $sku_info->sku_image,
-                    'original_price' => $sku_info->goods_price,
-                    'sku_number' => $sku_info->goods_number,
+                    'original_price' => $original_price,
+                    'sku_number' => $sku_number,
                     'market_price' => $sku_info->market_price,
                     'sku_sn' => $sku_info->goods_sn,
                     'spec_names' => !empty($sku_info->spec_names) ? explode(' ', $sku_info->spec_names) : '',
@@ -501,15 +525,15 @@ class CheckoutRepository
                     'goods_status' => $goods_info['goods_status'] == 1 ? true : false,
                     'goods_audit' => $goods_info['goods_audit'],
                     'is_delete' => $goods_info['is_delete'],
-                    'goods_image' => $goods_info['goods_image'],
-                    'goods_images' => $goods_info['goods_images'],
+                    'goods_image' => get_image_url($goods_info['goods_image']),
+                    'goods_images' => $goods_images,
                     'give_integral' => $goods_info['give_integral'],
                     'invoice_type' => $goods_info['invoice_type'],
                     'stock_mode' => $goods_info['stock_mode'],
                     'spu_number' => $goods_info['goods_number'],
                     'contract_ids' => $goods_info['contract_ids'],
                     'goods_sn' => $goods_info['goods_sn'],
-                    'act_id' => $goods_info['act_id'],
+                    'act_id' => $act_id,
                     'user_discount' => $goods_info['user_discount'],
                     'sales_model' => $goods_info['sales_model'],
                     'is_virtual' => $goods_info['is_virtual'],
@@ -520,41 +544,42 @@ class CheckoutRepository
                     'shop_status' => $shop_info['shop_status'],
                     'is_cross_border' => '0',
                     'goods_min_number' => 1,
-                    'goods_max_number' => $goods_info['goods_number'],
+                    'goods_max_number' => $sku_number,
                     'select' => 0,
-                    'cart_act_id' => $goods_info['act_id'],
-                    'activity' => null,
+                    'cart_act_id' => $act_id,
+                    'activity' => $activity,
                     'order_activity' => null, // todo
-                    'act_type' => null, // todo
+                    'act_type' => $act_type,
                     'prices' => [
-                        'is_original_price'=>true,
-                        'price_type' => 'original_price',
-                        'original_price' => $sku_info->original_price,
-                        'activity_price' => false,
-                        'member_price' => false,
-                        'goods_price' => $sku_info->goods_price,
-                        'activity_enable' => '0.00',
+                        'is_original_price' => !empty($activity) ? 0 : 1,
+                        'price_type' => !empty($activity) ? 'activity_price' : 'original_price',
+                        'original_price' => $original_price,
+                        'activity_price' => !empty($activity) ? $activity['act_price'] : 0,
+                        'member_price' => 0,
+                        'goods_price' => $goods_price,
+                        'activity_enable' => !empty($activity) ? 1 : 0,
                     ],
-                    'goods_price_format' => '￥' . $sku_info->goods_price,
+                    'goods_price_format' => '￥'.$goods_price,
                     'market_price_format' => '￥' . $sku_info->market_price,
-                    'original_price_format' => '￥' . $sku_info->original_price,
+                    'original_price_format' => "￥".$original_price,
                     'add_time_format' => format_time(time(), 'Y-m-d H:i:s'),
-                    'goods_amount' => $sku_info->goods_price * $item['number'],
-                    'goods_amount_format' => '￥' . $sku_info->goods_price * $item['number'],
+                    'goods_amount' => $goods_price * $item['number'],
+                    'goods_amount_format' => '￥' . $goods_price * $item['number'],
                     'cart_disable' => 0,
                     'contract_list' => [],
                     'gift_list' => [],
                     'reduce_cash' => 0,
                     'discount_fee' => 0,
                     'shop_bonus_amount' => 0,
-                    'other_price' => 0
+                    'other_price' => 0,
+                    'act_labels' => (new OrderInfoRepository())->getActLabels(['act_type' => $act_type])
                 ];
 
                 // 商品总数量
                 $goods_number += $item['number'];
 
                 // 商品总金额 商品单价*购买数量
-                $goods_amount += ($sku_info->goods_price *  $item['number']);
+                $goods_amount += ($goods_price *  $item['number']);
 
                 // 计算店铺商品运费
                 $goods_shipping_fee = 0;
@@ -623,6 +648,15 @@ class CheckoutRepository
                 'shop_store_card_amount_format' => '￥0',
             ];*/
 
+            $order_data = [
+                'original_shipping_fee' => 0,
+                'original_other_shipping_fee' => 0,
+                'original_packing_fee' => null,
+            ];
+            if ($groupSn != null) {
+                $order_data['group_sn'] = $groupSn;
+                $order_data['act_id'] = $act_id;
+            }
 
             $order = [
                 'goods_number' => $goods_number,
@@ -638,8 +672,9 @@ class CheckoutRepository
                 'shop_bonus_id' => 0,
                 'shop_bonus_amount' => 0,
                 'bonus_amount' => 0,
+                'order_data' => $order_data, // 订单活动数据
                 // 交易类型 0-普通商品 1-拍卖 2-预售 3-团购 5-积分兑换 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动 99-电子秤商品
-                'order_type' => 0,
+                'order_type' => $act_type,
                 'other_amount' => 0,
                 'buyer_type' => $buyerType,
                 'buy_type' => $buyType,
@@ -699,7 +734,9 @@ class CheckoutRepository
         $userId = $user->user_id;
 
         // 先从缓存中读取购物信息
-        $checkout_submit_data = session('checkout_submit_data');
+        $cache_id = CACHE_KEY_CHECKOUT_SUBMIT_DATA[0].':'.$userId;
+        $checkout_submit_data = cache()->get($cache_id);
+//        $checkout_submit_data = session('checkout_submit_data');
 
         if (empty($checkout_submit_data)) {
             // 如果购物信息为空 则初始化设置
@@ -713,10 +750,19 @@ class CheckoutRepository
             // 购买商品信息 (商品id/购物车id)|sku_id|购买数量 如果是购物车购买 是多个数组
             $cart_id = $checkoutData['cart_id'] ?? null;
             $buyItems = $this->_parseItems($cart_id);
+            $groupSn = $checkoutData['group_sn'] ?? null;
 
 //            dd($buyItems);
             if (empty($buyItems)) {
                 return arr_result(-1, null, '您没有提交任何需要结算的商品');
+            }
+
+            // 验证拼团 不能重复对同一个团进行参团
+            if ($groupSn) {
+                $groupon_log = GrouponLog::where([['user_id', $userId], ['group_sn', $groupSn]])->first();
+                if (!empty($groupon_log)) {
+                    return arr_result(-1, null, '您参与过该拼团');
+                }
             }
 
 //            if (count($buyItems) > 50) {
@@ -735,6 +781,7 @@ class CheckoutRepository
             $shop_store_card_ids = [];
             $shop_ids = [];
             $consignee_ids = [];
+            $total_goods_number = 0;
             foreach ($buyItems as $shop_id=>$buy_item) {
 
                 $pickup_ids[$shop_id] = 0; // 设置默认自提点id为空
@@ -744,6 +791,7 @@ class CheckoutRepository
                 $shop_store_card_ids[$shop_id] = 0; // todo
                 $shop_ids[] = $shop_id;
                 $consignee_ids[$shop_id] = 0; // todo
+                $total_goods_number = array_sum(array_column($buy_item, 'number'));
             }
 
             // 送货时间
@@ -771,7 +819,7 @@ class CheckoutRepository
             } elseif ($buyType == 1) { // 直接购买
                 $shop_list = $this->getQuickBuyShopGoods($userId, $buyItems);
             }*/
-            $shop_list = $this->getBuyShopGoods($buyType, $user, $buyItems);
+            $shop_list = $this->getBuyShopGoods($buyType, $user, $buyItems, $groupSn);
 //            dd($shop_list);
 
             // todo 需计算
@@ -890,7 +938,6 @@ class CheckoutRepository
             ];
 
 
-
             // 发票信息
             $invoice_type = '0';
             $invoice_info = $this->buy1->getInvoiceInfo($invoice_type);
@@ -899,10 +946,10 @@ class CheckoutRepository
                 'select_goods_number' => 0,
                 'select_goods_amount' => 0,
                 'select_goods_amount_format' => '￥0',
-                'goods_number' => 1,
+                'goods_number' => $total_goods_number,
                 'full_cut_amount' => 0,
                 'invalid_cart_ids' => [],
-                'goods_amount'=>1,
+                'goods_amount'=>$goods_amount,
                 'pre_sale_mode' => null,
                 'shop_delivery_enable' => $shop_delivery_enable,
                 'submit_enable' => 1,
@@ -947,7 +994,7 @@ class CheckoutRepository
                 'O' => 'service\cart\models\CheckoutModel',
                 'user_id' => $userId,
                 'buy_type' => $buyType,
-                'group_sn' => null,
+                'group_sn' => $checkoutData['group_sn'] ?? null,
                 'bar_id' => 0,
                 'address_id' => $address_id,
                 'pickup_ids' => $pickup_ids,
@@ -1075,7 +1122,9 @@ class CheckoutRepository
 //        dd($checkout_submit_data['invoice_info']);
 //        dd($checkout_submit_data['data']['order']['pay_code']);
         // 最后 将新的数组存入session
-        session(['checkout_submit_data'=>$checkout_submit_data]);
+//        session(['checkout_submit_data'=>$checkout_submit_data]);
+        cache()->put($cache_id, $checkout_submit_data, CACHE_KEY_CHECKOUT_SUBMIT_DATA[1]);
+
     }
 
     /**
@@ -1084,9 +1133,11 @@ class CheckoutRepository
      * @param string $key
      * @return bool|\Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
      */
-    public function getCheckoutData($key = '')
+    public function getCheckoutData($userId, $key = '')
     {
-        $data = session('checkout_submit_data');
+//        $data = session('checkout_submit_data');
+        $cache_id = CACHE_KEY_CHECKOUT_SUBMIT_DATA[0].':'.$userId;
+        $data = cache()->get($cache_id);
 
         if (empty($data)) { // 如果为空 则返回购买异常
             return false;
@@ -1103,9 +1154,11 @@ class CheckoutRepository
      * 清空购买信息
      *
      */
-    public function clearCheckoutData()
+    public function clearCheckoutData($userId)
     {
-        session(['checkout_submit_data'=>null]);
+//        session(['checkout_submit_data'=>null]);
+        $cache_id = CACHE_KEY_CHECKOUT_SUBMIT_DATA[0].':'.$userId;
+        cache()->forget($cache_id);
     }
 
     /**
@@ -1182,7 +1235,7 @@ class CheckoutRepository
         DB::beginTransaction(); // 开始事务
         try {
             // 获取购买信息
-            $checkoutData = $this->getCheckoutData();
+            $checkoutData = $this->getCheckoutData($user->user_id);
 
             // 购买类型 0-加入购物车购买 1-立即购买 2-去结算 3-兑换 4-自由购 5-到店购 6-礼品提货
             $buy_type = $checkoutData['buy_type'];
@@ -1287,14 +1340,14 @@ class CheckoutRepository
                     'consignee' => $input_address_info['consignee'],
                     'region_code' => $input_address_info['region_code'],
                     'region_name' => get_region_names_by_region_code($input_address_info['region_code']),
-                    'address' => $input_address_info['address_detail'],
-                    'address_lng' => $input_address_info['address_lng'],
-                    'address_lat' => $input_address_info['address_lat'],
+                    'address' => $input_address_info['address_detail'] ?? '',
+                    'address_lng' => $input_address_info['address_lng'] ?? '',
+                    'address_lat' => $input_address_info['address_lat'] ?? '',
                     'receiving_mode' => $checkoutData['pickup_ids'][$shop_id] > 0 ? 2 : 0, // 收货方式 默认0 0-普通快递 2-上门自提 todo 前面需要获取post过来的店铺自提点信息
                     'tel' => !empty($input_address_info['tel']) ? $input_address_info['tel'] : $input_address_info['mobile'],
-                    'email' => $input_address_info['email'],
-                    'postscript' => !empty($checkoutData['postscript'][$shop_id]) ? $checkoutData['postscript'][$shop_id] : null, // 买家留言
-                    'best_time' => $checkoutData['best_time'], // 最佳送货时间
+                    'email' => $input_address_info['email'] ?? '',
+                    'postscript' => !empty($checkoutData['postscript'][$shop_id]) ? $checkoutData['postscript'][$shop_id] : '', // 买家留言
+                    'best_time' => $checkoutData['best_time'] ?? '', // 最佳送货时间
                     'pay_id' => $balance_enable ? '0' : $this->payment->getPayIdByPayCode($pay_code), // 支付方式id
                     'pay_code' => $balance_enable ? '0' : $pay_code, // 支付方式缩写
                     'pay_name' => $balance_enable ? '余额支付' : format_pay_type($pay_code), // 支付名称
@@ -1335,9 +1388,9 @@ class CheckoutRepository
                     'is_distrib' => 0, // 是否为分销商品
                     'distrib_status' => 0, // 分销订单状态
                     'is_show' => '1,2,3,4', // todo 暂时不清楚是什么意思
-                    'order_data' => null, // 订单活动数据 序列化存储 "a:1:{s:8:\"group_sn\";s:1:\"0\";}"
+                    'order_data' => !empty($item['order']['order_data']) ? json_encode($item['order']['order_data']) : null, // 订单活动数据 序列化存储 "a:1:{s:8:\"group_sn\";s:1:\"0\";}"
                     'cash_user_id' => 0, //
-                    'sub_order_id' => $sub_order_id, // 子订单id
+                    'sub_order_id' => $sub_order_id, //  子订单id
                     'buy_type' => $buy_type, // 购买类型
                     'reachbuy_code' => '0', // 自由购下单码号码
                     'growth_value' => '0', // 会员等级成长值
@@ -1373,12 +1426,16 @@ class CheckoutRepository
                         ->get()->toArray();
 
                     // todo 商品活动扩展信息
-                    // "{\"full_cut_amount\":0,\"gift\":0,\"point\":0,\"bonus\":0}"
                     $ext_info = [
-                        'full_cut_amount' => 0,
                         'gift' => 0,
                         'point' => 0,
-                        'bonus' => 0
+                        'bonus' => 0,
+                        'bonus_amount' => 0,
+                        'shop_bonus_amount' => 0,
+                        'act_id' => $goods_info['act_id'],
+                        'act_type' => $goods_info['act_type'],
+                        'price_type' => $goods_info['prices']['price_type'],
+                        'is_member_price' => $goods_info['prices']['member_price'],
                     ]; //
                     // todo 判断是否是搭配套餐购买
                     $is_goods_mix = false; // 根据活动类型获取
@@ -1405,7 +1462,7 @@ class CheckoutRepository
                             'stock_mode' => $goods_info['stock_mode'], // 库存计数
                             'stock_dropped' => 0, // 库存是否已减
                             'act_type' => $goods_info['act_type'], // 活动类型 默认0 0无活动 1-拍卖 2-预售 3-团购 5-积分兑换 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动
-                            'goods_type' => $goods_info['goods_type'], // 商品交易类型 0-普通商品 1-拍卖 2-预售 3-团购 5-积分兑换 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动 99-电子秤商品
+                            'goods_type' => $goods_info['act_type'], // 商品交易类型 0-普通商品 1-拍卖 2-预售 3-团购 5-积分兑换 6-拼团 8-砍价 10-搭配套餐 11-限时折扣 12-满减送 13-赠品活动 99-电子秤商品
                             'is_distrib' => 0,
                             'discount' => $goods_info['discount_fee'],
                             'profits' => 0.00,
@@ -1482,7 +1539,7 @@ class CheckoutRepository
 
 
             // 删除 checkout_submit_data 缓存
-            $this->clearCheckoutData();
+            $this->clearCheckoutData($user->user_id);
 
             // 保存订单自提点信息
 
@@ -1498,10 +1555,13 @@ class CheckoutRepository
 
             DB::commit(); // 事务提交
 
-
+            $group_sn = $item['order']['order_data']['group_sn'] ?? null;
             $result_data = [
                 'order_sn' =>$result_order_sn
             ];
+            if ($group_sn != null) {
+                $result_data['group_sn'] = $group_sn;
+            }
 //                dd($result_data);
             return arr_result(0, $result_data);
         } catch (\Exception $e) {

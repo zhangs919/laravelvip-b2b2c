@@ -25,7 +25,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ get_image_url(sysconf('favicon')) }}" />
     <meta name="m_main_color" content="" />
     <link href="/css/iconfont/iconfont.css" rel="stylesheet">
-    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">
+{{--    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">--}}
+    <link href="/css/common.css" rel="stylesheet">
+
     <link href="/css/user.css?v=2" rel="stylesheet">
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)

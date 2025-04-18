@@ -26,7 +26,9 @@
     <meta name="m_main_color" content="" />
     <link href="/assets/d2eace91/css/swiper/swiper.min.css" rel="stylesheet" position="1">
     <link href="/css/iconfont/iconfont.css" rel="stylesheet">
-    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">
+{{--    <link href="/css/app.frontend.mobile.min.css" rel="stylesheet">--}}
+    <link href="/css/common.css" rel="stylesheet">
+
     <!--整站改色 _start-->
     @if(sysconf('custom_style_enable_m_site') == 1)
         <link rel="stylesheet" href="/css/custom/m_site-color-style-0.css"/>

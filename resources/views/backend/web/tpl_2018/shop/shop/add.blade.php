@@ -238,7 +238,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-take_rate" class="form-control ipt m-r-10" name="ShopModel[take_rate]"> %
+                            <input type="text" id="shopmodel-take_rate" class="form-control ipt m-r-10" name="ShopModel[take_rate]" value="0"> %
 
 
                         </div>
@@ -258,7 +258,7 @@
                         <div class="form-control-box">
 
 
-                            <input type="text" id="shopmodel-qrcode_take_rate" class="form-control ipt m-r-10" name="ShopModel[qrcode_take_rate]"> %
+                            <input type="text" id="shopmodel-qrcode_take_rate" class="form-control ipt m-r-10" name="ShopModel[qrcode_take_rate]" value="0"> %
 
 
                         </div>

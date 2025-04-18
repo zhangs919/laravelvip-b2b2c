@@ -25,9 +25,9 @@
     <script src="/assets/d2eace91/js/design/jquery-hdscroll.js?v=20180418"></script>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/public.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/design.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/topic_activity.css?v=1.6"/>
+    <link rel="stylesheet" href="//{{ config('lrw.mobile_domain') }}/css/topic_activity.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/tplsetting.css?v=1.6"/>
-    <link rel="stylesheet" href="http://{{ config('lrw.mobile_domain') }}/css/topic_activity.css?v=1.6"/>
+    <link rel="stylesheet" href="//{{ config('lrw.mobile_domain') }}/css/topic_activity.css?v=1.6"/>
     <link rel="stylesheet" href="/assets/d2eace91/css/design/mobile/index.css?v=1.6"/>
     {{--<link href="http://{{ config('lrw.mobile_domain') }}/css/dianpu.css" rel="stylesheet">--}}
 

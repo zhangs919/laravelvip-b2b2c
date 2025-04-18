@@ -23,15 +23,17 @@ class SellerBillOrder extends BaseModel
         'goods_amount',
         'tax',
         'shipping_fee',
+        'other_shipping_fee',
         'insure_fee',
         'pay_fee',
-        'pack_fee',
+        'packing_fee',
         'card_fee',
         'bonus',
+        'shop_bonus',
         'integral_money',
         'coupons',
-        'discount',
-        'value_card',
+        'discount_fee',
+        'store_card_price',
         'money_paid',
         'surplus',
         'drp_money',
@@ -40,6 +42,8 @@ class SellerBillOrder extends BaseModel
         'return_rate_fee',
         'rate_fee'
     ];
+
+    protected $primaryKey = 'id';
 
     public function getOrder()
     {

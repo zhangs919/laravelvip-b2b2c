@@ -278,10 +278,13 @@ if (! function_exists('result')) {
      * @param string $message 消息
      * @param array $extra 额外数据
      * @param bool $is_json 是否json格式返回
-     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     function result($code = 0, $data = "0", $message = "", $extra = [], $is_json = true)
     {
+        if (is_app() && $code == -1) { // 兼容移动端api code=1
+            $code = 1;
+        }
         $result = [
             'code' => $code,
             'data' => $data,
@@ -293,8 +296,12 @@ if (! function_exists('result')) {
             }
         }
         if ($is_json) {// 返回json格式
-            return response($result, 200)
-                ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错 特别注意：这里不能修改，否则上传图片接口会报错！！！！！！
+            if (is_app()) {
+                return response()->json($result);
+            } else {
+                return response($result, 200)
+                    ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错 特别注意：这里不能修改，否则上传图片接口会报错！！！！！！
+            }
         }
 
         return $result; // 返回数组格式
@@ -306,12 +313,17 @@ if (! function_exists('json_result')) {
      * 返回json格式数据
      *
      * @param array $data 数据
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     function json_result($data)
     {
-        return response($data, 200)
-            ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错 特别注意：这里不能修改，否则上传图片接口会报错！！！！！！
+        if (is_app()) {
+            return response()->json($data);
+        } else {
+            return response($data, 200)
+                ->header('Content-Type', 'text/html; charset=UTF-8'); // 设置response头信息 否则会报错 特别注意：这里不能修改，否则上传图片接口会报错！！！！！！
+        }
+
     }
 }
 
@@ -932,6 +944,9 @@ if (! function_exists('article_cat_type')) {
             '11' => '入驻指南',
             '12' => '信息公告',
             '14' => '分销帮助中心',
+            '15' => '用户发布帖子/视频',
+//            '16' => '用户发布视频',
+            '17' => '用户发布直播',
         ];
 
         if ($key != '') {
@@ -2044,13 +2059,23 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
         // 如果图片路径为空 返回默认图片 todo
         return $default;
     }
+    if (!sysconf('alioss_enable')) { // 后台未开启oss
+        $isOss = false;
+    }
 
-    if ($isOss) {
-        // Oss图片
-        $domain = sysconf('oss_domain');
+//    if ($isOss) {
+//        // Oss图片
+//        $domain = sysconf('oss_domain');
+//        $host = 'https://'.$domain.'/'.sysconf('alioss_root_path').'/';
+//    } else {
+//        // 本地图片
+//        $host = request()->getSchemeAndHttpHost().'/';
+//    }
+    if (strpos($path, 'upload')) { // 图片路径包括：upload 表示本地上传文件
+        $host = request()->getSchemeAndHttpHost().'/';
     } else {
-        // 本地图片
-        $domain = config('lrw.backend_domain');
+        $domain = sysconf('oss_domain');
+        $host = 'https://'.$domain.'/'.sysconf('alioss_root_path').'/';
     }
 //    if ($siteId) {
 //        $host = 'http://'.$domain.'/'.sysconf('alioss_root_path')./*'/site/'.$siteId.*/'/';
@@ -2060,7 +2085,7 @@ function get_image_url($path = '', $type = '', $isOss = true, $siteId = 0, $shop
 //        $host = 'http://'.$domain.'/'.sysconf('alioss_root_path').'/';
 //    }
     // $host = request()->getScheme().'://'.$domain.'/'.sysconf('alioss_root_path').'/';
-    $host = 'https://'.$domain.'/'.sysconf('alioss_root_path').'/';
+//    $host = 'https://'.$domain.'/'.sysconf('alioss_root_path').'/';
 
     $url = $host.ltrim($path, '/').$watermark;
     return $url;
@@ -2332,7 +2357,7 @@ function nav_layout($key = '')
 function get_ws_url($port = '8181')
 {
     $host = config('lrw.push_domain');
-    
+
     return 'wss://'.$host.':'.$port;
     // return (request()->isSecure() ? 'wss': 'ws').'://'.$host.':'.$port;
 }
@@ -3220,9 +3245,10 @@ function get_parent_region_names($parent_code)
  *
  * @param string $region_code 如：11,01,01
  * @param string $separate 返回地区中文字符串分隔符
- * @return bool
+ * @param bool $is_array 是否返回数组
+ * @return bool|array
  */
-function get_region_names_by_region_code($region_code = '', $separate = '-')
+function get_region_names_by_region_code($region_code = '', $separate = '-', $is_array = false)
 {
     if (empty($region_code)) {
         return '';
@@ -3233,6 +3259,9 @@ function get_region_names_by_region_code($region_code = '', $separate = '-')
 //    return $region_names;
     $region_name = array_reverse(get_parent_region_list($region_code));
     $region_name = array_column($region_name, 'region_name');
+    if ($is_array) {
+        return $region_name;
+    }
     $region_names = implode($separate, $region_name);
 
     return $region_names;
@@ -4512,12 +4541,45 @@ function format_price($price, $number = 2)
  * @param $image_file
  * @return string
  */
-function base64_encode_image($image_file) {
-    $image_info             = getimagesize($image_file);
-    $base64_image_content   = "data:{$image_info['mime']};base64," . chunk_split(base64_encode(file_get_contents($image_file)));
+ function base64_encode_image($url) {
+    $mimeType = '';
+    $base64 = '';
+    $url .= "?x-oss-process=image/resize,m_pad,limit_0,h_200,w_200";
 
-    return $base64_image_content;
+    $handle = fopen($url, 'rb');
+    if ($handle) {
+        $headers = stream_get_meta_data($handle);
+        foreach ($headers['wrapper_data'] as $header) {
+            if (strpos($header, 'Content-Type: ') === 0) {
+                $mimeType = str_replace('Content-Type: ', '', $header);
+                break;
+            }
+        }
+
+        while (!feof($handle)) {
+            $base64 .= base64_encode(fread($handle, 8192));
+        }
+        fclose($handle);
+    } else {
+        throw new Exception('Failed to open URL.');
+    }
+
+    return "data:$mimeType;base64,$base64";
 }
+// function base64_encode_image($imageUrl) {
+//     $response = Illuminate\Support\Facades\Http::get($imageUrl);
+//     if ($response->successful()) {
+//         $base64 = 'data:' . mime_content_type($imageUrl) . ';base64,' . base64_encode($response->body());
+//         return $base64;
+//     }
+//     return '';
+// }
+//function base64_encode_image($image_file) {
+//    $image_info             = getimagesize($image_file);
+//    $base64_image_content   = "data:{$image_info['mime']};base64," . chunk_split(base64_encode(file_get_contents($image_file)));
+//
+//    return $base64_image_content;
+//}
 
 /**
  * 编辑器内容
@@ -4752,35 +4814,35 @@ function get_wx_share_data($APIs = [], $url = '', $debug = false)
             //...
         ];
 //        $APIs = ["onMenuShareTimeline", "onMenuShareAppMessage", "scanQRCode"];
-        // try {
-        //     $app = \EasyWeChat\Factory::officialAccount($config);
-        //     $res = $app->jssdk->buildConfig($APIs, $debug = false, $beta = false, $json = false, [], $url);
-        //     return $res;
-        // } catch (\EasyWeChat\Kernel\Exceptions\InvalidConfigException $e){
-        //     // todo
-        //     return false;
-        // } catch (\EasyWeChat\Kernel\Exceptions\RuntimeException $e) {
-        //     // todo
-        //     return false;
-        // } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
-        //     // todo
-        //     return false;
-        // }
+         try {
+             $app = \App\Services\WechatService::app();
+             $res = $app->jssdk->buildConfig($APIs, $debug, false, false, [], $url);
+             return $res;
+         } catch (\EasyWeChat\Kernel\Exceptions\InvalidConfigException $e){
+             // todo
+             return false;
+         } catch (\EasyWeChat\Kernel\Exceptions\RuntimeException $e) {
+             // todo
+             return false;
+         } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
+             // todo
+             return false;
+         }
 
-        try {
-            $app = new \EasyWeChat\OfficialAccount\Application($config);
-            $utils = $app->getUtils();
-            $res = $utils->buildJsSdkConfig($url, $APIs, [], $debug);
-            return $res;
-        } catch (\EasyWeChat\Kernel\Exceptions\InvalidConfigException $e) {
-            return false;
-        } catch (\EasyWeChat\Kernel\Exceptions\RuntimeException $e) {
-            // todo
-            return false;
-        } catch (\EasyWeChat\Kernel\Exceptions\InvalidArgumentException $e) {
-            // todo
-            return false;
-        }
+//        try {
+//            $app = new \EasyWeChat\OfficialAccount\Application($config);
+//            $utils = $app->getUtils();
+//            $res = $utils->buildJsSdkConfig($url, $APIs, [], $debug);
+//            return $res;
+//        } catch (\EasyWeChat\Kernel\Exceptions\InvalidConfigException $e) {
+//            return false;
+//        } catch (\EasyWeChat\Kernel\Exceptions\RuntimeException $e) {
+//            // todo
+//            return false;
+//        } catch (\EasyWeChat\Kernel\Exceptions\InvalidArgumentException $e) {
+//            // todo
+//            return false;
+//        }
     }
 }
 

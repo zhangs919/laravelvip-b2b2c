@@ -19,6 +19,37 @@ class UserAddressRepository
         $this->userReal = new UserRealRepository();
     }
 
+    public function saveData($post, $user_id)
+    {
+        DB::beginTransaction();
+        try {
+
+            if (!empty($post['address_id'])) {
+                // 更新
+                $this->update($post['address_id'], $post);
+                $address_id = $post['address_id'];
+            } else {
+                // 新增
+                $ret = $this->store($post);
+                $address_id = $ret->address_id;
+            }
+
+            if (isset($post['is_default']) && $post['is_default']) {
+                // 将其他默认地址设置为非默认
+                UserAddress::where([['user_id', $user_id], ['address_id', '!=', $address_id]])->update(['is_default'=>0]);
+                (new UserAddressRepository())->setDefault($address_id, $user_id);
+            }
+
+            DB::commit();
+            return $address_id;
+        }catch (\Exception $e){
+            DB::rollback();//事务回滚
+//            echo $e->getMessage();
+//            echo $e->getCode();
+            return false;
+        }
+    }
+
     /**
      * 设置默认地址
      *

@@ -46,7 +46,7 @@
             </p>
             <p>
                 续费流程：前往店主用户中心->服务中心->查看入驻进度->
-                <a class="major-label m-l-5 m-r-5" href="http://{{ config('lrw.frontend_domain') }}/shop/apply/result.html" target="_blank">开店缴费</a>
+                <a class="major-label m-l-5 m-r-5" href="//{{ config('lrw.frontend_domain') }}/shop/apply/result.html" target="_blank">开店缴费</a>
                 进行线上缴费，或联系平台方管理员进行缴纳费用！
             </p>
         </div>

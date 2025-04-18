@@ -5,6 +5,29 @@
  */
 class Http
 {
+
+    public static function getHttpStatusCode($url)
+    {
+        // 初始化cURL会话
+        $ch = curl_init();
+
+// 设置cURL选项
+        curl_setopt($ch, CURLOPT_URL, $url); // 替换为你想要获取状态码的URL
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+
+// 执行cURL会话
+        $result = curl_exec($ch);
+
+// 获取HTTP状态码
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+// 关闭cURL会话
+        curl_close($ch);
+
+        return $httpCode;
+    }
+
     /**
      * 通过curl get数据
      * @param type $url
@@ -24,8 +47,12 @@ class Http
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [$header]); //模拟的header头
         $result = curl_exec($ch);
+
+        // 获取HTTP状态码
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         curl_close($ch);
-        return $result;
+        return [$result, $httpCode];
     }
 
     /**

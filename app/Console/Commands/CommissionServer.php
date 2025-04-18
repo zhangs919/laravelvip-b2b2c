@@ -366,7 +366,7 @@ class CommissionServer extends Command
                                         'shop_id' => $row['shop_id'],
                                         'bill_sn' => $bill_sn,
                                         'proportion' => $row['take_rate'], // 佣金比例
-                                        'commission_model' => $row['commission_model'] ?? -1, // todo 佣金模式（0：按商家比例 1：按平台分类比例）
+                                        'commission_model' => $row['commission_model'] ?? -1, // 佣金模式（0：按商家比例 1：按平台分类比例）
                                         'start_time' => $last_year_start,
                                         'end_time' => $last_year_end,
                                         'bill_cycle' => $row['cycle'],
@@ -415,7 +415,6 @@ class CommissionServer extends Command
                     //未出账单
                     if (empty($value['chargeoff_status'])) {
                         $detail = $this->commissionService->getBillAmountDetail($value['id'], $value['shop_id'], $value['proportion'], $value['start_time'], $value['end_time'], $value['chargeoff_status'], $value['commission_model']);
-
                         $order_list = $detail['order_list'] ?? [];
                         if (!empty($order_list)) {
                             $this->updateCommission($detail, $value, $time);
@@ -451,11 +450,11 @@ class CommissionServer extends Command
                 ];
 
                 /* 微分销 */
-                if (file_exists(MOBILE_DRP)) {
+//                if (file_exists(MOBILE_DRP)) {
 //                    $no_settlement = $this->commissionService->merchantsIsSettlement($row['shop_id'], '', $filter);
-                } else {
+//                } else {
                     $no_settlement = $this->commissionService->merchantsIsSettlement($row['shop_id'], '', $filter);
-                }
+//                }
 
                 $gain_amount = $no_settlement['all_gain_commission'] ?? 0;
                 $gain_amount = $this->lrwRepository->changeFloat($gain_amount);
@@ -518,9 +517,9 @@ class CommissionServer extends Command
 
         $res = $res->doesntHave('getSellerBillOrder');
 
-        $res = $res->with([
-            'getSellerNegativeOrder'
-        ]);
+//        $res = $res->with([
+//            'getSellerNegativeOrder'
+//        ]);
 
         $res = BaseRepository::getToArrayGet($res);
 
@@ -555,11 +554,7 @@ class CommissionServer extends Command
                         ]);
                     }
 
-                    if ($value['order_amount'] > 0 && $value['order_amount'] > $value['rate_fee']) {
-                        $order_amount = $value['order_amount'] - $value['rate_fee'];
-                    } else {
-                        $order_amount = $value['order_amount'];
-                    }
+                    $order_amount = $value['order_amount'];
 
                     $other = array(
                         'user_id' => $value['user_id'],
@@ -572,21 +567,21 @@ class CommissionServer extends Command
                         'order_amount' => $order_amount,
                         'return_amount' => $return_amount_info['return_amount'],
                         'goods_amount' => $value['goods_amount'],
-                        'tax' => $value['tax'],
+                        'tax' => 0,
                         'shipping_fee' => $value['shipping_fee'],
-                        'insure_fee' => $value['insure_fee'],
-                        'pay_fee' => $value['pay_fee'] ?? 0,
-                        'pack_fee' => $value['pack_fee'] ?? 0,
-                        'card_fee' => $value['card_fee'] ?? 0,
+                        'insure_fee' => 0,
+                        'pay_fee' => 0,
+                        'packing_fee' => $value['packing_fee'] ?? 0,
                         'bonus' => $value['bonus'],
+                        'shop_bonus' => $value['shop_bonus'],
                         'integral_money' => $value['integral_money'] ?? 0,
-                        'coupons' => $value['coupons'],
-                        'discount' => $value['discount'],
-                        'value_card' => $value_card ? $value_card : 0,
+                        'coupons' => 0,
+                        'discount_fee' => $value['discount_fee'],
+                        'store_card_price' => $value['store_card_price'],
                         'money_paid' => $value['money_paid'],
                         'surplus' => $value['surplus'],
                         'confirm_take_time' => $confirm_take_time,
-                        'rate_fee' => $value['rate_fee'],
+                        'rate_fee' => 0,
                         'return_rate_fee' => $return_amount_info['return_rate_price']
                     );
 
@@ -689,22 +684,23 @@ class CommissionServer extends Command
             $res = Shop::where('user_id', $shop_id);
             $shop_list = BaseRepository::getToArrayGet($res);
         } else {
-            $count = Shop::where('shop_audit', 1)->count();
+//            $count = Shop::where('shop_audit', 1)->count();
 
-            $shop_list = cache('shop_list');
-            $shop_list = !is_null($shop_list) ? $shop_list : false;
-
-            $cache_count = $shop_list ? count($shop_list) : 0;
-
-            $is_cache = 0;
-            if ($count && $cache_count && $count > $cache_count) {
-                cache()->forget('shop_list');
-                $is_cache = 1;
-            }
-
-            if ($is_cache == 1 || $shop_list === false) {
-                $shop_list = $this->commissionService->getCacheShopList();
-            }
+//            $shop_list = cache('shop_list');
+//            $shop_list = !is_null($shop_list) ? $shop_list : false;
+//
+//            $cache_count = $shop_list ? count($shop_list) : 0;
+//
+//            $is_cache = 0;
+//            if ($count && $cache_count && $count > $cache_count) {
+//                cache()->forget('shop_list');
+//                $is_cache = 1;
+//            }
+//
+//            if ($is_cache == 1 || $shop_list === false) {
+//                $shop_list = $this->commissionService->getCacheShopList();
+//            }
+            $shop_list = $this->commissionService->getCacheShopList();
 
             $operator = lang('order.order_action_user');
         }
@@ -725,7 +721,7 @@ class CommissionServer extends Command
     private function updateCommission($detail = [], $value = [], $gmtime = 0)
     {
         $order_list = $detail['order_list'] ?? [];
-        $order_list = BaseRepository::getExplode($order_list);
+//        $order_list = BaseRepository::getExplode($order_list);
 
         //出账单，绑定满足账单订单 start
         if ($detail && !empty($order_list) && $value['end_time'] < $gmtime) {

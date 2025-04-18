@@ -29,7 +29,9 @@ use App\Repositories\ActivityCategoryRepository;
 use App\Repositories\ActivityRepository;
 use App\Repositories\BrandRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\GoodsActivityRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\ShopCategoryRepository;
 use App\Services\Enum\ActTypeEnum;
 use Illuminate\Http\Request;
 
@@ -43,32 +45,40 @@ class LimitDiscountController extends Seller
 {
 
     private $links = [
-        ['url' => 'dashboard/limit-discount/list', 'text' => '列表'],
+        ['url' => 'dashboard/limit-discount/list', 'text' => '限时折扣活动列表'],
+        ['url' => 'dashboard/limit-discount/shop-activity-goods-list', 'text' => '店铺活动商品列表'],
         ['url' => 'dashboard/limit-discount/add', 'text' => '添加'],
         ['url' => 'dashboard/limit-discount/edit', 'text' => '编辑'],
     ];
 
     protected $activity;
     protected $activityCategory;
+    protected $goodsActivity;
     protected $goods;
     protected $category;
     protected $brand;
+    protected $shopCategory;
 
     public function __construct(
         ActivityRepository $activity
         ,ActivityCategoryRepository $activityCategory
+        ,GoodsActivityRepository $goodsActivity
         ,GoodsRepository $goods
         ,CategoryRepository $category
         ,BrandRepository $brand
+        ,ShopCategoryRepository $shopCategory
     )
     {
         parent::__construct();
 
         $this->activity = $activity;
         $this->activityCategory = $activityCategory;
+        $this->goodsActivity = $goodsActivity;
+
         $this->goods = $goods;
         $this->category = $category;
         $this->brand = $brand;
+        $this->shopCategory = $shopCategory;
 
         $this->set_menu_select('dashboard', 'dashboard-center');
     }
@@ -76,7 +86,7 @@ class LimitDiscountController extends Seller
 
     public function lists(Request $request)
     {
-        $title = '列表';
+        $title = '限时折扣活动列表';
         $fixed_title = '营销中心 - '.$title;
 
         $action_span = [
@@ -156,6 +166,149 @@ class LimitDiscountController extends Seller
         return $this->displayData(); // 模板渲染及APP客户端返回数据
     }
 
+    public function shopActivityGoodsList(Request $request)
+    {
+        $this->sublink($this->links, 'shop-activity-goods-list', '', '', 'add,edit');
+
+        $act_id = $request->get('act_id');
+        $activity = $this->activity->getById($act_id);
+
+        $title = "活动#{$act_id}【{$activity->act_name}]】- 店铺活动商品列表";
+        $fixed_title = '';
+
+        $action_span = [
+            [
+                'id' => '',
+                'url' => 'list',
+                'icon' => 'fa-reply',
+                'text' => '返回限时折扣活动列表'
+            ],
+//            [
+//                'id' => 'btn_add_activity_goods',
+//                'url' => 'javascript:void(0);',
+//                'icon' => 'fa-plus',
+//                'text' => '添加活动商品'
+//            ],
+        ];
+
+        $explain_panel = [
+            '<b>当前活动库存模式：SKU 级别，活动中同一规格的商品共享店铺设置的统一活动库存</b>',
+            '活动的商品列表根据活动商品所属的店铺或者门店，以标签页的形式分开展示'
+        ];
+        $blocks = [
+            'explain_panel' => $explain_panel,
+            'fixed_title' => $fixed_title,
+            'action_span' => $action_span
+        ];
+
+        $this->setLayoutBlock($blocks); // 设置block
+
+        $params = $request->all();
+
+        $shop_id = seller_shop_info()->shop_id;
+        $where = [];
+        $where[] = ['shop_id', $shop_id];
+        $where[] = ['act_id', $act_id];
+        // 搜索条件
+        $search_arr = ['keyword_type','keyword','is_enable'];
+        foreach ($search_arr as $v) {
+            if (isset($params[$v]) && !empty($params[$v])) {
+
+//                if ($v == 'act_name') {
+//                    $where[] = ['act_name', 'like', "%{$params[$v]}%"];
+//                } else {
+//                    $where[] = [$v, $params[$v]];
+//                }
+            }
+        }
+        // 列表
+        $condition = [
+            'where' => $where,
+            'sortname' => 'id',
+            'sortorder' => 'desc',
+        ];
+        // 列表
+        list($list, $total) = $this->goodsActivity->getList($condition);
+
+        $pageHtml = pagination($total);
+        $page = frontend_pagination($total, true);
+
+        $compact = compact('title', 'list', 'total', 'pageHtml','act_id','activity');
+        if ($request->ajax()) {
+            $render = view('dashboard.limit-discount.partials._shop_activity_goods_list', $compact)->render();
+            return result(0, $render);
+        }
+
+        // 获取数据
+
+        $webData = []; // web端（pc、mobile）数据对象
+        $data = [
+            'app_extra_data' => [],
+            'app_prefix_data' => [
+                'title' => $title,
+                'list' => $list,
+                'page' => $page,
+                'act_tag' => 0,
+                'act_id' => $act_id,
+                'shop_id' => $shop_id,
+                'activity' => $activity,
+                'search_shop_type' => '',
+                'explain' => $explain_panel,
+            ],
+            'app_context_data' => $this->getAppContext(),
+            'app_suffix_data' => [],
+            'web_data' => $webData,
+            'compact_data' => $compact,
+            'tpl_view' => 'dashboard.limit-discount.shop_activity_goods_list'
+        ];
+        $this->setData($data); // 设置数据
+        return $this->displayData(); // 模板渲染及APP客户端返回数据
+    }
+
+    public function addActivityGoods(Request $request)
+    {
+        if ($request->method() == 'POST') {
+            // todo 处理添加活动商品 与添加活动类似
+
+        }
+        $act_id = $request->get('act_id', 0);
+        $model = $this->activity->getById($act_id);
+        if (empty($model)) {
+            return result(0, "编号#{$act_id}不存在");
+        }
+        $start_time = date('Y-m-d H:i:s', time());
+        $end_time = date("Y-m-d H:i:s",strtotime("+7 day"));
+
+        // 获取数据
+        $compact =[
+            'act_price_type' => 0,
+            'act_goods_type_list' => [
+                '全部商品参与（包含出售中和已下架商品）',
+                '全部出售中商品参与',
+                '指定商品参与',
+                '指定商品不参与',
+            ],
+            'act_price_type_list' => [
+                "打折",
+                "减价",
+                "指定折扣价"
+            ],
+            'act_multistore_type_list' => [
+                "全部门店",
+                "指定分组下的门店",
+                "指定门店"
+            ],
+            'is_open_multi_store' => '1',
+            'model' => $model,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'progress_key' => 'shop:activity:progress:info:8'
+        ];
+        $render = view('dashboard.limit-discount.add_activity_goods', $compact)->render();
+
+        return result(0, $render);
+    }
+
     /**
      *
      * @param Request $request
@@ -166,7 +319,7 @@ class LimitDiscountController extends Seller
         $title = '添加';
 
         $id = $request->get('id', 0);
-        $this->sublink($this->links, 'add', '', '', 'edit');
+        $this->sublink($this->links, 'add', '', '', 'shop-activity-goods-list,edit');
 
         $model = [
             'sort' => 255,
@@ -192,7 +345,7 @@ class LimitDiscountController extends Seller
 //                ''
 //            ];
 //            $week_string = null;
-            $goods_list = $this->activity->getLimitDiscountGoodsActivityList($id); // 商品列表
+//            $goods_list = $this->activity->getLimitDiscountGoodsActivityList($id); // 商品列表
 
             $title = '编辑';
             $this->sublink($this->links, 'edit', '', '', 'add');
@@ -250,7 +403,6 @@ class LimitDiscountController extends Seller
             'select_group_list' =>null,
             'select_group_ids' =>'',
             'group_list' => [], // 门店分组
-            'goods_list' => $goods_list ?? null,
             'model' => $model,
             'start_time' => $start_time,
             'end_time' => $end_time
@@ -288,13 +440,14 @@ class LimitDiscountController extends Seller
     {
         $post = $request->post();
         $postModel = $request->post('LimitDiscountModel');
+        $shop_id = seller_shop_info()->shop_id;
 
         // 活动扩展数据
         $ext_info['act_repeat'] = $postModel['act_repeat'];
-        $ext_info['timepicker'] = $post['timepicker'];
         $ext_info['act_label'] = $postModel['act_label'];
 
         if ($postModel['act_repeat'] == 1) { // 周期重复
+            $ext_info['timepicker'] = $post['timepicker'];
             // 0-每天 1-每周 2-每月
             if ($post['timepicker'] == 0) {
                 $ext_info['day_hour'] = $post['day_hour'];
@@ -306,47 +459,110 @@ class LimitDiscountController extends Seller
             }
         } else {
             // 不重复 清空周期重复数据 ?? todo
-
+            $ext_info['cycle_data'] = $post['cycle_data'];
         }
 
         $ext_info['limit_type'] = $post['limit_type']; // 限购设置 每人限购N件
         if ($post['limit_type'] == 1) { // 限购
             $ext_info['limit_num_1'] = $post['limit_num_1'];
+        } else {
+            $ext_info['limit_num'] = 0;
         }
         $postModel['ext_info'] = $ext_info;
         $postModel['act_type'] = ActTypeEnum::ACT_TYPE_LIMIT_DISCOUNT; // 11-限时折扣
-
+        //"ext_info" => array:4 [
+        //    "act_repeat" => "0"
+        //    "timepicker" => "0"
+        //    "act_label" => "标签"
+        //    "limit_type" => "0"
+        //  ]
+//        {\"act_repeat\":0,\"cycle_data\":{\"type\":\"-1\"},\"act_label\":\"\标\签1\",\"limit_type\":\"0\",\"limit_num\":0}
         $activityData = $postModel;
-        $goodsActivityData = [
-            [
-                'sku_id' => $post['sku_id'],
-                'goods_id' => $post['goods_id'],
-                'cat_id' => 0, // 限时折扣活动 没有分类
-                'act_price' => $post['goods_price'],
-                'act_stock' => $post['goods_number'],
-                'ext_info' => null,
-                // "ext_info": "a:5:{s:9:\"fight_num\";s:1:\"3\";s:10:\"fight_time\";s:1:\"2\";s:13:\"discount_mode\";s:1:\"1\";s:14:\"first_discount\";N;s:14:\"discount_price\";s:3:\"0.2\";}",
-            ]
-        ];
+        $goodsActivityData = [];
+
+        if ($postModel['use_range'] == 1) {
+            // 指定商品
+            $goodsActivityData = [];
+            foreach ($post['goods_spu'] as $k=>$v) {
+                $goods_id = $v;
+                // 折扣（折）
+                $discount_str = $post['goods_spu_discount'][$k];
+                if ($discount_str) {
+                    $discount_arr = explode('-', $discount_str);
+                    $discount = $discount_arr[1]; // 折扣
+                    $sku_id = $discount_arr[0];
+                    $goods_sku = GoodsSku::where('sku_id', $sku_id)->select(['sku_id', 'goods_price', 'goods_number'])->first();
+                    $act_price = round($goods_sku->goods_price * ($discount/10), 2);
+                    $discount_mode = 0;
+                    $discount_num = $discount;
+                }
+
+                // 减价（元）
+                $reduce_str = $post['goods_spu_reduce'][$k];
+                if ($reduce_str) {
+                    $reduce_arr = explode('-', $reduce_str);
+                    $reduce = $reduce_arr[1]; // 减价
+                    $sku_id = $reduce_arr[0];
+                    $goods_sku = GoodsSku::where('sku_id', $sku_id)->select(['sku_id', 'goods_price', 'goods_number'])->first();
+                    $act_price = $goods_sku->goods_price - $reduce;
+                    $discount_mode = 1;
+                    $discount_num = $reduce;
+                }
+
+                // 指定折扣价（元）
+                $set_str = $post['goods_spu_set'][$k];
+                if ($set_str) {
+                    $set_arr = explode('-', $set_str);
+                    $set = $set_arr[1]; // 指定折扣价
+                    $sku_id = $set_arr[0];
+                    $act_price = $set;
+                    $discount_mode = 2;
+                    $discount_num = $set;
+                }
+
+                $stock_str = $post['goods_spu_stock'][$k];
+                $stock_arr = explode('-', $stock_str);
+                $stock = $stock_arr[1]; // 库存
+
+                $goodsActivityData[] = [
+                    'shop_id' => $shop_id,
+                    'sku_id' => $sku_id,
+                    'act_type' => ActTypeEnum::ACT_TYPE_LIMIT_DISCOUNT,
+                    'goods_id' => $goods_id,
+                    'cat_id' => 0, // 限时折扣活动 没有分类
+                    'act_price' => $act_price,
+                    'act_stock' => $stock,
+                    'is_enable' => 1,
+                    'ext_info' => [
+                        'discount_mode' => $discount_mode,
+                        'discount_num' => $discount_num
+                    ],
+                ];
+            }
+        }
 
         if (!empty($postModel['act_id'])) {
             // 编辑
-            $ret = $this->activity->modifyActivity($activityData, $goodsActivityData);
+            try {
+                $ret = $this->activity->modifyActivity($activityData);
+            } catch (\Exception $e) {
+                return result(-1, null, '限时折扣编辑失败'.$e->getMessage());
+            }
             $msg = '限时折扣编辑';
             $act_id = $postModel['act_id'];
         }else {
             // 添加
             $activityData['shop_id'] = seller_shop_info()->shop_id;
-
-            $ret = $this->activity->addActivity($activityData, $goodsActivityData);
+            $activityData['create_user_id'] = seller_shop_info()->user_id;
+            try {
+                $ret = $this->activity->addActivity($activityData, $goodsActivityData);
+            } catch (\Exception $e) {
+                return result(-1, null, '限时折扣添加失败'.$e->getMessage());
+            }
             $msg = '限时折扣添加';
             $act_id = @$ret->act_id;
         }
 
-        if ($ret === false) {
-            // fail
-            return result(-1, null, $msg.'失败');
-        }
         // success
         shop_log($msg.'成功。ID：'.$act_id);
         return result(0, null, $msg.'成功');
@@ -464,10 +680,13 @@ class LimitDiscountController extends Seller
         ];
         list($brand_list, $brand_total) = $this->brand->getList($condition);
 
+        // 店铺内分类列表
+        $shop_cat_list = $this->shopCategory->getShopCategoryList(seller_shop_info()->shop_id);
+
         $compact = compact(
             'page_id', 'pagination_id', 'list', 'pageHtml',
             'sku_ids', 'goods_ids', 'category_list',
-            'brand_list');
+            'brand_list', 'shop_cat_list');
         $render = view('dashboard.limit-discount.'.$tpl, $compact)->render();
         return result(0, $render);
     }
@@ -536,30 +755,32 @@ class LimitDiscountController extends Seller
     {
         $goods_ids = $request->post('goods_ids', []);
         $act_id = $request->post('act_id');
+        $is_join = $request->post('is_join');
 
         if (empty($goods_ids)) {
             return result(-1, null, INVALID_PARAM);
         }
-//        $goods_info = Goods::where('goods_id', $goods_id)
-//            ->select(['goods_id','goods_price','goods_number','goods_name'])->first();
-//        $goods_sku_list = GoodsSku::where([['goods_id', $goods_id],['checked',1]])
-//            ->select(['sku_id','goods_number','goods_price'])->get()->toArray();
-//        $price_arr = array_column($goods_sku_list, 'goods_price');
-//        $min_price = min($price_arr);
-//        $max_price = max($price_arr);
-//        if ($min_price == $max_price) {
-//            $goods_price = $min_price;
-//        } else {
-//            $goods_price = "￥{$min_price}-￥{$max_price}";
-//        }
-//        $sku_ids = array_column($goods_sku_list, 'sku_id');
-//        if (empty($goods_info)) {
-//            return result(-1, null, '商品ID无效');
-//        }
-//        if ($goods_info->goods_number <= 0) {
-//            return result(-1, null, '该商品库存不足，不可选择！');
-//        }
-        $render = view('dashboard.limit-discount.batch_goods_info', compact('goods_info', 'price_mode', 'goods_price', 'sku_ids'))->render();
+        $goods_id = array_first($goods_ids);
+        $goods_info = Goods::where('goods_id', $goods_id)
+            ->select(['goods_id','sku_id','goods_price','goods_number','goods_name','goods_sn','goods_barcode','sku_open'])->first();
+        $goods_sku_list = GoodsSku::where([['goods_id', $goods_id],['checked',1]])
+            ->select(['sku_id','goods_number','goods_price'])->get()->toArray();
+        $price_arr = array_column($goods_sku_list, 'goods_price');
+        $min_price = min($price_arr);
+        $max_price = max($price_arr);
+        if ($min_price == $max_price) {
+            $goods_price = $min_price;
+        } else {
+            $goods_price = "￥{$min_price}-￥{$max_price}";
+        }
+        $sku_ids = array_column($goods_sku_list, 'sku_id');
+        if (empty($goods_info)) {
+            return result(-1, null, '商品ID无效');
+        }
+        if ($goods_info->goods_number <= 0) {
+            return result(-1, null, '该商品库存不足，不可选择！');
+        }
+        $render = view('dashboard.limit-discount.batch_goods_info', compact('goods_info', 'price_mode', 'goods_price', 'sku_ids', 'is_join'))->render();
         return result(0, $render, '', ['unstock_goods_ids'=>[]]);
     }
 

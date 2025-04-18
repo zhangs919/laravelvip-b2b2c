@@ -494,7 +494,9 @@ class DeliveryOrderRepository
             $orderInfo = $this->orderInfo->getOrderInfo($condition);
             // 发货信息 取商家默认发货地址
             $shopAddress = ShopAddress::where([['shop_id', $orderInfo['shop_id']], ['is_default', 1]])->first();
-
+            if (empty($shopAddress)) {
+                throw new \Exception('请先设置默认发货地址');
+            }
 
             // 2.生成发货单订单数据
             $order = [

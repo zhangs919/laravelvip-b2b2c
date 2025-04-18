@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Region;
+use App\Services\Tree;
 use Illuminate\Http\Request;
 
 
@@ -27,6 +28,34 @@ class RegionRepository
     {
         $ret = $this->model->changeState($id, 'is_scope');
         return $ret;
+    }
+
+    public function getAllRegions()
+    {
+        // 设置地区信息缓存
+        $cache_id = CACHE_KEY_ALL_REGION[0];
+        $list = cache()->get($cache_id);
+        if ($list) {
+            return $list;
+        }
+
+        $condition = [
+            'where' => [['is_enable', 1]],
+            'limit' => 0,
+            'field' => [
+                'center', 'parent_code', 'region_code', 'region_name'
+            ],
+            'sortname' => 'region_id',
+            'sortorder' => 'asc'
+        ];
+        list($region_list, $total) = $this->model->getList($condition);
+        $list = [];
+        foreach ($region_list as $key=>$value) {
+            $list[$key] = $value->toArray();
+        }
+        $list = (new Tree())->list_to_tree($list, 'region_code', 'parent_code', 'children', 0, false);
+        cache()->put($cache_id, $list, CACHE_KEY_ALL_REGION[1]);
+        return $list;
     }
 
     /**

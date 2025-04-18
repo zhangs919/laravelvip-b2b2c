@@ -25,6 +25,8 @@ namespace App\Api\V1\Controllers;
 use App\Api\Foundation\Controllers\BaseController;
 use App\Repositories\UserRepository;
 use App\Services\ConnectApi;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -48,6 +50,39 @@ class AuthController extends BaseController
     }
 
     /**
+     * 第三方应用用户登录商城
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function thirdLogin(Request $request)
+    {
+        // app_secret=kFt76BkYCdnMzZ2n
+        // app_secret mobile 调用ip限制为指定服务器ip
+        try {
+            $this->validate($request, [
+                'app_secret' => 'required|string',
+                'mobile' => 'required|string',
+                'device_name' => 'required|string',
+            ], [
+                'app_secret.required' => '应用密钥不能为空',
+                'mobile.required' => '手机号不能为空',
+                'device_name.required' => '设备名称不能为空',
+            ]);
+        } catch (ValidationException $e) {
+            return $this->error($e->getMessage());
+        }
+
+        $res = $this->connectApi->attemptThirdLogin($request);
+        if (isset($res['code']) && $res['code'] == 1) {
+            return $this->error($res['message']);
+        }
+
+        $data = $res['data'];
+        return $this->success($data, '登录成功');
+    }
+
+    /**
      * 用户登录
      *
      * 用户登录获取token值
@@ -59,34 +94,34 @@ class AuthController extends BaseController
      */
     public function login(Request $request)
     {
-
-
         // 验证参数
         try {
             if ($request->input('SmsLoginModel.mobile')) {
                 $this->validate($request, [
                     'SmsLoginModel.mobile' => 'required|string',
-                    'SmsLoginModel.smsCaptcha' => 'required|string',
+                    'SmsLoginModel.sms_captcha' => 'required|string',
+                    'device_name' => 'required|string',
                 ], [
                     'SmsLoginModel.mobile.required' => '手机号不能为空',
-                    'SmsLoginModel.smsCaptcha.required' => '验证码不能为空',
+                    'SmsLoginModel.sms_captcha.required' => '验证码不能为空',
+                    'device_name.required' => '设备名称不能为空',
                 ]);
             } elseif ($request->input('LoginModel.username')) {
                 $this->validate($request, [
                     'LoginModel.username' => 'required|string',
                     'LoginModel.password' => 'required|string',
-                    'LoginModel.device_name' => 'required|string',
+                    'device_name' => 'required|string',
                 ], [
                     'LoginModel.username.required' => '用户名不能为空',
                     'LoginModel.password.required' => '密码不能为空',
-                    'LoginModel.device_name.required' => '设备名称不能为空',
+                    'device_name.required' => '设备名称不能为空',
                 ]);
             }
         } catch (ValidationException $e) {
             return $this->error($e->getMessage());
         }
         $res = $this->connectApi->attemptLogin($request);
-        if (isset($res['code']) && $res['code'] == -1) {
+        if (isset($res['code']) && $res['code'] == 1) {
             return $this->error($res['message']);
         }
 

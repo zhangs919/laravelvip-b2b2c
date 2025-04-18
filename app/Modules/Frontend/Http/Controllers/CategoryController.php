@@ -71,6 +71,11 @@ class CategoryController extends Frontend
         if (!empty($list)) {
             $cat_id = !empty($cat_id) ? $cat_id : array_first($list)['cat_id'];
         }
+        if (!empty($list)) {
+            foreach ($list as &$item) {
+                $item['cat_image'] = get_image_url($item['cat_image'], 'goods_image');
+            }
+        }
 
         $compact = compact('seo_title', 'list', 'cat_id');
 

@@ -16,7 +16,8 @@ class Article extends BaseModel
         'cat_id', 'cat_model', 'cat_type', 'extend_cat', 'user_id', 'shop_id', 'goods_ids',
         'title', 'keywords', 'add_time', 'source', 'is_show',
         'is_recommend', 'article_thumb', 'summary', 'content',
-        'link', 'sort', 'status', 'click_number'
+        'link', 'sort', 'status', 'click_number',
+        'video', 'images', 'location', 'live_status', 'push_stream', 'pull_stream', 'article_type','start_time','end_time'
     ];
 
     protected $primaryKey = 'article_id';
@@ -47,13 +48,18 @@ class Article extends BaseModel
 
     public function articleCat()
     {
-        $this->belongsTo(ArticleCat::class, 'cat_id');
+        return $this->belongsTo(ArticleCat::class, 'cat_id');
     }
 
-	public function shop()
-	{
-		$this->belongsTo(Shop::class, 'shop_id');
-	}
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id');
+    }
 
     public function scopeByIds($query, $ids)
     {
@@ -73,12 +79,6 @@ class Article extends BaseModel
 
         return $arr;
     }
-
-
-
-
-
-
 
 
 }

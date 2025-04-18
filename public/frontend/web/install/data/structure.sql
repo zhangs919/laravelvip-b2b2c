@@ -33,12 +33,14 @@ CREATE TABLE `activity`  (
   `purchase_num` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '限购数量',
   `status` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '审核状态 默认0 0待审核 1已审核 2审核不通过',
   `is_recommend` tinyint(1) NOT NULL DEFAULT 0 COMMENT '活动是否推荐 默认0 0未推荐 1已推荐',
+  `create_user_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建人用户id',
   `shop_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '店铺id',
   `site_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '站点id',
   `ext_info` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '扩展字段',
   `use_range` tinyint(1) NOT NULL DEFAULT 0,
   `sort` int(0) UNSIGNED NOT NULL DEFAULT 255 COMMENT '排序',
   `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '审核原因',
+  `act_ext_info` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '活动扩展字段',
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`act_id`) USING BTREE
@@ -209,6 +211,15 @@ CREATE TABLE `article`  (
   `sort` int(0) UNSIGNED NOT NULL DEFAULT 255 COMMENT '排序',
   `status` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '审核状态 0未审核 1已通过 2未通过',
   `click_number` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '点击量',
+  `video` varchar(255) NOT NULL DEFAULT '' COMMENT '视频',
+  `images` text COMMENT '多图 以\"|\"分隔',
+  `location` varchar(255) NOT NULL DEFAULT '' COMMENT '位置',
+  `live_status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '直播状态 0-未直播 1-直播中 2-直播关闭',
+  `push_stream` varchar(255) DEFAULT NULL COMMENT '推流地址',
+  `pull_stream` varchar(500) DEFAULT NULL COMMENT '拉流地址',
+  `article_type` tinyint(2) NOT NULL DEFAULT '0' COMMENT '文章类型 1-帖子 2-视频 3-直播',
+  `start_time` timestamp(0) NULL DEFAULT NULL COMMENT '直播开始时间',
+  `end_time` timestamp(0) NULL DEFAULT NULL COMMENT '直播结束时间',
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   `deleted_at` timestamp(0) NULL DEFAULT NULL,
@@ -318,7 +329,10 @@ CREATE TABLE `back_order`  (
   `disabled_time` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '超时时间',
   `back_status` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '退换货单状态 0-待处理 1-同意申请 2-货物已发出 3-货物已收到 4-处理完成 5-被驳回 6-已失效 7-已撤销',
   `back_reason` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '退换货原因 1-退款不退货 2-退款退货 3-换货 4-申请维修 5-下线业务',
-  `refund_money` decimal(10, 2) NOT NULL COMMENT '退款金额',
+  `refund_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '退款金额',
+  `should_return` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '应退款金额',
+  `actual_return` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '实际退款金额',
+  `return_shipping_fee` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '退款运费金额',
   `refund_type` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '退款方式 默认0 0退回账户余额 1退回原支付方式',
   `refund_status` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Refund status 默认0',
   `back_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '退换货说明',
@@ -519,6 +533,27 @@ CREATE TABLE `category`  (
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`cat_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for chat_message
+-- ----------------------------
+DROP TABLE IF EXISTS `chat_message`;
+CREATE TABLE `chat_message` (
+    `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '消息ID',
+    `sender_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '发送者ID',
+    `receiver_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '接收者ID',
+    `scene_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '业务场景 1-普通消息 2-邀请同行 3-私信消息 4-直播弹幕',
+    `target_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目标ID',
+    `message` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
+    `extra` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '额外信息',
+    `read_at` timestamp NULL DEFAULT NULL COMMENT '消息已读时间',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`message_id`),
+    KEY `chat_message_scene_id_index` (`scene_id`),
+    KEY `chat_message_receiver_id_index` (`receiver_id`),
+    KEY `chat_message_sender_id_index` (`sender_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='聊天消息表';
 
 -- ----------------------------
 -- Table structure for collect
@@ -1002,14 +1037,19 @@ CREATE TABLE `goods`  (
 DROP TABLE IF EXISTS `goods_activity`;
 CREATE TABLE `goods_activity`  (
   `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `shop_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '店铺ID',
+  `store_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '门店ID',
   `act_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '活动表主键id',
   `sku_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '商品SKU ID',
+  `act_type` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '活动类型 默认0 ',
   `goods_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '商品id',
   `cat_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '活动分类id',
   `sale_base` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '销量基数',
   `act_price` decimal(10, 2) NOT NULL COMMENT '活动价格',
   `act_stock` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '活动库存',
+  `is_enable` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否有效 0-已取消 1-有效',
   `ext_info` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '扩展字段',
+  `sort` int(0) UNSIGNED NOT NULL DEFAULT 255 COMMENT '排序',
   `click_count` int(0) UNSIGNED NOT NULL DEFAULT 0,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
@@ -1241,6 +1281,29 @@ CREATE TABLE `goods_unit`  (
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`unit_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for groupon_log
+-- ----------------------------
+DROP TABLE IF EXISTS `groupon_log`;
+CREATE TABLE `groupon_log` (
+   `log_id` int unsigned NOT NULL AUTO_INCREMENT,
+   `shop_id` int unsigned NOT NULL DEFAULT '0' COMMENT '店铺ID',
+   `goods_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商品ID',
+   `act_id` int unsigned NOT NULL DEFAULT '0' COMMENT '活动ID',
+   `user_id` int unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+   `user_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '用户类型 0-团长 1-参团会员',
+   `group_sn` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '拼团编号',
+   `order_sn` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '订单编号',
+   `add_time` int unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+   `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '拼团状态 0-拼团中 1-拼团成功 2-拼团失败',
+   `start_time` int unsigned NOT NULL DEFAULT '0' COMMENT '开始时间',
+   `end_time` int unsigned NOT NULL DEFAULT '0' COMMENT '结束时间',
+   `created_at` timestamp NULL DEFAULT NULL,
+   `updated_at` timestamp NULL DEFAULT NULL,
+   `deleted_at` timestamp NULL DEFAULT NULL,
+   PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='拼团记录表';
 
 -- ----------------------------
 -- Table structure for hot_search
@@ -2126,44 +2189,44 @@ CREATE TABLE `order_info`  (
   `shipping_status` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '配送状态 0-未发货 1-已发货 2-已收货 3-备货中 4-已发货(部分商品) 5-发货中(处理分单) 6-已发货(部分商品) 7-部分已收货 8-待发货',
   `pay_status` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '支付状态 0-未支付 1-已支付',
   `consignee` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '收货人姓名',
-  `region_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '收货地址',
-  `region_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '收货人地址region_name',
+  `region_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '收货地址',
+  `region_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '收货人地址region_name',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '收货人详细地址',
-  `address_lng` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '地图定位 经度',
-  `address_lat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '地图定位 纬度',
+  `address_lng` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '地图定位 经度',
+  `address_lat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '地图定位 纬度',
   `receiving_mode` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '收货方式 默认0 0-普通快递 2-上门自提',
-  `tel` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '收货人联系方式',
-  `email` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '收货人邮箱',
-  `postscript` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '买家留言',
-  `best_time` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '最佳送货时间 默认空 可选：工作日/周末/假日均可',
+  `tel` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '收货人联系方式',
+  `email` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '收货人邮箱',
+  `postscript` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '买家留言',
+  `best_time` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '最佳送货时间 默认空 可选：工作日/周末/假日均可',
   `pay_id` tinyint(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '支付方式id 默认0  id值根据后台增加的支付方式而不同 1货到付款 0余额支付 1支付宝 2银联支付 3微信支付 99找人代付',
-  `pay_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '支付方式缩写【不支持余额支付！！！】 cod货到付款 alipay支付宝 union银联支付 weixin微信支付 to_pay找人代付',
-  `pay_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '支付名称 货到付款 余额支付 支付宝 银联支付 微信支付 找人代付',
+  `pay_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '支付方式缩写【不支持余额支付！！！】 cod货到付款 alipay支付宝 union银联支付 weixin微信支付 to_pay找人代付',
+  `pay_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '支付名称 货到付款 余额支付 支付宝 银联支付 微信支付 找人代付',
   `pay_sn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '支付单号 默认0 第三方支付平台编号',
   `is_cod` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否为货到付款 0 否 1 是',
-  `order_amount` decimal(10, 2) NOT NULL COMMENT '订单总金额',
+  `order_amount` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '订单总金额',
   `order_points` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '订单兑换积分',
-  `money_paid` decimal(10, 2) NOT NULL COMMENT '订单实付金额',
-  `goods_amount` decimal(10, 2) NOT NULL COMMENT '商品总金额',
-  `inv_fee` decimal(10, 2) NOT NULL COMMENT '发票总费用',
-  `shipping_fee` decimal(10, 2) NOT NULL COMMENT '配送总费用',
-  `other_shipping_fee` decimal(10, 2) NOT NULL COMMENT '额外配送费',
-  `packing_fee` decimal(10, 2) NOT NULL COMMENT '包装费',
-  `cash_more` decimal(10, 2) NOT NULL COMMENT '货到付款加价',
-  `discount_fee` decimal(10, 2) NOT NULL COMMENT '活动优惠金额',
-  `change_amount` decimal(10, 2) NOT NULL COMMENT '订单改价总金额',
-  `shipping_change` decimal(10, 2) NOT NULL COMMENT '运费改价金额',
-  `surplus` decimal(10, 2) NOT NULL COMMENT '余额支付',
-  `user_surplus` decimal(10, 2) NOT NULL COMMENT '可提现余额支付',
-  `user_surplus_limit` decimal(10, 2) NOT NULL COMMENT '不可提现余额支付',
+  `money_paid` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '订单实付金额',
+  `goods_amount` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '商品总金额',
+  `inv_fee` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '发票总费用',
+  `shipping_fee` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '配送总费用',
+  `other_shipping_fee` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '额外配送费',
+  `packing_fee` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '包装费',
+  `cash_more` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '货到付款加价',
+  `discount_fee` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '活动优惠金额',
+  `change_amount` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '订单改价总金额',
+  `shipping_change` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '运费改价金额',
+  `surplus` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '余额支付',
+  `user_surplus` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '可提现余额支付',
+  `user_surplus_limit` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '不可提现余额支付',
   `bonus_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户全网红包id',
   `shop_bonus_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户店铺红包id',
   `bonus` decimal(10, 2) NOT NULL COMMENT '全网红包金额',
   `shop_bonus` decimal(10, 2) NOT NULL COMMENT '店铺红包金额',
   `store_card_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '店铺储值卡ID',
-  `store_card_price` decimal(10, 2) NOT NULL COMMENT '店铺储值卡金额',
+  `store_card_price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '店铺储值卡金额',
   `integral` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '积分数量',
-  `integral_money` decimal(10, 2) NOT NULL COMMENT '积分金额',
+  `integral_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '积分金额',
   `give_integral` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '订单赠送的积分',
   `order_from` int(0) UNSIGNED NOT NULL DEFAULT 1 COMMENT '订单来源 默认1 1PC端 2WAP端 ...',
   `add_time` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '订单添加时间 默认0',
@@ -2566,15 +2629,17 @@ CREATE TABLE `seller_bill_order`  (
   `goods_amount` decimal(10, 2) UNSIGNED NOT NULL COMMENT '商品总额',
   `tax` decimal(10, 2) UNSIGNED NOT NULL COMMENT '税额',
   `shipping_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '运费金额',
+  `other_shipping_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '额外运费金额',
   `insure_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '保价费用',
   `pay_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '支付费用',
-  `pack_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '包装费用',
+  `packing_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '包装费用',
   `card_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '贺卡费用',
   `bonus` decimal(10, 2) UNSIGNED NOT NULL COMMENT '红包金额',
+  `shop_bonus` decimal(10, 2) UNSIGNED NOT NULL COMMENT '店铺红包金额',
   `integral_money` decimal(10, 2) UNSIGNED NOT NULL COMMENT '积分金额',
   `coupons` decimal(10, 2) UNSIGNED NOT NULL COMMENT '优惠券',
-  `discount` decimal(10, 2) UNSIGNED NOT NULL COMMENT '优惠金额',
-  `value_card` decimal(10, 2) UNSIGNED NOT NULL COMMENT '储值卡',
+  `discount_fee` decimal(10, 2) UNSIGNED NOT NULL COMMENT '优惠金额',
+  `store_card_price` decimal(10, 2) UNSIGNED NOT NULL COMMENT '储值卡',
   `money_paid` decimal(10, 2) UNSIGNED NOT NULL COMMENT '已支付金额',
   `surplus` decimal(10, 2) UNSIGNED NOT NULL COMMENT '余额支付金额',
   `drp_money` decimal(10, 2) UNSIGNED NOT NULL COMMENT '分销金额',
@@ -3675,6 +3740,9 @@ CREATE TABLE `user`  (
   `customs_money` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'customs_money',
   `security_level` tinyint(0) NOT NULL DEFAULT 0 COMMENT '安全级别',
   `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `summary` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '个人简介',
+  `live_verified` tinyint(3) unsigned DEFAULT '0' COMMENT '主播认证状态 0-未认证 1-已认证 2-认证中 3-已拒绝',
+  `live_verified_remark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '主播认证备注',
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE,
@@ -3788,6 +3856,68 @@ CREATE TABLE `user_capital`  (
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员资金表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for user_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `user_comment`;
+CREATE TABLE `user_comment` (
+    `comment_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+    `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
+    `type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '类型 1-文章评论',
+    `target_id` int unsigned NOT NULL DEFAULT '0' COMMENT '目标ID',
+    `content` text COLLATE utf8mb4_unicode_ci COMMENT '评论内容',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    `deleted_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户评论表';
+
+-- ----------------------------
+-- Table structure for user_follow
+-- ----------------------------
+DROP TABLE IF EXISTS `user_follow`;
+CREATE TABLE `user_follow` (
+   `follow_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+   `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '类型 1-关注用户',
+   `target_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目标ID',
+   `created_at` timestamp NULL DEFAULT NULL,
+   `updated_at` timestamp NULL DEFAULT NULL,
+   `deleted_at` timestamp NULL DEFAULT NULL,
+   PRIMARY KEY (`follow_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户关注粉丝表';
+
+-- ----------------------------
+-- Table structure for user_praise
+-- ----------------------------
+DROP TABLE IF EXISTS `user_praise`;
+CREATE TABLE `user_praise` (
+   `praise_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+   `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '类型 1-文章点赞',
+   `target_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目标ID',
+   `created_at` timestamp NULL DEFAULT NULL,
+   `updated_at` timestamp NULL DEFAULT NULL,
+   `deleted_at` timestamp NULL DEFAULT NULL,
+   PRIMARY KEY (`praise_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户点赞表';
+
+-- ----------------------------
+-- Table structure for user_collect
+-- ----------------------------
+DROP TABLE IF EXISTS `user_collect`;
+CREATE TABLE `user_collect` (
+    `collect_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+    `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '类型 1-收藏文章',
+    `target_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目标ID',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    `deleted_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`collect_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户收藏表';
 
 -- ----------------------------
 -- Table structure for user_log

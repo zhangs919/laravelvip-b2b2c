@@ -10,7 +10,6 @@ class SellerBillGoods extends BaseModel
 
     protected $table = 'seller_bill_goods';
 
-    public $timestamps = false;
 
     protected $fillable = [
         'rec_id',

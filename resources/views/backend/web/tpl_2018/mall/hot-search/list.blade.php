@@ -73,7 +73,7 @@
 
 {{--footer script page元素同级下面--}}
 @section('footer_script')
-    <script src="http://{{ config('lrw.frontend_domain') }}/js/edit.js?v=20180726"></script>
+    <script src="//{{ config('lrw.frontend_domain') }}/js/edit.js?v=20180726"></script>
     <script src="/assets/d2eace91/js/pic/imgPreview.js?v=20180726"></script>
 
     <script type="text/javascript">
