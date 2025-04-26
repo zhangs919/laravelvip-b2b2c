@@ -11,6 +11,7 @@ use App\Repositories\GoodsRepository;
 use App\Repositories\ImageDirRepository;
 use App\Repositories\ImageRepository;
 use App\Repositories\LinkTypeRepository;
+use App\Repositories\MessageTemplateRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\ShopRepository;
 use App\Repositories\ToolsRepository;
@@ -18,6 +19,7 @@ use App\Repositories\TplBackupRepository;
 use App\Repositories\UploadVideoRepository;
 use App\Repositories\VideoDirRepository;
 use App\Repositories\VideoRepository;
+use App\Services\Enum\MessageTemplateMsgTypeEnum;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 use Illuminate\Http\Request;
@@ -716,6 +718,25 @@ class SiteController extends Backend
      */
     public function sendTestSms(Request $request)
     {
+//        $a = (new MessageTemplateRepository())->getTemplateConfig('login_captcha', MessageTemplateMsgTypeEnum::TYPE_SMS);
+//
+//        $template = "用户：\${name}，您的验证码是\${code}，有效期\${minutes}分钟。";
+//
+//        // 定义替换数据（变量名 => 实际值）
+//        $params = [
+//            'code'    => '123456',
+//        ];
+//
+//        // 批量替换占位符
+//        $message = preg_replace_callback(
+//            '/\$\{(\w+)\}/',
+//            function ($matches) use ($params) {
+//                $varName = $matches[1]; // 提取变量名（如 'code'）
+//                return isset($params[$varName]) ? $params[$varName] : $matches[0]; // 存在则替换，否则保留原占位符
+//            },
+//            $a['content']
+//        );
+//        dd($message);
 
         return result(0,'', '测试短信发送成功！');
     }

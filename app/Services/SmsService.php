@@ -34,9 +34,10 @@ class SmsService
      * @param $mobile
      * @param string $content
      * @param string $captcha
+     * @param string $template_id
      * @return bool
      */
-    public function send($mobile, $content = '', $captcha = '')
+    public function send($mobile, $content = '', $template_id = '', $params = [])
     {
         $config = config('sms');
         // 动态获取配置信息
@@ -48,15 +49,23 @@ class SmsService
         $easySms = new EasySms($config);
 
         // 暂时默认使用阿里云短信 后期优化
+        $sms_api = sysconf('sms_api'); // aliyunsms
+        if ($sms_api != 'aliyunsms') {
+            return '暂时只支持阿里云短信';
+        }
+        if (!$template_id) {
+            return '请先配置阿里云短信模版id';
+        }
+
         $gateway = 'aliyun';
         try {
-            /*todo 暂时注释 上线后打开注释*/
             $res = $easySms->send($mobile, [
                 'content'  => $content, //'您的验证码为：6379，该验证码 5 分钟内有效，请勿泄漏于他人。',
-                'template' => 'SMS_296920556', // 注册：SMS_162522033 登录：SMS_141615486
-                'data' => [
-                    'code' => $captcha
-                ],
+                'template' => $template_id, // 注册：SMS_162522033 登录：SMS_141615486 默认：SMS_296920556
+                'data' => $params,
+//                [
+//                    'code' => $captcha
+//                ],
             ]);
             Log::info(json_encode($res));
             if ($res[$gateway]['status'] == 'failure') {
@@ -81,7 +90,7 @@ class SmsService
 
             return true;
         } catch (Exception $e) {
-            return $e->getMessage();
+            throw new \Exception($e->getExceptions()[$gateway]->getMessage() ?? '短信发送失败');
         }
 
 

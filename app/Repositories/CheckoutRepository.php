@@ -1557,7 +1557,8 @@ class CheckoutRepository
 
             $group_sn = $item['order']['order_data']['group_sn'] ?? null;
             $result_data = [
-                'order_sn' =>$result_order_sn
+                'order_sn' =>$result_order_sn,
+                'order_ids' => implode(',', $order_ids)
             ];
             if ($group_sn != null) {
                 $result_data['group_sn'] = $group_sn;
@@ -1716,6 +1717,9 @@ class CheckoutRepository
             $is_virtual = false;
 
             $user_id = array_first($order_list)['user_id'];
+
+            $countdown = $this->orderInfo->getOrderCountdown(array_first($order_list)); // 倒计时
+            $invalid_time = $countdown > 0 ? (time() + $countdown) : 0;
         } else {
             // 单个订单支付
             $condition = [
@@ -1745,6 +1749,9 @@ class CheckoutRepository
             $is_virtual = false;
 
             $user_id = $info['user_id'];
+
+            $countdown = $this->orderInfo->getOrderCountdown($info); // 倒计时
+            $invalid_time = $countdown > 0 ? (time() + $countdown) : 0; // 订单结束倒计时时间戳
         }
 
         $order = [
@@ -1761,7 +1768,8 @@ class CheckoutRepository
             'buy_type' => $buy_type,
             'order_data' => $order_data,
             'order_sn' => $order_sn,
-            'region_names' => get_region_names_by_region_code($region_code)
+            'region_names' => get_region_names_by_region_code($region_code),
+            'invalid_time' => $invalid_time
         ];
 
         $remark_list = [
@@ -1770,6 +1778,7 @@ class CheckoutRepository
         ];
 
         $pay_list = $this->payment->getPaymentList($order['pay_code']);
+        $user_balance_total = $user->user_money + $user->user_money_limit;
 
         $user_info = [
             'user_name' => $user->user_name,
@@ -1779,7 +1788,7 @@ class CheckoutRepository
             'pay_point' => 0,//556, // todo
             'pay_point_amount' => 0.00,//5.87, // todo
             'pay_point_amount_format' => '￥0.00', //'￥5.87', // todo
-            'balance' => 0, //todo
+            'balance' => $user_balance_total, //todo
             'online_balance' => 0,
             'balance_format' => '￥0',
             'balance_password_enable' => 0,

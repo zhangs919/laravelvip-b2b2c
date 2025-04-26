@@ -224,7 +224,9 @@ class EvaluateController extends UserCenter
         // 获取数据
         $list = $this->goodsComment->getUserCenterCommentInfo($orderInfo, $this->user_id);
         $score_desc = get_score_desc('', true, true);
-
+        if (is_app()) {
+            return result(0,[],'评论成功！');
+        }
         $render = view('user.evaluate.partials._evaluate_goods', compact('list','score_desc'))->render();
 
         return result(0,$render,'评论成功！');
@@ -257,10 +259,13 @@ class EvaluateController extends UserCenter
         // 获取数据
         $list = $this->goodsComment->getUserCenterCommentInfo($orderInfo, $this->user_id);
         $score_desc = get_score_desc('', true, true);
+        if (is_app()) {
+            return result(0,[],'店铺评价成功！');
+        }
 
         $render = view('user.evaluate.partials._eval_goods', compact('list','score_desc'))->render();
 
-        return result(0,$render,'评论成功！');
+        return result(0,$render,'店铺评价成功！');
     }
 
     /**

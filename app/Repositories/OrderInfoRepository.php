@@ -108,10 +108,11 @@ class OrderInfoRepository
         $backing = OrderInfo::where($where)
             ->where('order_status', OS_ONLY_REFOUND)
             ->count();
-        // unevaluate
+        // 待评价
         $unevaluate = OrderInfo::where($where)
             ->whereIn('order_status', [OS_CONFIRMED, OS_SPLITED, OS_RETURNED_PART, OS_ONLY_REFOUND])
             ->where('pay_status', PS_PAYED)
+            ->where('shipping_status', SS_RECEIVED)
             ->where('evaluate_status', ES_UNEVALUATED)
             ->count();
 
@@ -1147,11 +1148,13 @@ class OrderInfoRepository
         $countdown = 0;
         if ($orderInfo['order_status'] == OS_CONFIRMED && $orderInfo['pay_status'] == PS_UNPAYED) {
             // 付款期限 倒计时
-            $countdown = ($orderInfo['add_time'] - (time() - get_order_pay_term())) > 0 ? ($orderInfo['add_time'] - (time() - get_order_pay_term())) : null;
+            $countdown = ($orderInfo['add_time'] - (time() - get_order_pay_term())) > 0 ? ($orderInfo['add_time'] - (time() - get_order_pay_term())) : 0;
         } elseif ($orderInfo['order_status'] == OS_CONFIRMED && $orderInfo['pay_status'] == PS_PAYED && $orderInfo['shipping_status'] == SS_SHIPPED) {
             // 确认收货期限 倒计时
+            $orderInfo['confirm_time'] = strtotime($orderInfo['confirm_time']);
             $countdown = ($orderInfo['confirm_time'] - time()) > 0
-                ? ($orderInfo['confirm_time'] - time()) : null;
+                ? ($orderInfo['confirm_time'] - time()) : 0;
+
         }
 
         return $countdown;

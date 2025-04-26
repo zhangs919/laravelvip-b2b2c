@@ -509,8 +509,8 @@
             height:"100%",
             controlBarVisibility:'always',
             cover: '{{ get_image_url($live['live_img']) }}',
-            source:"{{ $pull_stream }}",
-            // source:"http://image.laravelvip.com/images/videos/site/1/gallery/2019/03/17/15528319959755.mp4",
+            {{--source:"{{ $pull_stream['rtmp'] ?? '' }}",--}}
+            source:"http://image.laravelvip.com/images/videos/site/1/gallery/2019/03/17/15528319959755.mp4",
             useH5Prism:true,
             useFlashPrism:false,
             x5_fullscreen: false, //全屏播放

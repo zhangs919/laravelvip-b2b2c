@@ -71,6 +71,7 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
         Route::get('get-yikf.html', 'SiteController@getYikf');
         Route::post('get-weixinconfig.html', 'SiteController@getWeiXinConfig'); // getWeiXinConfig
         Route::get('app-info', 'SiteController@appInfo'); // App全局数据
+        Route::get('basic-config', 'SiteController@basicConfig'); // App配置数据
         Route::get('user-center-data', 'SiteController@userCenterData'); // 用户中心数据
         Route::post('image-base64', 'SiteController@imageBase64');
 

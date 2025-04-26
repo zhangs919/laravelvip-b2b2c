@@ -79,8 +79,16 @@ class BaseModel extends Model
     public function getList($condition = [], $column = '')
     {
         $pageArr = request()->all();
-        $curPage = !empty($pageArr['page']['cur_page']) ? $pageArr['page']['cur_page'] : 1;
-        $pageSize = !empty($pageArr['page']['page_size']) ? $pageArr['page']['page_size'] : 10;
+        if (isset($pageArr['cur_page'])) {
+            $curPage = $pageArr['cur_page'] ?? 1;
+        } else {
+            $curPage = !empty($pageArr['page']['cur_page']) ? $pageArr['page']['cur_page'] : 1;
+        }
+        if (isset($pageArr['page_size'])) {
+            $pageSize = $pageArr['page_size'] ?? 10;
+        } else {
+            $pageSize = !empty($pageArr['page']['page_size']) ? $pageArr['page']['page_size'] : 10;
+        }
 
         if (isset($condition['cur_page'])) {
             $curPage = $condition['cur_page'];

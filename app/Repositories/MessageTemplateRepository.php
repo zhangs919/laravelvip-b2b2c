@@ -24,6 +24,7 @@ namespace App\Repositories;
 
 
 use App\Models\MessageTemplate;
+use Illuminate\Support\Facades\DB;
 
 class MessageTemplateRepository
 {
@@ -32,10 +33,27 @@ class MessageTemplateRepository
     protected $model;
 
 
-
     public function __construct()
     {
         $this->model = new MessageTemplate();
     }
 
+    /**
+     * 获取模版信息
+     *
+     * @param string $templateCode 模版标识
+     * @param string $msgType 模版消息类型
+     * @return mixed
+     */
+    public function getTemplateConfig($templateCode, $msgType)
+    {
+        $info = MessageTemplate::where([['code', $templateCode]])
+            ->select(DB::raw("{$msgType}_open as is_open,{$msgType}_content as content,{$msgType}_spec as spec, name,code,aliyu_code"))
+            ->first();
+        if (empty($info)) {
+            throw new \Exception('消息模版不存在');
+        }
+
+        return $info->toArray();
+    }
 }

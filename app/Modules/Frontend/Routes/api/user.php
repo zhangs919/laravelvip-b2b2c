@@ -168,7 +168,9 @@ Route::group(['domain' => config('lrw.api_domain'), 'prefix' => $prefix], functi
             Route::get('list.html', 'User\EvaluateController@lists'); // 列表
             Route::get('list', 'User\EvaluateController@lists'); // 列表
             Route::get('info.html', 'User\EvaluateController@info'); // 详情
-
+            Route::post('eval-goods.html', 'User\EvaluateController@evalGoods'); // 商品评价保存数据
+            Route::post('eval-shop.html', 'User\EvaluateController@evalShop'); // 店铺动态评分保存数据
+            Route::any('reply.html', 'User\EvaluateController@reply'); // 买家回复
         });
 
         // 我的提货券

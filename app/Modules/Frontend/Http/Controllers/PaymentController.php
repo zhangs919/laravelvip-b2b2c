@@ -8,6 +8,7 @@ use App\Repositories\CheckoutRepository;
 use App\Repositories\OrderInfoRepository;
 use App\Repositories\PaymentLogicRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yansongda\Pay\Pay;
 
@@ -47,6 +48,7 @@ class PaymentController extends Frontend
         // 合并支付单号：MP202001041512549732598 或 订单编号：202001041512549732592
         $order_sn = $request->get('order_sn');
         $area_tag = $request->get('area_tag');
+        $pay_code = $request->get('pay_code'); // APP端请求参数
 
         // todo 判断order_sn 如果是合并支付订单号
         // 则通过合并支付订单号获取系统中真实的order_sn编号，并通过该订单编号查询订单信息
@@ -72,15 +74,48 @@ class PaymentController extends Frontend
 
 
         // 第三方支付逻辑方法
-        $payResult = $this->paymentLogic->toPay($order_info);
+        $payResult = $this->paymentLogic->toPay($order_info, 0, $pay_code, $this->user);
+        Log::info('支付完成：');
+        Log::info($payResult);
+
+        // 重新查询一遍订单
+        $order_info = OrderInfo::where([
+            ['order_sn', $order_sn],
+            ['user_id',$this->user_id]
+        ])->with(['shop'])->first();
+
+        if (empty($order_info)) {
+            abort(200, '无效的订单');
+        }
+
+        $order_info = $order_info->toArray();
 
         if (!is_array($payResult) && $order_info['pay_code'] != 'weixin') {
             return $payResult;
         }
         // 余额支付 跳转支付结果页
         if ($order_info['money_paid'] <= 0 || $order_info['surplus'] > 0) {
-            $redirect_url =url('/checkout/result.html?order_sn='.$order_sn);
-            return redirect($redirect_url);
+            if (is_app()) {
+                if ($payResult['code'] !== 0) {
+                    return result(-1, [
+                        'status' => 'PAY_ERROR',
+                        'order_id' => $order_info['order_id'],
+                    ], $payResult['message']);
+                }
+                $url = $request->get('url');
+                $APIs = [
+//        	"onMenuShareTimeline", "onMenuShareAppMessage",
+                    'updateTimelineShareData', 'updateAppMessageShareData','scanQRCode'];
+                $jsConfig = get_wx_share_data($APIs, $url);
+                return result(0, [
+                    'status' => 'SUCCESS',
+                    'order_id' => $order_info['order_id'],
+                    'jsConfig' => $jsConfig
+                ], $payResult['message']);
+            } else {
+                $redirect_url =url('/checkout/result.html?order_sn='.$order_sn);
+                return redirect($redirect_url);
+            }
         }
         if ($order_info['pay_code'] == 'weixin') {
             if (is_weixin() && !is_app()) {

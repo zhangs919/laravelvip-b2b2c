@@ -30,28 +30,43 @@ class Http
 
     /**
      * 通过curl get数据
-     * @param type $url
-     * @param type $timeout
-     * @param type $header
-     * @return type
+     *
+     * @param $url
+     * @param int $timeout
+     * @param string $header
+     * @return array
+     * @throws Exception
      */
-    public static function get($url, $timeout = 5, $header = "")
-    {
+    public static function get($url, $timeout = 60, $header = "") {
         $header = empty($header) ? self::defaultHeader() : $header;
         $ch = curl_init();
+
+        // 基础配置
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);    // https请求 不验证证书和hosts
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [$header]); //模拟的header头
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [$header]);
+
+        // SSL 配置
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2); // 强制 TLS 1.2
+
         $result = curl_exec($ch);
 
-        // 获取HTTP状态码
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // 检查 cURL 错误
+        if ($result === false) {
+            $error = curl_error($ch);
+            $errno = curl_errno($ch);
+            curl_close($ch);
+            throw new Exception("cURL 请求失败 (错误码 $errno): $error");
+        }
 
+        // 获取 HTTP 状态码
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
         return [$result, $httpCode];
     }
 

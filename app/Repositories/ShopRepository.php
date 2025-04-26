@@ -547,6 +547,10 @@ class ShopRepository
             return 5;
         }
 
+        if (empty($applyInfo)) {
+            return 0;
+        }
+
         //2开店申请已提交,等待平台审核通过
         if ($applyInfo->audit_status == 0) {
             return 2;

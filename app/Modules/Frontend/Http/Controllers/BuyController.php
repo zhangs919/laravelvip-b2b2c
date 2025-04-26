@@ -373,11 +373,13 @@ class BuyController extends Frontend
 
         $group_sn = $ret['data']['group_sn'] ?? null;
         $order_sn = $ret['data']['order_sn'];
+        $order_ids = $ret['data']['order_ids'];
 
         $data = route('payment').'?order_sn='.$order_sn; // 支付页面url
         $extra = [
             'group_sn' => $group_sn,
-            'order_sn' => $order_sn
+            'order_sn' => $order_sn,
+            'order_ids' => $order_ids
         ];
         if (is_app()) {
             return result(0, $extra, '提交订单成功');

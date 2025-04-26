@@ -6,6 +6,7 @@ namespace App\Kernel\Repositories\Common;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Class LrwRepository
@@ -63,7 +64,9 @@ class LrwRepository
     public static function checkEmpower($from = 0, $auth_code = '')
     {
         try {
-            $cache_id = CACHE_KEY_MALL_AUTH[0];
+            $domain = config('lrw.root_domain');
+
+            $cache_id = CACHE_KEY_MALL_AUTH[0].':'.$domain;
             if ($auth_info = cache()->get($cache_id)) {
                 // 存在缓存 判断域名授权是否到期
                 if (strtotime($auth_info['valid_at']) < time()) {
@@ -73,32 +76,32 @@ class LrwRepository
                 return arr_result(0, $auth_info, '验证通过');
             } else {
                 // 请求乐融沃官网接口验证域名是否商业授权
-                $domain = config('lrw.root_domain');
                 if ($from == 1) {
                     $auth_code = Storage::disk('local')->get('certs/lrw_public_key.pem'); // 授权码 购买授权后 官网提供
                     if (!$auth_code) {
-                        throw new \Exception('请先获取授权码');
+                        header("Location: /install/index.php");
+                        exit;
                     }
                 }
+                $lrw_url = config('lrw.upgrade_server') . "/update/check-auth";
                 $post = [
                     'name' => config('app.name'),
                     'domain' => $domain,
                     'auth_code' => $auth_code
                 ];
-                $data = [
-                    'name' => $post['name'] ?? '',
-                    'domain' => $post['domain'],
-                    'auth_code' => $post['auth_code'],
-                    'auth_type' => 1,
-                    'status' => 1,
-                    'valid_at' => Carbon::now()->addYear()->toDateTimeString(),
-                    'created_at' => Carbon::now()->toDateTimeString(),
-                    'updated_at' => Carbon::now()->toDateTimeString(),
-                ];
+                // 请求版本升级服务端
+                $res = Http::post($lrw_url, $post);
+                if ($res->status() != 200) {
+                    throw new \Exception('请求失败');
+                }
+                $res = json_decode($res->body(), true);
+                if ($res['code'] == -1) {
+                    throw new \Exception($res['message']);
+                }
 
                 // 验证通过 存储授权信息
-                cache()->put($cache_id, $data, CACHE_KEY_MALL_AUTH[1]);
-                return arr_result(0, ['auth_code' => $data['auth_code']], '验证通过');
+                cache()->put($cache_id, $res['data'], CACHE_KEY_MALL_AUTH[1]);
+                return arr_result(0, ['auth_code' => $res['data']['auth_code']], '验证通过');
             }
         } catch (\Exception $e) {
             return arr_result(-1, null, $e->getMessage());

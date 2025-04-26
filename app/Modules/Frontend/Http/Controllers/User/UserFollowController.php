@@ -3,6 +3,7 @@
 
 namespace App\Modules\Frontend\Http\Controllers\User;
 
+use App\Models\User;
 use App\Modules\Base\Http\Controllers\UserCenter;
 use App\Repositories\UserFollowRepository;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class UserFollowController extends UserCenter
     }
 
     /**
-     * 我关注的
+     * 我关注的/某用户关注的
      *
      * @param Request $request
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -29,7 +30,20 @@ class UserFollowController extends UserCenter
     public function lists(Request $request)
     {
         $type = $request->input('type', 1); // 类型 1-关注用户
-        $where[] = ['user_follow.user_id', $this->user_id];
+        $userId = $request->input('user_id', 0); // 其他用户关注的 传某用户的ID
+        $user = [
+            'user_id' => $this->user_id,
+            'nickname' => $this->user['nickname'],
+            'headimg' => $this->user['headimg'],
+        ];
+        if (!$userId) { // 如果没传用户ID参数，则表示获取当前登录用户关注的
+            $userId = $this->user_id;
+            $user = User::select(['user_id', 'nickname', 'headimg'])->first();
+            if (!empty($user)) {
+                $user = $user->toArray();
+            }
+        }
+        $where[] = ['user_follow.user_id', $userId];
         $where[] = ['user_follow.type', $type];
 
         $condition = [
@@ -47,7 +61,7 @@ class UserFollowController extends UserCenter
             'sortname' => 'user_follow.follow_id',
             'sortorder' => 'desc',
             'field' => [
-                'user_follow.*', 'user.nickname', 'user.headimg']
+                'user_follow.*', 'user.nickname', 'user.headimg', 'user.summary']
         ];
         list($list, $total) = $this->userFollow->getList($condition);
         if ($list->isNotEmpty()) {
@@ -61,12 +75,13 @@ class UserFollowController extends UserCenter
         $data = [
             'page' => $pageArr,
             'list' => $list,
+            'user' => $user
         ];
         return result(0, $data, '获取成功');
     }
 
     /**
-     * 我的粉丝
+     * 我的粉丝/某用户的粉丝
      *
      * @param Request $request
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -75,7 +90,20 @@ class UserFollowController extends UserCenter
     public function fansList(Request $request)
     {
         $type = $request->input('type', 1); // 类型 1-关注用户
-        $where[] = ['user_follow.target_id', $this->user_id];
+        $userId = $request->input('user_id', 0); // 其他用户的粉丝 传某用户的ID
+        $user = [
+            'user_id' => $this->user_id,
+            'nickname' => $this->user['nickname'],
+            'headimg' => $this->user['headimg'],
+        ];
+        if (!$userId) { // 如果没传用户ID参数，则表示获取当前登录用户关注的
+            $userId = $this->user_id;
+            $user = User::select(['user_id', 'nickname', 'headimg'])->first();
+            if (!empty($user)) {
+                $user = $user->toArray();
+            }
+        }
+        $where[] = ['user_follow.target_id', $userId];
         $where[] = ['user_follow.type', $type];
 
         $condition = [
@@ -93,13 +121,14 @@ class UserFollowController extends UserCenter
             'sortname' => 'user_follow.follow_id',
             'sortorder' => 'desc',
             'field' => [
-                'user_follow.*', 'user.nickname', 'user.headimg']
+                'user_follow.*', 'user.nickname', 'user.headimg', 'user.summary']
         ];
         list($list, $total) = $this->userFollow->getList($condition);
         if ($list->isNotEmpty()) {
             foreach ($list as $item) {
                 $item->headimg = get_image_url($item->headimg, 'headimg');
                 $item->is_followed = $this->userFollow->checkIsFollowed($this->user_id, $item->user_id);
+                $item->fans_count = 0; // todo 粉丝数量
             }
         }
         $pageArr = frontend_pagination($total, true);
@@ -107,6 +136,7 @@ class UserFollowController extends UserCenter
         $data = [
             'page' => $pageArr,
             'list' => $list,
+            'user' => $user
         ];
         return result(0, $data, '获取成功');
     }

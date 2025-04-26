@@ -24,8 +24,10 @@ namespace App\Services;
 
 
 use App\Models\User;
+use App\Repositories\MessageTemplateRepository;
 use App\Repositories\SmsLogRepository;
 use App\Repositories\UserRepository;
+use App\Services\Enum\MessageTemplateMsgTypeEnum;
 use App\Services\IP;
 use App\Services\Statistics\UserStat;
 use Illuminate\Http\Request;
@@ -38,13 +40,19 @@ class ConnectApi
     protected $ipService;
     protected $smsLog;
     protected $userRep;
+    protected $messageTemplateRep;
 
 
-    public function __construct(IP $ipService,SmsLogRepository $smsLog,UserRepository $userRep)
+    public function __construct(IP $ipService
+        ,SmsLogRepository $smsLog
+        ,UserRepository $userRep
+        ,MessageTemplateRepository $messageTemplateRep
+    )
     {
         $this->ipService = $ipService;
         $this->smsLog = $smsLog;
         $this->userRep = $userRep;
+        $this->messageTemplateRep = $messageTemplateRep;
 
     }
 
@@ -108,6 +116,7 @@ class ConnectApi
                         $msg = '当前手机号已被注册，请更换其他号码。';
                     }
                     $log_msg .= '申请注册会员，验证码：' . $captcha . '。';
+                    $templateCode = 'register_captcha';
                     break;
                 case '2':
 //                    if(sysconf('') != 1) {
@@ -121,6 +130,8 @@ class ConnectApi
                     $log_msg .= '申请登录，验证码：' . $captcha . '。';
                     $log_array['user_id'] = $user_info->user_id;
                     $log_array['user_name'] = $user_info->user_name;
+
+                    $templateCode = 'login_captcha';
                     break;
                 case '3':
 //                    if(sysconf('') != 1) {
@@ -134,6 +145,8 @@ class ConnectApi
                     $log_msg .= '申请重置登录密码，验证码：' . $captcha . '。';
                     $log_array['user_id'] = $user_info->user_id;
                     $log_array['user_name'] = $user_info->user_name;
+
+                    $templateCode = 'find_pwd_captcha';
                     break;
 
                 case '4':
@@ -145,6 +158,7 @@ class ConnectApi
                     $log_array['user_id'] = $user_info->user_id;
                     $log_array['user_name'] = $user_info->user_name;
 
+                    $templateCode = 'login_captcha';
                     break;
 
                 case '5':
@@ -160,6 +174,8 @@ class ConnectApi
                     $log_msg .= '申请更换手机号，验证旧手机号，验证码：' . $captcha . '。';
                     $log_array['user_id'] = $user_info->user_id;
                     $log_array['user_name'] = $user_info->user_name;
+
+                    $templateCode = 'login_captcha';
                     break;
 
                 case '6':
@@ -167,31 +183,58 @@ class ConnectApi
                     $log_msg = '您的验证码是：' . $captcha . '，请不要把验证码泄露给其他人。如非本人操作，可不用理会！';
                     $log_array['user_id'] = $user_info->user_id;
                     $log_array['user_name'] = $user_info->user_name;
+
+                    $templateCode = 'login_captcha';
                     break;
 
                 default:
                     $state = false;
                     $msg = '参数错误';
+                    $templateCode = '';
                     break;
             }
             if ($state == true) {
-                // 缓存验证码
-//                session(['sms_captcha' => $captcha]);
-                $cache_id = CACHE_KEY_SMS_CAPTCHA[0].':'.$user_info->user_id.':'.$log_type;
-                cache()->put($cache_id, $captcha, CACHE_KEY_SMS_CAPTCHA[1]);
-                $sms = new SmsService();
-                $result = $sms->send($phone, $log_msg, $captcha);
+                try {
+                    // 短信模版信息
+                    $messageTemplate = $this->messageTemplateRep->getTemplateConfig($templateCode, MessageTemplateMsgTypeEnum::TYPE_SMS);
+                    // 定义替换数据（变量名 => 实际值）
+                    $params = [
+                        'code'    => $captcha,
+                    ];
 
-                if ($result == true) { // 短信发送成功 新增短信日志记录
-                    $log_array['log_phone'] = $phone;
-                    $log_array['log_captcha'] = $captcha;
-                    $log_array['log_ip'] = $this->ipService->get();
-                    $log_array['log_msg'] = $log_msg;
-                    $log_array['log_type'] = $log_type;
-                    $this->smsLog->store($log_array);
-                } else {
-                    $state = false;
-                    $msg = env('APP_ENV') != 'production' ? $result : '手机短信发送失败';
+                    // 批量替换占位符
+                    $log_msg = preg_replace_callback(
+                        '/\$\{(\w+)\}/',
+                        function ($matches) use ($params) {
+                            $varName = $matches[1]; // 提取变量名（如 'code'）
+                            return isset($params[$varName]) ? $params[$varName] : $matches[0]; // 存在则替换，否则保留原占位符
+                        },
+                        $messageTemplate['content']
+                    );
+
+                    // 缓存验证码
+//                session(['sms_captcha' => $captcha]);
+                    $cache_id = CACHE_KEY_SMS_CAPTCHA[0].':'.$user_info->user_id.':'.$log_type;
+                    cache()->put($cache_id, $captcha, CACHE_KEY_SMS_CAPTCHA[1]);
+                    $sms = new SmsService();
+                    // 阿里云短信模版id
+                    $template_id = $messageTemplate['aliyu_code'] ?? '';
+                    $result = $sms->send($phone, $log_msg, $template_id,$params);
+
+                    if ($result === true) { // 短信发送成功 新增短信日志记录
+                        $log_array['log_phone'] = $phone;
+                        $log_array['log_captcha'] = $captcha;
+                        $log_array['log_ip'] = $this->ipService->get();
+                        $log_array['log_msg'] = $log_msg;
+                        $log_array['log_type'] = $log_type;
+                        $this->smsLog->store($log_array);
+                    } else {
+                        $state = false;
+                        $msg = env('APP_ENV') != 'production' ? $result : '手机短信发送失败';
+                    }
+                } catch (\Exception $e) {
+                    $msg = env('APP_ENV') != 'production' ? $e->getMessage() : '手机短信发送失败';
+                    return arr_result(-1, [], $msg);
                 }
             }
         }

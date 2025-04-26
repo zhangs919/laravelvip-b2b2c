@@ -495,6 +495,16 @@ class Frontend extends Foundation
             Log::stack(['api'])->info('weapp:'.request()->path());
 
             return result(0, $this->app_data, '', $this->app_extra_data);
+        }  elseif (is_app('wechat')) { // 微信浏览器访问
+
+            Log::stack(['api'])->info('wechat:'.request()->path());
+
+            return result(0, $this->app_data, '', $this->app_extra_data);
+        }  elseif (is_app('h5')) { // 手机端h5访问
+
+            Log::stack(['api'])->info('h5:'.request()->path());
+
+            return result(0, $this->app_data, '', $this->app_extra_data);
         } elseif (is_mobile() && !is_app()) { // 手机端访问 针对微信端
             // 网站状态 1正常 0暂时关闭
             if (sysconf('m_site_status') == 0) {

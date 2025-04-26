@@ -46,13 +46,18 @@ class CapitalAccountController extends UserCenter
         $seo_title = '用户中心';
 
         $params = $request->all();
-
+        $type = $params['type'] ?? 0; // 0-全部  1-收入 2-支出
 
         // 获取数据
         $user = $this->user;
 
         $where = [];
         // 搜索条件
+        if ($type == 1) {
+            $where[] = ['amount', '>=', 0];
+        } elseif ($type == 2) {
+            $where[] = ['amount', '<', 0];
+        }
 
         $where[] = ['user_id', $this->user_id];
 

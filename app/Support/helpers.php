@@ -780,8 +780,18 @@ if (! function_exists('frontend_pagination')) {
     function frontend_pagination($total, $isAjax = false) {
 
         $pageArr = request()->all();
-        $curPage = !empty($pageArr['page']['cur_page']) ? $pageArr['page']['cur_page'] : 1;
-        $pageSize = !empty($pageArr['page']['page_size']) ? $pageArr['page']['page_size'] : 12;
+
+        if (isset($pageArr['cur_page'])) {
+            $curPage = $pageArr['cur_page'] ?? 1;
+        } else {
+            $curPage = !empty($pageArr['page']['cur_page']) ? $pageArr['page']['cur_page'] : 1;
+        }
+        if (isset($pageArr['page_size'])) {
+            $pageSize = $pageArr['page_size'] ?? 10;
+        } else {
+            $pageSize = !empty($pageArr['page']['page_size']) ? $pageArr['page']['page_size'] : 10;
+        }
+
         $page_id = !empty($pageArr['page']['page_id']) ? $pageArr['page']['page_id'] : '#pagination';
         $page_id = str_replace('#', '', $page_id);
 
@@ -3474,26 +3484,26 @@ function get_application_list()
                     'field' => 'bonus',
                     'type' => 2,
                 ],
-                [
-                    'name' => '团购',
-                    'desc' => '监管店铺限时促销活动',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'tg',
-                    'url' => '/dashboard/group-buy/list',
-                    'field' => 'group_buy',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '搭配套餐',
-                    'desc' => '创建商品套餐让消费者购买',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'dp',
-                    'url' => '/dashboard/goods-mix/list',
-                    'field' => 'goods_mix',
-                    'type' => 2,
-                ],
+//                [
+//                    'name' => '团购',
+//                    'desc' => '监管店铺限时促销活动',
+//                    'label' => '',
+//                    'is_disp_block' => false,
+//                    'logo' => 'tg',
+//                    'url' => '/dashboard/group-buy/list',
+//                    'field' => 'group_buy',
+//                    'type' => 2,
+//                ],
+//                [
+//                    'name' => '搭配套餐',
+//                    'desc' => '创建商品套餐让消费者购买',
+//                    'label' => '',
+//                    'is_disp_block' => false,
+//                    'logo' => 'dp',
+//                    'url' => '/dashboard/goods-mix/list',
+//                    'field' => 'goods_mix',
+//                    'type' => 2,
+//                ],
                 [
                     'name' => '限时折扣',
                     'desc' => '设置商品限时打折促销',
@@ -3575,26 +3585,26 @@ function get_application_list()
             'url' => '',
             'field' => '',
             'child' => [
-                [
-                    'name' => '拼团',
-                    'desc' => '引导客户邀请朋友一起拼团购买',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'pt',
-                    'url' => '/dashboard/fight-group/list',
-                    'field' => 'groupon',
-                    'type' => 2,
-                ],
-                [
-                    'name' => '砍价',
-                    'desc' => '互动帮砍，拉动粉丝',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'kj',
-                    'url' => '/dashboard/bargain/list',
-                    'field' => 'bargain',
-                    'type' => 2,
-                ],
+//                [
+//                    'name' => '拼团',
+//                    'desc' => '引导客户邀请朋友一起拼团购买',
+//                    'label' => '已购',
+//                    'is_disp_block' => false,
+//                    'logo' => 'pt',
+//                    'url' => '/dashboard/fight-group/list',
+//                    'field' => 'groupon',
+//                    'type' => 2,
+//                ],
+//                [
+//                    'name' => '砍价',
+//                    'desc' => '互动帮砍，拉动粉丝',
+//                    'label' => '已购',
+//                    'is_disp_block' => false,
+//                    'logo' => 'kj',
+//                    'url' => '/dashboard/bargain/list',
+//                    'field' => 'bargain',
+//                    'type' => 2,
+//                ],
                 // [
                 //     'name' => '短信推送',
                 //     'desc' => '向消费者发送短信消息通知',
@@ -4120,15 +4130,16 @@ function get_shop_application_list()
 //                     'url' => '/dashboard/mini-video/live-list',
 //                     'field' => 'mini_video',
 //                 ],
-                 [
-                     'name' => '多连锁门店',
-                     'desc' => '根据客户位置推荐最近门店',
-                     'label' => '',
-                     'is_disp_block' => false,
-                     'logo' => 'multi_store',
-                     'url' => '/dashboard/multi-store/index',
-                     'field' => 'multi_store',
-                 ],
+//             todo 未开发完
+//                 [
+//                     'name' => '多连锁门店',
+//                     'desc' => '根据客户位置推荐最近门店',
+//                     'label' => '',
+//                     'is_disp_block' => false,
+//                     'logo' => 'multi_store',
+//                     'url' => '/dashboard/multi-store/index',
+//                     'field' => 'multi_store',
+//                 ],
              ]
          ],
         [
@@ -4149,24 +4160,24 @@ function get_shop_application_list()
                     'url' => '/dashboard/bonus/list',
                     'field' => 'bonus',
                 ],
-                [
-                    'name' => '团购',
-                    'desc' => '创建限时促销活动',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'tg',
-                    'url' => '/dashboard/group-buy/list',
-                    'field' => 'group_buy',
-                ],
-                [
-                    'name' => '搭配套餐',
-                    'desc' => '创建商品套餐让消费者购买',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'dp',
-                    'url' => '/dashboard/goods-mix/list',
-                    'field' => 'goods_mix',
-                ],
+//                [
+//                    'name' => '团购',
+//                    'desc' => '创建限时促销活动',
+//                    'label' => '',
+//                    'is_disp_block' => false,
+//                    'logo' => 'tg',
+//                    'url' => '/dashboard/group-buy/list',
+//                    'field' => 'group_buy',
+//                ],
+//                [
+//                    'name' => '搭配套餐',
+//                    'desc' => '创建商品套餐让消费者购买',
+//                    'label' => '',
+//                    'is_disp_block' => false,
+//                    'logo' => 'dp',
+//                    'url' => '/dashboard/goods-mix/list',
+//                    'field' => 'goods_mix',
+//                ],
                 [
                     'name' => '限时折扣',
                     'desc' => '设置商品限时打折促销',
@@ -4233,24 +4244,24 @@ function get_shop_application_list()
             'url' => '',
             'field' => '',
             'child' => [
-                [
-                    'name' => '拼团',
-                    'desc' => '引导客户邀请朋友一起拼团购买',
-                    'label' => '',
-                    'is_disp_block' => false,
-                    'logo' => 'pt',
-                    'url' => '/dashboard/fight-group/list',
-                    'field' => 'groupon',
-                ],
-                [
-                    'name' => '砍价',
-                    'desc' => '互动帮砍，拉动粉丝',
-                    'label' => '已购',
-                    'is_disp_block' => false,
-                    'logo' => 'kj',
-                    'url' => '/dashboard/bargain/list',
-                    'field' => 'bargain',
-                ],
+//                [
+//                    'name' => '拼团',
+//                    'desc' => '引导客户邀请朋友一起拼团购买',
+//                    'label' => '',
+//                    'is_disp_block' => false,
+//                    'logo' => 'pt',
+//                    'url' => '/dashboard/fight-group/list',
+//                    'field' => 'groupon',
+//                ],
+//                [
+//                    'name' => '砍价',
+//                    'desc' => '互动帮砍，拉动粉丝',
+//                    'label' => '已购',
+//                    'is_disp_block' => false,
+//                    'logo' => 'kj',
+//                    'url' => '/dashboard/bargain/list',
+//                    'field' => 'bargain',
+//                ],
                 // [
                 //     'name' => '短信推送',
                 //     'desc' => '向消费者发送短信消息通知',
@@ -4826,6 +4837,8 @@ function get_wx_share_data($APIs = [], $url = '', $debug = false)
              return false;
          } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
              // todo
+             return false;
+         } catch (\EasyWeChat\Kernel\Exceptions\HttpException $e) {
              return false;
          }
 

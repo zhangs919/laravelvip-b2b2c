@@ -77,6 +77,7 @@ class MainController extends BaseController
 //        $session_domain = $match[0];
         $root_domain = $match[1];
 
+        $this->app_name = '乐融沃商城';
         $this->frontend_sub = $current_sub;
         $this->mobile_sub = 'm';
         $this->backend_sub = 'backend';
@@ -149,11 +150,13 @@ class MainController extends BaseController
         $db_name = request('db_name', '');
         $db_prefix = request('db_prefix', '');
         // 阿里云配置
-        $ali_access_key_id = request('ali_access_key_id', '');
-        $ali_access_key_secret = request('ali_access_key_secret', '');
+//        $ali_access_key_id = request('ali_access_key_id', '');
+//        $ali_access_key_secret = request('ali_access_key_secret', '');
         $es_hosts = request('es_hosts', '');
         // 授权码
         $app_key = trim(request('app_key'));
+        // 应用名称
+        $app_name = trim(request('app_name', ''));
 
         // 注册超级管理员
         $admin = [
@@ -197,7 +200,7 @@ class MainController extends BaseController
         $store_sub = request('store_sub', '');
         $api_sub = request('api_sub', '');
         $push_sub = request('push_sub', '');
-        if (!$frontend_sub || !$mobile_sub || !$backend_sub || !$seller_sub
+        if (!$app_name || !$frontend_sub || !$mobile_sub || !$backend_sub || !$seller_sub
             || !$store_sub || !$api_sub || !$push_sub) {
             die(json_encode(['status' => 'n', 'info' => '请检查域名配置信息是否正确']));
         }
@@ -253,6 +256,7 @@ class MainController extends BaseController
         }
         // 写入配置
         $config = [
+            'APP_NAME' => $app_name,
             'APP_URL' => $appUrl,
             'DB_HOST' => $db_host,
             'DB_PORT' => $db_port,
@@ -274,8 +278,8 @@ class MainController extends BaseController
             'PUSH_DOMAIN' => $push_domain,
 
             // 阿里云配置
-            'ALI_ACCESS_KEY_ID' => $ali_access_key_id,
-            'ALI_ACCESS_KEY_SECRET' => $ali_access_key_secret,
+//            'ALI_ACCESS_KEY_ID' => $ali_access_key_id,
+//            'ALI_ACCESS_KEY_SECRET' => $ali_access_key_secret,
 
             'ES_HOSTS' => $es_hosts,
 

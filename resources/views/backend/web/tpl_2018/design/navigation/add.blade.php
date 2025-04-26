@@ -204,7 +204,7 @@
 
             <!-- 导航布局 -->
             {{--@if(!isset($info->id)) hide @else @if($info->nav_position != 2) hide @endif @endif--}}
-			<div class="nav_layout  @if(isset($info->id) && in_array($nav_page, ['m_site', 'm_news', 'm_goods'])) @else hide @endif" id="nav_icon_container">
+			<div class="nav_layout  @if(isset($info->id) && in_array($nav_page, ['app','m_site', 'm_news', 'm_goods'])) @else hide @endif" id="nav_icon_container">
 				<!-- 导航图标 -->
 				<div class="simple-form-field">
 					<div class="form-group">
@@ -239,7 +239,7 @@
 			</div>
 
 
-            @if($nav_page == 'm_site' || $nav_page == 'm_goods')
+            @if($nav_page == 'app' || $nav_page == 'm_site' || $nav_page == 'm_goods')
                 <!-- 选中图标 -->
                 <div id="nav_icon_active_container">
                     <div class="simple-form-field" >

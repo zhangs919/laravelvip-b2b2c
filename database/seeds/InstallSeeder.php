@@ -4812,15 +4812,15 @@ COMMIT;";
         $this->sql_statement('region', $sql);
     }
 
-    private function tpl_backup()
-    {
-        $sql = "BEGIN;
+	private function tpl_backup()
+	{
+		$sql = "BEGIN;
 INSERT INTO `tpl_backup` (`back_id`, `name`, `add_time`, `is_sys`, `shop_id`, `site_id`, `page`, `remark`, `type`, `topic_id`, `img`, `is_theme`, `ext_info`, `created_at`, `updated_at`) VALUES
 (1, 'aa', 0, 0, 0, 0, 'site', NULL, 0, 0, NULL, 0, NULL, '2022-07-30 04:11:25', '2022-07-30 04:11:25'),
 (2, '20221113', 0, 0, 0, 0, 'site', NULL, 0, 0, NULL, 0, NULL, '2022-11-13 07:14:54', '2022-11-13 07:14:54');
 COMMIT;";
-        $this->sql_statement('shipping', $sql);
-    }
+		$this->sql_statement('shipping', $sql);
+	}
 
     private function shipping()
     {
@@ -5903,9 +5903,9 @@ COMMIT;";
         $this->sql_statement('template_selector', $sql);
     }
 
-    private function user_rank()
-    {
-        $sql = "BEGIN;
+	private function user_rank()
+	{
+		$sql = "BEGIN;
 INSERT INTO `user_rank` (`rank_id`, `rank_name`, `rank_img`, `is_special`, `point_type`, `min_points`, `max_points`, `type`, `created_at`, `updated_at`) VALUES
 (1, '注册会员', '/backend/1/2018/06/30/15303671626400.jpg', 0, 0, 0, 1, 0, '2018-06-30 14:00:28', '2018-10-28 02:23:25'),
 (2, '铜牌会员', '/backend/1/2018/06/30/15303680668166.jpg', 0, 0, 2, 1999, 0, '2018-06-30 14:15:04', '2018-10-28 02:05:11'),
@@ -5913,8 +5913,8 @@ INSERT INTO `user_rank` (`rank_id`, `rank_name`, `rank_img`, `is_special`, `poin
 (4, '金牌会员', '/backend/1/2018/06/30/15303681658360.jpg', 0, 0, 10000, 29999, 0, '2018-06-30 14:16:30', '2018-06-30 14:16:30'),
 (5, '钻石会员', '/backend/1/2018/06/30/15303682021886.jpg', 0, 0, 30000, 100000, 0, '2018-06-30 14:17:07', '2018-06-30 14:17:07');
 COMMIT;";
-        $this->sql_statement('user_shop_rank', $sql);
-    }
+		$this->sql_statement('user_shop_rank', $sql);
+	}
 
     private function user_shop_rank()
     {

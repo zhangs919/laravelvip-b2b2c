@@ -240,7 +240,7 @@ class GoodsCommentRepository
     /**
      * 获取前端会员中心 评价晒单页面数据
      * url:/user/evaluate/info
-     * 
+     *
      * @param $orderInfo
      * @param $user_id
      * @return array|bool
@@ -253,70 +253,50 @@ class GoodsCommentRepository
         }
 
         $order_id = $orderInfo->order_id;
-
         $commentList = [];
-        // 判断评价状态
-        if ($orderInfo->evaluate_status == 2) {
-            // 已过期未评价
-            return false;
-        } elseif ($orderInfo->evaluate_status == 1) {
-            // 已评价
+        $orderGoods = $orderInfo->orderGoods;
+        foreach ($orderGoods as $item) {
+
+            // 查询订单商品的评价数据
             $where[] = ['order_id', $order_id];
             $where[] = ['user_id', $user_id];
-            $condition = [
-                'with' => ['orderInfo','orderGoods'],
-                'where' => $where,
-                'sortname' => 'comment_id',
-                'sortorder' => 'desc',
-                'limit' => 0
-            ];
-            list($data, $total) = $this->model->getList($condition);
+            $where[] = ['record_id', $item->record_id];
+            $commentInfo = GoodsComment::where($where)->first();
+            if (!empty($commentInfo)) {
+                // 已评价
+                $value = $commentInfo->toArray();
+                $value['back_id'] = null; // 退款退货或换货维修id
+                $value['back_number'] = null; // 退款退货或换货维修数量
+                $value['goods_number'] = $item->goods_number;
+                $value['goods_name'] = $item->goods_name;
+                $value['goods_image'] = get_image_url($item->goods_image);
+                $value['spec_info'] = $item->spec_info;
+                $value['order_add_time'] = $orderInfo->add_time;
+                $value['confirm_time'] = $orderInfo->confirm_time;
+                $value['order_status'] = $orderInfo->order_status;
+                $value['user_comment_status'] = $orderInfo->evaluate_status; // 会员评价状态
 
-
-            if (!$data->isEmpty()) {
-
-                foreach ($data as $key => $value) {
-
-                    $orderInfo = $value->orderInfo;
-                    $orderGoods = $value->orderGoods;
-
-                    $value->back_id = null; // 退款退货或换货维修id
-                    $value->back_number = null; // 退款退货或换货维修数量
-                    $value->goods_number = $orderGoods->goods_number;
-                    $value->goods_name = $orderGoods->goods_name;
-                    $value->goods_image = get_image_url($orderGoods->goods_image);
-                    $value->spec_info = $orderGoods->spec_info;
-                    $value->order_add_time = $orderInfo->add_time;
-                    $value->confirm_time = $orderInfo->confirm_time;
-                    $value->order_status = $orderInfo->order_status;
-                    $value->user_comment_status = $orderInfo->evaluate_status; // 会员评价状态
-
-                    $comment_images = [];
-                    $comment_images_arr = array_filter(array_unique([$value->comment_img1, $value->comment_img2, $value->comment_img3, $value->comment_img4, $value->comment_img5]));
-                    if (!empty($comment_images_arr)) {
-                        foreach ($comment_images_arr as $image) {
-                            $comment_images[] = get_image_url($image);
-                        }
+                $comment_images = [];
+                $comment_images_arr = array_filter(array_unique([$value['comment_img1'], $value['comment_img2'], $value['comment_img3'], $value['comment_img4'], $value['comment_img5']]));
+                if (!empty($comment_images_arr)) {
+                    foreach ($comment_images_arr as $image) {
+                        $comment_images[] = get_image_url($image);
                     }
-                    $value->comment_images = $comment_images;
-
-                    $add_comment_images = [];
-                    $add_comment_images_arr = array_filter(array_unique([$value->add_img1, $value->add_img2, $value->add_img3, $value->add_img4, $value->add_img5]));
-                    if (!empty($add_comment_images_arr)) {
-                        foreach ($add_comment_images_arr as $image) {
-                            $add_comment_images[] = get_image_url($image);
-                        }
-                    }
-                    $value->add_comment_images = $add_comment_images;
-
-                    unset($value->orderInfo, $value->orderGoods);
                 }
-            }
+                $value['comment_images'] = $comment_images;
 
-            $commentList = $data->toArray();
-        } else {
-            // 未评价
-            foreach ($orderInfo->orderGoods as $item) {
+                $add_comment_images = [];
+                $add_comment_images_arr = array_filter(array_unique([$value['add_img1'], $value['add_img2'], $value['add_img3'], $value['add_img4'], $value['add_img5']]));
+                if (!empty($add_comment_images_arr)) {
+                    foreach ($add_comment_images_arr as $image) {
+                        $add_comment_images[] = get_image_url($image);
+                    }
+                }
+                $value['add_comment_images'] = $add_comment_images;
+
+                $commentList[] = $value;
+            } else {
+                // 未评价
                 $commentList[] = [
                     'comment_id' => null,
                     'record_id' => $item->record_id,
@@ -451,16 +431,26 @@ class GoodsCommentRepository
                     $input['comment_status'] = 0;
                     $input['is_show'] = 0;
                     $input['evaluate_status'] = 0;
-
+                } else {
+                    // 如果评价不需要审核
                     $orderUpdate = [
                         'evaluate_status' => 1,
                         'evaluate_time' => time(),
                         'last_time' => time(),
                     ];
-                    // 2.更新订单评价状态
-                    OrderInfo::where('order_id', $order_info->order_id)->update($orderUpdate);
+                    // 2.更新订单评价状态 todo 需判断商品全部评价完了才能更改订单评价状态
+//                    OrderInfo::where('order_id', $order_info->order_id)->update($orderUpdate);
+
+                    // 修改订单商品评价状态
+                    $orderGoodsUpdate = [
+                        'is_evaluate' => 1
+                    ];
+                    OrderGoods::where('record_id', $post['record_id'])->update($orderGoodsUpdate);
                 }
                 $this->store($input);
+
+
+
             }
 
 

@@ -234,3 +234,5 @@ const CACHE_KEY_SMS_CAPTCHA = [
     'sms_captcha', // 短信验证码
     5*60 // 缓存时间 单位：秒
 ];
+
+const DEFAULT_VIDEO_COVER = 'https://image.laravelvip.com/images/site/1/images/2024/12/17/17344435501144.jpg';

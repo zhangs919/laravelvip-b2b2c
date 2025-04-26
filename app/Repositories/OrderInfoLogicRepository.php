@@ -322,7 +322,7 @@ class OrderInfoLogicRepository
 
         try {
             switch ($order['pay_code']) {
-                case '0':
+                case '0' || 'balance':
                     // 余额支付
                     $surplus = isset($order['surplus']) && $order['surplus'] > 0 ? $order['surplus'] : 0;
 

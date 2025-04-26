@@ -25,6 +25,7 @@ namespace App\Modules\Backend\Http\Controllers\Mall;
 
 use App\Modules\Base\Http\Controllers\Backend;
 use App\Repositories\MessageTemplateRepository;
+use App\Services\SmsService;
 use App\Services\WechatService;
 use Illuminate\Http\Request;
 
@@ -365,12 +366,26 @@ class MessageTemplateController extends Backend
             $mobile = $request->input('mobile');
             $params = $request->input('params');
 
+            $info = $this->messageTemplate->getById($id);
+            // 批量替换占位符
+            $log_msg = preg_replace_callback(
+                '/\$\{(\w+)\}/',
+                function ($matches) use ($params) {
+                    $varName = $matches[1]; // 提取变量名（如 'code'）
+                    return isset($params[$varName]) ? $params[$varName] : $matches[0]; // 存在则替换，否则保留原占位符
+                },
+                $info->sms_content
+            );
+            $sms = new SmsService();
+            // 阿里云短信模版id
+            $template_id = $info->aliyu_code ?? '';
+            $ret = $sms->send($mobile, $log_msg, $template_id,$params);
             // 调用短信接口 发送测试短信
-            $ret = false;
-            if ($ret === false) {
-                return result(-1, null, '短信不足');
+            if ($ret === true) {
+                return result(0, null, OPERATE_SUCCESS);
             }
-            return result(0, null, OPERATE_SUCCESS);
+
+            return result(-1, null, '短信不足');
         }
 
         return view('mall.message-template.sms_test', compact('title'));

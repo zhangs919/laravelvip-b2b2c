@@ -126,7 +126,7 @@ function check_func()
         array('pdo_mysql', '支持', 'success', '模块'),
         array('fileinfo', '支持', 'success', '模块'),
         array('openssl', '支持', 'success', '模块'),
-        array('swoole', '支持', 'success', '模块'),
+//        array('swoole', '支持', 'success', '模块'),
         /*以下函数需从禁用函数中删除*/
         array('file_get_contents', '支持', 'success', '函数'),
         array('mb_strlen', '支持', 'success', '函数'),

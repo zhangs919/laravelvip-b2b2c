@@ -127,7 +127,7 @@ class UserAccountRepository
                 'account_sn' => $this->makeAccountSn($process_type),
                 'user_id' => $user_id,
                 'admin_user' => $admin_user,
-                'amount' => $amount,
+                'amount' => $is_add ? $amount : -$amount,
                 'cur_balance' => $user->user_money, // 当前账户余额
                 'add_time' => time(),
                 'last_time' => 0,

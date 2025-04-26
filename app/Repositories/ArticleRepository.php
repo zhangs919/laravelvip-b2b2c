@@ -196,7 +196,8 @@ class ArticleRepository
         if ($info->status != 1) {
             return result(-1, [], '文章状态无效');
         }
-        $info->article_thumb = !empty($info->article_thumb) ? get_image_url($info->article_thumb) : '';
+//        $info->article_thumb = !empty($info->article_thumb) ? get_image_url($info->article_thumb) : '';
+        $info->article_thumb = DEFAULT_VIDEO_COVER;
         $info->video = !empty($info->video) ? get_image_url($info->video) : '';
         $images = [];
         if (!empty($info->images)) {
@@ -260,10 +261,13 @@ class ArticleRepository
                     break;
             }
             // 处理images
-            $images = explode('|', $post['images']);
-            $images = array_filter($images);
-            $images = implode('|', $images);
-            $post['images'] = $images;
+            if (!empty($post['images'])) {
+                $images = explode('|', $post['images']);
+                $images = array_filter($images);
+                $images = implode('|', $images);
+                $post['images'] = $images;
+            }
+
             $post['content'] = $post['content'] ?? '';
             $post['location'] = $post['location'] ?? '';
             $post['cat_id'] = $cat_id;

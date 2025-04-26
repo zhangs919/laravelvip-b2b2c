@@ -9,6 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * 客户端程序升级逻辑代码
@@ -229,17 +230,24 @@ class UpgradeRepository
      */
     public function upgradeLog($to_key_num)
     {
+        // 获取CPU型号
+        $cpuModel = shell_exec('grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f 2');
+        // 获取核心数
+        $coreCount = shell_exec('nproc');
+        // 获取主网卡MAC地址
+        $macAddress = shell_exec('cat /sys/class/net/eth0/address');
+
         $param = array(
             'domain' => request()->header('host'), //用户域名
             'key_num' => sysconf('lrw_version'), // 用户版本号
             'to_key_num' => $to_key_num, // 用户要升级的版本号
-            'time' => format_time(), // 升级时间
-            'cpu' => '0001', // 用户cpu信息 用于区分唯一标识
-            'mac' => '0002', // 用户网卡信息用于区分用户唯一标识
-            'serial_number' => '20170824085023WhUahf',
+            'time' => format_time(time()), // 升级时间
+            'cpu' => $cpuModel.' '.$coreCount.'核', // 用户cpu信息 用于区分唯一标识
+            'mac' => $macAddress, // 用户网卡信息用于区分用户唯一标识
+            'serial_number' => Str::uuid()->toString(), //'20170824085023WhUahf',
         );
         $url = config('lrw.upgrade_server') . "/update/upgrade_log";
-         Http::doPost($url, $param);
+        Http::doPost($url, $param);
     }
 
 }

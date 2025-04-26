@@ -854,13 +854,13 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         // 买家-投诉
         case 'buyer_complaint':
             $state = in_array($orderStatus, [OS_CONFIRMED,OS_CANCELED])
-                && (intval($orderInfo['confirm_time']) > (time() - get_complaint_seller_term()));
+                && (strtotime($orderInfo['confirm_time']) ? strtotime($orderInfo['confirm_time']) : intval($orderInfo['confirm_time']) > (time() - get_complaint_seller_term()));
             break;
 
         // 买家-确认收货
         case 'buyer_confirm_receipt':
             $state = ($orderStatus == OS_CONFIRMED && $shippingStatus == SS_SHIPPED
-                && intval($orderInfo['shipping_time']) < (time() - get_order_receiving_term() - get_order_delay_days_term($orderInfo['delay_days'])));
+                && (strtotime($orderInfo['shipping_time']) ? strtotime($orderInfo['shipping_time']) : intval($orderInfo['shipping_time'])) > (time() - get_order_receiving_term() - get_order_delay_days_term($orderInfo['delay_days'])));
             break;
 
         // 买家-延迟收货时间
@@ -882,16 +882,16 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         // 买家-评价
         case 'buyer_evaluate':
             $state = ($evaluateStatus == ES_UNEVALUATED
-                && in_array('order_status', [OS_CONFIRMED, OS_SPLITED, OS_RETURNED_PART, OS_ONLY_REFOUND])
-                && intval($orderInfo['end_time']) > (time() - sysconf('mark_term') * 24*60*60)
+                && in_array($orderStatus, [OS_CONFIRMED, OS_SPLITED, OS_RETURNED_PART, OS_ONLY_REFOUND])
+                && (strtotime($orderInfo['end_time']) ? strtotime($orderInfo['end_time']) : intval($orderInfo['end_time'])) > (time() - sysconf('mark_term') * 24*60*60)
             );
             break;
 
         // 买家-追加评价 todo
         case 'buyer_evaluate_again':
             $state = ($evaluateStatus == ES_EVALUATED
-                && in_array('order_status', [OS_CONFIRMED, OS_SPLITED, OS_RETURNED_PART, OS_ONLY_REFOUND])
-                && intval($orderInfo['end_time']) > (time() - sysconf('chase_term') * 24*60*60)
+                && in_array($orderStatus, [OS_CONFIRMED, OS_SPLITED, OS_RETURNED_PART, OS_ONLY_REFOUND])
+                && (strtotime($orderInfo['end_time']) ? strtotime($orderInfo['end_time']) : intval($orderInfo['end_time'])) > (time() - sysconf('chase_term') * 24*60*60)
             );
             break;
 
@@ -916,7 +916,7 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         // 买家-提交退款申请 申请售后期限 默认为15天：自买家确认收货起15天内，可且申请退款（仅退款/退款退货）、换货维修服务
         case 'buyer_refund':
             $state = $orderStatus == OS_CONFIRMED
-                && (intval($orderInfo['confirm_time']) > (time() - sysconf('customer_service_term') * 24*60*60));
+                && (strtotime($orderInfo['confirm_time']) ? strtotime($orderInfo['confirm_time']) : intval($orderInfo['confirm_time']) > (time() - sysconf('customer_service_term') * 24*60*60));
             break;
 
 
@@ -1022,7 +1022,7 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
             $state = (in_array($orderStatus, [OS_UNCONFIRMED, OS_CONFIRMED])
                 && $payStatus == PS_PAYED
                 && $shippingStatus == SS_SHIPPED_ING
-                && $deliveryInfo['delivery_status'] == DELIVERY_CREATE);
+                && (!empty($deliveryInfo) && $deliveryInfo['delivery_status'] == DELIVERY_CREATE));
             break;
 
         // 商家-打印订单
@@ -1042,7 +1042,7 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         case 'shop_shipping_print':
             $state = ($payStatus == PS_PAYED
                 && $shippingStatus == SS_SHIPPED
-                && $deliveryInfo['shipping_type'] > 0);
+                && !empty($deliveryInfo['shipping_type']));
 
             break;
 
@@ -1050,7 +1050,7 @@ function get_order_operate_state($operate, $orderInfo, $deliveryInfo = [])
         case 'shop_sheet_print':
             $state = ($payStatus == PS_PAYED
                 && $shippingStatus == SS_SHIPPED
-                && $deliveryInfo['shipping_type'] > 0);
+                && !empty($deliveryInfo['shipping_type']));
 
             break;
 

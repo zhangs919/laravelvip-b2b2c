@@ -43,7 +43,7 @@ class RegionRepository
             'where' => [['is_enable', 1]],
             'limit' => 0,
             'field' => [
-                'center', 'parent_code', 'region_code', 'region_name'
+                'center', 'parent_code', 'region_code', 'region_name', 'level'
             ],
             'sortname' => 'region_id',
             'sortorder' => 'asc'
@@ -54,8 +54,27 @@ class RegionRepository
             $list[$key] = $value->toArray();
         }
         $list = (new Tree())->list_to_tree($list, 'region_code', 'parent_code', 'children', 0, false);
+        // $list = $this->getRegionChildren($list);
+        
         cache()->put($cache_id, $list, CACHE_KEY_ALL_REGION[1]);
         return $list;
+    }
+    
+    public function getRegionChildren($data, $deep = 0)
+    {
+        $data = is_array($data) ? $data : $data->toArray();
+        $data = array_column($data, Null, "region_code");
+        $new_data = [];
+        foreach ($data as $k => $v) {
+            if ($deep > 0 && $v['level'] > $deep) continue;
+            //判断数据为第几级
+            if (isset($data[$v["parent_code"]])) {
+                $data[$v["parent_code"]]["children"][] = &$data[$k];
+            } else {
+                $new_data[] = &$data[$k];
+            }
+        }
+        return $new_data;
     }
 
     /**

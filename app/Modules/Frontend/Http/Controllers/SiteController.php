@@ -753,6 +753,24 @@ class SiteController extends Frontend
         return result(0, $data);
     }
 
+    /**
+     * 获取配置信息
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function basicConfig()
+    {
+        $data = [
+            'pay_weixin_open' => 1,
+            'ali_pay_status' => 1,
+            'balance_pay_status' => 1,
+            'offline_pay_status' => 1,
+            'friend_pay_status' => 1,
+        ];
+
+        return result(0, $data);
+    }
+
     public function getYikf(Request $request)
     {
         $shop_id = $request->get('shop_id'); //

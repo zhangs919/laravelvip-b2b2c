@@ -250,7 +250,7 @@ function is_mobile_domain() {
 /**
  * 检测是否使用app访问
  *
- * @param string $clientType android-Android客户端、ios-iOS客户端、weapp-微信小程序端
+ * @param string $clientType android-Android客户端、ios-iOS客户端、weapp-微信小程序端 wechat-微信浏览器 h5-手机自带浏览器
  * @return bool
  */
 function is_app($clientType = '')
@@ -290,6 +290,28 @@ function is_app($clientType = '')
         } else {
             return false;
         }
+    } elseif ($clientType == 'wechat') {
+        // 微信浏览器
+        if (
+            (!empty($user_agent) && ($user_agent == 'lrwapp/wechat'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/wechat')
+            )
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    } elseif ($clientType == 'h5') {
+        // 手机自带浏览器
+        if (
+            (!empty($user_agent) && ($user_agent == 'lrwapp/h5'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/h5')
+            )
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
         // Android、Ios、weapp
         if (
@@ -299,6 +321,10 @@ function is_app($clientType = '')
             || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/ios'))
             || (!empty($user_agent) && ($user_agent == 'lrwapp/weapp'))
             || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/weapp'))
+            || (!empty($user_agent) && ($user_agent == 'lrwapp/wechat'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/wechat'))
+            || (!empty($user_agent) && ($user_agent == 'lrwapp/h5'))
+            || (!empty($user_access_agent) && ($user_access_agent == 'lrwapp/h5'))
         ) {
             return true;
         } else {

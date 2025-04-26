@@ -79,7 +79,7 @@ class UploadVideoRepository
             $name = str_replace(strrchr($originalName, '.'), '', $originalName);
         }
 
-        if(! in_array( $ext, ['mp4'])){
+        if(! in_array( $ext, ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm', 'm4v'])){
             return ['error' => '上传文件后缀不合法'];
         }
 
@@ -106,12 +106,41 @@ class UploadVideoRepository
         $defaultDriver = config('filesystems.default');
 
         if ($defaultDriver == 'oss') {
+            $region_domains = '[{"name":"西南1(成都)","domain":"oss-cn-chengdu.aliyuncs.com","internal_domain":"oss-cn-chengdu-internal.aliyuncs.com","image_domain":"img-cn-chengdu.aliyuncs.com"},{"name":"华东2(上海)","domain":"oss-cn-shanghai.aliyuncs.com","internal_domain":"oss-cn-shanghai-internal.aliyuncs.com","image_domain":"img-cn-shanghai.aliyuncs.com"},{"name":"华北1(青岛)","domain":"oss-cn-qingdao.aliyuncs.com","internal_domain":"oss-cn-qingdao-internal.aliyuncs.com","image_domain":"img-cn-qingdao.aliyuncs.com"},{"name":"华北2(北京)","domain":"oss-cn-beijing.aliyuncs.com","internal_domain":"oss-cn-beijing-internal.aliyuncs.com","image_domain":"img-cn-beijing.aliyuncs.com"},{"name":"华东1(杭州)","domain":"oss-cn-hangzhou.aliyuncs.com","internal_domain":"oss-cn-hangzhou-internal.aliyuncs.com","image_domain":"img-cn-hangzhou.aliyuncs.com"},{"name":"华南1(深圳)","domain":"oss-cn-shenzhen.aliyuncs.com","internal_domain":"oss-cn-shenzhen-internal.aliyuncs.com","image_domain":"img-cn-shenzhen.aliyuncs.com"},{"name":"香港","domain":"oss-cn-hongkong.aliyuncs.com","internal_domain":"oss-cn-hongkong-internal.aliyuncs.com","image_domain":"img-cn-hongkong.aliyuncs.com"},{"name":"亚洲(新加坡)","domain":"oss-ap-southeast-1.aliyuncs.com","internal_domain":"oss-ap-southeast-1-internal.aliyuncs.com","image_domain":"img-ap-southeast-1.aliyuncs.com"},{"name":"美西1(美国硅谷)","domain":"oss-us-west-1.aliyuncs.com","internal_domain":"oss-us-west-1-internal.aliyuncs.com","image_domain":"img-us-west-1.aliyuncs.com"},{"name":"美东1(美国弗吉尼亚)","domain":"oss-us-east-1.aliyuncs.com","internal_domain":"oss-us-east-1-internal.aliyuncs.com","image_domain":"img-us-east-1.aliyuncs.com"}]';
+            $region_domains = json_decode($region_domains, true);
+            $alioss_bucket_region = sysconf('alioss_bucket_region');
+            $bucket_region_data = $region_domains[$alioss_bucket_region+1] ?? [];
+            if (empty($bucket_region_data)) {
+                return ['error' => '请检查oss配置'];
+            }
+            // 动态 OSS 配置
+            $ossConfig = [
+                'driver'        => 'oss',
+                'access_id'     => sysconf('alioss_access_key_id'),
+                'access_key'    => sysconf('alioss_access_key_secret'),
+                'bucket'        => sysconf('alioss_bucket_name'),
+                'endpoint'      => $bucket_region_data['domain'], // 根据实际区域调整
+//                'endpoint_internal'      => $bucket_region_data['internal_domain'], // 根据实际区域调整
+                'cdnDomain'        => sysconf('alioss_domain'),
+                'ssl'       => false, // true to use 'https://' and false to use 'http://'. default is false,
+                'isCName'       => !empty(sysconf('alioss_domain')), // 是否使用自定义域名,true: 则Storage.url()会使用自定义的cdn或域名生成文件url， false: 则使用外部节点生成url
+                'debug'       => false,
+//                'timeout'       => 3600, // 超时设置（可选）
+//                'connect_timeout' => 10, // 连接超时（可选）
+//                // 其他可能的配置项...
+//                'prefix' => '',
+                'throw' => true,
+            ];
+
+            // 创建临时磁盘实例
+            $disk = Storage::build($ossConfig);
+
             // oss上传
             $host = 'http://'.sysconf('oss_domain').$fullpath;
 
             $url = $host.ltrim($path, '/');
             $contents = file_get_contents($file); // 文件内容
-            $result = Storage::put($fullpath.ltrim($path, '/'), $contents);
+            $result = $disk->put($fullpath.ltrim($path, '/'), $contents);
 
 //            $result = Storage::put($fullpath.trim($dirname, '/'), $file);
 //            $url = 'http://'.sysconf('oss_domain').'/'.$result;

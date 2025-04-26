@@ -320,6 +320,7 @@ class ArticleController extends Frontend
         $params = $request->all();
         $type = $request->input('type', 1); // 文章类型 1-帖子/视频 2-我关注人的帖子/视频 3-直播
         $cat_type = $request->input('cat_type'); // 文章分类类型
+        $article_type = $request->input('article_type'); // 文章类型 1-帖子 1-视频 3-直播
         $cat_id = $request->input('cat_id'); // 文章分类ID
         $keyword = $request->input('keyword'); // 文章标题
         $user_id = $request->input('user_id'); // 用户ID
@@ -372,7 +373,12 @@ class ArticleController extends Frontend
         }
 
         $where[] = ['status', 1];
-        $where[] = ['cat_type', $cat_type];
+        if ($cat_type) {
+            $where[] = ['cat_type', $cat_type];
+        }
+        if ($article_type) {
+            $where[] = ['article_type', $article_type];
+        }
         // 列表
         $condition = [
             'where' => $where,
@@ -387,7 +393,8 @@ class ArticleController extends Frontend
         list($list, $total) = $this->article->getList($condition);
         if ($list->isNotEmpty()) {
             foreach ($list as $item) {
-                $item->article_thumb = !empty($item->article_thumb) ? get_image_url($item->article_thumb) : '';
+//                $item->article_thumb = !empty($item->article_thumb) ? get_image_url($item->article_thumb) : DEFAULT_VIDEO_COVER;
+                $item->article_thumb = DEFAULT_VIDEO_COVER;
                 $item->video = !empty($item->video) ? get_image_url($item->video) : '';
                 $images = [];
                 if (!empty($item->images)) {

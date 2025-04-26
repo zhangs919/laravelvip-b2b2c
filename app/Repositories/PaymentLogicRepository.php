@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yansongda\Pay\Pay;
+use function AlibabaCloud\Client\json;
 
 class PaymentLogicRepository
 {
@@ -161,9 +162,10 @@ class PaymentLogicRepository
      *
      * @param $orderInfo
      * @param int $payment_source 支付来源 0-商品订单 1-商家入驻支付订单 ***
+     * @param string 支付方式 weixin-微信支付 alipay-支付宝支付
      * @return mixed
      */
-    public function toPay($orderInfo, $payment_source = 0)
+    public function toPay($orderInfo, $payment_source = 0, $pay_code = '', $user = [])
     {
 
         $subject = sysconf('site_name') . '-' . (PAYMENT_SOURCE[$payment_source] ?? '订单支付');
@@ -173,7 +175,31 @@ class PaymentLogicRepository
         // pay_info:"<img src='http://qr.liantu.com/api.php?text=weixin://wxpay/bizpayurl?pr=q0uPrZb' alt='扫码支付'>"
 
 		try {
-			$pay_code = $orderInfo['pay_code'];
+		    if (!$pay_code) {
+                $pay_code = $orderInfo['pay_code'];
+
+            } else {
+                // 修改订单的支付方式
+                $up = ['pay_id' => 0, 'pay_code' => $pay_code, 'pay_name' => format_pay_type($pay_code)];
+                if ($pay_code == 'balance') {
+                    if ($orderInfo['order_amount'] <= $user['user_money']) {
+                        // 订单金额小于用户余额 全部使用余额支付
+                        $money_paid = 0;
+                        $surplus = $orderInfo['order_amount'];
+                    } else {
+                        // 余额不足支付 部分余额支付
+                        $money_paid = $orderInfo['order_amount'] - $user['user_money'];
+                        $surplus = $user['user_money'];
+                    }
+                    $up['surplus'] = $surplus; // 余额支付金额
+                    $up['user_surplus'] = $surplus;
+                    $up['money_paid'] = $money_paid;
+                    $orderInfo['surplus'] = $up['surplus'];
+                    $orderInfo['user_surplus'] = $up['user_surplus'];
+                    $orderInfo['money_paid'] = $up['money_paid'];
+                }
+                OrderInfo::where('order_id', $orderInfo['order_id'])->update($up);
+            }
 			switch ($pay_code) {
 				case 'alipay': //支付宝
                     if ($payment_source == 1) {
@@ -217,9 +243,11 @@ class PaymentLogicRepository
                     $openid = DB::table('user')->where('user_id', $orderInfo['user_id'])->value('weixin_key') ?? '';
                     Log::info("支付:".is_pc_domain().is_app('weapp'));
 
+//                    is_mobile_domain() && !is_weixin()) || is_app('h5')
+                    Log::info("is_mobile_domain()".is_mobile_domain()." - ". "is_weixin()" . is_weixin() ." - is_app('h5')".is_app('h5'));
 					// 判断客户端
-					if (is_mobile_domain()) {
-						// m.lrw.com 访问
+					if ((is_mobile_domain() && is_weixin()) || is_app('wechat')) {
+					    // 微信公众号支付
                         $order = [
                             '_config' => 'default', // 注意这一行
                             'out_trade_no' => $order_sn,
@@ -231,9 +259,43 @@ class PaymentLogicRepository
                                 'openid' => $openid,
                             ]
                         ];
+                        Log::info("支付调试-微信公众号支付：");
+                        Log::info(json_encode($order));
 						$pay = Pay::wechat()->mp($order);
-						return $pay;
-					} elseif (is_pc_domain()) {
+                        Log::info("支付结果:");
+                        Log::info($pay);
+
+                        return $pay;
+					} elseif ((is_mobile_domain() && !is_weixin()) || is_app('h5')) {
+					    // 微信h5支付
+                        $order = [
+                            // 'out_trade_no' => time().'',
+                            //    'description' => 'subject-测试',
+                            //    'amount' => [
+                            //        'total' => 1,
+                            //    ],
+                            //    'scene_info' => [
+                            //        'payer_client_ip' => '1.2.4.8',
+                            //        'h5_info' => [
+                            //            'type' => 'Wap',
+                            //        ]
+                            //    ],
+
+                            '_config' => 'default', // 注意这一行
+                            'out_trade_no' => $order_sn,
+                            'description' => $subject,
+                            'amount' => [
+                                'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
+                            ],
+                        ];
+                        Log::info("支付调试-微信h5支付：");
+                        Log::info(json_encode($order));
+                        $pay = Pay::wechat()->h5($order);
+                        Log::info("支付结果:");
+                        Log::info($pay);
+
+                        return $pay;
+                    } elseif (is_pc_domain()) {
 						// pc端
                         $order = [
                             '_config' => 'default', // 注意这一行
@@ -243,13 +305,18 @@ class PaymentLogicRepository
                                 'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
                             ]
                         ];
+                        Log::info("支付调试-微信pc支付：");
+                        Log::info(json_encode($order));
 						$pay = Pay::wechat()->scan($order);
 						$result = [
 							'pay' => $pay,
 							'subject' => $subject,
 							'total_fee' => $total_amount
 						];
-						return $result;
+
+                        Log::info("支付结果:".json_encode($result));
+
+                        return $result;
 					} elseif (is_app('weapp')) {
 //                        $order = [
 //                            '_config' => 'default', // 注意这一行
@@ -292,15 +359,18 @@ class PaymentLogicRepository
 //                        $pay = $utils->buildBridgeConfig($prepayId, $appId, $signType); // 返回数组
 
                         $app = WechatService::pay();
-                        $result = $app->order->unify([
+                        $order = [
                             'body' => $subject,
                             'out_trade_no' => $order_sn,
                             'total_fee' => $total_amount * 100,
                             'notify_url' => request()->getSchemeAndHttpHost().'/notify/front-weixin', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
                             'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
                             'openid' => $openid,
-                        ]);
-                        Log::info("支付:".json_encode($result));
+                        ];
+                        Log::info("支付调试-微信小程序支付：");
+                        Log::info(json_encode($order));
+                        $result = $app->order->unify($order);
+                        Log::info("支付结果:".json_encode($result));
 
                         if ($result['return_code'] != 'SUCCESS') {
                             return arr_result(-1, null, $result['return_msg']);
@@ -326,7 +396,6 @@ class PaymentLogicRepository
 //                            'sign' => array_get($result, 'sign'),
 //                        ];
 //                        Log::info("微信支付:".json_encode($unify));
-
                         return $prepay_data;
                     }
 
@@ -342,10 +411,17 @@ class PaymentLogicRepository
                             'total' => $total_amount * 100, // ** 微信支付的单位：分** **其他支付的单位：元**
                         ],
                     ];
+                    Log::info("支付调试-微信APP支付：");
+                    Log::info(json_encode($order));
 					$pay = Pay::wechat()->app($order);
-					return $pay;
-                case '0': // 余额支付-全部用余额支付
-                    if ($orderInfo['money_paid'] > 0 || $orderInfo['surplus'] <= 0) {
+                    Log::info("支付结果:");
+                    Log::info($pay);
+
+                    return $pay;
+                case '0' || 'balance': // 余额支付-全部用余额支付
+                    if (
+//                        $orderInfo['money_paid'] > 0 ||
+                        $orderInfo['surplus'] <= 0) {
                         // 金额异常
                         return arr_result(-1, null, '余额支付金额异常');
                     }

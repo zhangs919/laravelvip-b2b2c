@@ -165,6 +165,7 @@ class OrderController extends UserCenter
         $show_merge_pay_button = false;
         $customer_service_term = sysconf('customer_service_term') * 24*60*60;
         $comment_status = 1;
+        $close_trade_reason = explode("\r\n", sysconf('user_close_trad_reason'));
 
 
         $order_status = $params['order_status'];
@@ -173,7 +174,7 @@ class OrderController extends UserCenter
             'evaluate_status_list','order_time_list','pickup_list',
             'order_counts','order_counts_data','nav_default','is_exchange',
             'show_merge_pay_button','customer_service_term','comment_status','is_delete',
-            'order_status');
+            'order_status', 'close_trade_reason');
 
         if ($request->ajax() && !is_app()) { // web端访问 ajax请求
             $render = view('user.order.partials._list', $compact)->render();
@@ -199,6 +200,7 @@ class OrderController extends UserCenter
                 'show_merge_pay_button' => $show_merge_pay_button,
                 'customer_service_term' => $customer_service_term,
                 'comment_status' => $comment_status,
+                'close_trade_reason' => $close_trade_reason,
             ],
             'app_suffix_data' => [],
             'web_data' => $webData,
@@ -313,7 +315,6 @@ class OrderController extends UserCenter
 
     /**
      * 取消订单保存数据
-     *
      * @param Request $request
      * @return array|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */

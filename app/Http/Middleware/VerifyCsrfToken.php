@@ -119,6 +119,7 @@ class VerifyCsrfToken extends Middleware
         '/index/information/get-weixinconfig.html',
 		'/user/scan-code/get-code',
         '/',
+        '/openai/chat-gpt'
 
     ];
 }

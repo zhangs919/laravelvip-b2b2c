@@ -52,7 +52,7 @@ class InstallController extends Controller
         }
         $username = \request()->get('username') ?? '';
         $password = \request()->get('password') ?? '';
-        $app_key = \request()->get('app_key') ?? Str::random(32);
+        $app_key = \request()->get('app_key') ?? ''; // Str::random(32);
         if (!$username || !$password) {
             return result(-1, null, '参数缺失！');
         }
